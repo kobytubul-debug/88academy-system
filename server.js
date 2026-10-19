@@ -14,6 +14,10 @@ const PROD = process.env.NODE_ENV === 'production';
 const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, 'data');
 const DATA_FILE = path.join(DATA_DIR, 'academy.json');
 const PUBLIC = path.join(__dirname, 'public');
+// Videos the admin uploads live next to the data file, on the same disk.
+const MEDIA_DIR = path.join(DATA_DIR, 'media');
+const MAX_UPLOAD = (Number(process.env.MAX_UPLOAD_MB) || 500) * 1024 * 1024;
+const VIDEO_TYPES = { '.mp4': 'video/mp4', '.m4v': 'video/mp4', '.mov': 'video/quicktime', '.webm': 'video/webm' };
 const COOKIE = 'aca_sid';
 const SESSION_DAYS = 30;
 
@@ -52,6 +56,7 @@ function checkPassword(user, pw) {
 
 function load() {
   fs.mkdirSync(DATA_DIR, { recursive: true });
+  fs.mkdirSync(MEDIA_DIR, { recursive: true });
   if (fs.existsSync(DATA_FILE)) {
     db = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
   } else {
@@ -507,6 +512,7 @@ const ADMIN_ACTIONS = {
     });
     db.curriculum = cur;
     M.setCurriculum(cur);
+    cleanMedia();
     log(me, 'settings', String(b.note || 'עדכן את תוכנית הלימודים').slice(0, 200));
     return { ok: true };
   },
@@ -523,6 +529,94 @@ function roleName(r) {
 }
 
 // ---------- server ----------
+// ---------- uploaded videos ----------
+function freeBytes() {
+  try {
+    const st = fs.statfsSync(MEDIA_DIR);
+    return Number(st.bavail) * Number(st.bsize);
+  } catch (e) {
+    return Infinity;
+  }
+}
+
+// The admin's browser sends the file as is; it is written to a temporary name and renamed when complete.
+function upload(req, res, user) {
+  const name = decodeURIComponent(String(req.headers['x-file-name'] || 'video.mp4'));
+  const ext = path.extname(name).toLowerCase();
+  if (!VIDEO_TYPES[ext]) return json(res, 400, { error: 'אפשר להעלות סרטונים מסוג MP4, MOV, M4V או WEBM.' });
+  const size = Number(req.headers['content-length']) || 0;
+  if (!size) return json(res, 411, { error: 'הקובץ ריק.' });
+  if (size > MAX_UPLOAD) return json(res, 413, { error: 'הקובץ גדול מדי. אפשר עד ' + Math.round(MAX_UPLOAD / 1048576) + ' מגה־בייט. כדאי לכווץ את הסרטון, או להעלות אותו ל־YouTube ולהדביק קישור.' });
+  if (size > freeBytes() - 50 * 1048576) return json(res, 507, { error: 'אין מספיק מקום בדיסק. מגדילים את ה־Disk ב־Render (Disk ← Size), או מעלים את הסרטון ל־YouTube ומדביקים קישור.' });
+  const id = 'v' + Date.now().toString(36) + crypto.randomBytes(4).toString('hex');
+  const tmp = path.join(MEDIA_DIR, id + '.part');
+  const out = fs.createWriteStream(tmp);
+  let got = 0;
+  let failedUpload = false;
+  const fail = (code, msg) => {
+    if (failedUpload) return;
+    failedUpload = true;
+    out.destroy();
+    fs.rm(tmp, { force: true }, () => {});
+    try { json(res, code, { error: msg }); } catch (e) {}
+  };
+  req.on('data', (c) => {
+    got += c.length;
+    if (got > MAX_UPLOAD || got > size) { fail(413, 'הקובץ גדול מדי.'); req.destroy(); }
+  });
+  req.on('aborted', () => fail(400, 'ההעלאה הופסקה.'));
+  req.pipe(out);
+  out.on('error', () => fail(500, 'שמירת הקובץ נכשלה. אולי הדיסק מלא.'));
+  out.on('finish', () => {
+    if (failedUpload) return;
+    if (got !== size) return fail(400, 'ההעלאה לא הושלמה. נסו שוב.');
+    const final = id + ext;
+    fs.rename(tmp, path.join(MEDIA_DIR, final), (err) => {
+      if (err) return fail(500, 'שמירת הקובץ נכשלה.');
+      log(user, 'settings', 'העלה סרטון: ' + name.slice(0, 80));
+      save();
+      json(res, 200, { url: '/media/' + final, name: name.slice(0, 120), size: got });
+    });
+  });
+}
+
+// Plays a video, with byte ranges so the player can jump around.
+function sendMedia(req, res, name) {
+  if (!/^[A-Za-z0-9_-]+\.(mp4|m4v|mov|webm)$/.test(name)) return send(res, 404, 'Not found');
+  const full = path.join(MEDIA_DIR, name);
+  let st;
+  try { st = fs.statSync(full); } catch (e) { return send(res, 404, 'Not found'); }
+  const type = VIDEO_TYPES[path.extname(name).toLowerCase()];
+  const range = /^bytes=(\d*)-(\d*)$/.exec(req.headers.range || '');
+  const head = { 'Content-Type': type, 'Accept-Ranges': 'bytes', 'Cache-Control': 'private, max-age=86400', 'X-Content-Type-Options': 'nosniff' };
+  if (range && (range[1] || range[2])) {
+    let start = range[1] ? Number(range[1]) : st.size - Number(range[2]);
+    let end = range[1] && range[2] ? Number(range[2]) : st.size - 1;
+    start = Math.max(0, start);
+    end = Math.min(st.size - 1, end);
+    if (start > end) { res.writeHead(416, { 'Content-Range': 'bytes */' + st.size }); return res.end(); }
+    res.writeHead(206, Object.assign(head, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + st.size, 'Content-Length': end - start + 1 }));
+    return fs.createReadStream(full, { start, end }).pipe(res);
+  }
+  res.writeHead(200, Object.assign(head, { 'Content-Length': st.size }));
+  fs.createReadStream(full).pipe(res);
+}
+
+// Uploaded videos no skill or challenge uses any more (older than a day, so a fresh upload not yet saved stays).
+function cleanMedia() {
+  const used = new Set();
+  const cur = db.curriculum || { skills: [], challenges: [] };
+  cur.skills.concat(cur.challenges).forEach((x) => { if (x.video && x.video.startsWith('/media/')) used.add(x.video.slice(7)); });
+  fs.readdir(MEDIA_DIR, (err, files) => {
+    if (err) return;
+    files.forEach((f) => {
+      if (used.has(f)) return;
+      const full = path.join(MEDIA_DIR, f);
+      fs.stat(full, (e, st) => { if (!e && Date.now() - st.mtimeMs > 864e5) fs.rm(full, { force: true }, () => {}); });
+    });
+  });
+}
+
 async function handle(req, res) {
   const url = new URL(req.url, 'http://x');
   let p = decodeURIComponent(url.pathname);
@@ -589,6 +683,10 @@ async function handle(req, res) {
       save();
       return json(res, 200, { progress: out.doc, rewards: db.rewards.map((x) => Object.assign({}, x, { left: stockLeft(x.id) })), scoring: db.scoring, today: M.today() });
     }
+    if (p === '/api/admin/upload' && req.method === 'POST') {
+      if (user.role !== 'admin') return json(res, 403, { error: 'רק מנהלים.' });
+      return upload(req, res, user);
+    }
     if (p.startsWith('/api/admin/') && req.method === 'POST') {
       if (user.role !== 'admin') return json(res, 403, { error: 'רק מנהלים.' });
       const action = ADMIN_ACTIONS[p.slice('/api/admin/'.length)];
@@ -644,6 +742,10 @@ async function handle(req, res) {
       save();
     }
     return redirect(res, '/Login.dc.html', { 'Set-Cookie': sessionCookie('', 0) });
+  }
+  if (p.startsWith('/media/')) {
+    if (!user) return send(res, 401, 'Sign in');
+    return sendMedia(req, res, p.slice('/media/'.length));
   }
   const file = path.normalize(p).replace(/^[/\\]+/, '');
   if (!file || file.includes('..') || file.includes('/') || file.includes('\\')) return send(res, 404, 'Not found');

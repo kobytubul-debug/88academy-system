@@ -89,8 +89,17 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 </div>
 </div>
 <div>
-<label for="ch-video" style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #3D4541;">סרטון הדגמה <span style="font-weight: 400; color: #5E6762;">(לא חובה, YouTube או Google Drive)</span></label>
-<input id="ch-video" type="url" dir="ltr" value="{{video}}" onInput="{{onVideo}}" placeholder="https://youtu.be/…" style="width: 100%; box-sizing: border-box; height: 44px; padding: 0 14px; background: #FFFFFF; border: 1px solid #D3D9D5; border-radius: 10px; color: #1E2320; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 14px; text-align: left;">
+<span id="ch-file-label" style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #3D4541;">סרטון הדגמה <span style="font-weight: 400; color: #5E6762;">(לא חובה: קובץ מהמחשב עד 500 מגה־בייט, או קישור)</span></span>
+<sc-if value="{{hasFile}}" hint-placeholder-val="{{ false }}"><video src="{{video}}" controls="" preload="metadata" playsinline="" style="display: block; width: 100%; margin-bottom: 10px; aspect-ratio: 16 / 9; border-radius: 12px; background: #111413;"></video><p style="margin: 0 0 10px; font-size: 13px; color: #5E6762;">סרטון שהועלה לאתר · <button type="button" onClick="{{removeVideo}}" style="padding: 0; border: 0; background: none; color: #B42318; font: inherit; font-size: 13px; text-decoration: underline; cursor: pointer;">הסרת הסרטון</button></p></sc-if>
+<label class="file-drop" style="position: relative; display: flex; align-items: center; gap: 12px; padding: 6px 6px 6px 14px; background: #FFFFFF; border: 1px dashed #B9C2BD; border-radius: 10px; cursor: pointer;">
+<input type="file" accept="video/mp4,video/quicktime,video/webm,.mp4,.mov,.m4v,.webm" aria-labelledby="ch-file-label" onChange="{{onFile}}" disabled="{{uploading}}" style="position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden;">
+<span style="display: inline-flex; align-items: center; height: 36px; padding: 0 14px; border-radius: 8px; border: 1px solid #D3D9D5; background: #FFFFFF; color: #1E2320; font-size: 14px; white-space: nowrap;">העלאה מהמחשב</span>
+<span style="min-width: 0; font-size: 14px; color: #5E6762; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{fileStatus}}</span>
+</label>
+<sc-if value="{{uploading}}" hint-placeholder-val="{{ false }}"><div style="margin-top: 10px; height: 8px; border-radius: 999px; background: #E6EAE7; overflow: hidden;"><div style="width: {{pct}}%; height: 100%; background: #2A9171;"></div></div><p style="margin: 6px 0 0; font-size: 13px; color: #17694F;">מעלה… {{pct}}%</p></sc-if>
+<sc-if value="{{hasUploadError}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 8px 0 0; font-size: 13px; color: #B42318;">{{uploadError}}</p></sc-if>
+<label for="ch-video" style="display: block; margin: 12px 0 8px; font-size: 14px; font-weight: 500; color: #3D4541;">או קישור (YouTube או Google Drive)</label>
+<input id="ch-video" type="url" dir="ltr" value="{{videoLink}}" onInput="{{onVideo}}" placeholder="https://youtu.be/…" style="width: 100%; box-sizing: border-box; height: 44px; padding: 0 14px; background: #FFFFFF; border: 1px solid #D3D9D5; border-radius: 10px; color: #1E2320; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 14px; text-align: left;">
 </div>
 <label style="display: inline-flex; align-items: center; gap: 10px; align-self: flex-start; font-size: 15px; font-weight: 500; color: #1E2320; cursor: pointer;"><input type="checkbox" checked="{{active}}" onChange="{{toggleActive}}" style="width: 18px; height: 18px; margin: 0; accent-color: #B23A5E; cursor: pointer;">פעיל <span style="font-weight: 400; color: #5E6762;">(גלוי לסטודנטים)</span></label>
 </div>
@@ -140,8 +149,22 @@ class Component extends DCLogic {
     return {
       ready: true, id: c ? c.id : '', title: c ? c.title : '', desc: c ? c.desc || '' : '', level: String(c ? c.level : cur.levels[0].n),
       points: String(c ? c.points : 50), endDate: c && c.ends ? c.ends.slice(0, 10) : '', endTime: c && c.ends && c.ends.length > 10 ? c.ends.slice(11, 16) : '',
-      video: c ? c.video || '' : '', active: c ? c.active !== false : true, error: '', busy: false, confirming: false
+      video: c ? c.video || '' : '', active: c ? c.active !== false : true, error: '', busy: false, confirming: false, uploading: false, pct: 0, uploadError: ''
     };
+  }
+
+  uploadFile(e) {
+    const A = this.A();
+    const file = e && e.target && e.target.files ? e.target.files[0] : null;
+    if (!A || !file) return;
+    if (e.target) e.target.value = '';
+    if (!/\.(mp4|m4v|mov|webm)$/i.test(file.name)) { this.set({ uploadError: 'אפשר להעלות סרטונים מסוג MP4, MOV, M4V או WEBM.' }); return; }
+    if (file.size > 500 * 1024 * 1024) { this.set({ uploadError: 'הקובץ גדול מ־500 מגה־בייט.' }); return; }
+    this.set({ uploading: true, pct: 0, uploadError: '' });
+    A.upload(file, (pct) => this.setState(Object.assign({}, this.st(), { pct: pct }))).then((r) => {
+      if (!r.ok) { this.set({ uploading: false, uploadError: r.error }); return; }
+      this.set({ uploading: false, video: r.url });
+    });
   }
 
   set(patch) {
@@ -158,7 +181,8 @@ class Component extends DCLogic {
     if (!title) error = 'כתבו כותרת לאתגר.';
     else if (!Number.isInteger(pts) || pts < 0 || pts > 100000) error = 'הנקודות צריכות להיות מספר שלם, 0 ומעלה.';
     else if (s.endTime && !s.endDate) error = 'בחרו תאריך סיום, או מחקו את השעה.';
-    else if (video && !/^https?:\/\/\S+$/i.test(video)) error = 'הקישור לסרטון צריך להתחיל ב־https://';
+    else if (s.uploading) error = 'חכו שההעלאה תסתיים, ואז שמרו.';
+    else if (video && !/^https?:\/\/\S+$/i.test(video) && !(A && A.isFile(video))) error = 'הקישור לסרטון צריך להתחיל ב־https://';
     if (error) { this.setState(Object.assign({}, s, { error: error })); return; }
     if (!A) return;
     const cur = JSON.parse(JSON.stringify(this.cur()));
@@ -203,9 +227,18 @@ class Component extends DCLogic {
       onDate: (e) => this.set({ endDate: e.target.value }),
       onTime: (e) => this.set({ endTime: e.target.value }),
       onVideo: (e) => this.set({ video: e.target.value }),
+      hasFile: !!(A && A.isFile(s.video)),
+      videoLink: A && A.isFile(s.video) ? '' : s.video,
+      fileStatus: s.uploading ? 'מעלה…' : A && A.isFile(s.video) ? 'הסרטון נשמר באתר' : 'לא נבחר קובץ',
+      onFile: (e) => this.uploadFile(e),
+      removeVideo: () => this.set({ video: '' }),
+      uploading: !!s.uploading,
+      pct: String(s.pct || 0),
+      hasUploadError: !!s.uploadError,
+      uploadError: s.uploadError || '',
       toggleActive: () => this.set({ active: !s.active }),
       hasError: !!s.error, error: s.error,
-      busy: !!s.busy, saveLabel: s.busy ? 'שומר…' : 'שמירה', save: () => this.save(),
+      busy: !!s.busy || !!s.uploading, saveLabel: s.busy ? 'שומר…' : s.uploading ? 'מעלה סרטון…' : 'שמירה', save: () => this.save(),
       canDelete: !!s.id,
       askDelete: () => this.set({ confirming: true }),
       cancelDelete: () => this.set({ confirming: false }),

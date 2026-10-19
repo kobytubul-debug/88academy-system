@@ -388,6 +388,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <sc-if value="{{exampleReal}}" hint-placeholder-val="{{ false }}">
 <div ref="{{setExampleBox}}" style="margin-top: 12px;">
 <sc-if value="{{exampleHasEmbed}}" hint-placeholder-val="{{ true }}"><div style="position: relative; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; border: 1px solid #E1E5E2; background: #111413;"><iframe src="{{exampleEmbed}}" title="{{exampleArtLabel}}" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen="" style="position: absolute; inset: 0; width: 100%; height: 100%; border: 0;"></iframe></div></sc-if>
+<sc-if value="{{exampleIsFile}}" hint-placeholder-val="{{ false }}"><video src="{{exampleUrl}}" controls="" preload="metadata" playsinline="" onEnded="{{onExampleEnded}}" style="display: block; width: 100%; aspect-ratio: 16 / 9; border-radius: 12px; border: 1px solid #E1E5E2; background: #111413;"></video></sc-if>
 <sc-if value="{{exampleLinkOnly}}" hint-placeholder-val="{{ false }}"><a href="{{exampleUrl}}" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 18px; border-radius: 999px; background: #121413; color: #FFFFFF; text-decoration: none; font-size: 15px; font-weight: 600;">פתיחת הסרטון בחלון חדש</a></sc-if>
 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-top: 12px;">
 <sc-if value="{{exampleNotWatched}}" hint-placeholder-val="{{ true }}"><button type="button" class="ghost-dark" onClick="{{markWatched}}" style="display: inline-flex; align-items: center; gap: 8px; height: 42px; padding: 0 16px; border: 1.5px solid #121413; border-radius: 999px; background: #FFFFFF; color: #121413; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;">{{exampleWatchLabel}}</button></sc-if>
@@ -551,6 +552,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 </dl>
 </section>
 <div style="display: flex; align-items: center; gap: 12px; margin-top: 18px; padding: 18px 22px; background: {{challengeNoteBg}}; border: 1px solid {{challengeNoteBorder}}; border-radius: 16px; font-size: 16px; color: #2C322F;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5E6762" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>{{challengeLockedText}}</div>
+<sc-if value="{{challengeIsFile}}" hint-placeholder-val="{{ false }}"><video src="{{challengeVideoUrl}}" controls="" preload="metadata" playsinline="" style="display: block; width: 100%; margin-top: 18px; aspect-ratio: 16 / 9; border-radius: 16px; border: 1px solid #E1E5E2; background: #111413;"></video></sc-if>
 <sc-if value="{{challengeHasEmbed}}" hint-placeholder-val="{{ false }}"><div style="position: relative; margin-top: 18px; aspect-ratio: 16 / 9; border-radius: 16px; overflow: hidden; border: 1px solid #E1E5E2; background: #111413;"><iframe src="{{challengeEmbed}}" title="סרטון הדגמה לאתגר" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen="" style="position: absolute; inset: 0; width: 100%; height: 100%; border: 0;"></iframe></div></sc-if>
 <sc-if value="{{challengeCanSubmit}}" hint-placeholder-val="{{ false }}">
 <section aria-labelledby="ch-submit-title" style="margin-top: 18px; background: #FFFFFF; border: 2px solid #121413; border-radius: 20px; padding: 22px 24px;">
@@ -3294,12 +3296,14 @@ class Component extends DCLogic {
       exampleNone: !!(window.Academy && window.Academy.on) && !skill.video,
       exampleEmbed: (window.Academy && window.Academy.on && window.Academy.embedUrl(skill.video)) || '',
       exampleHasEmbed: !!(window.Academy && window.Academy.on && window.Academy.embedUrl(skill.video)),
-      exampleLinkOnly: !!(window.Academy && window.Academy.on && skill.video && !window.Academy.embedUrl(skill.video)),
+      exampleIsFile: !!(window.Academy && window.Academy.on && window.Academy.isFile(skill.video)),
+      exampleLinkOnly: !!(window.Academy && window.Academy.on && skill.video && !window.Academy.isFile(skill.video) && !window.Academy.embedUrl(skill.video)),
       exampleUrl: skill.video || '#',
       exampleWatched: s.ledger.some((e) => e.kind === 'video' && e.skill === skill.id),
       exampleNotWatched: !s.ledger.some((e) => e.kind === 'video' && e.skill === skill.id),
       exampleWatchLabel: this.rules().video > 0 ? 'צפיתי עד הסוף · ' + this.sg(this.rules().video) + ' מטבעות' : 'צפיתי עד הסוף',
       markWatched: () => this.videoFinished('example'),
+      onExampleEnded: () => { if (!s.ledger.some((e) => e.kind === 'video' && e.skill === skill.id)) this.videoFinished('example'); },
       muted: !!s.muted,
       soundOn: !s.muted,
       muteLabel: s.muted ? 'ביטול השתקה' : 'השתקה',
@@ -3362,6 +3366,7 @@ class Component extends DCLogic {
       challengeEmbed: (window.Academy && window.Academy.on && window.Academy.embedUrl(challenge.video)) || '',
       challengeHasEmbed: !!(window.Academy && window.Academy.on && window.Academy.embedUrl(challenge.video)),
       challengeVideoUrl: challenge.video || '#',
+      challengeIsFile: !!(window.Academy && window.Academy.on && window.Academy.isFile(challenge.video)),
       challengeTries: chFlights.map((f) => {
         const c = this.flightChip(f.status);
         return { id: f.id, at: f.at, statusLabel: c.label, chipBg: c.bg, chipBorder: c.border, chipColor: c.color, hasFeedback: !!f.feedback, feedback: f.feedback || '', watch: () => this.openVideo({ title: challenge.title, sub: 'הניסיון שלכם · ' + f.at, note: f.feedback ? 'משוב: ' + f.feedback : '', demoSkill: null, url: f.link || '' }) };

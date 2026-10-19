@@ -50,6 +50,7 @@ function str(v, max) {
 }
 function url(v) {
   const t = str(v, 500);
+  if (/^\/media\/[A-Za-z0-9_-]+\.(mp4|m4v|mov|webm)$/.test(t)) return t;
   return /^https?:\/\/\S+$/i.test(t) ? t : '';
 }
 

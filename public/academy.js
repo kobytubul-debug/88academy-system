@@ -29,6 +29,28 @@
   }
   A.request = req;
 
+  // Sends a video file from this computer to the server. onProgress gets 0–100. Resolves { ok, url } or { ok: false, error }.
+  A.upload = function (file, onProgress) {
+    return new Promise(function (resolve) {
+      var x = new XMLHttpRequest();
+      x.open('POST', '/api/admin/upload');
+      x.setRequestHeader('X-Academy', '1');
+      x.setRequestHeader('X-File-Name', encodeURIComponent(file.name || 'video.mp4'));
+      x.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
+      x.upload.onprogress = function (e) { if (e.lengthComputable && onProgress) onProgress(Math.round(e.loaded / e.total * 100)); };
+      x.onload = function () {
+        var j = {};
+        try { j = JSON.parse(x.responseText || '{}'); } catch (e) {}
+        if (x.status === 200 && j.url) resolve({ ok: true, url: j.url, name: j.name });
+        else resolve({ ok: false, error: j.error || 'ההעלאה נכשלה (' + x.status + '). נסו שוב.' });
+      };
+      x.onerror = function () { resolve({ ok: false, error: 'אין חיבור לשרת. בדקו את האינטרנט ונסו שוב.' }); };
+      x.send(file);
+    });
+  };
+  // A video uploaded to this site (played with the browser's own player).
+  A.isFile = function (u) { return /^\/media\/[A-Za-z0-9_-]+\.(mp4|m4v|mov|webm)$/.test(String(u || '')); };
+
   if (!boot) return;
 
   // ---------- events ----------
