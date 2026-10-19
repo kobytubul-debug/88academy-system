@@ -30,10 +30,10 @@
   A.request = req;
 
   // Sends a video file from this computer to the server. onProgress gets 0–100. Resolves { ok, url } or { ok: false, error }.
-  A.upload = function (file, onProgress) {
+  A.upload = function (file, onProgress, endpoint) {
     return new Promise(function (resolve) {
       var x = new XMLHttpRequest();
-      x.open('POST', '/api/admin/upload');
+      x.open('POST', endpoint || '/api/admin/upload');
       x.setRequestHeader('X-Academy', '1');
       x.setRequestHeader('X-File-Name', encodeURIComponent(file.name || 'video.mp4'));
       x.setRequestHeader('Content-Type', file.type || 'application/octet-stream');

@@ -164,6 +164,13 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <sc-if value="{{noChallenges}}" hint-placeholder-val="{{ false }}"><li style="padding: 18px 20px; font-size: 14px; color: #5E6762;">אין אתגרים עדיין. מוסיפים אתגר בכפתור ״אתגר״ למעלה.</li></sc-if>
 </ul>
 </section>
+<h2 id="vid-title" style="margin: 40px 0 6px; font-size: 22px; line-height: 1.3; font-weight: 600; color: #121413;">סרטוני טיסה של סטודנטים</h2>
+<p style="margin: 0 0 14px; font-size: 14px; color: #545D58;">סטודנטים יכולים להעלות סרטון ישר מהטלפון, או להדביק קישור. סרטון שהועלה נשמר עד שבודקים אותו, ועוד כמה ימים אחרי, ואז נמחק כדי לפנות מקום. הסטטוס, המשוב והמטבעות נשארים.</p>
+<section aria-labelledby="vid-title" style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 14px 18px; padding: 20px 22px; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px;">
+<div style="flex: 0 1 220px; min-width: 0;"><label for="video-days" style="display: block; margin-bottom: 6px; font-size: 14px; font-weight: 500; color: #3D4541;">ימים לשמירה אחרי הבדיקה</label><input id="video-days" type="number" min="1" max="365" inputmode="numeric" value="{{videoDays}}" onInput="{{onVideoDays}}" style="width: 100%; box-sizing: border-box; height: 42px; padding: 0 12px; background: #FFFFFF; border: 1px solid #D3D9D5; border-radius: 10px; font: inherit; font-size: 15px;"></div>
+<button type="button" class="btn-primary" onClick="{{saveVideoDays}}" disabled="{{busy}}" style="height: 42px; padding: 0 18px; border: 0; border-radius: 9px; background: #C7436A; color: #FFFFFF; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;">שמירה</button>
+<p style="flex: 1 1 260px; margin: 0; font-size: 13px; color: #5E6762;">{{diskText}}</p>
+</section>
 </main>
 </div>
 </x-dc>
@@ -308,6 +315,25 @@ class Component extends DCLogic {
     }, 'רמה ' + n + ' נוספה. עכשיו אפשר להוסיף לה מיומנויות.', { newLevel: false, nl: { name: '', desc: '', bonus: '0' } });
   }
 
+  settings() {
+    const A = this.A();
+    return (A && A.data.settings) || { videoDays: 14 };
+  }
+
+  saveVideoDays() {
+    const A = this.A();
+    const raw = this.st().videoDays != null ? this.st().videoDays : String(this.settings().videoDays);
+    const days = Number(raw);
+    if (!Number.isInteger(days) || days < 1 || days > 365) { this.setState({ error: 'מספר הימים צריך להיות בין 1 ל־365.' }); return; }
+    if (!A) return;
+    this.setState({ busy: true, error: '' });
+    A.call('saveSettings', { videoDays: days }).then((r) => {
+      if (!r.ok) { this.setState({ busy: false, error: r.error }); return; }
+      this.setState({ videoDays: null });
+      this.say('סרטוני טיסה יישמרו ' + days + ' ימים אחרי הבדיקה.');
+    });
+  }
+
   nextLevel() {
     return this.cur().levels.reduce((m, l) => Math.max(m, l.n), 0) + 1;
   }
@@ -428,7 +454,11 @@ class Component extends DCLogic {
           href: 'ChallengeEdit.dc.html?id=' + encodeURIComponent(c.id)
         };
       }),
-      noChallenges: cur.challenges.length === 0
+      noChallenges: cur.challenges.length === 0,
+      videoDays: s.videoDays != null ? s.videoDays : String(this.settings().videoDays || 14),
+      onVideoDays: (e) => this.setState({ videoDays: e.target.value }),
+      saveVideoDays: () => this.saveVideoDays(),
+      diskText: this.settings().mediaFree != null ? 'מקום פנוי בדיסק כרגע: ' + (this.settings().mediaFree >= 1024 ? (this.settings().mediaFree / 1024).toFixed(1) + ' GB' : this.settings().mediaFree + ' MB') + '. כשהמקום נגמר, מגדילים את ה־Disk ב־Render.' : ''
     };
   }
 }

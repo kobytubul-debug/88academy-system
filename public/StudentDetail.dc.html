@@ -206,7 +206,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 </div>
 <p style="margin: 6px 0 0; font-size: 13px; color: #5E6762;">{{f.meta}}</p>
 <sc-if value="{{f.hasNote}}" hint-placeholder-val="{{ false }}"><p style="margin: 10px 0 0; font-size: 14px; line-height: 1.55; color: #3D4541;">הערת הסטודנט: {{f.note}}</p></sc-if>
-<a href="{{f.link}}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 14px; font-weight: 500; color: #17694F;">צפייה בסרטון הטיסה<span aria-hidden="true">↗</span></a>
+<sc-if value="{{f.isFile}}" hint-placeholder-val="{{ false }}"><video src="{{f.link}}" controls="" preload="metadata" playsinline="" style="display: block; width: 100%; max-width: 640px; margin-top: 10px; aspect-ratio: 16 / 9; border-radius: 12px; background: #111413;"></video></sc-if>
+<sc-if value="{{f.isLink}}" hint-placeholder-val="{{ true }}"><a href="{{f.link}}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 14px; font-weight: 500; color: #17694F;">צפייה בסרטון הטיסה<span aria-hidden="true">↗</span></a></sc-if>
+<sc-if value="{{f.gone}}" hint-placeholder-val="{{ false }}"><p style="margin: 10px 0 0; font-size: 13px; color: #5E6762;">הסרטון נמחק מהאתר אחרי הבדיקה, כדי לפנות מקום.</p></sc-if>
 <sc-if value="{{f.hasFeedback}}" hint-placeholder-val="{{ false }}"><p style="margin: 10px 0 0; padding: 10px 12px; background: #F7F8F7; border-radius: 10px; font-size: 14px; line-height: 1.55; color: #3D4541;">המשוב: {{f.feedback}}</p></sc-if>
 <sc-if value="{{f.isReview}}" hint-placeholder-val="{{ true }}">
 <label for="{{f.fbId}}" style="display: block; margin: 14px 0 6px; font-size: 14px; font-weight: 500; color: #3D4541;">משוב לסטודנט <span style="font-weight: 400; color: #5E6762;">(לא חובה)</span></label>
@@ -725,6 +727,9 @@ class Component extends DCLogic {
         meta: 'הוגשה ' + A.fmtDate(f.at) + (f.reviewedAt ? ' · נבדקה ' + A.fmtDate(f.reviewedAt) + (f.reviewer ? ' על ידי ' + f.reviewer : '') : ''),
         hasNote: !!f.note, note: f.note || '',
         link: f.link || '#',
+        isFile: !!f.link && A.isFile(f.link),
+        isLink: !!f.link && !A.isFile(f.link),
+        gone: !f.link && !!f.videoGone,
         hasFeedback: !review && !!f.feedback, feedback: f.feedback || '',
         isReview: review,
         fbId: 'fb-' + f.id,

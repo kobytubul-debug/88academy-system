@@ -17,6 +17,7 @@ const PUBLIC = path.join(__dirname, 'public');
 // Videos the admin uploads live next to the data file, on the same disk.
 const MEDIA_DIR = path.join(DATA_DIR, 'media');
 const MAX_UPLOAD = (Number(process.env.MAX_UPLOAD_MB) || 500) * 1024 * 1024;
+const MAX_FLIGHT = (Number(process.env.MAX_FLIGHT_MB) || 200) * 1024 * 1024;
 const VIDEO_TYPES = { '.mp4': 'video/mp4', '.m4v': 'video/mp4', '.mov': 'video/quicktime', '.webm': 'video/webm' };
 const COOKIE = 'aca_sid';
 const SESSION_DAYS = 30;
@@ -64,6 +65,8 @@ function load() {
   }
   db.sessions = db.sessions || {};
   db.activity = db.activity || [];
+  db.uploads = db.uploads || {};
+  db.settings = Object.assign({ videoDays: 14 }, db.settings || {});
   db.progress = db.progress || {};
   const cur = M.cleanCurriculum(db.curriculum || M.curriculumDefaults());
   db.curriculum = typeof cur === 'string' ? M.curriculumDefaults() : cur;
@@ -143,7 +146,11 @@ function bootFor(user) {
   const base = { me: publicUser(user), today: M.today(), now: M.stamp(), units: db.units, rewards, scoring: db.scoring, levels: M.LEVELS, skills: M.SKILLS, challenges: M.CHALLENGES,
     allSkills: M.ALL_SKILLS.map((k) => ({ id: k.id, name: k.name, level: k.level, active: k.active })),
     allChallenges: M.ALL_CHALLENGES.map((c) => ({ id: c.id, title: c.title, points: c.points, active: c.active })) };
-  if (user.role === 'admin') base.curriculum = db.curriculum;
+  base.settings = { videoDays: db.settings.videoDays, maxFlightMb: Math.round(MAX_FLIGHT / 1048576) };
+  if (user.role === 'admin') {
+    base.curriculum = db.curriculum;
+    base.settings.mediaFree = Number.isFinite(freeBytes()) ? Math.round(freeBytes() / 1048576) : null;
+  }
   if (user.role === 'student') {
     base.progress = progressOf(user.id);
   } else if (user.role === 'admin') {
@@ -516,6 +523,14 @@ const ADMIN_ACTIONS = {
     log(me, 'settings', String(b.note || 'עדכן את תוכנית הלימודים').slice(0, 200));
     return { ok: true };
   },
+  saveSettings(me, b) {
+    const days = Math.trunc(Number(b.videoDays));
+    if (!(days >= 1 && days <= 365)) return 'מספר הימים צריך להיות בין 1 ל־365.';
+    db.settings.videoDays = days;
+    log(me, 'settings', 'סרטוני טיסה נשמרים ' + days + ' ימים אחרי הבדיקה');
+    cleanFlightVideos();
+    return { ok: true };
+  },
   saveScoring(me, b) {
     if (!b.scoring || typeof b.scoring !== 'object' || !b.scoring.rules) return 'נתונים חסרים.';
     db.scoring = b.scoring;
@@ -540,15 +555,17 @@ function freeBytes() {
 }
 
 // The admin's browser sends the file as is; it is written to a temporary name and renamed when complete.
-function upload(req, res, user) {
+function upload(req, res, user, opts) {
+  opts = opts || {};
+  const max = opts.max || MAX_UPLOAD;
   const name = decodeURIComponent(String(req.headers['x-file-name'] || 'video.mp4'));
   const ext = path.extname(name).toLowerCase();
   if (!VIDEO_TYPES[ext]) return json(res, 400, { error: 'אפשר להעלות סרטונים מסוג MP4, MOV, M4V או WEBM.' });
   const size = Number(req.headers['content-length']) || 0;
   if (!size) return json(res, 411, { error: 'הקובץ ריק.' });
-  if (size > MAX_UPLOAD) return json(res, 413, { error: 'הקובץ גדול מדי. אפשר עד ' + Math.round(MAX_UPLOAD / 1048576) + ' מגה־בייט. כדאי לכווץ את הסרטון, או להעלות אותו ל־YouTube ולהדביק קישור.' });
-  if (size > freeBytes() - 50 * 1048576) return json(res, 507, { error: 'אין מספיק מקום בדיסק. מגדילים את ה־Disk ב־Render (Disk ← Size), או מעלים את הסרטון ל־YouTube ומדביקים קישור.' });
-  const id = 'v' + Date.now().toString(36) + crypto.randomBytes(4).toString('hex');
+  if (size > max) return json(res, 413, { error: 'הקובץ גדול מדי. אפשר עד ' + Math.round(max / 1048576) + ' מגה־בייט. כדאי לקצר את הסרטון, או להעלות אותו ל־YouTube ולהדביק קישור.' });
+  if (size > freeBytes() - 50 * 1048576) return json(res, 507, { error: opts.owner ? 'אין כרגע מקום לסרטונים באתר. העלו את הסרטון ל־YouTube או ל־Google Drive והדביקו קישור, ועדכנו את המדריך.' : 'אין מספיק מקום בדיסק. מגדילים את ה־Disk ב־Render (Disk ← Size), או מעלים את הסרטון ל־YouTube ומדביקים קישור.' });
+  const id = (opts.owner ? 'f' : 'v') + Date.now().toString(36) + crypto.randomBytes(4).toString('hex');
   const tmp = path.join(MEDIA_DIR, id + '.part');
   const out = fs.createWriteStream(tmp);
   let got = 0;
@@ -562,7 +579,7 @@ function upload(req, res, user) {
   };
   req.on('data', (c) => {
     got += c.length;
-    if (got > MAX_UPLOAD || got > size) { fail(413, 'הקובץ גדול מדי.'); req.destroy(); }
+    if (got > max || got > size) { fail(413, 'הקובץ גדול מדי.'); req.destroy(); }
   });
   req.on('aborted', () => fail(400, 'ההעלאה הופסקה.'));
   req.pipe(out);
@@ -573,7 +590,8 @@ function upload(req, res, user) {
     const final = id + ext;
     fs.rename(tmp, path.join(MEDIA_DIR, final), (err) => {
       if (err) return fail(500, 'שמירת הקובץ נכשלה.');
-      log(user, 'settings', 'העלה סרטון: ' + name.slice(0, 80));
+      if (opts.owner) db.uploads[final] = { uid: user.id, at: Date.now(), size: got };
+      else log(user, 'settings', 'העלה סרטון: ' + name.slice(0, 80));
       save();
       json(res, 200, { url: '/media/' + final, name: name.slice(0, 120), size: got });
     });
@@ -581,8 +599,10 @@ function upload(req, res, user) {
 }
 
 // Plays a video, with byte ranges so the player can jump around.
-function sendMedia(req, res, name) {
+function sendMedia(req, res, name, user) {
   if (!/^[A-Za-z0-9_-]+\.(mp4|m4v|mov|webm)$/.test(name)) return send(res, 404, 'Not found');
+  const up = db.uploads[name];
+  if (up && user.role !== 'admin' && up.uid !== user.id) return send(res, 403, 'Forbidden');
   const full = path.join(MEDIA_DIR, name);
   let st;
   try { st = fs.statSync(full); } catch (e) { return send(res, 404, 'Not found'); }
@@ -610,11 +630,44 @@ function cleanMedia() {
   fs.readdir(MEDIA_DIR, (err, files) => {
     if (err) return;
     files.forEach((f) => {
-      if (used.has(f)) return;
+      if (used.has(f) || db.uploads[f]) return;
       const full = path.join(MEDIA_DIR, f);
       fs.stat(full, (e, st) => { if (!e && Date.now() - st.mtimeMs > 864e5) fs.rm(full, { force: true }, () => {}); });
     });
   });
+}
+
+// Students' flight videos are kept until the instructor has looked at them, and for a while after: then the file
+// goes and the flight keeps its status and feedback. Uploads no flight uses go after a day.
+function cleanFlightVideos() {
+  const days = Math.max(1, Number(db.settings.videoDays) || 14);
+  const limit = Date.now() - days * 864e5;
+  const used = new Set();
+  let changed = false;
+  Object.keys(db.progress).forEach((uid) => {
+    (db.progress[uid].flights || []).forEach((f) => {
+      const name = f.link && f.link.startsWith('/media/') ? f.link.slice(7) : '';
+      if (!name || !db.uploads[name]) return;
+      const done = f.status === 'approved' || f.status === 'rejected' || f.status === 'cancelled';
+      const at = Date.parse(String(f.reviewedAt || f.at || '').replace(' ', 'T') + ':00+03:00') || 0;
+      if (done && at && at < limit) {
+        fs.rm(path.join(MEDIA_DIR, name), { force: true }, () => {});
+        delete db.uploads[name];
+        f.link = '';
+        f.videoGone = true;
+        changed = true;
+      } else used.add(name);
+    });
+  });
+  Object.keys(db.uploads).forEach((name) => {
+    if (used.has(name)) return;
+    if (Date.now() - db.uploads[name].at > 864e5) {
+      fs.rm(path.join(MEDIA_DIR, name), { force: true }, () => {});
+      delete db.uploads[name];
+      changed = true;
+    }
+  });
+  if (changed) save();
 }
 
 async function handle(req, res) {
@@ -676,12 +729,16 @@ async function handle(req, res) {
       if (user.role !== 'student') return json(res, 403, { error: 'רק סטודנטים.' });
       const b = await readBody(req).catch(() => null);
       if (!b) return json(res, 400, { error: 'נתונים שגויים.' });
-      const ctx = { scoring: db.scoring, rewards: db.rewards, unit: user.unit, stockLeft };
+      const ctx = { scoring: db.scoring, rewards: db.rewards, unit: user.unit, stockLeft, ownsMedia: (link) => { const u = db.uploads[String(link).slice(7)]; return String(link).startsWith('/media/') && !!u && u.uid === user.id; } };
       const out = M.acceptStudent(progressOf(user.id), b.progress, ctx);
       db.progress[user.id] = out.doc;
       out.events.forEach((e) => log(user, e.kind, e.text, { target: user.id, ref: e.ref }));
       save();
       return json(res, 200, { progress: out.doc, rewards: db.rewards.map((x) => Object.assign({}, x, { left: stockLeft(x.id) })), scoring: db.scoring, today: M.today() });
+    }
+    if (p === '/api/upload/flight' && req.method === 'POST') {
+      if (user.role !== 'student') return json(res, 403, { error: 'רק סטודנטים.' });
+      return upload(req, res, user, { max: MAX_FLIGHT, owner: user.id });
     }
     if (p === '/api/admin/upload' && req.method === 'POST') {
       if (user.role !== 'admin') return json(res, 403, { error: 'רק מנהלים.' });
@@ -745,7 +802,7 @@ async function handle(req, res) {
   }
   if (p.startsWith('/media/')) {
     if (!user) return send(res, 401, 'Sign in');
-    return sendMedia(req, res, p.slice('/media/'.length));
+    return sendMedia(req, res, p.slice('/media/'.length), user);
   }
   const file = path.normalize(p).replace(/^[/\\]+/, '');
   if (!file || file.includes('..') || file.includes('/') || file.includes('\\')) return send(res, 404, 'Not found');
@@ -769,6 +826,8 @@ async function handle(req, res) {
 }
 
 load();
+cleanFlightVideos();
+setInterval(cleanFlightVideos, 3600e3).unref();
 http.createServer((req, res) => {
   handle(req, res).catch((err) => {
     console.error(err);

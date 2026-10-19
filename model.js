@@ -314,7 +314,7 @@ function acceptStudent(stored, incoming, ctx) {
   (Array.isArray(inc.flights) ? inc.flights : []).forEach((f) => {
     if (!f || typeof f.id !== 'string' || fids.has(f.id) || f.id.length > 40) return;
     const link = String(f.link || '').trim().slice(0, 500);
-    if (!/^https?:\/\/\S+$/i.test(link)) return;
+    if (!/^https?:\/\/\S+$/i.test(link) && !(ctx.ownsMedia && ctx.ownsMedia(link))) return;
     if (f.challenge != null) {
       const c = CHALLENGES.find((x) => x.id === String(f.challenge));
       if (!c || !challengeOpen(c, doc)) return;
