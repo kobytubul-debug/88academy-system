@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<title>סקירת מנהיגות — משקיף</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<dc-import name="Leadership" role="observer" observer="{{observerUser}}" hint-size="100%,1700px"></dc-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"observer":{"editor":"enum","options":["א. חזן · קבוצה א׳","ד. קרני · קבוצה ד׳","א. שפירא · קבוצה ה׳"],"default":"א. חזן · קבוצה א׳"},"$preview":{"width":1440,"height":1700}}'>
+class Component extends DCLogic {
+  // Which observer is logged in. Each one sees only the group assigned to them on the students page.
+  renderVals() {
+    const map = { 'א. חזן · קבוצה א׳': 'ahazan', 'ד. קרני · קבוצה ד׳': 'dkarni', 'א. שפירא · קבוצה ה׳': 'eshapira' };
+    return { observerUser: map[this.props.observer ?? 'א. חזן · קבוצה א׳'] || 'ahazan' };
+  }
+}
+</script>
+</body>
+</html>

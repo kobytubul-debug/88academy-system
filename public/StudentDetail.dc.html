@@ -1,0 +1,1624 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<title>כרטיס סטודנט — א. ראדין</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Karantina:wght@400;700&amp;family=Rubik:wght@400;500;600;700&amp;family=Unbounded:wght@500;700;800&amp;display=swap">
+<style>
+body{margin:0;background:#F5F6F4}
+a{color:#17694F}a:hover{color:#0E4F3A}
+.pill-hover:hover{background:#EEF1EF !important;color:#121413 !important}
+.tab-hover:hover{color:#121413 !important}
+.btn-ghost:hover{background:#EEF1EF !important;border-color:#B9C2BD !important}
+.btn-amber:hover{background:#FCE8EF !important;border-color:#D98AA5 !important}
+.btn-green:hover{background:#CDEFE1 !important;border-color:#6CC7A3 !important}
+.btn-primary:hover{background:#B13A5D !important}
+.btn-solid-danger:hover{background:#A61B1B !important}
+.seg[aria-pressed="false"]:hover{background:#EEF1EF !important;color:#1E2320 !important}
+.undo-link:hover{color:#0E4F3A !important;text-decoration:underline}
+.gnode:not([disabled]):hover{filter:brightness(1.18)}
+summary{list-style:none;cursor:pointer}
+summary::-webkit-details-marker{display:none}
+details[open] > summary .chev{transform:rotate(180deg)}
+details[open] > summary .chev-side{transform:rotate(-90deg)}
+input::placeholder{color:#6E7772}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid #C7436A;outline-offset:2px}
+</style>
+</helmet>
+<div dir="rtl" lang="he" style="min-height: 100vh; box-sizing: border-box; background: #F5F6F4; color: #1E2320; font-family: 'Rubik', system-ui, 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.5; color-scheme: light;">
+<sc-if value="{{impersonating}}" hint-placeholder-val="{{ false }}">
+<div style="background: #FCE8EF; border-bottom: 1px solid #EFB5C8;">
+<div style="max-width: 1280px; margin: 0 auto; padding: 10px clamp(16px, 4vw, 32px); box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; font-size: 14px; color: #7A2343;">
+<span>אתם צופים באתר בתור <span style="font-weight: 600; color: #121413;">{{displayName}}</span>. כל פעולה נרשמת ביומן הפעילות תחת השם שלכם.</span>
+<button type="button" class="btn-amber" onClick="{{stopImpersonating}}" style="height: 34px; padding: 0 14px; border-radius: 9px; border: 1px solid #D98AA5; background: #FFFFFF; color: #A8335A; font: inherit; font-size: 14px; font-weight: 500; cursor: pointer;">חזרה לחשבון המנהל</button>
+</div>
+</div>
+</sc-if>
+<header style="border-bottom: 5px solid #BDEFDB; background: #FFFFFF;">
+<div style="max-width: 1280px; margin: 0 auto; padding: 10px clamp(16px, 4vw, 32px); box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 28px;">
+<a href="Main.dc.html" aria-label="88ACADEMY — לעמוד הסקירה" style="display: flex; align-items: center; gap: 10px; text-decoration: none; white-space: nowrap;">
+<svg width="32.6" height="34" viewBox="0 0 100 104.15" aria-hidden="true" style="flex: none; display: block;"><path d="M74.4 104L71.1 104 67.8 103.6 66.6 103.3 64.3 102.7 61.5 101.5 59 100.2 56.6 98.7 55.4 97.7 53.7 96.2 52.2 94.5 52.1 94.2 54 90.9 55.5 87.7 55.6 87.6 55.8 87.6 58.1 90.4 59 91.3 60.1 92.3 61.5 93.3 62.7 94 65.1 95.3 67.9 96.2 70.9 96.7 73.6 96.8 76.6 96.4 78.1 96.1 80.4 95.3 82.2 94.4 84.2 93.1 86 91.7 87.4 90.4 88.9 88.6 89.7 87.4 90.8 85.4 91.7 83.2 92.3 81.6 92.6 80.2 92.8 78.7 92.9 76.2 92.6 73.3 92.2 71.4 91.3 68.8 90.4 66.9 89 64.8 87.3 62.8 85.4 61.1 83.6 59.7 81.6 58.6 79.6 57.8 76.6 57 74.9 56.8 73.4 56.7 71.1 56.7 68.8 57.1 66.3 57.8 64.1 58.7 61.6 60.2 59.8 61.6 58.6 62.7 57.5 64 56 65.9 54.7 68.3 53.7 70.4 53.1 72.8 52.8 74.9 52.7 77.4 52.9 80.1 53.7 83.4 53.2 84.9 51.7 88.4 50.5 90.5 49.6 92 47.8 94.4 46.1 96.2 44.4 97.8 41.9 99.6 40.4 100.5 38 101.7 36.2 102.4 33.6 103.3 31.4 103.7 28.6 104 26.4 104 24.4 103.9 21.3 103.4 18.8 102.7 16.1 101.6 13.5 100.3 11.1 98.7 9.8 97.7 8.1 96.2 6.5 94.4 5.2 92.7 3.7 90.3 2.6 88.4 1.4 85.4 0.8 83.2 0.2 80.1 0 77.4 0.1 74.6 0.3 72.4 1 69.3 1.8 66.6 3.3 63.3 5.1 60.3 6.1 59 8 57 10 55.2 12.5 53.4 15 52 14.9 51.8 14.7 51.7 12.5 50.4 10.8 49.2 9.8 48.4 8.1 46.8 6.8 45.5 5.3 43.7 4.4 42.4 3.4 40.7 2.7 39.2 1.6 36.7 0.9 34.4 0.5 32.7 0.3 31.4 0 28.7 -0 25.9 0.1 24.4 0.7 20.9 1.7 17.8 2.9 15 4.4 12.3 6 10.1 6.8 9.1 8.3 7.6 10.5 5.7 11.8 4.8 13.3 3.8 15 2.9 16.9 2 19.1 1.2 22.1 0.4 24.4 0.1 26.7 -0 29.6 0.1 31.6 0.3 35.2 1.2 37.5 2.1 40.2 3.3 42.5 4.8 44.3 6.1 46.2 7.8 47.8 9.6 47.8 9.8 47.7 10.1 46.5 12.1 44.9 15.1 44.4 16.4 44.2 16.6 44 16.6 43.9 16.4 42.8 15 41.8 13.8 40.2 12.3 37.9 10.6 37 10.1 35.2 9.1 32.9 8.3 29.6 7.6 26.6 7.5 23.8 7.7 21.4 8.3 20.1 8.7 18.4 9.4 15.9 10.8 14.1 12.2 12.5 13.8 10.9 15.6 9.7 17.4 8.9 18.9 8.4 20.1 7.6 22.6 7.2 24.6 7 26.9 7.2 29.6 7.6 32.1 8.3 34.2 9.3 36.5 10.7 38.9 12.5 41 14.1 42.6 15.8 43.9 17.6 45 19.8 46.1 22.3 46.9 25.2 47.4 28.1 47.5 30.1 47.2 32.6 46.7 34.9 45.9 37.2 44.7 39.4 43.2 41.5 41.4 42.5 40.2 44.3 37.7 45.3 35.7 46.1 33.9 46.8 31.4 47 30.1 47.2 28.2 47.1 25.9 46.9 23.6 46.2 21.1 46.2 20.6 46.7 19.1 48.1 15.8 49.3 13.6 50.7 11.5 52.2 9.6 53.4 8.1 54.8 6.8 57.1 4.9 58.3 4.1 60.6 2.8 62.6 1.9 65 1.1 67.6 0.4 70.3 0.1 73.1 -0 75.4 0.1 77.9 0.4 80.7 1.1 83.1 2 85.4 3.1 87.4 4.3 89.7 6 91.4 7.5 93.1 9.1 94.6 11 96.2 13.5 97.3 15.6 98.5 18.5 99.3 21.3 99.7 23.9 99.9 25.9 99.8 30 99.4 32.7 98.9 35 98 37.5 96.6 40.5 95.4 42.5 93.7 44.8 92 46.7 90 48.5 87.7 50.2 85 51.8 84.9 52 87.4 53.4 89.1 54.7 90.8 56 92.5 57.6 94.1 59.5 95.3 61.2 96.4 63 97.4 64.8 98.2 66.7 98.9 68.9 99.5 71.6 99.8 73.6 99.9 76.1 99.8 79.2 99.5 81.4 99.2 83.1 98.7 84.9 98 86.7 97.1 88.9 95.6 91.5 94.4 93.2 93 94.9 91.7 96.3 90 97.8 88.5 98.9 86.5 100.2 84.4 101.4 82.7 102.1 81.2 102.7 78.7 103.4 75.9 103.9ZM75 47.3L76.7 47.1 78.2 46.7 80.6 45.9 82.2 45.1 84.1 43.9 85.4 42.9 87.2 41.3 88.4 39.9 89.4 38.5 90.6 36.5 91.4 34.9 92.1 32.9 92.5 31.1 92.8 29.6 92.9 27.2 92.7 25.1 92.5 23.8 92.1 21.8 91.5 20.3 90.7 18.4 89.9 16.9 88.4 14.9 87.3 13.6 85.5 12 84.1 10.9 82.7 10.1 81.1 9.2 78.7 8.3 76.1 7.7 74.6 7.5 72.4 7.4 70.4 7.6 69.1 7.8 66.6 8.4 64.8 9.1 63 10 61.5 10.9 60 12.1 58.3 13.6 57.1 14.9 56.2 16.1 55.3 17.6 54.5 19.1 53.6 21.4 53 23.9 52.8 25.2 52.7 27.2 52.8 29.6 53.1 31.4 53.7 33.7 54.5 35.7 55.5 37.5 56.5 39 57.6 40.5 58.9 41.9 60.3 43.1 61.6 44 63.6 45.2 65.1 45.9 67.4 46.8 69.6 47.2 71.3 47.4 73.3 47.5ZM50.1 61.8L51.5 60 52.6 58.6 54.5 56.6 56.1 55.3 57.3 54.4 60.8 52.2 60.8 52 60.6 51.8 59 50.9 56.6 49.4 54.5 47.6 53.6 46.7 52.1 45 50 42.3 49.8 42.4 49.7 42.5 47.7 45.2 46.2 46.8 45.2 47.7 43.2 49.4 41 50.8 39.3 51.8 39 52 39 52.2 39.2 52.4 41.9 54 44.5 56 45.6 57 47.2 58.6 48.5 60.2 49.7 61.8 49.8 62 50 61.9ZM29 96.7L30.9 96.4 32.6 96 34.9 95.2 36.5 94.4 37.9 93.6 39.6 92.4 40.9 91.2 42.4 89.6 43.5 88.1 44.6 86.4 45.5 84.6 46.2 82.7 46.7 80.6 47 78.9 47.1 76.9 47 74.6 46.7 73.3 46.1 70.6 45.2 68.6 44.4 66.9 43.3 65.3 42.4 64 40.9 62.4 39.2 61 37.9 60 35.7 58.8 33.9 58 32.2 57.4 30.2 56.9 28.2 56.7 26.6 56.7 24.4 56.8 22.6 57.1 20.4 57.7 18.3 58.6 16.8 59.4 15 60.6 14.1 61.3 12.7 62.6 11.3 64.2 10.3 65.6 9.2 67.4 8.4 69.1 7.8 71.1 7.3 73.3 7.1 74.9 7 76.7 7.1 78.7 7.4 80.6 7.7 81.9 8.5 84.1 9.5 86.2 10.5 87.8 11.8 89.5 13.5 91.3 14.9 92.5 16.3 93.6 17.9 94.5 19.6 95.3 21.8 96.1 23.9 96.5 25.7 96.7 27.2 96.8Z" fill="#121413" fill-rule="evenodd"></path></svg>
+<svg width="93.9" height="13" viewBox="0 0 72.24 10" aria-hidden="true" style="flex: none; display: block;"><path d="M8.7 9.9L1 9.9 0.4 9.6 0.1 9.1 0 8.5 0.5 7.2 3.7 0.7 4 0.3 4.3 0.1 4.6 -0 5.2 -0 5.6 0.1 5.9 0.4 8.2 5.1 9.6 7.9 9.8 8.5 9.7 9.1 9.6 9.4 9.3 9.7ZM18.4 9.9L15.2 9.8 14.6 9.8 13.8 9.6 13.1 9.3 12.7 9 12.1 8.5 11.6 7.9 11.3 7.2 11 6.1 11 4.9 11 3.9 11.3 2.7 11.6 1.9 12.1 1.3 12.8 0.7 13.8 0.3 14.5 0.1 15.7 -0 18.5 0 19 0.1 19.4 0.5 19.6 0.9 19.6 1.5 19.4 1.9 19.1 2.2 18.5 2.4 15.7 2.5 14.8 2.7 14.2 3 13.9 3.3 13.6 3.9 13.5 4.5 13.5 5.4 13.7 6.1 14 6.7 14.5 7.1 14.9 7.2 15.5 7.4 18.5 7.4 19.1 7.6 19.3 7.8 19.5 8.1 19.6 8.4 19.6 9 19.5 9.3 19.3 9.5 19 9.7ZM29.4 9.9L21.8 9.9 21.5 9.8 21.2 9.6 20.8 9.1 20.7 8.7 20.8 8.4 21.4 6.9 24.5 0.8 24.8 0.3 25.2 0 25.5 -0 26 0 26.4 0.2 26.7 0.6 29 5.1 30.4 7.9 30.6 8.7 30.5 9.1 30.3 9.4 30 9.7ZM37 9.9L32.8 9.9 32.3 9.7 32.1 9.5 31.9 9.3 31.7 8.5 31.7 1.2 31.9 0.6 32.1 0.3 32.4 0.1 33.3 -0 36.9 -0 37.8 0.1 38.7 0.3 39.6 0.6 40.1 1 40.6 1.5 41.1 2.2 41.3 2.7 41.5 3.6 41.6 5.1 41.5 6.3 41.2 7.3 41 7.7 40.4 8.7 39.6 9.3 39 9.5 38.1 9.7ZM50.1 9.9L43.9 9.9 43.4 9.8 43 9.4 42.8 9.1 42.7 8.5 42.7 1.3 42.8 0.7 42.9 0.4 43.1 0.2 43.6 0 44 -0 50 -0 50.7 0.1 51.2 0.4 51.4 1 51.3 1.6 51 2.1 50.6 2.4 50 2.5 45.5 2.5 45.3 2.5 45.2 2.7 45.2 7 45.3 7.3 45.7 7.4 50.1 7.4 50.9 7.6 51.2 7.9 51.3 8.2 51.3 8.7 51.3 9.1 51.1 9.4 50.9 9.6 50.6 9.8ZM61.2 9.9L60.7 9.8 60.5 9.7 60.1 9.4 60 9.1 59.9 8.5 59.9 4.8 59.9 4.6 59.7 4.5 58.2 5.9 57.9 6.1 57.5 6.1 57 6.1 56.7 6 55.4 4.7 55.1 4.5 55 4.8 55 8.7 54.8 9.3 54.4 9.7 53.9 9.9 53.1 9.8 52.7 9.4 52.6 9.1 52.5 8.5 52.5 1.3 52.6 0.7 52.8 0.3 53.1 0.1 53.6 -0 54.2 0.1 54.5 0.2 54.9 0.6 57.2 2.8 57.5 3 57.7 2.8 59.9 0.7 60.4 0.2 60.7 0.1 61.2 0 61.6 0.1 62.1 0.4 62.3 0.7 62.4 1.3 62.4 8.8 62.3 9.3 62.1 9.5 61.6 9.8ZM67.8 9.9L67.2 9.8 66.9 9.6 66.6 9.3 66.5 8.5 66.5 5.4 66.3 5.1 63.6 1.8 63.4 1.2 63.5 0.6 63.7 0.3 64.2 0 64.8 -0 65.2 0.1 65.7 0.4 67.5 2.5 67.8 2.7 68 2.5 70 0.2 70.4 -0 71.4 0 71.9 0.3 72.1 0.6 72.1 1.2 72.1 1.6 71.8 2.1 69.1 5.2 69 5.7 69 8.4 68.9 9.1 68.7 9.4 68.5 9.6 68.2 9.8ZM37.4 7.3L37.9 7.2 38.4 6.9 38.7 6.6 38.9 6.1 39.1 5.4 39.1 4.6 39 3.9 38.8 3.4 38.5 3.1 38.2 2.8 37.3 2.5 36.4 2.5 34.6 2.5 34.3 2.5 34.2 2.8 34.2 7 34.3 7.3 34.5 7.4 35.1 7.4 36.9 7.4ZM49.7 6.1L47.2 6.1 46.4 6 46.1 5.8 45.9 5.4 45.8 4.8 46 4.3 46.3 3.9 47 3.7 49.4 3.7 50.1 3.8 50.4 4.1 50.6 4.3 50.8 4.9 50.7 5.2 50.6 5.5 50.4 5.8 50.1 6ZM6.4 7.3L6.5 7.2 6.4 7 5.1 4.3 4.9 4.1 4.8 4.2 3.4 7 3.3 7.2 3.4 7.3 3.6 7.4 4.5 7.4 6.1 7.4ZM27.2 7.3L27.2 7.2 27.2 7 25.9 4.3 25.7 4.1 25.5 4.2 24.7 5.8 24.1 7.2 24.1 7.3 24.3 7.4 25.7 7.4 27 7.4Z" fill="#121413" fill-rule="evenodd"></path></svg>
+</a>
+<nav aria-label="ניווט ראשי" style="flex: 1 1 auto; min-width: 0;">
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 2px;">
+<li><a href="Main.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">סקירה</a></li>
+<li><a href="Students.dc.html" aria-current="page" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid #9FDDC4; background: #D3F4E6; color: #121413; font-weight: 600; text-decoration: none; font-size: 15px; white-space: nowrap;">סטודנטים</a></li>
+<li><a href="Units.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">יחידות</a></li>
+<li><a href="Leadership.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">מנהיגות</a></li>
+<li><a href="Curriculum.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">תוכנית לימודים</a></li>
+<li><a href="Rewards.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">פרסים</a></li>
+<li><a href="PointsSettings.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">ניקוד</a></li>
+<li><a href="Activity.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">פעילות</a></li>
+</ul>
+</nav>
+<div style="display: flex; align-items: center; gap: 8px;">
+<span style="display: flex; align-items: center; gap: 10px; color: #3D4541; font-size: 15px; white-space: nowrap;"><span aria-hidden="true" style="width: 30px; height: 30px; border-radius: 50%; background: #76DEB8; color: #121413; display: grid; place-items: center; font-size: 14px; font-weight: 600;">{{meInitial}}</span>{{meName}}</span>
+<a href="/password" class="btn-ghost" aria-label="החלפת סיסמה" title="החלפת סיסמה" style="width: 40px; height: 40px; box-sizing: border-box; display: grid; place-items: center; padding: 0; background: transparent; border: 1px solid transparent; border-radius: 10px; color: #545D58; text-decoration: none;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"></circle><path d="M10.8 12.2L20 3M17 6l2.5 2.5M14.5 8.5L17 11"></path></svg></a>
+<a href="/logout" class="btn-ghost" aria-label="התנתקות" style="width: 40px; height: 40px; box-sizing: border-box; display: grid; place-items: center; padding: 0; background: transparent; border: 1px solid transparent; border-radius: 10px; color: #545D58; text-decoration: none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3"></path><path d="M10 8l-4 4 4 4"></path><path d="M6 12h10"></path></svg></a>
+</div>
+</div>
+</header>
+<main style="max-width: 944px; margin: 0 auto; padding: 40px clamp(16px, 4vw, 32px) 72px; box-sizing: border-box;">
+<sc-if value="{{isDeleted}}" hint-placeholder-val="{{ false }}">
+<div style="margin-top: 24px; padding: 32px 24px; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; text-align: center;">
+<p style="margin: 0; font-size: 19px; font-weight: 600; color: #121413;">החשבון של {{displayName}} נמחק.</p>
+<p style="margin: 8px 0 0; font-size: 14px; color: #545D58;">ההתקדמות, הטיסות והנקודות נמחקו יחד איתו.</p>
+<a href="Students.dc.html" class="btn-ghost" style="display: inline-flex; align-items: center; gap: 6px; height: 40px; margin-top: 18px; padding: 0 16px; box-sizing: border-box; border-radius: 10px; border: 1px solid #D3D9D5; background: #FFFFFF; color: #3D4541; text-decoration: none; font-size: 14px;"><span aria-hidden="true">→</span>חזרה לרשימת הסטודנטים</a>
+</div>
+</sc-if>
+<sc-if value="{{isPresent}}" hint-placeholder-val="{{ true }}">
+<div>
+<a href="Students.dc.html" style="display: inline-flex; align-items: center; gap: 6px; font-size: 14px; color: #17694F; text-decoration: none;"><span aria-hidden="true">→</span>סטודנטים</a>
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin-top: 14px;">
+<div style="min-width: 0;">
+<h1 style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin: 0; font-family: 'Karantina', 'Rubik', system-ui, sans-serif; font-size: 50px; line-height: 1; font-weight: 700; letter-spacing: 0.005em; color: #121413;">{{displayName}}<span dir="ltr" style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 16px; font-weight: 400; color: #5E6762;">@{{username}}</span></h1>
+<p style="margin: 8px 0 0; font-size: 14px; color: #545D58;">{{unitLabel}} · הצטרפות: {{joined}}</p>
+</div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
+<sc-if value="{{isDisabled}}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; align-items: center; height: 28px; padding: 0 10px; border-radius: 999px; background: #FDECEC; border: 1px solid #F2B8B8; color: #B42318; font-size: 13px; font-weight: 500;">החשבון מושבת</span></sc-if>
+<span style="font-size: 14px; color: #545D58;">רמה נוכחית: <span style="color: #121413; font-weight: 500;">{{currentLevelName}}</span></span>
+<span style="display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border-radius: 999px; background: #121413; color: #FFFFFF; font-size: 15px; font-weight: 500;"><span dir="ltr" style="font-family: 'Unbounded', 'Rubik', sans-serif; font-size: 16px; font-weight: 700; color: #76DEB8;">{{pointsNumber}}</span>{{pointsWord}} · {{rankName}}</span>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; margin-top: 28px; border-bottom: 1px solid #E1E5E2;">
+<div role="tablist" aria-label="פרטי הסטודנט" style="display: flex; flex-wrap: wrap; gap: 4px;">
+<button type="button" role="tab" aria-selected="{{tabProgress.selected}}" onClick="{{tabProgress.select}}" class="tab-hover" style="height: 46px; padding: 0 16px; margin-bottom: -1px; background: transparent; border: 0; border-bottom: 2px solid {{tabProgress.border}}; color: {{tabProgress.color}}; font: inherit; font-size: 15px; font-weight: {{tabProgress.weight}}; cursor: pointer;">התקדמות</button>
+<button type="button" role="tab" aria-selected="{{tabFlights.selected}}" onClick="{{tabFlights.select}}" class="tab-hover" style="height: 46px; padding: 0 16px; margin-bottom: -1px; background: transparent; border: 0; border-bottom: 2px solid {{tabFlights.border}}; color: {{tabFlights.color}}; font: inherit; font-size: 15px; font-weight: {{tabFlights.weight}}; cursor: pointer;">טיסות <span dir="ltr">({{flightCount}})</span></button>
+<button type="button" role="tab" aria-selected="{{tabTimeline.selected}}" onClick="{{tabTimeline.select}}" class="tab-hover" style="height: 46px; padding: 0 16px; margin-bottom: -1px; background: transparent; border: 0; border-bottom: 2px solid {{tabTimeline.border}}; color: {{tabTimeline.color}}; font: inherit; font-size: 15px; font-weight: {{tabTimeline.weight}}; cursor: pointer;">ציר זמן</button>
+<button type="button" role="tab" aria-selected="{{tabPoints.selected}}" onClick="{{tabPoints.select}}" class="tab-hover" style="height: 46px; padding: 0 16px; margin-bottom: -1px; background: transparent; border: 0; border-bottom: 2px solid {{tabPoints.border}}; color: {{tabPoints.color}}; font: inherit; font-size: 15px; font-weight: {{tabPoints.weight}}; cursor: pointer;">נקודות</button>
+<button type="button" role="tab" aria-selected="{{tabAccount.selected}}" onClick="{{tabAccount.select}}" class="tab-hover" style="height: 46px; padding: 0 16px; margin-bottom: -1px; background: transparent; border: 0; border-bottom: 2px solid {{tabAccount.border}}; color: {{tabAccount.color}}; font: inherit; font-size: 15px; font-weight: {{tabAccount.weight}}; cursor: pointer;">חשבון</button>
+</div>
+<a href="Activity.dc.html" style="display: inline-flex; align-items: center; gap: 6px; padding: 10px 4px; color: #3D4541; text-decoration: none; font-size: 15px;">יומן פעילות<span aria-hidden="true">←</span></a>
+</div>
+<sc-if value="{{isProgress}}" hint-placeholder-val="{{ true }}">
+<div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 20px; margin-top: 20px;">
+<p style="flex: 1 1 420px; min-width: 0; margin: 0; font-size: 14px; line-height: 1.6; color: #545D58;">טייס מנוסה? אפשר להעניק מיומנויות בודדות או רמה שלמה, עם הנקודות שלהן או בלי, כדי להתחיל מהמקום הנכון. סמנו <span style="font-weight: 500; color: #7A5300;">נדרש</span> כדי שהסטודנט יבצע תרגיל שוב: עד שיאושר מחדש הוא לא נספר כנרכש, {{redoTail}}<a href="PointsSettings.dc.html">הגדרות הניקוד</a>.</p>
+<button type="button" class="btn-ghost" onClick="{{toggleView}}" style="display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px; border-radius: 10px; border: 1px solid #D3D9D5; background: #FFFFFF; color: #3D4541; font: inherit; font-size: 14px; cursor: pointer;"><sc-if value="{{isListView}}" hint-placeholder-val="{{ true }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="5" r="2.5"></circle><circle cx="5" cy="19" r="2.5"></circle><circle cx="12" cy="19" r="2.5"></circle><circle cx="19" cy="19" r="2.5"></circle><path d="M12 7.5v9M10.6 7.1L6.2 16.8M13.4 7.1l4.4 9.7"></path></svg></sc-if><sc-if value="{{isGraphView}}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"></path><circle cx="4.5" cy="6" r="1" fill="currentColor"></circle><circle cx="4.5" cy="12" r="1" fill="currentColor"></circle><circle cx="4.5" cy="18" r="1" fill="currentColor"></circle></svg></sc-if>{{viewLabel}}</button>
+</div>
+<p aria-live="polite" style="position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;">{{announce}}</p>
+<sc-if value="{{isListView}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 16px; margin-top: 16px;">
+<sc-for list="{{levels}}" as="lv" hint-placeholder-count="3">
+<details open="" ref="{{lv.setRef}}" style="background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; overflow: hidden;">
+<summary style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding: 18px 22px;">
+<span style="font-size: 17px; font-weight: 600; color: #121413;">רמה {{lv.n}} · {{lv.name}}</span>
+<sc-if value="{{lv.isCurrent}}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; align-items: center; height: 24px; padding: 0 9px; border-radius: 999px; background: #FCE8EF; border: 1px solid #EFB5C8; color: #A8335A; font-size: 12px; font-weight: 500; white-space: nowrap;">רמה נוכחית</span></sc-if>
+<sc-if value="{{lv.isLocked}}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; align-items: center; gap: 5px; height: 24px; padding: 0 9px; border-radius: 999px; background: #F1F3F2; border: 1px solid #D3D9D5; color: #5E6762; font-size: 12px; font-weight: 500; white-space: nowrap;"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 10V8a4 4 0 0 1 8 0v2" fill="none" stroke="currentColor" stroke-width="2.4"></path><rect x="5.5" y="10" width="13" height="10" rx="2.5"></rect></svg>נעולה</span></sc-if>
+<span style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-inline-start: auto;">
+<sc-if value="{{lv.hasRequired}}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; color: #7A5300; font-variant-numeric: tabular-nums; white-space: nowrap;">{{lv.requiredText}}</span></sc-if>
+<span aria-hidden="true" style="display: block; width: 120px; height: 6px; border-radius: 999px; background: #E6EAE7; overflow: hidden;"><span style="display: block; width: {{lv.pct}}%; height: 100%; border-radius: 999px; background: #3FA37F; transition: width 0.3s ease;"></span></span>
+<span style="font-size: 14px; color: #545D58; font-variant-numeric: tabular-nums; white-space: nowrap;">{{lv.countText}}</span>
+<svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5E6762" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transition: transform 0.2s ease;"><path d="M6 9l6 6 6-6"></path></svg>
+</span>
+</summary>
+<ul style="list-style: none; margin: 0; padding: 0;">
+<sc-for list="{{lv.skills}}" as="k" hint-placeholder-count="7">
+<li ref="{{k.setRef}}" style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 12px 22px; border-top: 1px solid #E8EBE9; background: {{k.rowBg}}; transition: background 0.5s ease;">
+<span style="font-size: 16px; color: {{k.nameColor}};">{{k.name}}</span>
+<span style="font-size: 13px; color: #5E6762; font-variant-numeric: tabular-nums;">{{k.points}} נקודות</span>
+<span style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-inline-start: auto;">
+<sc-if value="{{k.isAcquired}}" hint-placeholder-val="{{ true }}">
+<span role="group" aria-label="{{k.groupLabel}}" style="display: inline-flex; gap: 2px; padding: 2px; border-radius: 999px; background: #F1F3F1; border: 1px solid #D3D9D5;">
+<button type="button" class="seg" aria-pressed="{{k.doneOn}}" onClick="{{k.markDone}}" style="display: inline-flex; align-items: center; gap: 5px; height: 28px; padding: 0 11px; border-radius: 999px; border: 1px solid {{k.doneBorder}}; background: {{k.doneBg}}; color: {{k.doneColor}}; font: inherit; font-size: 13px; font-weight: 500; cursor: pointer;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>נרכש</button>
+<button type="button" class="seg" aria-pressed="{{k.reqOn}}" onClick="{{k.markRequired}}" style="display: inline-flex; align-items: center; gap: 5px; height: 28px; padding: 0 11px; border-radius: 999px; border: 1px solid {{k.reqBorder}}; background: {{k.reqBg}}; color: {{k.reqColor}}; font: inherit; font-size: 13px; font-weight: 500; cursor: pointer;"><svg width="13" height="13" viewBox="-1 -1 26 26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 4v6h6"></path><path d="M3.5 15a9 9 0 1 0 2.1-9.4L1 10"></path></svg>נדרש</button>
+</span>
+<button type="button" class="btn-ghost" aria-label="{{k.revokeLabel}}" onClick="{{k.revoke}}" style="height: 36px; padding: 0 14px; border-radius: 9px; border: 1px solid #D3D9D5; background: #FFFFFF; color: #3D4541; font: inherit; font-size: 14px; cursor: pointer;">ביטול</button>
+</sc-if>
+<sc-if value="{{k.isOpen}}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; border-radius: 999px; background: #FCE8EF; border: 1px solid #EFB5C8; color: #A8335A; font-size: 13px; font-weight: 500;"><span aria-hidden="true" style="width: 6px; height: 6px; border-radius: 50%; background: #C7436A;"></span>זמין</span></sc-if>
+<sc-if value="{{k.isLocked}}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 10px; border-radius: 999px; background: #F1F3F2; border: 1px solid #D3D9D5; color: #5E6762; font-size: 13px; font-weight: 500;"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 10V8a4 4 0 0 1 8 0v2" fill="none" stroke="currentColor" stroke-width="2.4"></path><rect x="5.5" y="10" width="13" height="10" rx="2.5"></rect></svg>נעול</span></sc-if>
+<sc-if value="{{k.canGrant}}" hint-placeholder-val="{{ false }}"><button type="button" class="btn-amber" aria-label="{{k.grantLabel}}" onClick="{{k.grant}}" style="height: 36px; padding: 0 14px; border-radius: 9px; border: 1px solid #E9B2C4; background: #FFFFFF; color: #A8335A; font: inherit; font-size: 14px; font-weight: 500; cursor: pointer;">הענקה</button></sc-if>
+</span>
+<sc-if value="{{k.hasNote}}" hint-placeholder-val="{{ false }}"><p style="flex: 1 1 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 2px 12px; margin: 0; font-size: 13px; line-height: 1.5; color: #545D58;"><span>{{k.note}}</span><button type="button" class="undo-link" onClick="{{k.undo}}" style="padding: 2px 0; background: transparent; border: 0; color: #17694F; font: inherit; font-size: 13px; font-weight: 500; cursor: pointer;">ביטול הפעולה</button></p></sc-if>
+</li>
+</sc-for>
+</ul>
+<div class="lv-footer" style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; padding: 16px 22px; border-top: 1px solid #E8EBE9; background: #F7F8F7;">
+<sc-if value="{{lv.canGrant}}" hint-placeholder-val="{{ true }}">
+<button type="button" class="btn-green" onClick="{{lv.grant}}" style="height: 40px; padding: 0 16px; border-radius: 10px; border: 1px solid #A3DEC6; background: #DDF6EC; color: #17694F; font: inherit; font-size: 15px; font-weight: 500; cursor: pointer;">הענקת רמה שלמה</button>
+<label style="display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: {{lv.pointsColor}}; cursor: {{lv.pointsCursor}};"><input type="checkbox" checked="{{lv.withPoints}}" disabled="{{lv.pointsOff}}" onChange="{{lv.togglePoints}}" style="width: 18px; height: 18px; margin: 0; accent-color: #B23A5E; cursor: inherit;">{{lv.pointsLabel}}</label>
+</sc-if>
+<span style="display: flex; flex-wrap: wrap; gap: 10px; margin-inline-start: auto;">
+<sc-if value="{{lv.canRequire}}" hint-placeholder-val="{{ false }}"><button type="button" class="btn-ghost" onClick="{{lv.require}}" style="display: inline-flex; align-items: center; gap: 7px; height: 40px; padding: 0 14px; border-radius: 10px; border: 1px solid #D3D9D5; background: #FFFFFF; color: #3D4541; font: inherit; font-size: 14px; cursor: pointer;"><svg width="14" height="14" viewBox="-1 -1 26 26" fill="none" stroke="#7A5300" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 4v6h6"></path><path d="M3.5 15a9 9 0 1 0 2.1-9.4L1 10"></path></svg>ביצוע חוזר לכל הרמה</button></sc-if>
+<sc-if value="{{lv.canRevoke}}" hint-placeholder-val="{{ false }}"><button type="button" class="btn-ghost" onClick="{{lv.revoke}}" style="height: 40px; padding: 0 14px; border-radius: 10px; border: 1px solid #D3D9D5; background: #FFFFFF; color: #3D4541; font: inherit; font-size: 14px; cursor: pointer;">ביטול רמה שלמה</button></sc-if>
+</span>
+<sc-if value="{{lv.hasNote}}" hint-placeholder-val="{{ false }}"><p style="flex: 1 1 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 2px 12px; margin: 0; font-size: 13px; line-height: 1.5; color: #545D58;"><span>{{lv.note}}</span><button type="button" class="undo-link" onClick="{{lv.undo}}" style="padding: 2px 0; background: transparent; border: 0; color: #17694F; font: inherit; font-size: 13px; font-weight: 500; cursor: pointer;">ביטול הפעולה</button></p></sc-if>
+</div>
+</details>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{isGraphView}}" hint-placeholder-val="{{ false }}">
+<div style="margin-top: 16px; background: #F7F8F7; border: 1px solid #E1E5E2; border-radius: 16px; overflow-x: auto;">
+<p style="margin: 0; padding: 16px 22px 0; font-size: 14px; color: #545D58;">לחיצה על מיומנות פותחת אותה ברשימה, ושם אפשר לשנות אותה.</p>
+<div style="position: relative; width: 860px; height: {{graphH}}px; margin: 0 auto;">
+<sc-for list="{{edges}}" as="e" hint-placeholder-count="43">
+<svg width="860" aria-hidden="true" style="position: absolute; top: 0; left: 0; height: {{graphH}}px; overflow: visible; pointer-events: none;"><path d="{{e.d}}" fill="none" stroke="{{e.color}}" stroke-width="2" stroke-linecap="round" stroke-dasharray="{{e.dash}}" opacity="{{e.opacity}}"></path><path d="{{e.head}}" fill="{{e.color}}" opacity="{{e.opacity}}"></path></svg>
+</sc-for>
+<sc-for list="{{nodes}}" as="g" hint-placeholder-count="24">
+<div style="position: absolute; left: {{g.left}}px; top: {{g.top}}px; width: {{g.boxW}}px; display: flex; flex-direction: column; align-items: center; gap: 6px;">
+<button type="button" class="gnode" disabled="{{g.inert}}" aria-label="{{g.aria}}" onClick="{{g.open}}" style="width: {{g.size}}px; height: {{g.size}}px; box-sizing: border-box; display: grid; place-items: center; padding: 0; border-radius: 50%; border: {{g.borderW}}px solid {{g.ring}}; background: #FFFFFF; box-shadow: {{g.glow}}; color: {{g.ring}}; cursor: {{g.cursor}};">
+<span style="width: calc(100% - 8px); height: calc(100% - 8px); box-sizing: border-box; display: grid; place-items: center; border-radius: 50%; border: 1px dashed {{g.innerRing}};">
+<sc-if value="{{g.iconCheck}}" hint-placeholder-val="{{ false }}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if>
+<sc-if value="{{g.iconRedo}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="-1 -1 26 26" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 4v6h6"></path><path d="M3.5 15a9 9 0 1 0 2.1-9.4L1 10"></path></svg></sc-if>
+<sc-if value="{{g.iconPlay}}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 4.8v14.4L20 12z"></path></svg></sc-if>
+<sc-if value="{{g.iconLock}}" hint-placeholder-val="{{ true }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 10V8a4 4 0 0 1 8 0v2" fill="none" stroke="currentColor" stroke-width="2"></path><rect x="5.5" y="10" width="13" height="10" rx="2.5"></rect></svg></sc-if>
+<sc-if value="{{g.iconDrone}}" hint-placeholder-val="{{ false }}"><svg width="38" height="38" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="7.5" cy="7.5" r="4.5"></circle><circle cx="24.5" cy="7.5" r="4.5"></circle><circle cx="7.5" cy="24.5" r="4.5"></circle><circle cx="24.5" cy="24.5" r="4.5"></circle><path d="M10.7 10.7L21.3 21.3M21.3 10.7L10.7 21.3"></path><rect x="12.5" y="12.5" width="7" height="7" rx="2" fill="#FFFFFF"></rect></svg></sc-if>
+<sc-if value="{{g.iconTrophy}}" hint-placeholder-val="{{ false }}"><svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 3.5h10v5.5a5 5 0 0 1-10 0z"></path><path d="M7 5.5H4.5a3.5 3.5 0 0 0 3.2 4.6M17 5.5h2.5a3.5 3.5 0 0 1-3.2 4.6" fill="none" stroke="currentColor" stroke-width="1.6"></path><path d="M10.5 14h3v3.5h-3z"></path><rect x="7.5" y="17.5" width="9" height="3" rx="1"></rect></svg></sc-if>
+</span>
+</button>
+<sc-if value="{{g.hasSub}}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; color: #5E6762; white-space: nowrap;">{{g.sub}}</span></sc-if>
+<span style="max-width: {{g.labelMax}}px; font-size: {{g.labelSize}}px; line-height: 1.3; font-weight: {{g.labelWeight}}; color: {{g.labelColor}}; text-align: center;">{{g.label}}</span>
+</div>
+</sc-for>
+</div>
+<ul aria-label="מקרא" style="list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 22px; margin: 0; padding: 4px 16px 20px; font-size: 14px; color: #3D4541;">
+<li style="display: inline-flex; align-items: center; gap: 8px;"><span aria-hidden="true" style="width: 11px; height: 11px; border-radius: 50%; border: 2px solid #3FA37F;"></span>נרכש</li>
+<li style="display: inline-flex; align-items: center; gap: 8px;"><span aria-hidden="true" style="width: 11px; height: 11px; border-radius: 50%; border: 2px solid #E0AF2E;"></span>נדרש ביצוע חוזר</li>
+<li style="display: inline-flex; align-items: center; gap: 8px;"><span aria-hidden="true" style="width: 11px; height: 11px; border-radius: 50%; border: 2px solid #C7436A;"></span>זמין / רמה נוכחית</li>
+<li style="display: inline-flex; align-items: center; gap: 8px;"><span aria-hidden="true" style="width: 11px; height: 11px; border-radius: 50%; border: 2px solid #A3ADA7;"></span>נעול</li>
+</ul>
+</div>
+</sc-if>
+</div>
+</sc-if>
+<sc-if value="{{isFlights}}" hint-placeholder-val="{{ false }}">
+<sc-if value="{{noFlights}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; align-items: center; gap: 12px; margin-top: 24px; padding: 20px 22px; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; font-size: 15px; color: #545D58;">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6E7772" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="13" height="12" rx="2.5"></rect><path d="M16 10.5l5-3v9l-5-3"></path></svg>
+<span>עדיין לא הוגשו טיסות.</span>
+</div>
+</sc-if>
+<ul aria-label="טיסות" style="list-style: none; display: flex; flex-direction: column; gap: 14px; margin: 24px 0 0; padding: 0;">
+<sc-for list="{{flights}}" as="f" hint-placeholder-count="2">
+<li style="background: #FFFFFF; border: 1px solid {{f.border}}; border-radius: 16px; padding: 18px 20px;">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px;">
+<h3 style="margin: 0; font-size: 17px; line-height: 1.35; font-weight: 600; color: #121413;">{{f.skillName}}</h3>
+<span style="display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border-radius: 999px; background: {{f.chipBg}}; border: 1px solid {{f.chipBorder}}; color: {{f.chipColor}}; font-size: 13px; font-weight: 500; white-space: nowrap;">{{f.statusLabel}}</span>
+</div>
+<p style="margin: 6px 0 0; font-size: 13px; color: #5E6762;">{{f.meta}}</p>
+<sc-if value="{{f.hasNote}}" hint-placeholder-val="{{ false }}"><p style="margin: 10px 0 0; font-size: 14px; line-height: 1.55; color: #3D4541;">הערת הסטודנט: {{f.note}}</p></sc-if>
+<a href="{{f.link}}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 14px; font-weight: 500; color: #17694F;">צפייה בסרטון הטיסה<span aria-hidden="true">↗</span></a>
+<sc-if value="{{f.hasFeedback}}" hint-placeholder-val="{{ false }}"><p style="margin: 10px 0 0; padding: 10px 12px; background: #F7F8F7; border-radius: 10px; font-size: 14px; line-height: 1.55; color: #3D4541;">המשוב: {{f.feedback}}</p></sc-if>
+<sc-if value="{{f.isReview}}" hint-placeholder-val="{{ true }}">
+<label for="{{f.fbId}}" style="display: block; margin: 14px 0 6px; font-size: 14px; font-weight: 500; color: #3D4541;">משוב לסטודנט <span style="font-weight: 400; color: #5E6762;">(לא חובה)</span></label>
+<textarea id="{{f.fbId}}" rows="2" value="{{f.draft}}" onChange="{{f.onDraft}}" placeholder="מה היה טוב, ומה לשפר" style="display: block; width: 100%; box-sizing: border-box; min-height: 64px; padding: 10px 14px; background: #FFFFFF; border: 1px solid #D3D9D5; border-radius: 10px; color: #1E2320; font: inherit; font-size: 15px; line-height: 1.5; resize: vertical;"></textarea>
+<sc-if value="{{f.hasError}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 8px 0 0; font-size: 14px; color: #B42318;">{{f.error}}</p></sc-if>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px;">
+<button type="button" class="btn-primary" onClick="{{f.approve}}" disabled="{{f.busy}}" style="height: 42px; padding: 0 20px; border: 0; border-radius: 999px; background: #C7436A; color: #FFFFFF; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer;">אישור הטיסה · <span dir="ltr">+{{f.points}}</span> מטבעות</button>
+<button type="button" class="btn-ghost" onClick="{{f.reject}}" disabled="{{f.busy}}" style="height: 42px; padding: 0 18px; border-radius: 999px; border: 1px solid #D3D9D5; background: #FFFFFF; color: #3D4541; font: inherit; font-size: 15px; cursor: pointer;">החזרה לתיקון</button>
+</div>
+</sc-if>
+</li>
+</sc-for>
+</ul>
+</sc-if>
+<sc-if value="{{isTimeline}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 20px; margin-top: 24px;">
+<section aria-label="דרגה ונקודות" style="background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; padding: 22px 24px;">
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px;">
+<div>
+<p style="margin: 0; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; color: #5E6762;">הדרגה</p>
+<p style="margin: 4px 0 0; font-size: 34px; line-height: 1.1; font-weight: 700; color: #B23A5E;">{{rankName}}</p>
+</div>
+<p style="margin: 0; font-size: 17px; font-weight: 600; color: #121413;"><span style="font-variant-numeric: tabular-nums;">{{xpTotal}}</span> נקודות שנצברו</p>
+</div>
+<div aria-hidden="true" style="margin-top: 16px; height: 8px; border-radius: 999px; background: #E6EAE7; overflow: hidden;"><div style="width: {{xpPct}}%; height: 100%; border-radius: 999px; background: #2A9171;"></div></div>
+<sc-if value="{{hasNextRank}}" hint-placeholder-val="{{ true }}"><p style="margin: 10px 0 0; font-size: 14px; color: #545D58;">עוד <span style="font-weight: 600; color: #121413;">{{xpToNext}} נקודות</span> לדרגת <span style="font-weight: 600; color: #121413;">{{nextRankName}}</span></p></sc-if>
+<sc-if value="{{isTopRank}}" hint-placeholder-val="{{ false }}"><p style="margin: 10px 0 0; font-size: 14px; color: #545D58;">הדרגה הגבוהה ביותר במסלול.</p></sc-if>
+</section>
+<section aria-label="ציר זמן" style="background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; padding: 4px 24px;">
+<ol style="list-style: none; margin: 0; padding: 0;">
+<sc-for list="{{timeline}}" as="t" hint-placeholder-count="16">
+<li style="display: flex; align-items: flex-start; gap: 14px; padding: 16px 0; border-top: 1px solid {{t.divider}};">
+<span style="flex: none; display: grid; place-items: center; width: 24px; height: 24px;">
+<sc-if value="{{t.isRocket}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C7436A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path></svg></sc-if>
+<sc-if value="{{t.isCheck}}" hint-placeholder-val="{{ true }}"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#3FA37F"></circle><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></sc-if>
+<sc-if value="{{t.isRequired}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#E0AF2E"></circle><g transform="translate(6.6 6.3) scale(0.48)" fill="none" stroke="#FFFFFF" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4v6h6"></path><path d="M3.5 15a9 9 0 1 0 2.1-9.4L1 10"></path></g></svg></sc-if>
+<sc-if value="{{t.isRevoke}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#D84C4C"></circle><path d="M8.6 8.6l6.8 6.8M15.4 8.6l-6.8 6.8" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round"></path></svg></sc-if>
+<sc-if value="{{t.isMedal}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 13.5L7 22l5-3 5 3-1.5-8.5" fill="none" stroke="#C7436A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="12" cy="8.5" r="6.5" fill="#C7436A"></circle><circle cx="12" cy="8.5" r="3" fill="none" stroke="#FCE8EF" stroke-width="1.6"></circle></svg></sc-if>
+<sc-if value="{{t.isMedalDown}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 13.5L7 22l5-3 5 3-1.5-8.5" fill="none" stroke="#6E7772" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="12" cy="8.5" r="6.5" fill="#6E7772"></circle><circle cx="12" cy="8.5" r="3" fill="none" stroke="#F1F3F2" stroke-width="1.6"></circle></svg></sc-if>
+</span>
+<div style="flex: 1 1 auto; min-width: 0;">
+<p style="margin: 0; font-size: 16px; line-height: 1.45; color: #121413;">{{t.text}}<span style="font-size: 13px; color: #5E6762;">{{t.sub}}</span></p>
+<p style="margin: 3px 0 0; font-size: 13px; color: #5E6762;"><span dir="ltr">{{t.at}}</span> · {{t.ago}}</p>
+</div>
+<sc-if value="{{t.hasXp}}" hint-placeholder-val="{{ true }}"><span style="flex: none; display: inline-flex; align-items: center; gap: 4px; height: 26px; padding: 0 10px; border-radius: 999px; background: {{t.xpBg}}; border: 1px solid {{t.xpBorder}}; color: {{t.xpColor}}; font-size: 13px; font-weight: 500; white-space: nowrap;"><span dir="ltr">{{t.xpText}}</span> נקודות</span></sc-if>
+</li>
+</sc-for>
+</ol>
+</section>
+</div>
+</sc-if>
+<sc-if value="{{isPoints}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 20px; margin-top: 24px;">
+<dl style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr)); gap: 12px; margin: 0;">
+<div style="padding: 16px 18px; background: #121413; border-radius: 16px; color: #FFFFFF;"><dt style="font-size: 13px; color: #B8C2BD;">נצברו בסך הכול</dt><dd dir="ltr" style="margin: 4px 0 0; text-align: right; font-family: 'Unbounded', 'Rubik', sans-serif; font-size: 24px; font-weight: 700; color: #76DEB8;">{{xpTotal}}</dd></div>
+<div style="padding: 16px 18px; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px;"><dt style="font-size: 13px; color: #545D58;">יתרה למימוש</dt><dd dir="ltr" style="margin: 4px 0 0; text-align: right; font-family: 'Unbounded', 'Rubik', sans-serif; font-size: 24px; font-weight: 700; color: #121413;">{{balanceText}}</dd></div>
+<div style="padding: 16px 18px; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px;"><dt style="font-size: 13px; color: #545D58;">דרגה</dt><dd style="margin: 2px 0 0; font-family: 'Karantina', 'Rubik', sans-serif; font-size: 32px; line-height: 1; font-weight: 700; color: #121413;">{{rankName}}</dd></div>
+</dl>
+<section aria-labelledby="mix-title" style="background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; padding: 22px 24px;">
+<div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px;">
+<h2 id="mix-title" style="margin: 0; font-size: 18px; line-height: 1.35; font-weight: 600; color: #121413;">מאיפה הנקודות</h2>
+<span style="font-size: 14px; color: #545D58;">{{nextRankLine}}</span>
+</div>
+<div aria-hidden="true" style="display: flex; gap: 3px; height: 14px; margin-top: 14px; border-radius: 999px; overflow: hidden; background: #E6EAE7;">
+<sc-for list="{{mixBars}}" as="mb" hint-placeholder-count="4"><span style="flex: {{mb.grow}} 1 0; min-width: 4px; background: {{mb.color}};"></span></sc-for>
+</div>
+<ul style="list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 12px 24px; margin: 16px 0 0; padding: 0;">
+<sc-for list="{{mixRows}}" as="mr" hint-placeholder-count="5">
+<li style="display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: #3D4541;"><span aria-hidden="true" style="flex: none; width: 12px; height: 12px; margin-top: 4px; border-radius: 4px; background: {{mr.color}};"></span><span style="flex: 1 1 auto; min-width: 0;"><span style="display: block; color: #121413; font-weight: 500;">{{mr.name}}</span><span style="display: block; font-size: 12px; color: #5E6762;">{{mr.desc}}</span></span><span dir="ltr" style="font-family: 'Unbounded', 'Rubik', sans-serif; font-weight: 700; color: #121413;">{{mr.amount}}</span></li>
+</sc-for>
+</ul>
+</section>
+<section aria-labelledby="adjust-title" style="background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; padding: 22px 24px;">
+<h2 id="adjust-title" style="margin: 0 0 16px; font-size: 18px; line-height: 1.35; font-weight: 600; color: #121413;">התאמת נקודות</h2>
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px;">
+<div style="flex: 1 1 160px; min-width: 0;">
+<label for="pt-delta" style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #3D4541;">נקודות (+/-)</label>
+<input id="pt-delta" type="text" inputmode="numeric" dir="ltr" autocomplete="off" placeholder="+10 או -5" value="{{deltaInput}}" onChange="{{onDelta}}" onKeyDown="{{onPointsKey}}" aria-invalid="{{deltaInvalid}}" aria-describedby="pt-delta-error" style="width: 100%; box-sizing: border-box; height: 44px; padding: 0 14px; background: #FFFFFF; border: 1px solid {{deltaBorder}}; border-radius: 10px; color: #1E2320; font: inherit; font-size: 15px; font-variant-numeric: tabular-nums;">
+</div>
+<div style="flex: 3 1 260px; min-width: 0;">
+<label for="pt-reason" style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #3D4541;">סיבה</label>
+<input id="pt-reason" type="text" autocomplete="off" placeholder="לא חובה" value="{{reasonInput}}" onChange="{{onReason}}" onKeyDown="{{onPointsKey}}" style="width: 100%; box-sizing: border-box; height: 44px; padding: 0 14px; background: #FFFFFF; border: 1px solid #D3D9D5; border-radius: 10px; color: #1E2320; font: inherit; font-size: 15px;">
+</div>
+<button type="button" class="btn-primary" onClick="{{applyPoints}}" style="height: 44px; padding: 0 28px; border: 0; border-radius: 10px; background: #C7436A; color: #FFFFFF; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer;">החלה</button>
+</div>
+<sc-if value="{{hasDeltaError}}" hint-placeholder-val="{{ false }}"><p id="pt-delta-error" style="margin: 10px 0 0; font-size: 13px; color: #B42318;">{{deltaError}}</p></sc-if>
+<div aria-live="polite"><sc-if value="{{hasPointsFlash}}" hint-placeholder-val="{{ false }}"><p style="margin: 10px 0 0; font-size: 13px; color: #17694F;">{{pointsFlash}}</p></sc-if></div>
+</section>
+<section aria-label="היסטוריית נקודות" style="background: #F7F8F7; border: 1px solid #E1E5E2; border-radius: 16px; overflow: hidden;">
+<ul style="list-style: none; margin: 0; padding: 0;">
+<li style="display: grid; grid-template-columns: minmax(120px, 170px) minmax(0, 1fr) 80px; gap: 16px; padding: 12px 20px; border-bottom: 1px solid #E1E5E2; font-size: 13px; font-weight: 500; color: #5E6762;"><span>תאריך</span><span>סיבה</span><span style="text-align: left;">נקודות</span></li>
+<sc-for list="{{ledger}}" as="p" hint-placeholder-count="0">
+<li style="display: grid; grid-template-columns: minmax(120px, 170px) minmax(0, 1fr) 80px; gap: 16px; align-items: center; padding: 12px 20px; border-bottom: 1px solid #E8EBE9; font-size: 14px;">
+<span dir="ltr" style="text-align: right; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 13px; color: #3D4541;">{{p.date}}</span>
+<span style="min-width: 0; color: #2C322F;">{{p.reason}}</span>
+<span style="text-align: left; font-weight: 600; font-variant-numeric: tabular-nums; color: {{p.color}};"><span dir="ltr">{{p.amount}}</span></span>
+</li>
+</sc-for>
+<sc-if value="{{ledgerEmpty}}" hint-placeholder-val="{{ false }}"><li style="padding: 18px 20px; font-size: 14px; color: #5E6762;">עדיין אין נקודות.</li></sc-if>
+</ul>
+</section>
+</div>
+</sc-if>
+<sc-if value="{{isAccount}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 20px; margin-top: 24px;">
+<section aria-labelledby="acc-details-title" style="background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; padding: 22px 24px;">
+<h2 id="acc-details-title" style="margin: 0 0 18px; font-size: 18px; line-height: 1.35; font-weight: 600; color: #121413;">פרטים</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 18px 16px;">
+<div>
+<label for="acc-username" style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #3D4541;">שם משתמש</label>
+<input id="acc-username" type="text" autocomplete="off" spellcheck="false" value="{{accUsername}}" onChange="{{onAccUsername}}" onKeyDown="{{onDetailsKey}}" style="width: 100%; box-sizing: border-box; height: 44px; padding: 0 14px; background: #FFFFFF; border: 1px solid #D3D9D5; border-radius: 10px; color: #1E2320; font: inherit; font-size: 15px;">
+</div>
+<div>
+<label for="acc-name" style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #3D4541;">שם תצוגה</label>
+<input id="acc-name" type="text" autocomplete="off" value="{{accName}}" onChange="{{onAccName}}" onKeyDown="{{onDetailsKey}}" style="width: 100%; box-sizing: border-box; height: 44px; padding: 0 14px; background: #FFFFFF; border: 1px solid #D3D9D5; border-radius: 10px; color: #1E2320; font: inherit; font-size: 15px;">
+</div>
+<div>
+<label for="acc-role" style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #3D4541;">תפקיד</label>
+<div style="position: relative;">
+<select id="acc-role" value="{{accRole}}" onChange="{{onAccRole}}" style="appearance: none; -webkit-appearance: none; width: 100%; box-sizing: border-box; height: 44px; padding: 0 14px 0 40px; background: #FFFFFF; border: 1px solid #D3D9D5; border-radius: 10px; color: #1E2320; font: inherit; font-size: 15px; cursor: pointer;">
+<option value="student">סטודנט</option>
+<option value="observer">משקיף</option>
+<option value="admin">מנהל</option>
+</select>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5E6762" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); pointer-events: none;"><path d="M6 9l6 6 6-6"></path></svg>
+</div>
+</div>
+<div>
+<label for="acc-unit" style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #3D4541;">יחידה</label>
+<div style="position: relative;">
+<select id="acc-unit" value="{{accUnit}}" onChange="{{onAccUnit}}" style="appearance: none; -webkit-appearance: none; width: 100%; box-sizing: border-box; height: 44px; padding: 0 14px 0 40px; background: #FFFFFF; border: 1px solid #D3D9D5; border-radius: 10px; color: #1E2320; font: inherit; font-size: 15px; cursor: pointer;">
+<option value="">— ללא יחידה —</option>
+<sc-for list="{{unitOptions}}" as="o" hint-placeholder-count="6"><option value="{{o.id}}">{{o.name}}</option></sc-for>
+</select>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5E6762" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); pointer-events: none;"><path d="M6 9l6 6 6-6"></path></svg>
+</div>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; margin-top: 18px;">
+<label style="display: inline-flex; align-items: center; gap: 10px; align-self: flex-start; font-size: 15px; font-weight: 500; color: #1E2320; cursor: pointer;"><input type="checkbox" checked="{{accEarns}}" onChange="{{onAccEarns}}" style="width: 18px; height: 18px; margin: 0; accent-color: #B23A5E; cursor: pointer;">צובר נקודות</label>
+<p style="margin: 0; padding-inline-start: 28px; font-size: 13px; line-height: 1.55; color: #5E6762;">מיומנויות ואתגרים מזכים בנקודות שאפשר לממש בפרסים, והסטודנט רואה את הנקודות והפרסים. כשהאפשרות כבויה לא נצברות נקודות ולא מוצגים פרסים.</p>
+</div>
+<sc-if value="{{hasDetailsError}}" hint-placeholder-val="{{ false }}"><p style="margin: 14px 0 0; font-size: 13px; color: #B42318;">{{detailsError}}</p></sc-if>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 20px;">
+<button type="button" class="btn-primary" onClick="{{saveDetails}}" style="height: 44px; padding: 0 28px; border: 0; border-radius: 10px; background: #C7436A; color: #FFFFFF; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer;">שמירה</button>
+<span aria-live="polite" style="font-size: 14px; color: #17694F;">{{detailsFlash}}</span>
+</div>
+</section>
+<section aria-labelledby="acc-pass-title" style="background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; padding: 22px 24px;">
+<h2 id="acc-pass-title" style="margin: 0 0 14px; font-size: 18px; line-height: 1.35; font-weight: 600; color: #121413;">איפוס סיסמה</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 12px;">
+<input type="password" aria-label="סיסמה חדשה" autocomplete="new-password" placeholder="סיסמה חדשה (8 תווים לפחות)" value="{{newPassword}}" onChange="{{onNewPassword}}" onKeyDown="{{onPasswordKey}}" style="flex: 1 1 260px; min-width: 0; box-sizing: border-box; height: 44px; padding: 0 14px; background: #FFFFFF; border: 1px solid {{passwordBorder}}; border-radius: 10px; color: #1E2320; font: inherit; font-size: 15px;">
+<button type="button" class="btn-amber" onClick="{{resetPassword}}" style="height: 44px; padding: 0 22px; border-radius: 10px; border: 1px solid #E9B2C4; background: #FFFFFF; color: #A8335A; font: inherit; font-size: 15px; font-weight: 500; cursor: pointer;">איפוס</button>
+</div>
+<sc-if value="{{hasPasswordError}}" hint-placeholder-val="{{ false }}"><p style="margin: 10px 0 0; font-size: 13px; color: #B42318;">{{passwordError}}</p></sc-if>
+<div aria-live="polite"><sc-if value="{{hasPasswordFlash}}" hint-placeholder-val="{{ false }}"><p style="margin: 10px 0 0; font-size: 13px; color: #17694F;">{{passwordFlash}}</p></sc-if></div>
+</section>
+<section aria-labelledby="acc-remove-title" style="background: #FFFFFF; border: 1px solid #F2B8B8; border-radius: 16px; padding: 22px 24px;">
+<h2 id="acc-remove-title" style="margin: 0; font-size: 18px; line-height: 1.35; font-weight: 600; color: #B42318;">הסרת גישה</h2>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin-top: 8px;">
+<p style="flex: 1 1 360px; min-width: 0; margin: 0; font-size: 14px; line-height: 1.6; color: #545D58;">{{disableText}}</p>
+<button type="button" class="btn-amber" onClick="{{toggleDisabled}}" style="height: 40px; padding: 0 18px; border-radius: 10px; border: 1px solid #E9B2C4; background: #FFFFFF; color: #A8335A; font: inherit; font-size: 14px; font-weight: 500; cursor: pointer;">{{disableLabel}}</button>
+</div>
+<details ref="{{setDeleteBox}}" style="margin-top: 14px;">
+<summary style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 0; font-size: 14px; color: #B42318;"><svg class="chev-side" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transition: transform 0.2s ease;"><path d="M15 6l-6 6 6 6"></path></svg>מחיקה לצמיתות…</summary>
+<div style="margin-top: 10px; padding: 14px; background: #FDECEC; border: 1px solid #F2B8B8; border-radius: 12px;">
+<p style="margin: 0; font-size: 14px; line-height: 1.55; color: #7F1D1D;">המחיקה מסירה את החשבון יחד עם ההתקדמות, הטיסות והנקודות שלו. אי אפשר לבטל אותה.</p>
+<button type="button" class="btn-solid-danger" onClick="{{deleteAccount}}" style="margin-top: 12px; height: 38px; padding: 0 16px; border: 0; border-radius: 9px; background: #C62828; color: #FFFFFF; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;">מחיקת החשבון לצמיתות</button>
+</div>
+</details>
+</section>
+</div>
+</sc-if>
+</div>
+</sc-if>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"startTab":{"editor":"enum","options":["התקדמות","טיסות","ציר זמן","נקודות","חשבון"],"default":"התקדמות"},"$preview":{"width":1440,"height":2160}}'>
+class Component extends DCLogic {
+  defaults() {
+    const account = { name: 'א. ראדין', username: 'aradin', role: 'student', unit: 'a', earns: true };
+    const prog = {};
+    this.skills().forEach((k) => {
+      if (k.level <= 2) prog[k.id] = 'done';
+    });
+    return {
+      tab: null,
+      account: account,
+      draft: Object.assign({}, account),
+      detailsError: '',
+      detailsFlash: '',
+      newPassword: '',
+      passwordError: '',
+      passwordFlash: '',
+      deltaInput: '',
+      reasonInput: '',
+      deltaError: '',
+      pointsFlash: '',
+      ledger: this.ledgerSeed(),
+      impersonating: false,
+      disabled: false,
+      deleted: false,
+      prog: prog,
+      paid: this.paidSeed(),
+      levelPaid: { 1: 50, 2: 100 },
+      held: {},
+      heldBonus: {},
+      timeline: this.timelineSeed(),
+      withPoints: {},
+      last: null,
+      announce: '',
+      progView: 'list',
+      focusSkill: null
+    };
+  }
+
+  units() {
+    const A = window.Academy;
+    if (A && A.on) {
+      const map = {};
+      A.units().forEach((u) => { map[u.id] = u.name; });
+      return map;
+    }
+    return { a: "קבוצה א'", b: "קבוצה ב'", c: "קבוצה ג'", d: "קבוצה ד'", e: "קבוצה ה'", prep: 'קורס הכנה לפני גיוס היברידי' };
+  }
+
+  // ---------- curriculum ----------
+  levels() {
+    if (window.Academy && window.Academy.on) return window.Academy.levels().map((l) => ({ n: l.n, name: l.name }));
+    return [
+      { n: 1, name: 'אבני יסוד' },
+      { n: 2, name: 'תרגילי קורס פרופלור' },
+      { n: 3, name: 'תרגילים מתקדמים' }
+    ];
+  }
+
+  // Points per skill come from the scoring settings; `base` keeps the default (what was paid for levels 1–2).
+  skills() {
+    const sc = this.scoring();
+    const A = window.Academy;
+    if (A && A.on) {
+      if (this._skills && this._skillsFor === sc && this._skillsData === A.data) return this._skills;
+      this._skillsFor = sc;
+      this._skillsData = A.data;
+      this._skills = A.skills().map((k) => ({ id: k.id, level: k.level, name: k.name, base: A.skillPoints(k.id), points: A.skillPoints(k.id) }));
+      return this._skills;
+    }
+    if (!this._skills || this._skillsFor !== sc) {
+      this._skillsFor = sc;
+      this._skills = [
+        { id: 1, level: 1, name: 'שמירה על גובה', points: 20 },
+        { id: 2, level: 1, name: 'טיסה בקוו ישר', points: 20 },
+        { id: 3, level: 1, name: 'האטה ובלימה', points: 20 },
+        { id: 4, level: 1, name: 'סללום ימינה ושמאלה', points: 50 },
+        { id: 5, level: 1, name: 'שינוי גובה', points: 40 },
+        { id: 6, level: 1, name: 'פניות', points: 30 },
+        { id: 7, level: 1, name: 'שמיניות', points: 40 },
+        { id: 8, level: 2, name: 'עינוי סיני', points: 50 },
+        { id: 9, level: 2, name: 'מסלול', points: 20 },
+        { id: 10, level: 2, name: 'נחיתה', points: 25 },
+        { id: 11, level: 2, name: 'צילות', points: 25 },
+        { id: 12, level: 2, name: 'מדרגות', points: 80 },
+        { id: 13, level: 2, name: 'צינורות', points: 50 },
+        { id: 14, level: 3, name: 'נחיתות מדויקות', points: 30 },
+        { id: 15, level: 3, name: 'ירידה במדרגות', points: 60 },
+        { id: 16, level: 3, name: 'פיגומים', points: 50 },
+        { id: 17, level: 3, name: 'עליית מדרגות - שמאל', points: 80 },
+        { id: 18, level: 3, name: 'סיבוב 360 בפיר מעלית', points: 50 },
+        { id: 19, level: 3, name: 'מעבר בתוך המנוף', points: 50 },
+        { id: 20, level: 3, name: 'שמיניות קצרות', points: 50 }
+      ].map((k) => Object.assign(k, { base: k.points, points: sc.skills[k.id] != null ? sc.skills[k.id] : k.points }, window.Academy && window.Academy.on ? { name: window.Academy.skillName(k.id) } : {}));
+    }
+    return this._skills;
+  }
+
+  skill(id) {
+    return this.skills().find((k) => k.id === id);
+  }
+
+  // ---------- scoring settings (הגדרות ניקוד) ----------
+  // One points system, the same one the student sees: the points of each skill, a bonus for finishing a level, and
+  // points for logins, streaks, learning time and the other extras. The rank follows everything earned. The admin sets
+  // it all on the points-settings screen; it is saved in this browser, so every screen reads the same values.
+  scoringDefaults() {
+    return {
+      v: 1,
+      rules: {
+        login: { on: true, points: 5 },
+        streak3: { on: true, points: 10 },
+        streak7: { on: true, points: 30 },
+        time: { on: true, points: 5, minutes: 10, max: 3 },
+        video: { on: true, points: 5 },
+        first: { on: true, points: 10 },
+        quests: { on: true, points: 15 }
+      },
+      levelBonus: { on: true, 1: 50, 2: 100, 3: 150 },
+      skills: { 1: 20, 2: 20, 3: 20, 4: 50, 5: 40, 6: 30, 7: 40, 8: 50, 9: 20, 10: 25, 11: 25, 12: 80, 13: 50, 14: 30, 15: 60, 16: 50, 17: 80, 18: 50, 19: 50, 20: 50 },
+      ranks: [{ name: 'צוער', min: 0 }, { name: 'איש כנף', min: 300 }, { name: 'טייס', min: 600 }, { name: 'מוביל מבנה', min: 1000 }, { name: 'מפקד טייסת', min: 1500 }],
+      redo: 'keep'
+    };
+  }
+
+  // Saved values over the defaults, field by field. Anything missing or malformed keeps its default.
+  mergeScoring(base, saved) {
+    const out = JSON.parse(JSON.stringify(base));
+    if (!saved || typeof saved !== 'object') return out;
+    const int = (v, min, max) => typeof v === 'number' && isFinite(v) && Math.floor(v) === v && v >= min && v <= max;
+    const rules = saved.rules || {};
+    Object.keys(out.rules).forEach((k) => {
+      const r = rules[k];
+      if (!r || typeof r !== 'object') return;
+      if (typeof r.on === 'boolean') out.rules[k].on = r.on;
+      if (int(r.points, 0, 10000)) out.rules[k].points = r.points;
+      if (k === 'time') {
+        if (int(r.minutes, 1, 600)) out.rules.time.minutes = r.minutes;
+        if (int(r.max, 1, 100)) out.rules.time.max = r.max;
+      }
+    });
+    const lb = saved.levelBonus || {};
+    if (typeof lb.on === 'boolean') out.levelBonus.on = lb.on;
+    Array.from(new Set([1, 2, 3].concat(Object.keys(lb).filter((k) => /^\d+$/.test(k)).map(Number)))).forEach((n) => { if (int(lb[n], 0, 100000)) out.levelBonus[n] = lb[n]; });
+    const sk = saved.skills || {};
+    Array.from(new Set(Object.keys(out.skills).concat(Object.keys(sk).filter((k) => /^\d+$/.test(k))))).forEach((id) => { if (int(sk[id], 0, 10000)) out.skills[id] = sk[id]; });
+    const rk = saved.ranks;
+    const ranksOk = Array.isArray(rk) && rk.length >= 2 && rk.length <= 8 && rk.every((r, i) => r && typeof r.name === 'string' && r.name.trim() && int(r.min, 0, 1000000) && (i === 0 ? r.min === 0 : r.min > rk[i - 1].min));
+    if (ranksOk) out.ranks = rk.map((r) => ({ name: r.name.trim().slice(0, 24), min: r.min }));
+    if (saved.redo === 'keep' || saved.redo === 'hold') out.redo = saved.redo;
+    return out;
+  }
+
+  scoring() {
+    if (this._scoring) return this._scoring;
+    let saved = null;
+    try {
+      const raw = window.localStorage.getItem('88academy.scoring.v1');
+      saved = raw ? JSON.parse(raw) : null;
+    } catch (err) {
+      saved = null;
+    }
+    this._scoring = this.mergeScoring(this.scoringDefaults(), saved);
+    return this._scoring;
+  }
+
+  // Settings saved on another screen: read them again and redraw.
+  watchScoring() {
+    if (this._onScoring || typeof window === 'undefined' || !window.addEventListener) return;
+    this._onScoring = (e) => {
+      if (e && e.key && e.key !== '88academy.scoring.v1') return;
+      this._scoring = null;
+      this.forceUpdate();
+    };
+    window.addEventListener('storage', this._onScoring);
+  }
+
+  unwatchScoring() {
+    if (this._onScoring) window.removeEventListener('storage', this._onScoring);
+    this._onScoring = null;
+  }
+
+  levelBonus(n) {
+    const lb = this.scoring().levelBonus;
+    return lb.on ? lb[n] || 0 : 0;
+  }
+
+  ranks() {
+    return this.scoring().ranks.map((r) => ({ name: r.name, min: r.min }));
+  }
+
+  // "keep": "נדרש" leaves the points. "hold": they come off until the skill is approved again.
+  redoPolicy() {
+    return this.scoring().redo;
+  }
+
+  rankIndex(total) {
+    const ranks = this.ranks();
+    let i = 0;
+    while (i + 1 < ranks.length && total >= ranks[i + 1].min) i++;
+    return i;
+  }
+
+  // Levels 1 and 2 were granted by the instructor with their points (12.10). Newest first. Total 670.
+  ledgerSeed() {
+    const p = (id, delta, reason, date) => ({ id: id, delta: delta, reason: reason, date: date });
+    return [
+      p('sd13', 5, '10 דקות למידה', '2026-10-13 15:50'),
+      p('sd12', 5, 'צפייה בסרטון הדגמה: נחיתות מדויקות', '2026-10-13 15:40'),
+      p('sd11', 10, '3 ימים ברצף', '2026-10-13 15:27'),
+      p('sd10', 5, 'כניסה יומית', '2026-10-13 15:27'),
+      p('sd09', 5, '10 דקות למידה', '2026-10-12 17:40'),
+      p('sd08', 100, 'בונוס סיום רמה: תרגילי קורס פרופלור', '2026-10-12 17:27'),
+      p('sd07', 250, 'הענקת רמה: תרגילי קורס פרופלור', '2026-10-12 17:27'),
+      p('sd06', 50, 'בונוס סיום רמה: אבני יסוד', '2026-10-12 17:27'),
+      p('sd05', 220, 'הענקת רמה: אבני יסוד', '2026-10-12 17:27'),
+      p('sd04', 5, 'כניסה יומית', '2026-10-12 17:20'),
+      p('sd03', 5, '20 דקות למידה', '2026-10-11 18:50'),
+      p('sd02', 5, '10 דקות למידה', '2026-10-11 18:40'),
+      p('sd01', 5, 'כניסה יומית', '2026-10-11 18:10')
+    ];
+  }
+
+  paidSeed() {
+    const paid = {};
+    this.skills().forEach((k) => { if (k.level <= 2) paid[k.id] = k.base; });
+    return paid;
+  }
+
+  timelineSeed() {
+    if (window.Academy && window.Academy.on) return [];
+    const skill = (name) => {
+      const k = this.skills().find((x) => x.name === name);
+      return { kind: 'skill', text: 'מיומנות נרכשה: ' + name, sub: ' · ניתנה על ידי מדריך', xp: k.base };
+    };
+    const list = [
+      { kind: 'rank', text: 'דרגה חדשה: טייס', sub: ' · 640 נקודות', xp: null },
+      { kind: 'level', text: 'סיים את רמה 2: תרגילי קורס פרופלור', sub: ' · בונוס סיום רמה', xp: 100 },
+      { kind: 'rank', text: 'דרגה חדשה: איש כנף', sub: ' · 540 נקודות', xp: null },
+      skill('צינורות'), skill('מדרגות'), skill('נחיתה'), skill('צילות'), skill('מסלול'), skill('עינוי סיני'),
+      { kind: 'level', text: 'סיים את רמה 1: אבני יסוד', sub: ' · בונוס סיום רמה', xp: 50 },
+      skill('שמיניות'), skill('פניות'), skill('שינוי גובה'), skill('סללום ימינה ושמאלה'), skill('האטה ובלימה'), skill('טיסה בקוו ישר'), skill('שמירה על גובה')
+    ];
+    return list.map((e, i) => Object.assign({ id: 'seed' + i, at: '2026-10-12 17:27', ago: 'לפני 5 ימים' }, e));
+  }
+
+  // The level the student works on: the first one with a skill that is not acquired ("נדרש" counts as not acquired).
+  currentLevel(prog) {
+    const levels = this.levels();
+    for (let i = 0; i < levels.length; i++) {
+      if (this.skills().some((k) => k.level === levels[i].n && prog[k.id] !== 'done')) return levels[i].n;
+    }
+    return levels.length;
+  }
+
+  allDone(prog) {
+    return this.skills().every((k) => prog[k.id] === 'done');
+  }
+
+  statusOf(k, prog, current) {
+    if (prog[k.id] === 'done') return 'done';
+    if (prog[k.id] === 'required') return 'required';
+    return k.level <= current ? 'open' : 'locked';
+  }
+
+  st() {
+    const s0 = this.state || {};
+    const s = s0.account ? s0 : Object.assign(this.defaults(), s0);
+    const A = window.Academy;
+    if (!A || !A.on) return s;
+    return Object.assign({}, s, this.live(s));
+  }
+
+  // ---------- the real student ----------
+  studentId() {
+    try {
+      return new URLSearchParams(location.search).get('id') || '';
+    } catch (err) {
+      return '';
+    }
+  }
+
+  // Everything this card shows about the student, from the server's data.
+  live(s) {
+    const A = window.Academy;
+    const id = this.studentId();
+    const u = A.user(id);
+    if (!u || u.role !== 'student') return { deleted: true, account: { name: 'הסטודנט', username: '', role: 'student', unit: '', earns: false } };
+    const sm = A.summary(id);
+    const d = sm.doc;
+    const account = { name: u.name, username: u.username, role: u.role, unit: u.unit || '', earns: !!u.earns };
+    const prog = {};
+    Object.keys(d.acquired).forEach((k) => { prog[k] = 'done'; });
+    Object.keys(d.redo || {}).forEach((k) => { if (!d.acquired[k]) prog[k] = 'required'; });
+    const ledger = d.ledger.slice().reverse().map((e) => ({ id: e.id, delta: e.amount, reason: e.text, date: A.fmtDate(e.at), kind: e.kind, skill: e.skill }));
+    const draft = s.draftFor === id && s.draft ? s.draft : Object.assign({}, account);
+    const withPoints = Object.assign({ 1: true, 2: true, 3: true }, s.withPointsSet || {});
+    return { account: account, draft: draft, prog: prog, ledger: ledger, timeline: this.liveTimeline(d), disabled: !!u.disabled, sm: sm, withPoints: withPoints };
+  }
+
+  liveTimeline(d) {
+    const A = window.Academy;
+    const ev = [];
+    d.ledger.forEach((e) => {
+      if (e.kind === 'skill') ev.push({ id: e.id, at: e.at, kind: 'skill', text: 'מיומנות נרכשה: ' + A.skillName(e.skill), sub: /^טיסה/.test(e.text) ? ' · טיסה אושרה' : ' · ניתנה על ידי מדריך', xp: e.amount });
+      else if (e.kind === 'level') ev.push({ id: e.id, at: e.at, kind: 'level', text: e.text, sub: '', xp: e.amount });
+      else if (e.kind === 'revoke') ev.push({ id: e.id, at: e.at, kind: 'revoke', text: e.text, sub: ' · על ידי מדריך', xp: e.amount });
+      else if (e.kind === 'manual') ev.push({ id: e.id, at: e.at, kind: e.amount > 0 ? 'path' : 'revoke', text: 'התאמה ידנית: ' + e.text, sub: e.by ? ' · ' + e.by : '', xp: e.amount });
+    });
+    d.flights.forEach((f) => {
+      ev.push({ id: 'fs' + f.id, at: f.at, kind: 'path', text: 'הגיש טיסה: ' + A.flightName(f), sub: '', xp: null });
+      if (f.status === 'rejected') ev.push({ id: 'fr' + f.id, at: f.reviewedAt || f.at, kind: 'required', text: 'טיסה הוחזרה לתיקון: ' + A.flightName(f), sub: f.reviewer ? ' · ' + f.reviewer : '', xp: null });
+    });
+    d.requests.forEach((r) => {
+      const p = (A.data.rewards || []).find((x) => x.id === r.prize);
+      ev.push({ id: 'rq' + r.id, at: r.at, kind: 'path', text: 'ביקש פרס: ' + (p ? p.title : r.prize), sub: { pending: ' · ממתין', delivered: ' · נמסר', declined: ' · נדחה', cancelled: ' · בוטל' }[r.status] || '', xp: null });
+    });
+    return ev.sort((a, b) => (a.at < b.at ? 1 : a.at > b.at ? -1 : 0)).slice(0, 80).map((e) => Object.assign({ ago: A.ago(e.at) }, e, { at: A.fmtDate(e.at) }));
+  }
+
+  flightVals(s) {
+    const A = window.Academy;
+    if (!A || !A.on || !s.sm) return [];
+    const drafts = s.fb || {};
+    return s.sm.doc.flights.slice().sort((a, b) => (a.at < b.at ? 1 : a.at > b.at ? -1 : 0)).map((f) => {
+      const review = f.status === 'review';
+      const look = review ? { label: 'ממתינה לבדיקה', bg: '#FFF4D6', border: '#EFD48C', color: '#7A5300', box: '#EFD48C' }
+        : f.status === 'approved' ? { label: 'אושרה', bg: '#DDF6EC', border: '#A3DEC6', color: '#17694F', box: '#E1E5E2' }
+        : { label: 'הוחזרה לתיקון', bg: '#FDECEC', border: '#F2B8B8', color: '#B42318', box: '#E1E5E2' };
+      const first = !f.challenge && !s.sm.doc.flights.some((x) => x.skill === f.skill && x.id !== f.id && x.status === 'rejected');
+      const sc = A.data.scoring;
+      const ch = f.challenge ? (A.data.allChallenges || []).find((c) => c.id === f.challenge) : null;
+      const pts = f.challenge ? (ch ? Number(ch.points) || 0 : 0) : A.skillPoints(f.skill) + (first && sc.rules.first.on ? Number(sc.rules.first.points) || 0 : 0);
+      return {
+        id: f.id,
+        skillName: A.flightName(f),
+        statusLabel: look.label, chipBg: look.bg, chipBorder: look.border, chipColor: look.color, border: look.box,
+        meta: 'הוגשה ' + A.fmtDate(f.at) + (f.reviewedAt ? ' · נבדקה ' + A.fmtDate(f.reviewedAt) + (f.reviewer ? ' על ידי ' + f.reviewer : '') : ''),
+        hasNote: !!f.note, note: f.note || '',
+        link: f.link || '#',
+        hasFeedback: !review && !!f.feedback, feedback: f.feedback || '',
+        isReview: review,
+        fbId: 'fb-' + f.id,
+        draft: drafts[f.id] || '',
+        onDraft: (e) => this.setState({ fb: Object.assign({}, this.st().fb || {}, { [f.id]: e.target.value }), fbError: null }),
+        hasError: s.fbError && s.fbError.id === f.id, error: s.fbError && s.fbError.id === f.id ? s.fbError.text : '',
+        busy: s.fbBusy === f.id,
+        points: String(pts),
+        approve: () => this.review(f.id, true),
+        reject: () => this.review(f.id, false)
+      };
+    });
+  }
+
+  review(fid, approve) {
+    const s = this.st();
+    if (s.fbBusy) return;
+    this.setState({ fbBusy: fid, fbError: null });
+    window.Academy.call('reviewFlight', { id: this.studentId(), flight: fid, approve: approve, feedback: (s.fb || {})[fid] || '' }).then((r) => {
+      if (!r.ok) {
+        this.setState({ fbBusy: null, fbError: { id: fid, text: r.error } });
+        return;
+      }
+      const fb = Object.assign({}, this.st().fb || {});
+      delete fb[fid];
+      this.setState({ fbBusy: null, fb: fb, announce: approve ? 'הטיסה אושרה, והמטבעות נוספו לסטודנט.' : 'הטיסה הוחזרה לתיקון.' });
+    });
+  }
+
+  startTab() {
+    try {
+      const t = new URLSearchParams(location.search).get('tab');
+      if (['progress', 'flights', 'timeline', 'points', 'account'].indexOf(t) !== -1) return t;
+    } catch (err) {}
+    const map = { 'התקדמות': 'progress', 'טיסות': 'flights', 'ציר זמן': 'timeline', 'נקודות': 'points', 'חשבון': 'account' };
+    return map[this.props.startTab ?? 'התקדמות'] || 'progress';
+  }
+
+  componentDidMount() {
+    if (super.componentDidMount) super.componentDidMount();
+    if (window.Academy && window.Academy.on && !this.studentId()) {
+      location.replace('Students.dc.html');
+      return;
+    }
+    if (!this.state || !this.state.account) this.setState(this.defaults());
+    this.watchLeaving('StudentDetail.dc.html');
+    this.watchScoring();
+  }
+
+  // Leaving this screen (a link to another screen, or the screen being hidden) drops whatever was not saved.
+  watchLeaving(here) {
+    if (this._leaveClick || typeof window === 'undefined' || !window.addEventListener) return;
+    this._leaveClick = (e) => {
+      const a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+      const file = a ? (a.getAttribute('href') || '').split(/[?#]/)[0].split('/').pop() : '';
+      if (/\.dc\.html$/.test(file) && file !== here) this.discardUnsaved();
+    };
+    window.addEventListener('click', this._leaveClick, true);
+    try {
+      this._leaveSeen = new IntersectionObserver((entries) => {
+        if (entries.some((en) => !en.isIntersecting)) this.discardUnsaved();
+      });
+      this._leaveSeen.observe(document.body);
+    } catch (err) {
+      this._leaveSeen = null;
+    }
+  }
+
+  unwatchLeaving() {
+    if (this._leaveClick) window.removeEventListener('click', this._leaveClick, true);
+    if (this._leaveSeen) this._leaveSeen.disconnect();
+    this._leaveClick = null;
+    this._leaveSeen = null;
+  }
+
+  // Unsaved details, a typed password, a half-filled points form, a ticked "כולל נקודות", the undo link of the last
+  // progress change and an open "מחיקה לצמיתות" are dropped. Saved changes (progress included) stay.
+  discardUnsaved() {
+    if (this.deleteBoxEl) this.deleteBoxEl.open = false;
+    const s = this.st();
+    const changed = Object.keys(s.account).some((k) => s.draft[k] !== s.account[k]);
+    const ticked = Object.keys(s.withPoints || {}).some((n) => s.withPoints[n]);
+    if (!changed && !ticked && !s.last && !s.focusSkill && !s.newPassword && !s.deltaInput && !s.reasonInput && !s.detailsError && !s.passwordError && !s.deltaError) return;
+    this.setState({ draft: Object.assign({}, s.account), detailsError: '', newPassword: '', passwordError: '', deltaInput: '', reasonInput: '', deltaError: '', withPoints: {}, last: null, focusSkill: null });
+  }
+
+  deleteBoxRef() {
+    if (!this._deleteBoxRef) this._deleteBoxRef = (el) => { this.deleteBoxEl = el; };
+    return this._deleteBoxRef;
+  }
+
+  rowRef(id) {
+    this._rowRefs = this._rowRefs || {};
+    if (!this._rowRefs[id]) {
+      this._rowRefs[id] = (el) => {
+        this.rowEls = this.rowEls || {};
+        this.rowEls[id] = el;
+      };
+    }
+    return this._rowRefs[id];
+  }
+
+  levelRef(n) {
+    this._levelRefs = this._levelRefs || {};
+    if (!this._levelRefs[n]) {
+      this._levelRefs[n] = (el) => {
+        this.levelEls = this.levelEls || {};
+        this.levelEls[n] = el;
+      };
+    }
+    return this._levelRefs[n];
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (super.componentDidUpdate) super.componentDidUpdate(prevProps, prevState, snapshot);
+    if (prevProps && prevProps.startTab !== this.props.startTab) this.setState({ tab: null });
+  }
+
+  componentWillUnmount() {
+    if (super.componentWillUnmount) super.componentWillUnmount();
+    const timers = this.timers || {};
+    Object.keys(timers).forEach((key) => clearTimeout(timers[key]));
+    this.unwatchLeaving();
+    this.unwatchScoring();
+  }
+
+  flash(key, message) {
+    const patch = {};
+    patch[key] = message;
+    this.setState(patch);
+    this.timers = this.timers || {};
+    clearTimeout(this.timers[key]);
+    this.timers[key] = setTimeout(() => {
+      const clear = {};
+      clear[key] = '';
+      this.setState(clear);
+    }, 3200);
+  }
+
+  stamp() {
+    const now = new Date();
+    const pad = (n) => (n < 10 ? '0' : '') + n;
+    return now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate()) + ' ' + pad(now.getHours()) + ':' + pad(now.getMinutes());
+  }
+
+  nextId(prefix) {
+    this.seq = (this.seq || 0) + 1;
+    return prefix + Date.now() + '-' + this.seq;
+  }
+
+  // ---------- progress control ----------
+  // One change to a skill or to a whole level. Progress, points, the rank, the timeline and the points history move
+  // together, and the change can be undone in one step.
+  //   to: 'done' (הענקה / נרכש), 'required' (נדרש: do the exercise again), 'none' (ביטול).
+  // Points: a grant pays the skill's points (and the level bonus once the level is complete) when "כולל נקודות" is on.
+  // "נדרש" keeps the points already paid, and approving again doesn't pay twice. "ביטול" takes back the skill's points,
+  // and the level bonus if one was paid.
+  act(ids, to, scope, scopeId) {
+    const A = window.Academy;
+    if (A && A.on) {
+      if (!ids.length || this.st().busy) return;
+      const k0 = this.skill(ids[0]);
+      const level = scope === 'level' ? scopeId : k0 ? k0.level : 1;
+      const points = !!this.st().withPoints[level];
+      this.setState({ busy: true });
+      A.call('setSkill', { id: this.studentId(), skills: ids, to: to, points: points }).then((r) => {
+        if (!r.ok) {
+          this.setState({ busy: false, announce: r.error, last: { scope: scope, id: scopeId, text: r.error, ids: [], to: to } });
+          return;
+        }
+        const n = r.result.changed;
+        const c = r.result.coins;
+        const coins = (x) => (Math.abs(x) === 1 ? 'מטבע אחד' : Math.abs(x) + ' מטבעות');
+        let text;
+        if (to === 'done') text = (n === 1 ? 'המיומנות הוענקה' : 'הוענקו ' + n + ' מיומנויות') + (c ? ', נוספו ' + coins(c) + '.' : ', ללא מטבעות.');
+        else if (to === 'required') text = (n === 1 ? 'נדרש ביצוע חוזר.' : n + ' מיומנויות סומנו לביצוע חוזר.') + (c ? ' ירדו ' + coins(c) + ' עד לאישור מחדש.' : ' המטבעות נשארים.');
+        else text = (n === 1 ? 'המיומנות בוטלה' : n + ' מיומנויות בוטלו') + (c ? ', הורדו ' + coins(c) + '.' : '.');
+        const subject = scope === 'level' ? 'רמה ' + scopeId : (k0 ? k0.name : '');
+        this.setState({ busy: false, last: { scope: scope, id: scopeId, text: text, ids: ids, to: to }, announce: subject + ': ' + text }, () => this.refocus(scope, scopeId));
+      });
+      return;
+    }
+    const s = this.st();
+    const prog = Object.assign({}, s.prog);
+    const paid = Object.assign({}, s.paid);
+    const levelPaid = Object.assign({}, s.levelPaid || {});
+    // Points (and level bonuses) taken off by "נדרש" under the "hold" policy, until the skill is approved again.
+    const held = Object.assign({}, s.held || {});
+    const heldBonus = Object.assign({}, s.heldBonus || {});
+    const hold = this.redoPolicy() === 'hold';
+    const ranks = this.ranks();
+    const totalBefore = s.ledger.reduce((sum, p) => sum + p.delta, 0);
+    let gained = 0;
+    let refunded = 0;
+    let returned = 0;
+    let heldNow = 0;
+    let bonusGained = 0;
+    let bonusRefunded = 0;
+    const bonusLevels = [];
+    const events = [];
+    const touched = [];
+    const levelsTouched = [];
+    ids.forEach((id) => {
+      const k = this.skill(id);
+      const from = k ? prog[id] || 'none' : null;
+      if (!k || from === to || (to === 'required' && from !== 'done')) return;
+      if (levelsTouched.indexOf(k.level) === -1) levelsTouched.push(k.level);
+      if (to === 'done') {
+        prog[id] = 'done';
+        if (from === 'required') {
+          const back = held[id] || 0;
+          if (back) {
+            paid[id] = back;
+            returned += back;
+            delete held[id];
+          }
+          events.push({ kind: 'skill', text: 'מיומנות אושרה מחדש: ' + k.name, sub: back ? ' · על ידי מדריך, הנקודות חזרו' : ' · על ידי מדריך', xp: back || null });
+        } else {
+          let pts = null;
+          if (s.account.earns && s.withPoints[k.level] && !paid[id]) {
+            paid[id] = k.points;
+            gained += k.points;
+            pts = k.points;
+          }
+          events.push({ kind: 'skill', text: 'מיומנות נרכשה: ' + k.name, sub: pts ? ' · ניתנה על ידי מדריך' : ' · ניתנה על ידי מדריך, ללא נקודות', xp: pts });
+        }
+      } else if (to === 'required') {
+        prog[id] = 'required';
+        const take = hold ? paid[id] || 0 : 0;
+        if (take) {
+          held[id] = take;
+          heldNow += take;
+          delete paid[id];
+        }
+        events.push({ kind: 'required', text: 'נדרש ביצוע חוזר: ' + k.name, sub: take ? ' · על ידי מדריך, הנקודות ירדו עד לאישור מחדש' : ' · על ידי מדריך, הנקודות נשארות', xp: take ? -take : null });
+      } else {
+        delete prog[id];
+        delete held[id];
+        const back = paid[id] || 0;
+        events.push({ kind: 'revoke', text: 'מיומנות בוטלה: ' + k.name, sub: ' · על ידי מדריך', xp: back ? -back : null });
+        if (back) {
+          refunded += back;
+          delete paid[id];
+        }
+      }
+      touched.push({ k: k, from: from });
+    });
+    if (!touched.length) return;
+    levelsTouched.forEach((n) => {
+      const lv = this.levels().find((l) => l.n === n);
+      const complete = this.skills().filter((k) => k.level === n).every((k) => prog[k.id] === 'done');
+      if (to === 'done' && complete && !levelPaid[n] && heldBonus[n]) {
+        // The bonus that "נדרש" took off comes back once the level is complete again.
+        levelPaid[n] = heldBonus[n];
+        bonusGained += heldBonus[n];
+        bonusLevels.push(lv.name);
+        events.push({ kind: 'level', text: 'הרמה שוב שלמה: ' + lv.name, sub: ' · בונוס סיום הרמה חזר', xp: heldBonus[n] });
+        delete heldBonus[n];
+      } else if (to === 'done' && complete && !levelPaid[n] && s.account.earns && s.withPoints[n] && this.levelBonus(n) > 0) {
+        levelPaid[n] = this.levelBonus(n);
+        bonusGained += levelPaid[n];
+        bonusLevels.push(lv.name);
+        events.push({ kind: 'level', text: 'סיים את רמה ' + n + ': ' + lv.name, sub: ' · בונוס סיום רמה', xp: levelPaid[n] });
+      }
+      if (to === 'required' && hold && levelPaid[n] && !complete) {
+        heldBonus[n] = levelPaid[n];
+        bonusRefunded += levelPaid[n];
+        bonusLevels.push(lv.name);
+        events.push({ kind: 'revoke', text: 'בונוס סיום רמה ירד: ' + lv.name, sub: ' · עד שהרמה תהיה שוב שלמה', xp: -levelPaid[n] });
+        delete levelPaid[n];
+      }
+      if (to === 'none' && levelPaid[n] && !complete) {
+        bonusRefunded += levelPaid[n];
+        bonusLevels.push(lv.name);
+        events.push({ kind: 'revoke', text: 'בונוס סיום רמה בוטל: ' + lv.name, sub: ' · הרמה כבר לא שלמה', xp: -levelPaid[n] });
+        delete levelPaid[n];
+      }
+      if (to === 'none' && !complete) delete heldBonus[n];
+    });
+    const totalAfter = totalBefore + gained + returned + bonusGained - refunded - heldNow - bonusRefunded;
+    const r0 = this.rankIndex(totalBefore);
+    const r1 = this.rankIndex(totalAfter);
+    if (r1 > r0) events.push({ kind: 'rank', text: 'דרגה חדשה: ' + ranks[r1].name, sub: ' · ' + totalAfter + ' נקודות', xp: null });
+    if (r1 < r0) events.push({ kind: 'rankdown', text: 'הדרגה ירדה: ' + ranks[r1].name, sub: ' · ' + totalAfter + ' נקודות', xp: null });
+
+    const at = this.stamp();
+    const lv = scope === 'level' ? this.levels().find((l) => l.n === scopeId) : null;
+    const name = scope === 'level' ? lv.name : touched[0].k.name;
+    const added = [];
+    if (gained) added.push({ id: this.nextId('p'), delta: gained, reason: (scope === 'level' ? 'הענקת רמה: ' : 'הענקת מיומנות: ') + name, date: at });
+    if (returned) added.push({ id: this.nextId('p'), delta: returned, reason: 'אושר מחדש: ' + name, date: at });
+    if (bonusGained) added.push({ id: this.nextId('p'), delta: bonusGained, reason: 'בונוס סיום רמה: ' + bonusLevels.join(', '), date: at });
+    if (heldNow) added.push({ id: this.nextId('p'), delta: -heldNow, reason: 'ביצוע חוזר, עד לאישור מחדש: ' + name, date: at });
+    if (refunded) added.push({ id: this.nextId('p'), delta: -refunded, reason: (scope === 'level' ? 'ביטול רמה: ' : 'ביטול מיומנות: ') + name, date: at });
+    if (bonusRefunded) added.push({ id: this.nextId('p'), delta: -bonusRefunded, reason: (to === 'required' ? 'בונוס סיום רמה ירד עד לאישור מחדש: ' : 'ביטול בונוס סיום רמה: ') + bonusLevels.join(', '), date: at });
+    const newEvents = events.reverse().map((e) => Object.assign({ id: this.nextId('ev'), at: at, ago: 'עכשיו' }, e));
+
+    const pts = (x) => (x === 1 ? 'נקודה אחת' : x + ' נקודות');
+    const plus = gained + returned + bonusGained;
+    const minus = refunded + heldNow + bonusRefunded;
+    const n = touched.length;
+    const many = (one, several) => (n === 1 ? one : several.replace('#', n));
+    let text;
+    if (scope === 'skill') {
+      const from = touched[0].from;
+      if (to === 'done' && from === 'required') text = plus ? 'המיומנות אושרה שוב, וחזרו ' + pts(plus) + '.' : 'המיומנות סומנה שוב כנרכשת. הנקודות שלה כבר ניתנו.';
+      else if (to === 'done') text = plus ? 'המיומנות הוענקה, נוספו ' + pts(plus) + (bonusGained ? ' (כולל בונוס סיום רמה).' : '.') : 'המיומנות הוענקה, ללא נקודות.';
+      else if (to === 'required') text = 'נדרש ביצוע חוזר: המיומנות לא נספרת עד שתאושר שוב. ' + (minus ? 'ירדו ' + pts(minus) + ', והן יחזרו כשתאושר.' : 'הנקודות נשארות.');
+      else text = minus ? 'המיומנות בוטלה, הורדו ' + pts(minus) + '.' : 'המיומנות בוטלה.';
+    } else if (to === 'done') {
+      text = many('הוענקה מיומנות אחת', 'הוענקו # מיומנויות') + (plus ? ', נוספו ' + pts(plus) + (bonusGained ? ' (כולל בונוס סיום רמה).' : '.') : ', ללא נקודות.');
+    } else if (to === 'required') {
+      text = many('מיומנות אחת סומנה לביצוע חוזר.', '# מיומנויות סומנו לביצוע חוזר.') + (minus ? ' ירדו ' + pts(minus) + ' עד לאישור מחדש.' : ' הנקודות נשארות.');
+    } else {
+      text = many('מיומנות אחת בוטלה', '# מיומנויות בוטלו') + (minus ? ', הורדו ' + pts(minus) + '.' : '.');
+    }
+    const subject = scope === 'level' ? 'רמה ' + lv.n + ' · ' + lv.name : name;
+
+    this.setState({
+      prog: prog,
+      paid: paid,
+      levelPaid: levelPaid,
+      held: held,
+      heldBonus: heldBonus,
+      timeline: newEvents.concat(s.timeline),
+      ledger: added.concat(s.ledger),
+      last: {
+        scope: scope,
+        id: scopeId,
+        text: text,
+        prev: { prog: s.prog, paid: s.paid, levelPaid: s.levelPaid, held: s.held || {}, heldBonus: s.heldBonus || {} },
+        ledgerIds: added.map((p) => p.id),
+        eventIds: newEvents.map((e) => e.id)
+      },
+      announce: subject + ': ' + text
+    }, () => this.refocus(scope, scopeId));
+  }
+
+  // "ביטול הפעולה": puts back the progress and points from before the last change (other point changes stay).
+  undo() {
+    const s = this.st();
+    const last = s.last;
+    if (!last) return;
+    const A = window.Academy;
+    if (A && A.on) {
+      if (!last.ids || !last.ids.length) {
+        this.setState({ last: null });
+        return;
+      }
+      const back = last.to === 'done' ? 'none' : 'done';
+      A.call('setSkill', { id: this.studentId(), skills: last.ids, to: back, points: true }).then(() => {
+        this.setState({ last: null, announce: 'הפעולה בוטלה.' }, () => this.refocus(last.scope, last.id));
+      });
+      return;
+    }
+    this.setState({
+      prog: last.prev.prog,
+      paid: last.prev.paid,
+      levelPaid: last.prev.levelPaid,
+      held: last.prev.held || {},
+      heldBonus: last.prev.heldBonus || {},
+      ledger: s.ledger.filter((p) => last.ledgerIds.indexOf(p.id) === -1),
+      timeline: s.timeline.filter((e) => last.eventIds.indexOf(e.id) === -1),
+      last: null,
+      announce: 'הפעולה בוטלה.'
+    }, () => this.refocus(last.scope, last.id));
+  }
+
+  levelAction(n, to) {
+    const prog = this.st().prog;
+    const ids = this.skills().filter((k) => {
+      if (k.level !== n) return false;
+      if (to === 'done') return prog[k.id] !== 'done';
+      if (to === 'required') return prog[k.id] === 'done';
+      return !!prog[k.id];
+    }).map((k) => k.id);
+    this.act(ids, to, 'level', n);
+  }
+
+  setPoints(n, on) {
+    const withPoints = Object.assign({}, this.st().withPoints);
+    withPoints[n] = !!on;
+    this.setState({ withPoints: withPoints, withPointsSet: Object.assign({}, (this.state || {}).withPointsSet || {}, { [n]: !!on }) });
+  }
+
+  // A button that the change removes (e.g. הענקה) takes keyboard focus with it, so put focus back next to the change.
+  refocus(scope, id) {
+    if (typeof document === 'undefined' || !document.body) return;
+    const active = document.activeElement;
+    if (active && active !== document.body && document.body.contains(active)) return;
+    const el = scope === 'level' ? (this.levelEls || {})[id] : (this.rowEls || {})[id];
+    if (!el || !el.querySelector) return;
+    const target = el.querySelector('.undo-link') || (scope === 'level' ? el.querySelector('.lv-footer button') : el.querySelector('button'));
+    if (target && target.focus) target.focus();
+  }
+
+  toggleView() {
+    this.setState({ progView: this.st().progView === 'graph' ? 'list' : 'graph' });
+  }
+
+  // From the graph: back to the list, on the row of that skill.
+  jumpTo(id) {
+    this.timers = this.timers || {};
+    clearTimeout(this.timers.focusSkill);
+    this.setState({ progView: 'list', focusSkill: id }, () => {
+      const el = (this.rowEls || {})[id];
+      if (el) {
+        const box = el.closest ? el.closest('details') : null;
+        if (box && !box.open) box.open = true;
+        try { el.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (err) {}
+        const button = el.querySelector ? el.querySelector('button') : null;
+        if (button) {
+          try { button.focus({ preventScroll: true }); } catch (err) { button.focus(); }
+        }
+      }
+      this.timers.focusSkill = setTimeout(() => this.setState({ focusSkill: null }), 2400);
+    });
+  }
+
+  skillRow(k, status, s) {
+    const last = s.last;
+    const hasNote = !!last && last.scope === 'skill' && last.id === k.id;
+    const done = status === 'done';
+    const req = status === 'required';
+    return {
+      id: 's' + k.id,
+      name: k.name,
+      points: String(k.points),
+      setRef: this.rowRef(k.id),
+      rowBg: s.focusSkill === k.id ? '#EAF0FB' : 'transparent',
+      nameColor: status === 'locked' ? '#545D58' : '#1E2320',
+      isAcquired: done || req,
+      isOpen: status === 'open',
+      isLocked: status === 'locked',
+      canGrant: status === 'open' || status === 'locked',
+      groupLabel: 'סטטוס: ' + k.name,
+      doneOn: done ? 'true' : 'false',
+      doneBg: done ? '#DDF6EC' : 'transparent',
+      doneBorder: done ? '#A3DEC6' : 'transparent',
+      doneColor: done ? '#17694F' : '#5E6762',
+      reqOn: req ? 'true' : 'false',
+      reqBg: req ? '#FFF4D6' : 'transparent',
+      reqBorder: req ? '#EFD48C' : 'transparent',
+      reqColor: req ? '#7A5300' : '#5E6762',
+      markDone: () => this.act([k.id], 'done', 'skill', k.id),
+      markRequired: () => this.act([k.id], 'required', 'skill', k.id),
+      revoke: () => this.act([k.id], 'none', 'skill', k.id),
+      grant: () => this.act([k.id], 'done', 'skill', k.id),
+      revokeLabel: 'ביטול ' + k.name,
+      grantLabel: 'הענקה: ' + k.name,
+      hasNote: hasNote,
+      note: hasNote ? last.text : '',
+      undo: () => this.undo()
+    };
+  }
+
+  levelVals(s, current, allDone) {
+    const earns = !!s.account.earns;
+    return this.levels().map((lv) => {
+      const skills = this.skills().filter((k) => k.level === lv.n);
+      const statuses = skills.map((k) => this.statusOf(k, s.prog, current));
+      const done = statuses.filter((x) => x === 'done').length;
+      const required = statuses.filter((x) => x === 'required').length;
+      const hasNote = !!s.last && s.last.scope === 'level' && s.last.id === lv.n;
+      return {
+        id: 'lv' + lv.n,
+        n: String(lv.n),
+        name: lv.name,
+        setRef: this.levelRef(lv.n),
+        isCurrent: !allDone && lv.n === current,
+        isLocked: !allDone && lv.n > current && done < skills.length,
+        hasRequired: required > 0,
+        requiredText: required + ' לביצוע חוזר',
+        pct: String(Math.round((done / skills.length) * 1000) / 10),
+        countText: done + '/' + skills.length + ' נרכשו',
+        skills: skills.map((k, i) => this.skillRow(k, statuses[i], s)),
+        canGrant: done < skills.length,
+        canRequire: done > 0,
+        canRevoke: done + required > 0,
+        withPoints: earns && !!s.withPoints[lv.n],
+        pointsOff: !earns,
+        pointsLabel: earns ? 'כולל נקודות' : 'כולל נקודות (החשבון לא צובר נקודות)',
+        pointsColor: earns ? '#3D4541' : '#6E7772',
+        pointsCursor: earns ? 'pointer' : 'not-allowed',
+        togglePoints: (e) => this.setPoints(lv.n, e.target.checked),
+        grant: () => this.levelAction(lv.n, 'done'),
+        require: () => this.levelAction(lv.n, 'required'),
+        revoke: () => this.levelAction(lv.n, 'none'),
+        hasNote: hasNote,
+        note: hasNote ? s.last.text : '',
+        undo: () => this.undo()
+      };
+    });
+  }
+
+  // Same drawing as the student's "הנתיב שלי" graph, sized for this card, with the admin statuses.
+  graph(s, current) {
+    const W = 860;
+    const mid = W / 2;
+    const STEP = 410;
+    const GAP = 122;
+    const GREEN = '#3FA37F';
+    const ORANGE = '#C7436A';
+    const YELLOW = '#E0AF2E';
+    const GRAY = '#A3ADA7';
+    const nodes = [];
+    const edges = [];
+    const arrow = (x, y) => 'M' + (x - 6) + ' ' + (y - 10) + 'L' + (x + 6) + ' ' + (y - 10) + 'L' + x + ' ' + y + 'Z';
+    const label = { done: 'נרכש', required: 'נדרש ביצוע חוזר', open: 'זמין', locked: 'נעול' };
+    const levels = this.levels();
+    levels.forEach((lv, li) => {
+      const top = 20 + li * STEP;
+      const skills = this.skills().filter((k) => k.level === lv.n);
+      const done = skills.filter((k) => s.prog[k.id] === 'done').length;
+      const complete = done === skills.length;
+      const isCurrent = lv.n === current && !complete;
+      const locked = lv.n > current && !complete;
+      const ring = complete ? GREEN : isCurrent ? ORANGE : GRAY;
+      nodes.push({
+        id: 'L' + lv.n, left: mid - 150, boxW: 300, labelMax: 280, top: top, size: 84, borderW: 3, ring: ring,
+        innerRing: locked ? '#C3CBC6' : 'transparent',
+        glow: isCurrent ? '0 0 0 5px rgba(199, 67, 106, 0.14), 0 0 24px rgba(199, 67, 106, 0.30)' : 'none',
+        iconCheck: complete, iconRedo: false, iconPlay: false, iconLock: locked, iconDrone: isCurrent, iconTrophy: false,
+        hasSub: true, sub: 'רמה ' + lv.n + ' · ' + done + '/' + skills.length + ' מיומנויות', label: lv.name, labelSize: 17, labelWeight: 700,
+        labelColor: locked ? '#5E6762' : '#121413', inert: true, aria: 'רמה ' + lv.n + ': ' + lv.name, cursor: 'default', open: () => {}
+      });
+      const n = skills.length;
+      const fromY = top + 146;
+      const rowY = top + 206;
+      const nextTop = top + STEP;
+      skills.forEach((k, i) => {
+        const x = mid + ((n - 1) / 2 - i) * GAP;
+        const status = this.statusOf(k, s.prog, current);
+        const color = status === 'done' ? GREEN : status === 'required' ? YELLOW : status === 'open' ? ORANGE : GRAY;
+        edges.push({
+          id: 'a' + k.id, color: color, dash: status === 'locked' ? '5 6' : 'none', opacity: status === 'locked' ? 0.9 : 1,
+          d: 'M' + mid + ' ' + fromY + 'C' + mid + ' ' + (fromY + 34) + ' ' + x + ' ' + (rowY - 40) + ' ' + x + ' ' + (rowY - 11),
+          head: arrow(x, rowY - 2)
+        });
+        edges.push({
+          id: 'b' + k.id, color: status === 'done' ? GREEN : GRAY, dash: status === 'done' ? 'none' : '5 6', opacity: 0.9,
+          d: 'M' + x + ' ' + (rowY + 118) + 'C' + x + ' ' + (rowY + 160) + ' ' + mid + ' ' + (nextTop - 46) + ' ' + mid + ' ' + (nextTop - 11),
+          head: ''
+        });
+        nodes.push({
+          id: 'S' + k.id, left: x - 60, boxW: 120, labelMax: 116, top: rowY, size: 64, borderW: 2, ring: color,
+          innerRing: status === 'locked' ? '#C3CBC6' : 'transparent',
+          glow: status === 'open' ? '0 0 0 4px rgba(199, 67, 106, 0.12), 0 0 18px rgba(199, 67, 106, 0.28)' : status === 'required' ? '0 0 0 4px rgba(224, 175, 46, 0.16), 0 0 18px rgba(224, 175, 46, 0.35)' : 'none',
+          iconCheck: status === 'done', iconRedo: status === 'required', iconPlay: status === 'open', iconLock: status === 'locked', iconDrone: false, iconTrophy: false,
+          hasSub: false, sub: '', label: k.name, labelSize: 14, labelWeight: 500, labelColor: status === 'locked' ? '#5E6762' : '#1E2320',
+          inert: false, aria: k.name + ' — ' + label[status] + '. מעבר לשורה ברשימה', cursor: 'pointer', open: () => this.jumpTo(k.id)
+        });
+      });
+      edges.push({ id: 'h' + lv.n, color: complete ? GREEN : GRAY, dash: 'none', opacity: 1, d: '', head: arrow(mid, nextTop - 2) });
+    });
+    const finalTop = 20 + levels.length * STEP;
+    const allDone = this.allDone(s.prog);
+    nodes.push({
+      id: 'END', left: mid - 150, boxW: 300, labelMax: 280, top: finalTop, size: 84, borderW: 3, ring: allDone ? GREEN : GRAY,
+      innerRing: allDone ? 'transparent' : '#C3CBC6', glow: 'none',
+      iconCheck: false, iconRedo: false, iconPlay: false, iconLock: false, iconDrone: false, iconTrophy: true,
+      hasSub: true, sub: 'סוף המסלול', label: 'המסלול הושלם', labelSize: 17, labelWeight: 700, labelColor: allDone ? '#121413' : '#5E6762',
+      inert: true, aria: 'סוף המסלול', cursor: 'default', open: () => {}
+    });
+    return { nodes: nodes, edges: edges, height: finalTop + 150 };
+  }
+
+  timelineVals(s) {
+    return s.timeline.map((e, i) => {
+      const hasXp = typeof e.xp === 'number';
+      const neg = hasXp && e.xp < 0;
+      return {
+        id: e.id,
+        text: e.text,
+        sub: e.sub,
+        at: e.at,
+        ago: e.ago,
+        divider: i === 0 ? 'transparent' : '#E8EBE9',
+        isRocket: e.kind === 'path' || e.kind === 'level',
+        isCheck: e.kind === 'skill',
+        isRequired: e.kind === 'required',
+        isRevoke: e.kind === 'revoke',
+        isMedal: e.kind === 'rank',
+        isMedalDown: e.kind === 'rankdown',
+        hasXp: hasXp,
+        xpText: hasXp ? (e.xp > 0 ? '+' : '') + e.xp : '',
+        xpBg: neg ? '#FDECEC' : '#DDF6EC',
+        xpBorder: neg ? '#F2B8B8' : '#A3DEC6',
+        xpColor: neg ? '#B42318' : '#17694F'
+      };
+    });
+  }
+
+  rankVals(xp) {
+    const ranks = this.ranks();
+    const i = this.rankIndex(Math.max(0, xp));
+    const next = ranks[i + 1];
+    const pct = next ? Math.max(0, Math.min(100, ((xp - ranks[i].min) / (next.min - ranks[i].min)) * 100)) : 100;
+    return {
+      rankName: ranks[i].name,
+      xpTotal: String(xp),
+      xpPct: String(Math.round(pct * 10) / 10),
+      hasNextRank: !!next,
+      isTopRank: !next,
+      xpToNext: next ? String(next.min - xp) : '0',
+      nextRankName: next ? next.name : ''
+    };
+  }
+
+  // Where the points came from, by the reason written in the points history.
+  categoryOf(reason, kind) {
+    if (kind) {
+      if (kind === 'level' || (kind === 'revoke' && /בונוס/.test(reason || ''))) return 'level';
+      if (kind === 'skill' || kind === 'revoke') return 'stage';
+      if (kind === 'login' || kind === 'streak' || kind === 'time') return 'habit';
+      if (kind === 'video' || kind === 'first' || kind === 'quests') return 'bonus';
+      return 'manual';
+    }
+    const r = reason || '';
+    if (/בונוס סיום רמה|הרמה שוב שלמה/.test(r)) return 'level';
+    if (/^הענקת|^ביטול מיומנות|^ביטול רמה|^אושר מחדש|^ביצוע חוזר|^טיסה אושרה/.test(r)) return 'stage';
+    if (/כניסה יומית|ברצף|דקות למידה/.test(r)) return 'habit';
+    if (/סרטון הדגמה|ניסיון ראשון|משימות היום|אתגר/.test(r)) return 'bonus';
+    return 'manual';
+  }
+
+  mixVals(s) {
+    const cats = [
+      { id: 'stage', name: 'מיומנויות', desc: 'הנקודות של כל מיומנות שנרכשה', color: '#2A9171' },
+      { id: 'level', name: 'בונוסי סיום רמה', desc: 'על כל רמה שלמה', color: '#0E4F3A' },
+      { id: 'habit', name: 'התמדה', desc: 'כניסות, רצף ימים וזמן למידה', color: '#76DEB8' },
+      { id: 'bonus', name: 'בונוסים', desc: 'סרטונים, ניסיון ראשון ומשימות היום', color: '#C7436A' },
+      { id: 'manual', name: 'התאמות ידניות', desc: 'שינויים שהמדריך הזין', color: '#8A928E' }
+    ];
+    const sums = {};
+    s.ledger.forEach((p) => {
+      const c = this.categoryOf(p.reason, p.kind);
+      sums[c] = (sums[c] || 0) + p.delta;
+    });
+    const rows = cats.filter((c) => c.id !== 'manual' || sums.manual).map((c) => Object.assign({}, c, { amount: String(sums[c.id] || 0) }));
+    return {
+      mixRows: rows,
+      mixBars: cats.filter((c) => (sums[c.id] || 0) > 0).map((c) => ({ id: 'mb' + c.id, color: c.color, grow: sums[c.id] }))
+    };
+  }
+
+  // ---------- account and points ----------
+  setDraft(field, value) {
+    const draft = Object.assign({}, this.st().draft);
+    draft[field] = value;
+    this.setState({ draft: draft, draftFor: this.studentId(), detailsError: '' });
+  }
+
+  saveDetails() {
+    const d = this.st().draft;
+    const username = d.username.trim();
+    if (!/^[A-Za-z0-9._-]+$/.test(username)) {
+      this.setState({ detailsError: 'שם המשתמש יכול להכיל רק אותיות באנגלית, ספרות, נקודה, מקף או קו תחתון.' });
+      return;
+    }
+    if (!d.name.trim()) {
+      this.setState({ detailsError: 'יש להזין שם תצוגה.' });
+      return;
+    }
+    const account = { name: d.name.trim(), username: username, role: d.role, unit: d.unit, earns: !!d.earns };
+    const A = window.Academy;
+    if (A && A.on) {
+      A.call('updateUser', Object.assign({ id: this.studentId() }, account)).then((r) => {
+        if (!r.ok) {
+          this.setState({ detailsError: r.error });
+          return;
+        }
+        this.setState({ draftFor: null, detailsError: '' });
+        if (account.role !== 'student') {
+          location.href = 'Students.dc.html';
+          return;
+        }
+        this.flash('detailsFlash', 'הפרטים נשמרו.');
+      });
+      return;
+    }
+    this.setState({ account: account, draft: Object.assign({}, account), detailsError: '' });
+    this.flash('detailsFlash', 'הפרטים נשמרו.');
+  }
+
+  resetPassword() {
+    if (this.st().newPassword.length < 8) {
+      this.setState({ passwordError: 'הסיסמה צריכה להכיל לפחות 8 תווים.' });
+      return;
+    }
+    const A = window.Academy;
+    if (A && A.on) {
+      const pw = this.st().newPassword;
+      A.call('resetPassword', { id: this.studentId(), password: pw }).then((r) => {
+        if (!r.ok) {
+          this.setState({ passwordError: r.error });
+          return;
+        }
+        this.setState({ newPassword: '', passwordError: '' });
+        this.flash('passwordFlash', 'הסיסמה אופסה. מסרו לסטודנט את הסיסמה הזמנית ' + pw + '; בכניסה הבאה הוא יבחר סיסמה משלו.');
+      });
+      return;
+    }
+    this.setState({ newPassword: '', passwordError: '' });
+    this.flash('passwordFlash', 'הסיסמה אופסה. מסרו לסטודנט את הסיסמה החדשה.');
+  }
+
+  applyPoints() {
+    const s = this.st();
+    const raw = s.deltaInput.replace(/\s+/g, '').replace(/−/g, '-');
+    if (!/^[+-]?\d+$/.test(raw) || parseInt(raw, 10) === 0) {
+      this.setState({ deltaError: 'יש להזין מספר שלם שאינו אפס, חיובי או שלילי.' });
+      return;
+    }
+    const delta = parseInt(raw, 10);
+    const A = window.Academy;
+    if (A && A.on) {
+      A.call('adjust', { id: this.studentId(), delta: delta, reason: s.reasonInput.trim() }).then((r) => {
+        if (!r.ok) {
+          this.setState({ deltaError: r.error });
+          return;
+        }
+        this.setState({ deltaInput: '', reasonInput: '', deltaError: '' });
+        const n = Math.abs(delta);
+        this.flash('pointsFlash', delta > 0 ? (n === 1 ? 'נוסף מטבע אחד.' : 'נוספו ' + n + ' מטבעות.') : (n === 1 ? 'הורד מטבע אחד.' : 'הורדו ' + n + ' מטבעות.'));
+      });
+      return;
+    }
+    const entry = { id: this.nextId('p'), delta: delta, reason: s.reasonInput.trim(), date: this.stamp() };
+    this.setState({ ledger: [entry].concat(s.ledger), deltaInput: '', reasonInput: '', deltaError: '' });
+    const n = Math.abs(delta);
+    let message;
+    if (delta > 0) message = n === 1 ? 'נוספה נקודה אחת.' : 'נוספו ' + n + ' נקודות.';
+    else message = n === 1 ? 'הורדה נקודה אחת.' : 'הורדו ' + n + ' נקודות.';
+    this.flash('pointsFlash', message);
+  }
+
+  onEnter(fn) {
+    return (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        fn();
+      }
+    };
+  }
+
+  tabVals(active) {
+    const make = (key) => {
+      const on = active === key;
+      return {
+        selected: on ? 'true' : 'false',
+        border: on ? '#C7436A' : 'transparent',
+        color: on ? '#121413' : '#545D58',
+        weight: on ? '500' : '400',
+        select: () => this.setState({ tab: key })
+      };
+    };
+    return { tabProgress: make('progress'), tabFlights: make('flights'), tabTimeline: make('timeline'), tabPoints: make('points'), tabAccount: make('account') };
+  }
+
+  // The signed-in manager's name in the header, and a fresh draw whenever the data changes.
+  renderVals() {
+    const v = this.renderVals0();
+    const A = window.Academy;
+    if (A && A.on) {
+      if (!this._acaOff) this._acaOff = A.listen(() => this.forceUpdate());
+      v.meName = A.me.name;
+      v.meInitial = String(A.me.name || '?').trim().charAt(0);
+    } else {
+      v.meName = 'יהודה';
+      v.meInitial = 'י';
+    }
+    return v;
+  }
+
+  renderVals0() {
+    const s = this.st();
+    const tab = s.tab || this.startTab();
+    const units = this.units();
+    const a = s.account;
+    const total = s.ledger.reduce((sum, p) => sum + p.delta, 0);
+    const current = this.currentLevel(s.prog);
+    const allDone = this.allDone(s.prog);
+    const graphOn = tab === 'progress' && s.progView === 'graph';
+    const g = graphOn ? this.graph(s, current) : { nodes: [], edges: [], height: 0 };
+    return Object.assign({
+      setDeleteBox: this.deleteBoxRef(),
+      isProgress: tab === 'progress',
+      isFlights: tab === 'flights',
+      isTimeline: tab === 'timeline',
+      isPoints: tab === 'points',
+      isAccount: tab === 'account',
+      isDeleted: !!s.deleted,
+      isPresent: !s.deleted,
+      impersonating: !!s.impersonating,
+      isDisabled: !!s.disabled,
+      displayName: a.name,
+      username: a.username,
+      unitLabel: a.unit ? units[a.unit] : 'ללא יחידה',
+      currentLevelName: allDone ? 'המסלול הושלם' : this.levels()[current - 1].name,
+      pointsNumber: String(total),
+      pointsWord: Math.abs(total) === 1 ? 'נקודה' : 'נקודות',
+      isListView: !graphOn,
+      isGraphView: graphOn,
+      viewLabel: graphOn ? 'תצוגת רשימה' : 'תצוגת גרף',
+      toggleView: () => this.toggleView(),
+      announce: s.announce,
+      levels: this.levelVals(s, current, allDone),
+      nodes: g.nodes,
+      edges: g.edges,
+      graphH: String(g.height),
+      timeline: this.timelineVals(s),
+      deltaInput: s.deltaInput,
+      reasonInput: s.reasonInput,
+      onDelta: (e) => this.setState({ deltaInput: e.target.value, deltaError: '' }),
+      onReason: (e) => this.setState({ reasonInput: e.target.value }),
+      onPointsKey: this.onEnter(() => this.applyPoints()),
+      applyPoints: () => this.applyPoints(),
+      hasDeltaError: !!s.deltaError,
+      deltaError: s.deltaError,
+      deltaInvalid: s.deltaError ? 'true' : 'false',
+      deltaBorder: s.deltaError ? '#C62828' : '#D3D9D5',
+      hasPointsFlash: !!s.pointsFlash,
+      pointsFlash: s.pointsFlash,
+      ledger: s.ledger.map((p) => ({
+        id: p.id,
+        date: p.date,
+        reason: p.reason || '—',
+        amount: (p.delta > 0 ? '+' : '') + p.delta,
+        color: p.delta > 0 ? '#17694F' : '#B42318'
+      })),
+      ledgerEmpty: s.ledger.length === 0,
+      accUsername: s.draft.username,
+      accName: s.draft.name,
+      accRole: s.draft.role,
+      accUnit: s.draft.unit,
+      accEarns: !!s.draft.earns,
+      onAccUsername: (e) => this.setDraft('username', e.target.value),
+      onAccName: (e) => this.setDraft('name', e.target.value),
+      onAccRole: (e) => this.setDraft('role', e.target.value),
+      onAccUnit: (e) => this.setDraft('unit', e.target.value),
+      onAccEarns: (e) => this.setDraft('earns', e.target.checked),
+      onDetailsKey: this.onEnter(() => this.saveDetails()),
+      saveDetails: () => this.saveDetails(),
+      hasDetailsError: !!s.detailsError,
+      detailsError: s.detailsError,
+      detailsFlash: s.detailsFlash,
+      newPassword: s.newPassword,
+      onNewPassword: (e) => this.setState({ newPassword: e.target.value, passwordError: '' }),
+      onPasswordKey: this.onEnter(() => this.resetPassword()),
+      resetPassword: () => this.resetPassword(),
+      hasPasswordError: !!s.passwordError,
+      passwordError: s.passwordError,
+      passwordBorder: s.passwordError ? '#C62828' : '#D3D9D5',
+      hasPasswordFlash: !!s.passwordFlash,
+      passwordFlash: s.passwordFlash,
+      startImpersonating: () => {
+        this.setState({ impersonating: true });
+        try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (err) {}
+      },
+      stopImpersonating: () => this.setState({ impersonating: false }),
+      disableText: s.disabled ? 'החשבון מושבת: הסטודנט לא יכול להתחבר, וכל הנתונים שלו נשמרים.' : 'השבתת הכניסה חוסמת את החשבון אבל שומרת את כל הנתונים, ואפשר לבטל אותה בכל רגע.',
+      disableLabel: s.disabled ? 'הפעלת החשבון מחדש' : 'השבתת חשבון',
+      toggleDisabled: () => {
+        const A = window.Academy;
+        if (A && A.on) {
+          A.call('updateUser', { id: this.studentId(), disabled: !this.st().disabled });
+          return;
+        }
+        this.setState({ disabled: !this.st().disabled });
+      },
+      deleteAccount: () => {
+        const A = window.Academy;
+        if (A && A.on) {
+          A.call('deleteUser', { id: this.studentId() }).then((r) => { if (r.ok) location.href = 'Students.dc.html'; });
+          return;
+        }
+        this.setState({ deleted: true });
+      }
+    }, this.rankVals(total), this.tabVals(tab), this.mixVals(s), {
+      balanceText: String(s.sm ? s.sm.balance : total),
+      flights: this.flightVals(s),
+      flightCount: String(s.sm ? s.sm.doc.flights.length : 0),
+      joined: s.sm && s.sm.user && s.sm.user.created ? window.Academy.fmtDate(s.sm.user.created).slice(0, 5) + '.' + s.sm.user.created.slice(0, 4) : '11.10.2026',
+      noFlights: this.flightVals(s).length === 0,
+      unitOptions: Object.keys(units).map((id) => ({ id: id, name: units[id] })),
+      redoTail: this.redoPolicy() === 'hold' ? 'והנקודות שלו יורדות עד שיאושר שוב, כפי שנקבע ב' : 'והנקודות שכבר קיבל נשארות, כפי שנקבע ב',
+      nextRankLine: (() => {
+        const rv = this.rankVals(total);
+        return rv.hasNextRank ? 'עוד ' + rv.xpToNext + ' נקודות לדרגת ' + rv.nextRankName : 'הדרגה הגבוהה ביותר';
+      })()
+    });
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1020 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<title>הגדרות ניקוד</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Karantina:wght@400;700&amp;family=Rubik:wght@400;500;600;700&amp;family=Unbounded:wght@500;700;800&amp;display=swap">
+<style>
+body{margin:0;background:#F5F6F4}
+a{color:#17694F}a:hover{color:#0E4F3A}
+.pill-hover:hover{background:#EEF1EF !important;color:#121413 !important}
+.btn-ghost:hover:not(:disabled){background:#EEF1EF !important;border-color:#B9C2BD !important}
+.btn-primary:hover:not(:disabled){background:#B13A5D !important}
+.chip-link:hover{border-color:#121413 !important}
+.switch:hover > span{filter:brightness(0.95)}
+button:disabled,input:disabled{cursor:not-allowed !important}
+button:disabled{opacity:.55}
+input:disabled{background:#F1F3F2 !important;color:#8A928E !important}
+.vh{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+input::placeholder{color:#6E7772}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:2px solid #C7436A;outline-offset:2px}
+@media (max-width: 720px){.savebar{position:relative !important}}
+@media (prefers-reduced-motion: reduce){*{transition:none !important}}
+</style>
+</helmet>
+<div dir="rtl" lang="he" style="min-height: 100vh; box-sizing: border-box; background: #F5F6F4; color: #1E2320; font-family: 'Rubik', system-ui, 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.5; color-scheme: light;">
+<header style="border-bottom: 5px solid #BDEFDB; background: #FFFFFF;">
+<div style="max-width: 1280px; margin: 0 auto; padding: 10px clamp(16px, 4vw, 32px); box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 28px;">
+<a href="Main.dc.html" aria-label="88ACADEMY — לעמוד הסקירה" style="display: flex; align-items: center; gap: 10px; text-decoration: none; white-space: nowrap;">
+<svg width="32.6" height="34" viewBox="0 0 100 104.15" aria-hidden="true" style="flex: none; display: block;"><path d="M74.4 104L71.1 104 67.8 103.6 66.6 103.3 64.3 102.7 61.5 101.5 59 100.2 56.6 98.7 55.4 97.7 53.7 96.2 52.2 94.5 52.1 94.2 54 90.9 55.5 87.7 55.6 87.6 55.8 87.6 58.1 90.4 59 91.3 60.1 92.3 61.5 93.3 62.7 94 65.1 95.3 67.9 96.2 70.9 96.7 73.6 96.8 76.6 96.4 78.1 96.1 80.4 95.3 82.2 94.4 84.2 93.1 86 91.7 87.4 90.4 88.9 88.6 89.7 87.4 90.8 85.4 91.7 83.2 92.3 81.6 92.6 80.2 92.8 78.7 92.9 76.2 92.6 73.3 92.2 71.4 91.3 68.8 90.4 66.9 89 64.8 87.3 62.8 85.4 61.1 83.6 59.7 81.6 58.6 79.6 57.8 76.6 57 74.9 56.8 73.4 56.7 71.1 56.7 68.8 57.1 66.3 57.8 64.1 58.7 61.6 60.2 59.8 61.6 58.6 62.7 57.5 64 56 65.9 54.7 68.3 53.7 70.4 53.1 72.8 52.8 74.9 52.7 77.4 52.9 80.1 53.7 83.4 53.2 84.9 51.7 88.4 50.5 90.5 49.6 92 47.8 94.4 46.1 96.2 44.4 97.8 41.9 99.6 40.4 100.5 38 101.7 36.2 102.4 33.6 103.3 31.4 103.7 28.6 104 26.4 104 24.4 103.9 21.3 103.4 18.8 102.7 16.1 101.6 13.5 100.3 11.1 98.7 9.8 97.7 8.1 96.2 6.5 94.4 5.2 92.7 3.7 90.3 2.6 88.4 1.4 85.4 0.8 83.2 0.2 80.1 0 77.4 0.1 74.6 0.3 72.4 1 69.3 1.8 66.6 3.3 63.3 5.1 60.3 6.1 59 8 57 10 55.2 12.5 53.4 15 52 14.9 51.8 14.7 51.7 12.5 50.4 10.8 49.2 9.8 48.4 8.1 46.8 6.8 45.5 5.3 43.7 4.4 42.4 3.4 40.7 2.7 39.2 1.6 36.7 0.9 34.4 0.5 32.7 0.3 31.4 0 28.7 -0 25.9 0.1 24.4 0.7 20.9 1.7 17.8 2.9 15 4.4 12.3 6 10.1 6.8 9.1 8.3 7.6 10.5 5.7 11.8 4.8 13.3 3.8 15 2.9 16.9 2 19.1 1.2 22.1 0.4 24.4 0.1 26.7 -0 29.6 0.1 31.6 0.3 35.2 1.2 37.5 2.1 40.2 3.3 42.5 4.8 44.3 6.1 46.2 7.8 47.8 9.6 47.8 9.8 47.7 10.1 46.5 12.1 44.9 15.1 44.4 16.4 44.2 16.6 44 16.6 43.9 16.4 42.8 15 41.8 13.8 40.2 12.3 37.9 10.6 37 10.1 35.2 9.1 32.9 8.3 29.6 7.6 26.6 7.5 23.8 7.7 21.4 8.3 20.1 8.7 18.4 9.4 15.9 10.8 14.1 12.2 12.5 13.8 10.9 15.6 9.7 17.4 8.9 18.9 8.4 20.1 7.6 22.6 7.2 24.6 7 26.9 7.2 29.6 7.6 32.1 8.3 34.2 9.3 36.5 10.7 38.9 12.5 41 14.1 42.6 15.8 43.9 17.6 45 19.8 46.1 22.3 46.9 25.2 47.4 28.1 47.5 30.1 47.2 32.6 46.7 34.9 45.9 37.2 44.7 39.4 43.2 41.5 41.4 42.5 40.2 44.3 37.7 45.3 35.7 46.1 33.9 46.8 31.4 47 30.1 47.2 28.2 47.1 25.9 46.9 23.6 46.2 21.1 46.2 20.6 46.7 19.1 48.1 15.8 49.3 13.6 50.7 11.5 52.2 9.6 53.4 8.1 54.8 6.8 57.1 4.9 58.3 4.1 60.6 2.8 62.6 1.9 65 1.1 67.6 0.4 70.3 0.1 73.1 -0 75.4 0.1 77.9 0.4 80.7 1.1 83.1 2 85.4 3.1 87.4 4.3 89.7 6 91.4 7.5 93.1 9.1 94.6 11 96.2 13.5 97.3 15.6 98.5 18.5 99.3 21.3 99.7 23.9 99.9 25.9 99.8 30 99.4 32.7 98.9 35 98 37.5 96.6 40.5 95.4 42.5 93.7 44.8 92 46.7 90 48.5 87.7 50.2 85 51.8 84.9 52 87.4 53.4 89.1 54.7 90.8 56 92.5 57.6 94.1 59.5 95.3 61.2 96.4 63 97.4 64.8 98.2 66.7 98.9 68.9 99.5 71.6 99.8 73.6 99.9 76.1 99.8 79.2 99.5 81.4 99.2 83.1 98.7 84.9 98 86.7 97.1 88.9 95.6 91.5 94.4 93.2 93 94.9 91.7 96.3 90 97.8 88.5 98.9 86.5 100.2 84.4 101.4 82.7 102.1 81.2 102.7 78.7 103.4 75.9 103.9ZM75 47.3L76.7 47.1 78.2 46.7 80.6 45.9 82.2 45.1 84.1 43.9 85.4 42.9 87.2 41.3 88.4 39.9 89.4 38.5 90.6 36.5 91.4 34.9 92.1 32.9 92.5 31.1 92.8 29.6 92.9 27.2 92.7 25.1 92.5 23.8 92.1 21.8 91.5 20.3 90.7 18.4 89.9 16.9 88.4 14.9 87.3 13.6 85.5 12 84.1 10.9 82.7 10.1 81.1 9.2 78.7 8.3 76.1 7.7 74.6 7.5 72.4 7.4 70.4 7.6 69.1 7.8 66.6 8.4 64.8 9.1 63 10 61.5 10.9 60 12.1 58.3 13.6 57.1 14.9 56.2 16.1 55.3 17.6 54.5 19.1 53.6 21.4 53 23.9 52.8 25.2 52.7 27.2 52.8 29.6 53.1 31.4 53.7 33.7 54.5 35.7 55.5 37.5 56.5 39 57.6 40.5 58.9 41.9 60.3 43.1 61.6 44 63.6 45.2 65.1 45.9 67.4 46.8 69.6 47.2 71.3 47.4 73.3 47.5ZM50.1 61.8L51.5 60 52.6 58.6 54.5 56.6 56.1 55.3 57.3 54.4 60.8 52.2 60.8 52 60.6 51.8 59 50.9 56.6 49.4 54.5 47.6 53.6 46.7 52.1 45 50 42.3 49.8 42.4 49.7 42.5 47.7 45.2 46.2 46.8 45.2 47.7 43.2 49.4 41 50.8 39.3 51.8 39 52 39 52.2 39.2 52.4 41.9 54 44.5 56 45.6 57 47.2 58.6 48.5 60.2 49.7 61.8 49.8 62 50 61.9ZM29 96.7L30.9 96.4 32.6 96 34.9 95.2 36.5 94.4 37.9 93.6 39.6 92.4 40.9 91.2 42.4 89.6 43.5 88.1 44.6 86.4 45.5 84.6 46.2 82.7 46.7 80.6 47 78.9 47.1 76.9 47 74.6 46.7 73.3 46.1 70.6 45.2 68.6 44.4 66.9 43.3 65.3 42.4 64 40.9 62.4 39.2 61 37.9 60 35.7 58.8 33.9 58 32.2 57.4 30.2 56.9 28.2 56.7 26.6 56.7 24.4 56.8 22.6 57.1 20.4 57.7 18.3 58.6 16.8 59.4 15 60.6 14.1 61.3 12.7 62.6 11.3 64.2 10.3 65.6 9.2 67.4 8.4 69.1 7.8 71.1 7.3 73.3 7.1 74.9 7 76.7 7.1 78.7 7.4 80.6 7.7 81.9 8.5 84.1 9.5 86.2 10.5 87.8 11.8 89.5 13.5 91.3 14.9 92.5 16.3 93.6 17.9 94.5 19.6 95.3 21.8 96.1 23.9 96.5 25.7 96.7 27.2 96.8Z" fill="#121413" fill-rule="evenodd"></path></svg>
+<svg width="93.9" height="13" viewBox="0 0 72.24 10" aria-hidden="true" style="flex: none; display: block;"><path d="M8.7 9.9L1 9.9 0.4 9.6 0.1 9.1 0 8.5 0.5 7.2 3.7 0.7 4 0.3 4.3 0.1 4.6 -0 5.2 -0 5.6 0.1 5.9 0.4 8.2 5.1 9.6 7.9 9.8 8.5 9.7 9.1 9.6 9.4 9.3 9.7ZM18.4 9.9L15.2 9.8 14.6 9.8 13.8 9.6 13.1 9.3 12.7 9 12.1 8.5 11.6 7.9 11.3 7.2 11 6.1 11 4.9 11 3.9 11.3 2.7 11.6 1.9 12.1 1.3 12.8 0.7 13.8 0.3 14.5 0.1 15.7 -0 18.5 0 19 0.1 19.4 0.5 19.6 0.9 19.6 1.5 19.4 1.9 19.1 2.2 18.5 2.4 15.7 2.5 14.8 2.7 14.2 3 13.9 3.3 13.6 3.9 13.5 4.5 13.5 5.4 13.7 6.1 14 6.7 14.5 7.1 14.9 7.2 15.5 7.4 18.5 7.4 19.1 7.6 19.3 7.8 19.5 8.1 19.6 8.4 19.6 9 19.5 9.3 19.3 9.5 19 9.7ZM29.4 9.9L21.8 9.9 21.5 9.8 21.2 9.6 20.8 9.1 20.7 8.7 20.8 8.4 21.4 6.9 24.5 0.8 24.8 0.3 25.2 0 25.5 -0 26 0 26.4 0.2 26.7 0.6 29 5.1 30.4 7.9 30.6 8.7 30.5 9.1 30.3 9.4 30 9.7ZM37 9.9L32.8 9.9 32.3 9.7 32.1 9.5 31.9 9.3 31.7 8.5 31.7 1.2 31.9 0.6 32.1 0.3 32.4 0.1 33.3 -0 36.9 -0 37.8 0.1 38.7 0.3 39.6 0.6 40.1 1 40.6 1.5 41.1 2.2 41.3 2.7 41.5 3.6 41.6 5.1 41.5 6.3 41.2 7.3 41 7.7 40.4 8.7 39.6 9.3 39 9.5 38.1 9.7ZM50.1 9.9L43.9 9.9 43.4 9.8 43 9.4 42.8 9.1 42.7 8.5 42.7 1.3 42.8 0.7 42.9 0.4 43.1 0.2 43.6 0 44 -0 50 -0 50.7 0.1 51.2 0.4 51.4 1 51.3 1.6 51 2.1 50.6 2.4 50 2.5 45.5 2.5 45.3 2.5 45.2 2.7 45.2 7 45.3 7.3 45.7 7.4 50.1 7.4 50.9 7.6 51.2 7.9 51.3 8.2 51.3 8.7 51.3 9.1 51.1 9.4 50.9 9.6 50.6 9.8ZM61.2 9.9L60.7 9.8 60.5 9.7 60.1 9.4 60 9.1 59.9 8.5 59.9 4.8 59.9 4.6 59.7 4.5 58.2 5.9 57.9 6.1 57.5 6.1 57 6.1 56.7 6 55.4 4.7 55.1 4.5 55 4.8 55 8.7 54.8 9.3 54.4 9.7 53.9 9.9 53.1 9.8 52.7 9.4 52.6 9.1 52.5 8.5 52.5 1.3 52.6 0.7 52.8 0.3 53.1 0.1 53.6 -0 54.2 0.1 54.5 0.2 54.9 0.6 57.2 2.8 57.5 3 57.7 2.8 59.9 0.7 60.4 0.2 60.7 0.1 61.2 0 61.6 0.1 62.1 0.4 62.3 0.7 62.4 1.3 62.4 8.8 62.3 9.3 62.1 9.5 61.6 9.8ZM67.8 9.9L67.2 9.8 66.9 9.6 66.6 9.3 66.5 8.5 66.5 5.4 66.3 5.1 63.6 1.8 63.4 1.2 63.5 0.6 63.7 0.3 64.2 0 64.8 -0 65.2 0.1 65.7 0.4 67.5 2.5 67.8 2.7 68 2.5 70 0.2 70.4 -0 71.4 0 71.9 0.3 72.1 0.6 72.1 1.2 72.1 1.6 71.8 2.1 69.1 5.2 69 5.7 69 8.4 68.9 9.1 68.7 9.4 68.5 9.6 68.2 9.8ZM37.4 7.3L37.9 7.2 38.4 6.9 38.7 6.6 38.9 6.1 39.1 5.4 39.1 4.6 39 3.9 38.8 3.4 38.5 3.1 38.2 2.8 37.3 2.5 36.4 2.5 34.6 2.5 34.3 2.5 34.2 2.8 34.2 7 34.3 7.3 34.5 7.4 35.1 7.4 36.9 7.4ZM49.7 6.1L47.2 6.1 46.4 6 46.1 5.8 45.9 5.4 45.8 4.8 46 4.3 46.3 3.9 47 3.7 49.4 3.7 50.1 3.8 50.4 4.1 50.6 4.3 50.8 4.9 50.7 5.2 50.6 5.5 50.4 5.8 50.1 6ZM6.4 7.3L6.5 7.2 6.4 7 5.1 4.3 4.9 4.1 4.8 4.2 3.4 7 3.3 7.2 3.4 7.3 3.6 7.4 4.5 7.4 6.1 7.4ZM27.2 7.3L27.2 7.2 27.2 7 25.9 4.3 25.7 4.1 25.5 4.2 24.7 5.8 24.1 7.2 24.1 7.3 24.3 7.4 25.7 7.4 27 7.4Z" fill="#121413" fill-rule="evenodd"></path></svg>
+</a>
+<nav aria-label="ניווט ראשי" style="flex: 1 1 auto; min-width: 0;">
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 2px;">
+<li><a href="Main.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">סקירה</a></li>
+<li><a href="Students.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">סטודנטים</a></li>
+<li><a href="Units.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">יחידות</a></li>
+<li><a href="Leadership.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">מנהיגות</a></li>
+<li><a href="Curriculum.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">תוכנית לימודים</a></li>
+<li><a href="Rewards.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">פרסים</a></li>
+<li><a href="PointsSettings.dc.html" aria-current="page" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid #9FDDC4; background: #D3F4E6; color: #121413; font-weight: 600; text-decoration: none; font-size: 15px; white-space: nowrap;">ניקוד</a></li>
+<li><a href="Activity.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">פעילות</a></li>
+</ul>
+</nav>
+<div style="display: flex; align-items: center; gap: 8px;">
+<span style="display: flex; align-items: center; gap: 10px; color: #3D4541; font-size: 15px; white-space: nowrap;"><span aria-hidden="true" style="width: 30px; height: 30px; border-radius: 50%; background: #76DEB8; color: #121413; display: grid; place-items: center; font-size: 14px; font-weight: 600;">{{meInitial}}</span>{{meName}}</span>
+<a href="/password" class="btn-ghost" aria-label="החלפת סיסמה" title="החלפת סיסמה" style="width: 40px; height: 40px; box-sizing: border-box; display: grid; place-items: center; padding: 0; background: transparent; border: 1px solid transparent; border-radius: 10px; color: #545D58; text-decoration: none;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"></circle><path d="M10.8 12.2L20 3M17 6l2.5 2.5M14.5 8.5L17 11"></path></svg></a>
+<a href="/logout" class="btn-ghost" aria-label="התנתקות" style="width: 40px; height: 40px; box-sizing: border-box; display: grid; place-items: center; padding: 0; background: transparent; border: 1px solid transparent; border-radius: 10px; color: #545D58; text-decoration: none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3"></path><path d="M10 8l-4 4 4 4"></path><path d="M6 12h10"></path></svg></a>
+</div>
+</div>
+</header>
+
+<main style="max-width: 1280px; margin: 0 auto; padding: 40px clamp(16px, 4vw, 32px) 72px; box-sizing: border-box;">
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px;">
+<div style="flex: 1 1 520px; min-width: 0; max-width: 780px;">
+<h1 style="margin: 0; font-family: 'Karantina', 'Rubik', system-ui, sans-serif; font-size: 50px; line-height: 1; font-weight: 700; letter-spacing: 0.005em; color: #121413;">הגדרות ניקוד</h1>
+<p style="margin: 8px 0 0; font-size: 15px; line-height: 1.6; color: #3D4541;">כמה נקודות שווה כל דבר באתר, ומתי עולים בדרגה. השינויים חלים מרגע השמירה: נקודות שסטודנטים כבר קיבלו נשארות כמו שהן, והדרגה של כל אחד מתעדכנת לפי הספים החדשים. הסטודנטים רואים את הנקודות כמטבעות בארנק שלהם: נקודה אחת היא מטבע אחד.</p>
+</div>
+</div>
+
+<div class="savebar" style="position: sticky; top: 0; z-index: 5; margin-top: 18px; padding-top: 8px; padding-bottom: 4px; background: #F5F6F4;">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; padding: 12px 16px; background: #FFFFFF; border: 1px solid {{barBorder}}; border-radius: 16px; box-shadow: {{barShadow}};">
+<span ref="{{setStatus}}" tabindex="-1" style="display: inline-flex; align-items: center; gap: 10px; min-width: 0; font-size: 14px; font-weight: 500; color: {{statusColor}};"><span aria-hidden="true" style="flex: none; width: 10px; height: 10px; border-radius: 50%; background: {{statusDot}};"></span>{{statusText}}</span>
+<span style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; font-size: 13px; color: #545D58;">
+<span>המסלול המלא <span dir="ltr" style="font-family: 'Unbounded', 'Rubik', sans-serif; font-size: 14px; font-weight: 700; color: #121413;">{{courseTotalText}}</span></span>
+<span>יום למידה מלא עד <span dir="ltr" style="font-family: 'Unbounded', 'Rubik', sans-serif; font-size: 14px; font-weight: 700; color: #121413;">{{dayMaxText}}</span></span>
+<span>{{topRankName}} מ־<span dir="ltr" style="font-family: 'Unbounded', 'Rubik', sans-serif; font-size: 14px; font-weight: 700; color: #121413;">{{topRankMinText}}</span></span>
+</span>
+<span style="display: flex; flex-wrap: wrap; gap: 8px; margin-inline-start: auto;">
+<button type="button" class="btn-ghost" onClick="{{discard}}" disabled="{{clean}}" style="height: 42px; padding: 0 16px; border-radius: 10px; border: 1px solid #D3D9D5; background: #FFFFFF; color: #3D4541; font: inherit; font-size: 15px; cursor: pointer;">ביטול השינויים</button>
+<button type="button" class="btn-primary" onClick="{{save}}" disabled="{{cannotSave}}" style="height: 42px; padding: 0 26px; border: 0; border-radius: 10px; background: #C7436A; color: #FFFFFF; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer;">שמירה</button>
+</span>
+</div>
+<div aria-live="polite">
+<sc-if value="{{hasFlash}}" hint-placeholder-val="{{ false }}">
+<p style="display: flex; align-items: center; gap: 10px; margin: 10px 0 0; padding: 12px 16px; background: {{flashBg}}; border: 1px solid {{flashBorder}}; border-radius: 12px; font-size: 14px; color: {{flashColor}};"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg><span>{{flash}}</span></p>
+</sc-if>
+</div>
+</div>
+
+<nav aria-label="חלקי העמוד" style="margin-top: 14px;">
+<ul style="list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0;">
+<li><a href="#sec-stages" class="chip-link" style="display: inline-flex; align-items: center; height: 36px; padding: 0 14px; box-sizing: border-box; border-radius: 999px; border: 1px solid #D3D9D5; background: #FFFFFF; color: #121413; text-decoration: none; font-size: 14px;">שלבים</a></li>
+<li><a href="#sec-habit" class="chip-link" style="display: inline-flex; align-items: center; height: 36px; padding: 0 14px; box-sizing: border-box; border-radius: 999px; border: 1px solid #D3D9D5; background: #FFFFFF; color: #121413; text-decoration: none; font-size: 14px;">התמדה</a></li>
+<li><a href="#sec-bonus" class="chip-link" style="display: inline-flex; align-items: center; height: 36px; padding: 0 14px; box-sizing: border-box; border-radius: 999px; border: 1px solid #D3D9D5; background: #FFFFFF; color: #121413; text-decoration: none; font-size: 14px;">בונוסים</a></li>
+<li><a href="#sec-ranks" class="chip-link" style="display: inline-flex; align-items: center; height: 36px; padding: 0 14px; box-sizing: border-box; border-radius: 999px; border: 1px solid #D3D9D5; background: #FFFFFF; color: #121413; text-decoration: none; font-size: 14px;">דרגות</a></li>
+<li><a href="#sec-rules" class="chip-link" style="display: inline-flex; align-items: center; height: 36px; padding: 0 14px; box-sizing: border-box; border-radius: 999px; border: 1px solid #D3D9D5; background: #FFFFFF; color: #121413; text-decoration: none; font-size: 14px;">כללים</a></li>
+<li><a href="#sec-history" class="chip-link" style="display: inline-flex; align-items: center; height: 36px; padding: 0 14px; box-sizing: border-box; border-radius: 999px; border: 1px solid #D3D9D5; background: #FFFFFF; color: #121413; text-decoration: none; font-size: 14px;">היסטוריה</a></li>
+</ul>
+</nav>
+
+<div style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 24px; margin-top: 18px;">
+<div style="flex: 999 1 600px; min-width: 0; display: flex; flex-direction: column; gap: 24px;">
+
+<section id="sec-stages" aria-labelledby="stages-title" style="scroll-margin-top: 150px; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 18px; padding: 24px;">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px;">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px;">
+<h2 id="stages-title" style="margin: 0; font-size: 22px; line-height: 1.3; font-weight: 600; color: #121413;">נקודות על שלבים</h2>
+<span style="display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border-radius: 999px; background: #121413; color: #76DEB8; font-size: 12px; font-weight: 600;">המקור העיקרי לנקודות</span>
+</div>
+<span style="display: inline-flex; align-items: center; gap: 4px;">
+<span id="lb-switch-label" style="font-size: 14px; color: #3D4541;">בונוס סיום רמה</span>
+<button type="button" role="switch" class="switch" aria-checked="{{lbSwitch.checked}}" aria-labelledby="lb-switch-label" onClick="{{lbSwitch.toggle}}" style="flex: none; width: 56px; height: 44px; padding: 0; border: 0; background: transparent; display: grid; place-items: center; cursor: pointer;"><span style="width: 46px; height: 26px; box-sizing: border-box; padding: 3px; border-radius: 999px; background: {{lbSwitch.track}}; display: flex; justify-content: {{lbSwitch.knob}}; transition: background 0.15s ease;"><span style="width: 20px; height: 20px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 1px 3px rgba(18, 20, 19, 0.3);"></span></span></button>
+</span>
+</div>
+<p style="margin: 8px 0 0; font-size: 14px; line-height: 1.6; color: #545D58;">כשהמדריך מאשר טיסה, או מסמן מיומנות כנרכשה, הסטודנט מקבל את הנקודות שלה. כשכל המיומנויות ברמה נרכשות מתווסף בונוס סיום רמה.</p>
+<div style="display: flex; flex-direction: column; gap: 16px; margin-top: 18px;">
+<sc-for list="{{levelCards}}" as="lv" hint-placeholder-count="3">
+<div style="border: 1px solid #E1E5E2; border-radius: 16px; overflow: hidden;">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding: 12px 18px; background: #F5F7F5;">
+<h3 style="margin: 0; font-size: 17px; line-height: 1.4; font-weight: 600; color: #121413;">רמה {{lv.n}} · {{lv.name}}</h3>
+<span style="font-size: 14px; color: #545D58;">שווי הרמה <span dir="ltr" style="font-family: 'Unbounded', 'Rubik', sans-serif; font-size: 15px; font-weight: 700; color: #121413;">{{lv.worth}}</span></span>
+<span style="display: inline-flex; align-items: center; gap: 8px; margin-inline-start: auto;">
+<label for="{{lv.bonusId}}" style="font-size: 14px; color: {{lv.bonusLabelColor}};">בונוס סיום</label>
+<input id="{{lv.bonusId}}" type="text" inputmode="numeric" dir="ltr" autocomplete="off" value="{{lv.bonus}}" onChange="{{lv.onBonus}}" disabled="{{lv.bonusOff}}" aria-invalid="{{lv.bonusInvalid}}" aria-describedby="{{lv.noteId}}" style="width: 84px; height: 44px; box-sizing: border-box; padding: 0 10px; background: #FFFFFF; border: {{lv.bonusBorder}}; border-radius: 10px; color: #121413; font: inherit; font-size: 16px; font-weight: 600; text-align: center; font-variant-numeric: tabular-nums;">
+<span style="font-size: 13px; color: #5E6762;">נק׳</span>
+</span>
+<sc-if value="{{lv.hasNote}}" hint-placeholder-val="{{ false }}"><p id="{{lv.noteId}}" style="flex: 1 1 100%; margin: 0; font-size: 13px; color: {{lv.noteColor}}; text-align: end;">{{lv.note}}</p></sc-if>
+</div>
+<ul style="list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(290px, 100%), 1fr)); gap: 8px; margin: 0; padding: 14px 18px 18px;">
+<sc-for list="{{lv.skills}}" as="k" hint-placeholder-count="7">
+<li style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 6px 12px 6px 6px; border-radius: 12px; background: {{k.bg}}; border: 1px solid {{k.border}};">
+<span style="min-width: 0;"><label for="{{k.inputId}}" style="display: block; font-size: 15px; line-height: 1.35; color: #1E2320;">{{k.name}}</label><sc-if value="{{k.hasNote}}" hint-placeholder-val="{{ false }}"><span id="{{k.noteId}}" style="display: block; font-size: 12px; color: {{k.noteColor}};">{{k.note}}</span></sc-if></span>
+<span style="flex: none; display: flex; align-items: center; gap: 6px;"><input id="{{k.inputId}}" type="text" inputmode="numeric" dir="ltr" autocomplete="off" value="{{k.value}}" onChange="{{k.onChange}}" aria-invalid="{{k.invalid}}" aria-describedby="{{k.noteId}}" style="width: 72px; height: 44px; box-sizing: border-box; padding: 0 8px; background: #FFFFFF; border: {{k.inputBorder}}; border-radius: 10px; color: #121413; font: inherit; font-size: 16px; font-weight: 600; text-align: center; font-variant-numeric: tabular-nums;"><span style="font-size: 13px; color: #5E6762;">נק׳</span></span>
+</li>
+</sc-for>
+</ul>
+</div>
+</sc-for>
+</div>
+</section>
+
+<section id="sec-habit" aria-labelledby="habit-title" style="scroll-margin-top: 150px; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 18px; padding: 24px;">
+<h2 id="habit-title" style="margin: 0; font-size: 22px; line-height: 1.3; font-weight: 600; color: #121413;">נקודות על התמדה</h2>
+<p style="margin: 8px 0 0; font-size: 14px; line-height: 1.6; color: #545D58;">מעודדות להיכנס כל יום ולהתאמן באתר. כלל כבוי לא מזכה בנקודות, והוא לא מופיע לסטודנטים בהסבר.</p>
+<ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; margin: 16px 0 0; padding: 0;">
+<sc-for list="{{habitRules}}" as="ru" hint-placeholder-count="4">
+<li style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding: 12px 16px 12px 14px; border-radius: 14px; background: {{ru.bg}}; border: 1px solid {{ru.border}};">
+<button type="button" role="switch" class="switch" aria-checked="{{ru.checked}}" aria-label="{{ru.switchLabel}}" onClick="{{ru.toggle}}" style="flex: none; width: 56px; height: 44px; padding: 0; border: 0; background: transparent; display: grid; place-items: center; cursor: pointer;"><span style="width: 46px; height: 26px; box-sizing: border-box; padding: 3px; border-radius: 999px; background: {{ru.track}}; display: flex; justify-content: {{ru.knob}}; transition: background 0.15s ease;"><span style="width: 20px; height: 20px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 1px 3px rgba(18, 20, 19, 0.3);"></span></span></button>
+<span style="flex: 1 1 220px; min-width: 0;"><span style="display: block; font-size: 16px; font-weight: 600; color: {{ru.titleColor}};">{{ru.title}}</span><span style="display: block; margin-top: 2px; font-size: 13px; line-height: 1.5; color: #545D58;">{{ru.desc}}</span></span>
+<span style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 14px; color: #3D4541;">
+<sc-for list="{{ru.fields}}" as="fd" hint-placeholder-count="1">
+<span style="display: inline-flex; align-items: center; gap: 6px;"><sc-if value="{{fd.hasBefore}}" hint-placeholder-val="{{ false }}"><span aria-hidden="true">{{fd.before}}</span></sc-if><input id="{{fd.id}}" type="text" inputmode="numeric" dir="ltr" autocomplete="off" value="{{fd.value}}" onChange="{{fd.onChange}}" disabled="{{fd.disabled}}" aria-label="{{fd.aria}}" aria-invalid="{{fd.invalid}}" style="width: {{fd.width}}px; height: 44px; box-sizing: border-box; padding: 0 8px; background: #FFFFFF; border: {{fd.border}}; border-radius: 10px; color: #121413; font: inherit; font-size: 16px; font-weight: 600; text-align: center; font-variant-numeric: tabular-nums;"><span aria-hidden="true">{{fd.after}}</span></span>
+</sc-for>
+</span>
+<sc-if value="{{ru.hasNote}}" hint-placeholder-val="{{ false }}"><p style="flex: 1 1 100%; margin: 0; font-size: 13px; color: {{ru.noteColor}};">{{ru.note}}</p></sc-if>
+</li>
+</sc-for>
+</ul>
+</section>
+
+<section id="sec-bonus" aria-labelledby="bonus-title" style="scroll-margin-top: 150px; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 18px; padding: 24px;">
+<h2 id="bonus-title" style="margin: 0; font-size: 22px; line-height: 1.3; font-weight: 600; color: #121413;">בונוסים</h2>
+<p style="margin: 8px 0 0; font-size: 14px; line-height: 1.6; color: #545D58;">נקודות על מאמץ שמעבר לחובה.</p>
+<ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; margin: 16px 0 0; padding: 0;">
+<sc-for list="{{bonusRules}}" as="bu" hint-placeholder-count="3">
+<li style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding: 12px 16px 12px 14px; border-radius: 14px; background: {{bu.bg}}; border: 1px solid {{bu.border}};">
+<button type="button" role="switch" class="switch" aria-checked="{{bu.checked}}" aria-label="{{bu.switchLabel}}" onClick="{{bu.toggle}}" style="flex: none; width: 56px; height: 44px; padding: 0; border: 0; background: transparent; display: grid; place-items: center; cursor: pointer;"><span style="width: 46px; height: 26px; box-sizing: border-box; padding: 3px; border-radius: 999px; background: {{bu.track}}; display: flex; justify-content: {{bu.knob}}; transition: background 0.15s ease;"><span style="width: 20px; height: 20px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 1px 3px rgba(18, 20, 19, 0.3);"></span></span></button>
+<span style="flex: 1 1 220px; min-width: 0;"><span style="display: block; font-size: 16px; font-weight: 600; color: {{bu.titleColor}};">{{bu.title}}</span><span style="display: block; margin-top: 2px; font-size: 13px; line-height: 1.5; color: #545D58;">{{bu.desc}}</span></span>
+<span style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 14px; color: #3D4541;">
+<sc-for list="{{bu.fields}}" as="bf" hint-placeholder-count="1">
+<span style="display: inline-flex; align-items: center; gap: 6px;"><input id="{{bf.id}}" type="text" inputmode="numeric" dir="ltr" autocomplete="off" value="{{bf.value}}" onChange="{{bf.onChange}}" disabled="{{bf.disabled}}" aria-label="{{bf.aria}}" aria-invalid="{{bf.invalid}}" style="width: {{bf.width}}px; height: 44px; box-sizing: border-box; padding: 0 8px; background: #FFFFFF; border: {{bf.border}}; border-radius: 10px; color: #121413; font: inherit; font-size: 16px; font-weight: 600; text-align: center; font-variant-numeric: tabular-nums;"><span aria-hidden="true">{{bf.after}}</span></span>
+</sc-for>
+</span>
+<sc-if value="{{bu.hasNote}}" hint-placeholder-val="{{ false }}"><p style="flex: 1 1 100%; margin: 0; font-size: 13px; color: {{bu.noteColor}};">{{bu.note}}</p></sc-if>
+</li>
+</sc-for>
+</ul>
+</section>
+
+<section id="sec-ranks" aria-labelledby="ranks-title" style="scroll-margin-top: 150px; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 18px; padding: 24px;">
+<h2 id="ranks-title" style="margin: 0; font-size: 22px; line-height: 1.3; font-weight: 600; color: #121413;">דרגות</h2>
+<p style="margin: 8px 0 0; font-size: 14px; line-height: 1.6; color: #545D58;">הדרגה נקבעת לפי כל הנקודות שהסטודנט צבר. כשהוא עובר סף, הוא עולה דרגה ורואה חגיגה. אפשר לשנות שמות וספים, ולהוסיף או להסיר דרגות (2 עד 8).</p>
+<ol style="list-style: none; margin: 16px 0 0; padding: 0; border: 1px solid #E1E5E2; border-radius: 14px; overflow: hidden;">
+<sc-for list="{{rankRows}}" as="rk" hint-placeholder-count="5">
+<li style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding: 12px 16px; border-top: 1px solid {{rk.divider}}; background: {{rk.bg}};">
+<span aria-hidden="true" style="flex: none; width: 42px; height: 42px; border-radius: 50%; background: #121413; color: #76DEB8; display: grid; place-items: center; font-family: 'Unbounded', 'Rubik', sans-serif; font-size: 15px; font-weight: 700;">{{rk.num}}</span>
+<span style="flex: 1 1 170px; min-width: 0;"><label for="{{rk.nameId}}" class="vh">{{rk.nameLabel}}</label><input id="{{rk.nameId}}" type="text" autocomplete="off" value="{{rk.name}}" onChange="{{rk.onName}}" aria-invalid="{{rk.nameInvalid}}" style="width: 100%; height: 44px; box-sizing: border-box; padding: 0 12px; background: #FFFFFF; border: {{rk.nameBorder}}; border-radius: 10px; color: #121413; font-family: 'Karantina', 'Rubik', sans-serif; font-size: 26px; font-weight: 700;"></span>
+<span style="display: inline-flex; align-items: center; gap: 6px; font-size: 14px; color: #3D4541;">
+<sc-if value="{{rk.isFirst}}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; align-items: center; height: 44px; padding: 0 4px; color: #545D58;">מההתחלה (0 נק׳)</span></sc-if>
+<sc-if value="{{rk.notFirst}}" hint-placeholder-val="{{ true }}"><label for="{{rk.minId}}">מ־</label><input id="{{rk.minId}}" type="text" inputmode="numeric" dir="ltr" autocomplete="off" value="{{rk.min}}" onChange="{{rk.onMin}}" aria-invalid="{{rk.minInvalid}}" style="width: 96px; height: 44px; box-sizing: border-box; padding: 0 8px; background: #FFFFFF; border: {{rk.minBorder}}; border-radius: 10px; color: #121413; font: inherit; font-size: 16px; font-weight: 600; text-align: center; font-variant-numeric: tabular-nums;"><span>נק׳</span></sc-if>
+</span>
+<span style="display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border-radius: 999px; background: {{rk.countBg}}; color: {{rk.countColor}}; font-size: 13px; font-weight: 500; white-space: nowrap;">{{rk.countText}}</span>
+<button type="button" class="btn-ghost" aria-label="{{rk.removeLabel}}" onClick="{{rk.remove}}" disabled="{{rk.cannotRemove}}" style="flex: none; width: 44px; height: 44px; display: grid; place-items: center; padding: 0; border-radius: 10px; border: 1px solid #D3D9D5; background: #FFFFFF; color: #545D58; cursor: pointer;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"></path></svg></button>
+<sc-if value="{{rk.hasError}}" hint-placeholder-val="{{ false }}"><p style="flex: 1 1 100%; margin: 0; font-size: 13px; color: #B42318;">{{rk.error}}</p></sc-if>
+<sc-if value="{{rk.hasNote}}" hint-placeholder-val="{{ false }}"><p style="flex: 1 1 100%; margin: 0; font-size: 13px; color: #B23A5E;">{{rk.note}}</p></sc-if>
+</li>
+</sc-for>
+</ol>
+<button type="button" class="btn-ghost" ref="{{setAddRank}}" onClick="{{addRank}}" disabled="{{cannotAddRank}}" style="display: inline-flex; align-items: center; gap: 8px; height: 44px; margin-top: 12px; padding: 0 16px; border-radius: 10px; border: 1px solid #D3D9D5; background: #FFFFFF; color: #121413; font: inherit; font-size: 15px; font-weight: 500; cursor: pointer;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>הוספת דרגה</button>
+</section>
+
+<section id="sec-rules" aria-labelledby="rules-title" style="scroll-margin-top: 150px; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 18px; padding: 24px;">
+<h2 id="rules-title" style="margin: 0; font-size: 22px; line-height: 1.3; font-weight: 600; color: #121413;">כללים</h2>
+<fieldset style="margin: 14px 0 0; padding: 0; border: 0; min-width: 0;">
+<legend style="padding: 0; font-size: 16px; font-weight: 600; color: #121413;">כשהמדריך מסמן ״נדרש״ (ביצוע חוזר של תרגיל)</legend>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+<sc-for list="{{redoOptions}}" as="ro" hint-placeholder-count="2">
+<label style="display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; border-radius: 14px; border: {{ro.border}}; background: {{ro.bg}}; cursor: pointer;">
+<input type="radio" name="redo-policy" value="{{ro.value}}" checked="{{ro.checked}}" onChange="{{ro.pick}}" style="flex: none; width: 20px; height: 20px; margin: 2px 0 0; accent-color: #B23A5E; cursor: pointer;">
+<span style="min-width: 0;"><span style="display: block; font-size: 15px; font-weight: 600; color: #121413;">{{ro.title}}</span><span style="display: block; margin-top: 2px; font-size: 13px; line-height: 1.55; color: #545D58;">{{ro.desc}}</span></span>
+</label>
+</sc-for>
+</div>
+</fieldset>
+<div style="display: flex; align-items: flex-start; gap: 12px; margin-top: 16px; padding: 14px 16px; border-radius: 14px; background: #F5F7F5; font-size: 14px; line-height: 1.6; color: #3D4541;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#17694F" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 2px;"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5.5M12 7.5v.01"></path></svg><span>מימוש פרס מוריד רק מהיתרה למימוש של הסטודנט. הדרגה נקבעת לפי כל מה שנצבר, ולא יורדת כשמממשים. את מחירי הפרסים קובעים ב<a href="Rewards.dc.html">עמוד הפרסים</a>.</span></div>
+</section>
+
+<section id="sec-history" aria-labelledby="history-title" style="scroll-margin-top: 150px; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 18px; padding: 24px;">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px;">
+<h2 id="history-title" style="margin: 0; font-size: 22px; line-height: 1.3; font-weight: 600; color: #121413;">היסטוריית שינויים</h2>
+<button type="button" class="btn-ghost" onClick="{{resetDefaults}}" disabled="{{isDefaultDraft}}" style="height: 40px; padding: 0 14px; border-radius: 10px; border: 1px solid #D3D9D5; background: #FFFFFF; color: #3D4541; font: inherit; font-size: 14px; cursor: pointer;">החזרת ברירות המחדל</button>
+</div>
+<ol style="list-style: none; margin: 12px 0 0; padding: 0;">
+<sc-for list="{{logRows}}" as="lg" hint-placeholder-count="1">
+<li style="padding: 14px 0; border-top: 1px solid {{lg.divider}};">
+<p style="margin: 0; font-size: 13px; color: #545D58;"><span dir="ltr" style="font-family: 'IBM Plex Mono', ui-monospace, monospace;">{{lg.at}}</span> · {{lg.by}}</p>
+<ul style="margin: 6px 0 0; padding: 0 18px 0 0; font-size: 15px; line-height: 1.6; color: #1E2320;">
+<sc-for list="{{lg.lines}}" as="ln" hint-placeholder-count="2"><li>{{ln.text}}</li></sc-for>
+</ul>
+</li>
+</sc-for>
+</ol>
+</section>
+</div>
+
+<aside aria-label="סיכום והשפעה" style="flex: 1 1 320px; max-width: 420px; min-width: 0; display: flex; flex-direction: column; gap: 20px;">
+<section aria-labelledby="econ-title" style="padding: 22px 24px; border-radius: 22px; background: #121413; color: #FFFFFF;">
+<h2 id="econ-title" style="margin: 0; font-family: 'Karantina', 'Rubik', sans-serif; font-size: 36px; line-height: 0.95; font-weight: 700;">כלכלת הנקודות</h2>
+<p style="margin: 6px 0 0; font-size: 13px; color: #B8C2BD;">מתעדכן תוך כדי עריכה.</p>
+<p style="margin: 18px 0 0; font-size: 13px; color: #B8C2BD;">המסלול המלא שווה</p>
+<p dir="ltr" style="margin: 2px 0 0; text-align: right; font-family: 'Unbounded', 'Rubik', sans-serif; font-size: 40px; line-height: 1.05; font-weight: 700; color: #76DEB8;">{{courseTotalText}}</p>
+<p style="margin: 4px 0 0; font-size: 13px; color: #DCE3DF;">{{courseSplitText}}</p>
+<ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; margin: 16px 0 0; padding: 0;">
+<sc-for list="{{econLevels}}" as="el" hint-placeholder-count="3">
+<li>
+<span style="display: flex; justify-content: space-between; gap: 8px; font-size: 13px; color: #DCE3DF;"><span>רמה {{el.n}} · {{el.name}}</span><span dir="ltr" style="font-family: 'Unbounded', 'Rubik', sans-serif; font-weight: 700; color: #FFFFFF;">{{el.worth}}</span></span>
+<span aria-hidden="true" style="display: block; height: 6px; margin-top: 5px; border-radius: 999px; background: #2C322F; overflow: hidden;"><span style="display: block; width: {{el.pct}}%; height: 100%; border-radius: 999px; background: #76DEB8;"></span></span>
+</li>
+</sc-for>
+</ul>
+<dl style="display: grid; grid-template-columns: minmax(0, 1fr) max-content; gap: 10px 12px; margin: 18px 0 0; padding-top: 16px; border-top: 1px solid #2C322F; font-size: 14px;">
+<dt style="color: #DCE3DF;">יום למידה מלא<span style="display: block; font-size: 12px; color: #B8C2BD;">{{dayMaxSplit}}</span></dt><dd dir="ltr" style="margin: 0; font-family: 'Unbounded', 'Rubik', sans-serif; font-weight: 700; color: #FFFFFF;">{{dayMaxText}}</dd>
+<dt style="color: #DCE3DF;">שבוע של כניסה כל יום<span style="display: block; font-size: 12px; color: #B8C2BD;">כניסות ובונוסי רצף</span></dt><dd dir="ltr" style="margin: 0; font-family: 'Unbounded', 'Rubik', sans-serif; font-weight: 700; color: #FFFFFF;">{{weekStreakText}}</dd>
+<dt style="color: #DCE3DF;">{{topRankName}}<span style="display: block; font-size: 12px; color: #B8C2BD;">הדרגה הגבוהה</span></dt><dd dir="ltr" style="margin: 0; font-family: 'Unbounded', 'Rubik', sans-serif; font-weight: 700; color: #FFFFFF;">{{topRankMinText}}</dd>
+</dl>
+<p style="margin: 14px 0 0; padding: 12px 14px; border-radius: 14px; background: #1F2421; font-size: 14px; line-height: 1.55; color: #FFFFFF;">{{topRankNote}}</p>
+</section>
+
+<section aria-labelledby="impact-title" style="padding: 22px 24px; border-radius: 22px; background: #FFFFFF; border: 1px solid #E1E5E2;">
+<h2 id="impact-title" style="margin: 0; font-size: 19px; line-height: 1.3; font-weight: 600; color: #121413;">הסטודנטים לפי דרגה</h2>
+<p style="margin: 6px 0 0; font-size: 13px; line-height: 1.55; color: #545D58;">{{impactIntro}}</p>
+<ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; margin: 14px 0 0; padding: 0;">
+<sc-for list="{{rankSpread}}" as="sp" hint-placeholder-count="5">
+<li>
+<span style="display: flex; justify-content: space-between; gap: 8px; font-size: 14px;"><span style="color: #121413; font-weight: 500;">{{sp.name}}</span><span style="color: #3D4541;">{{sp.countText}}<sc-if value="{{sp.hasDelta}}" hint-placeholder-val="{{ false }}"> <span dir="ltr" style="font-weight: 600; color: {{sp.deltaColor}};">{{sp.delta}}</span></sc-if></span></span>
+<span aria-hidden="true" style="display: block; height: 8px; margin-top: 5px; border-radius: 999px; background: #E6EAE7; overflow: hidden;"><span style="display: block; width: {{sp.pct}}%; height: 100%; border-radius: 999px; background: #2A9171;"></span></span>
+</li>
+</sc-for>
+</ul>
+<sc-if value="{{hasMoves}}" hint-placeholder-val="{{ false }}">
+<div style="margin-top: 16px; padding: 12px 14px; border-radius: 14px; background: #FFF6F9; border: 1px solid #E9B2C4;">
+<p style="margin: 0; font-size: 14px; font-weight: 600; color: #7A2343;">{{movesTitle}}</p>
+<ul style="margin: 6px 0 0; padding: 0 18px 0 0; font-size: 14px; line-height: 1.6; color: #1E2320;">
+<sc-for list="{{moves}}" as="mv" hint-placeholder-count="2"><li>{{mv.text}}</li></sc-for>
+</ul>
+</div>
+</sc-if>
+<a href="Students.dc.html" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; font-size: 14px; color: #17694F; text-decoration: none;">לנקודות של כל סטודנט<span aria-hidden="true">←</span></a>
+</section>
+
+<section aria-labelledby="where-title" style="padding: 20px 22px; border-radius: 22px; background: #E9FAF3; border: 1px solid #BDEFDB;">
+<h2 id="where-title" style="margin: 0; font-size: 17px; line-height: 1.3; font-weight: 600; color: #121413;">איפה זה מופיע</h2>
+<ul style="list-style: none; display: flex; flex-direction: column; gap: 8px; margin: 10px 0 0; padding: 0; font-size: 14px;">
+<li><a href="Curriculum.dc.html" style="color: #17694F;">הנקודות של כל מיומנות בתוכנית הלימודים</a></li>
+<li><a href="Rewards.dc.html" style="color: #17694F;">הסיכום בעמוד הפרסים</a></li>
+</ul>
+</section>
+</aside>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":3860}}'>
+class Component extends DCLogic {
+  // ---------- scoring settings (the same shape on every screen that uses them) ----------
+  // Saved in this browser under one key, so all screens of the prototype read the same values.
+  storeKey() {
+    return '88academy.scoring.v1';
+  }
+
+  scoringDefaults() {
+    return {
+      v: 1,
+      rules: {
+        login: { on: true, points: 5 },
+        streak3: { on: true, points: 10 },
+        streak7: { on: true, points: 30 },
+        time: { on: true, points: 5, minutes: 10, max: 3 },
+        video: { on: true, points: 5 },
+        first: { on: true, points: 10 },
+        quests: { on: true, points: 15 }
+      },
+      levelBonus: { on: true, 1: 50, 2: 100, 3: 150 },
+      skills: { 1: 20, 2: 20, 3: 20, 4: 50, 5: 40, 6: 30, 7: 40, 8: 50, 9: 20, 10: 25, 11: 25, 12: 80, 13: 50, 14: 30, 15: 60, 16: 50, 17: 80, 18: 50, 19: 50, 20: 50 },
+      ranks: [{ name: 'צוער', min: 0 }, { name: 'איש כנף', min: 300 }, { name: 'טייס', min: 600 }, { name: 'מוביל מבנה', min: 1000 }, { name: 'מפקד טייסת', min: 1500 }],
+      redo: 'keep'
+    };
+  }
+
+  // Saved values over the defaults, field by field. Anything missing or malformed keeps its default.
+  mergeScoring(base, saved) {
+    const out = JSON.parse(JSON.stringify(base));
+    if (!saved || typeof saved !== 'object') return out;
+    const int = (v, min, max) => typeof v === 'number' && isFinite(v) && Math.floor(v) === v && v >= min && v <= max;
+    const rules = saved.rules || {};
+    Object.keys(out.rules).forEach((k) => {
+      const r = rules[k];
+      if (!r || typeof r !== 'object') return;
+      if (typeof r.on === 'boolean') out.rules[k].on = r.on;
+      if (int(r.points, 0, 10000)) out.rules[k].points = r.points;
+      if (k === 'time') {
+        if (int(r.minutes, 1, 600)) out.rules.time.minutes = r.minutes;
+        if (int(r.max, 1, 100)) out.rules.time.max = r.max;
+      }
+    });
+    const lb = saved.levelBonus || {};
+    if (typeof lb.on === 'boolean') out.levelBonus.on = lb.on;
+    Array.from(new Set([1, 2, 3].concat(Object.keys(lb).filter((k) => /^\d+$/.test(k)).map(Number)))).forEach((n) => { if (int(lb[n], 0, 100000)) out.levelBonus[n] = lb[n]; });
+    const sk = saved.skills || {};
+    Array.from(new Set(Object.keys(out.skills).concat(Object.keys(sk).filter((k) => /^\d+$/.test(k))))).forEach((id) => { if (int(sk[id], 0, 10000)) out.skills[id] = sk[id]; });
+    const rk = saved.ranks;
+    const ranksOk = Array.isArray(rk) && rk.length >= 2 && rk.length <= 8 && rk.every((r, i) => r && typeof r.name === 'string' && r.name.trim() && int(r.min, 0, 1000000) && (i === 0 ? r.min === 0 : r.min > rk[i - 1].min));
+    if (ranksOk) out.ranks = rk.map((r) => ({ name: r.name.trim().slice(0, 24), min: r.min }));
+    if (saved.redo === 'keep' || saved.redo === 'hold') out.redo = saved.redo;
+    return out;
+  }
+
+  // ---------- content ----------
+  levels() {
+    if (window.Academy && window.Academy.on) return window.Academy.levels().map((l) => ({ n: l.n, name: l.name }));
+    return [{ n: 1, name: 'אבני יסוד' }, { n: 2, name: 'תרגילי קורס פרופלור' }, { n: 3, name: 'תרגילים מתקדמים' }];
+  }
+
+  // The active skills of the curriculum (the ones students can earn).
+  skills() {
+    if (window.Academy && window.Academy.on) return window.Academy.skills().map((k) => ({ id: k.id, level: k.level, name: k.name }));
+    const names = ['שמירה על גובה', 'טיסה בקו ישר', 'האטה ובלימה', 'סללום ימינה ושמאלה', 'שינוי גובה', 'פניות', 'שמיניות', 'עינוי סיני', 'מסלול', 'נחיתות', 'צלילות', 'מדרגות', 'צינורות', 'נחיתות מדויקות', 'ירידה במדרגות', 'פיגומים', 'עליית מדרגות - שמאל', 'סיבוב 360 בפיר מעלית', 'מעבר בתוך המנוף', 'שמיניות קצרות'];
+    return names.map((name, i) => ({ id: i + 1, level: i < 7 ? 1 : i < 13 ? 2 : 3, name: name }));
+  }
+
+  // The students in the system and the points each has earned so far (as on the students page).
+  students() {
+    if (window.Academy && window.Academy.on) return window.Academy.students().map((sm) => ({ name: sm.user.name, points: sm.total }));
+    return [
+      { name: 'א. ראדין', points: 670 }, { name: 'א. סדוב', points: 230 }, { name: 'א. וולך', points: 320 },
+      { name: 'א. יהודאי', points: 110 }, { name: 'באבאפוו', points: 290 }, { name: 'ד. אסף', points: 440 },
+      { name: 'ד. סקולסקי', points: 520 }, { name: 'ד. צדקה', points: 670 }, { name: 'א. פרוינדליך', points: 520 },
+      { name: 'א. מטלון', points: 670 }, { name: 'א. פולטוב', points: 440 }
+    ];
+  }
+
+  ruleTitles() {
+    return { login: 'כניסה יומית', streak3: 'רצף של 3 ימים', streak7: 'רצף שבועי', time: 'זמן למידה', video: 'צפייה בסרטון הדגמה', first: 'מעבר בניסיון הראשון', quests: 'משימות היום' };
+  }
+
+  // ---------- storage ----------
+  readStore() {
+    let raw = null;
+    try { raw = window.localStorage.getItem(this.storeKey()); } catch (err) { raw = null; }
+    let saved = null;
+    try { saved = raw ? JSON.parse(raw) : null; } catch (err) { saved = null; }
+    const log = saved && Array.isArray(saved.log) ? saved.log.filter((e) => e && typeof e.at === 'string' && Array.isArray(e.changes)).slice(0, 20) : this.seedLog();
+    return { settings: this.mergeScoring(this.scoringDefaults(), saved), log: log };
+  }
+
+  writeStore(settings, log) {
+    try {
+      window.localStorage.setItem(this.storeKey(), JSON.stringify(Object.assign({}, settings, { log: log })));
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
+
+  seedLog() {
+    if (window.Academy && window.Academy.on) return [];
+    return [{ id: 'lg0', at: '16.10.2026 21:25', by: 'יהודה', changes: ['הגדרת שיטת הניקוד: נקודות על שלבים, התמדה ובונוסים, ו־5 דרגות'] }];
+  }
+
+  // ---------- draft (what the form shows) ----------
+  toDraft(sc, seqFrom) {
+    const val = {};
+    const on = {};
+    Object.keys(sc.rules).forEach((k) => { on[k] = !!sc.rules[k].on; val[k] = String(sc.rules[k].points); });
+    val.timeMinutes = String(sc.rules.time.minutes);
+    val.timeMax = String(sc.rules.time.max);
+    on.levelBonus = !!sc.levelBonus.on;
+    this.levels().forEach((l) => { val['lb' + l.n] = String(sc.levelBonus[l.n] != null ? sc.levelBonus[l.n] : 0); });
+    this.skills().forEach((k) => { val['sk' + k.id] = String(sc.skills[k.id] != null ? sc.skills[k.id] : 0); });
+    const base = seqFrom || 0;
+    return { val: val, on: on, ranks: sc.ranks.map((r, i) => ({ id: 'r' + (base + i), name: r.name, min: String(r.min) })), redo: sc.redo, rankSeq: base + sc.ranks.length };
+  }
+
+  num(v) {
+    const s = String(v == null ? '' : v).trim();
+    return /^\d{1,6}$/.test(s) ? parseInt(s, 10) : NaN;
+  }
+
+  // Number fields and their limits.
+  limits() {
+    const out = { login: [0, 1000], streak3: [0, 1000], streak7: [0, 1000], time: [0, 1000], timeMinutes: [1, 120], timeMax: [1, 24], video: [0, 1000], first: [0, 1000], quests: [0, 1000] };
+    this.levels().forEach((l) => { out['lb' + l.n] = [0, 5000]; });
+    this.skills().forEach((k) => { out['sk' + k.id] = [0, 1000]; });
+    return out;
+  }
+
+  errorsOf(d) {
+    const e = {};
+    const lim = this.limits();
+    Object.keys(lim).forEach((key) => {
+      const n = this.num(d.val[key]);
+      if (isNaN(n)) e[key] = 'צריך מספר שלם.';
+      else if (n < lim[key][0] || n > lim[key][1]) e[key] = 'בין ' + lim[key][0] + ' ל־' + lim[key][1].toLocaleString('en-US') + '.';
+    });
+    const names = {};
+    d.ranks.forEach((r, i) => {
+      const name = r.name.trim();
+      if (!name) e['rn:' + r.id] = 'צריך שם לדרגה.';
+      else if (names[name]) e['rn:' + r.id] = 'כבר יש דרגה בשם הזה.';
+      names[name] = true;
+      if (i === 0) return;
+      const n = this.num(r.min);
+      const prev = i === 1 ? 0 : this.num(d.ranks[i - 1].min);
+      if (isNaN(n)) e['rm:' + r.id] = 'צריך מספר שלם.';
+      else if (n > 1000000) e['rm:' + r.id] = 'עד 1,000,000.';
+      else if (!isNaN(prev) && n <= prev) e['rm:' + r.id] = 'הסף צריך להיות גבוה מ־' + prev.toLocaleString('en-US') + ' (' + (d.ranks[i - 1].name.trim() || 'הדרגה הקודמת') + ').';
+    });
+    return e;
+  }
+
+  // A valid draft back into settings.
+  fromDraft(d) {
+    const n = (key) => this.num(d.val[key]);
+    const rules = {};
+    ['login', 'streak3', 'streak7', 'video', 'first', 'quests'].forEach((k) => { rules[k] = { on: !!d.on[k], points: n(k) }; });
+    rules.time = { on: !!d.on.time, points: n('time'), minutes: n('timeMinutes'), max: n('timeMax') };
+    const saved = this.st().saved || {};
+    const skills = Object.assign({}, saved.skills || {});
+    this.skills().forEach((k) => { skills[k.id] = n('sk' + k.id); });
+    const levelBonus = Object.assign({}, saved.levelBonus || {}, { on: !!d.on.levelBonus });
+    this.levels().forEach((l) => { levelBonus[l.n] = n('lb' + l.n); });
+    return {
+      v: 1,
+      rules: rules,
+      levelBonus: levelBonus,
+      skills: skills,
+      ranks: d.ranks.map((r, i) => ({ name: r.name.trim(), min: i === 0 ? 0 : this.num(r.min) })),
+      redo: d.redo
+    };
+  }
+
+  // How many fields differ from the saved settings.
+  dirtyCount(d, saved) {
+    const ref = this.toDraft(saved);
+    let count = 0;
+    Object.keys(ref.val).forEach((k) => { if (String(d.val[k]).trim() !== ref.val[k]) count++; });
+    Object.keys(ref.on).forEach((k) => { if (!!d.on[k] !== ref.on[k]) count++; });
+    if (d.redo !== ref.redo) count++;
+    const len = Math.max(d.ranks.length, ref.ranks.length);
+    for (let i = 0; i < len; i++) {
+      const a = d.ranks[i];
+      const b = ref.ranks[i];
+      if (!a || !b) { count++; continue; }
+      if (a.name.trim() !== b.name) count++;
+      if (i > 0 && String(a.min).trim() !== b.min) count++;
+    }
+    return count;
+  }
+
+  // What changed, in words (for the change history).
+  changeLines(a, b) {
+    const out = [];
+    const t = this.ruleTitles();
+    const fromTo = (x, y) => 'מ־' + x + ' ל־' + y;
+    Object.keys(t).forEach((k) => {
+      const x = a.rules[k];
+      const y = b.rules[k];
+      if (x.on !== y.on) out.push(t[k] + ': ' + (y.on ? 'הופעל' : 'כובה'));
+      if (x.points !== y.points) out.push(t[k] + ': ' + fromTo(x.points, y.points) + ' נקודות');
+    });
+    if (a.rules.time.minutes !== b.rules.time.minutes) out.push('זמן למידה: נקודות על כל ' + b.rules.time.minutes + ' דקות (היה ' + a.rules.time.minutes + ')');
+    if (a.rules.time.max !== b.rules.time.max) out.push('זמן למידה: עד ' + b.rules.time.max + ' פעמים ביום (היה ' + a.rules.time.max + ')');
+    if (a.levelBonus.on !== b.levelBonus.on) out.push('בונוס סיום רמה: ' + (b.levelBonus.on ? 'הופעל' : 'כובה'));
+    this.levels().forEach((lv) => {
+      if (a.levelBonus[lv.n] !== b.levelBonus[lv.n]) out.push('בונוס סיום רמה ' + lv.n + ': ' + fromTo(a.levelBonus[lv.n], b.levelBonus[lv.n]));
+    });
+    this.skills().forEach((k) => {
+      if (a.skills[k.id] !== b.skills[k.id]) out.push(k.name + ': ' + fromTo(a.skills[k.id], b.skills[k.id]) + ' נקודות');
+    });
+    const len = Math.max(a.ranks.length, b.ranks.length);
+    for (let i = 0; i < len; i++) {
+      const x = a.ranks[i];
+      const y = b.ranks[i];
+      if (!x) { out.push('נוספה דרגה: ' + y.name + ', מ־' + y.min.toLocaleString('en-US') + ' נקודות'); continue; }
+      if (!y) { out.push('הוסרה דרגה: ' + x.name); continue; }
+      if (x.name !== y.name) out.push('דרגה ' + (i + 1) + ': השם שונה מ־' + x.name + ' ל־' + y.name);
+      if (x.min !== y.min) out.push(y.name + ': סף ' + fromTo(x.min.toLocaleString('en-US'), y.min.toLocaleString('en-US')));
+    }
+    if (a.redo !== b.redo) out.push('״נדרש״: ' + (b.redo === 'hold' ? 'הנקודות יורדות עד שהתרגיל מאושר שוב' : 'הנקודות נשארות'));
+    return out;
+  }
+
+  // ---------- state ----------
+  defaults() {
+    const stored = this.readStore();
+    return { saved: stored.settings, log: stored.log, draft: this.toDraft(stored.settings), flash: '', flashKind: 'ok' };
+  }
+
+  st() {
+    const s = this.state;
+    return s && s.draft ? s : Object.assign(this.defaults(), s || {});
+  }
+
+  componentDidMount() {
+    if (super.componentDidMount) super.componentDidMount();
+    if (!this.state || !this.state.draft) this.setState(this.defaults());
+    this.watchLeaving('PointsSettings.dc.html');
+    if (typeof window !== 'undefined' && window.addEventListener) {
+      // Settings saved from another copy of this screen: take them, unless this one has unsaved edits.
+      this._onStore = (e) => {
+        if (e && e.key && e.key !== this.storeKey()) return;
+        const s = this.st();
+        const stored = this.readStore();
+        const patch = { saved: stored.settings, log: stored.log };
+        if (!this.dirtyCount(s.draft, s.saved)) patch.draft = this.toDraft(stored.settings);
+        this.setState(patch);
+      };
+      window.addEventListener('storage', this._onStore);
+    }
+  }
+
+  componentWillUnmount() {
+    if (super.componentWillUnmount) super.componentWillUnmount();
+    clearTimeout(this._flashTimer);
+    this.unwatchLeaving();
+    if (this._onStore) window.removeEventListener('storage', this._onStore);
+    this._onStore = null;
+  }
+
+  // Leaving this screen (a link to another screen, or the screen being hidden) drops unsaved edits.
+  watchLeaving(here) {
+    if (this._leaveClick || typeof window === 'undefined' || !window.addEventListener) return;
+    this._leaveClick = (e) => {
+      const a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+      const file = a ? (a.getAttribute('href') || '').split(/[?#]/)[0].split('/').pop() : '';
+      if (/\.dc\.html$/.test(file) && file !== here) this.discardUnsaved();
+    };
+    window.addEventListener('click', this._leaveClick, true);
+    try {
+      this._leaveSeen = new IntersectionObserver((entries) => {
+        if (entries.some((en) => !en.isIntersecting)) this.discardUnsaved();
+      });
+      this._leaveSeen.observe(document.body);
+    } catch (err) {
+      this._leaveSeen = null;
+    }
+  }
+
+  unwatchLeaving() {
+    if (this._leaveClick) window.removeEventListener('click', this._leaveClick, true);
+    if (this._leaveSeen) this._leaveSeen.disconnect();
+    this._leaveClick = null;
+    this._leaveSeen = null;
+  }
+
+  discardUnsaved() {
+    const s = this.st();
+    if (!this.dirtyCount(s.draft, s.saved) && !s.flash) return;
+    this.setState({ draft: this.toDraft(s.saved, s.draft.rankSeq), flash: '' });
+  }
+
+  say(text, kind) {
+    clearTimeout(this._flashTimer);
+    this.setState({ flash: text, flashKind: kind || 'ok' });
+    this._flashTimer = setTimeout(() => this.setState({ flash: '' }), 5000);
+  }
+
+  edit(fn) {
+    const d = JSON.parse(JSON.stringify(this.st().draft));
+    fn(d);
+    this.setState({ draft: d });
+  }
+
+  setVal(key, value) {
+    this.edit((d) => { d.val[key] = String(value).slice(0, 7); });
+  }
+
+  toggle(key) {
+    this.edit((d) => { d.on[key] = !d.on[key]; });
+  }
+
+  setRank(id, field, value) {
+    this.edit((d) => {
+      const r = d.ranks.find((x) => x.id === id);
+      if (r) r[field] = String(value).slice(0, field === 'name' ? 24 : 7);
+    });
+  }
+
+  addRank() {
+    const s = this.st();
+    if (s.draft.ranks.length >= 8) return;
+    const last = s.draft.ranks[s.draft.ranks.length - 1];
+    const lastMin = this.num(last.min);
+    const id = 'r' + s.draft.rankSeq;
+    let name = 'דרגה חדשה';
+    let k = 2;
+    while (s.draft.ranks.some((r) => r.name.trim() === name)) name = 'דרגה חדשה ' + k++;
+    this.edit((d) => {
+      d.ranks.push({ id: id, name: name, min: String((isNaN(lastMin) ? 0 : lastMin) + 500) });
+      d.rankSeq += 1;
+    });
+    this.later(() => {
+      try {
+        const el = document.getElementById('rank-name-' + id);
+        if (el) { el.focus(); if (el.select) el.select(); }
+      } catch (err) {}
+    });
+  }
+
+  removeRank(id) {
+    const s = this.st();
+    const i = s.draft.ranks.findIndex((r) => r.id === id);
+    if (i <= 0 || s.draft.ranks.length <= 2) return;
+    const removed = s.draft.ranks[i].name.trim() || 'הדרגה';
+    this.edit((d) => { d.ranks.splice(i, 1); });
+    this.say('הדרגה ' + removed + ' הוסרה מהטיוטה. היא תוסר באמת רק אחרי שמירה.', 'info');
+    this.later(() => { try { if (this.addRankEl) this.addRankEl.focus(); } catch (err) {} });
+  }
+
+  later(fn) {
+    setTimeout(fn, 30);
+  }
+
+  focusStatus() {
+    this.later(() => { try { if (this.statusEl) this.statusEl.focus(); } catch (err) {} });
+  }
+
+  stamp() {
+    const now = new Date();
+    const pad = (n) => (n < 10 ? '0' : '') + n;
+    return pad(now.getDate()) + '.' + pad(now.getMonth() + 1) + '.' + now.getFullYear() + ' ' + pad(now.getHours()) + ':' + pad(now.getMinutes());
+  }
+
+  save() {
+    const s = this.st();
+    if (Object.keys(this.errorsOf(s.draft)).length) return;
+    const next = this.fromDraft(s.draft);
+    const lines = this.changeLines(s.saved, next);
+    if (!lines.length) {
+      this.setState({ draft: this.toDraft(s.saved, s.draft.rankSeq) });
+      this.say('אין שינויים לשמור.', 'info');
+      return;
+    }
+    const log = [{ id: 'lg' + Date.now(), at: this.stamp(), by: (window.Academy && window.Academy.on ? window.Academy.me.name : 'יהודה'), changes: lines }].concat(s.log).slice(0, 20);
+    const shared = this.writeStore(next, log);
+    this.setState({ saved: next, log: log, draft: this.toDraft(next, s.draft.rankSeq) });
+    this.say(shared ? 'ההגדרות נשמרו. מעכשיו הסטודנטים צוברים נקודות לפי הניקוד החדש.' : 'ההגדרות נשמרו למסך הזה. הדפדפן לא מאפשר לשתף אותן עם שאר המסכים.', shared ? 'ok' : 'info');
+    this.focusStatus();
+  }
+
+  discard() {
+    const s = this.st();
+    this.setState({ draft: this.toDraft(s.saved, s.draft.rankSeq) });
+    this.say('השינויים בוטלו. מוצגות ההגדרות השמורות.', 'info');
+    this.focusStatus();
+  }
+
+  resetDefaults() {
+    const s = this.st();
+    this.setState({ draft: this.toDraft(this.scoringDefaults(), s.draft.rankSeq) });
+    this.say('ברירות המחדל הוחזרו לטיוטה. כדי להחיל אותן צריך לשמור.', 'info');
+  }
+
+  ref(name) {
+    this._refs = this._refs || {};
+    if (!this._refs[name]) this._refs[name] = (el) => { this[name] = el; };
+    return this._refs[name];
+  }
+
+  // ---------- numbers for the summary ----------
+  economy(d) {
+    const n = (key) => { const v = this.num(d.val[key]); return isNaN(v) ? 0 : v; };
+    const on = (key) => (d.on[key] ? n(key) : 0);
+    const levels = this.levels().map((lv) => {
+      const skills = this.skills().filter((k) => k.level === lv.n).reduce((sum, k) => sum + n('sk' + k.id), 0);
+      const bonus = d.on.levelBonus ? n('lb' + lv.n) : 0;
+      return { n: lv.n, name: lv.name, skills: skills, bonus: bonus, worth: skills + bonus };
+    });
+    const skillsTotal = levels.reduce((sum, l) => sum + l.skills, 0);
+    const bonusTotal = levels.reduce((sum, l) => sum + l.bonus, 0);
+    const timeDay = d.on.time ? n('time') * n('timeMax') : 0;
+    return {
+      levels: levels,
+      skills: skillsTotal,
+      bonus: bonusTotal,
+      course: skillsTotal + bonusTotal,
+      login: on('login'),
+      time: timeDay,
+      quests: on('quests'),
+      day: on('login') + timeDay + on('quests'),
+      week: on('login') * 7 + on('streak3') + on('streak7') + timeDay * 7
+    };
+  }
+
+  rankAt(ranks, pts) {
+    let i = 0;
+    while (i + 1 < ranks.length && pts >= ranks[i + 1].min) i++;
+    return i;
+  }
+
+  // ---------- render ----------
+  // The signed-in manager's name in the header, and a fresh draw whenever the data changes.
+  renderVals() {
+    const v = this.renderVals0();
+    const A = window.Academy;
+    if (A && A.on) {
+      if (!this._acaOff) this._acaOff = A.listen(() => this.forceUpdate());
+      v.meName = A.me.name;
+      v.meInitial = String(A.me.name || '?').trim().charAt(0);
+    } else {
+      v.meName = 'יהודה';
+      v.meInitial = 'י';
+    }
+    return v;
+  }
+
+  renderVals0() {
+    const s = this.st();
+    const d = s.draft;
+    const saved = s.saved;
+    const errs = this.errorsOf(d);
+    const errCount = Object.keys(errs).length;
+    const dirty = this.dirtyCount(d, saved);
+    const ref = this.toDraft(saved);
+    const fmt = (x) => x.toLocaleString('en-US');
+    const eco = this.economy(d);
+    const border = (key, changed) => (errs[key] ? '2px solid #C62828' : changed ? '2px solid #C7436A' : '1px solid #B9C2BD');
+    const changedVal = (key) => String(d.val[key]).trim() !== ref.val[key];
+    const sw = (checked, toggle, label) => ({
+      checked: checked ? 'true' : 'false',
+      switchLabel: label,
+      track: checked ? '#2A9171' : '#C3CBC6',
+      knob: checked ? 'flex-end' : 'flex-start',
+      toggle: toggle
+    });
+
+    // stages
+    const levelCards = this.levels().map((lv) => {
+      const el = eco.levels.find((x) => x.n === lv.n);
+      const bkey = 'lb' + lv.n;
+      const bChanged = changedVal(bkey);
+      return {
+        id: 'lv' + lv.n,
+        n: lv.n,
+        name: lv.name,
+        worth: fmt(el.worth),
+        bonusId: 'level-bonus-' + lv.n,
+        noteId: 'level-bonus-note-' + lv.n,
+        bonus: d.val[bkey],
+        bonusOff: !d.on.levelBonus,
+        bonusLabelColor: d.on.levelBonus ? '#3D4541' : '#8A928E',
+        bonusInvalid: errs[bkey] ? 'true' : 'false',
+        bonusBorder: border(bkey, bChanged),
+        hasNote: !!errs[bkey] || (bChanged && d.on.levelBonus),
+        note: errs[bkey] || 'היה ' + ref.val[bkey],
+        noteColor: errs[bkey] ? '#B42318' : '#B23A5E',
+        onBonus: (e) => this.setVal(bkey, e.target.value),
+        skills: this.skills().filter((k) => k.level === lv.n).map((k) => {
+          const key = 'sk' + k.id;
+          const changed = changedVal(key);
+          return {
+            id: key,
+            name: k.name,
+            inputId: 'skill-points-' + k.id,
+            noteId: 'skill-note-' + k.id,
+            value: d.val[key],
+            invalid: errs[key] ? 'true' : 'false',
+            inputBorder: border(key, changed),
+            bg: changed ? '#FFF6F9' : '#FFFFFF',
+            border: changed ? '#E9B2C4' : '#E8EBE9',
+            hasNote: !!errs[key] || changed,
+            note: errs[key] || 'היה ' + ref.val[key],
+            noteColor: errs[key] ? '#B42318' : '#B23A5E',
+            onChange: (e) => this.setVal(key, e.target.value)
+          };
+        })
+      };
+    });
+
+    // rule rows
+    const field = (key, opts) => {
+      const changed = changedVal(key);
+      return Object.assign({
+        id: 'rule-' + key,
+        value: d.val[key],
+        width: 72,
+        hasBefore: false,
+        before: '',
+        after: 'נק׳',
+        disabled: false,
+        invalid: errs[key] ? 'true' : 'false',
+        border: border(key, changed),
+        onChange: (e) => this.setVal(key, e.target.value)
+      }, opts);
+    };
+    const ruleRow = (key, title, desc, fields, extraNote) => {
+      const on = !!d.on[key];
+      const keys = fields.map((f) => f.key);
+      const firstErr = keys.map((k) => errs[k]).find(Boolean);
+      const changedKeys = keys.filter((k) => changedVal(k));
+      const toggled = on !== ref.on[key];
+      let note = '';
+      if (firstErr) note = firstErr;
+      else if (toggled) note = on ? 'יופעל אחרי השמירה.' : 'יכובה אחרי השמירה. הסטודנטים לא יקבלו על זה נקודות.';
+      else if (changedKeys.length) note = 'היה: ' + changedKeys.map((k) => ref.val[k]).join(' / ');
+      else if (extraNote && on) note = extraNote;
+      return Object.assign(sw(on, () => this.toggle(key), (on ? 'כיבוי: ' : 'הפעלה: ') + title), {
+        id: 'rule-row-' + key,
+        title: title,
+        desc: desc,
+        titleColor: on ? '#121413' : '#5E6762',
+        bg: on ? (toggled || changedKeys.length ? '#FFF6F9' : '#FFFFFF') : '#F7F8F7',
+        border: toggled || changedKeys.length ? '#E9B2C4' : '#E1E5E2',
+        fields: fields.map((f) => field(f.key, Object.assign({ disabled: !on }, f.opts))),
+        hasNote: !!note,
+        note: note,
+        noteColor: firstErr ? '#B42318' : (toggled || changedKeys.length) ? '#B23A5E' : '#545D58'
+      });
+    };
+    const timeMax = eco.time;
+    const habitRules = [
+      ruleRow('login', 'כניסה יומית', 'פעם ביום, בכניסה הראשונה לאתר.', [{ key: 'login', opts: { aria: 'נקודות על כניסה יומית' } }]),
+      ruleRow('streak3', 'רצף של 3 ימים', 'בונוס ביום השלישי ברצף של כניסות.', [{ key: 'streak3', opts: { aria: 'נקודות על רצף של 3 ימים' } }]),
+      ruleRow('streak7', 'רצף שבועי', 'בונוס בכל יום שביעי ברצף: 7, 14, 21…', [{ key: 'streak7', opts: { aria: 'נקודות על רצף שבועי' } }]),
+      ruleRow('time', 'זמן למידה', 'כשהאתר פתוח מול הסטודנט. כשהחלון מוסתר, הזמן לא נספר.', [
+        { key: 'time', opts: { aria: 'נקודות על זמן למידה', after: 'נק׳ על כל' } },
+        { key: 'timeMinutes', opts: { aria: 'כל כמה דקות', after: 'דקות,', width: 64 } },
+        { key: 'timeMax', opts: { aria: 'כמה פעמים ביום לכל היותר', hasBefore: true, before: 'עד', after: 'פעמים ביום', width: 56 } }
+      ], 'עד ' + timeMax + ' נקודות ביום.')
+    ];
+    const bonusRules = [
+      ruleRow('video', 'צפייה בסרטון הדגמה עד הסוף', 'פעם אחת לכל מיומנות.', [{ key: 'video', opts: { aria: 'נקודות על צפייה בסרטון הדגמה' } }]),
+      ruleRow('first', 'מעבר בניסיון הראשון', 'כשהטיסה הראשונה שהוגשה במיומנות מאושרת.', [{ key: 'first', opts: { aria: 'נקודות על מעבר בניסיון הראשון' } }]),
+      ruleRow('quests', 'משימות היום', 'כניסה, צפייה בסרטון הדגמה והגשת טיסה, באותו יום.', [{ key: 'quests', opts: { aria: 'נקודות על השלמת משימות היום' } }])
+    ];
+
+    // ranks
+    const students = this.students();
+    const rankErrs = d.ranks.some((r) => errs['rn:' + r.id] || errs['rm:' + r.id]);
+    const draftRanks = rankErrs ? null : d.ranks.map((r, i) => ({ name: r.name.trim(), min: i === 0 ? 0 : this.num(r.min) }));
+    const useRanks = draftRanks || saved.ranks;
+    const countIn = (ranks, i) => students.filter((st) => this.rankAt(ranks, st.points) === i).length;
+    const rankRows = d.ranks.map((r, i) => {
+      const was = ref.ranks[i];
+      const nameChanged = !was || r.name.trim() !== was.name;
+      const minChanged = i > 0 && (!was || String(r.min).trim() !== was.min);
+      const nErr = errs['rn:' + r.id];
+      const mErr = errs['rm:' + r.id];
+      const count = draftRanks ? countIn(draftRanks, i) : null;
+      return {
+        id: r.id,
+        num: String(i + 1),
+        nameId: 'rank-name-' + r.id,
+        minId: 'rank-min-' + r.id,
+        nameLabel: 'שם הדרגה ' + (i + 1),
+        name: r.name,
+        min: r.min,
+        isFirst: i === 0,
+        notFirst: i > 0,
+        nameInvalid: nErr ? 'true' : 'false',
+        minInvalid: mErr ? 'true' : 'false',
+        nameBorder: nErr ? '2px solid #C62828' : nameChanged ? '2px solid #C7436A' : '1px solid #B9C2BD',
+        minBorder: mErr ? '2px solid #C62828' : minChanged ? '2px solid #C7436A' : '1px solid #B9C2BD',
+        countText: count == null ? '—' : count === 0 ? 'אין סטודנטים' : count === 1 ? 'סטודנט אחד' : count + ' סטודנטים',
+        countBg: count ? '#DDF6EC' : '#F1F3F2',
+        countColor: count ? '#17694F' : '#545D58',
+        removeLabel: 'הסרת הדרגה ' + (r.name.trim() || (i + 1)),
+        cannotRemove: i === 0 || d.ranks.length <= 2,
+        remove: () => this.removeRank(r.id),
+        onName: (e) => this.setRank(r.id, 'name', e.target.value),
+        onMin: (e) => this.setRank(r.id, 'min', e.target.value),
+        hasError: !!(nErr || mErr),
+        error: [nErr, mErr].filter(Boolean).join(' '),
+        hasNote: !nErr && !mErr && (!was || nameChanged || minChanged),
+        note: !was ? 'דרגה חדשה. תתווסף אחרי השמירה.' : 'היה: ' + was.name + (i > 0 ? ', מ־' + Number(was.min).toLocaleString('en-US') : ''),
+        divider: i === 0 ? 'transparent' : '#E8EBE9',
+        bg: !was || nameChanged || minChanged ? '#FFF6F9' : '#FFFFFF'
+      };
+    });
+
+    // students by rank, now and with the draft
+    const total = students.length;
+    const sameShape = !!draftRanks && draftRanks.length === saved.ranks.length;
+    const rankSpread = useRanks.map((r, i) => {
+      const now = countIn(useRanks, i);
+      const delta = sameShape ? now - countIn(saved.ranks, i) : 0;
+      return {
+        id: 'sp' + i,
+        name: r.name,
+        countText: now === 0 ? 'אין סטודנטים' : now === 1 ? 'סטודנט אחד' : now + ' סטודנטים',
+        pct: total ? Math.round(now / total * 100) : 0,
+        hasDelta: delta !== 0,
+        delta: (delta > 0 ? '+' : '') + delta,
+        deltaColor: delta > 0 ? '#17694F' : '#B42318'
+      };
+    });
+    // A student moves when the rank they would hold changes (a renamed rank in the same place is not a move).
+    const moves = draftRanks ? students.map((st) => {
+      const a = this.rankAt(saved.ranks, st.points);
+      const b = this.rankAt(draftRanks, st.points);
+      if (sameShape && a === b) return null;
+      if (saved.ranks[a].name === draftRanks[b].name && saved.ranks[a].min === draftRanks[b].min) return null;
+      const up = sameShape ? b > a : draftRanks[b].min > saved.ranks[a].min;
+      return { id: st.name, up: up, text: st.name + ' (' + st.points + ' נק׳): מ' + saved.ranks[a].name + ' ל' + draftRanks[b].name };
+    }).filter(Boolean) : [];
+    const ups = moves.filter((m) => m.up).length;
+    const downs = moves.length - ups;
+
+    // top rank
+    const top = useRanks[useRanks.length - 1];
+    const gap = top.min - eco.course;
+    let topNote;
+    if (gap <= 0) topNote = 'המסלול המלא לבדו מספיק כדי להגיע ל' + top.name + '.';
+    else if (eco.day > 0) topNote = 'כדי להגיע ל' + top.name + ' צריך את המסלול המלא ועוד ' + fmt(gap) + ' נקודות מהתמדה ובונוסים, בערך ' + Math.ceil(gap / eco.day) + ' ימי למידה מלאים.';
+    else topNote = 'כדי להגיע ל' + top.name + ' צריך עוד ' + fmt(gap) + ' נקודות מעבר למסלול המלא, וכרגע אין נקודות על התמדה.';
+
+    // save bar
+    let statusText = 'כל השינויים נשמרו.';
+    let statusColor = '#17694F';
+    let statusDot = '#2A9171';
+    if (errCount) {
+      statusText = errCount === 1 ? 'שדה אחד צריך תיקון לפני השמירה.' : errCount + ' שדות צריכים תיקון לפני השמירה.';
+      statusColor = '#B42318';
+      statusDot = '#C62828';
+    } else if (dirty) {
+      statusText = dirty === 1 ? 'שינוי אחד שעוד לא נשמר.' : dirty + ' שינויים שעוד לא נשמרו.';
+      statusColor = '#7A2343';
+      statusDot = '#C7436A';
+    }
+    const flashLook = s.flashKind === 'ok' ? { bg: '#DDF6EC', border: '#A3DEC6', color: '#145C45' } : { bg: '#F1F3F2', border: '#D3D9D5', color: '#2C322F' };
+
+    return {
+      setStatus: this.ref('statusEl'),
+      setAddRank: this.ref('addRankEl'),
+      statusText: statusText,
+      statusColor: statusColor,
+      statusDot: statusDot,
+      barBorder: dirty || errCount ? '#E9B2C4' : '#E1E5E2',
+      barShadow: dirty || errCount ? '0 10px 24px rgba(18, 20, 19, 0.10)' : 'none',
+      clean: !dirty,
+      cannotSave: !dirty || errCount > 0,
+      save: () => this.save(),
+      discard: () => this.discard(),
+      resetDefaults: () => this.resetDefaults(),
+      isDefaultDraft: this.dirtyCount(d, this.scoringDefaults()) === 0,
+      hasFlash: !!s.flash,
+      flash: s.flash,
+      flashBg: flashLook.bg,
+      flashBorder: flashLook.border,
+      flashColor: flashLook.color,
+
+      lbSwitch: sw(!!d.on.levelBonus, () => this.toggle('levelBonus'), 'בונוס סיום רמה'),
+      levelCards: levelCards,
+      habitRules: habitRules,
+      bonusRules: bonusRules,
+      rankRows: rankRows,
+      addRank: () => this.addRank(),
+      cannotAddRank: d.ranks.length >= 8,
+      redoOptions: [
+        { value: 'keep', title: 'הנקודות נשארות', desc: 'הסטודנט שומר את הנקודות שכבר קיבל, ולא מקבל אותן פעם שנייה כשהתרגיל מאושר שוב. מתאים כשהבקשה היא לתרגל ולהשתפר.' },
+        { value: 'hold', title: 'הנקודות יורדות עד שהתרגיל מאושר שוב', desc: 'הנקודות של המיומנות יורדות, וגם בונוס סיום הרמה אם הרמה כבר לא שלמה. כשהמדריך מאשר שוב, הן חוזרות.' }
+      ].map((o) => ({
+        id: o.value,
+        value: o.value,
+        title: o.title,
+        desc: o.desc,
+        checked: d.redo === o.value,
+        border: d.redo === o.value ? '2px solid #121413' : '1px solid #D3D9D5',
+        bg: d.redo === o.value ? '#FFFFFF' : '#F7F8F7',
+        pick: () => this.edit((x) => { x.redo = o.value; })
+      })),
+      logRows: s.log.map((e, i) => ({ id: e.id || 'lg' + i, at: e.at, by: e.by || '', divider: i === 0 ? 'transparent' : '#E8EBE9', lines: e.changes.slice(0, 12).map((t, j) => ({ id: 'l' + j, text: t })) })),
+
+      courseTotalText: fmt(eco.course),
+      courseSplitText: fmt(eco.skills) + ' על 20 מיומנויות' + (eco.bonus ? ' + ' + fmt(eco.bonus) + ' בונוסי סיום רמה' : ', בלי בונוסי רמה'),
+      econLevels: eco.levels.map((l) => ({ id: 'el' + l.n, n: l.n, name: l.name, worth: fmt(l.worth), pct: eco.course ? Math.round(l.worth / eco.course * 100) : 0 })),
+      dayMaxText: fmt(eco.day),
+      dayMaxSplit: [eco.login ? 'כניסה ' + eco.login : '', eco.time ? 'זמן למידה ' + eco.time : '', eco.quests ? 'משימות ' + eco.quests : ''].filter(Boolean).join(' · ') || 'אין נקודות יומיות',
+      weekStreakText: fmt(eco.week),
+      topRankName: top.name,
+      topRankMinText: fmt(top.min),
+      topRankNote: topNote,
+      impactIntro: draftRanks ? 'לפי הנקודות ש־' + total + ' הסטודנטים כבר צברו' + (moves.length ? ', ועם הספים שבטיוטה.' : '.') : 'יש לתקן את הדרגות כדי לראות את ההשפעה.',
+      rankSpread: rankSpread,
+      hasMoves: moves.length > 0,
+      movesTitle: [ups ? (ups === 1 ? 'סטודנט אחד יעלה בדרגה' : ups + ' סטודנטים יעלו בדרגה') : '', downs ? (downs === 1 ? 'סטודנט אחד ירד בדרגה' : downs + ' סטודנטים ירדו בדרגה') : ''].filter(Boolean).join(' · ') + ' אחרי השמירה:',
+      moves: moves
+    };
+  }
+}
+</script>
+</body>
+</html>

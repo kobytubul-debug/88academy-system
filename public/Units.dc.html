@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<title>יחידות</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Karantina:wght@400;700&amp;family=Rubik:wght@400;500;600;700&amp;family=Unbounded:wght@500;700;800&amp;display=swap">
+<style>
+body{margin:0;background:#F5F6F4}
+a{color:#17694F}a:hover{color:#0E4F3A}
+.pill-hover:hover{background:#EEF1EF !important;color:#121413 !important}
+.btn-ghost:hover{background:#EEF1EF !important;border-color:#B9C2BD !important}
+.btn-danger:hover{background:#FDECEC !important;border-color:#E79A9A !important}
+.btn-primary:hover{background:#B13A5D !important}
+.btn-solid-danger:hover{background:#A61B1B !important}
+input::placeholder,textarea::placeholder{color:#6E7772}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid #C7436A;outline-offset:2px}
+@media (prefers-reduced-motion: reduce){.unit-row{transition:none !important}}
+</style>
+</helmet>
+<div dir="rtl" lang="he" style="min-height: 100vh; box-sizing: border-box; background: #F5F6F4; color: #1E2320; font-family: 'Rubik', system-ui, 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.5; color-scheme: light;">
+<header style="border-bottom: 5px solid #BDEFDB; background: #FFFFFF;">
+<div style="max-width: 1280px; margin: 0 auto; padding: 10px clamp(16px, 4vw, 32px); box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 28px;">
+<a href="Main.dc.html" aria-label="88ACADEMY — לעמוד הסקירה" style="display: flex; align-items: center; gap: 10px; text-decoration: none; white-space: nowrap;">
+<svg width="32.6" height="34" viewBox="0 0 100 104.15" aria-hidden="true" style="flex: none; display: block;"><path d="M74.4 104L71.1 104 67.8 103.6 66.6 103.3 64.3 102.7 61.5 101.5 59 100.2 56.6 98.7 55.4 97.7 53.7 96.2 52.2 94.5 52.1 94.2 54 90.9 55.5 87.7 55.6 87.6 55.8 87.6 58.1 90.4 59 91.3 60.1 92.3 61.5 93.3 62.7 94 65.1 95.3 67.9 96.2 70.9 96.7 73.6 96.8 76.6 96.4 78.1 96.1 80.4 95.3 82.2 94.4 84.2 93.1 86 91.7 87.4 90.4 88.9 88.6 89.7 87.4 90.8 85.4 91.7 83.2 92.3 81.6 92.6 80.2 92.8 78.7 92.9 76.2 92.6 73.3 92.2 71.4 91.3 68.8 90.4 66.9 89 64.8 87.3 62.8 85.4 61.1 83.6 59.7 81.6 58.6 79.6 57.8 76.6 57 74.9 56.8 73.4 56.7 71.1 56.7 68.8 57.1 66.3 57.8 64.1 58.7 61.6 60.2 59.8 61.6 58.6 62.7 57.5 64 56 65.9 54.7 68.3 53.7 70.4 53.1 72.8 52.8 74.9 52.7 77.4 52.9 80.1 53.7 83.4 53.2 84.9 51.7 88.4 50.5 90.5 49.6 92 47.8 94.4 46.1 96.2 44.4 97.8 41.9 99.6 40.4 100.5 38 101.7 36.2 102.4 33.6 103.3 31.4 103.7 28.6 104 26.4 104 24.4 103.9 21.3 103.4 18.8 102.7 16.1 101.6 13.5 100.3 11.1 98.7 9.8 97.7 8.1 96.2 6.5 94.4 5.2 92.7 3.7 90.3 2.6 88.4 1.4 85.4 0.8 83.2 0.2 80.1 0 77.4 0.1 74.6 0.3 72.4 1 69.3 1.8 66.6 3.3 63.3 5.1 60.3 6.1 59 8 57 10 55.2 12.5 53.4 15 52 14.9 51.8 14.7 51.7 12.5 50.4 10.8 49.2 9.8 48.4 8.1 46.8 6.8 45.5 5.3 43.7 4.4 42.4 3.4 40.7 2.7 39.2 1.6 36.7 0.9 34.4 0.5 32.7 0.3 31.4 0 28.7 -0 25.9 0.1 24.4 0.7 20.9 1.7 17.8 2.9 15 4.4 12.3 6 10.1 6.8 9.1 8.3 7.6 10.5 5.7 11.8 4.8 13.3 3.8 15 2.9 16.9 2 19.1 1.2 22.1 0.4 24.4 0.1 26.7 -0 29.6 0.1 31.6 0.3 35.2 1.2 37.5 2.1 40.2 3.3 42.5 4.8 44.3 6.1 46.2 7.8 47.8 9.6 47.8 9.8 47.7 10.1 46.5 12.1 44.9 15.1 44.4 16.4 44.2 16.6 44 16.6 43.9 16.4 42.8 15 41.8 13.8 40.2 12.3 37.9 10.6 37 10.1 35.2 9.1 32.9 8.3 29.6 7.6 26.6 7.5 23.8 7.7 21.4 8.3 20.1 8.7 18.4 9.4 15.9 10.8 14.1 12.2 12.5 13.8 10.9 15.6 9.7 17.4 8.9 18.9 8.4 20.1 7.6 22.6 7.2 24.6 7 26.9 7.2 29.6 7.6 32.1 8.3 34.2 9.3 36.5 10.7 38.9 12.5 41 14.1 42.6 15.8 43.9 17.6 45 19.8 46.1 22.3 46.9 25.2 47.4 28.1 47.5 30.1 47.2 32.6 46.7 34.9 45.9 37.2 44.7 39.4 43.2 41.5 41.4 42.5 40.2 44.3 37.7 45.3 35.7 46.1 33.9 46.8 31.4 47 30.1 47.2 28.2 47.1 25.9 46.9 23.6 46.2 21.1 46.2 20.6 46.7 19.1 48.1 15.8 49.3 13.6 50.7 11.5 52.2 9.6 53.4 8.1 54.8 6.8 57.1 4.9 58.3 4.1 60.6 2.8 62.6 1.9 65 1.1 67.6 0.4 70.3 0.1 73.1 -0 75.4 0.1 77.9 0.4 80.7 1.1 83.1 2 85.4 3.1 87.4 4.3 89.7 6 91.4 7.5 93.1 9.1 94.6 11 96.2 13.5 97.3 15.6 98.5 18.5 99.3 21.3 99.7 23.9 99.9 25.9 99.8 30 99.4 32.7 98.9 35 98 37.5 96.6 40.5 95.4 42.5 93.7 44.8 92 46.7 90 48.5 87.7 50.2 85 51.8 84.9 52 87.4 53.4 89.1 54.7 90.8 56 92.5 57.6 94.1 59.5 95.3 61.2 96.4 63 97.4 64.8 98.2 66.7 98.9 68.9 99.5 71.6 99.8 73.6 99.9 76.1 99.8 79.2 99.5 81.4 99.2 83.1 98.7 84.9 98 86.7 97.1 88.9 95.6 91.5 94.4 93.2 93 94.9 91.7 96.3 90 97.8 88.5 98.9 86.5 100.2 84.4 101.4 82.7 102.1 81.2 102.7 78.7 103.4 75.9 103.9ZM75 47.3L76.7 47.1 78.2 46.7 80.6 45.9 82.2 45.1 84.1 43.9 85.4 42.9 87.2 41.3 88.4 39.9 89.4 38.5 90.6 36.5 91.4 34.9 92.1 32.9 92.5 31.1 92.8 29.6 92.9 27.2 92.7 25.1 92.5 23.8 92.1 21.8 91.5 20.3 90.7 18.4 89.9 16.9 88.4 14.9 87.3 13.6 85.5 12 84.1 10.9 82.7 10.1 81.1 9.2 78.7 8.3 76.1 7.7 74.6 7.5 72.4 7.4 70.4 7.6 69.1 7.8 66.6 8.4 64.8 9.1 63 10 61.5 10.9 60 12.1 58.3 13.6 57.1 14.9 56.2 16.1 55.3 17.6 54.5 19.1 53.6 21.4 53 23.9 52.8 25.2 52.7 27.2 52.8 29.6 53.1 31.4 53.7 33.7 54.5 35.7 55.5 37.5 56.5 39 57.6 40.5 58.9 41.9 60.3 43.1 61.6 44 63.6 45.2 65.1 45.9 67.4 46.8 69.6 47.2 71.3 47.4 73.3 47.5ZM50.1 61.8L51.5 60 52.6 58.6 54.5 56.6 56.1 55.3 57.3 54.4 60.8 52.2 60.8 52 60.6 51.8 59 50.9 56.6 49.4 54.5 47.6 53.6 46.7 52.1 45 50 42.3 49.8 42.4 49.7 42.5 47.7 45.2 46.2 46.8 45.2 47.7 43.2 49.4 41 50.8 39.3 51.8 39 52 39 52.2 39.2 52.4 41.9 54 44.5 56 45.6 57 47.2 58.6 48.5 60.2 49.7 61.8 49.8 62 50 61.9ZM29 96.7L30.9 96.4 32.6 96 34.9 95.2 36.5 94.4 37.9 93.6 39.6 92.4 40.9 91.2 42.4 89.6 43.5 88.1 44.6 86.4 45.5 84.6 46.2 82.7 46.7 80.6 47 78.9 47.1 76.9 47 74.6 46.7 73.3 46.1 70.6 45.2 68.6 44.4 66.9 43.3 65.3 42.4 64 40.9 62.4 39.2 61 37.9 60 35.7 58.8 33.9 58 32.2 57.4 30.2 56.9 28.2 56.7 26.6 56.7 24.4 56.8 22.6 57.1 20.4 57.7 18.3 58.6 16.8 59.4 15 60.6 14.1 61.3 12.7 62.6 11.3 64.2 10.3 65.6 9.2 67.4 8.4 69.1 7.8 71.1 7.3 73.3 7.1 74.9 7 76.7 7.1 78.7 7.4 80.6 7.7 81.9 8.5 84.1 9.5 86.2 10.5 87.8 11.8 89.5 13.5 91.3 14.9 92.5 16.3 93.6 17.9 94.5 19.6 95.3 21.8 96.1 23.9 96.5 25.7 96.7 27.2 96.8Z" fill="#121413" fill-rule="evenodd"></path></svg>
+<svg width="93.9" height="13" viewBox="0 0 72.24 10" aria-hidden="true" style="flex: none; display: block;"><path d="M8.7 9.9L1 9.9 0.4 9.6 0.1 9.1 0 8.5 0.5 7.2 3.7 0.7 4 0.3 4.3 0.1 4.6 -0 5.2 -0 5.6 0.1 5.9 0.4 8.2 5.1 9.6 7.9 9.8 8.5 9.7 9.1 9.6 9.4 9.3 9.7ZM18.4 9.9L15.2 9.8 14.6 9.8 13.8 9.6 13.1 9.3 12.7 9 12.1 8.5 11.6 7.9 11.3 7.2 11 6.1 11 4.9 11 3.9 11.3 2.7 11.6 1.9 12.1 1.3 12.8 0.7 13.8 0.3 14.5 0.1 15.7 -0 18.5 0 19 0.1 19.4 0.5 19.6 0.9 19.6 1.5 19.4 1.9 19.1 2.2 18.5 2.4 15.7 2.5 14.8 2.7 14.2 3 13.9 3.3 13.6 3.9 13.5 4.5 13.5 5.4 13.7 6.1 14 6.7 14.5 7.1 14.9 7.2 15.5 7.4 18.5 7.4 19.1 7.6 19.3 7.8 19.5 8.1 19.6 8.4 19.6 9 19.5 9.3 19.3 9.5 19 9.7ZM29.4 9.9L21.8 9.9 21.5 9.8 21.2 9.6 20.8 9.1 20.7 8.7 20.8 8.4 21.4 6.9 24.5 0.8 24.8 0.3 25.2 0 25.5 -0 26 0 26.4 0.2 26.7 0.6 29 5.1 30.4 7.9 30.6 8.7 30.5 9.1 30.3 9.4 30 9.7ZM37 9.9L32.8 9.9 32.3 9.7 32.1 9.5 31.9 9.3 31.7 8.5 31.7 1.2 31.9 0.6 32.1 0.3 32.4 0.1 33.3 -0 36.9 -0 37.8 0.1 38.7 0.3 39.6 0.6 40.1 1 40.6 1.5 41.1 2.2 41.3 2.7 41.5 3.6 41.6 5.1 41.5 6.3 41.2 7.3 41 7.7 40.4 8.7 39.6 9.3 39 9.5 38.1 9.7ZM50.1 9.9L43.9 9.9 43.4 9.8 43 9.4 42.8 9.1 42.7 8.5 42.7 1.3 42.8 0.7 42.9 0.4 43.1 0.2 43.6 0 44 -0 50 -0 50.7 0.1 51.2 0.4 51.4 1 51.3 1.6 51 2.1 50.6 2.4 50 2.5 45.5 2.5 45.3 2.5 45.2 2.7 45.2 7 45.3 7.3 45.7 7.4 50.1 7.4 50.9 7.6 51.2 7.9 51.3 8.2 51.3 8.7 51.3 9.1 51.1 9.4 50.9 9.6 50.6 9.8ZM61.2 9.9L60.7 9.8 60.5 9.7 60.1 9.4 60 9.1 59.9 8.5 59.9 4.8 59.9 4.6 59.7 4.5 58.2 5.9 57.9 6.1 57.5 6.1 57 6.1 56.7 6 55.4 4.7 55.1 4.5 55 4.8 55 8.7 54.8 9.3 54.4 9.7 53.9 9.9 53.1 9.8 52.7 9.4 52.6 9.1 52.5 8.5 52.5 1.3 52.6 0.7 52.8 0.3 53.1 0.1 53.6 -0 54.2 0.1 54.5 0.2 54.9 0.6 57.2 2.8 57.5 3 57.7 2.8 59.9 0.7 60.4 0.2 60.7 0.1 61.2 0 61.6 0.1 62.1 0.4 62.3 0.7 62.4 1.3 62.4 8.8 62.3 9.3 62.1 9.5 61.6 9.8ZM67.8 9.9L67.2 9.8 66.9 9.6 66.6 9.3 66.5 8.5 66.5 5.4 66.3 5.1 63.6 1.8 63.4 1.2 63.5 0.6 63.7 0.3 64.2 0 64.8 -0 65.2 0.1 65.7 0.4 67.5 2.5 67.8 2.7 68 2.5 70 0.2 70.4 -0 71.4 0 71.9 0.3 72.1 0.6 72.1 1.2 72.1 1.6 71.8 2.1 69.1 5.2 69 5.7 69 8.4 68.9 9.1 68.7 9.4 68.5 9.6 68.2 9.8ZM37.4 7.3L37.9 7.2 38.4 6.9 38.7 6.6 38.9 6.1 39.1 5.4 39.1 4.6 39 3.9 38.8 3.4 38.5 3.1 38.2 2.8 37.3 2.5 36.4 2.5 34.6 2.5 34.3 2.5 34.2 2.8 34.2 7 34.3 7.3 34.5 7.4 35.1 7.4 36.9 7.4ZM49.7 6.1L47.2 6.1 46.4 6 46.1 5.8 45.9 5.4 45.8 4.8 46 4.3 46.3 3.9 47 3.7 49.4 3.7 50.1 3.8 50.4 4.1 50.6 4.3 50.8 4.9 50.7 5.2 50.6 5.5 50.4 5.8 50.1 6ZM6.4 7.3L6.5 7.2 6.4 7 5.1 4.3 4.9 4.1 4.8 4.2 3.4 7 3.3 7.2 3.4 7.3 3.6 7.4 4.5 7.4 6.1 7.4ZM27.2 7.3L27.2 7.2 27.2 7 25.9 4.3 25.7 4.1 25.5 4.2 24.7 5.8 24.1 7.2 24.1 7.3 24.3 7.4 25.7 7.4 27 7.4Z" fill="#121413" fill-rule="evenodd"></path></svg>
+</a>
+<nav aria-label="ניווט ראשי" style="flex: 1 1 auto; min-width: 0;">
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 2px;">
+<li><a href="Main.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">סקירה</a></li>
+<li><a href="Students.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">סטודנטים</a></li>
+<li><a href="Units.dc.html" aria-current="page" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid #9FDDC4; background: #D3F4E6; color: #121413; font-weight: 600; text-decoration: none; font-size: 15px; white-space: nowrap;">יחידות</a></li>
+<li><a href="Leadership.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">מנהיגות</a></li>
+<li><a href="Curriculum.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">תוכנית לימודים</a></li>
+<li><a href="Rewards.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">פרסים</a></li>
+<li><a href="PointsSettings.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">ניקוד</a></li>
+<li><a href="Activity.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">פעילות</a></li>
+</ul>
+</nav>
+<div style="display: flex; align-items: center; gap: 8px;">
+<span style="display: flex; align-items: center; gap: 10px; color: #3D4541; font-size: 15px; white-space: nowrap;"><span aria-hidden="true" style="width: 30px; height: 30px; border-radius: 50%; background: #76DEB8; color: #121413; display: grid; place-items: center; font-size: 14px; font-weight: 600;">{{meInitial}}</span>{{meName}}</span>
+<a href="/password" class="btn-ghost" aria-label="החלפת סיסמה" title="החלפת סיסמה" style="width: 40px; height: 40px; box-sizing: border-box; display: grid; place-items: center; padding: 0; background: transparent; border: 1px solid transparent; border-radius: 10px; color: #545D58; text-decoration: none;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"></circle><path d="M10.8 12.2L20 3M17 6l2.5 2.5M14.5 8.5L17 11"></path></svg></a>
+<a href="/logout" class="btn-ghost" aria-label="התנתקות" style="width: 40px; height: 40px; box-sizing: border-box; display: grid; place-items: center; padding: 0; background: transparent; border: 1px solid transparent; border-radius: 10px; color: #545D58; text-decoration: none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3"></path><path d="M10 8l-4 4 4 4"></path><path d="M6 12h10"></path></svg></a>
+</div>
+</div>
+</header>
+<main style="max-width: 1280px; margin: 0 auto; padding: 40px clamp(16px, 4vw, 32px) 72px; box-sizing: border-box;">
+<div style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 28px;">
+<section aria-labelledby="units-title" style="flex: 999 1 560px; min-width: 0;">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px;">
+<h1 id="units-title" style="margin: 0; font-size: 30px; line-height: 1.2; font-weight: 600; color: #121413;">יחידות</h1>
+<a href="Leadership.dc.html" class="btn-ghost" style="display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px; box-sizing: border-box; border-radius: 10px; border: 1px solid #D3D9D5; background: #FFFFFF; color: #3D4541; text-decoration: none; font-size: 14px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 20V11M12 20V5M19 20v-6"></path></svg>תצוגת מנהיגות</a>
+</div>
+<div aria-live="polite">
+<sc-if value="{{hasFlash}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; align-items: center; gap: 10px; margin-top: 16px; padding: 12px 16px; background: #DDF6EC; border: 1px solid #A3DEC6; border-radius: 12px; color: #145C45; font-size: 14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#17694F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg><span>{{flash}}</span></div>
+</sc-if>
+</div>
+<ul aria-label="רשימת היחידות" style="list-style: none; margin: 20px 0 0; padding: 0; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; overflow: hidden;">
+<sc-for list="{{rows}}" as="u" hint-placeholder-count="6">
+<li class="unit-row" style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 12px 20px; padding-inline-start: {{u.indent}}px; border-top: 1px solid {{u.borderTop}}; background: {{u.rowBg}}; transition: background-color 0.4s ease;">
+<sc-if value="{{u.isChild}}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6E7772" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 4v7a4 4 0 0 1-4 4H6"></path><path d="M10 11l-4 4 4 4"></path></svg></sc-if>
+<span style="font-size: 16px; font-weight: 600; color: #121413;">{{u.name}}</span>
+<sc-if value="{{u.hasType}}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 999px; background: #F1F3F2; border: 1px solid #D3D9D5; color: #4B534F; font-size: 12px; font-weight: 500;">{{u.type}}</span></sc-if>
+<a href="{{u.studentsHref}}" style="font-size: 14px; color: #17694F; text-underline-offset: 3px;">{{u.membersLabel}}</a>
+<span style="display: flex; gap: 8px; margin-inline-start: auto;">
+<button type="button" class="btn-ghost" aria-label="{{u.editLabel}}" onClick="{{u.edit}}" style="height: 36px; padding: 0 14px; border-radius: 9px; border: 1px solid {{u.editBorder}}; background: {{u.editBg}}; color: {{u.editColor}}; font: inherit; font-size: 14px; cursor: pointer;">עריכה</button>
+<button type="button" class="btn-danger" aria-label="{{u.deleteLabel}}" onClick="{{u.askDelete}}" style="height: 36px; padding: 0 14px; border-radius: 9px; border: 1px solid #F2B8B8; background: #FDECEC; color: #B42318; font: inherit; font-size: 14px; cursor: pointer;">מחיקה</button>
+</span>
+<sc-if value="{{u.confirming}}" hint-placeholder-val="{{ false }}">
+<div style="flex: 1 1 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; padding: 12px 14px; background: #FDECEC; border: 1px solid #F2B8B8; border-radius: 10px;">
+<span style="flex: 1 1 260px; min-width: 0; font-size: 14px; line-height: 1.55; color: #7F1D1D;">{{u.confirmText}}</span>
+<span style="display: flex; gap: 8px;">
+<button type="button" class="btn-solid-danger" onClick="{{u.doDelete}}" style="height: 36px; padding: 0 14px; border: 0; border-radius: 9px; background: #C62828; color: #FFFFFF; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;">מחיקה סופית</button>
+<button type="button" class="btn-ghost" onClick="{{u.cancelDelete}}" style="height: 36px; padding: 0 14px; border-radius: 9px; border: 1px solid #D3D9D5; background: #FFFFFF; color: #3D4541; font: inherit; font-size: 14px; cursor: pointer;">ביטול</button>
+</span>
+</div>
+</sc-if>
+</li>
+</sc-for>
+<sc-if value="{{isEmpty}}" hint-placeholder-val="{{ false }}">
+<li style="padding: 32px 20px; text-align: center; font-size: 14px; color: #5E6762;">אין יחידות עדיין. אפשר ליצור את הראשונה בטופס.</li>
+</sc-if>
+</ul>
+<sc-if value="{{hasUnassigned}}" hint-placeholder-val="{{ true }}">
+<p style="margin: 14px 0 0; font-size: 14px; color: #5E6762;">{{unassignedLead}} בחרו {{unassignedPronoun}} ב<a href="Students.dc.html" style="color: #17694F; text-underline-offset: 3px;">דף הסטודנטים</a> והשתמשו ב״העברה ליחידה״.</p>
+</sc-if>
+<sc-if value="{{allAssigned}}" hint-placeholder-val="{{ false }}">
+<p style="margin: 14px 0 0; font-size: 14px; color: #5E6762;">כל הסטודנטים משויכים ליחידות.</p>
+</sc-if>
+</section>
+<aside ref="{{setPanel}}" aria-labelledby="unit-panel-title" style="flex: 1 1 380px; max-width: 440px; box-sizing: border-box; background: #FFFFFF; border: 1px solid {{panelBorder}}; border-radius: 16px; padding: 24px; scroll-margin-top: 24px;">
+<h2 id="unit-panel-title" style="margin: 0 0 20px; font-size: 21px; line-height: 1.3; font-weight: 600; color: #121413;">{{panelTitle}}</h2>
+<div style="display: flex; flex-direction: column; gap: 18px;">
+<div>
+<label for="unit-name" style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #3D4541;">שם</label>
+<input id="unit-name" ref="{{setNameField}}" type="text" autocomplete="off" value="{{formName}}" onChange="{{onName}}" onKeyDown="{{onFieldKey}}" aria-invalid="{{nameInvalid}}" aria-describedby="unit-name-error" style="width: 100%; box-sizing: border-box; height: 44px; padding: 0 14px; background: #FFFFFF; border: 1px solid {{nameBorder}}; border-radius: 10px; color: #1E2320; font: inherit; font-size: 15px;">
+<sc-if value="{{hasNameError}}" hint-placeholder-val="{{ false }}"><p id="unit-name-error" style="margin: 6px 0 0; font-size: 13px; color: #B42318;">{{nameError}}</p></sc-if>
+</div>
+<div>
+<label for="unit-type" style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #3D4541;">סוג <span style="font-weight: 400; color: #5E6762;">(אופציונלי)</span></label>
+<input id="unit-type" type="text" autocomplete="off" placeholder="למשל: גדוד, מחלקה, כיתה" value="{{formType}}" onChange="{{onType}}" onKeyDown="{{onFieldKey}}" style="width: 100%; box-sizing: border-box; height: 44px; padding: 0 14px; background: #FFFFFF; border: 1px solid #D3D9D5; border-radius: 10px; color: #1E2320; font: inherit; font-size: 15px;">
+</div>
+<div>
+<label for="unit-parent" style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #3D4541;">חלק מ־</label>
+<div style="position: relative;">
+<select id="unit-parent" value="{{formParent}}" onChange="{{onParent}}" aria-describedby="unit-parent-error" style="appearance: none; -webkit-appearance: none; width: 100%; box-sizing: border-box; height: 44px; padding: 0 14px 0 40px; background: #FFFFFF; border: 1px solid #D3D9D5; border-radius: 10px; color: #1E2320; font: inherit; font-size: 15px; cursor: pointer;">
+<option value="">— ללא (רמה עליונה) —</option>
+<sc-for list="{{parentList}}" as="o" hint-placeholder-count="3"><option value="{{o.value}}">{{o.label}}</option></sc-for>
+</select>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5E6762" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); pointer-events: none;"><path d="M6 9l6 6 6-6"></path></svg>
+</div>
+<sc-if value="{{hasParentError}}" hint-placeholder-val="{{ false }}"><p id="unit-parent-error" style="margin: 6px 0 0; font-size: 13px; color: #B42318;">{{parentError}}</p></sc-if>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px;">
+<button type="button" class="btn-primary" onClick="{{submit}}" style="height: 46px; padding: 0 24px; border: 0; border-radius: 10px; background: #C7436A; color: #FFFFFF; font: inherit; font-size: 16px; font-weight: 600; cursor: pointer;">{{submitLabel}}</button>
+<sc-if value="{{isEdit}}" hint-placeholder-val="{{ false }}"><button type="button" class="btn-ghost" onClick="{{cancelEdit}}" style="height: 46px; padding: 0 20px; border-radius: 10px; border: 1px solid #D3D9D5; background: #FFFFFF; color: #3D4541; font: inherit; font-size: 15px; cursor: pointer;">ביטול</button></sc-if>
+</div>
+</div>
+<p style="margin: 16px 0 0; font-size: 13px; line-height: 1.55; color: #5E6762;">אפשר לקנן יחידות — למשל גדוד ובתוכו מחלקות. נתוני המנהיגות של יחידה כוללים גם את תתי־היחידות שלה.</p>
+</aside>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  defaults() {
+    return {
+      units: [
+        { id: 'a', name: "קבוצה א'", type: '', parent: '', members: 5 },
+        { id: 'b', name: "קבוצה ב'", type: '', parent: '', members: 3 },
+        { id: 'c', name: "קבוצה ג'", type: '', parent: '', members: 2 },
+        { id: 'd', name: "קבוצה ד'", type: '', parent: '', members: 5 },
+        { id: 'e', name: "קבוצה ה'", type: '', parent: '', members: 2 },
+        { id: 'prep', name: 'קורס הכנה לפני גיוס היברידי', type: '', parent: '', members: 1 }
+      ],
+      unassigned: 1,
+      mode: 'add',
+      editId: null,
+      form: this.emptyForm(),
+      errors: {},
+      confirmId: null,
+      flash: '',
+      flashId: null,
+      seq: 1
+    };
+  }
+
+  emptyForm() {
+    return { name: '', type: '', parent: '' };
+  }
+
+  st() {
+    const s = this.state || {};
+    const base = s.units ? s : Object.assign(this.defaults(), s);
+    const A = window.Academy;
+    if (!A || !A.on) return base;
+    const people = A.users().filter((u) => u.role !== 'admin');
+    const units = A.units().map((u) => ({ id: u.id, name: u.name, type: u.type || '', parent: u.parent || '', members: people.filter((x) => x.unit === u.id).length }));
+    return Object.assign({}, base, { units: units, unassigned: A.users('student').filter((x) => !x.unit).length });
+  }
+
+  // The whole list of units goes to the server; the screen redraws from its answer.
+  saveUnits(units, patch, message, highlightId) {
+    const A = window.Academy;
+    if (!A || !A.on) { this.finish(Object.assign({ units: units }, patch), message, highlightId); return; }
+    A.call('saveUnits', { units: units.map((u) => ({ id: u.id, name: u.name, type: u.type || '', parent: u.parent || '' })) }).then((r) => {
+      if (!r.ok) { this.setState({ errors: Object.assign({}, this.st().errors, { name: r.error }) }); return; }
+      const p = Object.assign({}, patch);
+      delete p.units; delete p.unassigned; delete p.seq;
+      this.finish(p, message, highlightId);
+    });
+  }
+
+  componentDidMount() {
+    if (super.componentDidMount) super.componentDidMount();
+    if (!this.state || !this.state.units) this.setState(this.defaults());
+    this.watchLeaving('Units.dc.html');
+  }
+
+  componentWillUnmount() {
+    if (super.componentWillUnmount) super.componentWillUnmount();
+    clearTimeout(this.flashTimer);
+    this.unwatchLeaving();
+  }
+
+  // Leaving this screen (a link to another screen, or the screen being hidden) drops whatever was not saved.
+  watchLeaving(here) {
+    if (this._leaveClick || typeof window === 'undefined' || !window.addEventListener) return;
+    this._leaveClick = (e) => {
+      const a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+      const file = a ? (a.getAttribute('href') || '').split(/[?#]/)[0].split('/').pop() : '';
+      if (/\.dc\.html$/.test(file) && file !== here) this.discardUnsaved();
+    };
+    window.addEventListener('click', this._leaveClick, true);
+    try {
+      this._leaveSeen = new IntersectionObserver((entries) => {
+        if (entries.some((en) => !en.isIntersecting)) this.discardUnsaved();
+      });
+      this._leaveSeen.observe(document.body);
+    } catch (err) {
+      this._leaveSeen = null;
+    }
+  }
+
+  unwatchLeaving() {
+    if (this._leaveClick) window.removeEventListener('click', this._leaveClick, true);
+    if (this._leaveSeen) this._leaveSeen.disconnect();
+    this._leaveClick = null;
+    this._leaveSeen = null;
+  }
+
+  // An open edit, a half-filled form and a delete confirmation are dropped. Saved changes stay.
+  discardUnsaved() {
+    const s = this.st();
+    const blank = this.emptyForm();
+    const typed = Object.keys(blank).some((k) => s.form[k] !== blank[k]);
+    const errors = Object.keys(s.errors || {}).some((k) => s.errors[k]);
+    if (s.mode !== 'edit' && !typed && !errors && !s.confirmId) return;
+    this.setState({ mode: 'add', editId: null, form: blank, errors: {}, confirmId: null });
+  }
+
+  finish(patch, message, highlightId) {
+    this.setState(Object.assign({}, patch, { flash: message, flashId: highlightId }));
+    clearTimeout(this.flashTimer);
+    this.flashTimer = setTimeout(() => this.setState({ flash: '', flashId: null }), 3500);
+  }
+
+  ordered(units) {
+    const ids = {};
+    units.forEach((u) => { ids[u.id] = true; });
+    const byParent = {};
+    units.forEach((u) => {
+      const p = u.parent && ids[u.parent] ? u.parent : '';
+      (byParent[p] = byParent[p] || []).push(u);
+    });
+    const out = [];
+    const seen = {};
+    const walk = (pid, depth) => {
+      (byParent[pid] || []).forEach((u) => {
+        if (seen[u.id]) return;
+        seen[u.id] = true;
+        out.push({ unit: u, depth: depth });
+        walk(u.id, depth + 1);
+      });
+    };
+    walk('', 0);
+    units.forEach((u) => {
+      if (!seen[u.id]) {
+        seen[u.id] = true;
+        out.push({ unit: u, depth: 0 });
+      }
+    });
+    return out;
+  }
+
+  descendants(units, id) {
+    const found = {};
+    const stack = [id];
+    while (stack.length) {
+      const current = stack.pop();
+      units.forEach((u) => {
+        if (u.parent === current && !found[u.id]) {
+          found[u.id] = true;
+          stack.push(u.id);
+        }
+      });
+    }
+    return found;
+  }
+
+  setField(field, value) {
+    const s = this.st();
+    const form = Object.assign({}, s.form);
+    form[field] = value;
+    const errors = Object.assign({}, s.errors);
+    errors[field] = '';
+    this.setState({ form: form, errors: errors });
+  }
+
+  submit() {
+    const s = this.st();
+    const f = s.form;
+    const name = f.name.trim();
+    const errors = {};
+    if (!name) {
+      errors.name = 'יש להזין שם ליחידה.';
+    } else if (s.units.some((u) => u.id !== s.editId && u.name.trim() === name)) {
+      errors.name = 'כבר יש יחידה בשם הזה.';
+    }
+    if (s.mode === 'edit' && f.parent && (f.parent === s.editId || this.descendants(s.units, s.editId)[f.parent])) {
+      errors.parent = 'יחידה לא יכולה להיות חלק מעצמה או מאחת מתתי־היחידות שלה.';
+    }
+    if (Object.keys(errors).length) {
+      this.setState({ errors: errors });
+      return;
+    }
+    if (s.mode === 'edit') {
+      const id = s.editId;
+      const units = s.units.map((u) => (u.id === id ? Object.assign({}, u, { name: name, type: f.type.trim(), parent: f.parent }) : u));
+      this.saveUnits(units, { mode: 'add', editId: null, form: this.emptyForm(), errors: {} }, 'השינויים ב' + name + ' נשמרו.', id);
+      return;
+    }
+    const id = window.Academy && window.Academy.on ? 'g' + Date.now().toString(36) : 'n' + s.seq;
+    const unit = { id: id, name: name, type: f.type.trim(), parent: f.parent, members: 0 };
+    this.saveUnits(s.units.concat([unit]), { seq: s.seq + 1, form: this.emptyForm(), errors: {} }, 'היחידה ' + name + ' נוספה.', id);
+  }
+
+  startEdit(id) {
+    const u = this.st().units.find((x) => x.id === id);
+    if (!u) return;
+    this.setState({ mode: 'edit', editId: id, form: { name: u.name, type: u.type || '', parent: u.parent || '' }, errors: {}, confirmId: null }, () => {
+      try {
+        if (this.panelEl && this.panelEl.scrollIntoView) this.panelEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        if (this.nameEl) this.nameEl.focus({ preventScroll: true });
+      } catch (err) {}
+    });
+  }
+
+  cancelEdit() {
+    this.setState({ mode: 'add', editId: null, form: this.emptyForm(), errors: {} });
+  }
+
+  doDelete(id) {
+    const s = this.st();
+    const u = s.units.find((x) => x.id === id);
+    if (!u) return;
+    const units = s.units
+      .filter((x) => x.id !== id)
+      .map((x) => (x.parent === id ? Object.assign({}, x, { parent: u.parent || '' }) : x));
+    const patch = { units: units, unassigned: s.unassigned + u.members, confirmId: null };
+    if (s.editId === id) {
+      Object.assign(patch, { mode: 'add', editId: null, form: this.emptyForm(), errors: {} });
+    } else if (s.form.parent === id) {
+      patch.form = Object.assign({}, s.form, { parent: u.parent || '' });
+    }
+    this.saveUnits(units, patch, 'היחידה ' + u.name + ' נמחקה.', null);
+  }
+
+  onFieldKey(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      this.submit();
+    } else if (e.key === 'Escape' && this.st().mode === 'edit') {
+      this.cancelEdit();
+    }
+  }
+
+  panelRef() {
+    if (!this._panelRef) this._panelRef = (el) => { this.panelEl = el; };
+    return this._panelRef;
+  }
+
+  nameRef() {
+    if (!this._nameRef) this._nameRef = (el) => { this.nameEl = el; };
+    return this._nameRef;
+  }
+
+  membersLabel(n) {
+    if (n === 0) return 'אין חברים';
+    return n === 1 ? 'חבר אחד' : n + ' חברים';
+  }
+
+  confirmText(u, childCount) {
+    let text = 'למחוק את ' + u.name + '?';
+    if (u.members === 1) text += ' החבר היחיד בה יישאר בלי יחידה.';
+    else if (u.members > 1) text += ' ' + u.members + ' החברים בה יישארו בלי יחידה.';
+    if (childCount === 1) text += ' יחידת המשנה שלה תעלה רמה אחת.';
+    else if (childCount > 1) text += ' ' + childCount + ' יחידות המשנה שלה יעלו רמה אחת.';
+    return text;
+  }
+
+  parentOptions(s) {
+    const blocked = {};
+    if (s.mode === 'edit' && s.editId) {
+      blocked[s.editId] = true;
+      Object.assign(blocked, this.descendants(s.units, s.editId));
+    }
+    const list = this.ordered(s.units).filter((x) => !blocked[x.unit.id]);
+    const out = { parentList: list.map((item) => ({ value: item.unit.id, label: '– '.repeat(item.depth) + item.unit.name })) };
+    for (let i = 0; i < 12; i++) {
+      const item = list[i];
+      out['opt' + (i + 1)] = item
+        ? { value: item.unit.id, label: '– '.repeat(item.depth) + item.unit.name, hidden: false }
+        : { value: '__slot' + (i + 1), label: '', hidden: true };
+    }
+    return out;
+  }
+
+  // The signed-in manager's name in the header, and a fresh draw whenever the data changes.
+  renderVals() {
+    const v = this.renderVals0();
+    const A = window.Academy;
+    if (A && A.on) {
+      if (!this._acaOff) this._acaOff = A.listen(() => this.forceUpdate());
+      v.meName = A.me.name;
+      v.meInitial = String(A.me.name || '?').trim().charAt(0);
+    } else {
+      v.meName = 'יהודה';
+      v.meInitial = 'י';
+    }
+    return v;
+  }
+
+  renderVals0() {
+    const s = this.st();
+    const editing = s.mode === 'edit' ? s.units.find((u) => u.id === s.editId) : null;
+    const isEdit = !!editing;
+    const err = s.errors || {};
+    const rows = this.ordered(s.units).map((x, i) => {
+      const u = x.unit;
+      const isEditing = isEdit && editing.id === u.id;
+      const confirming = s.confirmId === u.id;
+      const childCount = s.units.filter((c) => c.parent === u.id).length;
+      let rowBg = 'transparent';
+      if (s.flashId === u.id) rowBg = '#E6F7EF';
+      if (isEditing) rowBg = '#FFF6F9';
+      if (confirming) rowBg = '#FDECEC';
+      return {
+        id: u.id,
+        name: u.name,
+        type: u.type,
+        hasType: !!u.type,
+        isChild: x.depth > 0,
+        indent: 20 + x.depth * 28,
+        borderTop: i === 0 ? 'transparent' : '#E8EBE9',
+        membersLabel: this.membersLabel(u.members),
+        studentsHref: 'Students.dc.html?unit=' + encodeURIComponent(u.id),
+        rowBg: rowBg,
+        editBorder: isEditing ? '#D98AA5' : '#D3D9D5',
+        editBg: isEditing ? '#FCE8EF' : '#FFFFFF',
+        editColor: isEditing ? '#A8335A' : '#3D4541',
+        editLabel: 'עריכת ' + u.name,
+        deleteLabel: 'מחיקת ' + u.name,
+        confirming: confirming,
+        confirmText: this.confirmText(u, childCount),
+        edit: () => this.startEdit(u.id),
+        askDelete: () => this.setState({ confirmId: u.id }),
+        cancelDelete: () => this.setState({ confirmId: null }),
+        doDelete: () => this.doDelete(u.id)
+      };
+    });
+    const n = s.unassigned;
+    return Object.assign({
+      rows: rows,
+      isEmpty: rows.length === 0,
+      hasFlash: !!s.flash,
+      flash: s.flash,
+      hasUnassigned: n > 0,
+      allAssigned: n === 0,
+      unassignedLead: n === 1 ? 'סטודנט אחד לא משויך ליחידה.' : n + ' סטודנטים לא משויכים ליחידה.',
+      unassignedPronoun: n === 1 ? 'אותו' : 'אותם',
+      isEdit: isEdit,
+      panelTitle: isEdit ? 'עריכת ' + editing.name : 'יחידה חדשה',
+      panelBorder: isEdit ? '#E9B2C4' : '#E1E5E2',
+      submitLabel: isEdit ? 'שמירה' : 'יצירת יחידה',
+      formName: s.form.name,
+      formType: s.form.type,
+      formParent: s.form.parent,
+      onName: (e) => this.setField('name', e.target.value),
+      onType: (e) => this.setField('type', e.target.value),
+      onParent: (e) => this.setField('parent', e.target.value),
+      onFieldKey: (e) => this.onFieldKey(e),
+      hasNameError: !!err.name,
+      nameError: err.name || '',
+      nameInvalid: err.name ? 'true' : 'false',
+      nameBorder: err.name ? '#C62828' : '#D3D9D5',
+      hasParentError: !!err.parent,
+      parentError: err.parent || '',
+      submit: () => this.submit(),
+      cancelEdit: () => this.cancelEdit(),
+      setPanel: this.panelRef(),
+      setNameField: this.nameRef()
+    }, this.parentOptions(s));
+  }
+}
+</script>
+</body>
+</html>

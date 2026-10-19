@@ -1,0 +1,896 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<title>סקירה</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Karantina:wght@400;700&amp;family=Rubik:wght@400;500;600;700&amp;family=Unbounded:wght@500;700;800&amp;display=swap">
+<style>
+body{margin:0;background:#F5F6F4}
+a{color:#17694F}a:hover{color:#0E4F3A}
+.pill-hover:hover{background:#EEF1EF !important;color:#121413 !important}
+.btn-ghost:hover{background:#EEF1EF !important;border-color:#B9C2BD !important}
+input::placeholder,textarea::placeholder{color:#6E7772}
+.tile:hover,.card-link:hover{background:#F5F7F5 !important;border-color:#D3D9D5 !important}
+.vh{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.col-hit .tip{opacity:0;transition:opacity .12s ease}
+.col-hit:hover .tip,.col-hit:focus-visible .tip{opacity:1}
+.col-hit:hover .col-bar,.col-hit:focus-visible .col-bar{background:#C7436A !important}
+.col-hit:hover,.col-hit:focus-visible{background:rgba(18,20,19,0.035)}
+.hbar-hit .tip{opacity:0;transform:translateY(4px);transition:opacity .12s ease,transform .12s ease}
+.hbar-hit:hover .tip,.hbar-hit:focus-visible .tip{opacity:1;transform:translateY(0)}
+.hbar-hit:hover .hbar,.hbar-hit:focus-visible .hbar{filter:brightness(1.22)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid #C7436A;outline-offset:2px}
+</style>
+</helmet>
+<div dir="rtl" lang="he" style="min-height: 100vh; box-sizing: border-box; background: #F5F6F4; color: #1E2320; font-family: 'Rubik', system-ui, 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.5; color-scheme: light;">
+<header style="border-bottom: 5px solid #BDEFDB; background: #FFFFFF;">
+<div style="max-width: 1280px; margin: 0 auto; padding: 10px clamp(16px, 4vw, 32px); box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 28px;">
+<a href="Main.dc.html" aria-label="88ACADEMY — לעמוד הסקירה" style="display: flex; align-items: center; gap: 10px; text-decoration: none; white-space: nowrap;">
+<svg width="32.6" height="34" viewBox="0 0 100 104.15" aria-hidden="true" style="flex: none; display: block;"><path d="M74.4 104L71.1 104 67.8 103.6 66.6 103.3 64.3 102.7 61.5 101.5 59 100.2 56.6 98.7 55.4 97.7 53.7 96.2 52.2 94.5 52.1 94.2 54 90.9 55.5 87.7 55.6 87.6 55.8 87.6 58.1 90.4 59 91.3 60.1 92.3 61.5 93.3 62.7 94 65.1 95.3 67.9 96.2 70.9 96.7 73.6 96.8 76.6 96.4 78.1 96.1 80.4 95.3 82.2 94.4 84.2 93.1 86 91.7 87.4 90.4 88.9 88.6 89.7 87.4 90.8 85.4 91.7 83.2 92.3 81.6 92.6 80.2 92.8 78.7 92.9 76.2 92.6 73.3 92.2 71.4 91.3 68.8 90.4 66.9 89 64.8 87.3 62.8 85.4 61.1 83.6 59.7 81.6 58.6 79.6 57.8 76.6 57 74.9 56.8 73.4 56.7 71.1 56.7 68.8 57.1 66.3 57.8 64.1 58.7 61.6 60.2 59.8 61.6 58.6 62.7 57.5 64 56 65.9 54.7 68.3 53.7 70.4 53.1 72.8 52.8 74.9 52.7 77.4 52.9 80.1 53.7 83.4 53.2 84.9 51.7 88.4 50.5 90.5 49.6 92 47.8 94.4 46.1 96.2 44.4 97.8 41.9 99.6 40.4 100.5 38 101.7 36.2 102.4 33.6 103.3 31.4 103.7 28.6 104 26.4 104 24.4 103.9 21.3 103.4 18.8 102.7 16.1 101.6 13.5 100.3 11.1 98.7 9.8 97.7 8.1 96.2 6.5 94.4 5.2 92.7 3.7 90.3 2.6 88.4 1.4 85.4 0.8 83.2 0.2 80.1 0 77.4 0.1 74.6 0.3 72.4 1 69.3 1.8 66.6 3.3 63.3 5.1 60.3 6.1 59 8 57 10 55.2 12.5 53.4 15 52 14.9 51.8 14.7 51.7 12.5 50.4 10.8 49.2 9.8 48.4 8.1 46.8 6.8 45.5 5.3 43.7 4.4 42.4 3.4 40.7 2.7 39.2 1.6 36.7 0.9 34.4 0.5 32.7 0.3 31.4 0 28.7 -0 25.9 0.1 24.4 0.7 20.9 1.7 17.8 2.9 15 4.4 12.3 6 10.1 6.8 9.1 8.3 7.6 10.5 5.7 11.8 4.8 13.3 3.8 15 2.9 16.9 2 19.1 1.2 22.1 0.4 24.4 0.1 26.7 -0 29.6 0.1 31.6 0.3 35.2 1.2 37.5 2.1 40.2 3.3 42.5 4.8 44.3 6.1 46.2 7.8 47.8 9.6 47.8 9.8 47.7 10.1 46.5 12.1 44.9 15.1 44.4 16.4 44.2 16.6 44 16.6 43.9 16.4 42.8 15 41.8 13.8 40.2 12.3 37.9 10.6 37 10.1 35.2 9.1 32.9 8.3 29.6 7.6 26.6 7.5 23.8 7.7 21.4 8.3 20.1 8.7 18.4 9.4 15.9 10.8 14.1 12.2 12.5 13.8 10.9 15.6 9.7 17.4 8.9 18.9 8.4 20.1 7.6 22.6 7.2 24.6 7 26.9 7.2 29.6 7.6 32.1 8.3 34.2 9.3 36.5 10.7 38.9 12.5 41 14.1 42.6 15.8 43.9 17.6 45 19.8 46.1 22.3 46.9 25.2 47.4 28.1 47.5 30.1 47.2 32.6 46.7 34.9 45.9 37.2 44.7 39.4 43.2 41.5 41.4 42.5 40.2 44.3 37.7 45.3 35.7 46.1 33.9 46.8 31.4 47 30.1 47.2 28.2 47.1 25.9 46.9 23.6 46.2 21.1 46.2 20.6 46.7 19.1 48.1 15.8 49.3 13.6 50.7 11.5 52.2 9.6 53.4 8.1 54.8 6.8 57.1 4.9 58.3 4.1 60.6 2.8 62.6 1.9 65 1.1 67.6 0.4 70.3 0.1 73.1 -0 75.4 0.1 77.9 0.4 80.7 1.1 83.1 2 85.4 3.1 87.4 4.3 89.7 6 91.4 7.5 93.1 9.1 94.6 11 96.2 13.5 97.3 15.6 98.5 18.5 99.3 21.3 99.7 23.9 99.9 25.9 99.8 30 99.4 32.7 98.9 35 98 37.5 96.6 40.5 95.4 42.5 93.7 44.8 92 46.7 90 48.5 87.7 50.2 85 51.8 84.9 52 87.4 53.4 89.1 54.7 90.8 56 92.5 57.6 94.1 59.5 95.3 61.2 96.4 63 97.4 64.8 98.2 66.7 98.9 68.9 99.5 71.6 99.8 73.6 99.9 76.1 99.8 79.2 99.5 81.4 99.2 83.1 98.7 84.9 98 86.7 97.1 88.9 95.6 91.5 94.4 93.2 93 94.9 91.7 96.3 90 97.8 88.5 98.9 86.5 100.2 84.4 101.4 82.7 102.1 81.2 102.7 78.7 103.4 75.9 103.9ZM75 47.3L76.7 47.1 78.2 46.7 80.6 45.9 82.2 45.1 84.1 43.9 85.4 42.9 87.2 41.3 88.4 39.9 89.4 38.5 90.6 36.5 91.4 34.9 92.1 32.9 92.5 31.1 92.8 29.6 92.9 27.2 92.7 25.1 92.5 23.8 92.1 21.8 91.5 20.3 90.7 18.4 89.9 16.9 88.4 14.9 87.3 13.6 85.5 12 84.1 10.9 82.7 10.1 81.1 9.2 78.7 8.3 76.1 7.7 74.6 7.5 72.4 7.4 70.4 7.6 69.1 7.8 66.6 8.4 64.8 9.1 63 10 61.5 10.9 60 12.1 58.3 13.6 57.1 14.9 56.2 16.1 55.3 17.6 54.5 19.1 53.6 21.4 53 23.9 52.8 25.2 52.7 27.2 52.8 29.6 53.1 31.4 53.7 33.7 54.5 35.7 55.5 37.5 56.5 39 57.6 40.5 58.9 41.9 60.3 43.1 61.6 44 63.6 45.2 65.1 45.9 67.4 46.8 69.6 47.2 71.3 47.4 73.3 47.5ZM50.1 61.8L51.5 60 52.6 58.6 54.5 56.6 56.1 55.3 57.3 54.4 60.8 52.2 60.8 52 60.6 51.8 59 50.9 56.6 49.4 54.5 47.6 53.6 46.7 52.1 45 50 42.3 49.8 42.4 49.7 42.5 47.7 45.2 46.2 46.8 45.2 47.7 43.2 49.4 41 50.8 39.3 51.8 39 52 39 52.2 39.2 52.4 41.9 54 44.5 56 45.6 57 47.2 58.6 48.5 60.2 49.7 61.8 49.8 62 50 61.9ZM29 96.7L30.9 96.4 32.6 96 34.9 95.2 36.5 94.4 37.9 93.6 39.6 92.4 40.9 91.2 42.4 89.6 43.5 88.1 44.6 86.4 45.5 84.6 46.2 82.7 46.7 80.6 47 78.9 47.1 76.9 47 74.6 46.7 73.3 46.1 70.6 45.2 68.6 44.4 66.9 43.3 65.3 42.4 64 40.9 62.4 39.2 61 37.9 60 35.7 58.8 33.9 58 32.2 57.4 30.2 56.9 28.2 56.7 26.6 56.7 24.4 56.8 22.6 57.1 20.4 57.7 18.3 58.6 16.8 59.4 15 60.6 14.1 61.3 12.7 62.6 11.3 64.2 10.3 65.6 9.2 67.4 8.4 69.1 7.8 71.1 7.3 73.3 7.1 74.9 7 76.7 7.1 78.7 7.4 80.6 7.7 81.9 8.5 84.1 9.5 86.2 10.5 87.8 11.8 89.5 13.5 91.3 14.9 92.5 16.3 93.6 17.9 94.5 19.6 95.3 21.8 96.1 23.9 96.5 25.7 96.7 27.2 96.8Z" fill="#121413" fill-rule="evenodd"></path></svg>
+<svg width="93.9" height="13" viewBox="0 0 72.24 10" aria-hidden="true" style="flex: none; display: block;"><path d="M8.7 9.9L1 9.9 0.4 9.6 0.1 9.1 0 8.5 0.5 7.2 3.7 0.7 4 0.3 4.3 0.1 4.6 -0 5.2 -0 5.6 0.1 5.9 0.4 8.2 5.1 9.6 7.9 9.8 8.5 9.7 9.1 9.6 9.4 9.3 9.7ZM18.4 9.9L15.2 9.8 14.6 9.8 13.8 9.6 13.1 9.3 12.7 9 12.1 8.5 11.6 7.9 11.3 7.2 11 6.1 11 4.9 11 3.9 11.3 2.7 11.6 1.9 12.1 1.3 12.8 0.7 13.8 0.3 14.5 0.1 15.7 -0 18.5 0 19 0.1 19.4 0.5 19.6 0.9 19.6 1.5 19.4 1.9 19.1 2.2 18.5 2.4 15.7 2.5 14.8 2.7 14.2 3 13.9 3.3 13.6 3.9 13.5 4.5 13.5 5.4 13.7 6.1 14 6.7 14.5 7.1 14.9 7.2 15.5 7.4 18.5 7.4 19.1 7.6 19.3 7.8 19.5 8.1 19.6 8.4 19.6 9 19.5 9.3 19.3 9.5 19 9.7ZM29.4 9.9L21.8 9.9 21.5 9.8 21.2 9.6 20.8 9.1 20.7 8.7 20.8 8.4 21.4 6.9 24.5 0.8 24.8 0.3 25.2 0 25.5 -0 26 0 26.4 0.2 26.7 0.6 29 5.1 30.4 7.9 30.6 8.7 30.5 9.1 30.3 9.4 30 9.7ZM37 9.9L32.8 9.9 32.3 9.7 32.1 9.5 31.9 9.3 31.7 8.5 31.7 1.2 31.9 0.6 32.1 0.3 32.4 0.1 33.3 -0 36.9 -0 37.8 0.1 38.7 0.3 39.6 0.6 40.1 1 40.6 1.5 41.1 2.2 41.3 2.7 41.5 3.6 41.6 5.1 41.5 6.3 41.2 7.3 41 7.7 40.4 8.7 39.6 9.3 39 9.5 38.1 9.7ZM50.1 9.9L43.9 9.9 43.4 9.8 43 9.4 42.8 9.1 42.7 8.5 42.7 1.3 42.8 0.7 42.9 0.4 43.1 0.2 43.6 0 44 -0 50 -0 50.7 0.1 51.2 0.4 51.4 1 51.3 1.6 51 2.1 50.6 2.4 50 2.5 45.5 2.5 45.3 2.5 45.2 2.7 45.2 7 45.3 7.3 45.7 7.4 50.1 7.4 50.9 7.6 51.2 7.9 51.3 8.2 51.3 8.7 51.3 9.1 51.1 9.4 50.9 9.6 50.6 9.8ZM61.2 9.9L60.7 9.8 60.5 9.7 60.1 9.4 60 9.1 59.9 8.5 59.9 4.8 59.9 4.6 59.7 4.5 58.2 5.9 57.9 6.1 57.5 6.1 57 6.1 56.7 6 55.4 4.7 55.1 4.5 55 4.8 55 8.7 54.8 9.3 54.4 9.7 53.9 9.9 53.1 9.8 52.7 9.4 52.6 9.1 52.5 8.5 52.5 1.3 52.6 0.7 52.8 0.3 53.1 0.1 53.6 -0 54.2 0.1 54.5 0.2 54.9 0.6 57.2 2.8 57.5 3 57.7 2.8 59.9 0.7 60.4 0.2 60.7 0.1 61.2 0 61.6 0.1 62.1 0.4 62.3 0.7 62.4 1.3 62.4 8.8 62.3 9.3 62.1 9.5 61.6 9.8ZM67.8 9.9L67.2 9.8 66.9 9.6 66.6 9.3 66.5 8.5 66.5 5.4 66.3 5.1 63.6 1.8 63.4 1.2 63.5 0.6 63.7 0.3 64.2 0 64.8 -0 65.2 0.1 65.7 0.4 67.5 2.5 67.8 2.7 68 2.5 70 0.2 70.4 -0 71.4 0 71.9 0.3 72.1 0.6 72.1 1.2 72.1 1.6 71.8 2.1 69.1 5.2 69 5.7 69 8.4 68.9 9.1 68.7 9.4 68.5 9.6 68.2 9.8ZM37.4 7.3L37.9 7.2 38.4 6.9 38.7 6.6 38.9 6.1 39.1 5.4 39.1 4.6 39 3.9 38.8 3.4 38.5 3.1 38.2 2.8 37.3 2.5 36.4 2.5 34.6 2.5 34.3 2.5 34.2 2.8 34.2 7 34.3 7.3 34.5 7.4 35.1 7.4 36.9 7.4ZM49.7 6.1L47.2 6.1 46.4 6 46.1 5.8 45.9 5.4 45.8 4.8 46 4.3 46.3 3.9 47 3.7 49.4 3.7 50.1 3.8 50.4 4.1 50.6 4.3 50.8 4.9 50.7 5.2 50.6 5.5 50.4 5.8 50.1 6ZM6.4 7.3L6.5 7.2 6.4 7 5.1 4.3 4.9 4.1 4.8 4.2 3.4 7 3.3 7.2 3.4 7.3 3.6 7.4 4.5 7.4 6.1 7.4ZM27.2 7.3L27.2 7.2 27.2 7 25.9 4.3 25.7 4.1 25.5 4.2 24.7 5.8 24.1 7.2 24.1 7.3 24.3 7.4 25.7 7.4 27 7.4Z" fill="#121413" fill-rule="evenodd"></path></svg>
+</a>
+<nav aria-label="ניווט ראשי" style="flex: 1 1 auto; min-width: 0;">
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 2px;">
+<li><a href="Main.dc.html" aria-current="page" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid #9FDDC4; background: #D3F4E6; color: #121413; font-weight: 600; text-decoration: none; font-size: 15px; white-space: nowrap;">סקירה</a></li>
+<li><a href="Students.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">סטודנטים</a></li>
+<li><a href="Units.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">יחידות</a></li>
+<li><a href="Leadership.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">מנהיגות</a></li>
+<li><a href="Curriculum.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">תוכנית לימודים</a></li>
+<li><a href="Rewards.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">פרסים</a></li>
+<li><a href="PointsSettings.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">ניקוד</a></li>
+<li><a href="Activity.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">פעילות</a></li>
+</ul>
+</nav>
+<div style="display: flex; align-items: center; gap: 8px;">
+<span style="display: flex; align-items: center; gap: 10px; color: #3D4541; font-size: 15px; white-space: nowrap;"><span aria-hidden="true" style="width: 30px; height: 30px; border-radius: 50%; background: #76DEB8; color: #121413; display: grid; place-items: center; font-size: 14px; font-weight: 600;">{{meInitial}}</span>{{meName}}</span>
+<a href="/password" class="btn-ghost" aria-label="החלפת סיסמה" title="החלפת סיסמה" style="width: 40px; height: 40px; box-sizing: border-box; display: grid; place-items: center; padding: 0; background: transparent; border: 1px solid transparent; border-radius: 10px; color: #545D58; text-decoration: none;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"></circle><path d="M10.8 12.2L20 3M17 6l2.5 2.5M14.5 8.5L17 11"></path></svg></a>
+<a href="/logout" class="btn-ghost" aria-label="התנתקות" style="width: 40px; height: 40px; box-sizing: border-box; display: grid; place-items: center; padding: 0; background: transparent; border: 1px solid transparent; border-radius: 10px; color: #545D58; text-decoration: none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3"></path><path d="M10 8l-4 4 4 4"></path><path d="M6 12h10"></path></svg></a>
+</div>
+</div>
+</header>
+<main style="max-width: 1280px; margin: 0 auto; padding: 36px clamp(16px, 4vw, 32px) 72px; box-sizing: border-box;">
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px;">
+<div style="min-width: 0;">
+<h1 style="margin: 0; font-family: 'Karantina', 'Rubik', system-ui, sans-serif; font-size: 50px; line-height: 1; font-weight: 700; letter-spacing: 0.005em; color: #121413;">סקירה</h1>
+<p style="margin: 8px 0 0; font-size: 15px; color: #545D58;">הנתונים החשובים של האקדמיה במבט אחד · נכון ל־<span dir="ltr">{{asOf}}</span></p>
+</div>
+<a href="Activity.dc.html" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 2px; color: #3D4541; text-decoration: none; font-size: 15px;">יומן פעילות<span aria-hidden="true">←</span></a>
+</div>
+
+<section aria-labelledby="attn-title" style="margin-top: 24px;">
+<h2 id="attn-title" style="position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;">דורש טיפול</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr)); gap: 16px;">
+<a href="#submissions" onClick="{{goSubs}}" class="card-link" style="display: flex; align-items: flex-start; gap: 14px; padding: 16px 18px; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; color: inherit; text-decoration: none;">
+<span aria-hidden="true" style="flex: none; width: 34px; height: 34px; box-sizing: border-box; border-radius: 50%; background: #DDF6EC; border: 1px solid #A3DEC6; display: grid; place-items: center; color: #17694F;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+<span style="flex: 1 1 auto; min-width: 0;">
+<span style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px;"><span style="font-size: 15px; font-weight: 600; color: #121413;">{{pendingTitle}}</span><span style="display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 999px; background: #DDF6EC; border: 1px solid #A3DEC6; color: #17694F; font-size: 12px; font-weight: 500;">מעודכן</span></span>
+<span style="display: block; margin-top: 4px; font-size: 13px; line-height: 1.5; color: #545D58;">{{pendingText}}</span>
+</span>
+<span style="flex: none; align-self: center; font-size: 14px; color: #17694F; white-space: nowrap;">להגשות <span aria-hidden="true">←</span></span>
+</a>
+<a href="Rewards.dc.html" class="card-link" style="display: flex; align-items: flex-start; gap: 14px; padding: 16px 18px; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; color: inherit; text-decoration: none;">
+<span aria-hidden="true" style="flex: none; width: 34px; height: 34px; box-sizing: border-box; border-radius: 50%; background: #DDF6EC; border: 1px solid #A3DEC6; display: grid; place-items: center; color: #17694F;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+<span style="flex: 1 1 auto; min-width: 0;">
+<span style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px;"><span style="font-size: 15px; font-weight: 600; color: #121413;">{{rewardsTitle}}</span><span style="display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 999px; background: {{rewardsChipBg}}; border: 1px solid {{rewardsChipBorder}}; color: {{rewardsChipColor}}; font-size: 12px; font-weight: 500;">{{rewardsChip}}</span></span>
+<span style="display: block; margin-top: 4px; font-size: 13px; line-height: 1.5; color: #545D58;">{{rewardsText}}</span>
+</span>
+<span style="flex: none; align-self: center; font-size: 14px; color: #17694F; white-space: nowrap;">לפרסים <span aria-hidden="true">←</span></span>
+</a>
+</div>
+</section>
+
+<section aria-label="מדדים עיקריים" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(160px, 100%), 1fr)); gap: 16px; margin-top: 16px;">
+<a href="Students.dc.html" class="tile" style="display: flex; flex-direction: column; gap: 4px; padding: 18px 20px; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 14px; color: inherit; text-decoration: none;">
+<span style="font-size: 14px; color: #545D58;">סטודנטים</span>
+<span style="font-size: 36px; line-height: 1.15; font-weight: 600; color: #121413;">{{kStudents}}</span>
+<span style="font-size: 13px; color: #5E6762;">{{kStudentsSub}}</span>
+</a>
+<a href="Activity.dc.html" class="tile" style="display: flex; flex-direction: column; gap: 4px; padding: 18px 20px; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 14px; color: inherit; text-decoration: none;">
+<span style="font-size: 14px; color: #545D58;">נכנסו ב־7 ימים</span>
+<span style="font-size: 36px; line-height: 1.15; font-weight: 600; color: #121413;">{{kActive}}</span>
+<span style="font-size: 13px; color: #5E6762;">{{kActiveSub}}</span>
+</a>
+<a href="#submissions" onClick="{{goSubs}}" class="tile" style="display: flex; flex-direction: column; gap: 4px; padding: 18px 20px; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 14px; color: inherit; text-decoration: none;">
+<span style="font-size: 14px; color: #545D58;">טיסות ב־7 ימים</span>
+<span style="font-size: 36px; line-height: 1.15; font-weight: 600; color: #121413;">{{kFlights}}</span>
+<span style="font-size: 13px; color: #5E6762;">{{kFlightsSub}}</span>
+</a>
+<a href="Leadership.dc.html" class="tile" style="display: flex; flex-direction: column; gap: 4px; padding: 18px 20px; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 14px; color: inherit; text-decoration: none;">
+<span style="font-size: 14px; color: #545D58;">טסו השבוע</span>
+<span style="font-size: 36px; line-height: 1.15; font-weight: 600; color: #121413;">{{kFlew}}</span>
+<span style="font-size: 13px; color: #5E6762;">{{kFlewSub}}</span>
+</a>
+<a href="Curriculum.dc.html" class="tile" style="display: flex; flex-direction: column; gap: 4px; padding: 18px 20px; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 14px; color: inherit; text-decoration: none;">
+<span style="font-size: 14px; color: #545D58;">מיומנויות בממוצע</span>
+<span style="font-size: 36px; line-height: 1.15; font-weight: 600; color: #121413;">{{kAvg}}</span>
+<span style="font-size: 13px; color: #5E6762;">{{kAvgSub}}</span>
+</a>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-top: 16px;">
+<section aria-labelledby="act-title" style="flex: 8 1 560px; min-width: 0; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; padding: 22px 24px;">
+<div style="display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 8px 16px;">
+<div style="min-width: 0;">
+<h2 id="act-title" style="margin: 0; font-size: 18px; line-height: 1.35; font-weight: 600; color: #121413;">פעילות סטודנטים</h2>
+<p style="margin: 4px 0 0; font-size: 13px; color: #5E6762;">סטודנטים שנכנסו למערכת בכל יום · 7 ימים אחרונים</p>
+</div>
+<button type="button" class="btn-ghost" onClick="{{toggleAct}}" style="display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-radius: 8px; border: 1px solid #D3D9D5; background: #FFFFFF; color: #3D4541; font: inherit; font-size: 13px; cursor: pointer;">{{actToggleLabel}}</button>
+</div>
+<sc-if value="{{actChart}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; gap: 10px; margin-top: 14px;">
+<div aria-hidden="true" style="position: relative; flex: none; width: 22px; height: 196px;">
+<sc-for list="{{ticks}}" as="t" hint-placeholder-count="4"><span style="position: absolute; inset-inline-start: 0; top: {{t.top}}px; transform: translateY(-50%); font-size: 12px; line-height: 1; color: #6E7772; font-variant-numeric: tabular-nums;">{{t.label}}</span></sc-for>
+</div>
+<div style="flex: 1 1 auto; min-width: 0;">
+<div style="position: relative; height: 196px;">
+<sc-for list="{{ticks}}" as="t" hint-placeholder-count="4"><span aria-hidden="true" style="position: absolute; left: 0; right: 0; top: {{t.top}}px; border-top: 1px solid {{t.line}};"></span></sc-for>
+<div style="position: absolute; inset: 0; display: flex;">
+<sc-for list="{{days}}" as="d" hint-placeholder-count="7">
+<div class="col-hit" tabIndex="0" role="img" aria-label="{{d.aria}}" style="position: relative; flex: 1 1 0; min-width: 0; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; border-radius: 8px;">
+<sc-if value="{{d.hasValue}}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="margin-bottom: 6px; font-size: 13px; line-height: 1; font-weight: 600; color: #1E2320;">{{d.value}}</span></sc-if>
+<span class="col-bar" aria-hidden="true" style="display: block; width: 24px; max-width: 70%; height: {{d.barH}}px; border-radius: 4px 4px 0 0; background: #2A9171;"></span>
+<span class="tip" aria-hidden="true" style="position: absolute; left: {{d.tipLeft}}; transform: {{d.tipShift}}; bottom: {{d.tipBottom}}px; z-index: 3; padding: 8px 11px; border-radius: 10px; background: #F5F6F4; border: 1px solid #D3D9D5; box-shadow: 0 10px 28px rgba(18, 20, 19, 0.14); text-align: start; white-space: nowrap; pointer-events: none;">
+<span style="display: block; font-size: 15px; font-weight: 600; color: #121413;">{{d.tipValue}}</span>
+<span style="display: block; margin-top: 2px; font-size: 12px; color: #545D58;">{{d.tipLabel}}</span>
+</span>
+</div>
+</sc-for>
+</div>
+</div>
+<div aria-hidden="true" style="display: flex; margin-top: 8px;">
+<sc-for list="{{days}}" as="d" hint-placeholder-count="7"><span style="flex: 1 1 0; min-width: 0; text-align: center; font-size: 13px; line-height: 1.35; color: {{d.labelColor}}; font-weight: {{d.labelWeight}}; white-space: nowrap;"><span style="display: block;">{{d.name}}</span><span style="display: block; font-size: 12px;">{{d.date}}</span></span></sc-for>
+</div>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{actTable}}" hint-placeholder-val="{{ false }}">
+<ul aria-label="סטודנטים שנכנסו וטיסות לפי יום" style="list-style: none; margin: 16px 0 0; padding: 0; border: 1px solid #E1E5E2; border-radius: 12px; overflow: hidden;">
+<li style="display: grid; grid-template-columns: minmax(0, 1.6fr) repeat(2, minmax(0, 1fr)); gap: 10px; padding: 10px 16px; background: #F7F8F7; font-size: 13px; font-weight: 500; color: #5E6762;"><span>יום</span><span>סטודנטים שנכנסו</span><span>טיסות שהועלו</span></li>
+<sc-for list="{{days}}" as="d" hint-placeholder-count="7">
+<li style="display: grid; grid-template-columns: minmax(0, 1.6fr) repeat(2, minmax(0, 1fr)); gap: 10px; padding: 10px 16px; border-top: 1px solid #E8EBE9; font-size: 14px; font-variant-numeric: tabular-nums; color: #1E2320;"><span style="color: {{d.labelColor}}; font-weight: {{d.labelWeight}};">{{d.fullLabel}}</span><span>{{d.value}}</span><span>{{d.flights}}</span></li>
+</sc-for>
+</ul>
+</sc-if>
+<p style="margin: 14px 0 0; font-size: 13px; color: #5E6762;">{{actNote}}</p>
+</section>
+
+<section aria-labelledby="lvl-title" style="flex: 4 1 340px; min-width: 0; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; padding: 22px 24px;">
+<h2 id="lvl-title" style="margin: 0; font-size: 18px; line-height: 1.35; font-weight: 600; color: #121413;">סטודנטים לפי רמה</h2>
+<p style="margin: 4px 0 0; font-size: 13px; color: #5E6762;">איפה כל סטודנט נמצא במסלול</p>
+<ul style="list-style: none; margin: 20px 0 0; padding: 0; display: flex; flex-direction: column; gap: 16px;">
+<sc-for list="{{levelRows}}" as="r" hint-placeholder-count="4">
+<li>
+<div class="hbar-hit" tabIndex="0" role="img" aria-label="{{r.aria}}" style="position: relative; border-radius: 8px;">
+<span style="display: block; font-size: 14px; color: #3D4541;">{{r.label}}</span>
+<span style="display: flex; align-items: center; gap: 8px; margin-top: 7px;">
+<span class="hbar" style="display: block; flex: none; width: calc((100% - 84px) * {{r.f}}); height: 12px; border-radius: 4px 0 0 4px; background: {{r.color}};"></span>
+<span style="font-size: 14px; font-weight: 600; color: #121413; font-variant-numeric: tabular-nums;">{{r.value}}</span>
+<span style="font-size: 13px; color: #5E6762; font-variant-numeric: tabular-nums;">{{r.share}}</span>
+</span>
+<span class="tip" aria-hidden="true" style="position: absolute; inset-inline-start: 0; bottom: calc(100% + 4px); z-index: 3; max-width: min(300px, 100%); padding: 8px 11px; border-radius: 10px; background: #F5F6F4; border: 1px solid #D3D9D5; box-shadow: 0 10px 28px rgba(18, 20, 19, 0.14); pointer-events: none;">
+<span style="display: block; font-size: 15px; font-weight: 600; color: #121413;">{{r.tipValue}}</span>
+<span style="display: block; margin-top: 2px; font-size: 12px; line-height: 1.5; color: #545D58;">{{r.tip}}</span>
+</span>
+</div>
+</li>
+</sc-for>
+</ul>
+<p style="margin: 18px 0 0; font-size: 13px; color: #5E6762;">{{lvlNote}}</p>
+</section>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-top: 16px;">
+<section aria-labelledby="stuck-title" style="flex: 1 1 340px; min-width: 0; display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; padding: 22px 24px;">
+<h2 id="stuck-title" style="margin: 0; font-size: 18px; line-height: 1.35; font-weight: 600; color: #121413;">איפה נתקעים</h2>
+<p style="margin: 4px 0 0; font-size: 13px; color: #5E6762;">מיומנויות שהכי הרבה סטודנטים עובדים עליהן ועוד לא עברו</p>
+<ul style="list-style: none; margin: 18px 0 0; padding: 0; display: flex; flex-direction: column; gap: 13px;">
+<sc-for list="{{stuckRows}}" as="q" hint-placeholder-count="7">
+<li>
+<div class="hbar-hit" tabIndex="0" role="img" aria-label="{{q.aria}}" style="position: relative; border-radius: 8px;">
+<span style="display: block; font-size: 14px; color: #3D4541;">{{q.label}}</span>
+<span style="display: flex; align-items: center; gap: 8px; margin-top: 6px;">
+<span class="hbar" style="display: block; flex: none; width: calc((100% - 40px) * {{q.f}}); height: 10px; border-radius: 4px 0 0 4px; background: #2A9171;"></span>
+<span style="font-size: 14px; font-weight: 600; color: #121413; font-variant-numeric: tabular-nums;">{{q.value}}</span>
+</span>
+<span class="tip" aria-hidden="true" style="position: absolute; inset-inline-start: 0; bottom: calc(100% + 4px); z-index: 3; max-width: min(300px, 100%); padding: 8px 11px; border-radius: 10px; background: #F5F6F4; border: 1px solid #D3D9D5; box-shadow: 0 10px 28px rgba(18, 20, 19, 0.14); pointer-events: none;">
+<span style="display: block; font-size: 15px; font-weight: 600; color: #121413;">{{q.tipValue}}</span>
+<span style="display: block; margin-top: 2px; font-size: 12px; line-height: 1.5; color: #545D58;">{{q.tip}}</span>
+</span>
+</div>
+</li>
+</sc-for>
+</ul>
+<a href="Leadership.dc.html" style="align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; margin-top: auto; padding-top: 18px; color: #17694F; text-decoration: none; font-size: 14px;">לסקירת המנהיגות<span aria-hidden="true">←</span></a>
+</section>
+
+<section aria-labelledby="attn2-title" style="flex: 1 1 340px; min-width: 0; display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; padding: 22px 24px;">
+<h2 id="attn2-title" style="margin: 0; font-size: 18px; line-height: 1.35; font-weight: 600; color: #121413;">צריכים תשומת לב</h2>
+<p style="margin: 4px 0 0; font-size: 13px; color: #5E6762;">הסטודנטים עם הכי מעט מיומנויות במסלול</p>
+<div style="display: flex; align-items: flex-start; gap: 10px; margin-top: 16px; padding: 12px 14px; background: #FFF6F9; border: 1px solid #EFD48C; border-radius: 12px;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7A5300" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 1px;"><rect x="3" y="6" width="13" height="12" rx="2.5"></rect><path d="M16 10.5l5-3v9l-5-3"></path></svg>
+<p style="margin: 0; font-size: 14px; line-height: 1.5; color: #1E2320;"><span style="font-weight: 600;">{{noFlightText}}</span> <span style="color: #545D58;">{{noFlightSub}}</span></p>
+</div>
+<ul style="list-style: none; margin: 8px 0 0; padding: 0;">
+<sc-for list="{{lowRows}}" as="w" hint-placeholder-count="4">
+<li style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; padding: 12px 0; border-top: 1px solid {{w.divider}};">
+<span style="flex: 1 1 150px; min-width: 0;">
+<span style="display: block; font-size: 15px; font-weight: 500; color: #121413;">{{w.name}}</span>
+<span style="display: block; margin-top: 2px; font-size: 13px; color: #5E6762;">{{w.meta}}</span>
+</span>
+<span style="flex: 0 1 150px; min-width: 110px; display: flex; align-items: center; gap: 10px;">
+<span role="progressbar" aria-label="{{w.meterLabel}}" aria-valuemin="0" aria-valuemax="20" aria-valuenow="{{w.skills}}" style="flex: 1 1 auto; height: 6px; border-radius: 999px; background: #E6EAE7; overflow: hidden;"><span style="display: block; width: {{w.pct}}%; height: 100%; border-radius: 999px; background: #3FA37F;"></span></span>
+<span style="font-size: 13px; color: #3D4541; font-variant-numeric: tabular-nums; white-space: nowrap;">{{w.skillsText}}</span>
+</span>
+</li>
+</sc-for>
+</ul>
+<a href="Students.dc.html" style="align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; margin-top: auto; padding-top: 14px; color: #17694F; text-decoration: none; font-size: 14px;">לכל הסטודנטים<span aria-hidden="true">←</span></a>
+</section>
+
+<section aria-labelledby="units-title" style="flex: 1 1 340px; min-width: 0; display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; padding: 22px 24px;">
+<h2 id="units-title" style="margin: 0; font-size: 18px; line-height: 1.35; font-weight: 600; color: #121413;">יחידות</h2>
+<p style="margin: 4px 0 0; font-size: 13px; color: #5E6762;">סטודנטים, ממוצע מיומנויות והמקום שבו נתקעים</p>
+<ul style="list-style: none; margin: 12px 0 0; padding: 0;">
+<li aria-hidden="true" style="display: grid; grid-template-columns: minmax(0, 1fr) 54px 54px; gap: 10px; padding: 0 0 8px; font-size: 12px; color: #6E7772;"><span>יחידה</span><span style="text-align: center;">סטודנטים</span><span style="text-align: center;">ממוצע</span></li>
+<sc-for list="{{unitRows}}" as="u" hint-placeholder-count="7">
+<li style="display: grid; grid-template-columns: minmax(0, 1fr) 54px 54px; gap: 2px 10px; align-items: center; padding: 9px 0; border-top: 1px solid #E8EBE9;">
+<span style="min-width: 0; font-size: 14px; color: #1E2320; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{u.name}}</span>
+<span style="text-align: center; font-size: 14px; color: #1E2320; font-variant-numeric: tabular-nums;">{{u.count}}<span class="vh"> סטודנטים</span></span>
+<span style="text-align: center; font-size: 14px; color: #1E2320; font-variant-numeric: tabular-nums;"><span class="vh">ממוצע מיומנויות </span>{{u.avg}}</span>
+<span style="grid-column: 1 / -1; font-size: 12px; color: #5E6762;">{{u.stuck}}</span>
+</li>
+</sc-for>
+</ul>
+<a href="Units.dc.html" style="align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; margin-top: auto; padding-top: 14px; color: #17694F; text-decoration: none; font-size: 14px;">לניהול היחידות<span aria-hidden="true">←</span></a>
+</section>
+</div>
+
+<section aria-labelledby="pts-title" style="margin-top: 16px; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; padding: 22px 24px;">
+<div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px;">
+<h2 id="pts-title" style="margin: 0; font-size: 18px; line-height: 1.35; font-weight: 600; color: #121413;">נקודות ודרגות</h2>
+<span style="display: inline-flex; flex-wrap: wrap; gap: 6px 20px; font-size: 14px;"><a href="Students.dc.html" style="display: inline-flex; align-items: center; gap: 6px; color: #17694F; text-decoration: none;">הנקודות של כל סטודנט<span aria-hidden="true">←</span></a><a href="PointsSettings.dc.html" style="display: inline-flex; align-items: center; gap: 6px; color: #17694F; text-decoration: none;">הגדרות ניקוד<span aria-hidden="true">←</span></a></span>
+</div>
+<p style="margin: 4px 0 0; font-size: 13px; color: #5E6762;">{{ptsSummary}}</p>
+<div style="display: flex; flex-wrap: wrap; gap: 16px 48px; margin-top: 12px;">
+<div style="flex: 1 1 360px; min-width: 0;">
+<h3 style="margin: 0; font-size: 14px; font-weight: 600; color: #3D4541;">הכי קרובים לדרגה הבאה</h3>
+<ol style="list-style: none; margin: 6px 0 0; padding: 0;">
+<sc-for list="{{closeRows}}" as="tp" hint-placeholder-count="5">
+<li style="display: flex; align-items: center; gap: 12px; padding: 9px 0; border-top: 1px solid {{tp.divider}};">
+<span style="flex: 1 1 auto; min-width: 0;"><span style="display: block; font-size: 14px; font-weight: 500; color: #121413;">{{tp.name}}</span><span style="display: block; font-size: 12px; color: #5E6762;">{{tp.sub}}</span></span>
+<span style="flex: none; display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: 999px; background: #121413; color: #FFFFFF; font-size: 12px; white-space: nowrap;"><span>עוד</span><span dir="ltr" style="font-family: 'Unbounded', 'Rubik', sans-serif; font-weight: 700; color: #76DEB8;">{{tp.gap}}</span><span>ל{{tp.next}}</span></span>
+</li>
+</sc-for>
+</ol>
+</div>
+<ul aria-label="סטודנטים לפי דרגה" style="flex: 1 1 300px; min-width: 0; list-style: none; display: flex; flex-direction: column; gap: 12px; margin: 0; padding: 4px 0 0;">
+<sc-for list="{{rankSpread}}" as="rs" hint-placeholder-count="5">
+<li><span style="display: flex; justify-content: space-between; gap: 8px; font-size: 14px;"><span style="color: #121413; font-weight: 500;">{{rs.name}}</span><span style="color: #3D4541;">{{rs.countText}}</span></span><span aria-hidden="true" style="display: block; height: 8px; margin-top: 5px; border-radius: 999px; background: #E6EAE7; overflow: hidden;"><span style="display: block; width: {{rs.pct}}%; height: 100%; border-radius: 999px; background: #2A9171;"></span></span></li>
+</sc-for>
+</ul>
+</div>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-top: 16px;">
+<section id="submissions" ref="{{setSubs}}" aria-labelledby="subs-title" style="flex: 7 1 560px; min-width: 0; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; padding: 22px 24px; scroll-margin-top: 16px;">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 16px;">
+<div style="min-width: 0;">
+<h2 id="subs-title" tabIndex="-1" style="margin: 0; font-size: 18px; line-height: 1.35; font-weight: 600; color: #121413;">הגשות</h2>
+<p style="margin: 4px 0 0; font-size: 13px; color: #5E6762;">טיסות שסטודנטים העלו לבדיקה</p>
+</div>
+<div role="tablist" aria-label="סינון לפי סטטוס" style="display: flex; gap: 4px; padding: 4px; background: #F7F8F7; border: 1px solid #E1E5E2; border-radius: 999px;">
+<sc-for list="{{subTabs}}" as="b" hint-placeholder-count="3">
+<button type="button" role="tab" aria-selected="{{b.selected}}" onClick="{{b.pick}}" class="pill-hover" style="display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 14px; border-radius: 999px; border: 1px solid {{b.border}}; background: {{b.bg}}; color: {{b.color}}; font: inherit; font-size: 14px; font-weight: {{b.weight}}; cursor: pointer;">{{b.label}}<span style="font-size: 12px; color: {{b.countColor}}; font-variant-numeric: tabular-nums;">{{b.count}}</span></button>
+</sc-for>
+</div>
+</div>
+<div role="tabpanel" aria-label="{{subPanelLabel}}" style="margin-top: 16px; border: 1px solid #E1E5E2; border-radius: 12px; overflow-x: auto;">
+<ul style="list-style: none; margin: 0; padding: 0; min-width: 620px;">
+<li style="display: grid; grid-template-columns: 112px minmax(0, 1fr) minmax(0, 1.3fr) 64px 92px 84px; gap: 12px; padding: 10px 16px; background: #F7F8F7; font-size: 12px; font-weight: 500; color: #5E6762;"><span>הוגש</span><span>סטודנט</span><span>מיומנות / אתגר</span><span>נקודות</span><span>בדיקה</span><span>סטטוס</span></li>
+<sc-for list="{{subRows}}" as="x" hint-placeholder-count="2">
+<li style="display: grid; grid-template-columns: 112px minmax(0, 1fr) minmax(0, 1.3fr) 64px 92px 84px; gap: 12px; align-items: center; padding: 12px 16px; border-top: 1px solid #E8EBE9; font-size: 14px; color: #1E2320;">
+<span dir="ltr" style="text-align: right; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 13px; color: #3D4541;">{{x.at}}</span>
+<a href="{{x.href}}" style="min-width: 0; color: #17694F;">{{x.student}}</a>
+<span style="min-width: 0;">{{x.item}}</span>
+<span style="color: #5E6762;">{{x.points}}</span>
+<a href="{{x.href}}" style="font-size: 13px; color: #17694F; white-space: nowrap;">{{x.ai}}</a>
+<span><span style="display: inline-flex; align-items: center; gap: 5px; height: 24px; padding: 0 9px; border-radius: 999px; background: {{x.chipBg}}; border: 1px solid {{x.chipBorder}}; color: {{x.chipColor}}; font-size: 12px; font-weight: 500; white-space: nowrap;">{{x.status}}</span></span>
+</li>
+</sc-for>
+</ul>
+<sc-if value="{{subEmpty}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 36px 20px; border-top: 1px solid #E8EBE9; text-align: center;">
+<span aria-hidden="true" style="width: 46px; height: 46px; box-sizing: border-box; border-radius: 50%; background: #DDF6EC; border: 1px solid #A3DEC6; display: grid; place-items: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#17694F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+<p style="margin: 4px 0 0; font-size: 16px; font-weight: 500; color: #121413;">{{subEmptyTitle}}</p>
+<p style="margin: 0; font-size: 14px; color: #5E6762;">{{subEmptyText}}</p>
+</div>
+</sc-if>
+</div>
+</section>
+
+<section aria-labelledby="recent-title" style="flex: 5 1 380px; min-width: 0; display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; padding: 22px 24px;">
+<h2 id="recent-title" style="margin: 0; font-size: 18px; line-height: 1.35; font-weight: 600; color: #121413;">פעילות אחרונה</h2>
+<p style="margin: 4px 0 0; font-size: 13px; color: #5E6762;">סטודנטים ומשקיפים, בלי הצפיות שלכם</p>
+<ol style="list-style: none; margin: 10px 0 0; padding: 0;">
+<sc-for list="{{recentRows}}" as="e" hint-placeholder-count="6">
+<li style="display: flex; align-items: flex-start; gap: 12px; padding: 11px 0; border-top: 1px solid {{e.divider}};">
+<span aria-hidden="true" style="flex: none; width: 28px; height: 28px; box-sizing: border-box; margin-top: 1px; border-radius: 50%; background: {{e.iconBg}}; border: 1px solid {{e.iconBorder}}; display: grid; place-items: center; color: {{e.iconColor}};">
+<sc-if value="{{e.isEye}}" hint-placeholder-val="{{ true }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle></svg></sc-if>
+<sc-if value="{{e.isLogin}}" hint-placeholder-val="{{ false }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3"></path><path d="M14 8l4 4-4 4"></path><path d="M18 12H8"></path></svg></sc-if>
+<sc-if value="{{e.isFlight}}" hint-placeholder-val="{{ false }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="13" height="12" rx="2.5"></rect><path d="M16 10.5l5-3v9l-5-3"></path></svg></sc-if>
+<sc-if value="{{e.isUser}}" hint-placeholder-val="{{ false }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="8" r="4"></circle><path d="M3 20c0-3.3 3.1-6 7-6s7 2.7 7 6"></path><path d="M19 8v6M16 11h6"></path></svg></sc-if>
+</span>
+<span style="flex: 1 1 auto; min-width: 0;">
+<span style="display: block; font-size: 14px; line-height: 1.45; color: #1E2320;">{{e.text}}</span>
+<span style="display: block; margin-top: 2px; font-size: 12px; color: #5E6762;"><span dir="ltr">{{e.when}}</span> · {{e.ago}}</span>
+</span>
+</li>
+</sc-for>
+</ol>
+<a href="Activity.dc.html" style="align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; margin-top: auto; padding-top: 14px; color: #17694F; text-decoration: none; font-size: 14px;">ליומן הפעילות<span aria-hidden="true">←</span></a>
+</section>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2560}}'>
+class Component extends DCLogic {
+  // "Now" in this prototype: Saturday 17.10.2026, the day of the newest entries in the activity log.
+  today() {
+    if (window.Academy && window.Academy.on) return window.Academy.today();
+    return '2026-10-17';
+  }
+
+  // The week starts on Monday, as in the leadership view.
+  weekStart() {
+    if (window.Academy && window.Academy.on) return window.Academy.addDays(this.today(), -6);
+    return '2026-10-12';
+  }
+
+  units() {
+    if (window.Academy && window.Academy.on) return window.Academy.units().map((u) => ({ id: u.id, name: u.name })).concat([{ id: '', name: 'ללא יחידה' }]);
+    return [
+      { id: 'a', name: "קבוצה א'" },
+      { id: 'b', name: "קבוצה ב'" },
+      { id: 'c', name: "קבוצה ג'" },
+      { id: 'd', name: "קבוצה ד'" },
+      { id: 'e', name: "קבוצה ה'" },
+      { id: 'prep', name: 'קורס הכנה לפני גיוס היברידי' },
+      { id: '', name: 'ללא יחידה' }
+    ];
+  }
+
+  // The 19 students of the units and leadership pages. skills: null where the screenshots did not show it;
+  // last: the last day the student logged in (from the activity log).
+  students() {
+    const A = window.Academy;
+    if (A && A.on) {
+      return A.students().map((x) => ({ id: x.user.id, name: x.user.name, unit: x.user.unit || '', skills: x.started ? x.done : null, last: x.lastDay || null, pts: x.total, sm: x }));
+    }
+    const s = (name, unit, skills, last) => ({ name: name, unit: unit, skills: skills, last: last || null });
+    const d = '2026-10-13';
+    return [
+      s('א. ראדין', 'a', 13, d), s('ד. צדקה', 'a', 13, d), s('נ. גרויה', 'a', 13, d), s('ר. שליסר', 'a', 13, d), s(null, 'a', 3),
+      s('א. פרוינדליך', 'b', 12, d), s('א. מטלון', 'b', 13, d), s(null, 'b', null),
+      s('א. יהודאי', 'c', 3, d), s('א. פולטוב', 'c', 11, d),
+      s('א. וולך', 'd', 7, d), s('ד. סקולסקי', 'd', 12, d), s(null, 'd', null), s(null, 'd', null), s(null, 'd', null),
+      s('א. סדוב', 'e', 6, d), s('ד. אסף', 'e', 11, d),
+      s(null, 'prep', null),
+      s('באבאפוו', '', 4, d)
+    ];
+  }
+
+  // ---------- points (הגדרות ניקוד) ----------
+  // The points a student earned: each skill's points and a bonus per finished level (as they were when earned), plus
+  // logins, streaks and learning time and the other extras (as on the students page; others get the usual 40 + 10).
+  pointsOf(name, skills) {
+    const per = [20, 20, 20, 50, 40, 30, 40, 50, 20, 25, 25, 80, 50, 30, 60, 50, 80, 50, 50, 50];
+    const extras = { 'א. ראדין': 50, 'ד. צדקה': 50, 'א. פרוינדליך': 50, 'א. מטלון': 50, 'א. יהודאי': 50, 'א. פולטוב': 50, 'א. וולך': 50, 'ד. סקולסקי': 50, 'א. סדוב': 50, 'ד. אסף': 50, 'באבאפוו': 180 };
+    let pts = extras[name] != null ? extras[name] : 50;
+    for (let i = 0; i < Math.min(skills, per.length); i++) pts += per[i];
+    return pts + (skills >= 7 ? 50 : 0) + (skills >= 13 ? 100 : 0) + (skills >= 20 ? 150 : 0);
+  }
+
+  // The ranks from the scoring settings, saved in this browser so every screen reads the same values.
+  scoringRanks() {
+    const base = [{ name: 'צוער', min: 0 }, { name: 'איש כנף', min: 300 }, { name: 'טייס', min: 600 }, { name: 'מוביל מבנה', min: 1000 }, { name: 'מפקד טייסת', min: 1500 }];
+    if (this._ranks) return this._ranks;
+    let saved = null;
+    try {
+      const raw = window.localStorage.getItem('88academy.scoring.v1');
+      saved = raw ? JSON.parse(raw) : null;
+    } catch (err) {
+      saved = null;
+    }
+    const rk = saved && saved.ranks;
+    const int = (v) => typeof v === 'number' && isFinite(v) && Math.floor(v) === v && v >= 0 && v <= 1000000;
+    const ok = Array.isArray(rk) && rk.length >= 2 && rk.length <= 8 && rk.every((r, i) => r && typeof r.name === 'string' && r.name.trim() && int(r.min) && (i === 0 ? r.min === 0 : r.min > rk[i - 1].min));
+    this._ranks = ok ? rk.map((r) => ({ name: r.name.trim().slice(0, 24), min: r.min })) : base;
+    return this._ranks;
+  }
+
+  componentDidMount() {
+    if (super.componentDidMount) super.componentDidMount();
+    if (typeof window === 'undefined' || !window.addEventListener) return;
+    // Settings saved on another screen: read the ranks again and redraw.
+    this._onScoring = (e) => {
+      if (e && e.key && e.key !== '88academy.scoring.v1') return;
+      this._ranks = null;
+      this.forceUpdate();
+    };
+    window.addEventListener('storage', this._onScoring);
+  }
+
+  componentWillUnmount() {
+    if (super.componentWillUnmount) super.componentWillUnmount();
+    if (this._onScoring) window.removeEventListener('storage', this._onScoring);
+    this._onScoring = null;
+  }
+
+  pointsVals(students, unitName) {
+    const ranks = this.scoringRanks();
+    const rankAt = (p) => {
+      let i = 0;
+      while (i + 1 < ranks.length && p >= ranks[i + 1].min) i++;
+      return i;
+    };
+    const known = students.filter((st) => typeof st.skills === 'number').map((st) => ({ name: st.name || '[שם סטודנט]', unit: st.unit, pts: st.pts != null ? st.pts : this.pointsOf(st.name, st.skills) }));
+    const sum = known.reduce((a, b) => a + b.pts, 0);
+    const close = known.filter((k) => k.name !== '[שם סטודנט]').map((k) => Object.assign({ ri: rankAt(k.pts) }, k)).filter((k) => ranks[k.ri + 1]).map((k) => Object.assign({ gap: ranks[k.ri + 1].min - k.pts }, k)).sort((a, b) => a.gap - b.gap || b.pts - a.pts || a.name.localeCompare(b.name)).slice(0, 5);
+    return {
+      ptsSummary: 'סה״כ ' + sum.toLocaleString('en-US') + ' נקודות שנצברו · ממוצע ' + (known.length ? Math.round(sum / known.length) : 0).toLocaleString('en-US') + ' לסטודנט (מתוך ' + known.length + ' עם נתונים)',
+      closeRows: close.map((k, i) => ({ id: 'cr' + i, name: k.name, sub: (unitName[k.unit] || 'ללא יחידה') + ' · ' + ranks[k.ri].name + ' · ' + k.pts.toLocaleString('en-US') + ' נקודות', gap: k.gap.toLocaleString('en-US'), next: ranks[k.ri + 1].name, divider: i === 0 ? 'transparent' : '#E8EBE9' })),
+      rankSpread: ranks.map((r, i) => {
+        const n = known.filter((k) => rankAt(k.pts) === i).length;
+        return { id: 'rs' + i, name: r.name, countText: n === 0 ? 'אין סטודנטים' : n === 1 ? 'סטודנט אחד' : n + ' סטודנטים', pct: known.length ? Math.round(n / known.length * 100) : 0 };
+      })
+    };
+  }
+
+  // Skills students are working on and have not passed yet, per unit (the leadership page's bottlenecks).
+  stuckByUnit() {
+    const A = window.Academy;
+    if (A && A.on) {
+      const out = {};
+      const all = A.students();
+      this.units().forEach((u) => { out[u.id] = A.bottlenecks(all.filter((x) => (x.user.unit || '') === u.id && x.started)); });
+      return out;
+    }
+    return {
+      a: [['נחיתות מדויקות', 4], ['ירידה במדרגות', 4], ['סיבוב 360 בפיר מעלית', 4], ['עליית מדרגות - שמאל', 4], ['פיגומים', 4]],
+      b: [['נחיתות מדויקות', 1], ['ירידה במדרגות', 1], ['פיגומים', 1], ['עליית מדרגות - שמאל', 1], ['סיבוב 360 בפיר מעלית', 1]],
+      c: [['מדרגות', 1], ['צינורות', 1], ['סללום ימינה ושמאלה', 1], ['שינוי גובה', 1], ['פניות', 1]],
+      d: [['מדרגות', 2], ['צינורות', 1], ['עינוי סיני', 1], ['מסלול', 1], ['נחיתה', 1]],
+      e: [['שמיניות', 1], ['מדרגות', 1], ['צינורות', 1]],
+      prep: [['האטה ובלימה', 1]],
+      '': [['שינוי גובה', 1], ['פניות', 1], ['שמיניות', 1]]
+    };
+  }
+
+  // Students who logged in each day of the last 7 days (activity log).
+  week() {
+    const A = window.Academy;
+    if (A && A.on) {
+      const all = A.students();
+      const out = [];
+      for (let k = 6; k >= 0; k--) {
+        const day = A.addDays(this.today(), -k);
+        const active = all.filter((x) => x.doc.ledger.some((e) => A.dayOf(e.at) === day) || x.doc.flights.some((f) => A.dayOf(f.at) === day) || (x.user.lastSeen && A.dayOf(x.user.lastSeen) === day)).length;
+        out.push({ date: day, active: active });
+      }
+      return out;
+    }
+    return [
+      { date: '2026-10-11', active: 13 },
+      { date: '2026-10-12', active: 0 },
+      { date: '2026-10-13', active: 13 },
+      { date: '2026-10-14', active: 0 },
+      { date: '2026-10-15', active: 0 },
+      { date: '2026-10-16', active: 0 },
+      { date: '2026-10-17', active: 0 }
+    ];
+  }
+
+  // Flights students uploaded for review (באבאפוו's two flights, as in his "הטיסות שלי").
+  submissions() {
+    const A = window.Academy;
+    if (A && A.on) {
+      const out = [];
+      A.students().forEach((x) => {
+        x.doc.flights.forEach((f) => {
+          out.push({ id: x.user.id + f.id, at: f.at, student: x.user.name, item: A.flightName(f), points: String(f.challenge ? ((A.data.allChallenges || []).find((c) => c.id === f.challenge) || { points: 0 }).points : A.skillPoints(f.skill)), ai: f.status === 'review' ? 'לבדיקה ←' : 'בכרטיס', status: f.status === 'review' ? 'pending' : f.status, href: 'StudentDetail.dc.html?id=' + encodeURIComponent(x.user.id) + '&tab=flights' });
+        });
+      });
+      return out.sort((a, b) => (a.at < b.at ? 1 : a.at > b.at ? -1 : 0));
+    }
+    return [
+      { id: 'f2', at: '2026-10-11 20:00', student: 'באבאפוו', item: 'סללום ימינה ושמאלה', points: '50', ai: 'לא נבדקה', status: 'approved' },
+      { id: 'f1', at: '2026-10-11 19:37', student: 'באבאפוו', item: 'שמירה על גובה', points: '20', ai: 'לא נבדקה', status: 'approved' }
+    ];
+  }
+
+  // Recent activity of students and observers (activity log and flights), newest first.
+  recent() {
+    const A = window.Academy;
+    if (A && A.on) {
+      const kind = { login: 'login', flight: 'flight', eye: 'eye' };
+      return (A.data.activity || []).slice(0, 8).map((e) => ({ id: e.id, kind: kind[e.kind] || 'user', text: (e.name ? e.name + (e.role === 'observer' ? ' (משקיף)' : '') + ' · ' : '') + e.text, date: A.dayOf(e.at), time: String(e.at).slice(11, 16) }));
+    }
+    return [
+      { id: 'r1', kind: 'eye', text: "א. שפירא (משקיף) · צפייה בנתוני קבוצה ה'", date: '2026-10-16', time: '06:53' },
+      { id: 'r2', kind: 'eye', text: "ד. קרני (משקיף) · צפייה בנתוני קבוצה ד'", date: '2026-10-15', time: '12:32' },
+      { id: 'r3', kind: 'eye', text: "א. חזן (משקיף) · צפייה בנתוני קבוצות א' ו־ב'", date: '2026-10-14', time: '08:07' },
+      { id: 'r4', kind: 'login', text: '13 סטודנטים נכנסו וצפו בסרטוני הייחוס', date: '2026-10-13', time: '15:27–20:05' },
+      { id: 'r5', kind: 'flight', text: 'באבאפוו · 2 טיסות הועלו ואושרו: שמירה על גובה, סללום ימינה ושמאלה', date: '2026-10-11', time: '20:00' },
+      { id: 'r6', kind: 'user', text: 'מדריך · נפתחו 13 חשבונות סטודנטים', date: '2026-10-11', time: '08:41' }
+    ];
+  }
+
+  rewardsCard() {
+    const A = window.Academy;
+    let pending = 0;
+    let active = 2;
+    let stock = 18;
+    if (A && A.on) {
+      pending = A.students().reduce((n, x) => n + x.pendingRequests.length, 0);
+      const list = (A.data.rewards || []).filter((p) => p.active !== false);
+      active = list.length;
+      stock = list.reduce((n, p) => n + Math.max(0, p.left != null ? p.left : p.stock), 0);
+    }
+    const busy = pending > 0;
+    return {
+      rewardsTitle: pending === 0 ? 'אין בקשות פרסים' : pending === 1 ? 'בקשת פרס אחת ממתינה' : pending + ' בקשות פרסים ממתינות',
+      rewardsChip: busy ? 'דורש טיפול' : 'מעודכן',
+      rewardsChipBg: busy ? '#FFF4D6' : '#DDF6EC',
+      rewardsChipBorder: busy ? '#EFD48C' : '#A3DEC6',
+      rewardsChipColor: busy ? '#7A5300' : '#17694F',
+      rewardsText: (active === 1 ? 'פרס פעיל אחד' : active + ' פרסים פעילים') + ', ' + stock + ' יחידות במלאי.'
+    };
+  }
+
+  levelNames() {
+    return { 1: 'אבני יסוד', 2: 'תרגילי קורס פרופלור', 3: 'תרגילים מתקדמים' };
+  }
+
+  // Level 2 opens after the 7 skills of level 1, level 3 after the 13 of levels 1–2.
+  levelOf(skills) {
+    if (skills === null) return 0;
+    return skills >= 13 ? 3 : skills >= 7 ? 2 : 1;
+  }
+
+  short(date) {
+    return date.slice(8, 10) + '.' + date.slice(5, 7);
+  }
+
+  daysAgo(date) {
+    return Math.round((Date.parse(this.today() + 'T12:00:00') - Date.parse(date + 'T12:00:00')) / 86400000);
+  }
+
+  ago(date) {
+    const n = this.daysAgo(date);
+    if (n <= 0) return 'היום';
+    if (n === 1) return 'אתמול';
+    if (n === 2) return 'לפני יומיים';
+    return 'לפני ' + n + ' ימים';
+  }
+
+  dayLetter(date) {
+    return ['א׳', 'ב׳', 'ג׳', 'ד׳', 'ה׳', 'ו׳', 'ש׳'][new Date(date + 'T12:00:00').getDay()];
+  }
+
+  // "א. יהודאי · באבאפוו · סטודנט נוסף מקבוצה א'" — names first, then the students the screenshots did not name.
+  who(list, unitName) {
+    const named = list.filter((x) => x.name).map((x) => x.name);
+    const unnamed = {};
+    const order = [];
+    list.filter((x) => !x.name).forEach((x) => {
+      if (!(x.unit in unnamed)) {
+        unnamed[x.unit] = 0;
+        order.push(x.unit);
+      }
+      unnamed[x.unit] += 1;
+    });
+    const extra = named.length ? ['סטודנט נוסף', 'סטודנטים נוספים'] : ['סטודנט', 'סטודנטים'];
+    const rest = order.map((u) => (unnamed[u] === 1 ? extra[0] : unnamed[u] + ' ' + extra[1]) + ' מ' + unitName[u]);
+    return named.concat(rest).join(' · ');
+  }
+
+  subsRef() {
+    if (!this._subsRef) this._subsRef = (el) => { this.subsEl = el; };
+    return this._subsRef;
+  }
+
+  // "להגשות" scrolls to the submissions card and moves focus to its heading.
+  goSubs(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    const el = this.subsEl;
+    if (!el) return;
+    try { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (err) {}
+    const h = el.querySelector ? el.querySelector('h2') : null;
+    if (h) {
+      try { h.focus({ preventScroll: true }); } catch (err) { h.focus(); }
+    }
+  }
+
+  // The signed-in manager's name in the header, and a fresh draw whenever the data changes.
+  renderVals() {
+    const v = this.renderVals0();
+    const A = window.Academy;
+    if (A && A.on) {
+      if (!this._acaOff) this._acaOff = A.listen(() => this.forceUpdate());
+      v.meName = A.me.name;
+      v.meInitial = String(A.me.name || '?').trim().charAt(0);
+    } else {
+      v.meName = 'יהודה';
+      v.meInitial = 'י';
+    }
+    const t = this.today();
+    v.asOf = t.slice(8, 10) + '.' + t.slice(5, 7) + '.' + t.slice(0, 4);
+    return v;
+  }
+
+  renderVals0() {
+    const s = this.state || {};
+    const today = this.today();
+    const units = this.units();
+    const unitName = {};
+    units.forEach((u) => { unitName[u.id] = u.name; });
+    const students = this.students();
+    const total = students.length;
+    const pct = (n, d) => (d ? Math.round((n / d) * 100) : 0) + '%';
+    const round3 = (x) => Math.round(x * 1000) / 1000;
+    const levelNames = this.levelNames();
+    const subs = this.submissions();
+    const week = this.week();
+    const from = week[0].date;
+    const dayOf = (x) => x.at.slice(0, 10);
+
+    // ---- KPI tiles
+    const unitCount = units.filter((u) => u.id).length;
+    const unassigned = students.filter((x) => !x.unit).length;
+    const active = students.filter((x) => x.last && x.last >= from).length;
+    const flights7 = subs.filter((x) => dayOf(x) >= from).length;
+    const pending = subs.filter((x) => x.status === 'pending').length;
+    const decided = subs.filter((x) => x.status !== 'pending' && this.daysAgo(dayOf(x)) < 30);
+    const approved30 = decided.filter((x) => x.status === 'approved').length;
+    const flew = new Set(subs.filter((x) => dayOf(x) >= this.weekStart()).map((x) => x.student)).size;
+    const known = students.filter((x) => x.skills !== null);
+    const avg = known.reduce((sum, x) => sum + x.skills, 0) / known.length;
+
+    // ---- students per day
+    const maxActive = Math.max.apply(null, week.map((d) => d.active));
+    const yMax = Math.max(5, Math.ceil(maxActive / 5) * 5);
+    const plotTop = 36;
+    const plotH = 160;
+    const ticks = [];
+    for (let v = yMax; v >= 0; v -= 5) {
+      ticks.push({ id: 't' + v, label: String(v), top: Math.round((plotTop + (1 - v / yMax) * plotH) * 10) / 10, line: v === 0 ? '#D3D9D5' : '#F1F3F2' });
+    }
+    const days = week.map((d, i) => {
+      const flights = subs.filter((x) => dayOf(x) === d.date).length;
+      const isToday = d.date === today;
+      const letter = this.dayLetter(d.date);
+      const date = this.short(d.date);
+      const barH = d.active ? Math.max(3, Math.round((d.active / yMax) * plotH)) : 0;
+      const people = d.active === 0 ? 'אף סטודנט לא נכנס' : d.active === 1 ? 'סטודנט אחד נכנס' : d.active + ' סטודנטים נכנסו';
+      const fl = flights === 0 ? 'בלי טיסות' : flights === 1 ? 'טיסה אחת הועלתה' : flights + ' טיסות הועלו';
+      return {
+        id: d.date,
+        name: isToday ? 'היום' : letter,
+        date: date,
+        fullLabel: 'יום ' + letter + ' ' + date + (isToday ? ' (היום)' : ''),
+        value: String(d.active),
+        flights: String(flights),
+        hasValue: d.active > 0,
+        barH: barH,
+        tipBottom: barH + (d.active > 0 ? 26 : 6),
+        // first column (right edge in RTL) opens leftwards, last column opens rightwards, the rest are centred
+        tipLeft: i === 0 ? '100%' : i === week.length - 1 ? '0' : '50%',
+        tipShift: i === 0 ? 'translateX(-100%)' : i === week.length - 1 ? 'none' : 'translateX(-50%)',
+        tipValue: people,
+        tipLabel: 'יום ' + letter + ' ' + date + ' · ' + fl,
+        aria: 'יום ' + letter + ' ' + date + ': ' + people + ', ' + fl,
+        labelColor: isToday ? '#121413' : '#5E6762',
+        labelWeight: isToday ? '600' : '400'
+      };
+    });
+    const activeDays = week.filter((d) => d.active > 0);
+    let actNote = 'אף סטודנט לא נכנס בשבוע האחרון.';
+    if (activeDays.length) {
+      const last = activeDays[activeDays.length - 1].date;
+      actNote = 'כניסות נרשמו ' + activeDays.map((d) => 'ב־' + this.short(d.date)).join(' ו') + '.';
+      if (this.daysAgo(last) >= 2) actNote += ' מאז ' + this.short(last) + ' (' + this.ago(last) + ') לא נכנס אף סטודנט.';
+    }
+
+    // ---- students per level
+    const groups = [1, 2, 3, 0].map((n) => ({ n: n, list: students.filter((x) => this.levelOf(x.skills) === n) }));
+    const maxLevel = Math.max.apply(null, groups.map((g) => g.list.length)) || 1;
+    const levelRows = groups.map((g) => {
+      const count = g.list.length;
+      const label = g.n ? 'רמה ' + g.n + ' · ' + levelNames[g.n] : 'ללא נתוני התקדמות';
+      const people = count === 1 ? 'סטודנט אחד' : count + ' סטודנטים';
+      const names = this.who(g.list, unitName);
+      return {
+        id: 'lv' + g.n,
+        label: label,
+        value: String(count),
+        share: pct(count, total),
+        f: round3(count / maxLevel),
+        color: g.n ? '#2A9171' : '#A3ADA7',
+        tipValue: people,
+        tip: names || 'אין סטודנטים ברמה הזאת',
+        aria: label + ': ' + people + ', ' + pct(count, total) + ' מהסטודנטים.' + (names ? ' ' + names : '')
+      };
+    });
+
+    // ---- bottlenecks across units
+    const byUnit = this.stuckByUnit();
+    const agg = {};
+    const order = [];
+    Object.keys(byUnit).forEach((uid) => {
+      byUnit[uid].forEach((pair) => {
+        if (!agg[pair[0]]) {
+          agg[pair[0]] = { name: pair[0], total: 0, parts: [] };
+          order.push(pair[0]);
+        }
+        agg[pair[0]].total += pair[1];
+        agg[pair[0]].parts.push(unitName[uid] + ': ' + pair[1]);
+      });
+    });
+    const top = order.map((k) => agg[k]).sort((a, b) => b.total - a.total).slice(0, 7);
+    const maxStuck = top.length ? top[0].total : 1;
+    const stuckRows = top.map((r) => {
+      const people = r.total === 1 ? 'סטודנט אחד עובד על זה' : r.total + ' סטודנטים עובדים על זה';
+      return {
+        id: r.name,
+        label: r.name,
+        value: String(r.total),
+        f: round3(r.total / maxStuck),
+        tipValue: people,
+        tip: r.parts.join(' · '),
+        aria: r.name + ': ' + people + '. ' + r.parts.join(', ')
+      };
+    });
+
+    // ---- students who need attention
+    const flyers = students.filter((x) => x.name && subs.some((f) => f.student === x.name)).map((x) => x.name);
+    const noFlight = total - flyers.length;
+    const low = students.filter((x) => x.name && x.skills !== null).sort((a, b) => a.skills - b.skills).slice(0, 4);
+    const lowRows = low.map((x, i) => ({
+      id: x.name,
+      name: x.name,
+      meta: (x.unit ? unitName[x.unit] : 'ללא יחידה') + ' · ' + levelNames[this.levelOf(x.skills)],
+      skills: x.skills,
+      skillsText: x.skills + '/20',
+      pct: Math.round((x.skills / 20) * 100),
+      meterLabel: 'מיומנויות שנרכשו: ' + x.skills + ' מתוך 20',
+      divider: i === 0 ? 'transparent' : '#E8EBE9'
+    }));
+
+    // ---- units
+    const unitRows = units.map((u) => {
+      const list = students.filter((x) => x.unit === u.id);
+      const allKnown = list.length > 0 && list.every((x) => x.skills !== null);
+      const first = (byUnit[u.id] || [])[0];
+      return {
+        id: u.id || 'none',
+        name: u.name,
+        count: String(list.length),
+        avg: allKnown ? (list.reduce((sum, x) => sum + x.skills, 0) / list.length).toFixed(1) : '–',
+        stuck: first ? 'נתקעים בעיקר ב: ' + first[0] : 'אין צווארי בקבוק'
+      };
+    });
+
+    // ---- submissions
+    const subTab = s.subTab || 'pending';
+    const tabNames = { pending: 'ממתינות', approved: 'אושרו', rejected: 'נדחו' };
+    const chips = {
+      pending: { label: 'ממתינה', bg: '#FFF4D6', border: '#EFD48C', color: '#7A5300' },
+      approved: { label: 'אושרה', bg: '#DDF6EC', border: '#A3DEC6', color: '#17694F' },
+      rejected: { label: 'נדחתה', bg: '#FDECEC', border: '#F2B8B8', color: '#B42318' }
+    };
+    const empty = {
+      pending: ['אין כאן כלום. הכול מעודכן!', 'הגשות חדשות של סטודנטים יופיעו כאן לבדיקה.'],
+      approved: ['עדיין לא אושרו הגשות.', 'הגשות שתאשרו יופיעו כאן.'],
+      rejected: ['אין הגשות שנדחו.', 'הגשות שתדחו יופיעו כאן, יחד עם ההערה לסטודנט.']
+    };
+    const subTabs = ['pending', 'approved', 'rejected'].map((key) => {
+      const on = key === subTab;
+      return {
+        id: key,
+        label: tabNames[key],
+        count: String(subs.filter((x) => x.status === key).length),
+        selected: on ? 'true' : 'false',
+        border: on ? '#9FDDC4' : 'transparent', bg: on ? '#D3F4E6' : 'transparent',
+        color: on ? '#121413' : '#3D4541',
+        weight: on ? '500' : '400',
+        countColor: on ? '#A8335A' : '#5E6762',
+        pick: () => this.setState({ subTab: key })
+      };
+    });
+    const shown = subs.filter((x) => x.status === subTab);
+    const subRows = shown.map((x) => ({
+      id: x.id,
+      href: x.href || 'Students.dc.html',
+      at: this.short(dayOf(x)) + ' · ' + x.at.slice(11, 16),
+      student: x.student,
+      item: x.item,
+      points: x.points,
+      ai: x.ai,
+      status: chips[x.status].label,
+      chipBg: chips[x.status].bg,
+      chipBorder: chips[x.status].border,
+      chipColor: chips[x.status].color
+    }));
+
+    // ---- recent activity
+    const icons = {
+      eye: { bg: '#F1F3F2', border: '#D3D9D5', color: '#4B534F' },
+      login: { bg: '#E6F7EF', border: '#A3DEC6', color: '#1F7A5A' },
+      flight: { bg: '#FCE8EF', border: '#EFB5C8', color: '#A8335A' },
+      user: { bg: '#E6EEFB', border: '#A9C1EA', color: '#2F5FA8' }
+    };
+    const recentRows = this.recent().map((e, i) => ({
+      id: e.id,
+      text: e.text,
+      when: this.short(e.date) + ' · ' + e.time,
+      ago: this.ago(e.date),
+      divider: i === 0 ? 'transparent' : '#E8EBE9',
+      iconBg: icons[e.kind].bg,
+      iconBorder: icons[e.kind].border,
+      iconColor: icons[e.kind].color,
+      isEye: e.kind === 'eye',
+      isLogin: e.kind === 'login',
+      isFlight: e.kind === 'flight',
+      isUser: e.kind === 'user'
+    }));
+
+    return Object.assign({
+      goSubs: (e) => this.goSubs(e),
+      setSubs: this.subsRef(),
+      pendingTitle: pending === 0 ? 'אין הגשות שממתינות לבדיקה' : pending === 1 ? 'הגשה אחת ממתינה לבדיקה' : pending + ' הגשות ממתינות לבדיקה',
+      pendingText: approved30 === 1 ? 'טיסה אחת אושרה ב־30 הימים האחרונים.' : approved30 + ' טיסות אושרו ב־30 הימים האחרונים.',
+      kStudents: String(total),
+      kStudentsSub: 'ב־' + unitCount + ' יחידות · ' + (unassigned === 1 ? 'אחד ללא יחידה' : unassigned + ' ללא יחידה'),
+      kActive: String(active),
+      kActiveSub: pct(active, total) + ' מהסטודנטים',
+      kFlights: String(flights7),
+      kFlightsSub: (decided.length ? pct(approved30, decided.length) + ' אושרו' : 'עוד לא נבדקו') + ' · ' + pending + ' ממתינות',
+      kFlew: pct(flew, total),
+      kFlewSub: flew + ' מתוך ' + total + (window.Academy && window.Academy.on ? ' · ב־7 הימים האחרונים' : ' · מיום שני'),
+      kAvg: avg.toFixed(1),
+      kAvgSub: 'מתוך 20 מיומנויות במסלול',
+      actChart: !s.actTable,
+      actTable: !!s.actTable,
+      actToggleLabel: s.actTable ? 'הצגה כתרשים' : 'הצגה כטבלה',
+      toggleAct: () => this.setState({ actTable: !(this.state || {}).actTable }),
+      ticks: ticks,
+      days: days,
+      actNote: actNote,
+      levelRows: levelRows,
+      lvlNote: 'רמה 2 נפתחת אחרי 7 מיומנויות, ורמה 3 אחרי 13.',
+      stuckRows: stuckRows,
+      noFlightText: noFlight + ' מתוך ' + total + ' סטודנטים עוד לא העלו טיסה.',
+      noFlightSub: flyers.length === 0 ? 'אף סטודנט לא העלה טיסה לבדיקה.' : flyers.length === 1 ? 'רק ' + flyers[0] + ' העלה טיסות לבדיקה.' : 'העלו טיסות: ' + flyers.join(', ') + '.',
+      lowRows: lowRows,
+      unitRows: unitRows,
+      subTabs: subTabs,
+      subRows: subRows,
+      subEmpty: shown.length === 0,
+      subEmptyTitle: empty[subTab][0],
+      subEmptyText: empty[subTab][1],
+      subPanelLabel: 'הגשות ' + tabNames[subTab],
+      recentRows: recentRows
+    }, this.rewardsCard(), this.pointsVals(students, unitName));
+  }
+}
+</script>
+</body>
+</html>

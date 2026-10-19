@@ -1,0 +1,679 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<title>יומן פעילות</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Karantina:wght@400;700&amp;family=Rubik:wght@400;500;600;700&amp;family=Unbounded:wght@500;700;800&amp;display=swap">
+<style>
+body{margin:0;background:#F5F6F4}
+a{color:#17694F}a:hover{color:#0E4F3A}
+.pill-hover:hover{background:#EEF1EF !important;color:#121413 !important}
+.btn-ghost:hover:not(:disabled){background:#EEF1EF !important;border-color:#B9C2BD !important}
+.btn-primary:hover{background:#B13A5D !important}
+.tr-hover:hover{background:#FFFFFF !important}
+.link-btn:hover{color:#0E4F3A !important;text-decoration:underline !important;text-underline-offset:3px}
+.details-btn:hover{background:#EEF1EF !important;color:#121413 !important}
+input::placeholder,textarea::placeholder{color:#6E7772}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid #C7436A;outline-offset:2px}
+</style>
+</helmet>
+<div dir="rtl" lang="he" style="min-height: 100vh; box-sizing: border-box; background: #F5F6F4; color: #1E2320; font-family: 'Rubik', system-ui, 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.5; color-scheme: light;">
+<header style="border-bottom: 5px solid #BDEFDB; background: #FFFFFF;">
+<div style="max-width: 1280px; margin: 0 auto; padding: 10px clamp(16px, 4vw, 32px); box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 28px;">
+<a href="Main.dc.html" aria-label="88ACADEMY — לעמוד הסקירה" style="display: flex; align-items: center; gap: 10px; text-decoration: none; white-space: nowrap;">
+<svg width="32.6" height="34" viewBox="0 0 100 104.15" aria-hidden="true" style="flex: none; display: block;"><path d="M74.4 104L71.1 104 67.8 103.6 66.6 103.3 64.3 102.7 61.5 101.5 59 100.2 56.6 98.7 55.4 97.7 53.7 96.2 52.2 94.5 52.1 94.2 54 90.9 55.5 87.7 55.6 87.6 55.8 87.6 58.1 90.4 59 91.3 60.1 92.3 61.5 93.3 62.7 94 65.1 95.3 67.9 96.2 70.9 96.7 73.6 96.8 76.6 96.4 78.1 96.1 80.4 95.3 82.2 94.4 84.2 93.1 86 91.7 87.4 90.4 88.9 88.6 89.7 87.4 90.8 85.4 91.7 83.2 92.3 81.6 92.6 80.2 92.8 78.7 92.9 76.2 92.6 73.3 92.2 71.4 91.3 68.8 90.4 66.9 89 64.8 87.3 62.8 85.4 61.1 83.6 59.7 81.6 58.6 79.6 57.8 76.6 57 74.9 56.8 73.4 56.7 71.1 56.7 68.8 57.1 66.3 57.8 64.1 58.7 61.6 60.2 59.8 61.6 58.6 62.7 57.5 64 56 65.9 54.7 68.3 53.7 70.4 53.1 72.8 52.8 74.9 52.7 77.4 52.9 80.1 53.7 83.4 53.2 84.9 51.7 88.4 50.5 90.5 49.6 92 47.8 94.4 46.1 96.2 44.4 97.8 41.9 99.6 40.4 100.5 38 101.7 36.2 102.4 33.6 103.3 31.4 103.7 28.6 104 26.4 104 24.4 103.9 21.3 103.4 18.8 102.7 16.1 101.6 13.5 100.3 11.1 98.7 9.8 97.7 8.1 96.2 6.5 94.4 5.2 92.7 3.7 90.3 2.6 88.4 1.4 85.4 0.8 83.2 0.2 80.1 0 77.4 0.1 74.6 0.3 72.4 1 69.3 1.8 66.6 3.3 63.3 5.1 60.3 6.1 59 8 57 10 55.2 12.5 53.4 15 52 14.9 51.8 14.7 51.7 12.5 50.4 10.8 49.2 9.8 48.4 8.1 46.8 6.8 45.5 5.3 43.7 4.4 42.4 3.4 40.7 2.7 39.2 1.6 36.7 0.9 34.4 0.5 32.7 0.3 31.4 0 28.7 -0 25.9 0.1 24.4 0.7 20.9 1.7 17.8 2.9 15 4.4 12.3 6 10.1 6.8 9.1 8.3 7.6 10.5 5.7 11.8 4.8 13.3 3.8 15 2.9 16.9 2 19.1 1.2 22.1 0.4 24.4 0.1 26.7 -0 29.6 0.1 31.6 0.3 35.2 1.2 37.5 2.1 40.2 3.3 42.5 4.8 44.3 6.1 46.2 7.8 47.8 9.6 47.8 9.8 47.7 10.1 46.5 12.1 44.9 15.1 44.4 16.4 44.2 16.6 44 16.6 43.9 16.4 42.8 15 41.8 13.8 40.2 12.3 37.9 10.6 37 10.1 35.2 9.1 32.9 8.3 29.6 7.6 26.6 7.5 23.8 7.7 21.4 8.3 20.1 8.7 18.4 9.4 15.9 10.8 14.1 12.2 12.5 13.8 10.9 15.6 9.7 17.4 8.9 18.9 8.4 20.1 7.6 22.6 7.2 24.6 7 26.9 7.2 29.6 7.6 32.1 8.3 34.2 9.3 36.5 10.7 38.9 12.5 41 14.1 42.6 15.8 43.9 17.6 45 19.8 46.1 22.3 46.9 25.2 47.4 28.1 47.5 30.1 47.2 32.6 46.7 34.9 45.9 37.2 44.7 39.4 43.2 41.5 41.4 42.5 40.2 44.3 37.7 45.3 35.7 46.1 33.9 46.8 31.4 47 30.1 47.2 28.2 47.1 25.9 46.9 23.6 46.2 21.1 46.2 20.6 46.7 19.1 48.1 15.8 49.3 13.6 50.7 11.5 52.2 9.6 53.4 8.1 54.8 6.8 57.1 4.9 58.3 4.1 60.6 2.8 62.6 1.9 65 1.1 67.6 0.4 70.3 0.1 73.1 -0 75.4 0.1 77.9 0.4 80.7 1.1 83.1 2 85.4 3.1 87.4 4.3 89.7 6 91.4 7.5 93.1 9.1 94.6 11 96.2 13.5 97.3 15.6 98.5 18.5 99.3 21.3 99.7 23.9 99.9 25.9 99.8 30 99.4 32.7 98.9 35 98 37.5 96.6 40.5 95.4 42.5 93.7 44.8 92 46.7 90 48.5 87.7 50.2 85 51.8 84.9 52 87.4 53.4 89.1 54.7 90.8 56 92.5 57.6 94.1 59.5 95.3 61.2 96.4 63 97.4 64.8 98.2 66.7 98.9 68.9 99.5 71.6 99.8 73.6 99.9 76.1 99.8 79.2 99.5 81.4 99.2 83.1 98.7 84.9 98 86.7 97.1 88.9 95.6 91.5 94.4 93.2 93 94.9 91.7 96.3 90 97.8 88.5 98.9 86.5 100.2 84.4 101.4 82.7 102.1 81.2 102.7 78.7 103.4 75.9 103.9ZM75 47.3L76.7 47.1 78.2 46.7 80.6 45.9 82.2 45.1 84.1 43.9 85.4 42.9 87.2 41.3 88.4 39.9 89.4 38.5 90.6 36.5 91.4 34.9 92.1 32.9 92.5 31.1 92.8 29.6 92.9 27.2 92.7 25.1 92.5 23.8 92.1 21.8 91.5 20.3 90.7 18.4 89.9 16.9 88.4 14.9 87.3 13.6 85.5 12 84.1 10.9 82.7 10.1 81.1 9.2 78.7 8.3 76.1 7.7 74.6 7.5 72.4 7.4 70.4 7.6 69.1 7.8 66.6 8.4 64.8 9.1 63 10 61.5 10.9 60 12.1 58.3 13.6 57.1 14.9 56.2 16.1 55.3 17.6 54.5 19.1 53.6 21.4 53 23.9 52.8 25.2 52.7 27.2 52.8 29.6 53.1 31.4 53.7 33.7 54.5 35.7 55.5 37.5 56.5 39 57.6 40.5 58.9 41.9 60.3 43.1 61.6 44 63.6 45.2 65.1 45.9 67.4 46.8 69.6 47.2 71.3 47.4 73.3 47.5ZM50.1 61.8L51.5 60 52.6 58.6 54.5 56.6 56.1 55.3 57.3 54.4 60.8 52.2 60.8 52 60.6 51.8 59 50.9 56.6 49.4 54.5 47.6 53.6 46.7 52.1 45 50 42.3 49.8 42.4 49.7 42.5 47.7 45.2 46.2 46.8 45.2 47.7 43.2 49.4 41 50.8 39.3 51.8 39 52 39 52.2 39.2 52.4 41.9 54 44.5 56 45.6 57 47.2 58.6 48.5 60.2 49.7 61.8 49.8 62 50 61.9ZM29 96.7L30.9 96.4 32.6 96 34.9 95.2 36.5 94.4 37.9 93.6 39.6 92.4 40.9 91.2 42.4 89.6 43.5 88.1 44.6 86.4 45.5 84.6 46.2 82.7 46.7 80.6 47 78.9 47.1 76.9 47 74.6 46.7 73.3 46.1 70.6 45.2 68.6 44.4 66.9 43.3 65.3 42.4 64 40.9 62.4 39.2 61 37.9 60 35.7 58.8 33.9 58 32.2 57.4 30.2 56.9 28.2 56.7 26.6 56.7 24.4 56.8 22.6 57.1 20.4 57.7 18.3 58.6 16.8 59.4 15 60.6 14.1 61.3 12.7 62.6 11.3 64.2 10.3 65.6 9.2 67.4 8.4 69.1 7.8 71.1 7.3 73.3 7.1 74.9 7 76.7 7.1 78.7 7.4 80.6 7.7 81.9 8.5 84.1 9.5 86.2 10.5 87.8 11.8 89.5 13.5 91.3 14.9 92.5 16.3 93.6 17.9 94.5 19.6 95.3 21.8 96.1 23.9 96.5 25.7 96.7 27.2 96.8Z" fill="#121413" fill-rule="evenodd"></path></svg>
+<svg width="93.9" height="13" viewBox="0 0 72.24 10" aria-hidden="true" style="flex: none; display: block;"><path d="M8.7 9.9L1 9.9 0.4 9.6 0.1 9.1 0 8.5 0.5 7.2 3.7 0.7 4 0.3 4.3 0.1 4.6 -0 5.2 -0 5.6 0.1 5.9 0.4 8.2 5.1 9.6 7.9 9.8 8.5 9.7 9.1 9.6 9.4 9.3 9.7ZM18.4 9.9L15.2 9.8 14.6 9.8 13.8 9.6 13.1 9.3 12.7 9 12.1 8.5 11.6 7.9 11.3 7.2 11 6.1 11 4.9 11 3.9 11.3 2.7 11.6 1.9 12.1 1.3 12.8 0.7 13.8 0.3 14.5 0.1 15.7 -0 18.5 0 19 0.1 19.4 0.5 19.6 0.9 19.6 1.5 19.4 1.9 19.1 2.2 18.5 2.4 15.7 2.5 14.8 2.7 14.2 3 13.9 3.3 13.6 3.9 13.5 4.5 13.5 5.4 13.7 6.1 14 6.7 14.5 7.1 14.9 7.2 15.5 7.4 18.5 7.4 19.1 7.6 19.3 7.8 19.5 8.1 19.6 8.4 19.6 9 19.5 9.3 19.3 9.5 19 9.7ZM29.4 9.9L21.8 9.9 21.5 9.8 21.2 9.6 20.8 9.1 20.7 8.7 20.8 8.4 21.4 6.9 24.5 0.8 24.8 0.3 25.2 0 25.5 -0 26 0 26.4 0.2 26.7 0.6 29 5.1 30.4 7.9 30.6 8.7 30.5 9.1 30.3 9.4 30 9.7ZM37 9.9L32.8 9.9 32.3 9.7 32.1 9.5 31.9 9.3 31.7 8.5 31.7 1.2 31.9 0.6 32.1 0.3 32.4 0.1 33.3 -0 36.9 -0 37.8 0.1 38.7 0.3 39.6 0.6 40.1 1 40.6 1.5 41.1 2.2 41.3 2.7 41.5 3.6 41.6 5.1 41.5 6.3 41.2 7.3 41 7.7 40.4 8.7 39.6 9.3 39 9.5 38.1 9.7ZM50.1 9.9L43.9 9.9 43.4 9.8 43 9.4 42.8 9.1 42.7 8.5 42.7 1.3 42.8 0.7 42.9 0.4 43.1 0.2 43.6 0 44 -0 50 -0 50.7 0.1 51.2 0.4 51.4 1 51.3 1.6 51 2.1 50.6 2.4 50 2.5 45.5 2.5 45.3 2.5 45.2 2.7 45.2 7 45.3 7.3 45.7 7.4 50.1 7.4 50.9 7.6 51.2 7.9 51.3 8.2 51.3 8.7 51.3 9.1 51.1 9.4 50.9 9.6 50.6 9.8ZM61.2 9.9L60.7 9.8 60.5 9.7 60.1 9.4 60 9.1 59.9 8.5 59.9 4.8 59.9 4.6 59.7 4.5 58.2 5.9 57.9 6.1 57.5 6.1 57 6.1 56.7 6 55.4 4.7 55.1 4.5 55 4.8 55 8.7 54.8 9.3 54.4 9.7 53.9 9.9 53.1 9.8 52.7 9.4 52.6 9.1 52.5 8.5 52.5 1.3 52.6 0.7 52.8 0.3 53.1 0.1 53.6 -0 54.2 0.1 54.5 0.2 54.9 0.6 57.2 2.8 57.5 3 57.7 2.8 59.9 0.7 60.4 0.2 60.7 0.1 61.2 0 61.6 0.1 62.1 0.4 62.3 0.7 62.4 1.3 62.4 8.8 62.3 9.3 62.1 9.5 61.6 9.8ZM67.8 9.9L67.2 9.8 66.9 9.6 66.6 9.3 66.5 8.5 66.5 5.4 66.3 5.1 63.6 1.8 63.4 1.2 63.5 0.6 63.7 0.3 64.2 0 64.8 -0 65.2 0.1 65.7 0.4 67.5 2.5 67.8 2.7 68 2.5 70 0.2 70.4 -0 71.4 0 71.9 0.3 72.1 0.6 72.1 1.2 72.1 1.6 71.8 2.1 69.1 5.2 69 5.7 69 8.4 68.9 9.1 68.7 9.4 68.5 9.6 68.2 9.8ZM37.4 7.3L37.9 7.2 38.4 6.9 38.7 6.6 38.9 6.1 39.1 5.4 39.1 4.6 39 3.9 38.8 3.4 38.5 3.1 38.2 2.8 37.3 2.5 36.4 2.5 34.6 2.5 34.3 2.5 34.2 2.8 34.2 7 34.3 7.3 34.5 7.4 35.1 7.4 36.9 7.4ZM49.7 6.1L47.2 6.1 46.4 6 46.1 5.8 45.9 5.4 45.8 4.8 46 4.3 46.3 3.9 47 3.7 49.4 3.7 50.1 3.8 50.4 4.1 50.6 4.3 50.8 4.9 50.7 5.2 50.6 5.5 50.4 5.8 50.1 6ZM6.4 7.3L6.5 7.2 6.4 7 5.1 4.3 4.9 4.1 4.8 4.2 3.4 7 3.3 7.2 3.4 7.3 3.6 7.4 4.5 7.4 6.1 7.4ZM27.2 7.3L27.2 7.2 27.2 7 25.9 4.3 25.7 4.1 25.5 4.2 24.7 5.8 24.1 7.2 24.1 7.3 24.3 7.4 25.7 7.4 27 7.4Z" fill="#121413" fill-rule="evenodd"></path></svg>
+</a>
+<nav aria-label="ניווט ראשי" style="flex: 1 1 auto; min-width: 0;">
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 2px;">
+<li><a href="Main.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">סקירה</a></li>
+<li><a href="Students.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">סטודנטים</a></li>
+<li><a href="Units.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">יחידות</a></li>
+<li><a href="Leadership.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">מנהיגות</a></li>
+<li><a href="Curriculum.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">תוכנית לימודים</a></li>
+<li><a href="Rewards.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">פרסים</a></li>
+<li><a href="PointsSettings.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">ניקוד</a></li>
+<li><a href="Activity.dc.html" aria-current="page" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid #9FDDC4; background: #D3F4E6; color: #121413; font-weight: 600; text-decoration: none; font-size: 15px; white-space: nowrap;">פעילות</a></li>
+</ul>
+</nav>
+<div style="display: flex; align-items: center; gap: 8px;">
+<span style="display: flex; align-items: center; gap: 10px; color: #3D4541; font-size: 15px; white-space: nowrap;"><span aria-hidden="true" style="width: 30px; height: 30px; border-radius: 50%; background: #76DEB8; color: #121413; display: grid; place-items: center; font-size: 14px; font-weight: 600;">{{meInitial}}</span>{{meName}}</span>
+<a href="/password" class="btn-ghost" aria-label="החלפת סיסמה" title="החלפת סיסמה" style="width: 40px; height: 40px; box-sizing: border-box; display: grid; place-items: center; padding: 0; background: transparent; border: 1px solid transparent; border-radius: 10px; color: #545D58; text-decoration: none;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"></circle><path d="M10.8 12.2L20 3M17 6l2.5 2.5M14.5 8.5L17 11"></path></svg></a>
+<a href="/logout" class="btn-ghost" aria-label="התנתקות" style="width: 40px; height: 40px; box-sizing: border-box; display: grid; place-items: center; padding: 0; background: transparent; border: 1px solid transparent; border-radius: 10px; color: #545D58; text-decoration: none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3"></path><path d="M10 8l-4 4 4 4"></path><path d="M6 12h10"></path></svg></a>
+</div>
+</div>
+</header>
+<main style="max-width: 1280px; margin: 0 auto; padding: 40px clamp(16px, 4vw, 32px) 72px; box-sizing: border-box;">
+<div style="display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 16px;">
+<div style="min-width: 0;">
+<h1 style="margin: 0; font-family: 'Karantina', 'Rubik', system-ui, sans-serif; font-size: 50px; line-height: 1; font-weight: 700; letter-spacing: 0.005em; color: #121413;">פעילות</h1>
+<p style="margin: 6px 0 0; font-size: 14px; color: #545D58;">כל מה שסטודנטים וצוות עושים באתר. גלוי למנהלים בלבד. השעות לפי שעון ישראל.</p>
+</div>
+<button type="button" class="btn-ghost" onClick="{{exportCsv}}" style="display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px; border-radius: 10px; border: 1px solid #D3D9D5; background: #FFFFFF; color: #3D4541; font: inherit; font-size: 14px; cursor: pointer;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5"></path><path d="M4 18v1a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-1"></path></svg>ייצוא CSV</button>
+</div>
+<section aria-label="סינון" style="margin-top: 24px; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; padding: 20px;">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr)); gap: 16px;">
+<div>
+<label for="f-student" style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500; color: #3D4541;">סטודנט</label>
+<div style="position: relative;">
+<select id="f-student" value="{{fStudent}}" onChange="{{onStudent}}" style="appearance: none; -webkit-appearance: none; width: 100%; box-sizing: border-box; height: 44px; padding: 0 14px 0 40px; background: #FFFFFF; border: 1px solid #D3D9D5; border-radius: 10px; color: #1E2320; font: inherit; font-size: 15px; cursor: pointer;">
+<option value="">כל הסטודנטים</option>
+<sc-for list="{{studentOptions}}" as="o" hint-placeholder-count="3"><option value="{{o.id}}">{{o.label}}</option></sc-for>
+</select>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5E6762" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); pointer-events: none;"><path d="M6 9l6 6 6-6"></path></svg>
+</div>
+</div>
+<div>
+<label for="f-actor" style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500; color: #3D4541;">בוצע על ידי</label>
+<div style="position: relative;">
+<select id="f-actor" value="{{fActor}}" onChange="{{onActor}}" style="appearance: none; -webkit-appearance: none; width: 100%; box-sizing: border-box; height: 44px; padding: 0 14px 0 40px; background: #FFFFFF; border: 1px solid #D3D9D5; border-radius: 10px; color: #1E2320; font: inherit; font-size: 15px; cursor: pointer;">
+<option value="">כולם</option>
+<sc-for list="{{actorOptions}}" as="o" hint-placeholder-count="3"><option value="{{o.id}}">{{o.label}}</option></sc-for>
+</select>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5E6762" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); pointer-events: none;"><path d="M6 9l6 6 6-6"></path></svg>
+</div>
+</div>
+<div>
+<label for="f-role" style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500; color: #3D4541;">תפקיד</label>
+<div style="position: relative;">
+<select id="f-role" value="{{fRole}}" onChange="{{onRole}}" style="appearance: none; -webkit-appearance: none; width: 100%; box-sizing: border-box; height: 44px; padding: 0 14px 0 40px; background: #FFFFFF; border: 1px solid #D3D9D5; border-radius: 10px; color: #1E2320; font: inherit; font-size: 15px; cursor: pointer;">
+<option value="">כל התפקידים</option>
+<option value="student">סטודנט</option>
+<option value="observer">משקיף</option>
+<option value="admin">מנהל</option>
+</select>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5E6762" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); pointer-events: none;"><path d="M6 9l6 6 6-6"></path></svg>
+</div>
+</div>
+<div>
+<label for="f-kind" style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500; color: #3D4541;">סוג</label>
+<div style="position: relative;">
+<select id="f-kind" value="{{fKind}}" onChange="{{onKind}}" style="appearance: none; -webkit-appearance: none; width: 100%; box-sizing: border-box; height: 44px; padding: 0 14px 0 40px; background: #FFFFFF; border: 1px solid #D3D9D5; border-radius: 10px; color: #1E2320; font: inherit; font-size: 15px; cursor: pointer;">
+<option value="">כל הסוגים</option>
+<sc-for list="{{kindOptions}}" as="o" hint-placeholder-count="3"><option value="{{o.id}}">{{o.label}}</option></sc-for>
+</select>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5E6762" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); pointer-events: none;"><path d="M6 9l6 6 6-6"></path></svg>
+</div>
+</div>
+<div>
+<label for="f-event" style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500; color: #3D4541;">אירוע</label>
+<div style="position: relative;">
+<select id="f-event" value="{{fEvent}}" onChange="{{onEvent}}" style="appearance: none; -webkit-appearance: none; width: 100%; box-sizing: border-box; height: 44px; padding: 0 14px 0 40px; background: #FFFFFF; border: 1px solid #D3D9D5; border-radius: 10px; color: #1E2320; font: inherit; font-size: 15px; cursor: pointer;">
+<option value="">כל האירועים</option>
+<sc-for list="{{eventOptions}}" as="o" hint-placeholder-count="3"><option value="{{o.id}}">{{o.label}}</option></sc-for>
+</select>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5E6762" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); pointer-events: none;"><path d="M6 9l6 6 6-6"></path></svg>
+</div>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px; margin-top: 16px;">
+<div style="flex: 1 1 170px; min-width: 0;">
+<label for="f-from" style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500; color: #3D4541;">מתאריך</label>
+<input id="f-from" type="date" value="{{fFrom}}" max="{{fTo}}" onChange="{{onFrom}}" aria-invalid="{{dateInvalid}}" aria-describedby="date-error" style="width: 100%; box-sizing: border-box; height: 44px; padding: 0 14px; background: #FFFFFF; border: 1px solid {{dateBorder}}; border-radius: 10px; color: #1E2320; font: inherit; font-size: 15px; color-scheme: light;">
+</div>
+<div style="flex: 1 1 170px; min-width: 0;">
+<label for="f-to" style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500; color: #3D4541;">עד תאריך</label>
+<input id="f-to" type="date" value="{{fTo}}" min="{{fFrom}}" onChange="{{onTo}}" aria-invalid="{{dateInvalid}}" aria-describedby="date-error" style="width: 100%; box-sizing: border-box; height: 44px; padding: 0 14px; background: #FFFFFF; border: 1px solid {{dateBorder}}; border-radius: 10px; color: #1E2320; font: inherit; font-size: 15px; color-scheme: light;">
+</div>
+<div style="flex: 3 1 280px; min-width: 0;">
+<label for="f-search" style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500; color: #3D4541;">חיפוש</label>
+<div style="position: relative;">
+<input id="f-search" type="search" value="{{fQuery}}" onChange="{{onQuery}}" onKeyDown="{{onQueryKey}}" placeholder="מיומנות, פרס, הודעה, שם משתמש…" style="width: 100%; box-sizing: border-box; height: 44px; padding: 0 40px 0 14px; background: #FFFFFF; border: 1px solid #D3D9D5; border-radius: 10px; color: #1E2320; font: inherit; font-size: 15px;">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5E6762" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" style="position: absolute; right: 14px; top: 50%; transform: translateY(-50%); pointer-events: none;"><circle cx="11" cy="11" r="6.5"></circle><path d="M16 16l4 4"></path></svg>
+</div>
+</div>
+<div style="display: flex; gap: 8px;">
+<button type="button" class="btn-primary" onClick="{{applyFilters}}" style="height: 44px; padding: 0 28px; border: 0; border-radius: 10px; background: #C7436A; color: #FFFFFF; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer;">סינון</button>
+<button type="button" class="btn-ghost" onClick="{{clearFilters}}" style="height: 44px; padding: 0 18px; border-radius: 10px; border: 1px solid #D3D9D5; background: #FFFFFF; color: #3D4541; font: inherit; font-size: 15px; cursor: pointer;">ניקוי</button>
+</div>
+</div>
+<sc-if value="{{hasDateError}}" hint-placeholder-val="{{ false }}">
+<p id="date-error" role="alert" style="margin: 10px 0 0; font-size: 14px; color: #B42318;">{{dateError}}</p>
+</sc-if>
+</section>
+<div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px; margin: 24px 0 12px;">
+<p role="status" aria-live="polite" style="margin: 0; font-size: 14px; color: #545D58;">{{summary}}</p>
+<sc-if value="{{hasFlash}}" hint-placeholder-val="{{ false }}">
+<p role="status" style="margin: 0; font-size: 14px; color: #1F7A5A;">{{flash}}</p>
+</sc-if>
+</div>
+<div style="background: #F7F8F7; border: 1px solid #E1E5E2; border-radius: 16px; overflow: hidden;">
+<div style="overflow-x: auto;">
+<ul aria-label="אירועים" style="list-style: none; margin: 0; padding: 0; min-width: 1040px;">
+<li style="display: grid; grid-template-columns: 150px 96px 156px minmax(0, 1fr) 104px minmax(0, 1.5fr); gap: 14px; align-items: center; padding: 12px 16px; border-bottom: 1px solid #E1E5E2; font-size: 13px; font-weight: 500; color: #5E6762;">
+<span>זמן</span>
+<span>מי</span>
+<span>אירוע</span>
+<span>מה קרה</span>
+<span>סטודנט</span>
+<span aria-hidden="true"></span>
+</li>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="12">
+<li class="tr-hover" style="display: grid; grid-template-columns: 150px 96px 156px minmax(0, 1fr) 104px minmax(0, 1.5fr); gap: 14px; align-items: center; padding: 10px 16px; border-bottom: 1px solid {{r.border}}; background: {{r.bg}};">
+<span dir="ltr" style="text-align: right; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 13px; color: #3D4541; white-space: nowrap;">{{r.ts}}</span>
+<span style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px; min-width: 0;">
+<button type="button" class="link-btn" title="{{r.actorTitle}}" onClick="{{r.byActor}}" style="padding: 0; border: 0; background: none; color: #17694F; font: inherit; font-size: 15px; font-weight: 500; text-align: start; cursor: pointer;">{{r.actorName}}</button>
+<span style="display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 999px; background: {{r.roleBg}}; border: 1px solid {{r.roleBorder}}; color: {{r.roleColor}}; font-size: 12px; font-weight: 500;">{{r.roleLabel}}</span>
+</span>
+<span style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; min-width: 0;">
+<span style="display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 6px; background: #F1F3F2; border: 1px solid #D3D9D5; color: #4B534F; font-size: 12px; font-weight: 500;">{{r.kindLabel}}</span>
+<button type="button" class="link-btn" title="{{r.eventTitle}}" onClick="{{r.byEvent}}" style="padding: 0; border: 0; background: none; color: #17694F; font: inherit; font-size: 15px; text-align: start; cursor: pointer;">{{r.eventLabel}}</button>
+</span>
+<span style="min-width: 0; color: #2C322F;">{{r.what}}</span>
+<span style="min-width: 0;">
+<sc-if value="{{r.hasStudent}}" hint-placeholder-val="{{ false }}"><button type="button" class="link-btn" title="{{r.studentTitle}}" onClick="{{r.byStudent}}" style="padding: 0; border: 0; background: none; color: #17694F; font: inherit; font-size: 15px; text-align: start; cursor: pointer;">{{r.studentName}}</button></sc-if>
+<sc-if value="{{r.noStudent}}" hint-placeholder-val="{{ true }}"><span style="color: #6E7772;">—</span></sc-if>
+</span>
+<div style="min-width: 0;">
+<button type="button" class="details-btn" aria-expanded="{{r.expanded}}" aria-controls="{{r.panelId}}" onClick="{{r.toggle}}" style="display: inline-flex; align-items: center; gap: 6px; height: 32px; margin-inline-start: -10px; padding: 0 10px; border-radius: 8px; border: 1px solid transparent; background: transparent; color: #3D4541; font: inherit; font-size: 14px; cursor: pointer;"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="transform: rotate({{r.chevronDeg}}deg); transition: transform 0.15s ease;"><path d="M16 5v14L6 12z"></path></svg>פרטים</button>
+<dl id="{{r.panelId}}" hidden="{{r.collapsed}}" style="margin: 4px 0 6px; font-size: 14px; line-height: 1.5;">
+<div style="display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 12px; padding: 3px 0;"><dt style="color: #5E6762;">עמוד</dt><dd style="margin: 0; min-width: 0; color: #1E2320;">{{r.page}}</dd></div>
+<sc-if value="{{r.hasItem}}" hint-placeholder-val="{{ true }}"><div style="display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 12px; padding: 3px 0;"><dt style="color: #5E6762;">פריט</dt><dd style="margin: 0; min-width: 0; color: #1E2320;">{{r.item}}</dd></div></sc-if>
+<sc-if value="{{r.hasRequest}}" hint-placeholder-val="{{ true }}"><div style="display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 12px; padding: 3px 0;"><dt style="color: #5E6762;">בקשה</dt><dd dir="ltr" style="margin: 0; min-width: 0; text-align: right; color: #1E2320; overflow-wrap: anywhere;">{{r.request}}</dd></div></sc-if>
+<div style="display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 12px; padding: 3px 0;"><dt style="color: #5E6762;">כתובת IP</dt><dd dir="ltr" style="margin: 0; min-width: 0; text-align: right; color: #1E2320;">{{r.ip}}</dd></div>
+<div style="display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 12px; padding: 3px 0;"><dt style="color: #5E6762;">דפדפן</dt><dd dir="ltr" style="margin: 0; min-width: 0; text-align: right; color: #1E2320; overflow-wrap: anywhere;">{{r.ua}}</dd></div>
+</dl>
+</div>
+</li>
+</sc-for>
+<sc-if value="{{isEmpty}}" hint-placeholder-val="{{ false }}">
+<li style="padding: 40px 16px; text-align: center; font-size: 15px; color: #545D58;">אין אירועים שמתאימים לסינון. <button type="button" class="link-btn" onClick="{{clearFilters}}" style="padding: 0; border: 0; background: none; color: #17694F; font: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer;">ניקוי הסינון</button></li>
+</sc-if>
+</ul>
+</div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; border-top: 1px solid #E1E5E2;">
+<span style="font-size: 14px; color: #545D58;">{{pageLabel}}</span>
+<div style="display: flex; gap: 8px;">
+<button type="button" class="btn-ghost" disabled="{{prevDisabled}}" onClick="{{prevPage}}" style="display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 14px; border-radius: 9px; border: 1px solid {{prevBorder}}; background: {{prevBg}}; color: {{prevColor}}; font: inherit; font-size: 14px; cursor: {{prevCursor}};"><span aria-hidden="true">→</span>הקודם</button>
+<button type="button" class="btn-ghost" disabled="{{nextDisabled}}" onClick="{{nextPage}}" style="display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 14px; border-radius: 9px; border: 1px solid {{nextBorder}}; background: {{nextBg}}; color: {{nextColor}}; font: inherit; font-size: 14px; cursor: {{nextCursor}};">הבא<span aria-hidden="true">←</span></button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1660}}'>
+class Component extends DCLogic {
+  emptyFilters() {
+    return { student: '', actor: '', role: '', kind: '', event: '', from: '', to: '', q: '' };
+  }
+
+  defaults() {
+    return { draft: this.emptyFilters(), applied: this.emptyFilters(), page: 1, open: {}, dateError: '', flash: '' };
+  }
+
+  st() {
+    const s = this.state;
+    return s && s.draft ? s : Object.assign(this.defaults(), s || {});
+  }
+
+  componentDidMount() {
+    if (super.componentDidMount) super.componentDidMount();
+    if (!this.state || !this.state.draft) this.setState(this.defaults());
+  }
+
+  componentWillUnmount() {
+    if (super.componentWillUnmount) super.componentWillUnmount();
+    clearTimeout(this._flashTimer);
+  }
+
+  pageSize() {
+    return 12;
+  }
+
+  live() {
+    return !!(window.Academy && window.Academy.on);
+  }
+
+  meta() {
+    if (!this._meta && this.live()) {
+      this._meta = {
+        roles: {
+          admin: { label: 'מנהל', bg: '#E6EEFB', border: '#A9C1EA', color: '#2F5FA8' },
+          observer: { label: 'משקיף', bg: '#F1F3F2', border: '#D3D9D5', color: '#4B534F' },
+          student: { label: 'סטודנט', bg: '#E6F7EF', border: '#A3DEC6', color: '#1F7A5A' },
+          gone: { label: 'נמחק', bg: '#F7F8F7', border: '#E1E5E2', color: '#6E7772' }
+        },
+        kinds: { auth: 'חשבון', learn: 'למידה', coins: 'נקודות ופרסים', admin: 'ניהול', view: 'צפייה' },
+        events: {
+          login: { label: 'התחברות', kind: 'auth' },
+          logout: { label: 'התנתקות', kind: 'auth' },
+          flight: { label: 'טיסה', kind: 'learn' },
+          skill: { label: 'מיומנות', kind: 'learn' },
+          points: { label: 'התאמת נקודות', kind: 'coins' },
+          reward: { label: 'פרס', kind: 'coins' },
+          user: { label: 'משתמשים', kind: 'admin' },
+          settings: { label: 'הגדרות', kind: 'admin' },
+          eye: { label: 'צפייה של משקיף', kind: 'view' }
+        }
+      };
+    }
+    if (!this._meta) {
+      this._meta = {
+        roles: {
+          admin: { label: 'מנהל', bg: '#E6EEFB', border: '#A9C1EA', color: '#2F5FA8' },
+          observer: { label: 'משקיף', bg: '#F1F3F2', border: '#D3D9D5', color: '#4B534F' },
+          student: { label: 'סטודנט', bg: '#E6F7EF', border: '#A3DEC6', color: '#1F7A5A' }
+        },
+        kinds: { page: 'עמוד', media: 'מדיה', auth: 'חשבון', admin: 'ניהול' },
+        events: {
+          view: { label: 'צפייה בעמוד', kind: 'page' },
+          video: { label: 'צפייה בסרטון ייחוס', kind: 'media' },
+          login: { label: 'התחברות', kind: 'auth' },
+          logout: { label: 'התנתקות', kind: 'auth' },
+          create: { label: 'יצירת משתמש', kind: 'admin' }
+        }
+      };
+    }
+    return this._meta;
+  }
+
+  // Everyone in the system: staff and students, as on the students page (plus the two group A students from the leadership screenshot).
+  users() {
+    if (this.live()) {
+      const A = window.Academy;
+      if (this._usersFor === A.data) return this._users;
+      const out = {};
+      A.users().forEach((u) => { out[u.id] = { name: u.name, username: u.username, role: u.role }; });
+      (A.data.activity || []).forEach((e) => {
+        if (e.uid && !out[e.uid]) out[e.uid] = { name: e.name || 'משתמש שנמחק', username: '', role: 'gone' };
+      });
+      this._usersFor = A.data;
+      this._users = out;
+      return out;
+    }
+    if (!this._users) {
+      this._users = {
+        u1: { name: 'מדריך', username: 'admin', role: 'admin' },
+        u2: { name: 'יהודה', username: 'yehuda', role: 'admin' },
+        u3: { name: 'א. חזן', username: 'ahazan', role: 'observer' },
+        u4: { name: 'ד. קרני', username: 'dkarni', role: 'observer' },
+        u5: { name: 'א. שפירא', username: 'eshapira', role: 'observer' },
+        s1: { name: 'א. ראדין', username: 'aradin', role: 'student' },
+        s2: { name: 'א. סדוב', username: 'asadov', role: 'student' },
+        s3: { name: 'א. וולך', username: 'awallach', role: 'student' },
+        s4: { name: 'א. יהודאי', username: 'ayehudai', role: 'student' },
+        s5: { name: 'באבאפוו', username: 'babafab', role: 'student' },
+        s6: { name: 'ד. אסף', username: 'dassaf', role: 'student' },
+        s7: { name: 'ד. סקולסקי', username: 'dskolsky', role: 'student' },
+        s8: { name: 'ד. צדקה', username: 'dtzadaka', role: 'student' },
+        s9: { name: 'א. פרוינדליך', username: 'efreundlich', role: 'student' },
+        s10: { name: 'א. מטלון', username: 'ematalon', role: 'student' },
+        s11: { name: 'א. פולטוב', username: 'epolatov', role: 'student' },
+        s12: { name: 'נ. גרויה', username: '', role: 'student' },
+        s13: { name: 'ר. שליסר', username: '', role: 'student' }
+      };
+    }
+    return this._users;
+  }
+
+  liveEvents() {
+    const A = window.Academy;
+    if (this._eventsFor === A.data) return this._events;
+    const users = this.users();
+    const meta = this.meta();
+    const list = (A.data.activity || []).filter((e) => e.uid && meta.events[e.kind]).map((e) => {
+      const target = e.target && users[e.target] ? e.target : '';
+      const student = target && users[target].role === 'student' ? target : (users[e.uid] && users[e.uid].role === 'student' ? e.uid : '');
+      const ev = {
+        id: e.id, ts: String(e.at || ''), actor: e.uid, event: e.kind, kind: meta.events[e.kind].kind,
+        what: e.text || '', student: student, page: meta.kinds[meta.events[e.kind].kind], item: target && target !== e.uid ? users[target].name : '',
+        request: '', ip: e.ip || '—', ua: e.ua || '—'
+      };
+      const actor = users[ev.actor];
+      ev.haystack = [ev.what, meta.events[ev.event].label, ev.page, actor.name, actor.username, student ? users[student].name : '', student ? users[student].username : '', ev.item, ev.ip].join(' ').toLowerCase();
+      return ev;
+    });
+    this._eventsFor = A.data;
+    this._events = list;
+    return list;
+  }
+
+  events() {
+    if (this.live()) return this.liveEvents();
+    if (this._events) return this._events;
+    const users = this.users();
+    const meta = this.meta();
+    const UA = {
+      win: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36',
+      edge: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0',
+      mac: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.0 Safari/605.1.15',
+      android: 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Mobile Safari/537.36',
+      iphone: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.0 Mobile/15E148 Safari/604.1'
+    };
+    const list = [];
+    const push = (ts, actor, event, what, extra) => {
+      list.push(Object.assign({ id: 'e' + (list.length + 1), ts: ts, actor: actor, event: event, kind: meta.events[event].kind, what: what, student: '', page: '', item: '', request: '', ip: '', ua: '' }, extra));
+    };
+    const pad = (n) => (n < 10 ? '0' : '') + n;
+    const at = (day, hms, plus) => {
+      const p = hms.split(':').map(Number);
+      const t = p[0] * 3600 + p[1] * 60 + p[2] + plus;
+      return day + ' ' + pad(Math.floor(t / 3600)) + ':' + pad(Math.floor(t / 60) % 60) + ':' + pad(t % 60);
+    };
+    const yehuda = { ip: '127.0.0.1', ua: UA.win };
+    const madrich = { ip: '192.0.2.44', ua: UA.edge };
+    const adminView = (ts, label, path, item, extra) => push(ts, 'u2', 'view', 'מנהל צפה: ' + label + (item ? ' — ' + item : ''), Object.assign({ page: 'ניהול: ' + label, item: item || '', request: 'GET ' + path + ' → 200' }, yehuda, extra));
+    const adminVideo = (ts, skill, id) => push(ts, 'u2', 'video', 'מנהל צפה בסרטון ייחוס: מיומנות', Object.assign({ page: 'ניהול: עריכת מיומנות', item: skill, request: 'GET /media/reference/' + id + '.mp4 → 206' }, yehuda));
+    const leaderView = (ts, actor, sub, path, item, who) => push(ts, actor, 'view', 'צפה במנהיגות: ' + sub + (item ? ' — ' + item : ''), Object.assign({ page: 'מנהיגות: ' + sub, item: item || '', request: 'GET ' + path + ' → 200' }, who));
+    const login = (ts, actor, who) => push(ts, actor, 'login', 'כניסה למערכת', Object.assign({ page: 'כניסה', request: 'POST /login → 302' }, who));
+    const logout = (ts, actor, who) => push(ts, actor, 'logout', 'יציאה מהמערכת', Object.assign({ page: 'יציאה', request: 'GET /logout → 302' }, who));
+
+    // 17.10 — as in the screenshot
+    leaderView('2026-10-17 00:27:47', 'u2', 'יחידה', '/observer/units/2', "קבוצה ב'", yehuda);
+    leaderView('2026-10-17 00:27:44', 'u2', 'סקירה כללית', '/observer', '', yehuda);
+    adminVideo('2026-10-17 00:04:06', 'שמירה על גובה', 1);
+    adminView('2026-10-17 00:04:06', 'עריכת מיומנות', '/admin/skills/1/edit', 'שמירה על גובה');
+    adminView('2026-10-17 00:03:53', 'תוכנית לימודים', '/admin/curriculum');
+    leaderView('2026-10-17 00:02:19', 'u2', 'יחידה', '/observer/units/1', "קבוצה א'", yehuda);
+    // 16.10 evening — the first screenshot
+    adminView('2026-10-16 20:21:43', 'בדיקות AI', '/admin/ai-checks');
+    adminView('2026-10-16 20:20:30', 'עריכת פרס', '/admin/rewards/3/edit', 'כרטיס זוגי לסרט - רב חן');
+    adminView('2026-10-16 20:19:59', 'פרסים', '/admin/rewards');
+    adminView('2026-10-16 20:19:50', 'תוכנית לימודים', '/admin/curriculum');
+    adminVideo('2026-10-16 20:17:24', 'שמירה על גובה', 1);
+    adminView('2026-10-16 20:17:24', 'עריכת מיומנות', '/admin/skills/1/edit', 'שמירה על גובה');
+    adminView('2026-10-16 20:15:24', 'תוכנית לימודים', '/admin/curriculum');
+    adminView('2026-10-16 20:14:57', 'סקירת מנהיגות', '/admin/leadership');
+    adminView('2026-10-16 20:14:53', 'יחידות', '/admin/units/1/edit', "קבוצה א'");
+    adminView('2026-10-16 20:14:12', 'יחידות', '/admin/units');
+    adminView('2026-10-16 20:14:09', 'סקירת מנהיגות', '/admin/leadership');
+    adminView('2026-10-16 20:14:05', 'יחידות', '/admin/units');
+    adminView('2026-10-16 19:58:44', 'כרטיס סטודנט', '/admin/users/6', 'א. ראדין', { student: 's1' });
+    adminView('2026-10-16 19:58:31', 'סטודנטים', '/admin/users');
+    login('2026-10-16 19:58:20', 'u2', yehuda);
+
+    // Observers
+    const shapira = { ip: '198.51.100.201', ua: UA.mac };
+    const karni = { ip: '198.51.100.214', ua: UA.win };
+    const hazan = { ip: '192.0.2.77', ua: UA.edge };
+    leaderView('2026-10-16 06:53:02', 'u5', 'יחידה', '/observer/units/5', "קבוצה ה'", shapira);
+    leaderView('2026-10-16 06:52:14', 'u5', 'סקירה כללית', '/observer', '', shapira);
+    login('2026-10-16 06:52:10', 'u5', shapira);
+    leaderView('2026-10-15 12:32:20', 'u4', 'יחידה', '/observer/units/4', "קבוצה ד'", karni);
+    leaderView('2026-10-15 12:31:44', 'u4', 'סקירה כללית', '/observer', '', karni);
+    login('2026-10-15 12:31:40', 'u4', karni);
+    leaderView('2026-10-14 08:07:30', 'u3', 'יחידה', '/observer/units/2', "קבוצה ב'", hazan);
+    leaderView('2026-10-14 08:06:01', 'u3', 'יחידה', '/observer/units/1', "קבוצה א'", hazan);
+    leaderView('2026-10-14 08:05:15', 'u3', 'סקירה כללית', '/observer', '', hazan);
+    login('2026-10-14 08:05:12', 'u3', hazan);
+
+    // Students: created on 11.10 (the join date), two sessions each (11.10 and 13.10 — "4 days ago" in the leadership view)
+    // [student, skill id, current skill (consistent with the leadership bottlenecks), device, ip, session 1, session 2]
+    const roster = [
+      ['s1', 14, 'נחיתות מדויקות', 'win', '203.0.113.21', '17:05:12', '16:40:33'],
+      ['s8', 15, 'ירידה במדרגות', 'android', '203.0.113.37', '18:22:47', '19:10:05'],
+      ['s12', 18, 'סיבוב 360 בפיר מעלית', 'win', '203.0.113.58', '16:48:20', '18:31:44'],
+      ['s13', 16, 'פיגומים', 'iphone', '203.0.113.64', '19:37:08', '17:56:51'],
+      ['s9', 13, 'צינורות', 'win', '198.51.100.23', '15:12:36', '20:05:19'],
+      ['s10', 14, 'נחיתות מדויקות', 'android', '198.51.100.41', '20:14:02', '15:27:40'],
+      ['s4', 4, 'סללום ימינה ושמאלה', 'win', '198.51.100.77', '17:50:55', '18:12:09'],
+      ['s11', 12, 'מדרגות', 'iphone', '198.51.100.90', '18:03:31', '16:58:26'],
+      ['s3', 8, 'עינוי סיני', 'win', '203.0.113.102', '16:26:14', '19:44:37'],
+      ['s7', 12, 'מדרגות', 'android', '203.0.113.115', '19:08:42', '17:21:58'],
+      ['s2', 7, 'שמיניות', 'win', '198.51.100.130', '17:33:27', '18:47:13'],
+      ['s6', 12, 'מדרגות', 'win', '198.51.100.152', '18:55:50', '16:15:04'],
+      ['s5', 5, 'שינוי גובה', 'iphone', '203.0.113.170', '20:31:18', '19:02:45']
+    ];
+    roster.forEach((r, i) => {
+      const sid = r[0], skillId = r[1], skill = r[2];
+      const who = { ip: r[4], ua: UA[r[3]], student: sid };
+      const name = users[sid].name;
+      const skillPage = (ts) => push(ts, sid, 'view', 'סטודנט צפה: מיומנות — ' + skill, Object.assign({ page: 'סטודנט: מיומנות', item: skill, request: 'GET /skills/' + skillId + ' → 200' }, who));
+      const video = (ts) => push(ts, sid, 'video', 'סטודנט צפה בסרטון ייחוס: מיומנות', Object.assign({ page: 'סטודנט: מיומנות', item: skill, request: 'GET /media/reference/' + skillId + '.mp4 → 206' }, who));
+      push(at('2026-10-11', '08:41:05', i * 53), 'u1', 'create', 'מנהל יצר משתמש: ' + name, Object.assign({ page: 'ניהול: סטודנטים', item: name, request: 'POST /admin/users → 302', student: sid }, madrich));
+      login(at('2026-10-11', r[5], 0), sid, who);
+      push(at('2026-10-11', r[5], 4), sid, 'view', 'סטודנט צפה: לוח הבקרה', Object.assign({ page: 'סטודנט: לוח הבקרה', request: 'GET /dashboard → 200' }, who));
+      skillPage(at('2026-10-11', r[5], 41));
+      video(at('2026-10-11', r[5], 44));
+      login(at('2026-10-13', r[6], 0), sid, who);
+      skillPage(at('2026-10-13', r[6], 6));
+      video(at('2026-10-13', r[6], 9));
+      logout(at('2026-10-13', r[6], 552), sid, who);
+    });
+    login('2026-10-11 08:40:12', 'u1', madrich);
+
+    // Newest first; same-second events keep the order above (Array.prototype.sort is stable).
+    list.sort((a, b) => (a.ts < b.ts ? 1 : a.ts > b.ts ? -1 : 0));
+    list.forEach((e) => {
+      const actor = users[e.actor];
+      const student = e.student ? users[e.student] : null;
+      e.haystack = [e.what, meta.events[e.event].label, meta.kinds[e.kind], actor.name, actor.username, student ? student.name : '', student ? student.username : '', e.page, e.item, e.request, e.ip].join(' ').toLowerCase();
+    });
+    this._events = list;
+    return list;
+  }
+
+  matches(e, f) {
+    if (f.student && e.student !== f.student) return false;
+    if (f.actor && e.actor !== f.actor) return false;
+    if (f.role && this.users()[e.actor].role !== f.role) return false;
+    if (f.kind && e.kind !== f.kind) return false;
+    if (f.event && e.event !== f.event) return false;
+    const day = e.ts.slice(0, 10);
+    if (f.from && day < f.from) return false;
+    if (f.to && day > f.to) return false;
+    const q = (f.q || '').trim().toLowerCase();
+    if (q && !q.split(/\s+/).every((t) => e.haystack.indexOf(t) !== -1)) return false;
+    return true;
+  }
+
+  // Applies the whole form (selects, dates and the search box). A reversed date range keeps the previous dates and shows an error.
+  commit(draft) {
+    const s = this.st();
+    const bad = !!(draft.from && draft.to && draft.from > draft.to);
+    const applied = bad ? Object.assign({}, draft, { from: s.applied.from, to: s.applied.to }) : Object.assign({}, draft);
+    this.setState({ draft: draft, applied: applied, page: 1, dateError: bad ? 'תאריך ההתחלה מאוחר מתאריך הסיום.' : '' });
+  }
+
+  setField(key, value) {
+    const s = this.st();
+    const patch = {};
+    patch[key] = value;
+    this.commit(Object.assign({}, s.draft, patch));
+  }
+
+  setQuery(value) {
+    const s = this.st();
+    this.setState({ draft: Object.assign({}, s.draft, { q: value }) });
+  }
+
+  clear() {
+    this.commit(this.emptyFilters());
+  }
+
+  go(page) {
+    this.setState({ page: page });
+  }
+
+  toggle(id) {
+    const open = Object.assign({}, this.st().open);
+    open[id] = !open[id];
+    this.setState({ open: open });
+  }
+
+  say(text) {
+    clearTimeout(this._flashTimer);
+    this.setState({ flash: text });
+    this._flashTimer = setTimeout(() => this.setState({ flash: '' }), 4000);
+  }
+
+  csv(list) {
+    const users = this.users();
+    const meta = this.meta();
+    const cell = (v) => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+    const head = ['זמן', 'מי', 'תפקיד', 'סוג', 'אירוע', 'מה קרה', 'סטודנט', 'עמוד', 'פריט', 'בקשה', 'כתובת IP', 'דפדפן'];
+    const lines = list.map((e) => {
+      const actor = users[e.actor];
+      return [e.ts, actor.name, meta.roles[actor.role].label, meta.kinds[e.kind], meta.events[e.event].label, e.what, e.student ? users[e.student].name : '', e.page, e.item, e.request, e.ip, e.ua].map(cell).join(',');
+    });
+    return '﻿' + [head.map(cell).join(',')].concat(lines).join('\r\n');
+  }
+
+  exportCsv(list) {
+    if (!list.length) {
+      this.say('אין אירועים לייצוא.');
+      return;
+    }
+    try {
+      const url = URL.createObjectURL(new Blob([this.csv(list)], { type: 'text/csv;charset=utf-8' }));
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'activity.csv';
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+      this.say(list.length === 1 ? 'נוצר קובץ CSV עם אירוע אחד.' : 'נוצר קובץ CSV עם ' + list.length + ' אירועים.');
+    } catch (err) {
+      this.say('לא ניתן להוריד קובץ מהתצוגה הזו.');
+    }
+  }
+
+  // No line break inside "קבוצה ב'" or after an initial such as "א." in the table.
+  keepTogether(text) {
+    return text.replace(/קבוצה (?=\S)/g, 'קבוצה\u00A0').replace(/(^|\s)([א-ת]\.) /g, '$1$2\u00A0');
+  }
+
+  row(e, last, open) {
+    const users = this.users();
+    const meta = this.meta();
+    const actor = users[e.actor];
+    const role = meta.roles[actor.role];
+    const student = e.student ? users[e.student] : null;
+    const eventLabel = meta.events[e.event].label;
+    return {
+      id: e.id,
+      ts: e.ts,
+      actorName: actor.name,
+      actorTitle: 'סינון לפי ' + actor.name,
+      byActor: () => this.setField('actor', e.actor),
+      roleLabel: role.label,
+      roleBg: role.bg,
+      roleBorder: role.border,
+      roleColor: role.color,
+      kindLabel: meta.kinds[e.kind],
+      eventLabel: eventLabel,
+      eventTitle: 'סינון לפי ' + eventLabel,
+      byEvent: () => this.setField('event', e.event),
+      what: this.keepTogether(e.what),
+      hasStudent: !!student,
+      noStudent: !student,
+      studentName: student ? student.name : '',
+      studentTitle: student ? 'סינון לפי ' + student.name : '',
+      byStudent: () => this.setField('student', e.student),
+      expanded: open,
+      collapsed: !open,
+      chevronDeg: open ? -90 : 0,
+      panelId: 'details-' + e.id,
+      toggle: () => this.toggle(e.id),
+      page: e.page,
+      item: e.item,
+      hasItem: !!e.item,
+      request: e.request,
+      hasRequest: !!e.request,
+      ip: e.ip,
+      ua: e.ua,
+      bg: open ? '#FFFFFF' : 'transparent',
+      border: last ? 'transparent' : '#E8EBE9'
+    };
+  }
+
+  // The signed-in manager's name in the header, and a fresh draw whenever the data changes.
+  renderVals() {
+    const v = this.renderVals0();
+    const A = window.Academy;
+    if (A && A.on) {
+      if (!this._acaOff) this._acaOff = A.listen(() => this.forceUpdate());
+      v.meName = A.me.name;
+      v.meInitial = String(A.me.name || '?').trim().charAt(0);
+    } else {
+      v.meName = 'יהודה';
+      v.meInitial = 'י';
+    }
+    return v;
+  }
+
+  renderVals0() {
+    const s = this.st();
+    const f = s.applied;
+    const d = s.draft;
+    const size = this.pageSize();
+    const list = this.events().filter((e) => this.matches(e, f));
+    const total = list.length;
+    const pages = Math.max(1, Math.ceil(total / size));
+    const page = Math.min(Math.max(1, s.page), pages);
+    const slice = list.slice((page - 1) * size, page * size);
+    const filtered = Object.keys(f).some((k) => !!f[k]);
+    const count = total === 1 ? 'אירוע אחד' : total + ' אירועים';
+    const summary = total === 0 ? 'אין אירועים שמתאימים לסינון' : (filtered ? 'נמצאו ' : '') + count + ' · עמוד ' + page + ' מתוך ' + pages;
+    const pager = (off) => ({ border: off ? '#E1E5E2' : '#D3D9D5', bg: off ? '#F7F8F7' : '#FFFFFF', color: off ? '#8A928E' : '#3D4541', cursor: off ? 'not-allowed' : 'pointer' });
+    const prev = pager(page <= 1);
+    const next = pager(page >= pages);
+    const users = this.users();
+    const meta = this.meta();
+    const byName = (a, b) => String(users[a].name).localeCompare(String(users[b].name), 'he');
+    const ids = Object.keys(users);
+    return {
+      studentOptions: ids.filter((id) => users[id].role === 'student').sort(byName).map((id) => ({ id: id, label: users[id].name })),
+      actorOptions: ids.filter((id) => users[id].role !== 'gone').sort((a, b) => (users[a].role === users[b].role ? byName(a, b) : (users[a].role === 'student' ? 1 : -1))).map((id) => ({ id: id, label: users[id].name + ' · ' + meta.roles[users[id].role].label })),
+      kindOptions: Object.keys(meta.kinds).map((k) => ({ id: k, label: meta.kinds[k] })),
+      eventOptions: Object.keys(meta.events).map((k) => ({ id: k, label: meta.events[k].label })),
+      fStudent: d.student,
+      fActor: d.actor,
+      fRole: d.role,
+      fKind: d.kind,
+      fEvent: d.event,
+      fFrom: d.from,
+      fTo: d.to,
+      fQuery: d.q,
+      onStudent: (e) => this.setField('student', e.target.value),
+      onActor: (e) => this.setField('actor', e.target.value),
+      onRole: (e) => this.setField('role', e.target.value),
+      onKind: (e) => this.setField('kind', e.target.value),
+      onEvent: (e) => this.setField('event', e.target.value),
+      onFrom: (e) => this.setField('from', e.target.value),
+      onTo: (e) => this.setField('to', e.target.value),
+      onQuery: (e) => this.setQuery(e.target.value),
+      onQueryKey: (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          this.commit(this.st().draft);
+        }
+      },
+      applyFilters: () => this.commit(this.st().draft),
+      clearFilters: () => this.clear(),
+      exportCsv: () => this.exportCsv(list),
+      hasDateError: !!s.dateError,
+      dateError: s.dateError,
+      dateInvalid: !!s.dateError,
+      dateBorder: s.dateError ? '#D64545' : '#D3D9D5',
+      summary: summary,
+      hasFlash: !!s.flash,
+      flash: s.flash,
+      rows: slice.map((e, i) => this.row(e, i === slice.length - 1, !!s.open[e.id])),
+      isEmpty: total === 0,
+      pageLabel: 'עמוד ' + page + ' מתוך ' + pages,
+      prevDisabled: page <= 1,
+      nextDisabled: page >= pages,
+      prevPage: () => this.go(page - 1),
+      nextPage: () => this.go(page + 1),
+      prevBorder: prev.border,
+      prevBg: prev.bg,
+      prevColor: prev.color,
+      prevCursor: prev.cursor,
+      nextBorder: next.border,
+      nextBg: next.bg,
+      nextColor: next.color,
+      nextCursor: next.cursor
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,698 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<title>סקירת מנהיגות</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Karantina:wght@400;700&amp;family=Rubik:wght@400;500;600;700&amp;family=Unbounded:wght@500;700;800&amp;display=swap">
+<style>
+body{margin:0;background:#F5F6F4}
+a{color:#17694F}a:hover{color:#0E4F3A}
+.pill-hover:hover{background:#EEF1EF !important;color:#121413 !important}
+.btn-ghost:hover{background:#EEF1EF !important;border-color:#B9C2BD !important}
+.unit-card:hover{background:#F5F7F5 !important;border-color:#B9C2BD !important}
+.link-btn:hover{color:#0E4F3A !important}
+.row-btn:hover{background:#F5F7F5 !important}
+.vh{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid #C7436A;outline-offset:2px}
+</style>
+</helmet>
+<div dir="rtl" lang="he" style="min-height: 100vh; box-sizing: border-box; background: #F5F6F4; color: #1E2320; font-family: 'Rubik', system-ui, 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.5; color-scheme: light;">
+<header style="border-bottom: 5px solid #BDEFDB; background: #FFFFFF;">
+<div style="max-width: 1280px; margin: 0 auto; padding: 10px clamp(16px, 4vw, 32px); box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 28px;">
+<a href="{{homeHref}}" aria-label="{{homeLabel}}" onClick="{{onHome}}" style="display: flex; align-items: center; gap: 10px; text-decoration: none; white-space: nowrap;">
+<svg width="32.6" height="34" viewBox="0 0 100 104.15" aria-hidden="true" style="flex: none; display: block;"><path d="M74.4 104L71.1 104 67.8 103.6 66.6 103.3 64.3 102.7 61.5 101.5 59 100.2 56.6 98.7 55.4 97.7 53.7 96.2 52.2 94.5 52.1 94.2 54 90.9 55.5 87.7 55.6 87.6 55.8 87.6 58.1 90.4 59 91.3 60.1 92.3 61.5 93.3 62.7 94 65.1 95.3 67.9 96.2 70.9 96.7 73.6 96.8 76.6 96.4 78.1 96.1 80.4 95.3 82.2 94.4 84.2 93.1 86 91.7 87.4 90.4 88.9 88.6 89.7 87.4 90.8 85.4 91.7 83.2 92.3 81.6 92.6 80.2 92.8 78.7 92.9 76.2 92.6 73.3 92.2 71.4 91.3 68.8 90.4 66.9 89 64.8 87.3 62.8 85.4 61.1 83.6 59.7 81.6 58.6 79.6 57.8 76.6 57 74.9 56.8 73.4 56.7 71.1 56.7 68.8 57.1 66.3 57.8 64.1 58.7 61.6 60.2 59.8 61.6 58.6 62.7 57.5 64 56 65.9 54.7 68.3 53.7 70.4 53.1 72.8 52.8 74.9 52.7 77.4 52.9 80.1 53.7 83.4 53.2 84.9 51.7 88.4 50.5 90.5 49.6 92 47.8 94.4 46.1 96.2 44.4 97.8 41.9 99.6 40.4 100.5 38 101.7 36.2 102.4 33.6 103.3 31.4 103.7 28.6 104 26.4 104 24.4 103.9 21.3 103.4 18.8 102.7 16.1 101.6 13.5 100.3 11.1 98.7 9.8 97.7 8.1 96.2 6.5 94.4 5.2 92.7 3.7 90.3 2.6 88.4 1.4 85.4 0.8 83.2 0.2 80.1 0 77.4 0.1 74.6 0.3 72.4 1 69.3 1.8 66.6 3.3 63.3 5.1 60.3 6.1 59 8 57 10 55.2 12.5 53.4 15 52 14.9 51.8 14.7 51.7 12.5 50.4 10.8 49.2 9.8 48.4 8.1 46.8 6.8 45.5 5.3 43.7 4.4 42.4 3.4 40.7 2.7 39.2 1.6 36.7 0.9 34.4 0.5 32.7 0.3 31.4 0 28.7 -0 25.9 0.1 24.4 0.7 20.9 1.7 17.8 2.9 15 4.4 12.3 6 10.1 6.8 9.1 8.3 7.6 10.5 5.7 11.8 4.8 13.3 3.8 15 2.9 16.9 2 19.1 1.2 22.1 0.4 24.4 0.1 26.7 -0 29.6 0.1 31.6 0.3 35.2 1.2 37.5 2.1 40.2 3.3 42.5 4.8 44.3 6.1 46.2 7.8 47.8 9.6 47.8 9.8 47.7 10.1 46.5 12.1 44.9 15.1 44.4 16.4 44.2 16.6 44 16.6 43.9 16.4 42.8 15 41.8 13.8 40.2 12.3 37.9 10.6 37 10.1 35.2 9.1 32.9 8.3 29.6 7.6 26.6 7.5 23.8 7.7 21.4 8.3 20.1 8.7 18.4 9.4 15.9 10.8 14.1 12.2 12.5 13.8 10.9 15.6 9.7 17.4 8.9 18.9 8.4 20.1 7.6 22.6 7.2 24.6 7 26.9 7.2 29.6 7.6 32.1 8.3 34.2 9.3 36.5 10.7 38.9 12.5 41 14.1 42.6 15.8 43.9 17.6 45 19.8 46.1 22.3 46.9 25.2 47.4 28.1 47.5 30.1 47.2 32.6 46.7 34.9 45.9 37.2 44.7 39.4 43.2 41.5 41.4 42.5 40.2 44.3 37.7 45.3 35.7 46.1 33.9 46.8 31.4 47 30.1 47.2 28.2 47.1 25.9 46.9 23.6 46.2 21.1 46.2 20.6 46.7 19.1 48.1 15.8 49.3 13.6 50.7 11.5 52.2 9.6 53.4 8.1 54.8 6.8 57.1 4.9 58.3 4.1 60.6 2.8 62.6 1.9 65 1.1 67.6 0.4 70.3 0.1 73.1 -0 75.4 0.1 77.9 0.4 80.7 1.1 83.1 2 85.4 3.1 87.4 4.3 89.7 6 91.4 7.5 93.1 9.1 94.6 11 96.2 13.5 97.3 15.6 98.5 18.5 99.3 21.3 99.7 23.9 99.9 25.9 99.8 30 99.4 32.7 98.9 35 98 37.5 96.6 40.5 95.4 42.5 93.7 44.8 92 46.7 90 48.5 87.7 50.2 85 51.8 84.9 52 87.4 53.4 89.1 54.7 90.8 56 92.5 57.6 94.1 59.5 95.3 61.2 96.4 63 97.4 64.8 98.2 66.7 98.9 68.9 99.5 71.6 99.8 73.6 99.9 76.1 99.8 79.2 99.5 81.4 99.2 83.1 98.7 84.9 98 86.7 97.1 88.9 95.6 91.5 94.4 93.2 93 94.9 91.7 96.3 90 97.8 88.5 98.9 86.5 100.2 84.4 101.4 82.7 102.1 81.2 102.7 78.7 103.4 75.9 103.9ZM75 47.3L76.7 47.1 78.2 46.7 80.6 45.9 82.2 45.1 84.1 43.9 85.4 42.9 87.2 41.3 88.4 39.9 89.4 38.5 90.6 36.5 91.4 34.9 92.1 32.9 92.5 31.1 92.8 29.6 92.9 27.2 92.7 25.1 92.5 23.8 92.1 21.8 91.5 20.3 90.7 18.4 89.9 16.9 88.4 14.9 87.3 13.6 85.5 12 84.1 10.9 82.7 10.1 81.1 9.2 78.7 8.3 76.1 7.7 74.6 7.5 72.4 7.4 70.4 7.6 69.1 7.8 66.6 8.4 64.8 9.1 63 10 61.5 10.9 60 12.1 58.3 13.6 57.1 14.9 56.2 16.1 55.3 17.6 54.5 19.1 53.6 21.4 53 23.9 52.8 25.2 52.7 27.2 52.8 29.6 53.1 31.4 53.7 33.7 54.5 35.7 55.5 37.5 56.5 39 57.6 40.5 58.9 41.9 60.3 43.1 61.6 44 63.6 45.2 65.1 45.9 67.4 46.8 69.6 47.2 71.3 47.4 73.3 47.5ZM50.1 61.8L51.5 60 52.6 58.6 54.5 56.6 56.1 55.3 57.3 54.4 60.8 52.2 60.8 52 60.6 51.8 59 50.9 56.6 49.4 54.5 47.6 53.6 46.7 52.1 45 50 42.3 49.8 42.4 49.7 42.5 47.7 45.2 46.2 46.8 45.2 47.7 43.2 49.4 41 50.8 39.3 51.8 39 52 39 52.2 39.2 52.4 41.9 54 44.5 56 45.6 57 47.2 58.6 48.5 60.2 49.7 61.8 49.8 62 50 61.9ZM29 96.7L30.9 96.4 32.6 96 34.9 95.2 36.5 94.4 37.9 93.6 39.6 92.4 40.9 91.2 42.4 89.6 43.5 88.1 44.6 86.4 45.5 84.6 46.2 82.7 46.7 80.6 47 78.9 47.1 76.9 47 74.6 46.7 73.3 46.1 70.6 45.2 68.6 44.4 66.9 43.3 65.3 42.4 64 40.9 62.4 39.2 61 37.9 60 35.7 58.8 33.9 58 32.2 57.4 30.2 56.9 28.2 56.7 26.6 56.7 24.4 56.8 22.6 57.1 20.4 57.7 18.3 58.6 16.8 59.4 15 60.6 14.1 61.3 12.7 62.6 11.3 64.2 10.3 65.6 9.2 67.4 8.4 69.1 7.8 71.1 7.3 73.3 7.1 74.9 7 76.7 7.1 78.7 7.4 80.6 7.7 81.9 8.5 84.1 9.5 86.2 10.5 87.8 11.8 89.5 13.5 91.3 14.9 92.5 16.3 93.6 17.9 94.5 19.6 95.3 21.8 96.1 23.9 96.5 25.7 96.7 27.2 96.8Z" fill="#121413" fill-rule="evenodd"></path></svg>
+<svg width="93.9" height="13" viewBox="0 0 72.24 10" aria-hidden="true" style="flex: none; display: block;"><path d="M8.7 9.9L1 9.9 0.4 9.6 0.1 9.1 0 8.5 0.5 7.2 3.7 0.7 4 0.3 4.3 0.1 4.6 -0 5.2 -0 5.6 0.1 5.9 0.4 8.2 5.1 9.6 7.9 9.8 8.5 9.7 9.1 9.6 9.4 9.3 9.7ZM18.4 9.9L15.2 9.8 14.6 9.8 13.8 9.6 13.1 9.3 12.7 9 12.1 8.5 11.6 7.9 11.3 7.2 11 6.1 11 4.9 11 3.9 11.3 2.7 11.6 1.9 12.1 1.3 12.8 0.7 13.8 0.3 14.5 0.1 15.7 -0 18.5 0 19 0.1 19.4 0.5 19.6 0.9 19.6 1.5 19.4 1.9 19.1 2.2 18.5 2.4 15.7 2.5 14.8 2.7 14.2 3 13.9 3.3 13.6 3.9 13.5 4.5 13.5 5.4 13.7 6.1 14 6.7 14.5 7.1 14.9 7.2 15.5 7.4 18.5 7.4 19.1 7.6 19.3 7.8 19.5 8.1 19.6 8.4 19.6 9 19.5 9.3 19.3 9.5 19 9.7ZM29.4 9.9L21.8 9.9 21.5 9.8 21.2 9.6 20.8 9.1 20.7 8.7 20.8 8.4 21.4 6.9 24.5 0.8 24.8 0.3 25.2 0 25.5 -0 26 0 26.4 0.2 26.7 0.6 29 5.1 30.4 7.9 30.6 8.7 30.5 9.1 30.3 9.4 30 9.7ZM37 9.9L32.8 9.9 32.3 9.7 32.1 9.5 31.9 9.3 31.7 8.5 31.7 1.2 31.9 0.6 32.1 0.3 32.4 0.1 33.3 -0 36.9 -0 37.8 0.1 38.7 0.3 39.6 0.6 40.1 1 40.6 1.5 41.1 2.2 41.3 2.7 41.5 3.6 41.6 5.1 41.5 6.3 41.2 7.3 41 7.7 40.4 8.7 39.6 9.3 39 9.5 38.1 9.7ZM50.1 9.9L43.9 9.9 43.4 9.8 43 9.4 42.8 9.1 42.7 8.5 42.7 1.3 42.8 0.7 42.9 0.4 43.1 0.2 43.6 0 44 -0 50 -0 50.7 0.1 51.2 0.4 51.4 1 51.3 1.6 51 2.1 50.6 2.4 50 2.5 45.5 2.5 45.3 2.5 45.2 2.7 45.2 7 45.3 7.3 45.7 7.4 50.1 7.4 50.9 7.6 51.2 7.9 51.3 8.2 51.3 8.7 51.3 9.1 51.1 9.4 50.9 9.6 50.6 9.8ZM61.2 9.9L60.7 9.8 60.5 9.7 60.1 9.4 60 9.1 59.9 8.5 59.9 4.8 59.9 4.6 59.7 4.5 58.2 5.9 57.9 6.1 57.5 6.1 57 6.1 56.7 6 55.4 4.7 55.1 4.5 55 4.8 55 8.7 54.8 9.3 54.4 9.7 53.9 9.9 53.1 9.8 52.7 9.4 52.6 9.1 52.5 8.5 52.5 1.3 52.6 0.7 52.8 0.3 53.1 0.1 53.6 -0 54.2 0.1 54.5 0.2 54.9 0.6 57.2 2.8 57.5 3 57.7 2.8 59.9 0.7 60.4 0.2 60.7 0.1 61.2 0 61.6 0.1 62.1 0.4 62.3 0.7 62.4 1.3 62.4 8.8 62.3 9.3 62.1 9.5 61.6 9.8ZM67.8 9.9L67.2 9.8 66.9 9.6 66.6 9.3 66.5 8.5 66.5 5.4 66.3 5.1 63.6 1.8 63.4 1.2 63.5 0.6 63.7 0.3 64.2 0 64.8 -0 65.2 0.1 65.7 0.4 67.5 2.5 67.8 2.7 68 2.5 70 0.2 70.4 -0 71.4 0 71.9 0.3 72.1 0.6 72.1 1.2 72.1 1.6 71.8 2.1 69.1 5.2 69 5.7 69 8.4 68.9 9.1 68.7 9.4 68.5 9.6 68.2 9.8ZM37.4 7.3L37.9 7.2 38.4 6.9 38.7 6.6 38.9 6.1 39.1 5.4 39.1 4.6 39 3.9 38.8 3.4 38.5 3.1 38.2 2.8 37.3 2.5 36.4 2.5 34.6 2.5 34.3 2.5 34.2 2.8 34.2 7 34.3 7.3 34.5 7.4 35.1 7.4 36.9 7.4ZM49.7 6.1L47.2 6.1 46.4 6 46.1 5.8 45.9 5.4 45.8 4.8 46 4.3 46.3 3.9 47 3.7 49.4 3.7 50.1 3.8 50.4 4.1 50.6 4.3 50.8 4.9 50.7 5.2 50.6 5.5 50.4 5.8 50.1 6ZM6.4 7.3L6.5 7.2 6.4 7 5.1 4.3 4.9 4.1 4.8 4.2 3.4 7 3.3 7.2 3.4 7.3 3.6 7.4 4.5 7.4 6.1 7.4ZM27.2 7.3L27.2 7.2 27.2 7 25.9 4.3 25.7 4.1 25.5 4.2 24.7 5.8 24.1 7.2 24.1 7.3 24.3 7.4 25.7 7.4 27 7.4Z" fill="#121413" fill-rule="evenodd"></path></svg>
+</a>
+<sc-if value="{{isAdminView}}" hint-placeholder-val="{{ true }}">
+<nav aria-label="ניווט ראשי" style="flex: 1 1 auto; min-width: 0;">
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 2px;">
+<li><a href="Main.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">סקירה</a></li>
+<li><a href="Students.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">סטודנטים</a></li>
+<li><a href="Units.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">יחידות</a></li>
+<li><a href="Leadership.dc.html" aria-current="page" onClick="{{goOverview}}" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid #9FDDC4; background: #D3F4E6; color: #121413; font-weight: 600; text-decoration: none; font-size: 15px; white-space: nowrap;">מנהיגות</a></li>
+<li><a href="Curriculum.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">תוכנית לימודים</a></li>
+<li><a href="Rewards.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">פרסים</a></li>
+<li><a href="PointsSettings.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">ניקוד</a></li>
+<li><a href="Activity.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">פעילות</a></li>
+</ul>
+</nav>
+</sc-if>
+<sc-if value="{{isObserverView}}" hint-placeholder-val="{{ false }}">
+<nav aria-label="ניווט ראשי" style="flex: 1 1 auto; min-width: 0;">
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 2px;">
+<li><a href="Observer.dc.html" aria-current="page" onClick="{{goOverview}}" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid #9FDDC4; background: #D3F4E6; color: #121413; font-weight: 600; text-decoration: none; font-size: 15px; white-space: nowrap;">מנהיגות</a></li>
+</ul>
+</nav>
+</sc-if>
+<div style="display: flex; align-items: center; gap: 8px;">
+<span style="display: flex; align-items: center; gap: 10px; color: #3D4541; font-size: 15px; white-space: nowrap;"><span aria-hidden="true" style="width: 30px; height: 30px; border-radius: 50%; background: #76DEB8; color: #121413; display: grid; place-items: center; font-size: 14px; font-weight: 600;">{{userInitial}}</span>{{userName}}<sc-if value="{{isObserverView}}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 999px; background: #F1F3F2; border: 1px solid #D3D9D5; color: #4B534F; font-size: 12px; font-weight: 500;">משקיף</span></sc-if></span>
+<a href="/password" class="btn-ghost" aria-label="החלפת סיסמה" title="החלפת סיסמה" style="width: 40px; height: 40px; box-sizing: border-box; display: grid; place-items: center; padding: 0; background: transparent; border: 1px solid transparent; border-radius: 10px; color: #545D58; text-decoration: none;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"></circle><path d="M10.8 12.2L20 3M17 6l2.5 2.5M14.5 8.5L17 11"></path></svg></a>
+<a href="/logout" class="btn-ghost" aria-label="התנתקות" style="width: 40px; height: 40px; box-sizing: border-box; display: grid; place-items: center; padding: 0; background: transparent; border: 1px solid transparent; border-radius: 10px; color: #545D58; text-decoration: none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3"></path><path d="M10 8l-4 4 4 4"></path><path d="M6 12h10"></path></svg></a>
+</div>
+</div>
+</header>
+<main style="max-width: 1280px; margin: 0 auto; padding: 40px clamp(16px, 4vw, 32px) 72px; box-sizing: border-box;">
+<sc-if value="{{isOverview}}" hint-placeholder-val="{{ true }}">
+<div>
+<h1 style="margin: 0; font-family: 'Karantina', 'Rubik', system-ui, sans-serif; font-size: 50px; line-height: 1; font-weight: 700; letter-spacing: 0.005em; color: #121413;">סקירת מנהיגות</h1>
+<p style="margin: 6px 0 0; font-size: 14px; color: #545D58;">לקריאה בלבד. הנתונים כוללים תתי־יחידות. ה״שבוע״ מתחיל ביום שני.</p>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(170px, 100%), 1fr)); gap: 1px; margin-top: 28px; background: #E1E5E2; border: 1px solid #E1E5E2; border-radius: 16px; overflow: hidden;">
+<div style="background: #FFFFFF; padding: 20px 22px;">
+<p style="margin: 0; font-size: 32px; line-height: 1.15; font-weight: 600; color: #121413; font-variant-numeric: tabular-nums;">{{all.count}}</p>
+<p style="margin: 6px 0 0; font-size: 13px; color: #545D58;">{{all.countLabel}}</p>
+</div>
+<div style="background: #FFFFFF; padding: 20px 22px;">
+<p style="margin: 0; font-size: 32px; line-height: 1.15; font-weight: 600; color: #121413; font-variant-numeric: tabular-nums;">{{all.weekPct}}</p>
+<p style="margin: 6px 0 0; font-size: 13px; color: #545D58;">{{all.weekLabel}}</p>
+</div>
+<div style="background: #FFFFFF; padding: 20px 22px;">
+<p style="margin: 0; font-size: 32px; line-height: 1.15; font-weight: 600; color: #121413; font-variant-numeric: tabular-nums;">{{all.flights7}}</p>
+<p style="margin: 6px 0 0; font-size: 13px; color: #545D58;">טיסות ב־7 ימים</p>
+</div>
+<div style="background: #FFFFFF; padding: 20px 22px;">
+<p style="margin: 0; font-size: 32px; line-height: 1.15; font-weight: 600; color: #121413; font-variant-numeric: tabular-nums;">{{all.approved}}</p>
+<p style="margin: 6px 0 0; font-size: 13px; color: #545D58;">אושרו · 30 יום</p>
+</div>
+<div style="background: #FFFFFF; padding: 20px 22px;">
+<p style="margin: 0; font-size: 32px; line-height: 1.15; font-weight: 600; color: #121413; font-variant-numeric: tabular-nums;">{{all.avg}}</p>
+<p style="margin: 6px 0 0; font-size: 13px; color: #545D58;">מיומנויות בממוצע</p>
+</div>
+<div style="background: #FFFFFF; padding: 20px 22px;">
+<p style="margin: 0; font-size: 32px; line-height: 1.15; font-weight: 600; color: #121413; font-variant-numeric: tabular-nums;">{{all.streak}}</p>
+<p style="margin: 6px 0 0; font-size: 13px; color: #545D58;">ברצף של שבועיים ומעלה</p>
+</div>
+</div>
+<h2 style="margin: 40px 0 16px; font-size: 22px; line-height: 1.3; font-weight: 600; color: #121413;">יחידות</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr)); gap: 16px;">
+<sc-for list="{{cards}}" as="cd" hint-placeholder-count="4">
+<button type="button" class="unit-card" ref="{{cd.setRef}}" onClick="{{cd.open}}" style="display: flex; flex-direction: column; align-items: stretch; gap: 12px; width: 100%; box-sizing: border-box; margin: 0; padding: 20px 22px; background: {{cd.bg}}; border: 1px {{cd.borderStyle}} {{cd.border}}; border-radius: 16px; color: inherit; font: inherit; text-align: start; cursor: pointer;">
+<span style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px;"><span style="font-size: 20px; line-height: 1.3; font-weight: 600; color: #121413;">{{cd.name}}</span><span style="display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: #545D58; white-space: nowrap;">{{cd.countText}}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></span></span>
+<span aria-hidden="true" style="display: block; height: 6px; border-radius: 999px; background: #E6EAE7; overflow: hidden;"><span style="display: block; width: {{cd.pct}}%; height: 100%; border-radius: 999px; background: #2A9171;"></span></span>
+<span style="font-size: 14px; color: #545D58;">{{cd.weekLine}}</span>
+<sc-if value="{{cd.hasStuck}}" hint-placeholder-val="{{ true }}"><span style="font-size: 14px; color: #545D58;">נתקעים בעיקר ב: <span style="color: #121413; font-weight: 500;">{{cd.stuck}}</span></span></sc-if>
+<span style="display: inline-flex; align-items: center; gap: 6px; font-size: 14px; color: #3D4541;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#17694F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"></path></svg>{{cd.pts}}</span>
+</button>
+</sc-for>
+<sc-if value="{{noCards}}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; color: #5E6762;">אין עדיין יחידות או סטודנטים. מוסיפים אותם בעמודי היחידות והסטודנטים.</p></sc-if>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{isNoGroup}}" hint-placeholder-val="{{ false }}">
+<div style="max-width: 640px; margin: 24px auto 0; padding: 32px 28px; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; text-align: center;">
+<h1 style="margin: 0; font-size: 24px; line-height: 1.3; font-weight: 600; color: #121413;">עדיין לא שויכה לכם קבוצה</h1>
+<p style="margin: 10px 0 0; font-size: 15px; line-height: 1.6; color: #545D58;">מנהל המערכת משייך כל משקיף לקבוצה בעמוד הסטודנטים. אחרי השיוך תראו כאן את הנתונים של הקבוצה שלכם.</p>
+</div>
+</sc-if>
+<sc-if value="{{isDetail}}" hint-placeholder-val="{{ false }}">
+<div>
+<sc-if value="{{canGoBack}}" hint-placeholder-val="{{ true }}"><button type="button" class="link-btn" ref="{{setBack}}" onClick="{{backToOverview}}" style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 0; background: transparent; border: 0; color: #17694F; font: inherit; font-size: 14px; text-decoration: underline; text-underline-offset: 3px; cursor: pointer;"><span aria-hidden="true">→</span>סקירה כללית</button></sc-if>
+<sc-if value="{{isObserverView}}" hint-placeholder-val="{{ false }}"><p style="display: flex; align-items: center; gap: 8px; margin: 0; font-size: 14px; color: #545D58;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle></svg>הקבוצה ששויכה לכם · לקריאה בלבד</p></sc-if>
+<h1 style="margin: 8px 0 0; font-family: 'Karantina', 'Rubik', system-ui, sans-serif; font-size: 50px; line-height: 1; font-weight: 700; letter-spacing: 0.005em; color: #121413;">{{detailName}}</h1>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(170px, 100%), 1fr)); gap: 1px; margin-top: 24px; background: #E1E5E2; border: 1px solid #E1E5E2; border-radius: 16px; overflow: hidden;">
+<div style="background: #FFFFFF; padding: 20px 22px;">
+<p style="margin: 0; font-size: 32px; line-height: 1.15; font-weight: 600; color: #121413; font-variant-numeric: tabular-nums;">{{det.count}}</p>
+<p style="margin: 6px 0 0; font-size: 13px; color: #545D58;">{{det.countLabel}}</p>
+</div>
+<div style="background: #FFFFFF; padding: 20px 22px;">
+<p style="margin: 0; font-size: 32px; line-height: 1.15; font-weight: 600; color: #121413; font-variant-numeric: tabular-nums;">{{det.weekPct}}</p>
+<p style="margin: 6px 0 0; font-size: 13px; color: #545D58;">{{det.weekLabel}}</p>
+</div>
+<div style="background: #FFFFFF; padding: 20px 22px;">
+<p style="margin: 0; font-size: 32px; line-height: 1.15; font-weight: 600; color: #121413; font-variant-numeric: tabular-nums;">{{det.flights7}}</p>
+<p style="margin: 6px 0 0; font-size: 13px; color: #545D58;">טיסות ב־7 ימים</p>
+</div>
+<div style="background: #FFFFFF; padding: 20px 22px;">
+<p style="margin: 0; font-size: 32px; line-height: 1.15; font-weight: 600; color: #121413; font-variant-numeric: tabular-nums;">{{det.approved}}</p>
+<p style="margin: 6px 0 0; font-size: 13px; color: #545D58;">אושרו · 30 יום</p>
+</div>
+<div style="background: #FFFFFF; padding: 20px 22px;">
+<p style="margin: 0; font-size: 32px; line-height: 1.15; font-weight: 600; color: #121413; font-variant-numeric: tabular-nums;">{{det.avg}}</p>
+<p style="margin: 6px 0 0; font-size: 13px; color: #545D58;">מיומנויות בממוצע</p>
+</div>
+<div style="background: #FFFFFF; padding: 20px 22px;">
+<p style="margin: 0; font-size: 32px; line-height: 1.15; font-weight: 600; color: #121413; font-variant-numeric: tabular-nums;">{{det.streak}}</p>
+<p style="margin: 6px 0 0; font-size: 13px; color: #545D58;">ברצף של שבועיים ומעלה</p>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr)); gap: 24px; margin-top: 36px;">
+<section aria-labelledby="bottlenecks-title">
+<h2 id="bottlenecks-title" style="margin: 0; font-size: 22px; line-height: 1.3; font-weight: 600; color: #121413;">צווארי בקבוק</h2>
+<p style="margin: 6px 0 16px; font-size: 14px; color: #545D58;">מיומנויות שהסטודנטים עובדים עליהן ועוד לא עברו, ודחיות אחרונות (30 יום).</p>
+<ul style="list-style: none; margin: 0; padding: 0; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; overflow: hidden;">
+<sc-for list="{{bottlenecks}}" as="b" hint-placeholder-count="5">
+<li style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 16px; padding: 14px 20px; border-top: 1px solid {{b.borderTop}};">
+<span style="font-size: 16px; color: #121413;">{{b.name}}</span>
+<span style="font-size: 14px; color: #545D58;">{{b.label}}</span>
+</li>
+</sc-for>
+<sc-if value="{{noBottlenecks}}" hint-placeholder-val="{{ false }}">
+<li style="padding: 16px 20px; font-size: 14px; color: #5E6762;">אין צווארי בקבוק כרגע.</li>
+</sc-if>
+</ul>
+</section>
+<section aria-labelledby="nudge-title">
+<h2 id="nudge-title" style="margin: 0; font-size: 22px; line-height: 1.3; font-weight: 600; color: #121413;">צריכים דחיפה</h2>
+<p style="margin: 6px 0 16px; font-size: 14px; color: #545D58;">לא טסו 14 ימים או יותר.</p>
+<sc-if value="{{hasNudge}}" hint-placeholder-val="{{ false }}">
+<ul style="list-style: none; margin: 0; padding: 0; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; overflow: hidden;">
+<sc-for list="{{nudge}}" as="nd" hint-placeholder-count="2">
+<li style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 16px; padding: 14px 20px; border-top: 1px solid {{nd.borderTop}};"><span style="font-size: 16px; color: #121413;">{{nd.name}}</span><span style="font-size: 14px; color: #545D58;">{{nd.label}}</span></li>
+</sc-for>
+</ul>
+</sc-if>
+<sc-if value="{{noNudge}}" hint-placeholder-val="{{ true }}"><div style="display: flex; align-items: center; gap: 10px; padding: 16px 20px; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; font-size: 15px; color: #3D4541;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#17694F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M8 12.5l2.8 2.8L16.5 9.5"></path></svg>כולם פעילים.</div></sc-if>
+</section>
+</div>
+<section aria-labelledby="points-title" style="margin-top: 40px;">
+<div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px;">
+<h2 id="points-title" style="margin: 0; font-size: 22px; line-height: 1.3; font-weight: 600; color: #121413;">נקודות ודרגות</h2>
+<p style="margin: 0; font-size: 14px; color: #3D4541;">{{groupPointsLine}}</p>
+</div>
+<p style="margin: 6px 0 16px; font-size: 14px; color: #545D58;">{{pointsIntro}}</p>
+<ol aria-label="הסטודנטים לפי נקודות" style="list-style: none; margin: 0; padding: 0; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; overflow: hidden;">
+<sc-for list="{{board}}" as="pb" hint-placeholder-count="5">
+<li style="border-top: 1px solid {{pb.divider}};">
+<button type="button" class="row-btn" aria-expanded="{{pb.expanded}}" onClick="{{pb.toggle}}" style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; width: 100%; box-sizing: border-box; margin: 0; padding: 14px 20px; border: 0; background: {{pb.bg}}; color: inherit; font: inherit; text-align: start; cursor: pointer;">
+<span dir="ltr" aria-hidden="true" style="flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: {{pb.posBg}}; color: {{pb.posColor}}; font-family: 'Unbounded', 'Rubik', sans-serif; font-size: 14px; font-weight: 700;">{{pb.pos}}</span>
+<span style="flex: 1 1 180px; min-width: 0;">
+<span style="display: block; font-size: 16px; font-weight: 600; color: {{pb.nameColor}};">{{pb.name}}<span class="vh">, מקום {{pb.pos}}</span></span>
+<span aria-hidden="true" style="display: block; max-width: 280px; height: 6px; margin-top: 6px; border-radius: 999px; background: #E6EAE7; overflow: hidden;"><span style="display: block; width: {{pb.pct}}%; height: 100%; border-radius: 999px; background: #2A9171;"></span></span>
+<span style="display: block; margin-top: 4px; font-size: 13px; color: #545D58;">{{pb.next}}</span>
+</span>
+<span style="display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border-radius: 999px; background: #121413; color: #76DEB8; font-size: 13px; font-weight: 600; white-space: nowrap;">{{pb.rank}}</span>
+<span style="display: inline-flex; align-items: baseline; justify-content: flex-end; gap: 6px; min-width: 96px;"><span dir="ltr" style="font-family: 'Unbounded', 'Rubik', sans-serif; font-size: 20px; font-weight: 700; color: #121413;">{{pb.points}}</span><span style="font-size: 13px; color: #545D58;">נקודות</span></span>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5E6762" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; transform: rotate({{pb.chevron}}deg); transition: transform 0.15s ease;"><path d="M6 9l6 6 6-6"></path></svg>
+</button>
+<sc-if value="{{pb.expanded}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 4px 20px 18px; background: #FBFCFB;">
+<div aria-hidden="true" style="display: flex; gap: 3px; height: 12px; border-radius: 999px; overflow: hidden; background: #E6EAE7;">
+<sc-for list="{{pb.bars}}" as="pbb" hint-placeholder-count="4"><span style="flex: {{pbb.grow}} 1 0; min-width: 4px; background: {{pbb.color}};"></span></sc-for>
+</div>
+<ul style="list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr)); gap: 8px 24px; margin: 12px 0 0; padding: 0;">
+<sc-for list="{{pb.mix}}" as="pbm" hint-placeholder-count="4">
+<li style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: #3D4541;"><span aria-hidden="true" style="flex: none; width: 10px; height: 10px; border-radius: 3px; background: {{pbm.color}};"></span><span style="flex: 1 1 auto; min-width: 0;">{{pbm.name}}</span><span dir="ltr" style="font-family: 'Unbounded', 'Rubik', sans-serif; font-size: 13px; font-weight: 700; color: #121413;">{{pbm.amount}}</span></li>
+</sc-for>
+</ul>
+<p style="margin: 12px 0 0; font-size: 13px; color: #545D58;">יתרה למימוש: <span dir="ltr" style="font-weight: 600; color: #17694F;">{{pb.balance}}</span> · מומשו בפרסים: {{pb.spent}}<sc-if value="{{pb.showAdjust}}" hint-placeholder-val="{{ false }}"> · <a href="Students.dc.html">להתאמת נקודות ברשימת הסטודנטים</a></sc-if></p>
+</div>
+</sc-if>
+</li>
+</sc-for>
+</ol>
+</section>
+<h2 style="margin: 40px 0 14px; font-size: 22px; line-height: 1.3; font-weight: 600; color: #121413;">סטודנטים</h2>
+<div style="background: #F7F8F7; border: 1px solid #E1E5E2; border-radius: 16px; overflow: hidden;">
+<div style="position: relative; overflow-x: auto;">
+<ul aria-label="סטודנטים ביחידה" style="list-style: none; margin: 0; padding: 0; min-width: 980px;">
+<li style="display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.4fr) 76px 84px minmax(0, 1.1fr) 56px 96px minmax(0, 1fr) 100px; align-items: center; gap: 12px; padding: 12px 20px; border-bottom: 1px solid #E1E5E2; font-size: 13px; font-weight: 500; color: #5E6762;">
+<span>סטודנט</span>
+<span>רמה</span>
+<span>מיומנויות</span>
+<span>נקודות</span>
+<span>דרגה</span>
+<span>רצף</span>
+<span>טיסות · 7 ימים</span>
+<span>פעילות אחרונה</span>
+<span>הצטרפות</span>
+</li>
+<sc-for list="{{members}}" as="m" hint-placeholder-count="5">
+<li style="display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.4fr) 76px 84px minmax(0, 1.1fr) 56px 96px minmax(0, 1fr) 100px; align-items: center; gap: 12px; padding: 12px 20px; border-bottom: 1px solid #E8EBE9; font-size: 15px;">
+<span style="min-width: 0;">
+<sc-if value="{{m.isLink}}" hint-placeholder-val="{{ true }}"><a href="{{m.href}}" style="color: #17694F; font-weight: 500; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px;">{{m.name}}</a></sc-if>
+<sc-if value="{{m.isPlainKnown}}" hint-placeholder-val="{{ false }}"><span style="color: #121413; font-weight: 500;">{{m.name}}</span></sc-if>
+<sc-if value="{{m.isPlaceholder}}" hint-placeholder-val="{{ false }}"><span style="color: #6E7772;">{{m.name}}</span></sc-if>
+</span>
+<span style="color: #2C322F;">{{m.level}}</span>
+<span style="font-variant-numeric: tabular-nums;">{{m.skills}}</span>
+<span dir="ltr" style="text-align: right; font-family: 'Unbounded', 'Rubik', sans-serif; font-size: 14px; font-weight: 700; color: #121413;">{{m.xp}}</span>
+<span style="color: #1E2320;">{{m.rank}}</span>
+<span style="color: #5E6762;">{{m.streak}}</span>
+<span style="font-variant-numeric: tabular-nums;">{{m.flights}}</span>
+<span style="color: #3D4541;">{{m.lastActive}}</span>
+<span style="color: #3D4541; font-variant-numeric: tabular-nums;">{{m.joined}}</span>
+</li>
+</sc-for>
+</ul>
+</div>
+</div>
+</div>
+</sc-if>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"startView":{"editor":"enum","options":["סקירה כללית","קבוצה א׳","קבוצה ב׳","קבוצה ג׳","קבוצה ד׳","קבוצה ה׳","קורס הכנה","לא ביחידה"],"default":"סקירה כללית"},"$preview":{"width":1440,"height":1160}}'>
+class Component extends DCLogic {
+  live() {
+    return !!(window.Academy && window.Academy.on);
+  }
+
+  // The numbers at the top of the overview and of each group.
+  stats(list) {
+    const A = window.Academy;
+    const today = A.today();
+    const d = new Date(today + 'T12:00:00Z');
+    const weekStart = A.addDays(today, -((d.getUTCDay() + 6) % 7));
+    const lastWeek = A.addDays(weekStart, -7);
+    const from7 = A.addDays(today, -6);
+    const from30 = A.addDays(today, -29);
+    let flewWeek = 0, flights7 = 0, decided = 0, approved = 0, streak = 0, skills = 0;
+    list.forEach((sm) => {
+      const fl = sm.doc.flights.filter((f) => f.status !== 'cancelled');
+      const days = fl.map((f) => A.dayOf(f.at));
+      const thisWeek = days.some((x) => x >= weekStart);
+      if (thisWeek) flewWeek++;
+      if (thisWeek && days.some((x) => x >= lastWeek && x < weekStart)) streak++;
+      flights7 += days.filter((x) => x >= from7).length;
+      fl.forEach((f) => {
+        if ((f.status === 'approved' || f.status === 'rejected') && A.dayOf(f.reviewedAt || f.at) >= from30) {
+          decided++;
+          if (f.status === 'approved') approved++;
+        }
+      });
+      skills += sm.done;
+    });
+    const n = list.length;
+    const pct = n ? Math.round(flewWeek / n * 100) : 0;
+    return {
+      count: String(n),
+      countLabel: n === 1 ? 'סטודנט' : 'סטודנטים',
+      pct: pct,
+      weekPct: pct + '%',
+      weekLabel: 'טסו השבוע (' + flewWeek + ')',
+      flights7: String(flights7),
+      approved: decided ? Math.round(approved / decided * 100) + '%' : '–',
+      avg: n ? (skills / n).toFixed(1) : '–',
+      streak: String(streak)
+    };
+  }
+
+  // Students who have not flown for 14 days or more.
+  nudgeList(list) {
+    const A = window.Academy;
+    const from = A.addDays(A.today(), -13);
+    return list.map((sm) => {
+      const days = sm.doc.flights.filter((f) => f.status !== 'cancelled').map((f) => A.dayOf(f.at)).sort();
+      const last = days[days.length - 1] || '';
+      return { sm: sm, last: last };
+    }).filter((x) => !x.last || x.last < from).map((x, i) => ({
+      id: 'nd-' + x.sm.user.id,
+      name: x.sm.user.name,
+      label: x.last ? 'טיסה אחרונה ' + A.ago(x.last) : 'עוד לא הגישו טיסה',
+      borderTop: i === 0 ? 'transparent' : '#E8EBE9'
+    }));
+  }
+
+  liveGroups() {
+    const A = window.Academy;
+    const all = A.students();
+    const out = A.units().map((u) => ({ id: u.id, name: u.name, list: all.filter((sm) => sm.user.unit === u.id) }));
+    const none = all.filter((sm) => !sm.user.unit || !A.units().some((u) => u.id === sm.user.unit));
+    if (none.length) out.push({ id: 'none', name: 'לא ביחידה', list: none });
+    return out.map((g) => Object.assign(g, {
+      count: g.list.length,
+      avg: g.list.length ? (g.list.reduce((a, sm) => a + sm.done, 0) / g.list.length).toFixed(1) : '–',
+      bottlenecks: A.bottlenecks(g.list),
+      members: g.list.slice().sort((a, b) => String(a.user.username).localeCompare(String(b.user.username))).map((sm) => ({ live: sm }))
+    }));
+  }
+
+  groups() {
+    if (this.live()) return this.liveGroups();
+    return this.demoGroups();
+  }
+
+  demoGroups() {
+
+    const s = (name, skills, xp) => ({ name: name, skills: skills, xp: xp });
+    return [
+      { id: 'a', name: "קבוצה א'", count: 5, avg: '11.0',
+        bottlenecks: [['נחיתות מדויקות', 4], ['ירידה במדרגות', 4], ['סיבוב 360 בפיר מעלית', 4], ['עליית מדרגות - שמאל', 4], ['פיגומים', 4]],
+        members: [s('א. ראדין', 13), s('ד. צדקה', 13), s('נ. גרויה', 13), s('ר. שליסר', 13), s(null, 3)] },
+      { id: 'b', name: "קבוצה ב'", count: 3, avg: '–',
+        bottlenecks: [['נחיתות מדויקות', 1], ['ירידה במדרגות', 1], ['פיגומים', 1], ['עליית מדרגות - שמאל', 1], ['סיבוב 360 בפיר מעלית', 1]],
+        members: [s('א. פרוינדליך', 12), s('א. מטלון', 13), null] },
+      { id: 'c', name: "קבוצה ג'", count: 2, avg: '7.0',
+        bottlenecks: [['מדרגות', 1], ['צינורות', 1], ['סללום ימינה ושמאלה', 1], ['שינוי גובה', 1], ['פניות', 1]],
+        members: [s('א. יהודאי', 3), s('א. פולטוב', 11)] },
+      { id: 'd', name: "קבוצה ד'", count: 5, avg: '–',
+        bottlenecks: [['מדרגות', 2], ['צינורות', 1], ['עינוי סיני', 1], ['מסלול', 1], ['נחיתה', 1]],
+        members: [s('א. וולך', 7), s('ד. סקולסקי', 12), null, null, null] },
+      { id: 'e', name: "קבוצה ה'", count: 2, avg: '8.5',
+        bottlenecks: [['שמיניות', 1], ['מדרגות', 1], ['צינורות', 1]],
+        members: [s('א. סדוב', 6), s('ד. אסף', 11)] },
+      { id: 'prep', name: 'קורס הכנה לפני גיוס היברידי', count: 1, avg: '–',
+        bottlenecks: [['האטה ובלימה', 1]],
+        members: [null] },
+      { id: 'none', name: 'לא ביחידה', count: 1, avg: '4.0',
+        bottlenecks: [['שינוי גובה', 1], ['פניות', 1], ['שמיניות', 1]],
+        members: [s('באבאפוו', 4)] }
+    ];
+  }
+
+  // Points of logins, streaks and learning time (habit) and of extras like videos and daily quests (bonus), per student,
+  // as on the students page. Students not listed there get the usual 40 + 10.
+  extras(name) {
+    const map = {
+      'א. ראדין': [45, 5], 'ד. צדקה': [40, 10], 'א. פרוינדליך': [45, 5], 'א. מטלון': [35, 15], 'א. יהודאי': [35, 15],
+      'א. פולטוב': [40, 10], 'א. וולך': [45, 5], 'ד. סקולסקי': [50, 0], 'א. סדוב': [40, 10], 'ד. אסף': [40, 10], 'באבאפוו': [135, 45]
+    };
+    const e = map[name] || [40, 10];
+    return { habit: e[0], bonus: e[1] };
+  }
+
+  // The points a student earned: each skill's points and a bonus per finished level (as they were when earned),
+  // plus logins, streaks, learning time and the other extras.
+  breakdown(name, skills) {
+    const per = [20, 20, 20, 50, 40, 30, 40, 50, 20, 25, 25, 80, 50, 30, 60, 50, 80, 50, 50, 50];
+    let stage = 0;
+    for (let i = 0; i < Math.min(skills, per.length); i++) stage += per[i];
+    const level = (skills >= 7 ? 50 : 0) + (skills >= 13 ? 100 : 0) + (skills >= 20 ? 150 : 0);
+    const ex = this.extras(name);
+    return { stage: stage, level: level, habit: ex.habit, bonus: ex.bonus, total: stage + level + ex.habit + ex.bonus };
+  }
+
+  pointsFor(skills) {
+    return this.breakdown(null, skills).total;
+  }
+
+  // ---------- scoring settings (הגדרות ניקוד) ----------
+  // The admin sets the scoring on the points-settings screen; it is saved in this browser, so every screen reads the
+  // same values. This screen uses the ranks (names and thresholds).
+  scoringRanks() {
+    const base = [{ name: 'צוער', min: 0 }, { name: 'איש כנף', min: 300 }, { name: 'טייס', min: 600 }, { name: 'מוביל מבנה', min: 1000 }, { name: 'מפקד טייסת', min: 1500 }];
+    if (this._ranks) return this._ranks;
+    let saved = null;
+    try {
+      const raw = window.localStorage.getItem('88academy.scoring.v1');
+      saved = raw ? JSON.parse(raw) : null;
+    } catch (err) {
+      saved = null;
+    }
+    const rk = saved && saved.ranks;
+    const int = (v) => typeof v === 'number' && isFinite(v) && Math.floor(v) === v && v >= 0 && v <= 1000000;
+    const ok = Array.isArray(rk) && rk.length >= 2 && rk.length <= 8 && rk.every((r, i) => r && typeof r.name === 'string' && r.name.trim() && int(r.min) && (i === 0 ? r.min === 0 : r.min > rk[i - 1].min));
+    this._ranks = ok ? rk.map((r) => ({ name: r.name.trim().slice(0, 24), min: r.min })) : base;
+    return this._ranks;
+  }
+
+  watchScoring() {
+    if (this._onScoring || typeof window === 'undefined' || !window.addEventListener) return;
+    this._onScoring = (e) => {
+      if (e && e.key && e.key !== '88academy.scoring.v1') return;
+      this._ranks = null;
+      this.forceUpdate();
+    };
+    window.addEventListener('storage', this._onScoring);
+  }
+
+  unwatchScoring() {
+    if (this._onScoring) window.removeEventListener('storage', this._onScoring);
+    this._onScoring = null;
+  }
+
+  rankInfo(pts) {
+    const ranks = this.scoringRanks();
+    let i = 0;
+    while (i + 1 < ranks.length && pts >= ranks[i + 1].min) i++;
+    const next = ranks[i + 1] || null;
+    const pct = next ? Math.max(0, Math.min(100, (pts - ranks[i].min) / (next.min - ranks[i].min) * 100)) : 100;
+    return { name: ranks[i].name, pct: Math.round(pct), text: next ? 'עוד ' + (next.min - pts).toLocaleString('en-US') + ' נקודות לדרגת ' + next.name : 'הדרגה הגבוהה ביותר' };
+  }
+
+  rankFor(pts) {
+    return this.rankInfo(pts).name;
+  }
+
+  toggleMember(id) {
+    const s = this.state || {};
+    this.setState({ openMember: s.openMember === id ? null : id });
+  }
+
+  member(m, index) {
+    if (m && m.live) {
+      const A = window.Academy;
+      const sm = m.live;
+      const level = sm.doc.ledger.filter((e) => e.kind === 'level').reduce((a, e) => a + (Number(e.amount) || 0), 0);
+      const bd = { stage: sm.stage - level, level: level, habit: sm.habit, bonus: sm.bonus + sm.manual, total: sm.total };
+      const fl7 = sm.doc.flights.filter((f) => f.status !== 'cancelled' && A.dayOf(f.at) >= A.addDays(A.today(), -6)).length;
+      const created = sm.user.created || '';
+      const loginDays = new Set(sm.doc.ledger.filter((e) => e.kind === 'login').map((e) => A.dayOf(e.at)));
+      let day = loginDays.has(A.today()) ? A.today() : A.addDays(A.today(), -1);
+      let streak = 0;
+      while (loginDays.has(day)) { streak++; day = A.addDays(day, -1); }
+      return {
+        id: sm.user.id, name: sm.user.name, isKnown: true, isPlaceholder: false, href: 'StudentDetail.dc.html?id=' + encodeURIComponent(sm.user.id),
+        level: sm.levelName, skills: String(sm.done), rank: sm.rankName, xp: sm.total.toLocaleString('en-US'), pts: sm.total, bd: bd, spent: sm.spent, balance: sm.balance,
+        streak: streak ? (streak === 1 ? 'יום אחד' : streak + ' ימים') : '—', flights: String(fl7), lastActive: sm.last ? A.ago(sm.last) : 'עוד לא נכנסו', joined: created.length >= 10 ? created.slice(8, 10) + '.' + created.slice(5, 7) + '.' + created.slice(0, 4) : '—'
+      };
+    }
+    // m === null: a student who wasn't in the screenshots. m.name === null: the name is unknown but the skill count is.
+    const row = { id: 'placeholder-' + index, href: 'StudentDetail.dc.html', name: '[שם סטודנט]', isKnown: false, isPlaceholder: true, level: '—', skills: '—', rank: '—', xp: '—', pts: null, bd: null, streak: '—', flights: '0', lastActive: '—', joined: '—' };
+    if (m && typeof m.skills === 'number') {
+      const levels = { 1: 'אבני יסוד', 2: 'תרגילי קורס פרופלור', 3: 'תרגילים מתקדמים' };
+      const level = m.skills >= 13 ? 3 : (m.skills >= 7 ? 2 : 1);
+      const bd = this.breakdown(m.name, m.skills);
+      Object.assign(row, { level: levels[level], skills: String(m.skills), rank: this.rankFor(bd.total), xp: bd.total.toLocaleString('en-US'), pts: bd.total, bd: bd });
+    }
+    if (m && m.name) {
+      Object.assign(row, { id: m.name, name: m.name, isKnown: true, isPlaceholder: false, lastActive: 'לפני 4 ימים', joined: '11.10.2026' });
+    }
+    return row;
+  }
+
+  viewFromProp() {
+    const map = { 'סקירה כללית': 'overview', 'קבוצה א׳': 'a', 'קבוצה ב׳': 'b', 'קבוצה ג׳': 'c', 'קבוצה ד׳': 'd', 'קבוצה ה׳': 'e', 'קורס הכנה': 'prep', 'לא ביחידה': 'none' };
+    return map[this.props.startView ?? 'סקירה כללית'] || 'overview';
+  }
+
+  isObserver() {
+    if (this.live()) return window.Academy.me.role === 'observer';
+    return this.props.role === 'observer' || this.props.role === 'משקיף';
+  }
+
+  // Observers and the group each one is assigned to (set on the students page). An observer sees that group only.
+  observers() {
+    return {
+      ahazan: { name: 'א. חזן', initial: 'א', unit: 'a' },
+      dkarni: { name: 'ד. קרני', initial: 'ד', unit: 'd' },
+      eshapira: { name: 'א. שפירא', initial: 'א', unit: 'e' }
+    };
+  }
+
+  viewer() {
+    if (this.live()) {
+      const me = window.Academy.me;
+      return { name: me.name, initial: String(me.name || '?').trim().charAt(0), unit: me.unit || '' };
+    }
+    return this.observers()[this.props.observer || 'ahazan'] || null;
+  }
+
+  componentDidMount() {
+    if (super.componentDidMount) super.componentDidMount();
+    if (this._leaveClick || typeof window === 'undefined' || !window.addEventListener) return;
+    const here = this.isObserver() ? 'Observer.dc.html' : 'Leadership.dc.html';
+    this._leaveClick = (e) => {
+      const a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+      const file = a ? (a.getAttribute('href') || '').split(/[?#]/)[0].split('/').pop() : '';
+      if (/\.dc\.html$/.test(file) && file !== here && this.state && (this.state.view || this.state.openMember)) this.setState({ view: null, openMember: null });
+    };
+    window.addEventListener('click', this._leaveClick, true);
+    this.watchScoring();
+    if (this.live() && this.isObserver()) window.Academy.request('POST', '/api/viewed', {});
+  }
+
+  componentWillUnmount() {
+    if (super.componentWillUnmount) super.componentWillUnmount();
+    if (this._leaveClick) window.removeEventListener('click', this._leaveClick, true);
+    this._leaveClick = null;
+    this.unwatchScoring();
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (super.componentDidUpdate) super.componentDidUpdate(prevProps, prevState, snapshot);
+    if (prevProps && prevProps.startView !== this.props.startView) this.setState({ view: null, openMember: null });
+  }
+
+  open(id) {
+    if (this.isObserver()) return;   // an observer stays on their own group
+    const s = this.state || {};
+    const from = s.view || this.viewFromProp();
+    this.setState({ view: id, openMember: null }, () => {
+      try {
+        // Detail: focus the back link. Overview: return focus to the card that was open.
+        const el = id === 'overview' ? (this.cardEls || {})[from] : this.backEl;
+        if (!el) return;
+        if (el.scrollIntoView) el.scrollIntoView({ block: 'nearest' });
+        el.focus({ preventScroll: true });
+      } catch (err) {}
+    });
+  }
+
+  backRef() {
+    if (!this._backRef) this._backRef = (el) => { this.backEl = el; };
+    return this._backRef;
+  }
+
+  cardRef(id) {
+    if (!this._cardRefs) this._cardRefs = {};
+    if (!this.cardEls) this.cardEls = {};
+    if (!this._cardRefs[id]) this._cardRefs[id] = (el) => { this.cardEls[id] = el; };
+    return this._cardRefs[id];
+  }
+
+  renderVals() {
+    const s = this.state || {};
+    const observer = this.isObserver();
+    const who = observer ? this.viewer() : null;
+    const view = observer ? (who && who.unit ? who.unit : '') : (s.view || this.viewFromProp());
+    const g = view ? this.groups().find((x) => x.id === view) : null;
+    const vals = {
+      isAdminView: !observer,
+      isObserverView: observer,
+      homeHref: observer ? 'Observer.dc.html' : 'Main.dc.html',
+      homeLabel: observer ? '88ACADEMY — לסקירת המנהיגות' : '88ACADEMY — לעמוד הסקירה',
+      onHome: () => { if (observer) this.open('overview'); },
+      goOverview: () => this.open('overview'),
+      userName: observer ? (who ? who.name : 'משקיף') : (this.live() ? window.Academy.me.name : 'יהודה'),
+      userInitial: observer ? (who ? who.initial : 'מ') : (this.live() ? String(window.Academy.me.name || '?').trim().charAt(0) : 'י'),
+      isOverview: !g && !observer,
+      isDetail: !!g,
+      isNoGroup: observer && !g,
+      canGoBack: !observer,
+      openA: () => this.open('a'),
+      openB: () => this.open('b'),
+      openC: () => this.open('c'),
+      openD: () => this.open('d'),
+      openE: () => this.open('e'),
+      openPrep: () => this.open('prep'),
+      openNone: () => this.open('none'),
+      backToOverview: () => this.open('overview'),
+      setBack: this.backRef(),
+      setCardA: this.cardRef('a'),
+      setCardB: this.cardRef('b'),
+      setCardC: this.cardRef('c'),
+      setCardD: this.cardRef('d'),
+      setCardE: this.cardRef('e'),
+      setCardPrep: this.cardRef('prep'),
+      setCardNone: this.cardRef('none'),
+      detailName: '',
+      detailCount: '',
+      detailCountLabel: '',
+      detailAvg: '',
+      bottlenecks: [],
+      noBottlenecks: false,
+      members: [],
+      board: [],
+      groupPointsLine: '',
+      pointsIntro: '',
+      cardPts: {}
+    };
+    const live = this.live();
+    if (live && !this._acaOff) this._acaOff = window.Academy.listen(() => this.forceUpdate());
+    const allGroups = this.groups();
+    const allList = live ? window.Academy.students() : [];
+    vals.all = live ? this.stats(allList) : { count: '19', countLabel: 'סטודנטים', weekPct: '0%', weekLabel: 'טסו השבוע (0)', flights7: '2', approved: '100%', avg: '9.6', streak: '0' };
+    vals.det = { count: '', countLabel: '', weekPct: '0%', weekLabel: 'טסו השבוע (0)', flights7: '0', approved: '–', avg: '', streak: '0' };
+    vals.nudge = [];
+    // Average points per group, for the unit cards.
+    this.groups().forEach((gr) => {
+      const known = gr.members.filter((m) => m && typeof m.skills === 'number').map((m) => this.breakdown(m.name, m.skills).total);
+      if (live) {
+        const pts = gr.list.map((sm) => sm.total);
+        vals.cardPts[gr.id] = pts.length ? 'ממוצע ' + Math.round(pts.reduce((a, b) => a + b, 0) / pts.length).toLocaleString('en-US') + ' נקודות לסטודנט' : 'אין עדיין סטודנטים';
+        return;
+      }
+      vals.cardPts[gr.id] = known.length ? 'ממוצע ' + Math.round(known.reduce((a, b) => a + b, 0) / known.length).toLocaleString('en-US') + ' נקודות לסטודנט' : 'אין עדיין נתוני נקודות';
+    });
+    vals.cards = allGroups.map((gr) => {
+      const st = live ? this.stats(gr.list) : { pct: 0, weekPct: '0%', flights7: '0', count: String(gr.count) };
+      const none = gr.id === 'none';
+      return {
+        id: gr.id, name: gr.name, open: () => this.open(gr.id), setRef: this.cardRef(gr.id),
+        countText: gr.count === 1 ? 'סטודנט אחד' : gr.count + ' סטודנטים',
+        pct: st.pct, weekLine: st.weekPct + ' טסו השבוע · ' + st.flights7 + ' טיסות ב־7 ימים',
+        hasStuck: gr.bottlenecks.length > 0, stuck: gr.bottlenecks.length ? gr.bottlenecks[0][0] : '',
+        pts: vals.cardPts[gr.id], bg: none ? '#F7F8F7' : '#FFFFFF', border: '#D3D9D5', borderStyle: none ? 'dashed' : 'solid'
+      };
+    });
+    vals.noCards = vals.cards.length === 0;
+    vals.hasNudge = false;
+    vals.noNudge = true;
+    if (!g) return vals;
+    if (live) {
+      vals.det = this.stats(g.list);
+      vals.nudge = this.nudgeList(g.list);
+      vals.hasNudge = vals.nudge.length > 0;
+      vals.noNudge = !vals.hasNudge;
+    }
+    // Rows keep the app's order (by username, as on the students page); unknown students go last.
+    // Observers read the overview only: names are not links to the admin student card.
+    const members = g.members.map((m, i) => {
+      const row = this.member(m, i);
+      return Object.assign(row, { isLink: row.isKnown && !observer, isPlainKnown: row.isKnown && observer });
+    });
+    // The points table: everyone with known progress, from the most points down. Read-only for observers too.
+    const withPts = members.filter((r) => r.pts != null).slice().sort((a, b) => b.pts - a.pts);
+    const missing = members.length - withPts.length;
+    const sum = withPts.reduce((acc, r) => acc + r.pts, 0);
+    const board = withPts.map((r, i) => {
+      const ri = this.rankInfo(r.pts);
+      const expanded = s.openMember === r.id;
+      const parts = [
+        { id: 'stage', name: 'מיומנויות', color: '#2A9171', v: r.bd.stage },
+        { id: 'level', name: 'בונוסי סיום רמה', color: '#0E4F3A', v: r.bd.level },
+        { id: 'habit', name: 'התמדה', color: '#76DEB8', v: r.bd.habit },
+        { id: 'bonus', name: 'בונוסים', color: '#C7436A', v: r.bd.bonus }
+      ];
+      return {
+        id: 'pb-' + r.id,
+        pos: String(1 + withPts.filter((o) => o.pts > r.pts).length),
+        posBg: withPts.every((o) => o.pts <= r.pts) ? '#76DEB8' : '#F1F3F2',
+        posColor: '#121413',
+        name: r.name,
+        nameColor: r.isPlaceholder ? '#6E7772' : '#121413',
+        rank: ri.name,
+        pct: ri.pct,
+        next: ri.text,
+        points: r.pts.toLocaleString('en-US'),
+        balance: (r.balance != null ? r.balance : r.pts).toLocaleString('en-US'),
+        spent: (r.spent || 0).toLocaleString('en-US'),
+        expanded: expanded,
+        chevron: expanded ? 180 : 0,
+        bg: expanded ? '#F2FBF7' : '#FFFFFF',
+        divider: i === 0 ? 'transparent' : '#E8EBE9',
+        toggle: () => this.toggleMember(r.id),
+        bars: parts.filter((p) => p.v > 0).map((p) => ({ id: 'b' + p.id, color: p.color, grow: p.v })),
+        mix: parts.map((p) => ({ id: 'm' + p.id, name: p.name, color: p.color, amount: p.v.toLocaleString('en-US') })),
+        showAdjust: !observer
+      };
+    });
+    return Object.assign(vals, {
+      board: board,
+      groupPointsLine: withPts.length ? 'סה״כ ' + sum.toLocaleString('en-US') + ' נקודות · ממוצע ' + Math.round(sum / withPts.length).toLocaleString('en-US') + ' לסטודנט' : '',
+      pointsIntro: (withPts.length ? 'לחיצה על סטודנט מציגה מאיפה הגיעו הנקודות שלו.' : 'עדיין אין נתוני נקודות בקבוצה.') + (missing ? (missing === 1 ? ' לסטודנט אחד' : ' ל־' + missing + ' סטודנטים') + ' בקבוצה עוד אין נתונים.' : ''),
+      detailName: g.name,
+      detailCount: String(g.count),
+      detailCountLabel: g.count === 1 ? 'סטודנט' : 'סטודנטים',
+      detailAvg: g.avg,
+      bottlenecks: g.bottlenecks.map((b, i) => ({
+        id: b[0],
+        name: b[0],
+        label: b[1] === 1 ? 'סטודנט אחד עובד על זה' : b[1] + ' עובדים על זה',
+        borderTop: i === 0 ? 'transparent' : '#E8EBE9'
+      })),
+      noBottlenecks: g.bottlenecks.length === 0,
+      members: members
+    });
+  }
+}
+</script>
+</body>
+</html>
