@@ -765,6 +765,13 @@ async function handle(req, res) {
       save();
       return json(res, 200, Object.assign({ result: out }, { boot: bootFor(user) }));
     }
+    if (p === '/api/intro-seen' && req.method === 'POST') {
+      if (user.role === 'student') {
+        const doc = progressOf(user.id);
+        if (!doc.introSeen) { doc.introSeen = true; log(user, 'user', 'קרא את ההסבר על הלמידה באפליקציה'); save(); }
+      }
+      return json(res, 200, { ok: true });
+    }
     if (p === '/api/viewed' && req.method === 'POST') {
       if (user.role === 'observer') {
         const un = db.units.find((x) => x.id === user.unit);

@@ -81,8 +81,6 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <ul style="list-style: none; margin: 0; padding: 0; display: flex; gap: 2px;">
 <li><button type="button" class="pill-hover" aria-current="{{navHome.current}}" onClick="{{navHome.go}}" style="display: flex; align-items: center; height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid {{navHome.border}}; background: {{navHome.bg}}; color: {{navHome.color}}; font: inherit; font-size: 15px; font-weight: {{navHome.weight}}; white-space: nowrap; cursor: pointer;">לוח מחוונים</button></li>
 <li><button type="button" class="pill-hover" aria-current="{{navPath.current}}" onClick="{{navPath.go}}" style="display: flex; align-items: center; height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid {{navPath.border}}; background: {{navPath.bg}}; color: {{navPath.color}}; font: inherit; font-size: 15px; font-weight: {{navPath.weight}}; white-space: nowrap; cursor: pointer;">הנתיב שלי</button></li>
-<li><button type="button" class="pill-hover" aria-current="{{navChallenges.current}}" onClick="{{navChallenges.go}}" style="display: flex; align-items: center; height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid {{navChallenges.border}}; background: {{navChallenges.bg}}; color: {{navChallenges.color}}; font: inherit; font-size: 15px; font-weight: {{navChallenges.weight}}; white-space: nowrap; cursor: pointer;">אתגרים</button></li>
-<li><button type="button" class="pill-hover" aria-current="{{navFlights.current}}" onClick="{{navFlights.go}}" style="display: flex; align-items: center; height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid {{navFlights.border}}; background: {{navFlights.bg}}; color: {{navFlights.color}}; font: inherit; font-size: 15px; font-weight: {{navFlights.weight}}; white-space: nowrap; cursor: pointer;">הטיסות שלי</button></li>
 <li><button type="button" class="pill-hover" aria-current="{{navRewards.current}}" onClick="{{navRewards.go}}" style="display: flex; align-items: center; height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid {{navRewards.border}}; background: {{navRewards.bg}}; color: {{navRewards.color}}; font: inherit; font-size: 15px; font-weight: {{navRewards.weight}}; white-space: nowrap; cursor: pointer;">פרסים</button></li>
 </ul>
 </nav>
@@ -131,6 +129,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 </div>
 <ul style="list-style: none; margin: 0; padding: 6px;">
 <li><button type="button" class="menu-row" onClick="{{goPoints}}" style="display: flex; align-items: center; gap: 12px; width: 100%; min-height: 46px; padding: 0 12px; box-sizing: border-box; border: 0; border-radius: 12px; background: transparent; color: #121413; font: inherit; font-size: 15px; text-align: start; text-decoration: none; cursor: pointer;"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" style="flex: none; display: block;"><circle cx="12" cy="12.7" r="10.8" fill="#C98A12"></circle><circle cx="12" cy="11.4" r="10.4" fill="#F7C548"></circle><circle cx="12" cy="11.4" r="7.7" fill="none" stroke="#DDA024" stroke-width="1.1"></circle><g fill="none" stroke="#97650A" stroke-width="1.35"><circle cx="9.85" cy="9.25" r="2.05"></circle><circle cx="14.15" cy="9.25" r="2.05"></circle><circle cx="9.85" cy="13.55" r="2.05"></circle><circle cx="14.15" cy="13.55" r="2.05"></circle></g><path d="M5.5 8.6a7.3 7.3 0 0 1 4.4-3.7" fill="none" stroke="#FFF2C6" stroke-width="1.6" stroke-linecap="round"></path></svg>המטבעות שלי</button></li>
+<li><button type="button" class="menu-row" onClick="{{openIntro}}" style="display: flex; align-items: center; gap: 12px; width: 100%; min-height: 46px; padding: 0 12px; box-sizing: border-box; border: 0; border-radius: 12px; background: transparent; color: #121413; font: inherit; font-size: 15px; text-align: start; text-decoration: none; cursor: pointer;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C7436A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none;"><circle cx="12" cy="12" r="9.5"></circle><path d="M9.3 9.3a2.8 2.8 0 0 1 5.4 1c0 1.9-2.7 2.4-2.7 4"></path><circle cx="12" cy="17.6" r="0.6" fill="#C7436A"></circle></svg>איך לומדים באפליקציה</button></li>
 <li><button type="button" class="menu-row" onClick="{{goGuide}}" style="display: flex; align-items: center; gap: 12px; width: 100%; min-height: 46px; padding: 0 12px; box-sizing: border-box; border: 0; border-radius: 12px; background: transparent; color: #121413; font: inherit; font-size: 15px; text-align: start; text-decoration: none; cursor: pointer;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C7436A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none;"><circle cx="12" cy="12" r="9.5"></circle><path d="M9.3 9.3a2.8 2.8 0 0 1 5.4 1c0 1.9-2.7 2.4-2.7 4"></path><circle cx="12" cy="17.6" r="0.6" fill="#C7436A"></circle></svg>איך צוברים מטבעות?</button></li>
 <li><button type="button" class="menu-row" onClick="{{goNotifications}}" style="display: flex; align-items: center; gap: 12px; width: 100%; min-height: 46px; padding: 0 12px; box-sizing: border-box; border: 0; border-radius: 12px; background: transparent; color: #121413; font: inherit; font-size: 15px; text-align: start; text-decoration: none; cursor: pointer;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3D4541" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none;"><path d="M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15z"></path><path d="M10 20.5a2.2 2.2 0 0 0 4 0"></path></svg>כל ההתראות</button></li>
 <li><a href="/password" class="menu-row" style="display: flex; align-items: center; gap: 12px; width: 100%; min-height: 46px; padding: 0 12px; box-sizing: border-box; border-radius: 12px; color: #1E2320; text-decoration: none; font-size: 15px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"></circle><path d="M10.8 12.2L20 3M17 6l2.5 2.5M14.5 8.5L17 11"></path></svg>החלפת סיסמה</a></li>
@@ -1000,12 +999,29 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 </div>
 </div>
 </sc-if>
+<sc-if value="{{introOpen}}" hint-placeholder-val="{{ false }}">
+<div role="dialog" aria-modal="true" aria-labelledby="intro-title" style="position: fixed; inset: 0; z-index: 200; overflow-y: auto; background: #F5F6F4;">
+<div style="max-width: 760px; margin: 0 auto; padding: clamp(20px, 5vw, 48px) clamp(16px, 4vw, 32px) 48px; box-sizing: border-box;">
+<p style="margin: 0; font-size: 15px; color: #17694F; font-weight: 600;">{{introHello}}</p>
+<h1 id="intro-title" style="display: inline-block; margin: 10px 0 0; padding: 6px 2px 8px; border-top: 6px solid #121413; border-bottom: 6px solid #121413; font-family: 'Karantina', 'Rubik', system-ui, sans-serif; font-size: clamp(44px, 9vw, 64px); line-height: 0.9; font-weight: 700; color: #121413;">איך לומדים כאן</h1>
+<p style="margin: 16px 0 0; font-size: 17px; line-height: 1.6; color: #2C322F;">האפליקציה מלווה אתכם בתרגול הטסה בבית: אתם מתרגלים, מצלמים, שולחים למדריך, וצוברים מטבעות בדרך. כך זה עובד:</p>
+<ol style="list-style: none; margin: 24px 0 0; padding: 0; display: flex; flex-direction: column; gap: 12px;">
+<sc-for list="{{introSteps}}" as="st" hint-placeholder-count="6">
+<li style="display: flex; gap: 16px; padding: 18px 20px; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 18px;">
+<span aria-hidden="true" style="flex: none; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: #121413; color: #76DEB8; font-family: 'Unbounded', 'Rubik', sans-serif; font-size: 16px; font-weight: 700;">{{st.n}}</span>
+<span style="min-width: 0;"><span style="display: block; font-size: 18px; font-weight: 600; color: #121413;">{{st.title}}</span><span style="display: block; margin-top: 4px; font-size: 15px; line-height: 1.6; color: #3D4541;">{{st.text}}</span></span>
+</li>
+</sc-for>
+</ol>
+<p style="margin: 20px 0 0; padding: 14px 18px; background: #FCE8EF; border: 1px solid #EFB5C8; border-radius: 14px; font-size: 15px; line-height: 1.6; color: #2C322F;">אפשר לחזור להסבר הזה בכל רגע מהתפריט האישי, בלחיצה על "איך לומדים באפליקציה".</p>
+<button type="button" class="btn-primary" ref="{{setIntroButton}}" onClick="{{closeIntro}}" style="display: block; width: 100%; max-width: 420px; height: 56px; margin: 24px auto 0; border: 0; border-radius: 999px; background: #C7436A; color: #FFFFFF; font: inherit; font-size: 17px; font-weight: 600; cursor: pointer;">{{introButton}}</button>
+</div>
+</div>
+</sc-if>
 <nav class="mob-only" aria-label="ניווט ראשי" style="position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; background: #FFFFFF; border-top: 1px solid #E1E5E2; box-shadow: 0 -8px 24px rgba(18, 20, 19, 0.07); padding-bottom: env(safe-area-inset-bottom);">
-<ul style="list-style: none; max-width: 600px; margin: 0 auto; padding: 0 6px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr));">
+<ul style="list-style: none; max-width: 600px; margin: 0 auto; padding: 0 6px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));">
 <li><button type="button" class="tab-btn" aria-current="{{navHome.current}}" onClick="{{navHome.go}}" style="width: 100%; height: 64px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 0; border: 0; background: transparent; color: {{navHome.tabColor}}; font: inherit; font-size: 12px; font-weight: {{navHome.weight}}; cursor: pointer;"><span class="tab-pill" style="width: 54px; height: 30px; display: grid; place-items: center; border-radius: 999px; background: {{navHome.tabBg}};"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7v8.5a1 1 0 0 1-1 1h-4.5V15h-5v5.5H5a1 1 0 0 1-1-1z"></path></svg></span>ראשי</button></li>
 <li><button type="button" class="tab-btn" aria-current="{{navPath.current}}" onClick="{{navPath.go}}" style="width: 100%; height: 64px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 0; border: 0; background: transparent; color: {{navPath.tabColor}}; font: inherit; font-size: 12px; font-weight: {{navPath.weight}}; cursor: pointer;"><span class="tab-pill" style="width: 54px; height: 30px; display: grid; place-items: center; border-radius: 999px; background: {{navPath.tabBg}};"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="18" r="2.5"></circle><circle cx="18" cy="6" r="2.5"></circle><path d="M8.5 18H15a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h6.5"></path></svg></span>הנתיב</button></li>
-<li><button type="button" class="tab-btn" aria-current="{{navChallenges.current}}" onClick="{{navChallenges.go}}" style="width: 100%; height: 64px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 0; border: 0; background: transparent; color: {{navChallenges.tabColor}}; font: inherit; font-size: 12px; font-weight: {{navChallenges.weight}}; cursor: pointer;"><span class="tab-pill" style="width: 54px; height: 30px; display: grid; place-items: center; border-radius: 999px; background: {{navChallenges.tabBg}};"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4M5 4h12l-2.5 4.5L17 13H5"></path></svg></span>אתגרים</button></li>
-<li><button type="button" class="tab-btn" aria-current="{{navFlights.current}}" onClick="{{navFlights.go}}" style="width: 100%; height: 64px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 0; border: 0; background: transparent; color: {{navFlights.tabColor}}; font: inherit; font-size: 12px; font-weight: {{navFlights.weight}}; cursor: pointer;"><span class="tab-pill" style="width: 54px; height: 30px; display: grid; place-items: center; border-radius: 999px; background: {{navFlights.tabBg}};"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6.5" cy="6.5" r="2.8"></circle><circle cx="17.5" cy="6.5" r="2.8"></circle><circle cx="6.5" cy="17.5" r="2.8"></circle><circle cx="17.5" cy="17.5" r="2.8"></circle><path d="M8.6 8.6l6.8 6.8M15.4 8.6l-6.8 6.8"></path></svg></span>טיסות</button></li>
 <li><button type="button" class="tab-btn" aria-current="{{navRewards.current}}" onClick="{{navRewards.go}}" style="width: 100%; height: 64px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 0; border: 0; background: transparent; color: {{navRewards.tabColor}}; font: inherit; font-size: 12px; font-weight: {{navRewards.weight}}; cursor: pointer;"><span class="tab-pill" style="width: 54px; height: 30px; display: grid; place-items: center; border-radius: 999px; background: {{navRewards.tabBg}};"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="9" width="17" height="11.5" rx="1.5"></rect><path d="M3 9h18M12 9v11.5M12 9c-1.6-3.6-6.2-4.1-6.2-1.5S10 9 12 9zM12 9c1.6-3.6 6.2-4.1 6.2-1.5S14 9 12 9z"></path></svg></span>פרסים</button></li>
 </ul>
 </nav>
@@ -1208,7 +1224,7 @@ class Component extends DCLogic {
     return {
       stage: { name: 'שלבים', color: '#2A9171', desc: 'מיומנויות שעברתם ובונוסים על סיום רמה' },
       habit: { name: 'התמדה', color: '#76DEB8', desc: 'כניסות, רצף ימים וזמן למידה באתר' },
-      bonus: { name: 'בונוסים', color: '#C7436A', desc: 'ניסיון ראשון, סרטוני הדגמה, משימות היום ואתגרים' },
+      bonus: { name: 'בונוסים', color: '#C7436A', desc: 'ניסיון ראשון, סרטוני הדגמה ומשימות היום' },
       spent: { name: 'מימושים', color: '#545D58', desc: 'פרסים שמימשתם' }
     };
   }
@@ -2069,6 +2085,42 @@ class Component extends DCLogic {
       if (!r.ok) { this.setDraft({ uploading: false, error: r.error, uploadName: '' }); return; }
       this.setDraft({ uploading: false, pct: 100, uploaded: r.url, error: '' });
     });
+  }
+
+  // The first time a student signs in, the app explains how learning works; reading it is recorded on the server.
+  introNeeded(s) {
+    const A = window.Academy;
+    if (s.introShow) return true;
+    return !!(A && A.on && A.me.role === 'student' && A.data.progress && !A.data.progress.introSeen && !s.introDone);
+  }
+
+  closeIntro() {
+    const A = window.Academy;
+    const first = !!(A && A.on && A.data.progress && !A.data.progress.introSeen);
+    if (first) {
+      A.data.progress.introSeen = true;
+      A.request('POST', '/api/intro-seen', {});
+    }
+    this.setState({ introDone: true, introShow: false, meOpen: false, bellOpen: false }, () => { if (first) this.go('home', null, true); });
+  }
+
+  introSteps() {
+    const r = this.rules();
+    const levels = this.levels();
+    const coins = [];
+    if (r.login) coins.push('כניסה יומית (' + this.sg(r.login) + ')');
+    if (r.streak3 || r.streak7) coins.push('רצף ימים');
+    if (r.timePoints) coins.push('זמן תרגול באפליקציה');
+    if (r.video) coins.push('צפייה בסרטוני הדגמה');
+    if (r.quests) coins.push('השלמת משימות היום');
+    return [
+      { n: '1', title: 'הנתיב שלכם', text: 'בלשונית "הנתיב" מחכות לכם ' + levels.length + ' רמות, ובכל רמה כמה מיומנויות. מתחילים מהרמה הראשונה, והרמה הבאה נפתחת כשמסיימים את כל המיומנויות שלפניה.' },
+      { n: '2', title: 'לומדים מיומנות', text: 'בכל מיומנות יש הסבר, סרטון הדגמה של ביצוע נכון, ו"איך עוברים": בדיוק מה המדריך יבדוק. צפו בסרטון, ואז צאו לתרגל.' },
+      { n: '3', title: 'מצלמים ושולחים', text: 'כשאתם מוכנים, צלמו את הטיסה שלכם. בעמוד המיומנות לוחצים "העלאת סרטון הטיסה" (או מדביקים קישור ל־YouTube), ושולחים לבדיקה.' },
+      { n: '4', title: 'המדריך בודק', text: 'המדריך צופה בטיסה ומאשר אותה, או מחזיר עם הערה. אם הוחזרה, קראו את ההערה, תרגלו שוב ושלחו טיסה חדשה. ההודעות מגיעות לפעמון למעלה.' },
+      { n: '5', title: 'צוברים מטבעות ועולים בדרגה', text: 'כל מיומנות שמאושרת מוסיפה מטבעות, ומעבר בניסיון הראשון ובסיום רמה מוסיפים עוד.' + (coins.length ? ' מטבעות מקבלים גם על ' + coins.join(', ') + '.' : '') + ' ככל שצוברים, עולים בדרגה.' },
+      { n: '6', title: 'מממשים פרסים', text: 'בלשונית "פרסים" אפשר להחליף מטבעות בפרסים. המימוש מוריד מהיתרה, והדרגה שלכם נשארת.' }
+    ];
   }
 
   challengeById(id) {
@@ -3044,7 +3096,7 @@ class Component extends DCLogic {
     if (r.first > 0) bonus.push({ id: 'gb1', points: '+' + r.first, title: 'מעבר בניסיון הראשון', desc: 'כשהטיסה הראשונה שהגשתם במיומנות מאושרת.', status: firsts ? 'קיבלתם ' + (firsts === 1 ? 'פעם אחת' : firsts + ' פעמים') : 'עוד לא קיבלתם', on: firsts > 0 });
     if (r.video > 0) bonus.push({ id: 'gb2', points: '+' + r.video, title: 'צפייה בסרטון ההדגמה', desc: 'כשצופים בסרטון ההדגמה של מיומנות עד הסוף. פעם אחת לכל מיומנות.', status: videos ? 'צפיתם ב־' + videos + ' סרטונים' : 'עוד לא צפיתם', on: videos > 0 });
     if (r.quests > 0) bonus.push({ id: 'gb3', points: '+' + r.quests, title: 'משימות היום', desc: 'נכנסים לאתר, צופים בסרטון הדגמה ומגישים טיסה, הכול באותו יום.', status: q.paid ? 'היום: קיבלתם' : 'היום: ' + q.done + ' מתוך 3', on: q.paid });
-    if (challenge) bonus.push({ id: 'gb4', points: '+' + challenge.points, title: 'אתגרים', desc: 'כל אתגר מציין כמה מטבעות הוא שווה. למשל: ' + challenge.title + '.', status: challenge.level <= current ? 'יש אתגר פתוח' : 'האתגר הבא נפתח ברמה ' + challenge.level, on: challenge.level <= current });
+    if (challenge && false) bonus.push({ id: 'gb4', points: '+' + challenge.points, title: 'אתגרים', desc: 'כל אתגר מציין כמה מטבעות הוא שווה. למשל: ' + challenge.title + '.', status: challenge.level <= current ? 'יש אתגר פתוח' : 'האתגר הבא נפתח ברמה ' + challenge.level, on: challenge.level <= current });
     return {
       guideLevels: this.levels().map((lv) => {
         const list = this.skills().filter((k) => k.level === lv.n);
@@ -3378,6 +3430,13 @@ class Component extends DCLogic {
       fileName: s.draft.fileName || '',
       fileNameColor: '#1E2320',
       fileBorder: s.draft.error ? '#D64545' : '#B9C2BD',
+      introOpen: this.introNeeded(s),
+      introSteps: this.introSteps(),
+      introHello: 'שלום ' + (((window.Academy && window.Academy.me) || {}).name || '') + ', ברוכים הבאים ל־88ACADEMY',
+      introButton: window.Academy && window.Academy.on && window.Academy.data.progress && !window.Academy.data.progress.introSeen ? 'קראתי, בואו נתחיל' : 'הבנתי, חזרה',
+      closeIntro: () => this.closeIntro(),
+      openIntro: () => this.setState({ introShow: true, meOpen: false, bellOpen: false }),
+      setIntroButton: this.ref('introButtonEl'),
       canUploadFlight: this.canUpload(),
       flightUploading: !!s.draft.uploading,
       flightPct: String(s.draft.pct || 0),
