@@ -19,6 +19,8 @@ const MEDIA_DIR = path.join(DATA_DIR, 'media');
 const MAX_UPLOAD = (Number(process.env.MAX_UPLOAD_MB) || 500) * 1024 * 1024;
 const MAX_FLIGHT = (Number(process.env.MAX_FLIGHT_MB) || 200) * 1024 * 1024;
 const VIDEO_TYPES = { '.mp4': 'video/mp4', '.m4v': 'video/mp4', '.mov': 'video/quicktime', '.webm': 'video/webm' };
+const IMAGE_TYPES = { '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp', '.gif': 'image/gif' };
+const MAX_IMAGE = 10 * 1024 * 1024;
 const COOKIE = 'aca_sid';
 const SESSION_DAYS = 30;
 
@@ -493,9 +495,10 @@ const ADMIN_ACTIONS = {
     db.rewards = b.rewards.map((p) => ({
       id: String(p.id || M.newId('r')).slice(0, 40), title: String(p.title || '').trim().slice(0, 120), desc: String(p.desc || '').slice(0, 1000),
       cost: Math.max(1, Math.trunc(Number(p.cost)) || 1), stock: Math.max(0, Math.trunc(Number(p.stock)) || 0), icon: String(p.icon || 'gift').slice(0, 20),
-      groups: p.groups === 'all' || !Array.isArray(p.groups) ? 'all' : p.groups.map(String), active: p.active !== false, link: String(p.link || '').slice(0, 500), image: /^https?:\/\/\S+$/i.test(String(p.image || '').trim()) ? String(p.image).trim().slice(0, 500) : ''
+      groups: p.groups === 'all' || !Array.isArray(p.groups) ? 'all' : p.groups.map(String), active: p.active !== false, link: String(p.link || '').slice(0, 500), image: /^https?:\/\/\S+$/i.test(String(p.image || '').trim()) || /^\/media\/[A-Za-z0-9_-]+\.(jpg|jpeg|png|webp|gif)$/.test(String(p.image || '').trim()) ? String(p.image).trim().slice(0, 500) : ''
     })).filter((p) => p.title);
     log(me, 'settings', 'עדכן את הפרסים');
+    cleanMedia();
     return { ok: true };
   },
   saveCurriculum(me, b) {
@@ -560,12 +563,14 @@ function upload(req, res, user, opts) {
   const max = opts.max || MAX_UPLOAD;
   const name = decodeURIComponent(String(req.headers['x-file-name'] || 'video.mp4'));
   const ext = path.extname(name).toLowerCase();
-  if (!VIDEO_TYPES[ext]) return json(res, 400, { error: 'אפשר להעלות סרטונים מסוג MP4, MOV, M4V או WEBM.' });
+  if (opts.image) {
+    if (!IMAGE_TYPES[ext]) return json(res, 400, { error: 'אפשר להעלות תמונות מסוג JPG, PNG, WEBP או GIF.' });
+  } else if (!VIDEO_TYPES[ext]) return json(res, 400, { error: 'אפשר להעלות סרטונים מסוג MP4, MOV, M4V או WEBM.' });
   const size = Number(req.headers['content-length']) || 0;
   if (!size) return json(res, 411, { error: 'הקובץ ריק.' });
   if (size > max) return json(res, 413, { error: 'הקובץ גדול מדי. אפשר עד ' + Math.round(max / 1048576) + ' מגה־בייט. כדאי לקצר את הסרטון, או להעלות אותו ל־YouTube ולהדביק קישור.' });
   if (size > freeBytes() - 50 * 1048576) return json(res, 507, { error: opts.owner ? 'אין כרגע מקום לסרטונים באתר. העלו את הסרטון ל־YouTube או ל־Google Drive והדביקו קישור, ועדכנו את המדריך.' : 'אין מספיק מקום בדיסק. מגדילים את ה־Disk ב־Render (Disk ← Size), או מעלים את הסרטון ל־YouTube ומדביקים קישור.' });
-  const id = (opts.owner ? 'f' : 'v') + Date.now().toString(36) + crypto.randomBytes(4).toString('hex');
+  const id = (opts.owner ? 'f' : opts.image ? 'i' : 'v') + Date.now().toString(36) + crypto.randomBytes(4).toString('hex');
   const tmp = path.join(MEDIA_DIR, id + '.part');
   const out = fs.createWriteStream(tmp);
   let got = 0;
@@ -591,7 +596,7 @@ function upload(req, res, user, opts) {
     fs.rename(tmp, path.join(MEDIA_DIR, final), (err) => {
       if (err) return fail(500, 'שמירת הקובץ נכשלה.');
       if (opts.owner) db.uploads[final] = { uid: user.id, at: Date.now(), size: got };
-      else log(user, 'settings', 'העלה סרטון: ' + name.slice(0, 80));
+      else log(user, 'settings', (opts.image ? 'העלה תמונה: ' : 'העלה סרטון: ') + name.slice(0, 80));
       save();
       json(res, 200, { url: '/media/' + final, name: name.slice(0, 120), size: got });
     });
@@ -600,13 +605,13 @@ function upload(req, res, user, opts) {
 
 // Plays a video, with byte ranges so the player can jump around.
 function sendMedia(req, res, name, user) {
-  if (!/^[A-Za-z0-9_-]+\.(mp4|m4v|mov|webm)$/.test(name)) return send(res, 404, 'Not found');
+  if (!/^[A-Za-z0-9_-]+\.(mp4|m4v|mov|webm|jpg|jpeg|png|webp|gif)$/.test(name)) return send(res, 404, 'Not found');
   const up = db.uploads[name];
   if (up && user.role !== 'admin' && up.uid !== user.id) return send(res, 403, 'Forbidden');
   const full = path.join(MEDIA_DIR, name);
   let st;
   try { st = fs.statSync(full); } catch (e) { return send(res, 404, 'Not found'); }
-  const type = VIDEO_TYPES[path.extname(name).toLowerCase()];
+  const type = VIDEO_TYPES[path.extname(name).toLowerCase()] || IMAGE_TYPES[path.extname(name).toLowerCase()];
   const range = /^bytes=(\d*)-(\d*)$/.exec(req.headers.range || '');
   const head = { 'Content-Type': type, 'Accept-Ranges': 'bytes', 'Cache-Control': 'private, max-age=86400', 'X-Content-Type-Options': 'nosniff' };
   if (range && (range[1] || range[2])) {
@@ -627,6 +632,7 @@ function cleanMedia() {
   const used = new Set();
   const cur = db.curriculum || { skills: [], challenges: [] };
   cur.skills.concat(cur.challenges).forEach((x) => { if (x.video && x.video.startsWith('/media/')) used.add(x.video.slice(7)); });
+  (db.rewards || []).forEach((r) => { if (r.image && r.image.startsWith('/media/')) used.add(r.image.slice(7)); });
   fs.readdir(MEDIA_DIR, (err, files) => {
     if (err) return;
     files.forEach((f) => {
@@ -739,6 +745,10 @@ async function handle(req, res) {
     if (p === '/api/upload/flight' && req.method === 'POST') {
       if (user.role !== 'student') return json(res, 403, { error: 'רק סטודנטים.' });
       return upload(req, res, user, { max: MAX_FLIGHT, owner: user.id });
+    }
+    if (p === '/api/admin/upload-image' && req.method === 'POST') {
+      if (user.role !== 'admin') return json(res, 403, { error: 'רק מנהלים.' });
+      return upload(req, res, user, { image: true, max: MAX_IMAGE });
     }
     if (p === '/api/admin/upload' && req.method === 'POST') {
       if (user.role !== 'admin') return json(res, 403, { error: 'רק מנהלים.' });
