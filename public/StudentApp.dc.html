@@ -60,6 +60,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 @keyframes badge-in{from{opacity:0;transform:scale(.4) rotate(-20deg)}to{opacity:1;transform:none}}
 .fx-coin{position:absolute;left:0;top:0;width:26px;height:26px;opacity:0;pointer-events:none;will-change:transform,opacity}
 .fx-tag{position:absolute;left:0;top:0;opacity:0;pointer-events:none;white-space:nowrap}
+.learn-word{}
+@media (max-width: 640px){.learn-word{display:none !important}}
+@media (max-width: 480px){header > div{gap:6px !important}.learn-chip{padding:0 8px !important;height:36px !important}.learn-chip svg{display:none !important}.learn-chip span{font-size:13px !important}}
 .vh{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 @media (max-width: 1099px){.desk-only{display:none !important}.main-pad{padding-bottom:calc(112px + env(safe-area-inset-bottom)) !important}}
 @media (min-width: 1100px){.mob-only{display:none !important}}
@@ -86,6 +89,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 </ul>
 </nav>
 <span class="mob-only" aria-hidden="true" style="flex: 1 1 auto;"></span>
+<span class="learn-chip" title="זמן למידה היום" style="flex: none; display: inline-flex; align-items: center; gap: 6px; height: 40px; padding: 0 12px; box-sizing: border-box; border-radius: 999px; background: #E9FAF3; color: #17694F;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none;"><circle cx="12" cy="12" r="9"></circle><path d="M12 7.5V12l3 2"></path></svg><span class="learn-word" aria-hidden="true" style="font-size: 13px; color: #2C6B55;">היום</span><span aria-hidden="true" style="font-family: 'Unbounded', 'Rubik', sans-serif; font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap;">{{learnTime}}</span><span class="vh">{{learnTimeLabel}}</span></span>
 <span ref="{{setStreakChip}}" style="flex: none; display: inline-flex; align-items: center; gap: 6px; height: 40px; padding: 0 12px; box-sizing: border-box; border-radius: 999px; background: #FCE8EF; color: #A8335A;"><svg class="flame" width="16" height="19" viewBox="0 0 24 28" aria-hidden="true" style="flex: none;"><path d="M12 1.5c1.2 4.2-1.6 6.4-1.6 9.3 0 1.6 1.1 2.8 2.6 2.8 1.8 0 2.7-1.6 2.5-3.6 2.5 1.8 4 4.7 4 7.4A7.5 7.5 0 0 1 12 25a7.5 7.5 0 0 1-7.5-7.6c0-5.8 5.2-9.3 7.5-15.9z" fill="#C7436A"></path><path d="M12 13.5c.6 2.2-1 3.2-1 4.8a1.9 1.9 0 0 0 3.8.1c1.2 1 1.8 2.3 1.8 3.4A4.6 4.6 0 0 1 12 26a4.6 4.6 0 0 1-4.6-4.6c0-3.4 3.2-5 4.6-7.9z" fill="#FFB4C6"></path></svg><span dir="ltr" aria-hidden="true" style="font-family: 'Unbounded', 'Rubik', sans-serif; font-size: 15px; font-weight: 700;">{{streakDays}}</span><span class="vh">{{streakChipLabel}}</span></span>
 <button type="button" class="wallet" onClick="{{goPoints}}" aria-label="{{walletAria}}" aria-current="{{walletCurrent}}" style="flex: none; display: inline-flex; align-items: center; gap: 8px; height: 44px; padding-block: 0; padding-inline: 5px 14px; box-sizing: border-box; border: 0; border-radius: 999px; background: #121413; box-shadow: {{walletShadow}}; color: #FFFFFF; font: inherit; cursor: pointer;">
 <span ref="{{setWalletCoin}}" aria-hidden="true" style="flex: none; width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; background: {{walletRing}};"><svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true" style="flex: none; display: block;"><circle cx="12" cy="12.7" r="10.8" fill="#C98A12"></circle><circle cx="12" cy="11.4" r="10.4" fill="#F7C548"></circle><circle cx="12" cy="11.4" r="7.7" fill="none" stroke="#DDA024" stroke-width="1.1"></circle><g fill="none" stroke="#97650A" stroke-width="1.35"><circle cx="9.85" cy="9.25" r="2.05"></circle><circle cx="14.15" cy="9.25" r="2.05"></circle><circle cx="9.85" cy="13.55" r="2.05"></circle><circle cx="14.15" cy="13.55" r="2.05"></circle></g><path d="M5.5 8.6a7.3 7.3 0 0 1 4.4-3.7" fill="none" stroke="#FFF2C6" stroke-width="1.6" stroke-linecap="round"></path></svg></span>
@@ -387,11 +391,11 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 </sc-if>
 <sc-if value="{{exampleReal}}" hint-placeholder-val="{{ false }}">
 <div ref="{{setExampleBox}}" style="margin-top: 12px;">
-<sc-if value="{{exampleHasEmbed}}" hint-placeholder-val="{{ true }}"><div style="position: relative; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; border: 1px solid #E1E5E2; background: #111413;"><iframe referrerpolicy="strict-origin-when-cross-origin" src="{{exampleEmbed}}" title="{{exampleArtLabel}}" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen="" style="position: absolute; inset: 0; width: 100%; height: 100%; border: 0;"></iframe></div></sc-if>
+<sc-if value="{{exampleHasEmbed}}" hint-placeholder-val="{{ true }}"><div style="position: relative; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; border: 1px solid #E1E5E2; background: #111413;"><iframe data-yt-example="1" referrerpolicy="strict-origin-when-cross-origin" src="{{exampleEmbed}}" title="{{exampleArtLabel}}" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen="" style="position: absolute; inset: 0; width: 100%; height: 100%; border: 0;"></iframe></div></sc-if>
 <sc-if value="{{exampleIsFile}}" hint-placeholder-val="{{ false }}"><video src="{{exampleUrl}}" controls="" preload="metadata" playsinline="" onEnded="{{onExampleEnded}}" style="display: block; width: 100%; aspect-ratio: 16 / 9; border-radius: 12px; border: 1px solid #E1E5E2; background: #111413;"></video></sc-if>
 <sc-if value="{{exampleLinkOnly}}" hint-placeholder-val="{{ false }}"><a href="{{exampleUrl}}" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 18px; border-radius: 999px; background: #121413; color: #FFFFFF; text-decoration: none; font-size: 15px; font-weight: 600;">פתיחת הסרטון בחלון חדש</a></sc-if>
 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-top: 12px;">
-<sc-if value="{{exampleNotWatched}}" hint-placeholder-val="{{ true }}"><button type="button" class="ghost-dark" onClick="{{markWatched}}" style="display: inline-flex; align-items: center; gap: 8px; height: 42px; padding: 0 16px; border: 1.5px solid #121413; border-radius: 999px; background: #FFFFFF; color: #121413; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;">{{exampleWatchLabel}}</button></sc-if>
+<sc-if value="{{exampleNotWatched}}" hint-placeholder-val="{{ true }}"><button type="button" class="{{watchBtnClass}}" onClick="{{markWatched}}" aria-disabled="{{watchLocked}}" style="display: inline-flex; align-items: center; gap: 8px; height: 42px; padding: 0 16px; border: 1.5px solid {{watchBtnBorder}}; border-radius: 999px; background: {{watchBtnBg}}; color: {{watchBtnColor}}; font: inherit; font-size: 14px; font-weight: 600; cursor: {{watchBtnCursor}};"><sc-if value="{{watchLocked}}" hint-placeholder-val="{{ true }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 10V8a4 4 0 0 1 8 0v2" fill="none" stroke="currentColor" stroke-width="2.4"></path><rect x="5.5" y="10" width="13" height="10" rx="2.5"></rect></svg></sc-if>{{exampleWatchLabel}}</button><sc-if value="{{watchLocked}}" hint-placeholder-val="{{ true }}"><span style="font-size: 13px; color: #5E6762;">הכפתור ייפתח כשהסרטון יסתיים</span></sc-if></sc-if>
 <sc-if value="{{exampleWatched}}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; align-items: center; gap: 6px; font-size: 14px; color: #17694F;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>צפיתם בסרטון</span></sc-if>
 </div>
 </div>
@@ -1464,6 +1468,7 @@ class Component extends DCLogic {
     if (!this.state || !this.state.flights) this.setState(this.defaults());
     this.watchLeaving('StudentApp.dc.html');
     if (typeof window !== 'undefined' && window.setInterval) this.startClock();
+    this.watchYouTube();
     this.watchScoring();
     const s0 = this.st();
     if (s0.pendingLogin) this.later('login', () => this.claimLogin(), 700);
@@ -1485,6 +1490,7 @@ class Component extends DCLogic {
     clearTimeout(this._flashTimer);
     clearInterval(this._clock);
     this._clock = null;
+    if (this._ytOn) { window.removeEventListener('message', this._ytOn); this._ytOn = null; }
     const timers = this._timers || {};
     Object.keys(timers).forEach((k) => clearTimeout(timers[k]));
     this._timers = {};
@@ -1956,6 +1962,13 @@ class Component extends DCLogic {
     });
   }
 
+  // Today's learning time for the top bar: 0:07 under an hour, 1:05 (hours:minutes) above it. Counted in minutes.
+  learnClock(sec) {
+    const m = Math.floor((Number(sec) || 0) / 60);
+    const h = Math.floor(m / 60);
+    return h > 0 ? h + ':' + String(m % 60).padStart(2, '0') + ' ש׳' : m + ' דק׳';
+  }
+
   // Learning time: coins for every few minutes the app is in front of the student, a few times a day (as set).
   startClock() {
     if (this._clock || typeof window === 'undefined' || !window.setInterval) return;
@@ -1963,6 +1976,7 @@ class Component extends DCLogic {
   }
 
   tick() {
+    this.helloYouTube();
     if (this._hidden) return;
     try { if (typeof document !== 'undefined' && document.visibilityState === 'hidden') return; } catch (err) {}
     const s = this.st();
@@ -1974,6 +1988,64 @@ class Component extends DCLogic {
     } else {
       this.setState({ timeToday: t });
     }
+  }
+
+  // The demo-video coins open only once the video has really played to its end.
+  // Uploaded videos and YouTube report their end; other links (Drive, outside sites) cannot, so their button stays open.
+  exampleLocked(skill) {
+    if (!skill || !skill.video || !(window.Academy && window.Academy.on)) return false;
+    const A = window.Academy;
+    const yt = /youtube\.com\/embed\//.test(A.embedUrl(skill.video) || '');
+    if (!A.isFile(skill.video) && !yt) return false;
+    if (yt && this.st().ytQuiet) return false; // the YouTube player never answered, so its end cannot be known
+    return !(this.st().vidEnded || {})[skill.id];
+  }
+
+  markEnded(skillId) {
+    if (!skillId) return;
+    const ended = Object.assign({}, this.st().vidEnded || {});
+    if (ended[skillId]) return;
+    ended[skillId] = true;
+    this.setState({ vidEnded: ended });
+  }
+
+  // YouTube tells the page when a video ends only when asked (enablejsapi) and once the page says it is listening.
+  trackableEmbed(url) {
+    if (!/youtube\.com\/embed\//.test(url || '')) return url;
+    let origin = '';
+    try { origin = window.location.origin; } catch (err) {}
+    return url + (url.indexOf('?') === -1 ? '?' : '&') + 'enablejsapi=1' + (origin ? '&origin=' + encodeURIComponent(origin) : '');
+  }
+
+  watchYouTube() {
+    if (this._ytOn || typeof window === 'undefined' || !window.addEventListener) return;
+    this._ytOn = (ev) => {
+      if (!/^https:\/\/www\.youtube(-nocookie)?\.com$/.test(ev.origin || '')) return;
+      let d = ev.data;
+      try { if (typeof d === 'string') d = JSON.parse(d); } catch (err) { return; }
+      if (!d) return;
+      this._ytHeard = true;
+      const ended = (d.event === 'onStateChange' && d.info === 0) || (d.event === 'infoDelivery' && d.info && d.info.playerState === 0);
+      if (!ended) return;
+      const frame = document.querySelector('iframe[data-yt-example]');
+      if (frame && frame.contentWindow !== ev.source) return;
+      this.markEnded(this.where(this.st()).skillId);
+    };
+    window.addEventListener('message', this._ytOn);
+  }
+
+  helloYouTube() {
+    try {
+      const frame = document.querySelector('iframe[data-yt-example]');
+      if (!frame || !frame.contentWindow) return;
+      if (frame._said && frame._said === frame.src) return;
+      if (!frame._tries || frame._tries.src !== frame.src) frame._tries = { src: frame.src, n: 0 };
+      frame._tries.n++;
+      frame.contentWindow.postMessage(JSON.stringify({ event: 'listening', id: 'ex', channel: 'widget' }), '*');
+      frame.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'addEventListener', args: ['onStateChange'], id: 'ex', channel: 'widget' }), '*');
+      if (frame._tries.n > 8 && this._ytHeard) frame._said = frame.src;
+      if (frame._tries.n === 20 && !this._ytHeard && !this.st().ytQuiet) this.setState({ ytQuiet: true });
+    } catch (err) {}
   }
 
   // A demo video watched to the end: coins the first time for that skill, and today's video quest.
@@ -2993,6 +3065,8 @@ class Component extends DCLogic {
       walletAria: 'הארנק שלי: ' + bal + ' מטבעות. לעמוד המטבעות שלי',
       // the ring around the wallet's coin fills toward the next learning-time coins
       walletRing: r.timePoints > 0 && timeGot < r.timeMax ? 'conic-gradient(#76DEB8 ' + Math.round(intoStep / r.timeStep * 360) + 'deg, #3A413D 0deg)' : '#2C322F',
+      learnTime: this.learnClock(s.timeToday || 0),
+      learnTimeLabel: 'זמן למידה היום: ' + Math.floor((s.timeToday || 0) / 60) + ' דקות',
       streakDays: String(streak),
       streakChipLabel: streak === 1 ? 'יום אחד ברצף' : streak + ' ימים ברצף',
       questsCount: q.done + '/3',
@@ -3450,16 +3524,22 @@ class Component extends DCLogic {
       exampleFake: !(window.Academy && window.Academy.on),
       exampleReal: !!(window.Academy && window.Academy.on) && !!skill.video,
       exampleNone: !!(window.Academy && window.Academy.on) && !skill.video,
-      exampleEmbed: (window.Academy && window.Academy.on && window.Academy.embedUrl(skill.video)) || '',
+      exampleEmbed: this.trackableEmbed((window.Academy && window.Academy.on && window.Academy.embedUrl(skill.video)) || ''),
       exampleHasEmbed: !!(window.Academy && window.Academy.on && window.Academy.embedUrl(skill.video)),
       exampleIsFile: !!(window.Academy && window.Academy.on && window.Academy.isFile(skill.video)),
       exampleLinkOnly: !!(window.Academy && window.Academy.on && skill.video && !window.Academy.isFile(skill.video) && !window.Academy.embedUrl(skill.video)),
       exampleUrl: skill.video || '#',
       exampleWatched: s.ledger.some((e) => e.kind === 'video' && e.skill === skill.id),
       exampleNotWatched: !s.ledger.some((e) => e.kind === 'video' && e.skill === skill.id),
-      exampleWatchLabel: this.rules().video > 0 ? 'צפיתי עד הסוף · ' + this.sg(this.rules().video) + ' מטבעות' : 'צפיתי עד הסוף',
-      markWatched: () => this.videoFinished('example'),
-      onExampleEnded: () => { if (!s.ledger.some((e) => e.kind === 'video' && e.skill === skill.id)) this.videoFinished('example'); },
+      exampleWatchLabel: this.exampleLocked(skill) ? (this.rules().video > 0 ? 'צפו עד הסוף כדי לאסוף ' + this.sg(this.rules().video) + ' מטבעות' : 'צפו בסרטון עד הסוף') : (this.rules().video > 0 ? 'צפיתי עד הסוף · איסוף ' + this.sg(this.rules().video) + ' מטבעות' : 'צפיתי עד הסוף'),
+      watchLocked: this.exampleLocked(skill),
+      watchBtnClass: this.exampleLocked(skill) ? '' : 'ghost-dark',
+      watchBtnBg: this.exampleLocked(skill) ? '#EEF1EF' : '#76DEB8',
+      watchBtnColor: this.exampleLocked(skill) ? '#7A837E' : '#121413',
+      watchBtnBorder: this.exampleLocked(skill) ? '#D3D9D5' : '#121413',
+      watchBtnCursor: this.exampleLocked(skill) ? 'not-allowed' : 'pointer',
+      markWatched: () => { if (this.exampleLocked(skill)) { this.say('צפו בסרטון עד הסוף, ואז הכפתור ייפתח.'); return; } this.videoFinished('example'); },
+      onExampleEnded: () => this.markEnded(skill.id),
       muted: !!s.muted,
       soundOn: !s.muted,
       muteLabel: s.muted ? 'ביטול השתקה' : 'השתקה',
