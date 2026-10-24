@@ -250,7 +250,7 @@
   A.embedUrl = function (u) {
     var t = String(u || '').trim();
     var m = t.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/);
-    if (m) return 'https://www.youtube-nocookie.com/embed/' + m[1] + '?rel=0';
+    if (m) return 'https://www.youtube.com/embed/' + m[1] + '?rel=0';
     m = t.match(/drive\.google\.com\/(?:file\/d\/|open\?id=)([A-Za-z0-9_-]{10,})/);
     if (m) return 'https://drive.google.com/file/d/' + m[1] + '/preview';
     return '';
