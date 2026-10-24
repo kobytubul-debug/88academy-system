@@ -317,6 +317,7 @@ const ADMIN_ACTIONS = {
   updateUser(me, b) {
     const u = findUser(b.id);
     if (!u) return 'המשתמש לא נמצא.';
+    if (u.envAdmin && !me.envAdmin) return 'רק המנהל הראשי יכול לערוך את החשבון שלו.';
     const username = cleanUsername(b.username != null ? b.username : u.username);
     if (!validUsername(username)) return 'שם משתמש: רק אותיות באנגלית, ספרות, נקודה, מקף או קו תחתון.';
     if (db.users.some((x) => x.id !== u.id && x.username.toLowerCase() === username.toLowerCase())) return 'שם המשתמש @' + username + ' כבר תפוס.';
@@ -340,6 +341,20 @@ const ADMIN_ACTIONS = {
     if (role === 'student') progressOf(u.id);
     log(me, 'user', 'עדכן את הפרטים של ' + name, { target: u.id });
     return { id: u.id };
+  },
+  // Clearing history: only the main admin (the one set in Render) may do it. Takes the ids to remove, or all: true.
+  clearActivity(me, b) {
+    if (!me.envAdmin) return 'רק המנהל הראשי יכול למחוק היסטוריה.';
+    const before = db.activity.length;
+    if (b.all === true) db.activity = [];
+    else {
+      const ids = new Set(Array.isArray(b.ids) ? b.ids.map(String) : []);
+      if (!ids.size) return 'לא נבחרו אירועים למחיקה.';
+      db.activity = db.activity.filter((e) => !ids.has(String(e.id)));
+    }
+    const gone = before - db.activity.length;
+    log(me, 'user', b.all === true ? 'מחק את כל ההיסטוריה (' + gone + ' אירועים)' : gone === 1 ? 'מחק אירוע אחד מההיסטוריה' : 'מחק ' + gone + ' אירועים מההיסטוריה');
+    return { removed: gone };
   },
   deleteUser(me, b) {
     const u = findUser(b.id);
