@@ -40,7 +40,6 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <li><a href="Curriculum.dc.html" aria-current="page" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid #9FDDC4; background: #D3F4E6; color: #121413; font-weight: 600; text-decoration: none; font-size: 15px; white-space: nowrap;">תוכנית לימודים</a></li>
 <li><a href="Rewards.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">פרסים</a></li>
 <li><a href="PointsSettings.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">ניקוד</a></li>
-<li><a href="AIChecks.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">בדיקת AI</a></li>
 <li><a href="Activity.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">פעילות</a></li>
 </ul>
 </nav>
@@ -64,8 +63,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <label for="ch-desc" style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #3D4541;">מה צריך לעשות</label>
 <textarea id="ch-desc" rows="3" maxlength="1000" value="{{desc}}" onInput="{{onDesc}}" style="display: block; width: 100%; box-sizing: border-box; min-height: 96px; padding: 12px 14px; background: #FFFFFF; border: 1px solid #D3D9D5; border-radius: 10px; color: #1E2320; font: inherit; font-size: 15px; line-height: 1.5; resize: vertical;"></textarea>
 </div>
+<label style="display: flex; align-items: flex-start; gap: 10px; padding: 14px 16px; background: #FFF8E6; border: 1px solid #EFD48C; border-radius: 12px; cursor: pointer;"><input type="checkbox" checked="{{final}}" onChange="{{toggleFinal}}" style="width: 20px; height: 20px; margin: 2px 0 0; accent-color: #B23A5E; cursor: pointer;"><span><span style="display: block; font-size: 15px; font-weight: 600; color: #121413;">מבחן מסכם</span><span style="display: block; margin-top: 2px; font-size: 14px; line-height: 1.55; color: #545D58;">האתגר מופיע לסטודנט כגביע בסוף "הנתיב שלי", ונפתח רק אחרי שהוא מסיים את כל המיומנויות. רק אתגר אחד יכול להיות המבחן המסכם.</span></span></label>
 <div style="display: flex; flex-wrap: wrap; gap: 22px 16px;">
-<div style="flex: 2 1 260px; min-width: 0;">
+<sc-if value="{{notFinal}}" hint-placeholder-val="{{ true }}"><div style="flex: 2 1 260px; min-width: 0;">
 <label for="ch-level" style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #3D4541;">נפתח מרמה</label>
 <div style="position: relative;">
 <select id="ch-level" value="{{level}}" onChange="{{onLevel}}" style="appearance: none; -webkit-appearance: none; width: 100%; box-sizing: border-box; height: 44px; padding: 0 14px 0 40px; background: #FFFFFF; border: 1px solid #D3D9D5; border-radius: 10px; color: #1E2320; font: inherit; font-size: 15px; cursor: pointer;">
@@ -73,7 +73,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 </select>
 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5E6762" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); pointer-events: none;"><path d="M6 9l6 6 6-6"></path></svg>
 </div>
-</div>
+</div></sc-if>
 <div style="flex: 1 1 160px; min-width: 0;">
 <label for="ch-points" style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #3D4541;">נקודות</label>
 <input id="ch-points" type="text" inputmode="numeric" dir="ltr" value="{{points}}" onInput="{{onPoints}}" style="width: 100%; box-sizing: border-box; height: 44px; padding: 0 14px; background: #FFFFFF; border: 1px solid #D3D9D5; border-radius: 10px; color: #1E2320; font: inherit; font-size: 15px; text-align: right;">
@@ -150,7 +150,7 @@ class Component extends DCLogic {
     return {
       ready: true, id: c ? c.id : '', title: c ? c.title : '', desc: c ? c.desc || '' : '', level: String(c ? c.level : cur.levels[0].n),
       points: String(c ? c.points : 50), endDate: c && c.ends ? c.ends.slice(0, 10) : '', endTime: c && c.ends && c.ends.length > 10 ? c.ends.slice(11, 16) : '',
-      video: c ? c.video || '' : '', active: c ? c.active !== false : true, error: '', busy: false, confirming: false, uploading: false, pct: 0, uploadError: ''
+      video: c ? c.video || '' : '', active: c ? c.active !== false : true, final: !!(c && c.final), error: '', busy: false, confirming: false, uploading: false, pct: 0, uploadError: ''
     };
   }
 
@@ -189,7 +189,8 @@ class Component extends DCLogic {
     const cur = JSON.parse(JSON.stringify(this.cur()));
     let c = s.id ? cur.challenges.find((x) => x.id === s.id) : null;
     if (!c) { c = { id: 'c' + Date.now().toString(36) }; cur.challenges.push(c); }
-    Object.assign(c, { title: title, desc: s.desc.trim(), level: Number(s.level), points: pts, ends: s.endDate ? s.endDate + (s.endTime ? ' ' + s.endTime : '') : '', video: video, active: !!s.active });
+    Object.assign(c, { title: title, desc: s.desc.trim(), level: Number(s.level), points: pts, ends: s.endDate ? s.endDate + (s.endTime ? ' ' + s.endTime : '') : '', video: video, active: !!s.active, final: !!s.final });
+    if (s.final) cur.challenges.forEach((x) => { if (x !== c) x.final = false; });
     this.setState(Object.assign({}, s, { busy: true }));
     A.call('saveCurriculum', { curriculum: cur, note: (s.id ? 'עדכן את האתגר ' : 'הוסיף את האתגר ') + title }).then((r) => {
       if (!r.ok) { this.setState(Object.assign({}, this.st(), { busy: false, error: r.error })); return; }
@@ -238,6 +239,9 @@ class Component extends DCLogic {
       hasUploadError: !!s.uploadError,
       uploadError: s.uploadError || '',
       toggleActive: () => this.set({ active: !s.active }),
+      final: !!s.final,
+      notFinal: !s.final,
+      toggleFinal: () => this.set({ final: !s.final }),
       hasError: !!s.error, error: s.error,
       busy: !!s.busy || !!s.uploading, saveLabel: s.busy ? 'שומר…' : s.uploading ? 'מעלה סרטון…' : 'שמירה', save: () => this.save(),
       canDelete: !!s.id,
