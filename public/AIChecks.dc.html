@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<title>בדיקת AI</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Karantina:wght@400;700&amp;family=Rubik:wght@400;500;600;700&amp;family=Unbounded:wght@500;700;800&amp;display=swap">
+<style>
+body{margin:0;background:#F5F6F4}
+a{color:#17694F}a:hover{color:#0E4F3A}
+.pill-hover:hover{background:#EEF1EF !important;color:#121413 !important}
+.btn-ghost:hover{background:#EEF1EF !important;border-color:#B9C2BD !important}
+.btn-amber:hover{background:#FCE8EF !important;border-color:#D98AA5 !important}
+.btn-primary:hover{background:#B13A5D !important}
+.tr-hover:hover{background:#FFFFFF}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid #C7436A;outline-offset:2px}
+</style>
+</helmet>
+<div dir="rtl" lang="he" style="min-height: 100vh; box-sizing: border-box; background: #F5F6F4; color: #1E2320; font-family: 'Rubik', system-ui, 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.5; color-scheme: light;">
+<header style="border-bottom: 5px solid #BDEFDB; background: #FFFFFF;">
+<div style="max-width: 1280px; margin: 0 auto; padding: 10px clamp(16px, 4vw, 32px); box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 28px;">
+<a href="Main.dc.html" aria-label="88ACADEMY — לעמוד הסקירה" style="display: flex; align-items: center; gap: 10px; text-decoration: none; white-space: nowrap;">
+<svg width="32.6" height="34" viewBox="0 0 100 104.15" aria-hidden="true" style="flex: none; display: block;"><path d="M74.4 104L71.1 104 67.8 103.6 66.6 103.3 64.3 102.7 61.5 101.5 59 100.2 56.6 98.7 55.4 97.7 53.7 96.2 52.2 94.5 52.1 94.2 54 90.9 55.5 87.7 55.6 87.6 55.8 87.6 58.1 90.4 59 91.3 60.1 92.3 61.5 93.3 62.7 94 65.1 95.3 67.9 96.2 70.9 96.7 73.6 96.8 76.6 96.4 78.1 96.1 80.4 95.3 82.2 94.4 84.2 93.1 86 91.7 87.4 90.4 88.9 88.6 89.7 87.4 90.8 85.4 91.7 83.2 92.3 81.6 92.6 80.2 92.8 78.7 92.9 76.2 92.6 73.3 92.2 71.4 91.3 68.8 90.4 66.9 89 64.8 87.3 62.8 85.4 61.1 83.6 59.7 81.6 58.6 79.6 57.8 76.6 57 74.9 56.8 73.4 56.7 71.1 56.7 68.8 57.1 66.3 57.8 64.1 58.7 61.6 60.2 59.8 61.6 58.6 62.7 57.5 64 56 65.9 54.7 68.3 53.7 70.4 53.1 72.8 52.8 74.9 52.7 77.4 52.9 80.1 53.7 83.4 53.2 84.9 51.7 88.4 50.5 90.5 49.6 92 47.8 94.4 46.1 96.2 44.4 97.8 41.9 99.6 40.4 100.5 38 101.7 36.2 102.4 33.6 103.3 31.4 103.7 28.6 104 26.4 104 24.4 103.9 21.3 103.4 18.8 102.7 16.1 101.6 13.5 100.3 11.1 98.7 9.8 97.7 8.1 96.2 6.5 94.4 5.2 92.7 3.7 90.3 2.6 88.4 1.4 85.4 0.8 83.2 0.2 80.1 0 77.4 0.1 74.6 0.3 72.4 1 69.3 1.8 66.6 3.3 63.3 5.1 60.3 6.1 59 8 57 10 55.2 12.5 53.4 15 52 14.9 51.8 14.7 51.7 12.5 50.4 10.8 49.2 9.8 48.4 8.1 46.8 6.8 45.5 5.3 43.7 4.4 42.4 3.4 40.7 2.7 39.2 1.6 36.7 0.9 34.4 0.5 32.7 0.3 31.4 0 28.7 -0 25.9 0.1 24.4 0.7 20.9 1.7 17.8 2.9 15 4.4 12.3 6 10.1 6.8 9.1 8.3 7.6 10.5 5.7 11.8 4.8 13.3 3.8 15 2.9 16.9 2 19.1 1.2 22.1 0.4 24.4 0.1 26.7 -0 29.6 0.1 31.6 0.3 35.2 1.2 37.5 2.1 40.2 3.3 42.5 4.8 44.3 6.1 46.2 7.8 47.8 9.6 47.8 9.8 47.7 10.1 46.5 12.1 44.9 15.1 44.4 16.4 44.2 16.6 44 16.6 43.9 16.4 42.8 15 41.8 13.8 40.2 12.3 37.9 10.6 37 10.1 35.2 9.1 32.9 8.3 29.6 7.6 26.6 7.5 23.8 7.7 21.4 8.3 20.1 8.7 18.4 9.4 15.9 10.8 14.1 12.2 12.5 13.8 10.9 15.6 9.7 17.4 8.9 18.9 8.4 20.1 7.6 22.6 7.2 24.6 7 26.9 7.2 29.6 7.6 32.1 8.3 34.2 9.3 36.5 10.7 38.9 12.5 41 14.1 42.6 15.8 43.9 17.6 45 19.8 46.1 22.3 46.9 25.2 47.4 28.1 47.5 30.1 47.2 32.6 46.7 34.9 45.9 37.2 44.7 39.4 43.2 41.5 41.4 42.5 40.2 44.3 37.7 45.3 35.7 46.1 33.9 46.8 31.4 47 30.1 47.2 28.2 47.1 25.9 46.9 23.6 46.2 21.1 46.2 20.6 46.7 19.1 48.1 15.8 49.3 13.6 50.7 11.5 52.2 9.6 53.4 8.1 54.8 6.8 57.1 4.9 58.3 4.1 60.6 2.8 62.6 1.9 65 1.1 67.6 0.4 70.3 0.1 73.1 -0 75.4 0.1 77.9 0.4 80.7 1.1 83.1 2 85.4 3.1 87.4 4.3 89.7 6 91.4 7.5 93.1 9.1 94.6 11 96.2 13.5 97.3 15.6 98.5 18.5 99.3 21.3 99.7 23.9 99.9 25.9 99.8 30 99.4 32.7 98.9 35 98 37.5 96.6 40.5 95.4 42.5 93.7 44.8 92 46.7 90 48.5 87.7 50.2 85 51.8 84.9 52 87.4 53.4 89.1 54.7 90.8 56 92.5 57.6 94.1 59.5 95.3 61.2 96.4 63 97.4 64.8 98.2 66.7 98.9 68.9 99.5 71.6 99.8 73.6 99.9 76.1 99.8 79.2 99.5 81.4 99.2 83.1 98.7 84.9 98 86.7 97.1 88.9 95.6 91.5 94.4 93.2 93 94.9 91.7 96.3 90 97.8 88.5 98.9 86.5 100.2 84.4 101.4 82.7 102.1 81.2 102.7 78.7 103.4 75.9 103.9ZM75 47.3L76.7 47.1 78.2 46.7 80.6 45.9 82.2 45.1 84.1 43.9 85.4 42.9 87.2 41.3 88.4 39.9 89.4 38.5 90.6 36.5 91.4 34.9 92.1 32.9 92.5 31.1 92.8 29.6 92.9 27.2 92.7 25.1 92.5 23.8 92.1 21.8 91.5 20.3 90.7 18.4 89.9 16.9 88.4 14.9 87.3 13.6 85.5 12 84.1 10.9 82.7 10.1 81.1 9.2 78.7 8.3 76.1 7.7 74.6 7.5 72.4 7.4 70.4 7.6 69.1 7.8 66.6 8.4 64.8 9.1 63 10 61.5 10.9 60 12.1 58.3 13.6 57.1 14.9 56.2 16.1 55.3 17.6 54.5 19.1 53.6 21.4 53 23.9 52.8 25.2 52.7 27.2 52.8 29.6 53.1 31.4 53.7 33.7 54.5 35.7 55.5 37.5 56.5 39 57.6 40.5 58.9 41.9 60.3 43.1 61.6 44 63.6 45.2 65.1 45.9 67.4 46.8 69.6 47.2 71.3 47.4 73.3 47.5ZM50.1 61.8L51.5 60 52.6 58.6 54.5 56.6 56.1 55.3 57.3 54.4 60.8 52.2 60.8 52 60.6 51.8 59 50.9 56.6 49.4 54.5 47.6 53.6 46.7 52.1 45 50 42.3 49.8 42.4 49.7 42.5 47.7 45.2 46.2 46.8 45.2 47.7 43.2 49.4 41 50.8 39.3 51.8 39 52 39 52.2 39.2 52.4 41.9 54 44.5 56 45.6 57 47.2 58.6 48.5 60.2 49.7 61.8 49.8 62 50 61.9ZM29 96.7L30.9 96.4 32.6 96 34.9 95.2 36.5 94.4 37.9 93.6 39.6 92.4 40.9 91.2 42.4 89.6 43.5 88.1 44.6 86.4 45.5 84.6 46.2 82.7 46.7 80.6 47 78.9 47.1 76.9 47 74.6 46.7 73.3 46.1 70.6 45.2 68.6 44.4 66.9 43.3 65.3 42.4 64 40.9 62.4 39.2 61 37.9 60 35.7 58.8 33.9 58 32.2 57.4 30.2 56.9 28.2 56.7 26.6 56.7 24.4 56.8 22.6 57.1 20.4 57.7 18.3 58.6 16.8 59.4 15 60.6 14.1 61.3 12.7 62.6 11.3 64.2 10.3 65.6 9.2 67.4 8.4 69.1 7.8 71.1 7.3 73.3 7.1 74.9 7 76.7 7.1 78.7 7.4 80.6 7.7 81.9 8.5 84.1 9.5 86.2 10.5 87.8 11.8 89.5 13.5 91.3 14.9 92.5 16.3 93.6 17.9 94.5 19.6 95.3 21.8 96.1 23.9 96.5 25.7 96.7 27.2 96.8Z" fill="#121413" fill-rule="evenodd"></path></svg>
+<svg width="93.9" height="13" viewBox="0 0 72.24 10" aria-hidden="true" style="flex: none; display: block;"><path d="M8.7 9.9L1 9.9 0.4 9.6 0.1 9.1 0 8.5 0.5 7.2 3.7 0.7 4 0.3 4.3 0.1 4.6 -0 5.2 -0 5.6 0.1 5.9 0.4 8.2 5.1 9.6 7.9 9.8 8.5 9.7 9.1 9.6 9.4 9.3 9.7ZM18.4 9.9L15.2 9.8 14.6 9.8 13.8 9.6 13.1 9.3 12.7 9 12.1 8.5 11.6 7.9 11.3 7.2 11 6.1 11 4.9 11 3.9 11.3 2.7 11.6 1.9 12.1 1.3 12.8 0.7 13.8 0.3 14.5 0.1 15.7 -0 18.5 0 19 0.1 19.4 0.5 19.6 0.9 19.6 1.5 19.4 1.9 19.1 2.2 18.5 2.4 15.7 2.5 14.8 2.7 14.2 3 13.9 3.3 13.6 3.9 13.5 4.5 13.5 5.4 13.7 6.1 14 6.7 14.5 7.1 14.9 7.2 15.5 7.4 18.5 7.4 19.1 7.6 19.3 7.8 19.5 8.1 19.6 8.4 19.6 9 19.5 9.3 19.3 9.5 19 9.7ZM29.4 9.9L21.8 9.9 21.5 9.8 21.2 9.6 20.8 9.1 20.7 8.7 20.8 8.4 21.4 6.9 24.5 0.8 24.8 0.3 25.2 0 25.5 -0 26 0 26.4 0.2 26.7 0.6 29 5.1 30.4 7.9 30.6 8.7 30.5 9.1 30.3 9.4 30 9.7ZM37 9.9L32.8 9.9 32.3 9.7 32.1 9.5 31.9 9.3 31.7 8.5 31.7 1.2 31.9 0.6 32.1 0.3 32.4 0.1 33.3 -0 36.9 -0 37.8 0.1 38.7 0.3 39.6 0.6 40.1 1 40.6 1.5 41.1 2.2 41.3 2.7 41.5 3.6 41.6 5.1 41.5 6.3 41.2 7.3 41 7.7 40.4 8.7 39.6 9.3 39 9.5 38.1 9.7ZM50.1 9.9L43.9 9.9 43.4 9.8 43 9.4 42.8 9.1 42.7 8.5 42.7 1.3 42.8 0.7 42.9 0.4 43.1 0.2 43.6 0 44 -0 50 -0 50.7 0.1 51.2 0.4 51.4 1 51.3 1.6 51 2.1 50.6 2.4 50 2.5 45.5 2.5 45.3 2.5 45.2 2.7 45.2 7 45.3 7.3 45.7 7.4 50.1 7.4 50.9 7.6 51.2 7.9 51.3 8.2 51.3 8.7 51.3 9.1 51.1 9.4 50.9 9.6 50.6 9.8ZM61.2 9.9L60.7 9.8 60.5 9.7 60.1 9.4 60 9.1 59.9 8.5 59.9 4.8 59.9 4.6 59.7 4.5 58.2 5.9 57.9 6.1 57.5 6.1 57 6.1 56.7 6 55.4 4.7 55.1 4.5 55 4.8 55 8.7 54.8 9.3 54.4 9.7 53.9 9.9 53.1 9.8 52.7 9.4 52.6 9.1 52.5 8.5 52.5 1.3 52.6 0.7 52.8 0.3 53.1 0.1 53.6 -0 54.2 0.1 54.5 0.2 54.9 0.6 57.2 2.8 57.5 3 57.7 2.8 59.9 0.7 60.4 0.2 60.7 0.1 61.2 0 61.6 0.1 62.1 0.4 62.3 0.7 62.4 1.3 62.4 8.8 62.3 9.3 62.1 9.5 61.6 9.8ZM67.8 9.9L67.2 9.8 66.9 9.6 66.6 9.3 66.5 8.5 66.5 5.4 66.3 5.1 63.6 1.8 63.4 1.2 63.5 0.6 63.7 0.3 64.2 0 64.8 -0 65.2 0.1 65.7 0.4 67.5 2.5 67.8 2.7 68 2.5 70 0.2 70.4 -0 71.4 0 71.9 0.3 72.1 0.6 72.1 1.2 72.1 1.6 71.8 2.1 69.1 5.2 69 5.7 69 8.4 68.9 9.1 68.7 9.4 68.5 9.6 68.2 9.8ZM37.4 7.3L37.9 7.2 38.4 6.9 38.7 6.6 38.9 6.1 39.1 5.4 39.1 4.6 39 3.9 38.8 3.4 38.5 3.1 38.2 2.8 37.3 2.5 36.4 2.5 34.6 2.5 34.3 2.5 34.2 2.8 34.2 7 34.3 7.3 34.5 7.4 35.1 7.4 36.9 7.4ZM49.7 6.1L47.2 6.1 46.4 6 46.1 5.8 45.9 5.4 45.8 4.8 46 4.3 46.3 3.9 47 3.7 49.4 3.7 50.1 3.8 50.4 4.1 50.6 4.3 50.8 4.9 50.7 5.2 50.6 5.5 50.4 5.8 50.1 6ZM6.4 7.3L6.5 7.2 6.4 7 5.1 4.3 4.9 4.1 4.8 4.2 3.4 7 3.3 7.2 3.4 7.3 3.6 7.4 4.5 7.4 6.1 7.4ZM27.2 7.3L27.2 7.2 27.2 7 25.9 4.3 25.7 4.1 25.5 4.2 24.7 5.8 24.1 7.2 24.1 7.3 24.3 7.4 25.7 7.4 27 7.4Z" fill="#121413" fill-rule="evenodd"></path></svg>
+</a>
+<nav aria-label="ניווט ראשי" style="flex: 1 1 auto; min-width: 0;">
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 2px;">
+<li><a href="Main.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">סקירה</a></li>
+<li><a href="Students.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">סטודנטים</a></li>
+<li><a href="Units.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">יחידות</a></li>
+<li><a href="Leadership.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">מנהיגות</a></li>
+<li><a href="Curriculum.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">תוכנית לימודים</a></li>
+<li><a href="Rewards.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">פרסים</a></li>
+<li><a href="PointsSettings.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">ניקוד</a></li>
+<li><a href="AIChecks.dc.html" aria-current="page" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid #9FDDC4; background: #D3F4E6; color: #121413; font-weight: 600; text-decoration: none; font-size: 15px; white-space: nowrap;">בדיקת AI</a></li>
+<li><a href="Activity.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">פעילות</a></li>
+</ul>
+</nav>
+<div style="display: flex; align-items: center; gap: 8px;">
+<span style="display: flex; align-items: center; gap: 10px; color: #3D4541; font-size: 15px; white-space: nowrap;"><span aria-hidden="true" style="width: 30px; height: 30px; border-radius: 50%; background: #76DEB8; color: #121413; display: grid; place-items: center; font-size: 14px; font-weight: 600;">{{meInitial}}</span>{{meName}}</span>
+<a href="/password" class="btn-ghost" aria-label="החלפת סיסמה" title="החלפת סיסמה" style="width: 40px; height: 40px; box-sizing: border-box; display: grid; place-items: center; padding: 0; background: transparent; border: 1px solid transparent; border-radius: 10px; color: #545D58; text-decoration: none;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"></circle><path d="M10.8 12.2L20 3M17 6l2.5 2.5M14.5 8.5L17 11"></path></svg></a>
+<a href="/logout" class="btn-ghost" aria-label="התנתקות" style="width: 40px; height: 40px; box-sizing: border-box; display: grid; place-items: center; padding: 0; background: transparent; border: 1px solid transparent; border-radius: 10px; color: #545D58; text-decoration: none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3"></path><path d="M10 8l-4 4 4 4"></path><path d="M6 12h10"></path></svg></a>
+</div>
+</div>
+</header>
+<main style="max-width: 1080px; margin: 0 auto; padding: 40px clamp(16px, 4vw, 32px) 72px; box-sizing: border-box;">
+<h1 style="margin: 0; font-family: 'Karantina', 'Rubik', system-ui, sans-serif; font-size: 50px; line-height: 1; font-weight: 700; letter-spacing: 0.005em; color: #121413;">בדיקת AI</h1>
+<p style="margin: 10px 0 0; font-size: 15px; line-height: 1.6; color: #3D4541;">כשסטודנט שולח טיסה, Google Gemini צופה בסרטון, משווה אותו ל"איך עוברים" של המיומנות, וכותב משוב. אתם מחליטים אם הוא רק ממליץ לכם, או גם מאשר ומחזיר לבד.</p>
+<div aria-live="polite">
+<sc-if value="{{hasFlash}}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 10px; margin-top: 16px; padding: 12px 16px; background: #DDF6EC; border: 1px solid #A3DEC6; border-radius: 12px; color: #145C45; font-size: 14px;">{{flash}}</div></sc-if>
+<sc-if value="{{hasError}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 16px 0 0; padding: 12px 16px; background: #FDECEC; border: 1px solid #F2B8B8; border-radius: 12px; font-size: 14px; color: #7F1D1D;">{{error}}</p></sc-if>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr)); gap: 1px; margin-top: 24px; background: #E1E5E2; border: 1px solid #E1E5E2; border-radius: 16px; overflow: hidden;">
+<div style="background: #FFFFFF; padding: 18px 20px;"><p style="margin: 0; font-size: 22px; font-weight: 600; color: {{statusColor}};">{{statusText}}</p><p style="margin: 4px 0 0; font-size: 13px; color: #545D58;">מצב</p></div>
+<div style="background: #FFFFFF; padding: 18px 20px;"><p style="margin: 0; font-size: 22px; font-weight: 600; color: {{keyColor}};">{{keyText}}</p><p style="margin: 4px 0 0; font-size: 13px; color: #545D58;">מפתח Gemini</p></div>
+<div style="background: #FFFFFF; padding: 18px 20px;"><p style="margin: 0; font-size: 22px; font-weight: 600; color: #121413; font-variant-numeric: tabular-nums;">{{todayText}}</p><p style="margin: 4px 0 0; font-size: 13px; color: #545D58;">בדיקות היום</p></div>
+<div style="background: #FFFFFF; padding: 18px 20px;"><p style="margin: 0; font-size: 22px; font-weight: 600; color: #121413; font-variant-numeric: tabular-nums;">{{queueText}}</p><p style="margin: 4px 0 0; font-size: 13px; color: #545D58;">ממתינות בתור</p></div>
+</div>
+
+<sc-if value="{{noKey}}" hint-placeholder-val="{{ false }}">
+<section aria-labelledby="key-title" style="margin-top: 20px; padding: 20px 22px; background: #FFF8E6; border: 1px solid #EFD48C; border-radius: 16px;">
+<h2 id="key-title" style="margin: 0; font-size: 18px; font-weight: 600; color: #5C4000;">לפני שמפעילים: מפתח של Google Gemini</h2>
+<ol style="margin: 10px 0 0; padding-inline-start: 22px; font-size: 15px; line-height: 1.7; color: #2C322F;">
+<li>נכנסים ל־<a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> עם חשבון Google, ולוחצים <b>Create API key</b>.</li>
+<li>מחברים אמצעי תשלום (Billing) לפרויקט של המפתח. בלי זה יש מגבלות שימוש נמוכות.</li>
+<li>מעתיקים את המפתח. ב־Render: <b>Environment ← Add variable</b>, ב־KEY כותבים <code dir="ltr">GEMINI_API_KEY</code> וב־VALUE מדביקים את המפתח, ואז <b>Save, rebuild, and deploy</b>.</li>
+<li>חוזרים לעמוד הזה. המצב "מפתח Gemini" יתחלף ל"מחובר".</li>
+</ol>
+</section>
+</sc-if>
+
+<section aria-labelledby="set-title" style="margin-top: 24px; padding: 24px; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px;">
+<h2 id="set-title" style="margin: 0; font-size: 20px; font-weight: 600; color: #121413;">הגדרות</h2>
+<label style="display: flex; align-items: center; gap: 12px; margin-top: 18px; font-size: 17px; font-weight: 600; color: #121413; cursor: pointer;"><input type="checkbox" checked="{{enabled}}" onChange="{{toggleEnabled}}" style="width: 22px; height: 22px; margin: 0; accent-color: #B23A5E; cursor: pointer;">בדיקת AI פעילה</label>
+<p style="margin: 6px 0 0; padding-inline-start: 34px; font-size: 14px; color: #5E6762;">כשהיא כבויה, כל טיסה מחכה לבדיקה שלכם, כמו היום.</p>
+
+<fieldset style="margin: 22px 0 0; padding: 0; border: 0; min-width: 0;">
+<legend style="padding: 0; font-size: 15px; font-weight: 600; color: #121413;">מה ה־AI עושה עם התוצאה</legend>
+<label style="display: flex; align-items: flex-start; gap: 10px; margin-top: 12px; padding: 14px 16px; border: 1px solid {{suggestBorder}}; border-radius: 12px; cursor: pointer;"><input type="radio" name="ai-mode" checked="{{modeSuggest}}" onChange="{{pickSuggest}}" style="width: 18px; height: 18px; margin: 3px 0 0; accent-color: #B23A5E;"><span><span style="display: block; font-size: 15px; font-weight: 600; color: #121413;">ממליץ בלבד</span><span style="display: block; margin-top: 2px; font-size: 14px; line-height: 1.55; color: #545D58;">ה־AI כותב המלצה ומשוב בכרטיס הסטודנט, ואתם מאשרים או מחזירים. הסטודנט רואה רק את ההחלטה שלכם.</span></span></label>
+<label style="display: flex; align-items: flex-start; gap: 10px; margin-top: 10px; padding: 14px 16px; border: 1px solid {{autoBorder}}; border-radius: 12px; cursor: pointer;"><input type="radio" name="ai-mode" checked="{{modeAuto}}" onChange="{{pickAuto}}" style="width: 18px; height: 18px; margin: 3px 0 0; accent-color: #B23A5E;"><span><span style="display: block; font-size: 15px; font-weight: 600; color: #121413;">מחליט לבד</span><span style="display: block; margin-top: 2px; font-size: 14px; line-height: 1.55; color: #545D58;">כשה־AI בטוח מספיק, הוא מאשר את הטיסה (הסטודנט מקבל מטבעות ועובר הלאה) או מחזיר אותה עם משוב. כשהוא לא בטוח, הטיסה מחכה לכם. תמיד אפשר לבטל מכרטיס הסטודנט.</span></span></label>
+</fieldset>
+
+<sc-if value="{{modeAuto}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-wrap: wrap; gap: 16px 20px; margin-top: 18px; padding: 16px; background: #F7F8F7; border-radius: 12px;">
+<div style="flex: 0 1 220px; min-width: 0;"><label for="ai-threshold" style="display: block; margin-bottom: 6px; font-size: 14px; font-weight: 500; color: #3D4541;">החלטה רק מעל ביטחון של (%)</label><input id="ai-threshold" type="number" min="50" max="100" inputmode="numeric" value="{{threshold}}" onInput="{{onThreshold}}" style="width: 100%; box-sizing: border-box; height: 42px; padding: 0 12px; background: #FFFFFF; border: 1px solid #D3D9D5; border-radius: 10px; font: inherit; font-size: 15px;"></div>
+<label style="flex: 1 1 260px; display: flex; align-items: center; gap: 10px; font-size: 15px; color: #1E2320; cursor: pointer;"><input type="checkbox" checked="{{autoReject}}" onChange="{{toggleAutoReject}}" style="width: 18px; height: 18px; margin: 0; accent-color: #B23A5E;">מותר גם להחזיר טיסה לתיקון (לא רק לאשר)</label>
+</div>
+</sc-if>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px 20px; margin-top: 18px;">
+<div style="flex: 0 1 220px; min-width: 0;"><label for="ai-limit" style="display: block; margin-bottom: 6px; font-size: 14px; font-weight: 500; color: #3D4541;">מקסימום בדיקות ביום</label><input id="ai-limit" type="number" min="1" max="5000" inputmode="numeric" value="{{dailyLimit}}" onInput="{{onLimit}}" style="width: 100%; box-sizing: border-box; height: 42px; padding: 0 12px; background: #FFFFFF; border: 1px solid #D3D9D5; border-radius: 10px; font: inherit; font-size: 15px;"></div>
+<div style="flex: 1 1 260px; min-width: 0;"><label for="ai-model" style="display: block; margin-bottom: 6px; font-size: 14px; font-weight: 500; color: #3D4541;">מודל <span style="font-weight: 400; color: #5E6762;">(לא חובה. ריק = {{defaultModel}})</span></label><input id="ai-model" type="text" dir="ltr" value="{{model}}" onInput="{{onModel}}" placeholder="{{defaultModel}}" style="width: 100%; box-sizing: border-box; height: 42px; padding: 0 12px; background: #FFFFFF; border: 1px solid #D3D9D5; border-radius: 10px; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 14px; text-align: left;"></div>
+</div>
+<label for="ai-extra" style="display: block; margin: 18px 0 6px; font-size: 14px; font-weight: 500; color: #3D4541;">הנחיות נוספות ל־AI <span style="font-weight: 400; color: #5E6762;">(לא חובה, לכל הבדיקות)</span></label>
+<textarea id="ai-extra" rows="3" maxlength="1500" value="{{extra}}" onInput="{{onExtra}}" placeholder="למשל: היו מחמירים בגובה הטיסה. כתבו משוב קצר ומעודד." style="display: block; width: 100%; box-sizing: border-box; padding: 10px 12px; background: #FFFFFF; border: 1px solid #D3D9D5; border-radius: 10px; font: inherit; font-size: 15px; line-height: 1.5; resize: vertical;"></textarea>
+<p style="margin: 14px 0 0; font-size: 13px; line-height: 1.6; color: #5E6762;">ה־AI בודק סרטונים שהסטודנטים העלו לאתר, וקישורי YouTube ציבוריים. קישורי YouTube "לא רשום" וקישורי Google Drive נשארים לבדיקה שלכם. אפשר לכבות את הבדיקה למיומנות מסוימת בעריכת המיומנות.</p>
+<button type="button" class="btn-primary" onClick="{{save}}" disabled="{{busy}}" style="margin-top: 18px; height: 46px; padding: 0 28px; border: 0; border-radius: 10px; background: #C7436A; color: #FFFFFF; font: inherit; font-size: 16px; font-weight: 600; cursor: pointer;">{{saveLabel}}</button>
+</section>
+
+<h2 style="margin: 36px 0 12px; font-size: 22px; font-weight: 600; color: #121413;">בדיקות אחרונות</h2>
+<sc-if value="{{noChecks}}" hint-placeholder-val="{{ false }}"><p style="margin: 0; padding: 18px 20px; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; font-size: 14px; color: #5E6762;">עוד אין בדיקות.</p></sc-if>
+<ul style="list-style: none; margin: 0; padding: 0; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; overflow: hidden;">
+<sc-for list="{{checks}}" as="c" hint-placeholder-count="3">
+<li style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; padding: 14px 20px; border-top: 1px solid {{c.divider}};">
+<span style="flex: 1 1 260px; min-width: 0;"><a href="{{c.href}}" style="font-size: 15px; font-weight: 600; color: #121413; text-decoration: underline; text-underline-offset: 3px;">{{c.student}}</a><span style="font-size: 15px; color: #3D4541;"> · {{c.item}}</span><span style="display: block; margin-top: 2px; font-size: 13px; color: #5E6762;">{{c.meta}}</span></span>
+<span style="display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border-radius: 999px; background: {{c.bg}}; border: 1px solid {{c.border}}; color: {{c.color}}; font-size: 13px; font-weight: 500; white-space: nowrap;">{{c.label}}</span>
+</li>
+</sc-for>
+</ul>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1980}}'>
+class Component extends DCLogic {
+  // The admin's control over the AI checks: on or off, advise or decide, how sure it must be, and a daily cap.
+  A() {
+    return window.Academy && window.Academy.on ? window.Academy : null;
+  }
+
+  saved() {
+    const A = this.A();
+    return (A && A.data.settings && A.data.settings.ai) || { enabled: false, mode: 'suggest', threshold: 80, autoReject: true, extra: '', model: '', dailyLimit: 100, hasKey: false, defaultModel: 'gemini-3.8-flash', queue: 0, today: 0 };
+  }
+
+  st() {
+    if (this.state && this.state.ready) return this.state;
+    const a = this.saved();
+    return { ready: true, enabled: !!a.enabled, mode: a.mode, threshold: String(a.threshold), autoReject: !!a.autoReject, extra: a.extra || '', model: a.model || '', dailyLimit: String(a.dailyLimit), busy: false, flash: '', error: '' };
+  }
+
+  set(patch) {
+    this.setState(Object.assign({}, this.st(), patch, { error: '' }));
+  }
+
+  componentWillUnmount() {
+    if (super.componentWillUnmount) super.componentWillUnmount();
+    if (this._acaOff) this._acaOff();
+    clearTimeout(this._flashTimer);
+  }
+
+  save() {
+    const A = this.A();
+    const s = this.st();
+    if (!A) return;
+    this.setState(Object.assign({}, s, { busy: true, error: '' }));
+    A.call('saveAi', { enabled: s.enabled, mode: s.mode, threshold: Number(s.threshold), autoReject: s.autoReject, extra: s.extra, model: s.model, dailyLimit: Number(s.dailyLimit) }).then((r) => {
+      if (!r.ok) { this.setState(Object.assign({}, this.st(), { busy: false, error: r.error })); return; }
+      const msg = !s.enabled ? 'נשמר. בדיקת ה־AI כבויה.' : s.mode === 'auto' ? 'נשמר. ה־AI בודק כל טיסה חדשה ומחליט לבד כשהוא בטוח מעל ' + s.threshold + '%.' : 'נשמר. ה־AI בודק כל טיסה חדשה וממליץ לכם בכרטיס הסטודנט.';
+      this.setState(Object.assign({}, this.st(), { busy: false, flash: msg }));
+      clearTimeout(this._flashTimer);
+      this._flashTimer = setTimeout(() => this.setState(Object.assign({}, this.st(), { flash: '' })), 5000);
+    });
+  }
+
+  checks() {
+    const A = this.A();
+    if (!A) return [];
+    const out = [];
+    A.users('student').forEach((u) => {
+      A.progress(u.id).flights.forEach((f) => { if (f.ai) out.push({ u: u, f: f }); });
+    });
+    out.sort((a, b) => (String(a.f.ai.at) < String(b.f.ai.at) ? 1 : -1));
+    return out.slice(0, 60).map((x, i) => {
+      const ai = x.f.ai;
+      let look;
+      if (ai.status === 'done') {
+        const v = ({ pass: 'עוברת', fail: 'לא עוברת', unclear: 'לא ברור' })[ai.verdict];
+        const applied = ai.applied === 'approved' ? ' · אושרה' : ai.applied === 'rejected' ? ' · הוחזרה' : '';
+        look = ai.verdict === 'pass' ? ['#DDF6EC', '#A3DEC6', '#17694F'] : ai.verdict === 'fail' ? ['#FDECEC', '#F2B8B8', '#B42318'] : ['#FFF4D6', '#EFD48C', '#7A5300'];
+        look.push(v + ' · ' + ai.confidence + '%' + applied);
+      } else if (ai.status === 'error') look = ['#FDECEC', '#F2B8B8', '#B42318', 'נכשלה'];
+      else if (ai.status === 'skipped') look = ['#F1F3F2', '#D3D9D5', '#545D58', ai.reason === 'limit' ? 'מגבלה יומית' : 'לא נבדקה'];
+      else look = ['#F1F3F2', '#D3D9D5', '#545D58', ai.status === 'checking' ? 'בבדיקה…' : 'בתור'];
+      return {
+        id: x.u.id + x.f.id,
+        student: x.u.name,
+        item: A.flightName(x.f),
+        meta: A.fmtDate(ai.at) + (ai.status === 'error' && ai.error ? ' · ' + ai.error : '') + (x.f.status === 'review' ? ' · ממתינה להחלטה שלכם' : ''),
+        href: 'StudentDetail.dc.html?id=' + encodeURIComponent(x.u.id) + '&tab=flights',
+        bg: look[0], border: look[1], color: look[2], label: look[3],
+        divider: i === 0 ? 'transparent' : '#E8EBE9'
+      };
+    });
+  }
+
+  renderVals() {
+    const s = this.st();
+    const A = this.A();
+    if (A && !this._acaOff) this._acaOff = A.listen(() => this.forceUpdate());
+    const a = this.saved();
+    const meName = A ? A.me.name : 'יהודה';
+    const checks = this.checks();
+    return {
+      meName: meName,
+      meInitial: String(meName || '?').trim().charAt(0),
+      hasFlash: !!s.flash, flash: s.flash, hasError: !!s.error, error: s.error,
+      statusText: !a.enabled ? 'כבויה' : a.mode === 'auto' ? 'פעילה · מחליטה' : 'פעילה · ממליצה',
+      statusColor: a.enabled ? '#17694F' : '#545D58',
+      keyText: a.hasKey ? 'מחובר' : 'חסר',
+      keyColor: a.hasKey ? '#17694F' : '#B42318',
+      noKey: !a.hasKey,
+      todayText: (a.today || 0) + ' / ' + a.dailyLimit,
+      queueText: String(a.queue || 0),
+      enabled: !!s.enabled,
+      toggleEnabled: () => this.set({ enabled: !s.enabled }),
+      modeSuggest: s.mode !== 'auto',
+      modeAuto: s.mode === 'auto',
+      suggestBorder: s.mode !== 'auto' ? '#C7436A' : '#D3D9D5',
+      autoBorder: s.mode === 'auto' ? '#C7436A' : '#D3D9D5',
+      pickSuggest: () => this.set({ mode: 'suggest' }),
+      pickAuto: () => this.set({ mode: 'auto' }),
+      threshold: s.threshold, onThreshold: (e) => this.set({ threshold: e.target.value }),
+      autoReject: !!s.autoReject, toggleAutoReject: () => this.set({ autoReject: !s.autoReject }),
+      dailyLimit: s.dailyLimit, onLimit: (e) => this.set({ dailyLimit: e.target.value }),
+      model: s.model, onModel: (e) => this.set({ model: e.target.value }),
+      defaultModel: a.defaultModel || 'gemini-3.8-flash',
+      extra: s.extra, onExtra: (e) => this.set({ extra: e.target.value }),
+      busy: !!s.busy, saveLabel: s.busy ? 'שומר…' : 'שמירה', save: () => this.save(),
+      checks: checks, noChecks: checks.length === 0
+    };
+  }
+}
+</script>
+</body>
+</html>

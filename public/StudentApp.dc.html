@@ -63,6 +63,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .vh{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 @media (max-width: 1099px){.desk-only{display:none !important}.main-pad{padding-bottom:calc(112px + env(safe-area-inset-bottom)) !important}}
 @media (min-width: 1100px){.mob-only{display:none !important}}
+@media not all and (hover: hover) and (pointer: fine){.pc-hint{display:none !important}}
 @media (max-width: 1279px){.xl-only{display:none !important}}
 @media (max-width: 640px), (min-width: 1100px) and (max-width: 1279px){.coin-word{display:none !important}}
 @media (max-width: 480px){.sm-hide{display:none !important}.big-h1{font-size:46px !important}.next-h2{font-size:42px !important}}
@@ -410,7 +411,10 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 </sc-if>
 <sc-if value="{{skillOpen}}" hint-placeholder-val="{{ false }}">
 <section aria-labelledby="submit-title" style="background: #FFFFFF; border: 2px solid #121413; border-radius: 20px; padding: 22px 24px;">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px;">
 <h2 id="submit-title" style="margin: 0; font-family: 'Karantina', 'Rubik', sans-serif; font-size: 34px; line-height: 0.95; font-weight: 700; color: #121413;">הגשת טיסה</h2>
+<p class="pc-hint" style="display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0; padding: 8px 12px; background: #F2FBF7; border: 1px solid #BFE6D5; border-radius: 12px; font-size: 14px; color: #0F3D2E;"><span>לצילום מסך לוחצים יחד על</span><span dir="ltr" style="display: inline-flex; align-items: center; gap: 4px;"><kbd style="display: inline-flex; align-items: center; gap: 4px; min-width: 24px; height: 26px; padding: 0 8px; box-sizing: border-box; border: 1px solid #B9C2BD; border-bottom-width: 3px; border-radius: 7px; background: #FFFFFF; font-family: inherit; font-size: 13px; font-weight: 600; color: #121413;"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 4.5l8-1.1v8.1H3zM12 3.3l9-1.3v9.5h-9zM3 12.5h8v8.1l-8-1.1zM12 12.5h9V22l-9-1.3z"></path></svg>Windows</kbd>+<kbd style="display: inline-flex; align-items: center; min-width: 24px; height: 26px; padding: 0 8px; box-sizing: border-box; border: 1px solid #B9C2BD; border-bottom-width: 3px; border-radius: 7px; background: #FFFFFF; font-family: inherit; font-size: 13px; font-weight: 600; color: #121413;">Shift</kbd>+<kbd style="display: inline-flex; align-items: center; justify-content: center; min-width: 26px; height: 26px; padding: 0 8px; box-sizing: border-box; border: 1px solid #B9C2BD; border-bottom-width: 3px; border-radius: 7px; background: #FFFFFF; font-family: inherit; font-size: 13px; font-weight: 600; color: #121413;">S</kbd></span></p>
+</div>
 <p style="margin: 8px 0 0; font-size: 14px; line-height: 1.55; color: #545D58;">{{submitIntro}}</p>
 <sc-if value="{{canUploadFlight}}" hint-placeholder-val="{{ false }}">
 <div style="margin: 18px 0 0;">
@@ -1640,7 +1644,8 @@ class Component extends DCLogic {
     }[status];
   }
 
-  flightChip(status) {
+  flightChip(status, f) {
+    if (status === 'review' && f && f.ai && (f.ai.status === 'queued' || f.ai.status === 'checking')) return { label: 'בבדיקה אוטומטית', bg: '#F3EDFB', border: '#CDB8EE', color: '#5B3A99' };
     return {
       approved: { label: 'מאושר', bg: '#DDF6EC', border: '#A3DEC6', color: '#17694F' },
       review: { label: 'בסקירה', bg: '#FFF4D6', border: '#EFD48C', color: '#7A5300' },
@@ -2059,8 +2064,22 @@ class Component extends DCLogic {
     const at = this.stamp();
     const flight = { id: 'new' + s.seq, skill: skill.id, at: at, status: 'review', feedback: '', note: s.draft.note.trim(), link: link };
     const note = { id: 'nn' + s.seq, kind: 'submitted', skill: skill.id, text: 'הטיסה שלכם ב' + skill.name + ' נשלחה לבדיקה. אם תאושר תקבלו ' + this.sg(skill.points) + ' מטבעות.', when: 'עכשיו', read: false };
-    this.setState({ flights: [flight].concat(s.flights), notifications: [note].concat(s.notifications), draft: { fileName: '', note: '', error: '' }, seq: s.seq + 1 }, () => this.award([]));
-    this.say('הטיסה נשלחה לבדיקה. אם המדריך יאשר אותה תקבלו ' + this.sg(skill.points) + ' מטבעות.');
+    this.setState({ flights: [flight].concat(s.flights), notifications: [note].concat(s.notifications), draft: { fileName: '', note: '', error: '' }, seq: s.seq + 1 }, () => {
+      this.award([]);
+      // On to the next exercise that is still open: after this one on the path, or from the start of it.
+      const st = this.st();
+      const list = this.skills();
+      const i = list.findIndex((k) => k.id === skill.id);
+      const order = list.slice(i + 1).concat(list.slice(0, i));
+      const next = order.find((k) => this.statusOf(k.id, st) === 'open');
+      if (next) {
+        this.openSkill(next.id);
+        this.say('הטיסה ב' + skill.name + ' נשלחה לבדיקה. ממשיכים לתרגיל הבא: ' + next.name + '.');
+      } else {
+        this.go('path', null, true);
+        this.say('הטיסה נשלחה לבדיקה. כל התרגילים הפתוחים ממתינים עכשיו למדריך.');
+      }
+    });
   }
 
   canUpload() {
@@ -3183,7 +3202,7 @@ class Component extends DCLogic {
     const skillLevel = levels.find((l) => l.n === skill.level);
     const tries = s.flights.filter((f) => f.skill === skill.id);
     const attempts = tries.map((f) => {
-      const c = this.flightChip(f.status);
+      const c = this.flightChip(f.status, f);
       return {
         id: f.id, at: f.at, statusLabel: c.label, chipBg: c.bg, chipBorder: c.border, chipColor: c.color,
         hasFeedback: !!f.feedback, feedback: f.feedback, hasNote: !!f.note, note: f.note,
@@ -3249,7 +3268,7 @@ class Component extends DCLogic {
 
     // flights table
     const flightRows = s.flights.slice().sort((a, b) => (a.at < b.at ? 1 : a.at > b.at ? -1 : 0)).map((f) => {
-      const c = this.flightChip(f.status);
+      const c = this.flightChip(f.status, f);
       const ch = f.challenge ? this.challengeById(f.challenge) : null;
       const k = f.challenge ? { name: ch ? ch.title : 'אתגר', points: ch ? ch.points : 0 } : (byId[f.skill] || { name: this.skillNameAny(f.skill), points: 0 });
       const firstTry = !f.challenge && s.flights.filter((x) => x.skill === f.skill).sort((a, b) => (a.at < b.at ? -1 : 1))[0] === f;
@@ -3495,7 +3514,7 @@ class Component extends DCLogic {
       challengeVideoUrl: challenge.video || '#',
       challengeIsFile: !!(window.Academy && window.Academy.on && window.Academy.isFile(challenge.video)),
       challengeTries: chFlights.map((f) => {
-        const c = this.flightChip(f.status);
+        const c = this.flightChip(f.status, f);
         return { id: f.id, at: f.at, statusLabel: c.label, chipBg: c.bg, chipBorder: c.border, chipColor: c.color, hasFeedback: !!f.feedback, feedback: f.feedback || '', watch: () => this.openVideo({ title: challenge.title, sub: 'הניסיון שלכם · ' + f.at, note: (f.videoGone ? 'הסרטון נמחק מהאתר כמה ימים אחרי הבדיקה. ' : '') + (f.feedback ? 'משוב: ' + f.feedback : ''), demoSkill: null, url: f.link || '' }) };
       }),
       challengeHasTries: chFlights.length > 0,

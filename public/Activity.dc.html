@@ -40,6 +40,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <li><a href="Curriculum.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">תוכנית לימודים</a></li>
 <li><a href="Rewards.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">פרסים</a></li>
 <li><a href="PointsSettings.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">ניקוד</a></li>
+<li><a href="AIChecks.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">בדיקת AI</a></li>
 <li><a href="Activity.dc.html" aria-current="page" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid #9FDDC4; background: #D3F4E6; color: #121413; font-weight: 600; text-decoration: none; font-size: 15px; white-space: nowrap;">פעילות</a></li>
 </ul>
 </nav>
@@ -239,7 +240,8 @@ class Component extends DCLogic {
           admin: { label: 'מנהל', bg: '#E6EEFB', border: '#A9C1EA', color: '#2F5FA8' },
           observer: { label: 'משקיף', bg: '#F1F3F2', border: '#D3D9D5', color: '#4B534F' },
           student: { label: 'סטודנט', bg: '#E6F7EF', border: '#A3DEC6', color: '#1F7A5A' },
-          gone: { label: 'נמחק', bg: '#F7F8F7', border: '#E1E5E2', color: '#6E7772' }
+          gone: { label: 'נמחק', bg: '#F7F8F7', border: '#E1E5E2', color: '#6E7772' },
+          ai: { label: 'אוטומטי', bg: '#F3EDFB', border: '#CDB8EE', color: '#5B3A99' }
         },
         kinds: { auth: 'חשבון', learn: 'למידה', coins: 'נקודות ופרסים', admin: 'ניהול', view: 'צפייה' },
         events: {
@@ -283,7 +285,7 @@ class Component extends DCLogic {
       const out = {};
       A.users().forEach((u) => { out[u.id] = { name: u.name, username: u.username, role: u.role }; });
       (A.data.activity || []).forEach((e) => {
-        if (e.uid && !out[e.uid]) out[e.uid] = { name: e.name || 'משתמש שנמחק', username: '', role: 'gone' };
+        if (e.uid && !out[e.uid]) out[e.uid] = { name: e.name || 'משתמש שנמחק', username: '', role: e.uid === 'ai' ? 'ai' : 'gone' };
       });
       this._usersFor = A.data;
       this._users = out;
@@ -621,7 +623,7 @@ class Component extends DCLogic {
     const ids = Object.keys(users);
     return {
       studentOptions: ids.filter((id) => users[id].role === 'student').sort(byName).map((id) => ({ id: id, label: users[id].name })),
-      actorOptions: ids.filter((id) => users[id].role !== 'gone').sort((a, b) => (users[a].role === users[b].role ? byName(a, b) : (users[a].role === 'student' ? 1 : -1))).map((id) => ({ id: id, label: users[id].name + ' · ' + meta.roles[users[id].role].label })),
+      actorOptions: ids.filter((id) => users[id].role !== 'gone' && users[id].role !== 'ai').sort((a, b) => (users[a].role === users[b].role ? byName(a, b) : (users[a].role === 'student' ? 1 : -1))).map((id) => ({ id: id, label: users[id].name + ' · ' + meta.roles[users[id].role].label })),
       kindOptions: Object.keys(meta.kinds).map((k) => ({ id: k, label: meta.kinds[k] })),
       eventOptions: Object.keys(meta.events).map((k) => ({ id: k, label: meta.events[k].label })),
       fStudent: d.student,

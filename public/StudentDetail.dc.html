@@ -56,6 +56,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <li><a href="Curriculum.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">תוכנית לימודים</a></li>
 <li><a href="Rewards.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">פרסים</a></li>
 <li><a href="PointsSettings.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">ניקוד</a></li>
+<li><a href="AIChecks.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">בדיקת AI</a></li>
 <li><a href="Activity.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">פעילות</a></li>
 </ul>
 </nav>
@@ -209,6 +210,17 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <sc-if value="{{f.isFile}}" hint-placeholder-val="{{ false }}"><video src="{{f.link}}" controls="" preload="metadata" playsinline="" style="display: block; width: 100%; max-width: 640px; margin-top: 10px; aspect-ratio: 16 / 9; border-radius: 12px; background: #111413;"></video></sc-if>
 <sc-if value="{{f.isLink}}" hint-placeholder-val="{{ true }}"><a href="{{f.link}}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 14px; font-weight: 500; color: #17694F;">צפייה בסרטון הטיסה<span aria-hidden="true">↗</span></a></sc-if>
 <sc-if value="{{f.gone}}" hint-placeholder-val="{{ false }}"><p style="margin: 10px 0 0; font-size: 13px; color: #5E6762;">הסרטון נמחק מהאתר אחרי הבדיקה, כדי לפנות מקום.</p></sc-if>
+<sc-if value="{{f.hasAi}}" hint-placeholder-val="{{ false }}">
+<div style="margin-top: 12px; padding: 12px 14px; background: {{f.aiBg}}; border: 1px solid {{f.aiBorder}}; border-radius: 12px; font-size: 14px; line-height: 1.55; color: #1E2320;">
+<p style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin: 0; font-weight: 600;"><span aria-hidden="true">🤖</span>{{f.aiTitle}}</p>
+<sc-if value="{{f.aiHasFeedback}}" hint-placeholder-val="{{ false }}"><p style="margin: 6px 0 0;">משוב לסטודנט: {{f.aiFeedback}}</p></sc-if>
+<sc-if value="{{f.aiHasNotes}}" hint-placeholder-val="{{ false }}"><p style="margin: 6px 0 0; color: #545D58;">למדריך: {{f.aiNotes}}</p></sc-if>
+<div style="display: flex; flex-wrap: wrap; gap: 8px 14px; margin-top: 8px;">
+<sc-if value="{{f.aiCanUse}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{f.aiUse}}" style="padding: 0; border: 0; background: none; color: #17694F; font: inherit; font-size: 14px; font-weight: 500; text-decoration: underline; text-underline-offset: 3px; cursor: pointer;">להעתיק את המשוב לתיבה</button></sc-if>
+<sc-if value="{{f.aiCanRecheck}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{f.aiRecheck}}" style="padding: 0; border: 0; background: none; color: #17694F; font: inherit; font-size: 14px; font-weight: 500; text-decoration: underline; text-underline-offset: 3px; cursor: pointer;">בדיקת AI חוזרת</button></sc-if>
+</div>
+</div>
+</sc-if>
 <sc-if value="{{f.hasFeedback}}" hint-placeholder-val="{{ false }}"><p style="margin: 10px 0 0; padding: 10px 12px; background: #F7F8F7; border-radius: 10px; font-size: 14px; line-height: 1.55; color: #3D4541;">המשוב: {{f.feedback}}</p></sc-if>
 <sc-if value="{{f.isReview}}" hint-placeholder-val="{{ true }}">
 <label for="{{f.fbId}}" style="display: block; margin: 14px 0 6px; font-size: 14px; font-weight: 500; color: #3D4541;">משוב לסטודנט <span style="font-weight: 400; color: #5E6762;">(לא חובה)</span></label>
@@ -738,9 +750,44 @@ class Component extends DCLogic {
         hasError: s.fbError && s.fbError.id === f.id, error: s.fbError && s.fbError.id === f.id ? s.fbError.text : '',
         busy: s.fbBusy === f.id,
         points: String(pts),
+        ...this.aiVals(f, review),
         approve: () => this.review(f.id, true),
         reject: () => this.review(f.id, false)
       };
+    });
+  }
+
+  // What the AI check said about a flight, for the instructor.
+  aiVals(f, review) {
+    const A = window.Academy;
+    const ai = f.ai || null;
+    const set = (A.data.settings && A.data.settings.ai) || {};
+    const out = { hasAi: false, aiTitle: '', aiBg: '#F2FBF7', aiBorder: '#BFE6D5', aiHasFeedback: false, aiFeedback: '', aiHasNotes: false, aiNotes: '', aiCanUse: false, aiCanRecheck: false, aiUse: () => {}, aiRecheck: () => {} };
+    out.aiCanRecheck = review && !!set.enabled && !!set.hasKey && !!f.link && (!ai || ['done', 'error', 'skipped'].indexOf(ai.status) !== -1);
+    out.aiRecheck = () => this.aiRecheck(f.id);
+    if (!ai) { out.hasAi = out.aiCanRecheck; out.aiTitle = 'הטיסה לא נבדקה ב־AI.'; out.aiBg = '#F7F8F7'; out.aiBorder = '#E1E5E2'; return out; }
+    out.hasAi = true;
+    if (ai.status === 'queued' || ai.status === 'checking') { out.aiTitle = ai.status === 'checking' ? 'בבדיקת AI עכשיו…' : 'ממתינה לבדיקת AI…'; out.aiBg = '#F7F8F7'; out.aiBorder = '#E1E5E2'; return out; }
+    if (ai.status === 'error') { out.aiTitle = 'בדיקת ה־AI נכשלה: ' + (ai.error || '') + (/youtube/i.test(f.link || '') ? ' (‏AI יכול לפתוח רק סרטוני YouTube ציבוריים, לא "לא רשום")' : ''); out.aiBg = '#FDECEC'; out.aiBorder = '#F2B8B8'; return out; }
+    if (ai.status === 'skipped') {
+      out.aiTitle = ({ link: 'ה־AI לא יכול לפתוח את הקישור הזה. הוא בודק סרטונים שהועלו לאתר, וקישורי YouTube ציבוריים.', limit: 'לא נבדקה: הגעתם למגבלת הבדיקות היומית.', gone: 'לא נבדקה: המיומנות כבר לא קיימת.' })[ai.reason] || 'לא נבדקה ב־AI.';
+      out.aiBg = '#F7F8F7'; out.aiBorder = '#E1E5E2';
+      return out;
+    }
+    const v = ({ pass: 'עוברת', fail: 'לא עוברת', unclear: 'לא ברור' })[ai.verdict] || ai.verdict;
+    out.aiTitle = 'בדיקת AI: ' + v + ' · ביטחון ' + ai.confidence + '%' + (ai.applied === 'approved' ? ' · אושרה אוטומטית' : ai.applied === 'rejected' ? ' · הוחזרה אוטומטית' : '');
+    if (ai.verdict === 'fail') { out.aiBg = '#FDF3F3'; out.aiBorder = '#F2B8B8'; }
+    if (ai.verdict === 'unclear') { out.aiBg = '#FFF8E6'; out.aiBorder = '#EFD48C'; }
+    out.aiHasFeedback = !!ai.feedback; out.aiFeedback = ai.feedback || '';
+    out.aiHasNotes = !!ai.notes; out.aiNotes = ai.notes || '';
+    out.aiCanUse = review && !!ai.feedback;
+    out.aiUse = () => this.setState({ fb: Object.assign({}, this.st().fb || {}, { [f.id]: ai.feedback }) });
+    return out;
+  }
+
+  aiRecheck(fid) {
+    window.Academy.call('aiRecheck', { id: this.studentId(), flight: fid }).then((r) => {
+      this.setState(r.ok ? { announce: 'הטיסה נשלחה לבדיקת AI. התוצאה תופיע כאן בעוד דקה או שתיים.' } : { fbError: { id: fid, text: r.error } });
     });
   }
 

@@ -40,6 +40,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <li><a href="Curriculum.dc.html" aria-current="page" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid #9FDDC4; background: #D3F4E6; color: #121413; font-weight: 600; text-decoration: none; font-size: 15px; white-space: nowrap;">תוכנית לימודים</a></li>
 <li><a href="Rewards.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">פרסים</a></li>
 <li><a href="PointsSettings.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">ניקוד</a></li>
+<li><a href="AIChecks.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">בדיקת AI</a></li>
 <li><a href="Activity.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">פעילות</a></li>
 </ul>
 </nav>
@@ -87,6 +88,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <input id="sk-map" type="text" dir="auto" maxlength="80" value="{{map}}" onInput="{{onMap}}" style="width: 100%; box-sizing: border-box; height: 44px; padding: 0 14px; background: #FFFFFF; border: 1px solid #D3D9D5; border-radius: 10px; color: #1E2320; font: inherit; font-size: 15px; text-align: right;">
 </div>
 <label style="display: inline-flex; align-items: center; gap: 10px; align-self: flex-start; font-size: 15px; font-weight: 500; color: #1E2320; cursor: pointer;"><input type="checkbox" checked="{{active}}" onChange="{{toggleActive}}" style="width: 18px; height: 18px; margin: 0; accent-color: #B23A5E; cursor: pointer;">פעיל <span style="font-weight: 400; color: #5E6762;">(מופיע לסטודנטים ונדרש לסיום הרמה)</span></label>
+<label style="display: inline-flex; align-items: center; gap: 10px; align-self: flex-start; font-size: 15px; font-weight: 500; color: #1E2320; cursor: pointer;"><input type="checkbox" checked="{{aiCheck}}" onChange="{{toggleAi}}" style="width: 18px; height: 18px; margin: 0; accent-color: #B23A5E; cursor: pointer;">בדיקת AI לטיסות במיומנות הזו <span style="font-weight: 400; color: #5E6762;">(כשבדיקת ה־AI פעילה)</span></label>
 </div>
 <section aria-labelledby="ref-title" style="margin-top: 28px; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; padding: 24px;">
 <h2 id="ref-title" style="margin: 0; font-size: 19px; line-height: 1.35; font-weight: 600; color: #121413;">סרטון הדגמה</h2>
@@ -159,7 +161,7 @@ class Component extends DCLogic {
     const pts = k && A ? A.skillPoints(k.id) : 20;
     return {
       ready: true, id: k ? k.id : 0, level: String(level), points: String(pts), name: k ? k.name : '', desc: k ? k.desc || '' : '', pass: k ? k.pass || '' : '',
-      map: k ? k.map || '' : '', caption: k ? k.caption || '' : '', video: k ? k.video || '' : '', active: k ? k.active !== false : true,
+      map: k ? k.map || '' : '', caption: k ? k.caption || '' : '', video: k ? k.video || '' : '', active: k ? k.active !== false : true, aiCheck: k ? k.aiCheck !== false : true,
       error: '', busy: false, confirming: false, uploading: false, pct: 0, uploadError: '', fileName: ''
     };
   }
@@ -204,7 +206,7 @@ class Component extends DCLogic {
       cur.skills.push(k);
     }
     if (!s.id || k.level !== level) k.order = cur.skills.filter((x) => x.level === level && x.id !== k.id).reduce((m, x) => Math.max(m, x.order || 0), 0) + 1;
-    Object.assign(k, { level: level, name: name, desc: s.desc.trim(), pass: s.pass.trim(), map: s.map.trim(), caption: s.caption.trim(), video: video, active: !!s.active });
+    Object.assign(k, { level: level, name: name, desc: s.desc.trim(), pass: s.pass.trim(), map: s.map.trim(), caption: s.caption.trim(), video: video, active: !!s.active, aiCheck: !!s.aiCheck });
     const points = {}; points[k.id] = pts;
     this.setState(Object.assign({}, s, { busy: true }));
     A.call('saveCurriculum', { curriculum: cur, points: points, note: (s.id ? 'עדכן את המיומנות ' : 'הוסיף את המיומנות ') + name }).then((r) => {
@@ -265,6 +267,8 @@ class Component extends DCLogic {
       hasUploadError: !!s.uploadError,
       uploadError: s.uploadError || '',
       toggleActive: () => this.set({ active: !s.active }),
+      aiCheck: !!s.aiCheck,
+      toggleAi: () => this.set({ aiCheck: !s.aiCheck }),
       hasEmbed: !!embed, embed: embed || 'about:blank',
       linkOnly: !isFile && !embed && /^https?:\/\/\S+$/i.test(s.video.trim()),
       hasError: !!s.error, error: s.error,

@@ -8,6 +8,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const M = require('./model');
+const AI = require('./ai');
 
 const PORT = Number(process.env.PORT) || 3000;
 const PROD = process.env.NODE_ENV === 'production';
@@ -69,6 +70,8 @@ function load() {
   db.activity = db.activity || [];
   db.uploads = db.uploads || {};
   db.settings = Object.assign({ videoDays: 14 }, db.settings || {});
+  db.settings.ai = Object.assign({ enabled: false, mode: 'suggest', threshold: 80, autoReject: true, extra: '', model: '', dailyLimit: 100 }, db.settings.ai || {});
+  db.aiUsage = db.aiUsage || { day: '', count: 0 };
   db.progress = db.progress || {};
   const cur = M.cleanCurriculum(db.curriculum || M.curriculumDefaults());
   db.curriculum = typeof cur === 'string' ? M.curriculumDefaults() : cur;
@@ -152,9 +155,10 @@ function bootFor(user) {
   if (user.role === 'admin') {
     base.curriculum = db.curriculum;
     base.settings.mediaFree = Number.isFinite(freeBytes()) ? Math.round(freeBytes() / 1048576) : null;
+    base.settings.ai = Object.assign({}, db.settings.ai, { hasKey: AI.hasKey(), defaultModel: AI.DEFAULT_MODEL, queue: aiQueue.length + (aiBusy ? 1 : 0), today: db.aiUsage.day === M.today() ? db.aiUsage.count : 0 });
   }
   if (user.role === 'student') {
-    base.progress = progressOf(user.id);
+    base.progress = studentView(progressOf(user.id));
   } else if (user.role === 'admin') {
     base.users = db.users.map(publicUser);
     base.progressAll = {};
@@ -402,11 +406,11 @@ const ADMIN_ACTIONS = {
         if (pts && !doc.ledger.some((e) => e.kind === 'challenge' && e.challenge === f.challenge && !e.reverted)) {
           doc.ledger.push({ id: M.newId('a'), at: M.stamp(), cat: 'bonus', kind: 'challenge', challenge: f.challenge, text: 'אתגר: ' + c.title, amount: pts, skill: null });
         }
-        M.notify(doc, { kind: 'approved', text: 'האתגר אושר: ' + c.title + (pts ? ' (' + M.sg(pts) + ' מטבעות).' : '.') + (feedback ? ' מדריך: ״' + feedback + '״' : '') });
+        M.notify(doc, { kind: 'approved', text: 'האתגר אושר: ' + c.title + (pts ? ' (' + M.sg(pts) + ' מטבעות).' : '.') + (feedback ? (me.ai ? ' משוב הבדיקה האוטומטית: ״' : ' מדריך: ״') + feedback + '״' : '') });
         log(me, 'flight', 'אישר אתגר של ' + u.name + ': ' + c.title, { target: u.id });
       } else {
         f.status = 'rejected';
-        M.notify(doc, { kind: 'rejected', text: 'הטיסה לאתגר ' + c.title + ' לא אושרה. אפשר לנסות שוב.' + (feedback ? ' מדריך: ״' + feedback + '״' : '') });
+        M.notify(doc, { kind: 'rejected', text: 'הטיסה לאתגר ' + c.title + ' לא אושרה. אפשר לנסות שוב.' + (feedback ? (me.ai ? ' משוב הבדיקה האוטומטית: ״' : ' מדריך: ״') + feedback + '״' : '') });
         log(me, 'flight', 'החזיר לתיקון אתגר של ' + u.name + ': ' + c.title, { target: u.id });
       }
       return { ok: true };
@@ -417,11 +421,11 @@ const ADMIN_ACTIONS = {
       f.status = 'approved';
       const added = M.grantSkill(doc, db.scoring, f.skill, 'flight', { first });
       const sum = added.reduce((s, e) => s + e.amount, 0);
-      M.notify(doc, { kind: 'approved', skill: f.skill, text: 'מאושר: ' + k.name + ' (' + M.sg(sum) + ' מטבעות).' + (feedback ? ' מדריך: ״' + feedback + '״' : '') });
+      M.notify(doc, { kind: 'approved', skill: f.skill, text: 'מאושר: ' + k.name + ' (' + M.sg(sum) + ' מטבעות).' + (feedback ? (me.ai ? ' משוב הבדיקה האוטומטית: ״' : ' מדריך: ״') + feedback + '״' : '') });
       log(me, 'flight', 'אישר טיסה של ' + u.name + ': ' + k.name, { target: u.id });
     } else {
       f.status = 'rejected';
-      M.notify(doc, { kind: 'rejected', skill: f.skill, text: 'הטיסה ב' + k.name + ' לא אושרה. אפשר לנסות שוב.' + (feedback ? ' מדריך: ״' + feedback + '״' : '') });
+      M.notify(doc, { kind: 'rejected', skill: f.skill, text: 'הטיסה ב' + k.name + ' לא אושרה. אפשר לנסות שוב.' + (feedback ? (me.ai ? ' משוב הבדיקה האוטומטית: ״' : ' מדריך: ״') + feedback + '״' : '') });
       log(me, 'flight', 'החזיר לתיקון טיסה של ' + u.name + ': ' + k.name, { target: u.id });
     }
     return { ok: true };
@@ -524,6 +528,36 @@ const ADMIN_ACTIONS = {
     M.setCurriculum(cur);
     cleanMedia();
     log(me, 'settings', String(b.note || 'עדכן את תוכנית הלימודים').slice(0, 200));
+    return { ok: true };
+  },
+  saveAi(me, b) {
+    const a = db.settings.ai;
+    const t = Math.trunc(Number(b.threshold));
+    const lim = Math.trunc(Number(b.dailyLimit));
+    if (!(t >= 50 && t <= 100)) return 'רמת הביטחון צריכה להיות בין 50 ל־100.';
+    if (!(lim >= 1 && lim <= 5000)) return 'המגבלה היומית צריכה להיות בין 1 ל־5,000.';
+    if (b.enabled && !AI.hasKey()) return 'קודם מוסיפים את המפתח GEMINI_API_KEY בהגדרות של Render (Environment), ואז מפעילים.';
+    const was = a.enabled;
+    a.enabled = !!b.enabled;
+    a.mode = b.mode === 'auto' ? 'auto' : 'suggest';
+    a.threshold = t;
+    a.autoReject = !!b.autoReject;
+    a.extra = String(b.extra || '').trim().slice(0, 1500);
+    a.model = String(b.model || '').trim().replace(/[^A-Za-z0-9._\/-]/g, '').slice(0, 80);
+    a.dailyLimit = lim;
+    log(me, 'settings', 'עדכן את בדיקת ה־AI: ' + (a.enabled ? (a.mode === 'auto' ? 'פעילה, מחליטה לבד' : 'פעילה, ממליצה בלבד') : 'כבויה'));
+    if (a.enabled && !was) queueWaiting();
+    return { ok: true };
+  },
+  aiRecheck(me, b) {
+    const u = findUser(b.id);
+    if (!u || u.role !== 'student') return 'הסטודנט לא נמצא.';
+    const f = progressOf(u.id).flights.find((x) => x.id === b.flight);
+    if (!f) return 'הטיסה לא נמצאה.';
+    if (f.status !== 'review') return 'אפשר לבדוק שוב רק טיסה שממתינה לבדיקה.';
+    if (!AI.hasKey()) return 'חסר המפתח GEMINI_API_KEY בהגדרות של Render.';
+    if (!enqueue(u.id, f, true)) return 'לטיסה הזו אין סרטון ש־AI יכול לפתוח (קובץ שהועלה או קישור YouTube ציבורי).';
+    log(me, 'flight', 'שלח לבדיקת AI חוזרת את הטיסה של ' + u.name, { target: u.id });
     return { ok: true };
   },
   saveSettings(me, b) {
@@ -676,6 +710,130 @@ function cleanFlightVideos() {
   if (changed) save();
 }
 
+// ---------- AI checks ----------
+// A student's view of their progress: everything, except the AI's notes meant for the instructor.
+function studentView(doc) {
+  if (!doc.flights.some((f) => f.ai)) return doc;
+  const copy = Object.assign({}, doc, { flights: doc.flights.map((f) => {
+    if (!f.ai) return f;
+    const ai = Object.assign({}, f.ai);
+    delete ai.notes;
+    delete ai.error;
+    return Object.assign({}, f, { ai });
+  }) });
+  return copy;
+}
+
+const aiQueue = [];
+let aiBusy = false;
+const AI_USER = { id: 'ai', name: 'בדיקת AI', role: 'admin', ai: true };
+
+function videoSource(f) {
+  if (f.link && f.link.startsWith('/media/') && db.uploads[f.link.slice(7)]) return { file: path.join(MEDIA_DIR, f.link.slice(7)) };
+  const yt = AI.youtubeUrl(f.link);
+  return yt ? { youtube: yt } : null;
+}
+
+function aiWanted(f) {
+  if (f.challenge) return true;
+  const k = M.skillById(f.skill);
+  return !!k && k.aiCheck !== false;
+}
+
+function enqueue(uid, f, force) {
+  if (!videoSource(f)) { f.ai = { status: 'skipped', reason: 'link', at: M.stamp() }; return false; }
+  if (!force && !aiWanted(f)) return false;
+  if (aiQueue.some((j) => j.fid === f.id)) return true;
+  f.ai = { status: 'queued', at: M.stamp() };
+  aiQueue.push({ uid, fid: f.id });
+  setImmediate(runAi);
+  return true;
+}
+
+function queueNewFlights(uid, events) {
+  if (!db.settings.ai.enabled || !AI.hasKey()) return;
+  const doc = progressOf(uid);
+  events.filter((e) => e.kind === 'flight' && e.ref).forEach((e) => {
+    const f = doc.flights.find((x) => x.id === e.ref);
+    if (f && f.status === 'review') enqueue(uid, f, false);
+  });
+  save();
+}
+
+// When the check is turned on, flights already waiting (and checks cut off by a restart) go in line.
+function queueWaiting() {
+  if (!db.settings.ai.enabled || !AI.hasKey()) return;
+  Object.keys(db.progress).forEach((uid) => {
+    (db.progress[uid].flights || []).forEach((f) => {
+      if (f.status !== 'review') return;
+      if (!f.ai || f.ai.status === 'queued' || f.ai.status === 'checking') enqueue(uid, f, false);
+    });
+  });
+  save();
+}
+
+async function runAi() {
+  if (aiBusy) return;
+  aiBusy = true;
+  try {
+    while (aiQueue.length) {
+      const job = aiQueue.shift();
+      await checkOne(job).catch((e) => console.error('AI check failed:', e.message));
+    }
+  } finally {
+    aiBusy = false;
+  }
+}
+
+async function checkOne(job) {
+  const set = db.settings.ai;
+  const find = () => (db.progress[job.uid] || { flights: [] }).flights.find((x) => x.id === job.fid);
+  let f = find();
+  if (!f || f.status !== 'review') return;
+  const today = M.today();
+  if (db.aiUsage.day !== today) db.aiUsage = { day: today, count: 0 };
+  if (db.aiUsage.count >= set.dailyLimit) { f.ai = { status: 'skipped', reason: 'limit', at: M.stamp() }; save(); return; }
+  const src = videoSource(f);
+  if (!src) { f.ai = { status: 'skipped', reason: 'link', at: M.stamp() }; save(); return; }
+  const c = f.challenge ? M.challengeById(f.challenge) : null;
+  const k = f.challenge ? null : M.skillById(f.skill);
+  if (!c && !k) { f.ai = { status: 'skipped', reason: 'gone', at: M.stamp() }; save(); return; }
+  f.ai = { status: 'checking', at: M.stamp() };
+  db.aiUsage.count++;
+  save();
+  let result;
+  try {
+    result = await AI.check(Object.assign({}, src, {
+      skillName: c ? 'אתגר: ' + c.title : k.name,
+      desc: c ? c.desc : k.desc,
+      pass: c ? c.desc : k.pass,
+      map: k ? k.map : '',
+      note: f.note,
+      extra: set.extra,
+      model: set.model
+    }));
+  } catch (e) {
+    f = find();
+    if (f) { f.ai = { status: 'error', error: String(e.message || e).slice(0, 300), at: M.stamp() }; save(); }
+    return;
+  }
+  f = find();
+  if (!f) return;
+  f.ai = Object.assign({ status: 'done', at: M.stamp() }, result);
+  const u = findUser(job.uid);
+  const sure = result.confidence >= set.threshold;
+  if (f.status === 'review' && set.enabled && set.mode === 'auto' && sure && u) {
+    if (result.verdict === 'pass') {
+      ADMIN_ACTIONS.reviewFlight(AI_USER, { id: u.id, flight: f.id, approve: true, feedback: result.feedback });
+      f.ai.applied = 'approved';
+    } else if (result.verdict === 'fail' && set.autoReject) {
+      ADMIN_ACTIONS.reviewFlight(AI_USER, { id: u.id, flight: f.id, approve: false, feedback: result.feedback });
+      f.ai.applied = 'rejected';
+    }
+  }
+  save();
+}
+
 async function handle(req, res) {
   const url = new URL(req.url, 'http://x');
   let p = decodeURIComponent(url.pathname);
@@ -740,7 +898,8 @@ async function handle(req, res) {
       db.progress[user.id] = out.doc;
       out.events.forEach((e) => log(user, e.kind, e.text, { target: user.id, ref: e.ref }));
       save();
-      return json(res, 200, { progress: out.doc, rewards: db.rewards.map((x) => Object.assign({}, x, { left: stockLeft(x.id) })), scoring: db.scoring, today: M.today() });
+      queueNewFlights(user.id, out.events);
+      return json(res, 200, { progress: studentView(out.doc), rewards: db.rewards.map((x) => Object.assign({}, x, { left: stockLeft(x.id) })), scoring: db.scoring, today: M.today() });
     }
     if (p === '/api/upload/flight' && req.method === 'POST') {
       if (user.role !== 'student') return json(res, 403, { error: 'רק סטודנטים.' });
@@ -844,6 +1003,7 @@ async function handle(req, res) {
 
 load();
 cleanFlightVideos();
+queueWaiting();
 setInterval(cleanFlightVideos, 3600e3).unref();
 http.createServer((req, res) => {
   handle(req, res).catch((err) => {

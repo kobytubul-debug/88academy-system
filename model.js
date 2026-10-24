@@ -77,7 +77,7 @@ function cleanCurriculum(cur) {
     const level = levels.some((l) => l.n === Number(k.level)) ? Number(k.level) : levels[0].n;
     skills.push({
       id, level, order: Math.max(0, Math.trunc(Number(k.order)) || 0), name, desc: str(k.desc, 1000), pass: str(k.pass, 1000),
-      map: str(k.map, 80), caption: str(k.caption, 300), video: url(k.video), showVideo: k.showVideo !== false, active: k.active !== false
+      map: str(k.map, 80), caption: str(k.caption, 300), video: url(k.video), showVideo: k.showVideo !== false, active: k.active !== false, aiCheck: k.aiCheck !== false
     });
   });
   const challenges = [];
