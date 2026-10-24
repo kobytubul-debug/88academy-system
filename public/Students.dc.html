@@ -131,7 +131,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <sc-if value="{{u.pointsOff}}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 999px; background: #F1F3F2; border: 1px solid #D3D9D5; color: #4B534F; font-size: 12px; font-weight: 500;">כבוי</span></sc-if>
 </span>
 <span style="display: flex; justify-content: flex-end;">
-<button type="button" class="btn-ghost" aria-label="{{u.editLabel}}" onClick="{{u.edit}}" style="height: 34px; padding: 0 12px; border-radius: 9px; border: 1px solid {{u.editBorder}}; background: {{u.editBg}}; color: {{u.editColor}}; font: inherit; font-size: 14px; cursor: pointer;">עריכה</button>
+<sc-if value="{{u.editShown}}" hint-placeholder-val="{{ true }}"><button type="button" class="btn-ghost" aria-label="{{u.editLabel}}" onClick="{{u.edit}}" style="height: 34px; padding: 0 12px; border-radius: 9px; border: 1px solid {{u.editBorder}}; background: {{u.editBg}}; color: {{u.editColor}}; font: inherit; font-size: 14px; cursor: pointer;">עריכה</button></sc-if><sc-if value="{{u.editHidden}}" hint-placeholder-val="{{ false }}"><span title="רק המנהל הראשי יכול לערוך את החשבון הזה" style="white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px; font-size: 13px; color: #6E7772;"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 10V8a4 4 0 0 1 8 0v2" fill="none" stroke="currentColor" stroke-width="2.4"></path><rect x="5.5" y="10" width="13" height="10" rx="2.5"></rect></svg>מנהל ראשי</span></sc-if>
 </span>
 </li>
 <sc-if value="{{u.ptsExpanded}}" hint-placeholder-val="{{ false }}">
@@ -632,7 +632,7 @@ class Component extends DCLogic {
   startEdit(id) {
     const s = this.st();
     const u = s.users.find((x) => x.id === id);
-    if (!u) return;
+    if (!u || this.lockedOwner(u)) return;
     this.setState({
       mode: 'edit',
       editId: id,
@@ -645,6 +645,12 @@ class Component extends DCLogic {
         if (this.nameEl) this.nameEl.focus({ preventScroll: true });
       } catch (err) {}
     });
+  }
+
+  // The main admin's account is edited only by the main admin; other admins see it locked.
+  lockedOwner(u) {
+    const A = window.Academy;
+    return !!(u && u.envAdmin && A && A.on && A.me && !A.me.envAdmin);
   }
 
   cancelEdit() {
@@ -851,7 +857,9 @@ class Component extends DCLogic {
         editColor: isEditing ? '#A8335A' : '#3D4541',
         cardHref: 'StudentDetail.dc.html?id=' + encodeURIComponent(u.id),
         toggle: (e) => this.toggleSelect(u.id, e.target.checked),
-        edit: () => this.startEdit(u.id)
+        edit: () => { if (this.lockedOwner(u)) return; this.startEdit(u.id); },
+        editHidden: this.lockedOwner(u),
+        editShown: !this.lockedOwner(u)
       };
     });
 
