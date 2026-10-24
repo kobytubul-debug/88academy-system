@@ -529,6 +529,15 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 </ul>
 </section>
 </sc-for>
+<sc-if value="{{hasFinal}}" hint-placeholder-val="{{ false }}">
+<section aria-label="מבחן מסכם" style="padding: 22px 24px; border-radius: 24px; background: #121413; color: #FFFFFF;">
+<button type="button" class="card-btn" onClick="{{openFinal}}" style="display: flex; flex-wrap: wrap; align-items: center; gap: 14px 18px; width: 100%; padding: 0; border: 0; background: transparent; color: inherit; font: inherit; text-align: start; cursor: pointer;">
+<span aria-hidden="true" style="flex: none; width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: #FFFFFF; color: #C98A12;"><svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M7 3.5h10v5.5a5 5 0 0 1-10 0z"></path><path d="M7 5.5H4.5a3.5 3.5 0 0 0 3.2 4.6M17 5.5h2.5a3.5 3.5 0 0 1-3.2 4.6" fill="none" stroke="currentColor" stroke-width="1.6"></path><path d="M10.5 14h3v3.5h-3z"></path><rect x="7.5" y="17.5" width="9" height="3" rx="1"></rect></svg></span>
+<span style="flex: 1 1 220px; min-width: 0;"><span style="display: block; font-size: 13px; color: #76DEB8;">מבחן מסכם</span><span style="display: block; margin-top: 2px; font-size: 22px; font-weight: 600;">{{finalTitle}}</span></span>
+<span style="display: inline-flex; align-items: center; height: 30px; padding: 0 12px; border-radius: 999px; background: #FFFFFF; color: #121413; font-size: 14px; font-weight: 600;">{{finalChip}}</span>
+</button>
+</section>
+</sc-if>
 </div>
 </sc-if>
 </div>
@@ -1100,7 +1109,7 @@ class Component extends DCLogic {
       return A.challenges().map((c) => {
         const endAt = c.ends ? (c.ends.length === 10 ? c.ends + ' 23:59' : c.ends) : '';
         const endsText = c.ends ? c.ends.slice(8, 10) + '.' + c.ends.slice(5, 7) + '.' + c.ends.slice(0, 4) + (c.ends.length > 10 ? ' ' + c.ends.slice(11) : '') : 'בלי תאריך סיום';
-        return { id: c.id, title: c.title, desc: c.desc || '', level: c.level, ends: endsText, ended: !!endAt && now > endAt, points: Number(c.points) || 0, pointsText: (Number(c.points) || 0) + ' מטבעות', video: c.video || '' };
+        return { id: c.id, title: c.title, desc: c.desc || '', level: c.level, ends: endsText, ended: !!endAt && now > endAt, points: Number(c.points) || 0, pointsText: (Number(c.points) || 0) + ' מטבעות', video: c.video || '', final: !!c.final };
       });
     }
     return [
@@ -2142,6 +2151,10 @@ class Component extends DCLogic {
     ];
   }
 
+  finalExam() {
+    return this.challenges().find((c) => c.final) || null;
+  }
+
   challengeById(id) {
     return this.challenges().find((c) => c.id === id) || null;
   }
@@ -2161,6 +2174,7 @@ class Component extends DCLogic {
     if (mine.some((f) => f.status === 'approved')) return 'done';
     if (mine.some((f) => f.status === 'review')) return 'review';
     if (c.ended) return 'ended';
+    if (c.final) return this.skills().length && this.skills().every((k) => s.acquired[k.id]) ? 'open' : 'locked';
     const levels = this.levels();
     const rank = (n) => levels.findIndex((l) => l.n === n);
     const lvRank = rank(c.level);
@@ -2739,7 +2753,20 @@ class Component extends DCLogic {
         inert: false, aria: k.name + ' — ' + this.chip(status).label + ', ' + k.points + ' מטבעות', cursor: 'pointer', open: () => this.openSkill(k.id)
       };
     };
-    const endNode = (cx, top, boxW, size) => ({
+    const fin = this.finalExam();
+    const finState = fin ? this.challengeState(fin, s) : '';
+    const endNode = (cx, top, boxW, size) => (fin ? {
+      id: 'END', left: Math.round(cx - boxW / 2), boxW: boxW, labelMax: boxW - 20, top: top, size: size, borderW: 3,
+      ring: finState === 'done' ? GREEN : finState === 'review' ? YELLOW : finState === 'open' ? ROSE : GRAY,
+      innerRing: finState === 'locked' || finState === 'ended' ? '#C3CBC6' : 'transparent',
+      glow: finState === 'open' ? '0 0 0 6px rgba(199, 67, 106, 0.14), 0 0 28px rgba(199, 67, 106, 0.30)' : 'none',
+      iconCheck: false, iconPlay: false, iconReview: false, iconLock: false, iconDrone: false, iconTrophy: true,
+      hasSub: true, subCoin: false, sub: 'מבחן מסכם' + (fin.points ? ' · ' + this.sg(fin.points) : ''), subDir: 'rtl',
+      subBg: finState === 'done' ? '#DDF6EC' : finState === 'open' ? '#121413' : '#FFFFFF', subColor: finState === 'done' ? '#17694F' : finState === 'open' ? '#FFD15C' : '#3D4541',
+      label: fin.title, labelSize: 18, labelWeight: 700, labelColor: finState === 'locked' ? '#5E6762' : '#121413',
+      inert: false, aria: 'מבחן מסכם: ' + fin.title + ' — ' + ({ done: 'הושלם', review: 'בבדיקה', open: 'פתוח', ended: 'הסתיים', locked: 'נעול' })[finState], cursor: 'pointer',
+      open: () => this.go('challenge', { challengeId: fin.id })
+    } : {
       id: 'END', left: Math.round(cx - boxW / 2), boxW: boxW, labelMax: boxW - 20, top: top, size: size, borderW: 3,
       ring: allDone ? GREEN : GRAY, innerRing: allDone ? 'transparent' : '#C3CBC6', glow: 'none',
       iconCheck: false, iconPlay: false, iconReview: false, iconLock: false, iconDrone: false, iconTrophy: true,
@@ -3480,6 +3507,10 @@ class Component extends DCLogic {
       // path
       isGraph: here.pathView === 'graph',
       isList: here.pathView === 'list',
+      hasFinal: !!this.finalExam(),
+      finalTitle: this.finalExam() ? this.finalExam().title : '',
+      finalChip: this.finalExam() ? (({ done: 'הושלם', review: 'בבדיקה', open: 'פתוח', ended: 'הסתיים', locked: 'נעול' })[this.challengeState(this.finalExam(), s)] + (this.finalExam().points ? ' · ' + this.sg(this.finalExam().points) + ' מטבעות' : '')) : '',
+      openFinal: () => { const f = this.finalExam(); if (f) this.go('challenge', { challengeId: f.id }); },
       graphTab: tab(here.pathView === 'graph'),
       listTab: tab(here.pathView === 'list'),
       showGraph: () => this.setState({ pathView: 'graph' }),
@@ -3519,12 +3550,12 @@ class Component extends DCLogic {
       }),
       challengeHasTries: chFlights.length > 0,
       challengeDesc: challenge.desc,
-      challengeLevel: 'רמה ' + challenge.level + (challengeLevel.name ? ' · ' + challengeLevel.name : ''),
+      challengeLevel: challenge.final ? 'אחרי שמסיימים את כל המסלול' : 'רמה ' + challenge.level + (challengeLevel.name ? ' · ' + challengeLevel.name : ''),
       challengeEnds: challenge.ends,
       challengePoints: challenge.pointsText,
       challengeNoteBg: chState === 'done' ? '#DDF6EC' : chState === 'review' ? '#FFF4D6' : challengeOpen ? '#FCE8EF' : '#F1F3F2',
       challengeNoteBorder: chState === 'done' ? '#A3DEC6' : chState === 'review' ? '#EFD48C' : challengeOpen ? '#EFB5C8' : '#D3D9D5',
-      challengeLockedText: chState === 'done' ? 'השלמתם את האתגר. כל הכבוד!' : chState === 'review' ? 'הטיסה שלכם לאתגר בבדיקה. המדריך יעדכן אתכם.' : chState === 'ended' ? 'האתגר הסתיים.' : challengeOpen ? 'האתגר פתוח' + (challenge.ends && challenge.ends !== 'בלי תאריך סיום' ? ' עד ' + challenge.ends : '') + '. העלו את הטיסה שלכם למטה.' : 'האתגר ייפתח כשתגיעו לרמה ' + challenge.level + ' · ' + challengeLevel.name + '. הוא שווה ' + challenge.points + ' מטבעות.',
+      challengeLockedText: challenge.final && chState === 'locked' ? 'המבחן המסכם ייפתח כשתסיימו את כל המיומנויות במסלול.' : challenge.final && chState === 'done' ? 'עברתם את המבחן המסכם וסיימתם את המסלול. כל הכבוד!' : chState === 'done' ? 'השלמתם את האתגר. כל הכבוד!' : chState === 'review' ? 'הטיסה שלכם לאתגר בבדיקה. המדריך יעדכן אתכם.' : chState === 'ended' ? 'האתגר הסתיים.' : challengeOpen ? 'האתגר פתוח' + (challenge.ends && challenge.ends !== 'בלי תאריך סיום' ? ' עד ' + challenge.ends : '') + '. העלו את הטיסה שלכם למטה.' : 'האתגר ייפתח כשתגיעו לרמה ' + challenge.level + ' · ' + challengeLevel.name + '. הוא שווה ' + challenge.points + ' מטבעות.',
 
       // flights
       flightRows: flightRows,
