@@ -87,8 +87,7 @@ function cleanCurriculum(cur) {
     if (!id || !title || challenges.some((x) => x.id === id)) return;
     const level = levels.some((l) => l.n === Number(c.level)) ? Number(c.level) : levels[0].n;
     const ends = /^\d{4}-\d{2}-\d{2}( \d{2}:\d{2})?$/.test(str(c.ends, 16)) ? str(c.ends, 16) : '';
-    const final = !!c.final && !challenges.some((x) => x.final);
-    challenges.push({ id, title, desc: str(c.desc, 1000), level, ends, points: Math.max(0, Math.min(100000, Math.trunc(Number(c.points)) || 0)), video: url(c.video), active: c.active !== false, final });
+    challenges.push({ id, title, desc: str(c.desc, 1000), level, ends, points: Math.max(0, Math.min(100000, Math.trunc(Number(c.points)) || 0)), video: url(c.video), active: c.active !== false });
   });
   return { levels, skills, challenges };
 }
@@ -263,11 +262,6 @@ function revokeSkill(doc, skillId) {
 
 // A challenge is open from its level on, until its end time (Israel time) if it has one.
 function challengeOpen(c, doc) {
-  if (c.final) {
-    if (!SKILLS.length || !SKILLS.every((k) => doc.acquired[k.id])) return false;
-    if (c.ends && stamp() > (c.ends.length === 10 ? c.ends + ' 23:59' : c.ends)) return false;
-    return true;
-  }
   const rank = (n) => LEVELS.findIndex((l) => l.n === n);
   if (rank(c.level) > rank(currentLevel(doc))) return false;
   if (c.ends && stamp() > (c.ends.length === 10 ? c.ends + ' 23:59' : c.ends)) return false;

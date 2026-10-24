@@ -38,6 +38,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <li><a href="Curriculum.dc.html" aria-current="page" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid #9FDDC4; background: #D3F4E6; color: #121413; font-weight: 600; text-decoration: none; font-size: 15px; white-space: nowrap;">תוכנית לימודים</a></li>
 <li><a href="Rewards.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">פרסים</a></li>
 <li><a href="PointsSettings.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">ניקוד</a></li>
+<li><a href="AIChecks.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">בדיקת AI</a></li>
 <li><a href="Activity.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">פעילות</a></li>
 </ul>
 </nav>
@@ -447,7 +448,7 @@ class Component extends DCLogic {
         return {
           id: c.id, title: c.title,
           nameColor: c.active === false || ended ? '#6E7772' : '#1E2320',
-          meta: (c.final ? 'מבחן מסכם · בסוף המסלול' : 'מ' + levelName(c.level)) + ' · ' + (c.points === 1 ? 'נקודה אחת' : c.points + ' נקודות') + (c.ends ? ' · עד ' + c.ends.slice(8, 10) + '.' + c.ends.slice(5, 7) + (c.ends.length > 10 ? ' ' + c.ends.slice(11) : '') : ''),
+          meta: 'מ' + levelName(c.level) + ' · ' + (c.points === 1 ? 'נקודה אחת' : c.points + ' נקודות') + (c.ends ? ' · עד ' + c.ends.slice(8, 10) + '.' + c.ends.slice(5, 7) + (c.ends.length > 10 ? ' ' + c.ends.slice(11) : '') : ''),
           inactive: c.active === false || !!ended,
           inactiveText: c.active === false ? 'לא פעיל' : 'הסתיים',
           divider: i === 0 ? 'transparent' : '#E8EBE9',

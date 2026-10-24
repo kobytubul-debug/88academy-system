@@ -150,7 +150,7 @@ function bootFor(user) {
   const rewards = db.rewards.map((p) => Object.assign({}, p, { left: stockLeft(p.id) }));
   const base = { me: publicUser(user), today: M.today(), now: M.stamp(), units: db.units, rewards, scoring: db.scoring, levels: M.LEVELS, skills: M.SKILLS, challenges: M.CHALLENGES,
     allSkills: M.ALL_SKILLS.map((k) => ({ id: k.id, name: k.name, level: k.level, active: k.active })),
-    allChallenges: M.ALL_CHALLENGES.map((c) => ({ id: c.id, title: c.title, points: c.points, active: c.active, final: !!c.final })) };
+    allChallenges: M.ALL_CHALLENGES.map((c) => ({ id: c.id, title: c.title, points: c.points, active: c.active })) };
   base.settings = { videoDays: db.settings.videoDays, maxFlightMb: Math.round(MAX_FLIGHT / 1048576) };
   if (user.role === 'admin') {
     base.curriculum = db.curriculum;
