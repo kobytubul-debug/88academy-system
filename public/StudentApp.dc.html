@@ -1969,6 +1969,13 @@ class Component extends DCLogic {
     return h > 0 ? h + ':' + String(m % 60).padStart(2, '0') + ' ש׳' : m + ' דק׳';
   }
 
+  // The size limit in words, with a rough phone-video length (about 100 MB a minute at 1080p).
+  flightHint(mb) {
+    const min = Math.max(1, Math.floor(mb / 100));
+    const len = min <= 1 ? 'בערך דקה' : min === 2 ? 'בערך שתי דקות' : 'בערך ' + min + ' דקות';
+    return 'עד ' + mb + ' מגה־בייט, ' + len + ' של צילום בטלפון. סרטון ארוך יותר מעלים ל־YouTube ומדביקים קישור למטה.';
+  }
+
   // Learning time: coins for every few minutes the app is in front of the student, a few times a day (as set).
   startClock() {
     if (this._clock || typeof window === 'undefined' || !window.setInterval) return;
@@ -2173,7 +2180,7 @@ class Component extends DCLogic {
     const file = e && e.target && e.target.files ? e.target.files[0] : null;
     if (!A || !file) return;
     if (e.target) e.target.value = '';
-    const max = ((A.data.settings && A.data.settings.maxFlightMb) || 200) * 1024 * 1024;
+    const max = ((A.data.settings && A.data.settings.maxFlightMb) || 500) * 1024 * 1024;
     if (!/^video\//.test(file.type || '') && !/\.(mp4|m4v|mov|webm)$/i.test(file.name)) { this.setDraft({ error: 'זה לא נראה כמו קובץ וידאו. בחרו סרטון.' }); return; }
     if (!/\.(mp4|m4v|mov|webm)$/i.test(file.name) && !/(mp4|quicktime|webm)/.test(file.type || '')) { this.setDraft({ error: 'אפשר להעלות סרטונים מסוג MP4, MOV או WEBM. אפשר גם להדביק קישור.' }); return; }
     if (file.size > max) { this.setDraft({ error: 'הסרטון גדול מ־' + Math.round(max / 1048576) + ' מגה־בייט. קצרו אותו, או העלו ל־YouTube והדביקו קישור.' }); return; }
@@ -3571,7 +3578,7 @@ class Component extends DCLogic {
       flightNoFile: !s.draft.uploaded && !s.draft.uploading,
       flightUploadName: s.draft.uploadName || '',
       flightUploadLabel: 'העלאת סרטון הטיסה',
-      flightUploadHint: 'עד ' + (((window.Academy && window.Academy.data.settings) || {}).maxFlightMb || 200) + ' מגה־בייט, בערך דקה או שתיים בטלפון. סרטון ארוך יותר מעלים ל־YouTube ומדביקים קישור למטה.',
+      flightUploadHint: this.flightHint((((window.Academy && window.Academy.data.settings) || {}).maxFlightMb) || 500),
       onFlightFile: (e) => this.uploadFlightFile(e),
       clearFlightFile: () => this.setDraft({ uploaded: '', uploadName: '', pct: 0, error: '' }),
       linkLabel: this.canUpload() ? 'או קישור לסרטון (YouTube או Google Drive)' : 'קישור לסרטון הטיסה',
