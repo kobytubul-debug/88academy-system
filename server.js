@@ -18,7 +18,7 @@ const PUBLIC = path.join(__dirname, 'public');
 // Videos the admin uploads live next to the data file, on the same disk.
 const MEDIA_DIR = path.join(DATA_DIR, 'media');
 const MAX_UPLOAD = (Number(process.env.MAX_UPLOAD_MB) || 500) * 1024 * 1024;
-const MAX_FLIGHT = (Number(process.env.MAX_FLIGHT_MB) || 200) * 1024 * 1024;
+const MAX_FLIGHT = (Number(process.env.MAX_FLIGHT_MB) || 500) * 1024 * 1024;
 const VIDEO_TYPES = { '.mp4': 'video/mp4', '.m4v': 'video/mp4', '.mov': 'video/quicktime', '.webm': 'video/webm' };
 const IMAGE_TYPES = { '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp', '.gif': 'image/gif' };
 const MAX_IMAGE = 10 * 1024 * 1024;
@@ -1020,9 +1020,12 @@ load();
 cleanFlightVideos();
 queueWaiting();
 setInterval(cleanFlightVideos, 3600e3).unref();
-http.createServer((req, res) => {
+const server = http.createServer((req, res) => {
   handle(req, res).catch((err) => {
     console.error(err);
     try { json(res, 500, { error: 'שגיאה בשרת. נסו שוב.' }); } catch (e) {}
   });
-}).listen(PORT, () => console.log('88ACADEMY on port ' + PORT + (PROD ? '' : ' (dev: admin / admin1234)')));
+});
+// Big flight videos from a phone on a slow connection can take a while: allow up to an hour per request (Node's default stops at 5 minutes).
+server.requestTimeout = 60 * 60 * 1000;
+server.listen(PORT, () => console.log('88ACADEMY on port ' + PORT + (PROD ? '' : ' (dev: admin / admin1234)')));
