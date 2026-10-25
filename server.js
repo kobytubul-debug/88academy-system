@@ -443,6 +443,7 @@ const ADMIN_ACTIONS = {
       M.notify(doc, { kind: 'rejected', skill: f.skill, text: 'הטיסה ב' + k.name + ' לא אושרה. אפשר לנסות שוב.' + (feedback ? (me.ai ? ' משוב הבדיקה האוטומטית: ״' : ' מדריך: ״') + feedback + '״' : '') });
       log(me, 'flight', 'החזיר לתיקון טיסה של ' + u.name + ': ' + k.name, { target: u.id });
     }
+    if (Number(db.settings.videoDays) === 0) cleanFlightVideos();
     return { ok: true };
   },
   // The instructor sets skills: done (with or without coins), sent back for a redo, or cancelled.
@@ -576,10 +577,11 @@ const ADMIN_ACTIONS = {
     return { ok: true };
   },
   saveSettings(me, b) {
+    // 0 = delete the video as soon as the flight has been reviewed.
     const days = Math.trunc(Number(b.videoDays));
-    if (!(days >= 1 && days <= 365)) return 'מספר הימים צריך להיות בין 1 ל־365.';
+    if (!(days >= 0 && days <= 365)) return 'מספר הימים צריך להיות בין 1 ל־365.';
     db.settings.videoDays = days;
-    log(me, 'settings', 'סרטוני טיסה נשמרים ' + days + ' ימים אחרי הבדיקה');
+    log(me, 'settings', days === 0 ? 'סרטוני טיסה נמחקים מיד אחרי הבדיקה' : 'סרטוני טיסה נשמרים ' + days + ' ימים אחרי הבדיקה');
     cleanFlightVideos();
     return { ok: true };
   },
@@ -695,7 +697,8 @@ function cleanMedia() {
 // Students' flight videos are kept until the instructor has looked at them, and for a while after: then the file
 // goes and the flight keeps its status and feedback. Uploads no flight uses go after a day.
 function cleanFlightVideos() {
-  const days = Math.max(1, Number(db.settings.videoDays) || 14);
+  const set = Number(db.settings.videoDays);
+  const days = Number.isFinite(set) && set >= 0 ? set : 14;
   const limit = Date.now() - days * 864e5;
   const used = new Set();
   let changed = false;
@@ -705,7 +708,7 @@ function cleanFlightVideos() {
       if (!name || !db.uploads[name]) return;
       const done = f.status === 'approved' || f.status === 'rejected' || f.status === 'cancelled';
       const at = Date.parse(String(f.reviewedAt || f.at || '').replace(' ', 'T') + ':00+03:00') || 0;
-      if (done && at && at < limit) {
+      if (done && (days === 0 || (at && at < limit))) {
         fs.rm(path.join(MEDIA_DIR, name), { force: true }, () => {});
         delete db.uploads[name];
         f.link = '';
@@ -936,6 +939,7 @@ async function handle(req, res) {
       if (!b) return json(res, 400, { error: 'נתונים שגויים.' });
       const out = action(user, b);
       if (typeof out === 'string') return json(res, 400, { error: out });
+      if (Number(db.settings.videoDays) === 0) cleanFlightVideos();
       save();
       return json(res, 200, Object.assign({ result: out }, { boot: bootFor(user) }));
     }
