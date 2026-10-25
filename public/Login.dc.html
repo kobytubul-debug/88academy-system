@@ -65,6 +65,122 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #C743
 </main>
 </div>
 </x-dc>
+<script>
+/* 88ACADEMY sign-in animations: the fields react as you fill them, and a right password sends the logo flying into the site. */
+(function(){
+  var css = [
+    /* fields */
+    '#login-user,#login-pass{transition:border-color .25s,box-shadow .25s,transform .25s cubic-bezier(.2,.8,.2,1),background-color .25s !important}',
+    '#login-user:focus,#login-pass:focus{outline:none !important;border-color:#57AD8E !important;box-shadow:0 0 0 4px rgba(118,222,184,.35),0 8px 18px rgba(18,20,19,.08) !important;transform:translateY(-2px)}',
+    'label[for=login-user],label[for=login-pass]{display:block;transition:color .25s,transform .25s cubic-bezier(.2,.8,.2,1);transform-origin:right center}',
+    'html.f-user label[for=login-user],html.f-pass label[for=login-pass]{color:#17694F !important;transform:translateX(-4px) scale(1.04)}',
+    'html.ok-user #login-user,html.ok-pass #login-pass{border-color:#76DEB8 !important;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27%3E%3Ccircle cx=%2712%27 cy=%2712%27 r=%2711%27 fill=%27%2376DEB8%27/%3E%3Cpath d=%27M6.8 12.4l3.4 3.4 7-7.2%27 fill=%27none%27 stroke=%27%23121413%27 stroke-width=%272.4%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E") !important;background-repeat:no-repeat !important;background-size:22px 22px !important}',
+    'html.ok-user #login-user{background-position:left 12px center !important;padding-left:44px !important}',
+    'html.ok-pass #login-pass{background-position:left 54px center !important}',
+    '.lg-pop{animation:lgPop .5s cubic-bezier(.2,1.4,.4,1)}',
+    '@keyframes lgPop{0%{transform:scale(1)}35%{transform:scale(1.035)}100%{transform:scale(1)}}',
+    '.lg-shake{animation:lgShake .45s cubic-bezier(.36,.07,.19,.97)}',
+    '@keyframes lgShake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(4px)}30%,50%,70%{transform:translateX(-7px)}40%,60%{transform:translateX(7px)}}',
+    /* 1. the card becomes a solid mint tile of the background */
+    'html.lg-go main>*{opacity:0 !important;transition:opacity .22s ease !important}',
+    'html.lg-go main{background:#76DEB8 !important;border-color:#76DEB8 !important;box-shadow:none !important;border-radius:44px !important;transform:translate(var(--cx),var(--cy)) rotate(-9deg) scale(.4) !important;transition:background-color .35s,border-color .35s,box-shadow .35s,border-radius .6s,transform 1.05s cubic-bezier(.65,0,.25,1) .4s !important;z-index:0}',
+    /* 2. the logo comes forward and grows; ACADEMY fades */
+    '.login-logo{position:relative;z-index:5;overflow:visible;transition:transform 1s cubic-bezier(.3,1.25,.4,1) .3s}',
+    'html.lg-go .login-logo{transform:translate(var(--lx),var(--ly)) scale(var(--ls))}',
+    '.login-logo g[transform^="translate(9.63"]{transition:opacity .4s ease 1.15s}',
+    'html.lg-go .login-logo g[transform^="translate(9.63"]{opacity:0}',
+    /* 3. propellers in the empty rings, then lift-off */
+    '.lg-prop{opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(.2);transition:opacity .3s ease 1.35s,transform .45s cubic-bezier(.2,1.4,.4,1) 1.35s}',
+    'html.lg-go .lg-prop{opacity:1;transform:scale(1)}',
+    '.lg-spin{transform-box:fill-box;transform-origin:center;animation:lgSpin .5s linear infinite}',
+    '.lg-ccw{animation-direction:reverse}',
+    'html.lg-up .lg-spin{animation-duration:.12s}',
+    '@keyframes lgSpin{to{transform:rotate(360deg)}}',
+    'html.lg-up .login-logo{transform:translate(var(--lx),calc(var(--ly) - 115vh)) scale(var(--ls)) rotate(-2deg);transition:transform 1.05s cubic-bezier(.55,0,.75,.35)}',
+    'html.lg-up .lg-hover{animation:none}',
+    '.lg-hover{transform-box:fill-box;transform-origin:center}',
+    'html.lg-go:not(.lg-up) .lg-hover{animation:lgHover .6s ease-in-out 1.6s infinite alternate}',
+    '@keyframes lgHover{to{transform:translateY(-1.5px)}}'
+  ].join('\n');
+  var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
+  var root = document.documentElement;
+  function q(s){ return document.querySelector(s); }
+  function mark(id, on){ root.classList.toggle(id, !!on); }
+  document.addEventListener('focusin', function(e){
+    var t = e.target; if (!t || !t.id) return;
+    if (t.id === 'login-user') mark('f-user', 1);
+    if (t.id === 'login-pass') mark('f-pass', 1);
+  });
+  document.addEventListener('focusout', function(e){
+    var t = e.target; if (!t || !t.id) return;
+    var k = t.id === 'login-user' ? 'user' : t.id === 'login-pass' ? 'pass' : '';
+    if (!k) return;
+    mark('f-' + k, 0);
+    var was = root.classList.contains('ok-' + k), now = !!String(t.value || '').trim();
+    mark('ok-' + k, now);
+    if (now && !was) { t.classList.remove('lg-pop'); void t.offsetWidth; t.classList.add('lg-pop'); }
+  });
+  document.addEventListener('input', function(e){
+    var t = e.target; if (!t) return;
+    if (t.id === 'login-user' && !t.value) mark('ok-user', 0);
+    if (t.id === 'login-pass' && !t.value) mark('ok-pass', 0);
+  });
+  window.__lgShake = function(){
+    var m = q('main'); if (!m) return;
+    m.classList.remove('lg-shake'); void m.offsetWidth; m.classList.add('lg-shake');
+    mark('ok-pass', 0);
+  };
+  var NS = 'http://www.w3.org/2000/svg';
+  function el(n, a){ var x = document.createElementNS(NS, n); for (var k in a) x.setAttribute(k, a[k]); return x; }
+  function props(svg){
+    if (svg.querySelector('.lg-prop')) return;
+    var hover = el('g', {'class': 'lg-hover'});
+    while (svg.firstChild) hover.appendChild(svg.firstChild);
+    svg.appendChild(hover);
+    /* the four empty rings of the 88 (viewBox units); diagonal pairs spin opposite ways, like a real drone */
+    [[27.0, 27.4, 0, 0], [72.73, 27.38, 1, 0], [26.97, 76.66, 1, 1], [72.7, 76.66, 0, 1]].forEach(function(c){
+      var g = el('g', {transform: 'translate(' + c[0] + ' ' + c[1] + ')'});
+      var inner = el('g', {'class': 'lg-prop'});
+      var spin = el('g', {'class': 'lg-spin' + (c[2] ? ' lg-ccw' : '')});
+      /* a three-blade FPV propeller: swept blades and a hub with a hole. Top pair pink, bottom pair mint, as on the site. */
+      var col = c[3] ? ['#76DEB8', '#3E9C7B'] : ['#C7436A', '#97284B'];
+      spin.appendChild(el('circle', {cx: 0, cy: 0, r: 19.4, fill: 'none'})); /* keeps the spin centred on the hub */
+      [0, 120, 240].forEach(function(deg){
+        spin.appendChild(el('path', {d: 'M-1.7 -2.6 C-3.9 -6.4 -4.6 -11.2 -3.7 -15.6 C-3.5 -16.7 -2.4 -17.1 -1.5 -16.5 L1.3 -14.4 C1.6 -10.4 1.3 -6.4 2.1 -3.1 Z', fill: col[0], stroke: col[1], 'stroke-width': 0.45, 'stroke-linejoin': 'round', transform: 'rotate(' + deg + ') scale(' + (c[2] ? -1.3 : 1.3) + ' 1.04)', 'vector-effect': 'non-scaling-stroke'}));
+      });
+      spin.appendChild(el('circle', {cx: 0, cy: 0, r: 4.2, fill: col[0], stroke: col[1], 'stroke-width': 0.45}));
+      spin.appendChild(el('circle', {cx: 0, cy: 0, r: 1.7, fill: '#FFFFFF', stroke: col[1], 'stroke-width': 0.45}));
+      inner.appendChild(spin);
+      g.appendChild(inner);
+      hover.appendChild(g);
+    });
+  }
+  /* done(): goes into the site. Called by the sign-in once the server accepted the password. */
+  window.__lgFly = function(done){
+    var reduce = false;
+    try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+    var svg = q('.login-logo'), m = q('main');
+    if (reduce || !svg || !m) { done(); return; }
+    var finished = false; function go(){ if (!finished) { finished = true; done(); } }
+    try {
+      props(svg);
+      var w = innerWidth, h = innerHeight;
+      var lb = svg.getBoundingClientRect(), mb = m.getBoundingClientRect();
+      var ls = Math.min(2.6, (Math.min(w, h) * 0.5) / Math.max(lb.width, lb.height));
+      root.style.setProperty('--lx', Math.round(w / 2 - (lb.left + lb.width / 2)) + 'px');
+      root.style.setProperty('--ly', Math.round(h / 2 - (lb.top + lb.height / 2)) + 'px');
+      root.style.setProperty('--ls', ls.toFixed(2));
+      root.style.setProperty('--cx', Math.round(-Math.min(w * 0.26, 360)) + 'px');
+      root.style.setProperty('--cy', Math.round(h * 0.06) + 'px');
+      if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+      root.classList.add('lg-go');
+      setTimeout(function(){ root.classList.add('lg-up'); }, 2300);
+      setTimeout(go, 3250);
+    } catch (e) { go(); }
+    setTimeout(go, 5000);
+  };
+})();
+</script>
 <script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
 class Component extends DCLogic {
 
@@ -112,10 +228,13 @@ class Component extends DCLogic {
     this.setState({ busy: true, error: '' });
     window.Academy.request('POST', '/api/login', { username: s.username.trim(), password: s.password }).then((r) => {
       if (r.ok) {
-        location.href = r.json.home || '/';
+        const home = r.json.home || '/';
+        if (window.__lgFly) window.__lgFly(() => { location.href = home; });
+        else location.href = home;
         return;
       }
       this.setState({ busy: false, error: r.error, password: '' });
+      if (window.__lgShake) window.__lgShake();
     });
   }
 
