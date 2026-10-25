@@ -3315,7 +3315,7 @@ class Component extends DCLogic {
       return {
         id: f.id, at: f.at, statusLabel: c.label, chipBg: c.bg, chipBorder: c.border, chipColor: c.color,
         hasFeedback: !!f.feedback, feedback: f.feedback, hasNote: !!f.note, note: f.note,
-        watch: () => this.openVideo({ title: skill.name, sub: 'הניסיון שלכם · ' + f.at, note: (f.videoGone ? 'הסרטון נמחק מהאתר כמה ימים אחרי הבדיקה. ' : '') + (f.feedback ? 'משוב: ' + f.feedback : ''), demoSkill: null, url: f.link || '' })
+        watch: () => this.openVideo({ title: skill.name, sub: 'הניסיון שלכם · ' + f.at, note: (f.videoGone ? 'הסרטון נמחק מהאתר אחרי הבדיקה. ' : '') + (f.feedback ? 'משוב: ' + f.feedback : ''), demoSkill: null, url: f.link || '' })
       };
     });
     const stagePaid = s.ledger.some((e) => e.kind === 'skill' && e.skill === skill.id);
@@ -3390,7 +3390,7 @@ class Component extends DCLogic {
         ptsColor: f.status === 'approved' ? '#17694F' : f.status === 'review' ? '#7A5300' : '#8A928E',
         kindText: f.challenge ? '(אתגר)' : '(מיומנות)',
         watchLabel: 'צפייה בסרטון של ' + k.name, openSkill: () => (f.challenge ? this.go('challenge', { challengeId: f.challenge }) : byId[f.skill] ? this.openSkill(f.skill) : null),
-        watch: () => this.openVideo({ title: k.name, sub: 'הניסיון שלכם · ' + f.at, note: (f.videoGone ? 'הסרטון נמחק מהאתר כמה ימים אחרי הבדיקה. ' : '') + (f.feedback ? 'משוב: ' + f.feedback : ''), demoSkill: null, url: f.link || '' })
+        watch: () => this.openVideo({ title: k.name, sub: 'הניסיון שלכם · ' + f.at, note: (f.videoGone ? 'הסרטון נמחק מהאתר אחרי הבדיקה. ' : '') + (f.feedback ? 'משוב: ' + f.feedback : ''), demoSkill: null, url: f.link || '' })
       };
     });
 
@@ -3634,7 +3634,7 @@ class Component extends DCLogic {
       challengeIsFile: !!(window.Academy && window.Academy.on && window.Academy.isFile(challenge.video)),
       challengeTries: chFlights.map((f) => {
         const c = this.flightChip(f.status, f);
-        return { id: f.id, at: f.at, statusLabel: c.label, chipBg: c.bg, chipBorder: c.border, chipColor: c.color, hasFeedback: !!f.feedback, feedback: f.feedback || '', watch: () => this.openVideo({ title: challenge.title, sub: 'הניסיון שלכם · ' + f.at, note: (f.videoGone ? 'הסרטון נמחק מהאתר כמה ימים אחרי הבדיקה. ' : '') + (f.feedback ? 'משוב: ' + f.feedback : ''), demoSkill: null, url: f.link || '' }) };
+        return { id: f.id, at: f.at, statusLabel: c.label, chipBg: c.bg, chipBorder: c.border, chipColor: c.color, hasFeedback: !!f.feedback, feedback: f.feedback || '', watch: () => this.openVideo({ title: challenge.title, sub: 'הניסיון שלכם · ' + f.at, note: (f.videoGone ? 'הסרטון נמחק מהאתר אחרי הבדיקה. ' : '') + (f.feedback ? 'משוב: ' + f.feedback : ''), demoSkill: null, url: f.link || '' }) };
       }),
       challengeHasTries: chFlights.length > 0,
       challengeDesc: challenge.desc,

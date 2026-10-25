@@ -165,9 +165,13 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 </ul>
 </section>
 <h2 id="vid-title" style="margin: 40px 0 6px; font-size: 22px; line-height: 1.3; font-weight: 600; color: #121413;">סרטוני טיסה של סטודנטים</h2>
-<p style="margin: 0 0 14px; font-size: 14px; color: #545D58;">סטודנטים יכולים להעלות סרטון ישר מהטלפון, או להדביק קישור. סרטון שהועלה נשמר עד שבודקים אותו, ועוד כמה ימים אחרי, ואז נמחק כדי לפנות מקום. הסטטוס, המשוב והמטבעות נשארים.</p>
+<p style="margin: 0 0 14px; font-size: 14px; color: #545D58;">סטודנטים יכולים להעלות סרטון ישר מהטלפון, או להדביק קישור. סרטון שהועלה נשמר עד שבודקים אותו, ואז נמחק כדי לפנות מקום: מיד, או אחרי כמה ימים שתבחרו. הסטטוס, המשוב והמטבעות נשארים.</p>
 <section aria-labelledby="vid-title" style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 14px 18px; padding: 20px 22px; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px;">
-<div style="flex: 0 1 220px; min-width: 0;"><label for="video-days" style="display: block; margin-bottom: 6px; font-size: 14px; font-weight: 500; color: #3D4541;">ימים לשמירה אחרי הבדיקה</label><input id="video-days" type="number" min="1" max="365" inputmode="numeric" value="{{videoDays}}" onInput="{{onVideoDays}}" style="width: 100%; box-sizing: border-box; height: 42px; padding: 0 12px; background: #FFFFFF; border: 1px solid #D3D9D5; border-radius: 10px; font: inherit; font-size: 15px;"></div>
+<div role="radiogroup" aria-label="מתי למחוק סרטון טיסה" style="flex: 1 1 100%; display: flex; flex-direction: column; gap: 12px;">
+<label style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; font-size: 15px; font-weight: 500; color: #121413; cursor: pointer;"><input type="radio" name="video-when" checked="{{videoKeep}}" onChange="{{pickVideoKeep}}" style="width: 18px; height: 18px; margin: 0; accent-color: #C7436A;">שמירה למשך<input id="video-days" type="number" min="1" max="365" inputmode="numeric" aria-label="ימים לשמירה אחרי הבדיקה" value="{{videoDays}}" onInput="{{onVideoDays}}" onFocus="{{pickVideoKeep}}" style="width: 84px; box-sizing: border-box; height: 40px; padding: 0 10px; background: #FFFFFF; border: 1px solid #D3D9D5; border-radius: 10px; font: inherit; font-size: 15px; text-align: center;">ימים אחרי הבדיקה</label>
+<label style="display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 500; color: #121413; cursor: pointer;"><input type="radio" name="video-when" checked="{{videoNow}}" onChange="{{pickVideoNow}}" style="width: 18px; height: 18px; margin: 0; accent-color: #C7436A;">מחיקה מיד אחרי הבדיקה</label>
+<sc-if value="{{videoNow}}" hint-placeholder-val="{{ false }}"><p style="margin: -4px 0 0; padding-inline-start: 28px; font-size: 13px; color: #8A3550;">ברגע שמאשרים או מחזירים טיסה, הסרטון שלה נמחק מהאתר. כדאי לצפות בו עד הסוף לפני שלוחצים.</p></sc-if>
+</div>
 <button type="button" class="btn-primary" onClick="{{saveVideoDays}}" disabled="{{busy}}" style="height: 42px; padding: 0 18px; border: 0; border-radius: 9px; background: #C7436A; color: #FFFFFF; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;">שמירה</button>
 <p style="flex: 1 1 260px; margin: 0; font-size: 13px; color: #5E6762;">{{diskText}}</p>
 </section>
@@ -320,17 +324,24 @@ class Component extends DCLogic {
     return (A && A.data.settings) || { videoDays: 14 };
   }
 
+  // "Delete right after review" is stored as 0 days; the box shows the draft until it is saved.
+  videoNow() {
+    const d = this.st().videoNowDraft;
+    return d != null ? !!d : Number(this.settings().videoDays) === 0;
+  }
+
   saveVideoDays() {
     const A = this.A();
-    const raw = this.st().videoDays != null ? this.st().videoDays : String(this.settings().videoDays);
-    const days = Number(raw);
-    if (!Number.isInteger(days) || days < 1 || days > 365) { this.setState({ error: 'מספר הימים צריך להיות בין 1 ל־365.' }); return; }
+    const now = this.videoNow();
+    const raw = this.st().videoDays != null ? this.st().videoDays : String(this.settings().videoDays || 14);
+    const days = now ? 0 : Number(raw);
+    if (!now && (!Number.isInteger(days) || days < 1 || days > 365)) { this.setState({ error: 'מספר הימים צריך להיות בין 1 ל־365.' }); return; }
     if (!A) return;
     this.setState({ busy: true, error: '' });
     A.call('saveSettings', { videoDays: days }).then((r) => {
       if (!r.ok) { this.setState({ busy: false, error: r.error }); return; }
-      this.setState({ videoDays: null });
-      this.say('סרטוני טיסה יישמרו ' + days + ' ימים אחרי הבדיקה.');
+      this.setState({ videoDays: null, videoNowDraft: null });
+      this.say(days === 0 ? 'סרטוני טיסה יימחקו מיד אחרי הבדיקה.' : 'סרטוני טיסה יישמרו ' + days + ' ימים אחרי הבדיקה.');
     });
   }
 
@@ -456,6 +467,10 @@ class Component extends DCLogic {
       }),
       noChallenges: cur.challenges.length === 0,
       videoDays: s.videoDays != null ? s.videoDays : String(this.settings().videoDays || 14),
+      videoNow: this.videoNow(),
+      videoKeep: !this.videoNow(),
+      pickVideoNow: () => this.setState({ videoNowDraft: true }),
+      pickVideoKeep: () => { if (this.videoNow()) this.setState({ videoNowDraft: false }); },
       onVideoDays: (e) => this.setState({ videoDays: e.target.value }),
       saveVideoDays: () => this.saveVideoDays(),
       diskText: this.settings().mediaFree != null ? 'מקום פנוי בדיסק כרגע: ' + (this.settings().mediaFree >= 1024 ? (this.settings().mediaFree / 1024).toFixed(1) + ' GB' : this.settings().mediaFree + ' MB') + '. כשהמקום נגמר, מגדילים את ה־Disk ב־Render.' : ''
