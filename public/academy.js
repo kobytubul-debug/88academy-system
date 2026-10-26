@@ -162,11 +162,24 @@
   A.dayOf = function (at) { return String(at || '').slice(0, 10); };
 
   // One student's picture, the same on every screen.
+  // The levels a student's group learns (its own setting, else its parent's); null = all levels.
+  A.levelsFor = function (user) {
+    var unit = user && user.unit ? A.units().filter(function (x) { return x.id === user.unit; })[0] : null;
+    for (var i = 0; unit && i < 6; i++) {
+      if (unit.levels && unit.levels.length) return unit.levels;
+      var p = unit.parent;
+      unit = p ? A.units().filter(function (x) { return x.id === p; })[0] : null;
+    }
+    return null;
+  };
   A.summary = function (uid) {
     var u = A.user(uid);
     var d = A.progress(uid);
-    var skills = A.skills();
-    var levels = A.levels();
+    var only = u && u.role === 'student' ? A.levelsFor(u) : null;
+    var inScope = function (n) { return !only || only.indexOf(n) !== -1; };
+    var skills = A.skills().filter(function (k) { return inScope(k.level); });
+    var levels = A.levels().filter(function (l) { return inScope(l.n); });
+    if (!levels.length) { skills = A.skills(); levels = A.levels(); }
     var done = skills.filter(function (k) { return d.acquired[k.id]; });
     var level = levels.length;
     for (var i = 0; i < levels.length; i++) {

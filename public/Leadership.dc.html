@@ -21,6 +21,12 @@ a{color:#17694F}a:hover{color:#0E4F3A}
 .row-btn:hover{background:#F5F7F5 !important}
 .vh{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid #C7436A;outline-offset:2px}
+.view-btn:hover{color:#121413 !important}
+.ul-row:hover{background:#F5F7F5 !important}
+.pick-row:hover{border-color:#2A9171 !important}
+.btn-save:hover{background:#B13A5D !important}
+.btn-save:disabled{opacity:.6;cursor:default}
+@media (max-width: 760px){.ul-head{display:none !important}.ul-row{grid-template-columns:minmax(0,1fr) auto !important;grid-template-areas:"name count" "week week" "stuck pts" !important;gap:8px 12px !important}.ul-name{grid-area:name}.ul-count{grid-area:count}.ul-week{grid-area:week}.ul-stuck{grid-area:stuck}.ul-pts{grid-area:pts;text-align:end}.ul-arrow{display:none}}
 </style>
 </helmet>
 <div dir="rtl" lang="he" style="min-height: 100vh; box-sizing: border-box; background: #F5F6F4; color: #1E2320; font-family: 'Rubik', system-ui, 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.5; color-scheme: light;">
@@ -89,19 +95,44 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <p style="margin: 6px 0 0; font-size: 13px; color: #545D58;">ברצף של שבועיים ומעלה</p>
 </div>
 </div>
-<h2 style="margin: 40px 0 16px; font-size: 22px; line-height: 1.3; font-weight: 600; color: #121413;">יחידות</h2>
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin: 40px 0 16px;">
+<h2 style="margin: 0; font-size: 22px; line-height: 1.3; font-weight: 600; color: #121413;">יחידות</h2>
+<div role="group" aria-label="תצוגת היחידות" style="display: inline-flex; padding: 3px; gap: 2px; background: #EEF1EF; border: 1px solid #E1E5E2; border-radius: 999px;">
+<button type="button" class="view-btn" aria-pressed="{{isCardsView}}" onClick="{{showCards}}" style="display: inline-flex; align-items: center; gap: 7px; height: 34px; padding: 0 14px; border: 0; border-radius: 999px; background: {{cardsBtnBg}}; color: {{cardsBtnColor}}; font: inherit; font-size: 14px; font-weight: 500; cursor: pointer;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"></rect><rect x="13" y="4" width="7" height="7" rx="1.5"></rect><rect x="4" y="13" width="7" height="7" rx="1.5"></rect><rect x="13" y="13" width="7" height="7" rx="1.5"></rect></svg>קוביות</button>
+<button type="button" class="view-btn" aria-pressed="{{isListView}}" onClick="{{showList}}" style="display: inline-flex; align-items: center; gap: 7px; height: 34px; padding: 0 14px; border: 0; border-radius: 999px; background: {{listBtnBg}}; color: {{listBtnColor}}; font: inherit; font-size: 14px; font-weight: 500; cursor: pointer;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"></path><circle cx="4.5" cy="6" r="1"></circle><circle cx="4.5" cy="12" r="1"></circle><circle cx="4.5" cy="18" r="1"></circle></svg>רשימה</button>
+</div>
+</div>
+<sc-if value="{{isListView}}" hint-placeholder-val="{{ false }}">
+<div style="background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; overflow: hidden;">
+<div class="ul-head" style="display: grid; grid-template-columns: minmax(0, 1.4fr) 110px minmax(0, 1.6fr) minmax(0, 1.2fr) minmax(0, 1.3fr) 24px; gap: 14px; padding: 12px 20px; border-bottom: 1px solid #E1E5E2; font-size: 13px; font-weight: 500; color: #5E6762;"><span>יחידה</span><span>סטודנטים</span><span>השבוע</span><span>נתקעים ב</span><span>נקודות</span><span aria-hidden="true"></span></div>
+<sc-for list="{{cards}}" as="cd" hint-placeholder-count="4">
+<button type="button" class="ul-row" onClick="{{cd.open}}" style="display: grid; grid-template-columns: minmax(0, 1.4fr) 110px minmax(0, 1.6fr) minmax(0, 1.2fr) minmax(0, 1.3fr) 24px; gap: 14px; align-items: center; width: 100%; box-sizing: border-box; margin: 0; padding: 14px 20px; background: {{cd.bg}}; border: 0; border-top: 1px solid #EEF1EF; color: inherit; font: inherit; font-size: 14px; text-align: start; cursor: pointer;">
+<span class="ul-name" style="min-width: 0;"><span style="display: block; font-size: 16px; font-weight: 600; color: #121413;">{{cd.name}}</span><sc-if value="{{cd.hasLevels}}" hint-placeholder-val="{{ false }}"><span style="display: block; margin-top: 2px; font-size: 12px; color: #17694F;">{{cd.levelsText}}</span></sc-if></span>
+<span class="ul-count" style="color: #3D4541;">{{cd.countText}}</span>
+<span class="ul-week" style="min-width: 0; display: flex; flex-direction: column; gap: 6px;"><span aria-hidden="true" style="display: block; height: 6px; border-radius: 999px; background: #E6EAE7; overflow: hidden;"><span style="display: block; width: {{cd.pct}}%; height: 100%; border-radius: 999px; background: #2A9171;"></span></span><span style="color: #545D58;">{{cd.weekLine}}</span></span>
+<span class="ul-stuck" style="min-width: 0; color: #121413;">{{cd.stuckOrDash}}</span>
+<span class="ul-pts" style="min-width: 0; color: #3D4541;">{{cd.pts}}</span>
+<svg class="ul-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5E6762" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg>
+</button>
+</sc-for>
+<sc-if value="{{noCards}}" hint-placeholder-val="{{ false }}"><p style="margin: 0; padding: 18px 20px; font-size: 14px; color: #5E6762;">אין עדיין יחידות או סטודנטים.</p></sc-if>
+</div>
+</sc-if>
+<sc-if value="{{isCardsView}}" hint-placeholder-val="{{ true }}">
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr)); gap: 16px;">
 <sc-for list="{{cards}}" as="cd" hint-placeholder-count="4">
 <button type="button" class="unit-card" ref="{{cd.setRef}}" onClick="{{cd.open}}" style="display: flex; flex-direction: column; align-items: stretch; gap: 12px; width: 100%; box-sizing: border-box; margin: 0; padding: 20px 22px; background: {{cd.bg}}; border: 1px {{cd.borderStyle}} {{cd.border}}; border-radius: 16px; color: inherit; font: inherit; text-align: start; cursor: pointer;">
 <span style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px;"><span style="font-size: 20px; line-height: 1.3; font-weight: 600; color: #121413;">{{cd.name}}</span><span style="display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: #545D58; white-space: nowrap;">{{cd.countText}}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></span></span>
 <span aria-hidden="true" style="display: block; height: 6px; border-radius: 999px; background: #E6EAE7; overflow: hidden;"><span style="display: block; width: {{cd.pct}}%; height: 100%; border-radius: 999px; background: #2A9171;"></span></span>
 <span style="font-size: 14px; color: #545D58;">{{cd.weekLine}}</span>
+<sc-if value="{{cd.hasLevels}}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; color: #17694F;">{{cd.levelsText}}</span></sc-if>
 <sc-if value="{{cd.hasStuck}}" hint-placeholder-val="{{ true }}"><span style="font-size: 14px; color: #545D58;">נתקעים בעיקר ב: <span style="color: #121413; font-weight: 500;">{{cd.stuck}}</span></span></sc-if>
 <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 14px; color: #3D4541;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#17694F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"></path></svg>{{cd.pts}}</span>
 </button>
 </sc-for>
 <sc-if value="{{noCards}}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; color: #5E6762;">אין עדיין יחידות או סטודנטים. מוסיפים אותם בעמודי היחידות והסטודנטים.</p></sc-if>
 </div>
+</sc-if>
 </div>
 </sc-if>
 <sc-if value="{{isNoGroup}}" hint-placeholder-val="{{ false }}">
@@ -141,6 +172,41 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <p style="margin: 6px 0 0; font-size: 13px; color: #545D58;">ברצף של שבועיים ומעלה</p>
 </div>
 </div>
+<sc-if value="{{canManage}}" hint-placeholder-val="{{ false }}">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr)); gap: 24px; margin-top: 36px;">
+<sc-if value="{{canLevels}}" hint-placeholder-val="{{ true }}">
+<section aria-labelledby="unit-levels-title" style="background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; padding: 22px 24px;">
+<h2 id="unit-levels-title" style="margin: 0; font-size: 20px; line-height: 1.3; font-weight: 600; color: #121413;">רמות שהקבוצה לומדת</h2>
+<p style="margin: 6px 0 0; font-size: 14px; line-height: 1.55; color: #545D58;">{{levelsIntro}}</p>
+<ul style="list-style: none; margin: 16px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px;">
+<sc-for list="{{unitLevels}}" as="lv" hint-placeholder-count="3">
+<li><label class="pick-row" style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; border: 1.5px solid {{lv.border}}; background: {{lv.bg}}; cursor: pointer;"><input type="checkbox" checked="{{lv.on}}" onChange="{{lv.toggle}}" style="width: 18px; height: 18px; margin: 0; accent-color: #2A9171;"><span style="display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 9px; background: #121413; color: #76DEB8; font-family: 'Unbounded', 'Rubik', sans-serif; font-size: 13px; font-weight: 700;">{{lv.n}}</span><span style="min-width: 0;"><span style="display: block; font-size: 15px; font-weight: 600; color: #121413;">{{lv.name}}</span><span style="display: block; font-size: 13px; color: #5E6762;">{{lv.sub}}</span></span></label></li>
+</sc-for>
+</ul>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-top: 16px;">
+<button type="button" class="btn-save" onClick="{{saveLevels}}" disabled="{{mgrBusy}}" style="height: 42px; padding: 0 20px; border: 0; border-radius: 10px; background: #C7436A; color: #FFFFFF; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer;">שמירת הרמות</button>
+<sc-if value="{{levelsDirty}}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; color: #8A3550;">יש שינויים שלא נשמרו</span></sc-if>
+<sc-if value="{{hasLevelsMsg}}" hint-placeholder-val="{{ false }}"><span role="status" style="font-size: 13px; color: #17694F;">{{levelsMsg}}</span></sc-if>
+</div>
+</section>
+</sc-if>
+<section aria-labelledby="unit-prizes-title" style="background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; padding: 22px 24px;">
+<h2 id="unit-prizes-title" style="margin: 0; font-size: 20px; line-height: 1.3; font-weight: 600; color: #121413;">פרסים לקבוצה</h2>
+<p style="margin: 6px 0 0; font-size: 14px; line-height: 1.55; color: #545D58;">{{prizesIntro}}</p>
+<ul style="list-style: none; margin: 16px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(170px, 100%), 1fr)); gap: 10px;">
+<sc-for list="{{unitPrizes}}" as="pz" hint-placeholder-count="3">
+<li><label class="pick-row" style="position: relative; display: flex; flex-direction: column; gap: 8px; height: 100%; box-sizing: border-box; padding: 10px; border-radius: 14px; border: 1.5px solid {{pz.border}}; background: {{pz.bg}}; cursor: pointer;"><input type="checkbox" checked="{{pz.on}}" onChange="{{pz.toggle}}" aria-label="{{pz.aria}}" style="position: absolute; top: 14px; inset-inline-start: 14px; width: 18px; height: 18px; margin: 0; accent-color: #2A9171; z-index: 1;"><span style="display: block; aspect-ratio: 4 / 3; border-radius: 10px; overflow: hidden; background: #F1F3F2;"><sc-if value="{{pz.hasImage}}" hint-placeholder-val="{{ false }}"><img src="{{pz.image}}" alt="" style="display: block; width: 100%; height: 100%; object-fit: cover; opacity: {{pz.imgOpacity}};"></sc-if><sc-if value="{{pz.noImage}}" hint-placeholder-val="{{ true }}"><span style="display: grid; place-items: center; width: 100%; height: 100%; font-size: 30px; color: #8A928E;">🎁</span></sc-if></span><span style="font-size: 14px; font-weight: 600; line-height: 1.35; color: #121413;">{{pz.title}}</span><span style="font-size: 13px; color: #5E6762;">{{pz.sub}}</span></label></li>
+</sc-for>
+</ul>
+<sc-if value="{{noPrizes}}" hint-placeholder-val="{{ false }}"><p style="margin: 14px 0 0; font-size: 14px; color: #5E6762;">עדיין אין פרסים. מוסיפים פרסים בעמוד הפרסים.</p></sc-if>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-top: 16px;">
+<button type="button" class="btn-save" onClick="{{savePrizes}}" disabled="{{mgrBusy}}" style="height: 42px; padding: 0 20px; border: 0; border-radius: 10px; background: #C7436A; color: #FFFFFF; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer;">שמירת הפרסים</button>
+<sc-if value="{{prizesDirty}}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; color: #8A3550;">יש שינויים שלא נשמרו</span></sc-if>
+<sc-if value="{{hasPrizesMsg}}" hint-placeholder-val="{{ false }}"><span role="status" style="font-size: 13px; color: #17694F;">{{prizesMsg}}</span></sc-if>
+</div>
+</section>
+</div>
+</sc-if>
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr)); gap: 24px; margin-top: 36px;">
 <section aria-labelledby="bottlenecks-title">
 <h2 id="bottlenecks-title" style="margin: 0; font-size: 22px; line-height: 1.3; font-weight: 600; color: #121413;">צווארי בקבוק</h2>
@@ -547,6 +613,123 @@ class Component extends DCLogic {
     return this._cardRefs[id];
   }
 
+  // ---------- the units grid: cubes or a list (remembered in this browser) ----------
+  unitsView() {
+    const s = this.state || {};
+    if (s.unitsView) return s.unitsView;
+    try { return window.localStorage.getItem('lead-units-view') === 'list' ? 'list' : 'cards'; } catch (err) { return 'cards'; }
+  }
+
+  setUnitsView(v) {
+    try { window.localStorage.setItem('lead-units-view', v); } catch (err) {}
+    this.setState({ unitsView: v });
+  }
+
+  // ---------- a group's levels and prizes (managers only) ----------
+  unitObj(id) {
+    const A = window.Academy;
+    return A && A.on ? A.units().find((u) => u.id === id) || null : null;
+  }
+
+  savedLevels(id) {
+    const u = this.unitObj(id);
+    return u && Array.isArray(u.levels) ? u.levels.slice() : [];
+  }
+
+  levelsText(id) {
+    const A = window.Academy;
+    const lv = this.savedLevels(id);
+    if (!lv.length || !A || !A.on) return '';
+    const names = A.levels().filter((l) => lv.indexOf(l.n) !== -1).map((l) => l.name);
+    return names.length ? 'לומדת: ' + names.join(', ') : '';
+  }
+
+  savedPrizes(id) {
+    const A = window.Academy;
+    return (A.data.rewards || []).filter((p) => p.groups === 'all' || !Array.isArray(p.groups) || p.groups.indexOf(id) !== -1).map((p) => p.id);
+  }
+
+  manageVals(g) {
+    const A = window.Academy;
+    const s = this.state || {};
+    const id = g.id;
+    const saved = this.savedLevels(id);
+    const draftLv = (s.lvDraft || {})[id];
+    const picked = draftLv || saved;
+    const levels = A.levels();
+    const all = picked.length === 0;
+    const sameSet = (a, b) => a.length === b.length && a.every((x) => b.indexOf(x) !== -1);
+    const prizes = (A.data.rewards || []).filter((p) => p.active !== false);
+    const savedPz = this.savedPrizes(id);
+    const draftPz = (s.pzDraft || {})[id];
+    const pz = draftPz || savedPz;
+    const msg = s.mgrMsg && s.mgrMsg.unit === id ? s.mgrMsg : null;
+    return {
+      canManage: true,
+      canLevels: id !== 'none',
+      levelsIntro: all ? 'כרגע הקבוצה לומדת את כל הרמות. סמנו רמות כדי שהסטודנטים בקבוצה יראו בנתיב רק אותן.' : 'הסטודנטים בקבוצה רואים בנתיב רק את הרמות המסומנות. בלי סימון בכלל, הקבוצה לומדת את כל הרמות.',
+      unitLevels: levels.map((l) => {
+        const on = picked.indexOf(l.n) !== -1;
+        const count = A.skills().filter((k) => k.level === l.n).length;
+        return {
+          id: 'lv' + l.n, n: String(l.n), name: l.name, on: on,
+          sub: (count === 1 ? 'מיומנות אחת' : count + ' מיומנויות') + (all ? ' · נלמדת (כל הרמות)' : on ? ' · משויכת לקבוצה' : ''),
+          border: on ? '#2A9171' : '#E1E5E2', bg: on ? '#EEFAF5' : '#FFFFFF',
+          toggle: () => {
+            const cur = ((this.state || {}).lvDraft || {})[id] || this.savedLevels(id);
+            const next = cur.indexOf(l.n) !== -1 ? cur.filter((x) => x !== l.n) : cur.concat([l.n]);
+            this.setState({ lvDraft: Object.assign({}, (this.state || {}).lvDraft, { [id]: next }), mgrMsg: null });
+          }
+        };
+      }),
+      levelsDirty: !!draftLv && !sameSet(draftLv, saved),
+      saveLevels: () => this.saveUnitLevels(id),
+      hasLevelsMsg: !!(msg && msg.kind === 'levels'), levelsMsg: msg && msg.kind === 'levels' ? msg.text : '',
+      prizesIntro: 'סמנו את הפרסים שהסטודנטים בקבוצה יכולים לראות ולממש. השינוי מתעדכן גם בעמוד הפרסים.',
+      unitPrizes: prizes.map((p) => {
+        const on = pz.indexOf(p.id) !== -1;
+        return {
+          id: 'pz' + p.id, title: p.title, on: on, aria: (on ? 'הסרת ' : 'שיוך ') + p.title,
+          sub: p.cost + ' נקודות' + (on ? ' · משויך' : ''),
+          hasImage: !!p.image, noImage: !p.image, image: p.image || '', imgOpacity: on ? 1 : 0.55,
+          border: on ? '#2A9171' : '#E1E5E2', bg: on ? '#EEFAF5' : '#FFFFFF',
+          toggle: () => {
+            const cur = ((this.state || {}).pzDraft || {})[id] || this.savedPrizes(id);
+            const next = cur.indexOf(p.id) !== -1 ? cur.filter((x) => x !== p.id) : cur.concat([p.id]);
+            this.setState({ pzDraft: Object.assign({}, (this.state || {}).pzDraft, { [id]: next }), mgrMsg: null });
+          }
+        };
+      }),
+      noPrizes: prizes.length === 0,
+      prizesDirty: !!draftPz && !sameSet(draftPz, savedPz),
+      savePrizes: () => this.saveUnitPrizes(id),
+      hasPrizesMsg: !!(msg && msg.kind === 'prizes'), prizesMsg: msg && msg.kind === 'prizes' ? msg.text : '',
+      mgrBusy: !!s.mgrBusy
+    };
+  }
+
+  saveUnitLevels(id) {
+    const A = window.Academy;
+    const s = this.state || {};
+    const lv = (s.lvDraft || {})[id] || this.savedLevels(id);
+    this.setState({ mgrBusy: true });
+    A.call('setUnitLevels', { unit: id, levels: lv }).then((r) => {
+      const d = Object.assign({}, (this.state || {}).lvDraft); delete d[id];
+      this.setState({ mgrBusy: false, lvDraft: d, mgrMsg: { unit: id, kind: 'levels', text: r.ok ? (lv.length ? 'נשמר. הקבוצה לומדת רק את הרמות המסומנות.' : 'נשמר. הקבוצה לומדת את כל הרמות.') : r.error } });
+    });
+  }
+
+  saveUnitPrizes(id) {
+    const A = window.Academy;
+    const s = this.state || {};
+    const pz = (s.pzDraft || {})[id] || this.savedPrizes(id);
+    this.setState({ mgrBusy: true });
+    A.call('setUnitRewards', { unit: id, prizes: pz }).then((r) => {
+      const d = Object.assign({}, (this.state || {}).pzDraft); delete d[id];
+      this.setState({ mgrBusy: false, pzDraft: d, mgrMsg: { unit: id, kind: 'prizes', text: r.ok ? 'נשמר. ' + (pz.length === 1 ? 'פרס אחד משויך' : pz.length + ' פרסים משויכים') + ' לקבוצה.' : r.error } });
+    });
+  }
+
   renderVals() {
     const s = this.state || {};
     const observer = this.isObserver();
@@ -619,13 +802,24 @@ class Component extends DCLogic {
         countText: gr.count === 1 ? 'סטודנט אחד' : gr.count + ' סטודנטים',
         pct: st.pct, weekLine: st.weekPct + ' טסו השבוע · ' + st.flights7 + ' טיסות ב־7 ימים',
         hasStuck: gr.bottlenecks.length > 0, stuck: gr.bottlenecks.length ? gr.bottlenecks[0][0] : '',
-        pts: vals.cardPts[gr.id], bg: none ? '#F7F8F7' : '#FFFFFF', border: '#D3D9D5', borderStyle: none ? 'dashed' : 'solid'
+        pts: vals.cardPts[gr.id], bg: none ? '#F7F8F7' : '#FFFFFF', border: '#D3D9D5', borderStyle: none ? 'dashed' : 'solid',
+        stuckOrDash: gr.bottlenecks.length ? gr.bottlenecks[0][0] : '—',
+        hasLevels: !!this.levelsText(gr.id), levelsText: this.levelsText(gr.id)
       };
     });
+    const listView = this.unitsView() === 'list';
+    Object.assign(vals, {
+      isListView: listView, isCardsView: !listView,
+      showCards: () => this.setUnitsView('cards'), showList: () => this.setUnitsView('list'),
+      cardsBtnBg: listView ? 'transparent' : '#FFFFFF', cardsBtnColor: listView ? '#5E6762' : '#121413',
+      listBtnBg: listView ? '#FFFFFF' : 'transparent', listBtnColor: listView ? '#121413' : '#5E6762'
+    });
+    Object.assign(vals, { canManage: false, canLevels: false, unitLevels: [], unitPrizes: [], noPrizes: false });
     vals.noCards = vals.cards.length === 0;
     vals.hasNudge = false;
     vals.noNudge = true;
     if (!g) return vals;
+    if (live && !observer) Object.assign(vals, this.manageVals(g));
     if (live) {
       vals.det = this.stats(g.list);
       vals.nudge = this.nudgeList(g.list);
