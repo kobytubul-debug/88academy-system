@@ -19,6 +19,21 @@ a{color:#17694F}a:hover{color:#0E4F3A}
 .btn-ghost:hover:not(:disabled){background:#F1F3F2 !important;border-color:#B9C2BD !important}
 .btn-primary:hover{background:#B13A5D !important}
 .cta:hover{background:#B13A5D !important}
+/* Next-step card: white with a green frame; under the pointer (or keyboard focus) it turns black as before. */
+.next-card{border:3px solid #76DEB8;transition:background-color .35s ease,border-color .35s ease,box-shadow .35s ease}
+.next-card *{transition:color .3s ease,background-color .3s ease,border-color .3s ease}
+.next-card:hover,.next-card:focus-within{border-color:#121413;box-shadow:0 18px 40px rgba(18,20,19,.18)}
+.next-card:not(:hover):not(:focus-within){background:#FFFFFF !important;color:#121413 !important}
+.next-card:not(:hover):not(:focus-within) .next-eyebrow{color:#17694F !important}
+.next-card:not(:hover):not(:focus-within) .nc-white{color:#121413 !important}
+.next-card:not(:hover):not(:focus-within) .nc-sub{color:#2C322F !important}
+.next-card:not(:hover):not(:focus-within) .nc-muted{color:#545D58 !important}
+.next-card:not(:hover):not(:focus-within) .nc-link{color:#17694F !important}
+.next-card:not(:hover):not(:focus-within) .nc-chip{background:#F1F3F2 !important;border-color:#D3D9D5 !important;color:#2C322F !important}
+.next-card:not(:hover):not(:focus-within) .nc-line{border-top-color:#E1E5E2 !important}
+.next-card:not(:hover):not(:focus-within) .nc-track{background:#E1E5E2 !important}
+.next-card:not(:hover):not(:focus-within) .nc-chip .nc-gold{color:#9A6A08 !important}
+
 .cta:hover .cta-arrow{transform:translateX(-4px)}
 .link-btn:hover{color:#0E4F3A !important;text-decoration:underline !important;text-underline-offset:3px}
 .link-mint:hover{color:#FFFFFF !important}
@@ -163,39 +178,38 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <div style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 20px; margin-top: 22px;">
 <div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 20px;">
 
-<section aria-labelledby="next-title" style="position: relative; background: #121413; color: #FFFFFF; border-radius: 26px; padding: 24px clamp(18px, 3vw, 28px) 20px; overflow: hidden;">
+<section aria-labelledby="next-title" class="nc-white next-card" style="position: relative; background: #121413; color: #FFFFFF; border-radius: 26px; padding: 24px clamp(18px, 3vw, 28px) 20px; overflow: hidden;">
 <span aria-hidden="true" style="position: absolute; top: -78px; left: -66px; width: 150px; height: 150px; border-radius: 30px; background: #76DEB8; transform: rotate(-14deg);"></span>
 <span aria-hidden="true" style="position: absolute; top: 58px; left: 22px; width: 30px; height: 30px; border-radius: 9px; background: #8CF4E1; transform: rotate(18deg);"></span>
 <div style="position: relative; padding-inline-end: 64px;">
-<p style="margin: 0; font-size: 13px; font-weight: 600; letter-spacing: 0.02em; color: #76DEB8;">הצעד הבא שלכם</p>
+<p class="next-eyebrow" style="margin: 0; font-size: 22px; line-height: 1.2; font-weight: 700; color: #76DEB8;">הצעד הבא שלכם</p>
 <sc-if value="{{hasNext}}" hint-placeholder-val="{{ true }}">
-<h2 id="next-title" class="next-h2" style="margin: 6px 0 0; font-family: 'Karantina', 'Rubik', sans-serif; font-size: 54px; line-height: 0.92; font-weight: 700; color: #FFFFFF;">{{nextName}}</h2>
-<p style="margin: 8px 0 0; font-size: 15px; line-height: 1.5; color: #DCE3DF;">{{nextMeta}}</p>
+<h2 id="next-title" class="nc-white next-h2" style="margin: 6px 0 0; font-family: 'Karantina', 'Rubik', sans-serif; font-size: 54px; line-height: 0.92; font-weight: 700; color: #FFFFFF;">{{nextName}}</h2>
+<p class="nc-sub" style="margin: 8px 0 0; font-size: 15px; line-height: 1.5; color: #DCE3DF;">{{nextMeta}}</p>
 </sc-if>
 <sc-if value="{{noNext}}" hint-placeholder-val="{{ false }}">
-<h2 id="next-title" class="next-h2" style="margin: 6px 0 0; font-family: 'Karantina', 'Rubik', sans-serif; font-size: 44px; line-height: 0.95; font-weight: 700; color: #FFFFFF;">{{noNextTitle}}</h2>
-<p style="margin: 8px 0 0; font-size: 15px; line-height: 1.5; color: #DCE3DF;">{{noNextText}}</p>
+<h2 id="next-title" class="nc-white next-h2" style="margin: 6px 0 0; font-family: 'Karantina', 'Rubik', sans-serif; font-size: 44px; line-height: 0.95; font-weight: 700; color: #FFFFFF;">{{noNextTitle}}</h2>
+<p class="nc-sub" style="margin: 8px 0 0; font-size: 15px; line-height: 1.5; color: #DCE3DF;">{{noNextText}}</p>
 </sc-if>
 </div>
 <sc-if value="{{hasNext}}" hint-placeholder-val="{{ true }}">
 <div style="position: relative;">
 <ul aria-label="מה תקבלו על המיומנות" style="list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 0; padding: 0;">
-<sc-for list="{{nextRewards}}" as="nr" hint-placeholder-count="2"><li style="display: inline-flex; align-items: center; gap: 7px; min-height: 36px; padding-block: 2px; padding-inline: 6px 13px; box-sizing: border-box; border-radius: 999px; background: #1F2421; border: 1px solid #3A413D; font-size: 14px; color: #DCE3DF;"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" style="flex: none; display: block;"><circle cx="12" cy="12.7" r="10.8" fill="#C98A12"></circle><circle cx="12" cy="11.4" r="10.4" fill="#F7C548"></circle><circle cx="12" cy="11.4" r="7.7" fill="none" stroke="#DDA024" stroke-width="1.1"></circle><g fill="none" stroke="#97650A" stroke-width="1.35"><circle cx="9.85" cy="9.25" r="2.05"></circle><circle cx="14.15" cy="9.25" r="2.05"></circle><circle cx="9.85" cy="13.55" r="2.05"></circle><circle cx="14.15" cy="13.55" r="2.05"></circle></g><path d="M5.5 8.6a7.3 7.3 0 0 1 4.4-3.7" fill="none" stroke="#FFF2C6" stroke-width="1.6" stroke-linecap="round"></path></svg><span dir="ltr" style="font-family: 'Unbounded', 'Rubik', sans-serif; font-weight: 700; color: #FFD15C;">{{nr.amount}}</span><span>{{nr.text}}</span></li></sc-for>
+<sc-for list="{{nextRewards}}" as="nr" hint-placeholder-count="2"><li class="nc-chip nc-sub" style="display: inline-flex; align-items: center; gap: 7px; min-height: 36px; padding-block: 2px; padding-inline: 6px 13px; box-sizing: border-box; border-radius: 999px; background: #1F2421; border: 1px solid #3A413D; font-size: 14px; color: #DCE3DF;"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" style="flex: none; display: block;"><circle cx="12" cy="12.7" r="10.8" fill="#C98A12"></circle><circle cx="12" cy="11.4" r="10.4" fill="#F7C548"></circle><circle cx="12" cy="11.4" r="7.7" fill="none" stroke="#DDA024" stroke-width="1.1"></circle><g fill="none" stroke="#97650A" stroke-width="1.35"><circle cx="9.85" cy="9.25" r="2.05"></circle><circle cx="14.15" cy="9.25" r="2.05"></circle><circle cx="9.85" cy="13.55" r="2.05"></circle><circle cx="14.15" cy="13.55" r="2.05"></circle></g><path d="M5.5 8.6a7.3 7.3 0 0 1 4.4-3.7" fill="none" stroke="#FFF2C6" stroke-width="1.6" stroke-linecap="round"></path></svg><span class="nc-gold" dir="ltr" style="font-family: 'Unbounded', 'Rubik', sans-serif; font-weight: 700; color: #FFD15C;">{{nr.amount}}</span><span>{{nr.text}}</span></li></sc-for>
 </ul>
 <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px;">
-<button type="button" class="cta" onClick="{{openNext}}" style="display: inline-flex; align-items: center; gap: 10px; height: 52px; padding-block: 0; padding-inline: 26px 20px; border: 0; border-radius: 999px; background: #C7436A; color: #FFFFFF; font: inherit; font-size: 17px; font-weight: 600; cursor: pointer;">לטיסה<svg class="cta-arrow" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transition: transform 0.15s ease;"><path d="M15 6l-6 6 6 6"></path></svg></button>
-<button type="button" class="ghost-dark" onClick="{{openNextVideo}}" style="display: inline-flex; align-items: center; gap: 8px; height: 52px; padding: 0 18px; border: 1.5px solid #4A524E; border-radius: 999px; background: transparent; color: #FFFFFF; font: inherit; font-size: 15px; cursor: pointer;"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"></path></svg>סרטון הדגמה<sc-if value="{{nextVideoHasCoins}}" hint-placeholder-val="{{ true }}"><span style="display: inline-flex; align-items: center; gap: 4px;"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="flex: none; display: block;"><circle cx="12" cy="12.7" r="10.8" fill="#C98A12"></circle><circle cx="12" cy="11.4" r="10.4" fill="#F7C548"></circle><circle cx="12" cy="11.4" r="7.7" fill="none" stroke="#DDA024" stroke-width="1.1"></circle><g fill="none" stroke="#97650A" stroke-width="1.35"><circle cx="9.85" cy="9.25" r="2.05"></circle><circle cx="14.15" cy="9.25" r="2.05"></circle><circle cx="9.85" cy="13.55" r="2.05"></circle><circle cx="14.15" cy="13.55" r="2.05"></circle></g><path d="M5.5 8.6a7.3 7.3 0 0 1 4.4-3.7" fill="none" stroke="#FFF2C6" stroke-width="1.6" stroke-linecap="round"></path></svg><span dir="ltr" style="font-family: 'Unbounded', 'Rubik', sans-serif; font-size: 13px; font-weight: 700; color: #FFD15C;">{{nextVideoCoins}}</span></span></sc-if></button>
+<button type="button" class="cta" onClick="{{openNextVideo}}" style="display: inline-flex; align-items: center; gap: 10px; height: 52px; padding: 0 24px; border: 0; border-radius: 999px; background: #C7436A; color: #FFFFFF; font: inherit; font-size: 17px; font-weight: 600; cursor: pointer;"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"></path></svg>סרטון הדגמה<sc-if value="{{nextVideoHasCoins}}" hint-placeholder-val="{{ true }}"><span style="display: inline-flex; align-items: center; gap: 4px;"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="flex: none; display: block;"><circle cx="12" cy="12.7" r="10.8" fill="#C98A12"></circle><circle cx="12" cy="11.4" r="10.4" fill="#F7C548"></circle><circle cx="12" cy="11.4" r="7.7" fill="none" stroke="#DDA024" stroke-width="1.1"></circle><g fill="none" stroke="#97650A" stroke-width="1.35"><circle cx="9.85" cy="9.25" r="2.05"></circle><circle cx="14.15" cy="9.25" r="2.05"></circle><circle cx="9.85" cy="13.55" r="2.05"></circle><circle cx="14.15" cy="13.55" r="2.05"></circle></g><path d="M5.5 8.6a7.3 7.3 0 0 1 4.4-3.7" fill="none" stroke="#FFF2C6" stroke-width="1.6" stroke-linecap="round"></path></svg><span class="nc-gold" dir="ltr" style="font-family: 'Unbounded', 'Rubik', sans-serif; font-size: 13px; font-weight: 700; color: #FFD15C;">{{nextVideoCoins}}</span></span></sc-if></button>
 </div>
 </div>
 </sc-if>
-<sc-if value="{{hasAlsoOpen}}" hint-placeholder-val="{{ true }}"><p style="position: relative; margin: 16px 0 0; font-size: 14px; color: #B8C2BD;">גם פתוח: <sc-for list="{{alsoOpen}}" as="o" hint-placeholder-count="2"><button type="button" class="link-mint" onClick="{{o.open}}" style="padding: 0; border: 0; background: none; color: #76DEB8; font: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer;">{{o.name}}</button> <span dir="ltr">(+{{o.points}})</span>{{o.sep}}</sc-for></p></sc-if>
-<div style="position: relative; margin-top: 20px; padding-top: 14px; border-top: 1px solid #2C322F;">
+<sc-if value="{{hasAlsoOpen}}" hint-placeholder-val="{{ true }}"><p class="nc-muted" style="position: relative; margin: 16px 0 0; font-size: 14px; color: #B8C2BD;">גם פתוח: <sc-for list="{{alsoOpen}}" as="o" hint-placeholder-count="2"><button type="button" class="nc-link link-mint" onClick="{{o.open}}" style="padding: 0; border: 0; background: none; color: #76DEB8; font: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer;">{{o.name}}</button> <span dir="ltr">(+{{o.points}})</span>{{o.sep}}</sc-for></p></sc-if>
+<div class="nc-line" style="position: relative; margin-top: 20px; padding-top: 14px; border-top: 1px solid #2C322F;">
 <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 16px;">
-<span style="font-size: 15px; font-weight: 600; color: #FFFFFF;">רמה {{levelNumber}} · {{levelName}}</span>
-<button type="button" class="link-mint" onClick="{{goPath}}" style="display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0; border: 0; background: none; color: #76DEB8; font: inherit; font-size: 14px; cursor: pointer;">הנתיב שלי<span aria-hidden="true">←</span></button>
+<span class="nc-white" style="font-size: 15px; font-weight: 600; color: #FFFFFF;">רמה {{levelNumber}} · {{levelName}}</span>
+<button type="button" class="nc-link link-mint" onClick="{{goPath}}" style="display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0; border: 0; background: none; color: #76DEB8; font: inherit; font-size: 14px; cursor: pointer;">הנתיב שלי<span aria-hidden="true">←</span></button>
 </div>
-<div role="progressbar" aria-label="התקדמות ברמה" aria-valuemin="0" aria-valuemax="{{levelTotal}}" aria-valuenow="{{levelDone}}" style="height: 8px; margin-top: 6px; border-radius: 999px; background: #2C322F; overflow: hidden;"><span style="display: block; width: {{levelPct}}%; height: 100%; border-radius: 999px; background: #76DEB8;"></span></div>
-<p style="margin: 8px 0 0; font-size: 13px; line-height: 1.5; color: #B8C2BD;">{{levelLine}}</p>
+<div class="nc-track" role="progressbar" aria-label="התקדמות ברמה" aria-valuemin="0" aria-valuemax="{{levelTotal}}" aria-valuenow="{{levelDone}}" style="height: 8px; margin-top: 6px; border-radius: 999px; background: #2C322F; overflow: hidden;"><span style="display: block; width: {{levelPct}}%; height: 100%; border-radius: 999px; background: #76DEB8;"></span></div>
+<p class="nc-muted" style="margin: 8px 0 0; font-size: 13px; line-height: 1.5; color: #B8C2BD;">{{levelLine}}</p>
 </div>
 </section>
 
