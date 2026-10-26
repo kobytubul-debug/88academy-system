@@ -622,6 +622,38 @@ const ADMIN_ACTIONS = {
     log(me, 'settings', String(b.note || 'עדכן את תוכנית הלימודים').slice(0, 200));
     return { ok: true };
   },
+  // Give a level another number (its place in the path): "level 1 becomes level 3" moves it and renumbers
+  // the others. Every stored reference to a level number follows: skills, challenges, level bonuses,
+  // the levels a group learns, and level-bonus entries in students' coins.
+  moveLevel(me, b) {
+    const cur = db.curriculum;
+    const from = Number(b.n);
+    const to = Math.trunc(Number(b.to));
+    const order = cur.levels.slice();
+    const i = order.findIndex((l) => l.n === from);
+    if (i === -1) return 'הרמה לא נמצאה.';
+    if (!(to >= 1 && to <= order.length)) return 'מספר הרמה צריך להיות בין 1 ל־' + order.length + '.';
+    if (to === i + 1 && order.every((l, k) => l.n === k + 1)) return { ok: true };
+    const [lv] = order.splice(i, 1);
+    order.splice(to - 1, 0, lv);
+    const map = {};
+    order.forEach((l, k) => { map[l.n] = k + 1; });
+    const re = (n) => (map[n] != null ? map[n] : n);
+    cur.levels = order.map((l) => Object.assign({}, l, { n: re(l.n) }));
+    cur.skills.forEach((k) => { k.level = re(k.level); });
+    cur.challenges.forEach((c) => { if (c.level != null) c.level = re(c.level); });
+    const lb = db.scoring.levelBonus || {};
+    const nlb = { on: lb.on };
+    Object.keys(lb).forEach((key) => { if (key !== 'on' && map[Number(key)] != null) nlb[map[Number(key)]] = lb[key]; });
+    db.scoring.levelBonus = nlb;
+    db.units.forEach((u) => { if (Array.isArray(u.levels)) u.levels = u.levels.map(re).sort((x, y) => x - y); });
+    Object.keys(db.progress).forEach((uid) => {
+      (db.progress[uid].ledger || []).forEach((e) => { if (e.kind === 'level' && e.level != null) e.level = re(e.level); });
+    });
+    M.setCurriculum(cur);
+    log(me, 'settings', 'הרמה ' + lv.name + ' היא עכשיו רמה ' + to);
+    return { ok: true };
+  },
   saveAi(me, b) {
     const a = db.settings.ai;
     const t = Math.trunc(Number(b.threshold));
