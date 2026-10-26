@@ -146,14 +146,17 @@ function stockLeft(prizeId) {
 function publicUser(u) {
   return { id: u.id, username: u.username, name: u.name, role: u.role, unit: u.unit || '', earns: !!u.earns, disabled: !!u.disabled, mustChange: !!u.mustChange, created: u.created || '', lastLogin: u.lastLogin || '', lastSeen: u.lastSeen || '', envAdmin: !!u.envAdmin };
 }
-// The levels a student's group learns (its own setting, else its parent group's); empty = all levels.
+// What a student's group learns: whole levels and single skills (its own setting, else its parent group's).
+// Nothing assigned = the whole curriculum.
 function levelsFor(user) {
   let unit = user && user.unit ? db.units.find((x) => x.id === user.unit) : null;
   for (let i = 0; unit && i < 6; i++) {
-    if (Array.isArray(unit.levels) && unit.levels.length) return unit.levels;
+    const lv = Array.isArray(unit.levels) ? unit.levels : [];
+    const sk = Array.isArray(unit.skills) ? unit.skills : [];
+    if (lv.length || sk.length) return { levels: lv, skills: sk };
     unit = unit.parent ? db.units.find((x) => x.id === unit.parent) : null;
   }
-  return [];
+  return { levels: [], skills: [] };
 }
 function bootFor(user) {
   if (user.role === 'student') return M.scoped(levelsFor(user), () => bootFor0(user));
@@ -518,7 +521,11 @@ const ADMIN_ACTIONS = {
     if (!Array.isArray(b.units)) return 'נתונים חסרים.';
     const old = new Map(db.units.map((x) => [x.id, x]));
     const units = b.units.map((x) => ({ id: String(x.id || M.newId('g')).slice(0, 40), name: String(x.name || '').trim().slice(0, 80), type: String(x.type || '').trim().slice(0, 40), parent: String(x.parent || '') })).filter((x) => x.name);
-    units.forEach((x) => { const o = old.get(x.id); if (o && Array.isArray(o.levels) && o.levels.length) x.levels = o.levels; });
+    units.forEach((x) => {
+      const o = old.get(x.id);
+      if (o && Array.isArray(o.levels) && o.levels.length) x.levels = o.levels;
+      if (o && Array.isArray(o.skills) && o.skills.length) x.skills = o.skills;
+    });
     const ids = new Set(units.map((x) => x.id));
     units.forEach((x) => { if (!ids.has(x.parent)) x.parent = ''; });
     db.units = units;
@@ -537,6 +544,25 @@ const ADMIN_ACTIONS = {
     else delete un.levels;
     const names = un.levels ? un.levels.map((n) => (M.LEVELS.find((l) => l.n === n) || {}).name).join(', ') : 'כל הרמות';
     log(me, 'settings', 'שייך ל' + un.name + ' רמות: ' + names);
+    return { ok: true };
+  },
+  // From the curriculum page: put one level or one skill in the chosen groups (and take it out of the others).
+  assignToUnits(me, b) {
+    const kind = b.kind === 'skill' ? 'skill' : 'level';
+    const id = Number(b.ref);
+    const known = kind === 'level' ? M.LEVELS.some((l) => l.n === id) : M.ALL_SKILLS.some((k) => k.id === id);
+    if (!known) return kind === 'level' ? 'הרמה לא נמצאה.' : 'המיומנות לא נמצאה.';
+    const want = new Set((Array.isArray(b.units) ? b.units : []).map(String));
+    const field = kind === 'level' ? 'levels' : 'skills';
+    db.units.forEach((u) => {
+      const list = (Array.isArray(u[field]) ? u[field] : []).filter((x) => x !== id);
+      if (want.has(u.id)) list.push(id);
+      if (list.length) u[field] = kind === 'level' ? M.LEVELS.map((l) => l.n).filter((n) => list.indexOf(n) !== -1) : list.sort((x, y) => x - y);
+      else delete u[field];
+    });
+    const name = kind === 'level' ? (M.LEVELS.find((l) => l.n === id) || {}).name : (M.ALL_SKILLS.find((k) => k.id === id) || {}).name;
+    const names = db.units.filter((u) => want.has(u.id)).map((u) => u.name);
+    log(me, 'settings', 'שייך את ' + (kind === 'level' ? 'הרמה ' : 'המיומנות ') + name + ' ל' + (names.length ? names.join(', ') : 'אף קבוצה'));
     return { ok: true };
   },
   // Which prizes a group can see and ask for. Updates each prize's own list of groups.

@@ -108,14 +108,21 @@ setCurriculum(curriculumDefaults());
 
 // A group can be set to learn only some levels. While a student of such a group is being handled, the
 // curriculum lists are narrowed to those levels (and the final exam), then put back. Node runs this in one go.
-function scoped(levels, fn) {
-  const set = new Set((Array.isArray(levels) ? levels : []).map(Number));
-  if (!set.size || !LEVELS.some((l) => set.has(l.n))) return fn();
+// scope: { levels: [level numbers], skills: [skill ids] } — whole levels, plus single skills from other levels.
+// (A plain array is read as whole levels.) Nothing assigned = the whole curriculum.
+function scoped(scope, fn) {
+  const sc = Array.isArray(scope) ? { levels: scope, skills: [] } : scope || {};
+  const lv = new Set((Array.isArray(sc.levels) ? sc.levels : []).map(Number));
+  const sk = new Set((Array.isArray(sc.skills) ? sc.skills : []).map(Number));
+  if (!lv.size && !sk.size) return fn();
+  const inScope = (k) => lv.has(k.level) || sk.has(k.id);
+  if (!SKILLS.some(inScope)) return fn();
   const keep = [LEVELS.slice(), SKILLS.slice(), CHALLENGES.slice()];
   const fill = (arr, items) => { arr.length = 0; items.forEach((x) => arr.push(x)); };
-  fill(LEVELS, keep[0].filter((l) => set.has(l.n)));
-  fill(SKILLS, keep[1].filter((k) => set.has(k.level)));
-  fill(CHALLENGES, keep[2].filter((c) => c.final || set.has(c.level)));
+  const shown = new Set(keep[1].filter(inScope).map((k) => k.level));
+  fill(LEVELS, keep[0].filter((l) => shown.has(l.n)));
+  fill(SKILLS, keep[1].filter(inScope));
+  fill(CHALLENGES, keep[2].filter((c) => c.final || shown.has(c.level)));
   try { return fn(); } finally { fill(LEVELS, keep[0]); fill(SKILLS, keep[1]); fill(CHALLENGES, keep[2]); }
 }
 
