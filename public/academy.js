@@ -162,11 +162,12 @@
   A.dayOf = function (at) { return String(at || '').slice(0, 10); };
 
   // One student's picture, the same on every screen.
-  // The levels a student's group learns (its own setting, else its parent's); null = all levels.
-  A.levelsFor = function (user) {
+  // What a student's group learns: whole levels and single skills (its own setting, else its parent's); null = everything.
+  A.scopeFor = function (user) {
     var unit = user && user.unit ? A.units().filter(function (x) { return x.id === user.unit; })[0] : null;
     for (var i = 0; unit && i < 6; i++) {
-      if (unit.levels && unit.levels.length) return unit.levels;
+      var lv = unit.levels || [], sk = unit.skills || [];
+      if (lv.length || sk.length) return { levels: lv, skills: sk };
       var p = unit.parent;
       unit = p ? A.units().filter(function (x) { return x.id === p; })[0] : null;
     }
@@ -175,10 +176,11 @@
   A.summary = function (uid) {
     var u = A.user(uid);
     var d = A.progress(uid);
-    var only = u && u.role === 'student' ? A.levelsFor(u) : null;
-    var inScope = function (n) { return !only || only.indexOf(n) !== -1; };
-    var skills = A.skills().filter(function (k) { return inScope(k.level); });
-    var levels = A.levels().filter(function (l) { return inScope(l.n); });
+    var only = u && u.role === 'student' ? A.scopeFor(u) : null;
+    var inScope = function (k) { return !only || only.levels.indexOf(k.level) !== -1 || only.skills.indexOf(k.id) !== -1; };
+    var skills = A.skills().filter(inScope);
+    var shown = skills.map(function (k) { return k.level; });
+    var levels = A.levels().filter(function (l) { return shown.indexOf(l.n) !== -1; });
     if (!levels.length) { skills = A.skills(); levels = A.levels(); }
     var done = skills.filter(function (k) { return d.acquired[k.id]; });
     var level = levels.length;

@@ -640,8 +640,11 @@ class Component extends DCLogic {
   levelsText(id) {
     const A = window.Academy;
     const lv = this.savedLevels(id);
-    if (!lv.length || !A || !A.on) return '';
+    const u = this.unitObj(id);
+    const sk = u && Array.isArray(u.skills) ? u.skills.length : 0;
+    if ((!lv.length && !sk) || !A || !A.on) return '';
     const names = A.levels().filter((l) => lv.indexOf(l.n) !== -1).map((l) => l.name);
+    if (sk) names.push(sk === 1 ? 'מיומנות בודדת' : sk + ' מיומנויות בודדות');
     return names.length ? 'לומדת: ' + names.join(', ') : '';
   }
 
@@ -668,7 +671,7 @@ class Component extends DCLogic {
     return {
       canManage: true,
       canLevels: id !== 'none',
-      levelsIntro: all ? 'כרגע הקבוצה לומדת את כל הרמות. סמנו רמות כדי שהסטודנטים בקבוצה יראו בנתיב רק אותן.' : 'הסטודנטים בקבוצה רואים בנתיב רק את הרמות המסומנות. בלי סימון בכלל, הקבוצה לומדת את כל הרמות.',
+      levelsIntro: ((this.unitObj(id) || {}).skills || []).length ? 'לקבוצה משויכות גם מיומנויות בודדות (משייכים אותן בתוכנית הלימודים). סמנו כאן רמות שלמות.' : all ? 'כרגע הקבוצה לומדת את כל הרמות. סמנו רמות כדי שהסטודנטים בקבוצה יראו בנתיב רק אותן.' : 'הסטודנטים בקבוצה רואים בנתיב רק את הרמות המסומנות. בלי סימון בכלל, הקבוצה לומדת את כל הרמות.',
       unitLevels: levels.map((l) => {
         const on = picked.indexOf(l.n) !== -1;
         const count = A.skills().filter((k) => k.level === l.n).length;
