@@ -296,19 +296,21 @@ function acceptStudent(stored, incoming, ctx) {
   const events = [];
   const ids = new Set(doc.ledger.map((e) => e.id));
   const todays = (kind) => doc.ledger.filter((e) => e.kind === kind && String(e.at).slice(0, 10) === day).length;
+  // A student who does not earn points (role "student" rather than "player") still leaves the day's marks, at 0.
+  const pay = (v) => (ctx.earns === false ? 0 : v);
 
   // habit and bonus coins the student earns by using the app
   (Array.isArray(inc.ledger) ? inc.ledger : []).forEach((e) => {
     if (!e || typeof e.id !== 'string' || ids.has(e.id) || e.id.length > 40) return;
     const amount = Number(e.amount) || 0;
     let ok = false;
-    if (e.kind === 'login') ok = todays('login') === 0 && amount === rule(sc, 'login');
-    else if (e.kind === 'streak') ok = todays('streak') === 0 && todays('login') > 0 && (amount === rule(sc, 'streak3') || amount === rule(sc, 'streak7'));
-    else if (e.kind === 'time') ok = todays('time') < Math.max(0, Number(sc.rules && sc.rules.time && sc.rules.time.max) || 0) && amount === rule(sc, 'time');
+    if (e.kind === 'login') ok = todays('login') === 0 && amount === pay(rule(sc, 'login'));
+    else if (e.kind === 'streak') ok = todays('streak') === 0 && todays('login') > 0 && (amount === pay(rule(sc, 'streak3')) || amount === pay(rule(sc, 'streak7')));
+    else if (e.kind === 'time') ok = todays('time') < Math.max(0, Number(sc.rules && sc.rules.time && sc.rules.time.max) || 0) && amount === pay(rule(sc, 'time'));
     else if (e.kind === 'video') {
       const sid = Number(e.skill);
-      ok = SKILLS.some((k) => k.id === sid && k.video) && !doc.ledger.some((x) => x.kind === 'video' && x.skill === sid) && amount === rule(sc, 'video');
-    } else if (e.kind === 'quests') ok = todays('quests') === 0 && amount === rule(sc, 'quests') && todays('login') > 0;
+      ok = SKILLS.some((k) => k.id === sid && k.video) && !doc.ledger.some((x) => x.kind === 'video' && x.skill === sid) && amount === pay(rule(sc, 'video'));
+    } else if (e.kind === 'quests') ok = todays('quests') === 0 && amount === pay(rule(sc, 'quests')) && todays('login') > 0;
     if (!ok) return;
     const entry = { id: e.id, at: now, cat: e.kind === 'video' || e.kind === 'quests' ? 'bonus' : 'habit', kind: e.kind, text: String(e.text || '').slice(0, 120), amount: amount, skill: e.kind === 'video' ? Number(e.skill) : null };
     doc.ledger.push(entry);
@@ -354,7 +356,7 @@ function acceptStudent(stored, incoming, ctx) {
       }
       return;
     }
-    if (r.status !== 'pending') return;
+    if (r.status !== 'pending' || ctx.earns === false) return;
     const p = ctx.rewards.find((x) => x.id === r.prize && x.active !== false);
     if (!p) return;
     if (p.groups !== 'all' && (!Array.isArray(p.groups) || p.groups.indexOf(ctx.unit || 'none') === -1)) return;

@@ -392,6 +392,7 @@ const ADMIN_ACTIONS = {
   adjust(me, b) {
     const u = findUser(b.id);
     if (!u || u.role !== 'student') return 'הסטודנט לא נמצא.';
+    if (!u.earns) return 'זה סטודנט שלא צובר נקודות. כדי לתת לו נקודות, משנים את התפקיד שלו לשחקן.';
     const delta = Math.trunc(Number(b.delta));
     if (!delta || Math.abs(delta) > 100000) return 'יש להזין מספר שלם שאינו אפס.';
     const doc = progressOf(u.id);
@@ -417,7 +418,7 @@ const ADMIN_ACTIONS = {
       const c = M.challengeById(f.challenge) || { title: 'אתגר', points: 0 };
       if (b.approve) {
         f.status = 'approved';
-        const pts = Number(c.points) || 0;
+        const pts = u.earns ? Number(c.points) || 0 : 0;
         if (pts && !doc.ledger.some((e) => e.kind === 'challenge' && e.challenge === f.challenge && !e.reverted)) {
           doc.ledger.push({ id: M.newId('a'), at: M.stamp(), cat: 'bonus', kind: 'challenge', challenge: f.challenge, text: 'אתגר: ' + c.title, amount: pts, skill: null });
         }
@@ -434,9 +435,9 @@ const ADMIN_ACTIONS = {
     if (b.approve) {
       const first = !doc.flights.some((x) => x.skill === f.skill && x.id !== f.id && x.status === 'rejected');
       f.status = 'approved';
-      const added = M.grantSkill(doc, db.scoring, f.skill, 'flight', { first });
+      const added = M.grantSkill(doc, db.scoring, f.skill, 'flight', { first, points: !!u.earns });
       const sum = added.reduce((s, e) => s + e.amount, 0);
-      M.notify(doc, { kind: 'approved', skill: f.skill, text: 'מאושר: ' + k.name + ' (' + M.sg(sum) + ' מטבעות).' + (feedback ? (me.ai ? ' משוב הבדיקה האוטומטית: ״' : ' מדריך: ״') + feedback + '״' : '') });
+      M.notify(doc, { kind: 'approved', skill: f.skill, text: 'מאושר: ' + k.name + (u.earns ? ' (' + M.sg(sum) + ' מטבעות).' : '.') + (feedback ? (me.ai ? ' משוב הבדיקה האוטומטית: ״' : ' מדריך: ״') + feedback + '״' : '') });
       log(me, 'flight', 'אישר טיסה של ' + u.name + ': ' + k.name, { target: u.id });
     } else {
       f.status = 'rejected';
@@ -462,7 +463,7 @@ const ADMIN_ACTIONS = {
       if (!k) return;
       if (to === 'done') {
         if (doc.acquired[sid]) return;
-        const added = M.grantSkill(doc, db.scoring, sid, 'instructor', { first: false, points: b.points !== false });
+        const added = M.grantSkill(doc, db.scoring, sid, 'instructor', { first: false, points: b.points !== false && !!u.earns });
         sum += added.reduce((s, e) => s + e.amount, 0);
         doc.flights.forEach((f) => { if (f.skill === sid && f.status === 'review') { f.status = 'approved'; f.reviewedAt = M.stamp(); f.reviewer = me.name; } });
       } else if (to === 'required') {
@@ -911,7 +912,7 @@ async function handle(req, res) {
       if (user.role !== 'student') return json(res, 403, { error: 'רק סטודנטים.' });
       const b = await readBody(req).catch(() => null);
       if (!b) return json(res, 400, { error: 'נתונים שגויים.' });
-      const ctx = { scoring: db.scoring, rewards: db.rewards, unit: user.unit, stockLeft, ownsMedia: (link) => { const u = db.uploads[String(link).slice(7)]; return String(link).startsWith('/media/') && !!u && u.uid === user.id; } };
+      const ctx = { scoring: db.scoring, rewards: db.rewards, unit: user.unit, earns: !!user.earns, stockLeft, ownsMedia: (link) => { const u = db.uploads[String(link).slice(7)]; return String(link).startsWith('/media/') && !!u && u.uid === user.id; } };
       const out = M.acceptStudent(progressOf(user.id), b.progress, ctx);
       db.progress[user.id] = out.doc;
       out.events.forEach((e) => log(user, e.kind, e.text, { target: user.id, ref: e.ref }));
