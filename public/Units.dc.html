@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<title>יחידות</title>
+<title>הקורסים · ניהול הקבוצות</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -22,6 +22,7 @@ a{color:#17694F}a:hover{color:#0E4F3A}
 input::placeholder,textarea::placeholder{color:#6E7772}
 a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid #C7436A;outline-offset:2px}
 @media (prefers-reduced-motion: reduce){.unit-row{transition:none !important}}
+.course-tab:not([aria-current]):hover{background:#EEF1EF !important;border-color:#B9C2BD !important;color:#121413 !important}
 </style>
 </helmet>
 <div dir="rtl" lang="he" style="min-height: 100vh; box-sizing: border-box; background: #F5F6F4; color: #1E2320; font-family: 'Rubik', system-ui, 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.5; color-scheme: light;">
@@ -35,8 +36,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 2px;">
 <li><a href="Main.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">סקירה</a></li>
 <li><a href="Students.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">סטודנטים</a></li>
-<li><a href="Units.dc.html" aria-current="page" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid #9FDDC4; background: #D3F4E6; color: #121413; font-weight: 600; text-decoration: none; font-size: 15px; white-space: nowrap;">יחידות</a></li>
-<li><a href="Leadership.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">מנהיגות</a></li>
+<li><a href="Leadership.dc.html" aria-current="page" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid #9FDDC4; background: #D3F4E6; color: #121413; font-weight: 600; text-decoration: none; font-size: 15px; white-space: nowrap;">הקורסים</a></li>
 <li><a href="Curriculum.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">תוכנית לימודים</a></li>
 <li><a href="Rewards.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">פרסים</a></li>
 <li><a href="PointsSettings.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">ניקוד</a></li>
@@ -54,8 +54,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <div style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 28px;">
 <section aria-labelledby="units-title" style="flex: 999 1 560px; min-width: 0;">
 <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px;">
-<h1 id="units-title" style="margin: 0; font-size: 30px; line-height: 1.2; font-weight: 600; color: #121413;">יחידות</h1>
-<a href="Leadership.dc.html" class="btn-ghost" style="display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px; box-sizing: border-box; border-radius: 10px; border: 1px solid #D3D9D5; background: #FFFFFF; color: #3D4541; text-decoration: none; font-size: 14px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 20V11M12 20V5M19 20v-6"></path></svg>תצוגת מנהיגות</a>
+<div><h1 id="units-title" style="margin: 0; font-family: 'Karantina', 'Rubik', system-ui, sans-serif; font-size: 50px; line-height: 1; font-weight: 700; color: #121413;">הקורסים</h1>
+<p style="margin: 6px 0 0; font-size: 14px; color: #545D58;">כאן יוצרים, משנים ומוחקים קבוצות. את הרמות והפרסים של כל קבוצה קובעים בעמוד הקבוצה שבסקירה.</p>
+<nav aria-label="הקורסים" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px;"><a href="Leadership.dc.html" class="course-tab" style="display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; box-sizing: border-box; border-radius: 999px; text-decoration: none; font-size: 15px; white-space: nowrap; border: 1px solid #D3D9D5; background: #FFFFFF; color: #3D4541;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M5 20V11M12 20V5M19 20v-6"></path></svg>סקירת הקבוצות</a><a href="Units.dc.html" class="course-tab" aria-current="page" style="display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; box-sizing: border-box; border-radius: 999px; text-decoration: none; font-size: 15px; white-space: nowrap; border: 1px solid #121413; background: #121413; color: #FFFFFF; font-weight: 600;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path><path d="M13.5 6.5l4 4"></path></svg>ניהול הקבוצות</a></nav></div>
 </div>
 <div aria-live="polite">
 <sc-if value="{{hasFlash}}" hint-placeholder-val="{{ false }}">
@@ -123,7 +124,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <sc-if value="{{isEdit}}" hint-placeholder-val="{{ false }}"><button type="button" class="btn-ghost" onClick="{{cancelEdit}}" style="height: 46px; padding: 0 20px; border-radius: 10px; border: 1px solid #D3D9D5; background: #FFFFFF; color: #3D4541; font: inherit; font-size: 15px; cursor: pointer;">ביטול</button></sc-if>
 </div>
 </div>
-<p style="margin: 16px 0 0; font-size: 13px; line-height: 1.55; color: #5E6762;">אפשר לקנן יחידות — למשל גדוד ובתוכו מחלקות. נתוני המנהיגות של יחידה כוללים גם את תתי־היחידות שלה.</p>
+<p style="margin: 16px 0 0; font-size: 13px; line-height: 1.55; color: #5E6762;">אפשר לקנן יחידות — למשל גדוד ובתוכו מחלקות. נתוני הסקירה של יחידה כוללים גם את תתי־היחידות שלה.</p>
 </aside>
 </div>
 </main>
@@ -458,9 +459,9 @@ class Component extends DCLogic {
       unassignedLead: n === 1 ? 'סטודנט אחד לא משויך ליחידה.' : n + ' סטודנטים לא משויכים ליחידה.',
       unassignedPronoun: n === 1 ? 'אותו' : 'אותם',
       isEdit: isEdit,
-      panelTitle: isEdit ? 'עריכת ' + editing.name : 'יחידה חדשה',
+      panelTitle: isEdit ? 'עריכת ' + editing.name : 'קבוצה חדשה',
       panelBorder: isEdit ? '#E9B2C4' : '#E1E5E2',
-      submitLabel: isEdit ? 'שמירה' : 'יצירת יחידה',
+      submitLabel: isEdit ? 'שמירה' : 'יצירת קבוצה',
       formName: s.form.name,
       formType: s.form.type,
       formParent: s.form.parent,

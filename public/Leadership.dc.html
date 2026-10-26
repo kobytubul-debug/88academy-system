@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<title>סקירת מנהיגות</title>
+<title>הקורסים</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -27,6 +27,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .btn-save:hover{background:#B13A5D !important}
 .btn-save:disabled{opacity:.6;cursor:default}
 @media (max-width: 760px){.ul-head{display:none !important}.ul-row{grid-template-columns:minmax(0,1fr) auto !important;grid-template-areas:"name count" "week week" "stuck pts" !important;gap:8px 12px !important}.ul-name{grid-area:name}.ul-count{grid-area:count}.ul-week{grid-area:week}.ul-stuck{grid-area:stuck}.ul-pts{grid-area:pts;text-align:end}.ul-arrow{display:none}}
+.course-tab:not([aria-current]):hover{background:#EEF1EF !important;border-color:#B9C2BD !important;color:#121413 !important}
 </style>
 </helmet>
 <div dir="rtl" lang="he" style="min-height: 100vh; box-sizing: border-box; background: #F5F6F4; color: #1E2320; font-family: 'Rubik', system-ui, 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.5; color-scheme: light;">
@@ -41,8 +42,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 2px;">
 <li><a href="Main.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">סקירה</a></li>
 <li><a href="Students.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">סטודנטים</a></li>
-<li><a href="Units.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">יחידות</a></li>
-<li><a href="Leadership.dc.html" aria-current="page" onClick="{{goOverview}}" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid #9FDDC4; background: #D3F4E6; color: #121413; font-weight: 600; text-decoration: none; font-size: 15px; white-space: nowrap;">מנהיגות</a></li>
+<li><a href="Leadership.dc.html" aria-current="page" onClick="{{goOverview}}" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid #9FDDC4; background: #D3F4E6; color: #121413; font-weight: 600; text-decoration: none; font-size: 15px; white-space: nowrap;">הקורסים</a></li>
 <li><a href="Curriculum.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">תוכנית לימודים</a></li>
 <li><a href="Rewards.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">פרסים</a></li>
 <li><a href="PointsSettings.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">ניקוד</a></li>
@@ -67,8 +67,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <main style="max-width: 1280px; margin: 0 auto; padding: 40px clamp(16px, 4vw, 32px) 72px; box-sizing: border-box;">
 <sc-if value="{{isOverview}}" hint-placeholder-val="{{ true }}">
 <div>
-<h1 style="margin: 0; font-family: 'Karantina', 'Rubik', system-ui, sans-serif; font-size: 50px; line-height: 1; font-weight: 700; letter-spacing: 0.005em; color: #121413;">סקירת מנהיגות</h1>
-<p style="margin: 6px 0 0; font-size: 14px; color: #545D58;">לקריאה בלבד. הנתונים כוללים תתי־יחידות. ה״שבוע״ מתחיל ביום שני.</p>
+<h1 style="margin: 0; font-family: 'Karantina', 'Rubik', system-ui, sans-serif; font-size: 50px; line-height: 1; font-weight: 700; letter-spacing: 0.005em; color: #121413;">הקורסים</h1>
+<p style="margin: 6px 0 0; font-size: 14px; color: #545D58;">כל הקבוצות במקום אחד: איך כל קבוצה מתקדמת, ומה היא לומדת. הנתונים כוללים תתי־קבוצות. ה״שבוע״ מתחיל ביום שני.</p>
+<nav aria-label="הקורסים" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px;"><a href="Leadership.dc.html" class="course-tab" aria-current="page" style="display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; box-sizing: border-box; border-radius: 999px; text-decoration: none; font-size: 15px; white-space: nowrap; border: 1px solid #121413; background: #121413; color: #FFFFFF; font-weight: 600;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M5 20V11M12 20V5M19 20v-6"></path></svg>סקירת הקבוצות</a><a href="Units.dc.html" class="course-tab" style="display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; box-sizing: border-box; border-radius: 999px; text-decoration: none; font-size: 15px; white-space: nowrap; border: 1px solid #D3D9D5; background: #FFFFFF; color: #3D4541;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path><path d="M13.5 6.5l4 4"></path></svg>ניהול הקבוצות</a></nav>
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(170px, 100%), 1fr)); gap: 1px; margin-top: 28px; background: #E1E5E2; border: 1px solid #E1E5E2; border-radius: 16px; overflow: hidden;">
 <div style="background: #FFFFFF; padding: 20px 22px;">
 <p style="margin: 0; font-size: 32px; line-height: 1.15; font-weight: 600; color: #121413; font-variant-numeric: tabular-nums;">{{all.count}}</p>
@@ -96,8 +97,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 </div>
 </div>
 <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin: 40px 0 16px;">
-<h2 style="margin: 0; font-size: 22px; line-height: 1.3; font-weight: 600; color: #121413;">יחידות</h2>
-<div role="group" aria-label="תצוגת היחידות" style="display: inline-flex; padding: 3px; gap: 2px; background: #EEF1EF; border: 1px solid #E1E5E2; border-radius: 999px;">
+<h2 style="margin: 0; font-size: 22px; line-height: 1.3; font-weight: 600; color: #121413;">הקבוצות</h2>
+<div role="group" aria-label="תצוגת הקבוצות" style="display: inline-flex; padding: 3px; gap: 2px; background: #EEF1EF; border: 1px solid #E1E5E2; border-radius: 999px;">
 <button type="button" class="view-btn" aria-pressed="{{isCardsView}}" onClick="{{showCards}}" style="display: inline-flex; align-items: center; gap: 7px; height: 34px; padding: 0 14px; border: 0; border-radius: 999px; background: {{cardsBtnBg}}; color: {{cardsBtnColor}}; font: inherit; font-size: 14px; font-weight: 500; cursor: pointer;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"></rect><rect x="13" y="4" width="7" height="7" rx="1.5"></rect><rect x="4" y="13" width="7" height="7" rx="1.5"></rect><rect x="13" y="13" width="7" height="7" rx="1.5"></rect></svg>קוביות</button>
 <button type="button" class="view-btn" aria-pressed="{{isListView}}" onClick="{{showList}}" style="display: inline-flex; align-items: center; gap: 7px; height: 34px; padding: 0 14px; border: 0; border-radius: 999px; background: {{listBtnBg}}; color: {{listBtnColor}}; font: inherit; font-size: 14px; font-weight: 500; cursor: pointer;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"></path><circle cx="4.5" cy="6" r="1"></circle><circle cx="4.5" cy="12" r="1"></circle><circle cx="4.5" cy="18" r="1"></circle></svg>רשימה</button>
 </div>
@@ -740,7 +741,7 @@ class Component extends DCLogic {
       isAdminView: !observer,
       isObserverView: observer,
       homeHref: observer ? 'Observer.dc.html' : 'Main.dc.html',
-      homeLabel: observer ? '88ACADEMY — לסקירת המנהיגות' : '88ACADEMY — לעמוד הסקירה',
+      homeLabel: observer ? '88ACADEMY — לסקירת הקבוצה' : '88ACADEMY — לעמוד הסקירה',
       onHome: () => { if (observer) this.open('overview'); },
       goOverview: () => this.open('overview'),
       userName: observer ? (who ? who.name : 'משקיף') : (this.live() ? window.Academy.me.name : 'יהודה'),
