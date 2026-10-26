@@ -146,9 +146,22 @@ function stockLeft(prizeId) {
 function publicUser(u) {
   return { id: u.id, username: u.username, name: u.name, role: u.role, unit: u.unit || '', earns: !!u.earns, disabled: !!u.disabled, mustChange: !!u.mustChange, created: u.created || '', lastLogin: u.lastLogin || '', lastSeen: u.lastSeen || '', envAdmin: !!u.envAdmin };
 }
+// The levels a student's group learns (its own setting, else its parent group's); empty = all levels.
+function levelsFor(user) {
+  let unit = user && user.unit ? db.units.find((x) => x.id === user.unit) : null;
+  for (let i = 0; unit && i < 6; i++) {
+    if (Array.isArray(unit.levels) && unit.levels.length) return unit.levels;
+    unit = unit.parent ? db.units.find((x) => x.id === unit.parent) : null;
+  }
+  return [];
+}
 function bootFor(user) {
+  if (user.role === 'student') return M.scoped(levelsFor(user), () => bootFor0(user));
+  return bootFor0(user);
+}
+function bootFor0(user) {
   const rewards = db.rewards.map((p) => Object.assign({}, p, { left: stockLeft(p.id) }));
-  const base = { me: publicUser(user), today: M.today(), now: M.stamp(), units: db.units, rewards, scoring: db.scoring, levels: M.LEVELS, skills: M.SKILLS, challenges: M.CHALLENGES,
+  const base = { me: publicUser(user), today: M.today(), now: M.stamp(), units: db.units, rewards, scoring: db.scoring, levels: M.LEVELS.slice(), skills: M.SKILLS.slice(), challenges: M.CHALLENGES.slice(),
     allSkills: M.ALL_SKILLS.map((k) => ({ id: k.id, name: k.name, level: k.level, active: k.active })),
     allChallenges: M.ALL_CHALLENGES.map((c) => ({ id: c.id, title: c.title, points: c.points, active: c.active, final: !!c.final })) };
   base.settings = { videoDays: db.settings.videoDays, maxFlightMb: Math.round(MAX_FLIGHT / 1048576) };
@@ -503,12 +516,48 @@ const ADMIN_ACTIONS = {
   },
   saveUnits(me, b) {
     if (!Array.isArray(b.units)) return 'נתונים חסרים.';
+    const old = new Map(db.units.map((x) => [x.id, x]));
     const units = b.units.map((x) => ({ id: String(x.id || M.newId('g')).slice(0, 40), name: String(x.name || '').trim().slice(0, 80), type: String(x.type || '').trim().slice(0, 40), parent: String(x.parent || '') })).filter((x) => x.name);
+    units.forEach((x) => { const o = old.get(x.id); if (o && Array.isArray(o.levels) && o.levels.length) x.levels = o.levels; });
     const ids = new Set(units.map((x) => x.id));
     units.forEach((x) => { if (!ids.has(x.parent)) x.parent = ''; });
     db.units = units;
     db.users.forEach((u) => { if (u.unit && !ids.has(u.unit)) u.unit = ''; });
     log(me, 'settings', 'עדכן את היחידות');
+    return { ok: true };
+  },
+  // The levels a group learns. An empty list means every level.
+  setUnitLevels(me, b) {
+    const un = db.units.find((x) => x.id === String(b.unit || ''));
+    if (!un) return 'הקבוצה לא נמצאה.';
+    const known = new Set(M.LEVELS.map((l) => l.n));
+    const levels = Array.from(new Set((Array.isArray(b.levels) ? b.levels : []).map(Number).filter((n) => known.has(n))));
+    if (Array.isArray(b.levels) && b.levels.length && !levels.length) return 'לא נבחרו רמות.';
+    if (levels.length && levels.length < known.size) un.levels = M.LEVELS.map((l) => l.n).filter((n) => levels.indexOf(n) !== -1);
+    else delete un.levels;
+    const names = un.levels ? un.levels.map((n) => (M.LEVELS.find((l) => l.n === n) || {}).name).join(', ') : 'כל הרמות';
+    log(me, 'settings', 'שייך ל' + un.name + ' רמות: ' + names);
+    return { ok: true };
+  },
+  // Which prizes a group can see and ask for. Updates each prize's own list of groups.
+  setUnitRewards(me, b) {
+    const unit = String(b.unit || '');
+    if (unit !== 'none' && !db.units.some((x) => x.id === unit)) return 'הקבוצה לא נמצאה.';
+    const want = new Set((Array.isArray(b.prizes) ? b.prizes : []).map(String));
+    const everyGroup = db.units.map((x) => x.id).concat(['none']);
+    db.rewards.forEach((p) => {
+      const on = want.has(p.id);
+      if (p.groups === 'all' || !Array.isArray(p.groups)) {
+        if (on) return;
+        p.groups = everyGroup.filter((g) => g !== unit);
+      } else {
+        const set = new Set(p.groups);
+        if (on) set.add(unit); else set.delete(unit);
+        p.groups = everyGroup.every((g) => set.has(g)) ? 'all' : Array.from(set);
+      }
+    });
+    const un = db.units.find((x) => x.id === unit);
+    log(me, 'reward', 'עדכן את הפרסים של ' + (un ? un.name : 'מי שלא ביחידה') + ' (' + want.size + ')');
     return { ok: true };
   },
   saveRewards(me, b) {
@@ -913,7 +962,7 @@ async function handle(req, res) {
       const b = await readBody(req).catch(() => null);
       if (!b) return json(res, 400, { error: 'נתונים שגויים.' });
       const ctx = { scoring: db.scoring, rewards: db.rewards, unit: user.unit, earns: !!user.earns, stockLeft, ownsMedia: (link) => { const u = db.uploads[String(link).slice(7)]; return String(link).startsWith('/media/') && !!u && u.uid === user.id; } };
-      const out = M.acceptStudent(progressOf(user.id), b.progress, ctx);
+      const out = M.scoped(levelsFor(user), () => M.acceptStudent(progressOf(user.id), b.progress, ctx));
       db.progress[user.id] = out.doc;
       out.events.forEach((e) => log(user, e.kind, e.text, { target: user.id, ref: e.ref }));
       save();
@@ -938,7 +987,9 @@ async function handle(req, res) {
       if (!action) return json(res, 404, { error: 'פעולה לא מוכרת.' });
       const b = await readBody(req).catch(() => null);
       if (!b) return json(res, 400, { error: 'נתונים שגויים.' });
-      const out = action(user, b);
+      // Actions on one student run with that student's group levels.
+      const tgt = b && b.id ? findUser(b.id) : null;
+      const out = tgt && tgt.role === 'student' ? M.scoped(levelsFor(tgt), () => action(user, b)) : action(user, b);
       if (typeof out === 'string') return json(res, 400, { error: out });
       if (Number(db.settings.videoDays) === 0) cleanFlightVideos();
       save();

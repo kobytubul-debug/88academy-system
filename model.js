@@ -106,6 +106,19 @@ function setCurriculum(cur) {
 }
 setCurriculum(curriculumDefaults());
 
+// A group can be set to learn only some levels. While a student of such a group is being handled, the
+// curriculum lists are narrowed to those levels (and the final exam), then put back. Node runs this in one go.
+function scoped(levels, fn) {
+  const set = new Set((Array.isArray(levels) ? levels : []).map(Number));
+  if (!set.size || !LEVELS.some((l) => set.has(l.n))) return fn();
+  const keep = [LEVELS.slice(), SKILLS.slice(), CHALLENGES.slice()];
+  const fill = (arr, items) => { arr.length = 0; items.forEach((x) => arr.push(x)); };
+  fill(LEVELS, keep[0].filter((l) => set.has(l.n)));
+  fill(SKILLS, keep[1].filter((k) => set.has(k.level)));
+  fill(CHALLENGES, keep[2].filter((c) => c.final || set.has(c.level)));
+  try { return fn(); } finally { fill(LEVELS, keep[0]); fill(SKILLS, keep[1]); fill(CHALLENGES, keep[2]); }
+}
+
 function skillById(id) {
   return ALL_SKILLS.find((k) => k.id === Number(id)) || null;
 }
@@ -400,4 +413,4 @@ function acceptStudent(stored, incoming, ctx) {
   return { doc, events };
 }
 
-module.exports = { LEVELS, SKILLS, ALL_SKILLS, CHALLENGES, ALL_CHALLENGES, curriculumDefaults, cleanCurriculum, setCurriculum, skillById, challengeById, challengeOpen, scoringDefaults, emptyProgress, today, stamp, total, spent, balance, currentLevel, levelComplete, grantSkill, requireSkill, revokeSkill, notify, newId, skillPoints, rule, sg, acceptStudent };
+module.exports = { scoped, LEVELS, SKILLS, ALL_SKILLS, CHALLENGES, ALL_CHALLENGES, curriculumDefaults, cleanCurriculum, setCurriculum, skillById, challengeById, challengeOpen, scoringDefaults, emptyProgress, today, stamp, total, spent, balance, currentLevel, levelComplete, grantSkill, requireSkill, revokeSkill, notify, newId, skillPoints, rule, sg, acceptStudent };
