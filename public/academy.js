@@ -176,14 +176,17 @@
     var cat = { habit: 0, bonus: 0, stage: 0, manual: 0 };
     var total = 0;
     var last = u && u.lastSeen ? u.lastSeen : '';
-    d.ledger.forEach(function (e) {
+    // A student who does not earn points (not a "player") counts as 0 on every screen.
+    var earns = !u || u.role !== 'student' || !!u.earns;
+    (earns ? d.ledger : []).forEach(function (e) {
       total += Number(e.amount) || 0;
       var c = e.kind === 'manual' ? 'manual' : e.cat;
       cat[c] = (cat[c] || 0) + (Number(e.amount) || 0);
       if (e.at > last) last = e.at;
     });
     d.flights.forEach(function (f) { if (f.at > last) last = f.at; });
-    var spent = d.requests.filter(function (r) { return r.status === 'pending' || r.status === 'delivered'; }).reduce(function (s, r) { return s + (Number(r.cost) || 0); }, 0);
+    d.ledger.forEach(function (e) { if (e.at > last) last = e.at; });
+    var spent = !earns ? 0 : d.requests.filter(function (r) { return r.status === 'pending' || r.status === 'delivered'; }).reduce(function (s, r) { return s + (Number(r.cost) || 0); }, 0);
     var ri = A.rankIndex(total);
     var lv = levels.filter(function (l) { return l.n === level; })[0] || levels[0];
     var allDone = done.length === skills.length;
@@ -193,6 +196,7 @@
       rankIndex: ri, rankName: A.ranks()[ri].name, last: last, lastDay: A.dayOf(last),
       reviewing: d.flights.filter(function (f) { return f.status === 'review'; }),
       pendingRequests: d.requests.filter(function (r) { return r.status === 'pending'; }),
+      earns: earns,
       started: d.ledger.length > 0 || d.flights.length > 0 || !!(u && u.lastLogin)
     };
   };

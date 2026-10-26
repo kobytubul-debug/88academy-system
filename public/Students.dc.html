@@ -128,7 +128,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <span style="text-align: center; font-variant-numeric: tabular-nums;">{{u.skillsLabel}}</span>
 <span style="display: flex; justify-content: center; font-variant-numeric: tabular-nums; color: #545D58;">
 <sc-if value="{{u.pointsOn}}" hint-placeholder-val="{{ true }}"><button type="button" class="pts-btn" aria-expanded="{{u.ptsExpanded}}" aria-label="{{u.ptsLabel}}" onClick="{{u.togglePoints}}" style="display: flex; flex-direction: column; align-items: center; gap: 1px; min-width: 100px; padding: 5px 10px; border-radius: 10px; border: 1px solid {{u.ptsBorder}}; background: {{u.ptsBg}}; color: #121413; font: inherit; cursor: pointer;"><span dir="ltr" style="font-family: 'Unbounded', 'Rubik', sans-serif; font-size: 15px; font-weight: 700; line-height: 1.3;">{{u.pointsLabel}}</span><span style="display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: #3D4541;">{{u.rankName}}<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: rotate({{u.ptsChevron}}deg); transition: transform 0.15s ease;"><path d="M6 9l6 6 6-6"></path></svg></span></button></sc-if>
-<sc-if value="{{u.pointsOff}}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 999px; background: #F1F3F2; border: 1px solid #D3D9D5; color: #4B534F; font-size: 12px; font-weight: 500;">כבוי</span></sc-if>
+<sc-if value="{{u.pointsOff}}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 999px; background: #F1F3F2; border: 1px solid #D3D9D5; color: #4B534F; font-size: 12px; font-weight: 500;">לא צובר</span></sc-if>
 </span>
 <span style="display: flex; justify-content: flex-end;">
 <sc-if value="{{u.editShown}}" hint-placeholder-val="{{ true }}"><button type="button" class="btn-ghost" aria-label="{{u.editLabel}}" onClick="{{u.edit}}" style="height: 34px; padding: 0 12px; border-radius: 9px; border: 1px solid {{u.editBorder}}; background: {{u.editBg}}; color: {{u.editColor}}; font: inherit; font-size: 14px; cursor: pointer;">עריכה</button></sc-if><sc-if value="{{u.editHidden}}" hint-placeholder-val="{{ false }}"><span title="רק המנהל הראשי יכול לערוך את החשבון הזה" style="white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px; font-size: 13px; color: #6E7772;"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 10V8a4 4 0 0 1 8 0v2" fill="none" stroke="currentColor" stroke-width="2.4"></path><rect x="5.5" y="10" width="13" height="10" rx="2.5"></rect></svg>מנהל ראשי</span></sc-if>
@@ -213,7 +213,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <label for="nu-role" style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #3D4541;">תפקיד</label>
 <div style="position: relative;">
 <select id="nu-role" value="{{formRole}}" onChange="{{onRole}}" disabled="{{roleLocked}}" style="appearance: none; -webkit-appearance: none; width: 100%; box-sizing: border-box; height: 44px; padding: 0 14px 0 40px; background: #FFFFFF; border: 1px solid #D3D9D5; border-radius: 10px; color: #1E2320; font: inherit; font-size: 15px; cursor: pointer;">
-<option value="student">סטודנט</option>
+<option value="student">סטודנט — לא צובר נקודות</option>
+<option value="player">שחקן — צובר נקודות</option>
 <option value="observer">משקיף</option>
 <option value="admin">מנהל</option>
 </select>
@@ -233,10 +234,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5E6762" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); pointer-events: none;"><path d="M6 9l6 6 6-6"></path></svg>
 </div>
 </div>
-<div style="display: flex; flex-direction: column; gap: 6px;">
-<label style="display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 500; color: #1E2320; cursor: pointer;"><input type="checkbox" checked="{{formEarns}}" onChange="{{onEarns}}" style="width: 18px; height: 18px; margin: 0; accent-color: #B23A5E; cursor: pointer;">צובר נקודות</label>
-<p style="margin: 0; padding-inline-start: 28px; font-size: 13px; line-height: 1.55; color: #5E6762;">מיומנויות ואתגרים מזכים בנקודות שאפשר לממש בפרסים, והסטודנט רואה את הנקודות והפרסים. כשהאפשרות כבויה לא נצברות נקודות ולא מוצגים פרסים.</p>
-</div>
+<p style="margin: 0; font-size: 13px; line-height: 1.55; color: #5E6762;">{{roleHint}}</p>
 </div>
 </sc-if>
 <sc-if value="{{isObserverForm}}" hint-placeholder-val="{{ false }}">
@@ -320,7 +318,7 @@ class Component extends DCLogic {
   }
 
   emptyForm() {
-    return { username: '', name: '', password: '', role: 'student', unit: '', earns: true };
+    return { username: '', name: '', password: '', role: 'student', unit: '', earns: false };
   }
 
   units() {
@@ -533,6 +531,16 @@ class Component extends DCLogic {
     this.setState(Object.assign({}, patch, { flash: message, flashId: highlightId }), after);
     clearTimeout(this.flashTimer);
     this.flashTimer = setTimeout(() => this.setState({ flash: '', flashId: null }), 3500);
+  }
+
+  // "Player" is a student who earns points; "student" is one who does not. Both are the student role on the server.
+  setRole(v) {
+    const s = this.st();
+    const form = Object.assign({}, s.form);
+    if (v === 'player' || v === 'student') { form.role = 'student'; form.earns = v === 'player'; }
+    else { form.role = v; form.earns = false; }
+    const errors = Object.assign({}, s.errors, { role: '', unit: '' });
+    this.setState({ form: form, errors: errors });
   }
 
   setField(field, value) {
@@ -819,11 +827,11 @@ class Component extends DCLogic {
         name: u.name,
         username: u.username,
         isStudent: isStudent,
-        isStaff: !isStudent,
-        roleLabel: isAdmin ? 'מנהל' : 'משקיף',
-        badgeBg: isAdmin ? '#E6EEFB' : '#F1F3F2',
-        badgeBorder: isAdmin ? '#A9C1EA' : '#D3D9D5',
-        badgeColor: isAdmin ? '#2F5FA8' : '#4B534F',
+        isStaff: true,
+        roleLabel: isAdmin ? 'מנהל' : !isStudent ? 'משקיף' : earning ? 'שחקן' : 'סטודנט',
+        badgeBg: isAdmin ? '#E6EEFB' : earning ? '#E9FAF3' : '#F1F3F2',
+        badgeBorder: isAdmin ? '#A9C1EA' : earning ? '#9FDDC4' : '#D3D9D5',
+        badgeColor: isAdmin ? '#2F5FA8' : earning ? '#17694F' : '#4B534F',
         isObserver: u.role === 'observer',
         unitLabel: isStudent ? (u.unit ? units[u.unit] : '—') : (u.role === 'observer' ? (u.unit ? units[u.unit] : 'לא שויכה קבוצה') : ''),
         unitColor: u.role === 'observer' && !u.unit ? '#7A5300' : (u.unit ? '#2C322F' : '#6E7772'),
@@ -923,7 +931,8 @@ class Component extends DCLogic {
       formUsername: f.username,
       formName: f.name,
       formPassword: f.password,
-      formRole: f.role,
+      formRole: f.role === 'student' ? (f.earns ? 'player' : 'student') : f.role,
+      roleHint: f.earns ? 'שחקן צובר נקודות על מיומנויות, אתגרים והתמדה, רואה את הארנק והדרגה, ויכול לממש פרסים.' : 'סטודנט לומד ומגיש טיסות, אבל לא צובר נקודות: הוא לא רואה ניקוד, ארנק, דרגות או פרסים.',
       formUnit: f.unit,
       formEarns: !!f.earns,
       isStudentForm: f.role === 'student',
@@ -936,7 +945,7 @@ class Component extends DCLogic {
       onUsername: (e) => this.setField('username', e.target.value),
       onName: (e) => this.setField('name', e.target.value),
       onPassword: (e) => this.setField('password', e.target.value),
-      onRole: (e) => this.setField('role', e.target.value),
+      onRole: (e) => this.setRole(e.target.value),
       onUnit: (e) => this.setField('unit', e.target.value),
       onEarns: (e) => this.setField('earns', e.target.checked),
       onFieldKey: (e) => this.onFieldKey(e),
