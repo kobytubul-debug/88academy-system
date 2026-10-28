@@ -84,7 +84,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
 <sc-if value="{{isDisabled}}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; align-items: center; height: 28px; padding: 0 10px; border-radius: 999px; background: #FDECEC; border: 1px solid #F2B8B8; color: #B42318; font-size: 13px; font-weight: 500;">החשבון מושבת</span></sc-if>
 <span style="font-size: 14px; color: #545D58;">רמה נוכחית: <span style="color: #121413; font-weight: 500;">{{currentLevelName}}</span></span>
-<span style="display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border-radius: 999px; background: #121413; color: #FFFFFF; font-size: 15px; font-weight: 500;"><span dir="ltr" style="font-family: 'Unbounded', 'Rubik', sans-serif; font-size: 16px; font-weight: 700; color: #76DEB8;">{{pointsNumber}}</span>{{pointsWord}} · {{rankName}}</span>
+<span style="display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border-radius: 999px; background: #121413; color: #FFFFFF; font-size: 15px; font-weight: 500;"><sc-if value="{{earnsOn}}" hint-placeholder-val="{{ true }}"><span dir="ltr" style="font-family: 'Unbounded', 'Rubik', sans-serif; font-size: 16px; font-weight: 700; color: #76DEB8;">{{pointsNumber}}</span>{{pointsWord}} · {{rankName}}</sc-if><sc-if value="{{earnsOff}}" hint-placeholder-val="{{ false }}">סטודנט · לא צובר נקודות</sc-if></span>
 </div>
 </div>
 <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; margin-top: 28px; border-bottom: 1px solid #E1E5E2;">
@@ -207,6 +207,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <sc-if value="{{f.hasNote}}" hint-placeholder-val="{{ false }}"><p style="margin: 10px 0 0; font-size: 14px; line-height: 1.55; color: #3D4541;">הערת הסטודנט: {{f.note}}</p></sc-if>
 <sc-if value="{{f.isFile}}" hint-placeholder-val="{{ false }}"><video src="{{f.link}}" controls="" preload="metadata" playsinline="" style="display: block; width: 100%; max-width: 640px; margin-top: 10px; aspect-ratio: 16 / 9; border-radius: 12px; background: #111413;"></video></sc-if>
 <sc-if value="{{f.isLink}}" hint-placeholder-val="{{ true }}"><a href="{{f.link}}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 14px; font-weight: 500; color: #17694F;">צפייה בסרטון הטיסה<span aria-hidden="true">↗</span></a></sc-if>
+<sc-if value="{{f.showWatch}}" hint-placeholder-val="{{ false }}"><p style="display: flex; align-items: center; gap: 7px; margin: 10px 0 0; font-size: 13px;"><sc-if value="{{f.watched}}" hint-placeholder-val="{{ true }}"><span style="display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; border-radius: 999px; background: #E9FAF3; border: 1px solid #9FDDC4; color: #17694F; font-weight: 500;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>{{f.watchText}}</span></sc-if><sc-if value="{{f.notWatched}}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; border-radius: 999px; background: #FFF4D6; border: 1px solid #EFD48C; color: #7A5300; font-weight: 500;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"></path></svg>{{f.watchText}}</span></sc-if></p></sc-if>
 <sc-if value="{{f.gone}}" hint-placeholder-val="{{ false }}"><p style="margin: 10px 0 0; font-size: 13px; color: #5E6762;">הסרטון נמחק מהאתר אחרי הבדיקה, כדי לפנות מקום.</p></sc-if>
 <sc-if value="{{f.hasAi}}" hint-placeholder-val="{{ false }}">
 <div style="margin-top: 12px; padding: 12px 14px; background: {{f.aiBg}}; border: 1px solid {{f.aiBorder}}; border-radius: 12px; font-size: 14px; line-height: 1.55; color: #1E2320;">
@@ -225,7 +226,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <textarea id="{{f.fbId}}" rows="2" value="{{f.draft}}" onChange="{{f.onDraft}}" placeholder="מה היה טוב, ומה לשפר" style="display: block; width: 100%; box-sizing: border-box; min-height: 64px; padding: 10px 14px; background: #FFFFFF; border: 1px solid #D3D9D5; border-radius: 10px; color: #1E2320; font: inherit; font-size: 15px; line-height: 1.5; resize: vertical;"></textarea>
 <sc-if value="{{f.hasError}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 8px 0 0; font-size: 14px; color: #B42318;">{{f.error}}</p></sc-if>
 <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px;">
-<button type="button" class="btn-primary" onClick="{{f.approve}}" disabled="{{f.busy}}" style="height: 42px; padding: 0 20px; border: 0; border-radius: 999px; background: #C7436A; color: #FFFFFF; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer;">אישור הטיסה · <span dir="ltr">+{{f.points}}</span> מטבעות</button>
+<button type="button" class="btn-primary" onClick="{{f.approve}}" disabled="{{f.busy}}" style="height: 42px; padding: 0 20px; border: 0; border-radius: 999px; background: #C7436A; color: #FFFFFF; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer;">אישור הטיסה<sc-if value="{{f.earns}}" hint-placeholder-val="{{ true }}"> · <span dir="ltr">+{{f.points}}</span> מטבעות</sc-if></button>
 <button type="button" class="btn-ghost" onClick="{{f.reject}}" disabled="{{f.busy}}" style="height: 42px; padding: 0 18px; border-radius: 999px; border: 1px solid #D3D9D5; background: #FFFFFF; color: #3D4541; font: inherit; font-size: 15px; cursor: pointer;">החזרה לתיקון</button>
 </div>
 </sc-if>
@@ -656,7 +657,20 @@ class Component extends DCLogic {
     for (let i = 0; i < levels.length; i++) {
       if (this.skills().some((k) => k.level === levels[i].n && prog[k.id] !== 'done')) return levels[i].n;
     }
-    return levels.length;
+    return levels.length ? levels[levels.length - 1].n : 1;
+  }
+
+  // A student who does not earn points (role "סטודנט", not "שחקן").
+  noCoins() {
+    const A = window.Academy;
+    if (!A || !A.on) return false;
+    const u = A.user(this.studentId());
+    return !!(u && u.role === 'student' && !u.earns);
+  }
+
+  // Levels follow the student's group order, so compare places in that order, not level ids.
+  lvRank(n) {
+    return this.levels().findIndex((l) => l.n === n);
   }
 
   allDone(prog) {
@@ -666,7 +680,7 @@ class Component extends DCLogic {
   statusOf(k, prog, current) {
     if (prog[k.id] === 'done') return 'done';
     if (prog[k.id] === 'required') return 'required';
-    return k.level <= current ? 'open' : 'locked';
+    return this.lvRank(k.level) <= this.lvRank(current) ? 'open' : 'locked';
   }
 
   st() {
@@ -743,6 +757,19 @@ class Component extends DCLogic {
         statusLabel: look.label, chipBg: look.bg, chipBorder: look.border, chipColor: look.color, border: look.box,
         meta: 'הוגשה ' + A.fmtDate(f.at) + (f.reviewedAt ? ' · נבדקה ' + A.fmtDate(f.reviewedAt) + (f.reviewer ? ' על ידי ' + f.reviewer : '') : ''),
         hasNote: !!f.note, note: f.note || '',
+        earns: !this.noCoins(),
+        ...(() => {
+          // Did the student watch the skill's demo video to the end? (recorded even when they do not earn points)
+          const k = f.challenge ? null : (A.data.allSkills || []).find((x) => x.id === f.skill);
+          const full = f.challenge ? null : (A.data.curriculum && A.data.curriculum.skills || []).find((x) => x.id === f.skill);
+          const hasVideo = !!(full && full.video);
+          const seen = f.challenge ? null : s.sm.doc.ledger.find((e) => e.kind === 'video' && e.skill === f.skill);
+          return {
+            showWatch: !f.challenge && (hasVideo || !!seen),
+            watched: !!seen, notWatched: !seen,
+            watchText: seen ? 'צפה בסרטון ההדגמה עד הסוף · ' + A.fmtDate(seen.at) : 'עוד לא צפה בסרטון ההדגמה' + (k ? ' של ' + k.name : '')
+          };
+        })(),
         link: f.link || '#',
         isFile: !!f.link && A.isFile(f.link),
         isLink: !!f.link && !A.isFile(f.link),
@@ -1252,7 +1279,7 @@ class Component extends DCLogic {
         name: lv.name,
         setRef: this.levelRef(lv.n),
         isCurrent: !allDone && lv.n === current,
-        isLocked: !allDone && lv.n > current && done < skills.length,
+        isLocked: !allDone && this.lvRank(lv.n) > this.lvRank(current) && done < skills.length,
         hasRequired: required > 0,
         requiredText: required + ' לביצוע חוזר',
         pct: String(Math.round((done / skills.length) * 1000) / 10),
@@ -1298,7 +1325,7 @@ class Component extends DCLogic {
       const done = skills.filter((k) => s.prog[k.id] === 'done').length;
       const complete = done === skills.length;
       const isCurrent = lv.n === current && !complete;
-      const locked = lv.n > current && !complete;
+      const locked = this.lvRank(lv.n) > this.lvRank(current) && !complete;
       const ring = complete ? GREEN : isCurrent ? ORANGE : GRAY;
       nodes.push({
         id: 'L' + lv.n, left: mid - 150, boxW: 300, labelMax: 280, top: top, size: 84, borderW: 3, ring: ring,
@@ -1581,8 +1608,9 @@ class Component extends DCLogic {
       displayName: a.name,
       username: a.username,
       unitLabel: a.unit ? units[a.unit] : 'ללא יחידה',
-      currentLevelName: allDone ? 'המסלול הושלם' : this.levels()[current - 1].name,
+      currentLevelName: allDone ? 'המסלול הושלם' : ((this.levels().find((l) => l.n === current) || {}).name || ''),
       pointsNumber: String(total),
+      earnsOn: !this.noCoins(), earnsOff: this.noCoins(),
       pointsWord: Math.abs(total) === 1 ? 'נקודה' : 'נקודות',
       isListView: !graphOn,
       isGraphView: graphOn,

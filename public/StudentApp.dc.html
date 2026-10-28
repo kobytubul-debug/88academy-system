@@ -2086,6 +2086,7 @@ class Component extends DCLogic {
       const frame = document.querySelector('iframe[data-yt-example]');
       if (frame && frame.contentWindow !== ev.source) return;
       this.markEnded(this.where(this.st()).skillId);
+      if (!this.coinsOn()) this.videoFinished('example');
     };
     window.addEventListener('message', this._ytOn);
   }
@@ -2111,7 +2112,8 @@ class Component extends DCLogic {
     if (!skillId) return;
     const k = this.skills().find((x) => x.id === skillId);
     const items = [];
-    if (this.rules().video > 0 && !s.ledger.some((e) => e.kind === 'video' && e.skill === skillId)) items.push({ cat: 'bonus', kind: 'video', skill: skillId, text: 'צפייה בסרטון הדגמה: ' + k.name, amount: this.rules().video });
+    // Always leave a mark that the video was watched (at 0 coins when the rule is off or the student does not earn), so the instructor can see it.
+    if (!s.ledger.some((e) => e.kind === 'video' && e.skill === skillId)) items.push({ cat: 'bonus', kind: 'video', skill: skillId, text: 'צפייה בסרטון הדגמה: ' + k.name, amount: Math.max(0, this.rules().video || 0) });
     const questBefore = s.questVideo;
     this.setState({ questVideo: true }, () => {
       const gave = this.award(items, { from: key === 'example' ? this.exampleBoxEl : this.modalBoxEl });
@@ -3599,7 +3601,7 @@ class Component extends DCLogic {
       watchBtnBorder: this.exampleLocked(skill) ? '#D3D9D5' : '#121413',
       watchBtnCursor: this.exampleLocked(skill) ? 'not-allowed' : 'pointer',
       markWatched: () => { if (this.exampleLocked(skill)) { this.say('צפו בסרטון עד הסוף, ואז הכפתור ייפתח.'); return; } this.videoFinished('example'); },
-      onExampleEnded: () => this.markEnded(skill.id),
+      onExampleEnded: () => { this.markEnded(skill.id); if (!this.coinsOn()) this.videoFinished('example'); },
       muted: !!s.muted,
       soundOn: !s.muted,
       muteLabel: s.muted ? 'ביטול השתקה' : 'השתקה',
