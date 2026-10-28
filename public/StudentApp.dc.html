@@ -548,7 +548,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <sc-for list="{{levels}}" as="l" hint-placeholder-count="3">
 <section aria-label="{{l.aria}}" style="padding: 22px 24px; border-radius: 24px; background: {{l.cardBg}}; border: {{l.cardBorder}};">
 <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px;">
-<h2 style="margin: 0; font-size: 22px; line-height: 1.3; font-weight: 600; color: {{l.titleColor}};">רמה {{l.n}} · {{l.name}}</h2>
+<h2 style="margin: 0; font-size: 22px; line-height: 1.3; font-weight: 600; color: {{l.titleColor}};">רמה {{l.pos}} · {{l.name}}</h2>
 <span style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px;">
 <span style="font-size: 14px; color: #3D4541;"><span dir="ltr" style="font-variant-numeric: tabular-nums;">{{l.count}}</span> מיומנויות · <span dir="ltr" style="font-variant-numeric: tabular-nums;">{{l.pointsText}}</span> מטבעות</span>
 <sc-if value="{{l.hasBonus}}" hint-placeholder-val="{{ true }}"><span style="display: inline-flex; align-items: center; gap: 6px; height: 30px; padding-block: 0; padding-inline: 12px 5px; box-sizing: border-box; border-radius: 999px; background: {{l.bonusBg}}; color: {{l.bonusColor}}; font-size: 13px; white-space: nowrap;">{{l.bonusLabel}} <span dir="ltr" style="font-family: 'Unbounded', 'Rubik', sans-serif; font-weight: 700;">+{{l.bonus}}</span><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" style="flex: none; display: block;"><circle cx="12" cy="12.7" r="10.8" fill="#C98A12"></circle><circle cx="12" cy="11.4" r="10.4" fill="#F7C548"></circle><circle cx="12" cy="11.4" r="7.7" fill="none" stroke="#DDA024" stroke-width="1.1"></circle><g fill="none" stroke="#97650A" stroke-width="1.35"><circle cx="9.85" cy="9.25" r="2.05"></circle><circle cx="14.15" cy="9.25" r="2.05"></circle><circle cx="9.85" cy="13.55" r="2.05"></circle><circle cx="14.15" cy="13.55" r="2.05"></circle></g><path d="M5.5 8.6a7.3 7.3 0 0 1 4.4-3.7" fill="none" stroke="#FFF2C6" stroke-width="1.6" stroke-linecap="round"></path></svg></span></sc-if>
@@ -913,7 +913,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <ul style="list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 16px; margin: 18px 0 0; padding: 0;">
 <sc-for list="{{guideLevels}}" as="gl" hint-placeholder-count="3">
 <li style="display: flex; flex-direction: column; padding: 22px 24px; border-radius: 26px; background: #FFFFFF; border: {{gl.border}};">
-<span style="display: flex; align-items: center; justify-content: space-between; gap: 10px;"><span style="font-size: 14px; font-weight: 600; color: #545D58;">רמה {{gl.n}}</span><sc-if value="{{gl.isCurrent}}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 999px; background: #FCE8EF; color: #A8335A; font-size: 12px; font-weight: 600;">אתם כאן</span></sc-if></span>
+<span style="display: flex; align-items: center; justify-content: space-between; gap: 10px;"><span style="font-size: 14px; font-weight: 600; color: #545D58;">רמה {{gl.pos}}</span><sc-if value="{{gl.isCurrent}}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 999px; background: #FCE8EF; color: #A8335A; font-size: 12px; font-weight: 600;">אתם כאן</span></sc-if></span>
 <span style="display: block; margin-top: 4px; font-family: 'Karantina', 'Rubik', sans-serif; font-size: 36px; line-height: 0.95; font-weight: 700; color: #121413;">{{gl.name}}</span>
 <dl style="display: grid; grid-template-columns: minmax(0, 1fr) max-content; gap: 8px 12px; margin: 16px 0 0; font-size: 14px;">
 <dt style="color: #3D4541;">{{gl.skillsText}}</dt><dd dir="ltr" style="margin: 0; font-family: 'Unbounded', 'Rubik', sans-serif; font-weight: 700; color: #121413;">{{gl.range}}</dd>
@@ -1662,7 +1662,17 @@ class Component extends DCLogic {
     if (s.acquired[id]) return 'done';
     if (!skill) return 'locked';
     if (s.flights.some((f) => f.skill === id && f.status === 'review')) return 'review';
-    return skill.level <= this.currentLevel(s) ? 'open' : 'locked';
+    return this.levelRank(skill.level) <= this.levelRank(this.currentLevel(s)) ? 'open' : 'locked';
+  }
+
+  // Levels are kept in the order the student's group learns them; their number on screen is their place in that order.
+  levelRank(n) {
+    return this.levels().findIndex((l) => l.n === n);
+  }
+
+  levelPos(n) {
+    const i = this.levelRank(n);
+    return i === -1 ? n : i + 1;
   }
 
   currentLevel(s) {
@@ -2841,7 +2851,7 @@ class Component extends DCLogic {
       const skills = this.skills().filter((k) => k.level === lv.n);
       const done = skills.filter((k) => s.acquired[k.id]).length;
       const complete = done === skills.length;
-      return { lv: lv, skills: skills, done: done, complete: complete, isCurrent: lv.n === current && !complete, locked: lv.n > current };
+      return { lv: lv, skills: skills, done: done, complete: complete, isCurrent: lv.n === current && !complete, locked: this.levelRank(lv.n) > this.levelRank(current) };
     });
     const allDone = this.skills().every((k) => s.acquired[k.id]);
     const course = levels.reduce((sum, L) => sum + this.levelWorth(L.lv.n), 0);
@@ -2856,9 +2866,9 @@ class Component extends DCLogic {
         ring: L.complete ? GREEN : L.isCurrent ? ROSE : GRAY, innerRing: L.locked ? '#C3CBC6' : 'transparent',
         glow: L.isCurrent ? '0 0 0 6px rgba(199, 67, 106, 0.14), 0 0 28px rgba(199, 67, 106, 0.30)' : 'none',
         iconCheck: L.complete, iconPlay: false, iconReview: false, iconLock: L.locked, iconDrone: L.isCurrent, iconTrophy: false,
-        hasSub: true, subCoin: false, sub: 'רמה ' + lv.n + ' · ' + L.done + '/' + L.skills.length + (lv.bonus && this.coinsOn() ? ' · בונוס ' + this.sg(lv.bonus) : ''), subDir: 'rtl', subBg: '#FFFFFF', subColor: '#3D4541',
+        hasSub: true, subCoin: false, sub: 'רמה ' + this.levelPos(lv.n) + ' · ' + L.done + '/' + L.skills.length + (lv.bonus && this.coinsOn() ? ' · בונוס ' + this.sg(lv.bonus) : ''), subDir: 'rtl', subBg: '#FFFFFF', subColor: '#3D4541',
         label: lv.name, labelSize: 18, labelWeight: 700,
-        labelColor: L.locked ? '#5E6762' : '#121413', inert: true, aria: 'רמה ' + lv.n + ': ' + lv.name, cursor: 'default', open: () => {}
+        labelColor: L.locked ? '#5E6762' : '#121413', inert: true, aria: 'רמה ' + this.levelPos(lv.n) + ': ' + lv.name, cursor: 'default', open: () => {}
       };
     };
     const skillNode = (k, status, x, top, boxW, labelMax, size) => {
@@ -3273,10 +3283,11 @@ class Component extends DCLogic {
         const pts = list.map((k) => k.points);
         const worth = this.levelWorth(lv.n);
         const earned = this.levelEarned(lv.n, s);
-        const locked = lv.n > current;
+        const locked = this.levelRank(lv.n) > this.levelRank(current);
         return {
           id: 'gl' + lv.n,
           n: lv.n,
+          pos: String(this.levelPos(lv.n)),
           name: lv.name,
           isCurrent: lv.n === current,
           border: lv.n === current ? '6px solid #57AD8E' : '1px solid #E1E5E2',
@@ -3286,7 +3297,7 @@ class Component extends DCLogic {
           bonusText: lv.bonus > 0 ? '+' + lv.bonus : 'אין',
           worth: worth,
           pct: Math.round(earned / worth * 100),
-          mine: locked ? 'הרמה תיפתח כשתסיימו את רמה ' + (lv.n - 1) + '.' : 'צברתם כאן ' + earned + ' מתוך ' + worth + ' מטבעות.'
+          mine: locked ? 'הרמה תיפתח כשתסיימו את רמה ' + (this.levelPos(lv.n) - 1) + '.' : 'צברתם כאן ' + earned + ' מתוך ' + worth + ' מטבעות.'
         };
       }),
       guideHabit: habit.map((x) => Object.assign(x, { statusBg: x.on ? got.bg : waiting.bg, statusColor: x.on ? got.color : waiting.color })),
@@ -3383,12 +3394,12 @@ class Component extends DCLogic {
     const levelRows = levels.map((lv) => {
       const list = skills.filter((k) => k.level === lv.n);
       const done = list.filter((k) => s.acquired[k.id]).length;
-      const locked = lv.n > current;
+      const locked = this.levelRank(lv.n) > this.levelRank(current);
       const complete = done === list.length;
       const earned = this.levelEarned(lv.n, s);
       const worth = this.levelWorth(lv.n);
       return {
-        id: 'level' + lv.n, n: lv.n, name: lv.name, aria: 'רמה ' + lv.n + ': ' + lv.name, count: done + '/' + list.length, pct: Math.round(done / list.length * 100),
+        id: 'level' + lv.n, n: lv.n, pos: String(this.levelPos(lv.n)), name: lv.name, aria: 'רמה ' + this.levelPos(lv.n) + ': ' + lv.name, count: done + '/' + list.length, pct: Math.round(done / list.length * 100),
         hasDesc: !!lv.desc, desc: lv.desc, titleColor: locked ? '#545D58' : '#121413',
         cardBg: locked ? '#F7F8F7' : '#FFFFFF', cardBorder: lv.n === current && !complete ? '2px solid #121413' : complete ? '1px solid #A3DEC6' : '1px solid #E1E5E2',
         pointsText: earned + '/' + worth, bonus: lv.bonus, hasBonus: lv.bonus > 0, bonusLabel: complete ? 'בונוס הרמה התקבל' : 'בונוס בסיום הרמה', bonusBg: complete ? '#DDF6EC' : '#121413', bonusColor: complete ? '#17694F' : '#76DEB8',
@@ -3515,7 +3526,7 @@ class Component extends DCLogic {
       goPath: () => this.go('path', null),
 
       // dashboard
-      levelNumber: String(current),
+      levelNumber: String(this.levelPos(current)),
       levelName: currentLevel.name,
       levelDone: String(levelDone),
       levelTotal: String(levelSkills.length),
@@ -3562,7 +3573,7 @@ class Component extends DCLogic {
       skillWorth: worthRows,
       hasMap: !!skill.map,
       skillMap: skill.map,
-      skillLevelNumber: String(skill.level),
+      skillLevelNumber: String(this.levelPos(skill.level)),
       skillLevelName: skillLevel.name,
       skillDesc: skill.desc,
       skillPass: skill.pass,
@@ -3654,7 +3665,7 @@ class Component extends DCLogic {
 
       // challenges
       challenges: this.challenges().map((c) => {
-        const lv = levels.find((l) => l.n === c.level) || { name: 'רמה ' + c.level };
+        const lv = levels.find((l) => l.n === c.level) || { name: 'רמה ' + this.levelPos(c.level) };
         const state = this.challengeState(c, s);
         const isOpen = state !== 'locked' && state !== 'ended';
         return {
@@ -3680,7 +3691,7 @@ class Component extends DCLogic {
       }),
       challengeHasTries: chFlights.length > 0,
       challengeDesc: challenge.desc,
-      challengeLevel: challenge.final ? 'אחרי שמסיימים את כל המסלול' : 'רמה ' + challenge.level + (challengeLevel.name ? ' · ' + challengeLevel.name : ''),
+      challengeLevel: challenge.final ? 'אחרי שמסיימים את כל המסלול' : 'רמה ' + this.levelPos(challenge.level) + (challengeLevel.name ? ' · ' + challengeLevel.name : ''),
       challengeEnds: challenge.ends,
       challengePoints: challenge.pointsText,
       challengeNoteBg: chState === 'done' ? '#DDF6EC' : chState === 'review' ? '#FFF4D6' : challengeOpen ? '#FCE8EF' : '#F1F3F2',

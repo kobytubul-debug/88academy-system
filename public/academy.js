@@ -181,6 +181,11 @@
     var skills = A.skills().filter(inScope);
     var shown = skills.map(function (k) { return k.level; });
     var levels = A.levels().filter(function (l) { return shown.indexOf(l.n) !== -1; });
+    // The group's own order of levels first, then levels reached only through single skills.
+    if (only && only.levels.length) {
+      var own = only.levels.map(function (n) { return levels.filter(function (l) { return l.n === n; })[0]; }).filter(Boolean);
+      levels = own.concat(levels.filter(function (l) { return own.indexOf(l) === -1; }));
+    }
     if (!levels.length) { skills = A.skills(); levels = A.levels(); }
     var done = skills.filter(function (k) { return d.acquired[k.id]; });
     var level = levels.length;
@@ -212,6 +217,7 @@
       reviewing: d.flights.filter(function (f) { return f.status === 'review'; }),
       pendingRequests: d.requests.filter(function (r) { return r.status === 'pending'; }),
       earns: earns,
+      levelsList: levels, skillsList: skills,
       started: d.ledger.length > 0 || d.flights.length > 0 || !!(u && u.lastLogin)
     };
   };

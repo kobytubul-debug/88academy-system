@@ -109,7 +109,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <sc-for list="{{levels}}" as="lv" hint-placeholder-count="3">
 <details open="" ref="{{lv.setRef}}" style="background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; overflow: hidden;">
 <summary style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding: 18px 22px;">
-<span style="font-size: 17px; font-weight: 600; color: #121413;">רמה {{lv.n}} · {{lv.name}}</span>
+<span style="font-size: 17px; font-weight: 600; color: #121413;">{{lv.name}}</span>
 <sc-if value="{{lv.isCurrent}}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; align-items: center; height: 24px; padding: 0 9px; border-radius: 999px; background: #FCE8EF; border: 1px solid #EFB5C8; color: #A8335A; font-size: 12px; font-weight: 500; white-space: nowrap;">רמה נוכחית</span></sc-if>
 <sc-if value="{{lv.isLocked}}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; align-items: center; gap: 5px; height: 24px; padding: 0 9px; border-radius: 999px; background: #F1F3F2; border: 1px solid #D3D9D5; color: #5E6762; font-size: 12px; font-weight: 500; white-space: nowrap;"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 10V8a4 4 0 0 1 8 0v2" fill="none" stroke="currentColor" stroke-width="2.4"></path><rect x="5.5" y="10" width="13" height="10" rx="2.5"></rect></svg>נעולה</span></sc-if>
 <span style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-inline-start: auto;">
@@ -448,7 +448,12 @@ class Component extends DCLogic {
 
   // ---------- curriculum ----------
   levels() {
-    if (window.Academy && window.Academy.on) return window.Academy.levels().map((l) => ({ n: l.n, name: l.name }));
+    if (window.Academy && window.Academy.on) {
+      // In the order this student's group learns the levels (and only those).
+      const sm = this.studentId() ? window.Academy.summary(this.studentId()) : null;
+      const list = sm && sm.user && sm.levelsList && sm.levelsList.length ? sm.levelsList : window.Academy.levels();
+      return list.map((l) => ({ n: l.n, name: l.name }));
+    }
     return [
       { n: 1, name: 'אבני יסוד' },
       { n: 2, name: 'תרגילי קורס פרופלור' },
@@ -464,7 +469,9 @@ class Component extends DCLogic {
       if (this._skills && this._skillsFor === sc && this._skillsData === A.data) return this._skills;
       this._skillsFor = sc;
       this._skillsData = A.data;
-      this._skills = A.skills().map((k) => ({ id: k.id, level: k.level, name: k.name, base: A.skillPoints(k.id), points: A.skillPoints(k.id) }));
+      const sm = this.studentId() ? A.summary(this.studentId()) : null;
+      const own = sm && sm.user && sm.skillsList && sm.skillsList.length ? sm.skillsList : A.skills();
+      this._skills = own.map((k) => ({ id: k.id, level: k.level, name: k.name, base: A.skillPoints(k.id), points: A.skillPoints(k.id) }));
       return this._skills;
     }
     if (!this._skills || this._skillsFor !== sc) {
@@ -952,7 +959,7 @@ class Component extends DCLogic {
         if (to === 'done') text = (n === 1 ? 'המיומנות הוענקה' : 'הוענקו ' + n + ' מיומנויות') + (c ? ', נוספו ' + coins(c) + '.' : ', ללא מטבעות.');
         else if (to === 'required') text = (n === 1 ? 'נדרש ביצוע חוזר.' : n + ' מיומנויות סומנו לביצוע חוזר.') + (c ? ' ירדו ' + coins(c) + ' עד לאישור מחדש.' : ' המטבעות נשארים.');
         else text = (n === 1 ? 'המיומנות בוטלה' : n + ' מיומנויות בוטלו') + (c ? ', הורדו ' + coins(c) + '.' : '.');
-        const subject = scope === 'level' ? 'רמה ' + scopeId : (k0 ? k0.name : '');
+        const subject = scope === 'level' ? 'הרמה ' + (((window.Academy && window.Academy.on ? window.Academy.levels() : []).find((l) => l.n === Number(scopeId)) || {}).name || '') : (k0 ? k0.name : '');
         this.setState({ busy: false, last: { scope: scope, id: scopeId, text: text, ids: ids, to: to }, announce: subject + ': ' + text }, () => this.refocus(scope, scopeId));
       });
       return;
@@ -1091,7 +1098,7 @@ class Component extends DCLogic {
     } else {
       text = many('מיומנות אחת בוטלה', '# מיומנויות בוטלו') + (minus ? ', הורדו ' + pts(minus) + '.' : '.');
     }
-    const subject = scope === 'level' ? 'רמה ' + lv.n + ' · ' + lv.name : name;
+    const subject = scope === 'level' ? 'הרמה ' + lv.name : name;
 
     this.setState({
       prog: prog,
@@ -1298,8 +1305,8 @@ class Component extends DCLogic {
         innerRing: locked ? '#C3CBC6' : 'transparent',
         glow: isCurrent ? '0 0 0 5px rgba(199, 67, 106, 0.14), 0 0 24px rgba(199, 67, 106, 0.30)' : 'none',
         iconCheck: complete, iconRedo: false, iconPlay: false, iconLock: locked, iconDrone: isCurrent, iconTrophy: false,
-        hasSub: true, sub: 'רמה ' + lv.n + ' · ' + done + '/' + skills.length + ' מיומנויות', label: lv.name, labelSize: 17, labelWeight: 700,
-        labelColor: locked ? '#5E6762' : '#121413', inert: true, aria: 'רמה ' + lv.n + ': ' + lv.name, cursor: 'default', open: () => {}
+        hasSub: true, sub: done + '/' + skills.length + ' מיומנויות', label: lv.name, labelSize: 17, labelWeight: 700,
+        labelColor: locked ? '#5E6762' : '#121413', inert: true, aria: lv.name, cursor: 'default', open: () => {}
       });
       const n = skills.length;
       const fromY = top + 146;

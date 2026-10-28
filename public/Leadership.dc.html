@@ -25,6 +25,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .ul-row:hover{background:#F5F7F5 !important}
 .pick-row:hover{border-color:#2A9171 !important}
 .all-lv[aria-pressed="false"]:hover{background:#EEF1EF !important}
+.ord-btn:not(:disabled):hover{background:#EEF1EF !important;border-color:#B9C2BD !important}
 .btn-save:hover{background:#B13A5D !important}
 .btn-save:disabled{opacity:.6;cursor:default}
 @media (max-width: 760px){.ul-head{display:none !important}.ul-row{grid-template-columns:minmax(0,1fr) auto !important;grid-template-areas:"name count" "week week" "stuck pts" !important;gap:8px 12px !important}.ul-name{grid-area:name}.ul-count{grid-area:count}.ul-week{grid-area:week}.ul-stuck{grid-area:stuck}.ul-pts{grid-area:pts;text-align:end}.ul-arrow{display:none}}
@@ -185,7 +186,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <p style="margin: 6px 0 0; font-size: 14px; line-height: 1.55; color: #545D58;">{{levelsIntro}}</p>
 <ul style="list-style: none; margin: 16px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px;">
 <sc-for list="{{unitLevels}}" as="lv" hint-placeholder-count="3">
-<li><label class="pick-row" style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; border: 1.5px solid {{lv.border}}; background: {{lv.bg}}; cursor: pointer;"><input type="checkbox" checked="{{lv.on}}" onChange="{{lv.toggle}}" style="width: 18px; height: 18px; margin: 0; accent-color: #2A9171;"><span style="display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 9px; background: #121413; color: #76DEB8; font-family: 'Unbounded', 'Rubik', sans-serif; font-size: 13px; font-weight: 700;">{{lv.n}}</span><span style="min-width: 0;"><span style="display: block; font-size: 15px; font-weight: 600; color: #121413;">{{lv.name}}</span><span style="display: block; font-size: 13px; color: #5E6762;">{{lv.sub}}</span></span></label></li>
+<li style="display: flex; align-items: stretch; gap: 8px;"><label class="pick-row" style="flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; border: 1.5px solid {{lv.border}}; background: {{lv.bg}}; cursor: pointer;"><input type="checkbox" checked="{{lv.on}}" onChange="{{lv.toggle}}" style="width: 18px; height: 18px; margin: 0; accent-color: #2A9171;"><span aria-hidden="true" style="flex: none; display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 9px; background: {{lv.badgeBg}}; color: {{lv.badgeColor}}; font-family: 'Unbounded', 'Rubik', sans-serif; font-size: 13px; font-weight: 700;">{{lv.pos}}</span><span style="min-width: 0;"><span style="display: block; font-size: 15px; font-weight: 600; color: #121413;">{{lv.name}}</span><span style="display: block; font-size: 13px; color: #5E6762;">{{lv.sub}}</span></span></label><sc-if value="{{lv.on}}" hint-placeholder-val="{{ true }}"><span style="flex: none; display: flex; flex-direction: column; gap: 4px;"><button type="button" class="ord-btn" aria-label="{{lv.upLabel}}" onClick="{{lv.up}}" disabled="{{lv.first}}" style="flex: 1; width: 36px; min-height: 26px; padding: 0; border-radius: 8px; border: 1px solid #D3D9D5; background: #FFFFFF; color: {{lv.upColor}}; font: inherit; font-size: 14px; cursor: pointer;">↑</button><button type="button" class="ord-btn" aria-label="{{lv.downLabel}}" onClick="{{lv.down}}" disabled="{{lv.last}}" style="flex: 1; width: 36px; min-height: 26px; padding: 0; border-radius: 8px; border: 1px solid #D3D9D5; background: #FFFFFF; color: {{lv.downColor}}; font: inherit; font-size: 14px; cursor: pointer;">↓</button></span></sc-if></li>
 </sc-for>
 </ul>
 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-top: 16px;">
@@ -647,9 +648,9 @@ class Component extends DCLogic {
     const u = this.unitObj(id);
     const sk = u && Array.isArray(u.skills) ? u.skills.length : 0;
     if ((!lv.length && !sk) || !A || !A.on) return '';
-    const names = A.levels().filter((l) => lv.indexOf(l.n) !== -1).map((l) => l.name);
+    const names = lv.map((n) => (A.levels().find((l) => l.n === n) || {}).name).filter(Boolean);
     if (sk) names.push(sk === 1 ? 'מיומנות בודדת' : sk + ' מיומנויות בודדות');
-    return names.length ? 'לומדת: ' + names.join(', ') : '';
+    return names.length ? 'לומדת: ' + names.join(' ← ') : '';
   }
 
   savedPrizes(id) {
@@ -667,7 +668,7 @@ class Component extends DCLogic {
     const everyLevel = levels.map((l) => l.n);
     // Nothing saved means the group learns every level, so every box shows ticked.
     const picked = draftLv || (saved.length ? saved : everyLevel);
-    const all = picked.length === 0 || everyLevel.every((n) => picked.indexOf(n) !== -1);
+    const all = picked.length === 0 || picked.join(',') === everyLevel.join(',');
     const sameSet = (a, b) => a.length === b.length && a.every((x) => b.indexOf(x) !== -1);
     const prizes = (A.data.rewards || []).filter((p) => p.active !== false);
     const savedPz = this.savedPrizes(id);
@@ -680,23 +681,31 @@ class Component extends DCLogic {
       allLevelsOn: all,
       allLevelsBg: all ? '#121413' : '#FFFFFF', allLevelsColor: all ? '#FFFFFF' : '#121413', allLevelsBorder: all ? '#121413' : '#D3D9D5',
       pickAllLevels: () => this.setState({ lvDraft: Object.assign({}, (this.state || {}).lvDraft, { [id]: everyLevel.slice() }), mgrMsg: null }),
-      levelsIntro: ((this.unitObj(id) || {}).skills || []).length ? 'לקבוצה משויכות גם מיומנויות בודדות (משייכים אותן בתוכנית הלימודים). סמנו כאן רמות שלמות.' : all ? 'הקבוצה לומדת את כל הרמות. הורידו סימון מרמה כדי שהסטודנטים בקבוצה לא יראו אותה.' : 'הסטודנטים בקבוצה רואים בנתיב רק את הרמות המסומנות. בלי סימון בכלל, הקבוצה לומדת את כל הרמות.',
-      unitLevels: levels.map((l) => {
+      levelsIntro: (((this.unitObj(id) || {}).skills || []).length ? 'לקבוצה משויכות גם מיומנויות בודדות (משייכים אותן בתוכנית הלימודים). ' : '') + 'סמנו את הרמות שהקבוצה לומדת, וקבעו בחצים את הסדר שלהן. הסטודנטים רואים אותן בנתיב בסדר הזה: הראשונה היא רמה 1 שלהם, וכן הלאה.' ||  'הסטודנטים בקבוצה רואים בנתיב רק את הרמות המסומנות. בלי סימון בכלל, הקבוצה לומדת את כל הרמות.',
+      unitLevels: picked.map((n) => levels.find((l) => l.n === n)).filter(Boolean).concat(levels.filter((l) => picked.indexOf(l.n) === -1)).map((l) => {
         const on = picked.indexOf(l.n) !== -1;
+        const at = picked.indexOf(l.n);
         const count = A.skills().filter((k) => k.level === l.n).length;
+        const setDraft = (next) => this.setState({ lvDraft: Object.assign({}, (this.state || {}).lvDraft, { [id]: next }), mgrMsg: null });
+        const current = () => { const sv = this.savedLevels(id); return (((this.state || {}).lvDraft || {})[id] || (sv.length ? sv : everyLevel)).slice(); };
+        const swap = (d) => { const cur = current(); const i = cur.indexOf(l.n); const j = i + d; if (i < 0 || j < 0 || j >= cur.length) return; const t = cur[i]; cur[i] = cur[j]; cur[j] = t; setDraft(cur); };
         return {
           id: 'lv' + l.n, n: String(l.n), name: l.name, on: on,
-          sub: (count === 1 ? 'מיומנות אחת' : count + ' מיומנויות') + (on ? ' · נלמדת בקבוצה' : ' · לא נלמדת'),
+          pos: on ? String(at + 1) : '–',
+          badgeBg: on ? '#121413' : '#E6EAE7', badgeColor: on ? '#76DEB8' : '#8A928E',
+          sub: (count === 1 ? 'מיומנות אחת' : count + ' מיומנויות') + (on ? ' · רמה ' + (at + 1) + ' בקבוצה' : ' · לא נלמדת בקבוצה'),
           border: on ? '#2A9171' : '#E1E5E2', bg: on ? '#EEFAF5' : '#FFFFFF',
+          first: !on || at === 0, last: !on || at === picked.length - 1,
+          upColor: !on || at === 0 ? '#C9D0CC' : '#3D4541', downColor: !on || at === picked.length - 1 ? '#C9D0CC' : '#3D4541',
+          upLabel: 'הקדמת ' + l.name, downLabel: 'דחיית ' + l.name,
+          up: () => swap(-1), down: () => swap(1),
           toggle: () => {
-            const sv = this.savedLevels(id);
-            const cur = ((this.state || {}).lvDraft || {})[id] || (sv.length ? sv : everyLevel);
-            const next = cur.indexOf(l.n) !== -1 ? cur.filter((x) => x !== l.n) : cur.concat([l.n]);
-            this.setState({ lvDraft: Object.assign({}, (this.state || {}).lvDraft, { [id]: next }), mgrMsg: null });
+            const cur = current();
+            setDraft(cur.indexOf(l.n) !== -1 ? cur.filter((x) => x !== l.n) : cur.concat([l.n]));
           }
         };
       }),
-      levelsDirty: !!draftLv && !sameSet(draftLv, saved.length ? saved : everyLevel),
+      levelsDirty: !!draftLv && (draftLv.join(',') !== (saved.length ? saved : everyLevel).join(',')),
       saveLevels: () => this.saveUnitLevels(id),
       hasLevelsMsg: !!(msg && msg.kind === 'levels'), levelsMsg: msg && msg.kind === 'levels' ? msg.text : '',
       prizesIntro: 'סמנו את הפרסים שהסטודנטים בקבוצה יכולים לראות ולממש. השינוי מתעדכן גם בעמוד הפרסים.',
@@ -729,11 +738,11 @@ class Component extends DCLogic {
     const sv = this.savedLevels(id);
     const lv = (s.lvDraft || {})[id] || (sv.length ? sv : every);
     if (!lv.length) { this.setState({ mgrMsg: { unit: id, kind: 'levels', text: 'סמנו לפחות רמה אחת, או לחצו "כל הרמות".' } }); return; }
-    const all = every.every((n) => lv.indexOf(n) !== -1);
+    const all = lv.join(',') === every.join(',');
     this.setState({ mgrBusy: true });
     A.call('setUnitLevels', { unit: id, levels: all ? [] : lv }).then((r) => {
       const d = Object.assign({}, (this.state || {}).lvDraft); delete d[id];
-      this.setState({ mgrBusy: false, lvDraft: d, mgrMsg: { unit: id, kind: 'levels', text: r.ok ? (all ? 'נשמר. הקבוצה לומדת את כל הרמות.' : 'נשמר. הקבוצה לומדת רק את הרמות המסומנות.') : r.error } });
+      this.setState({ mgrBusy: false, lvDraft: d, mgrMsg: { unit: id, kind: 'levels', text: r.ok ? (all ? 'נשמר. הקבוצה לומדת את כל הרמות, בסדר הרגיל.' : 'נשמר. הקבוצה לומדת ' + (lv.length === 1 ? 'רמה אחת' : lv.length + ' רמות') + ', בסדר שקבעתם.') : r.error } });
     });
   }
 

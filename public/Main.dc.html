@@ -713,7 +713,7 @@ class Component extends DCLogic {
     const maxLevel = Math.max.apply(null, groups.map((g) => g.list.length)) || 1;
     const levelRows = groups.map((g) => {
       const count = g.list.length;
-      const label = g.n ? 'רמה ' + g.n + ' · ' + levelNames[g.n] : 'ללא נתוני התקדמות';
+      const label = g.n ? (levelNames[g.n] || 'רמה') : 'ללא נתוני התקדמות';
       const people = count === 1 ? 'סטודנט אחד' : count + ' סטודנטים';
       const names = this.who(g.list, unitName);
       return {

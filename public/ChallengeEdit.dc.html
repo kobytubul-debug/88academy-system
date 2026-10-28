@@ -219,7 +219,7 @@ class Component extends DCLogic {
       meInitial: String(meName || '?').trim().charAt(0),
       heading: s.id ? 'עריכת אתגר' : 'אתגר חדש',
       missing: !!this.param('id') && !s.id,
-      levelOptions: this.cur().levels.map((l) => ({ value: String(l.n), label: 'רמה ' + l.n + ' · ' + l.name })),
+      levelOptions: this.cur().levels.map((l) => ({ value: String(l.n), label: l.name })),
       title: s.title, desc: s.desc, level: s.level, points: s.points, endDate: s.endDate, endTime: s.endTime, video: s.video, active: !!s.active,
       onTitle: (e) => this.set({ title: e.target.value }),
       onDesc: (e) => this.set({ desc: e.target.value }),

@@ -243,7 +243,7 @@ class Component extends DCLogic {
     return {
       heading: s.id ? 'עריכת מיומנות' : 'מיומנות חדשה',
       missing: !!this.param('id') && !s.id,
-      levelOptions: this.cur().levels.map((l) => ({ value: String(l.n), label: 'רמה ' + l.n + ' · ' + l.name })),
+      levelOptions: this.cur().levels.map((l) => ({ value: String(l.n), label: l.name })),
       level: s.level, points: s.points, name: s.name, desc: s.desc, pass: s.pass, map: s.map, caption: s.caption, video: s.video, active: !!s.active,
       onLevel: (e) => this.set({ level: e.target.value }),
       onPoints: (e) => this.set({ points: e.target.value.slice(0, 6) }),

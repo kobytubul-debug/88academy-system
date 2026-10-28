@@ -113,7 +113,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,[t
 <sc-for list="{{levelCards}}" as="lv" hint-placeholder-count="3">
 <div style="border: 1px solid #E1E5E2; border-radius: 16px; overflow: hidden;">
 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding: 12px 18px; background: #F5F7F5;">
-<h3 style="margin: 0; font-size: 17px; line-height: 1.4; font-weight: 600; color: #121413;">רמה {{lv.n}} · {{lv.name}}</h3>
+<h3 style="margin: 0; font-size: 17px; line-height: 1.4; font-weight: 600; color: #121413;">{{lv.name}}</h3>
 <span style="font-size: 14px; color: #545D58;">שווי הרמה <span dir="ltr" style="font-family: 'Unbounded', 'Rubik', sans-serif; font-size: 15px; font-weight: 700; color: #121413;">{{lv.worth}}</span></span>
 <span style="display: inline-flex; align-items: center; gap: 8px; margin-inline-start: auto;">
 <label for="{{lv.bonusId}}" style="font-size: 14px; color: {{lv.bonusLabelColor}};">בונוס סיום</label>
@@ -239,7 +239,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,[t
 <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; margin: 16px 0 0; padding: 0;">
 <sc-for list="{{econLevels}}" as="el" hint-placeholder-count="3">
 <li>
-<span style="display: flex; justify-content: space-between; gap: 8px; font-size: 13px; color: #DCE3DF;"><span>רמה {{el.n}} · {{el.name}}</span><span dir="ltr" style="font-family: 'Unbounded', 'Rubik', sans-serif; font-weight: 700; color: #FFFFFF;">{{el.worth}}</span></span>
+<span style="display: flex; justify-content: space-between; gap: 8px; font-size: 13px; color: #DCE3DF;"><span>{{el.name}}</span><span dir="ltr" style="font-family: 'Unbounded', 'Rubik', sans-serif; font-weight: 700; color: #FFFFFF;">{{el.worth}}</span></span>
 <span aria-hidden="true" style="display: block; height: 6px; margin-top: 5px; border-radius: 999px; background: #2C322F; overflow: hidden;"><span style="display: block; width: {{el.pct}}%; height: 100%; border-radius: 999px; background: #76DEB8;"></span></span>
 </li>
 </sc-for>
