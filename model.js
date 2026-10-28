@@ -120,8 +120,13 @@ function scoped(scope, fn) {
   const keep = [LEVELS.slice(), SKILLS.slice(), CHALLENGES.slice()];
   const fill = (arr, items) => { arr.length = 0; items.forEach((x) => arr.push(x)); };
   const shown = new Set(keep[1].filter(inScope).map((k) => k.level));
-  fill(LEVELS, keep[0].filter((l) => shown.has(l.n)));
-  fill(SKILLS, keep[1].filter(inScope));
+  // The group's own order of levels comes first; levels reached only through single skills follow in the usual order.
+  const own = (Array.isArray(sc.levels) ? sc.levels : []).map(Number).filter((n, i, arr) => shown.has(n) && arr.indexOf(n) === i);
+  const ordered = own.map((n) => keep[0].find((l) => l.n === n)).filter(Boolean).concat(keep[0].filter((l) => shown.has(l.n) && own.indexOf(l.n) === -1));
+  const rank = {};
+  ordered.forEach((l, i) => { rank[l.n] = i; });
+  fill(LEVELS, ordered);
+  fill(SKILLS, keep[1].filter(inScope).sort((a, b) => (rank[a.level] - rank[b.level]) || (a.order - b.order) || (a.id - b.id)));
   fill(CHALLENGES, keep[2].filter((c) => c.final || shown.has(c.level)));
   try { return fn(); } finally { fill(LEVELS, keep[0]); fill(SKILLS, keep[1]); fill(CHALLENGES, keep[2]); }
 }
@@ -354,7 +359,8 @@ function acceptStudent(stored, incoming, ctx) {
     }
     const sid = Number(f.skill);
     const k = SKILLS.find((x) => x.id === sid);
-    if (!k || doc.acquired[sid] || k.level > currentLevel(doc)) return;
+    const rk = (n) => LEVELS.findIndex((l) => l.n === n);
+    if (!k || doc.acquired[sid] || rk(k.level) > rk(currentLevel(doc))) return;
     if (doc.flights.some((x) => x.skill === sid && x.status === 'review')) return;
     const flight = { id: f.id, skill: sid, at: now, status: 'review', feedback: '', note: String(f.note || '').slice(0, 500), link: link };
     doc.flights.unshift(flight);

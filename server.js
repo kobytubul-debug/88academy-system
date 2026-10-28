@@ -540,7 +540,9 @@ const ADMIN_ACTIONS = {
     const known = new Set(M.LEVELS.map((l) => l.n));
     const levels = Array.from(new Set((Array.isArray(b.levels) ? b.levels : []).map(Number).filter((n) => known.has(n))));
     if (Array.isArray(b.levels) && b.levels.length && !levels.length) return 'לא נבחרו רמות.';
-    if (levels.length && levels.length < known.size) un.levels = M.LEVELS.map((l) => l.n).filter((n) => levels.indexOf(n) !== -1);
+    // The list is kept in the order given: that is the order the group learns the levels in.
+    const isDefault = levels.length === known.size && levels.every((n, i) => M.LEVELS[i] && M.LEVELS[i].n === n);
+    if (levels.length && !isDefault) un.levels = levels;
     else delete un.levels;
     const names = un.levels ? un.levels.map((n) => (M.LEVELS.find((l) => l.n === n) || {}).name).join(', ') : 'כל הרמות';
     log(me, 'settings', 'שייך ל' + un.name + ' רמות: ' + names);
@@ -555,9 +557,10 @@ const ADMIN_ACTIONS = {
     const want = new Set((Array.isArray(b.units) ? b.units : []).map(String));
     const field = kind === 'level' ? 'levels' : 'skills';
     db.units.forEach((u) => {
-      const list = (Array.isArray(u[field]) ? u[field] : []).filter((x) => x !== id);
-      if (want.has(u.id)) list.push(id);
-      if (list.length) u[field] = kind === 'level' ? M.LEVELS.map((l) => l.n).filter((n) => list.indexOf(n) !== -1) : list.sort((x, y) => x - y);
+      const had = Array.isArray(u[field]) ? u[field] : [];
+      const list = want.has(u.id) && had.indexOf(id) !== -1 ? had.slice() : had.filter((x) => x !== id);
+      if (want.has(u.id) && list.indexOf(id) === -1) list.push(id);
+      if (list.length) u[field] = kind === 'level' ? list : list.sort((x, y) => x - y);
       else delete u[field];
     });
     const name = kind === 'level' ? (M.LEVELS.find((l) => l.n === id) || {}).name : (M.ALL_SKILLS.find((k) => k.id === id) || {}).name;
@@ -646,7 +649,7 @@ const ADMIN_ACTIONS = {
     const nlb = { on: lb.on };
     Object.keys(lb).forEach((key) => { if (key !== 'on' && map[Number(key)] != null) nlb[map[Number(key)]] = lb[key]; });
     db.scoring.levelBonus = nlb;
-    db.units.forEach((u) => { if (Array.isArray(u.levels)) u.levels = u.levels.map(re).sort((x, y) => x - y); });
+    db.units.forEach((u) => { if (Array.isArray(u.levels)) u.levels = u.levels.map(re); });
     Object.keys(db.progress).forEach((uid) => {
       (db.progress[uid].ledger || []).forEach((e) => { if (e.kind === 'level' && e.level != null) e.level = re(e.level); });
     });
