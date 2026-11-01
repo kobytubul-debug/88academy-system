@@ -211,6 +211,22 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <sc-if value="{{hasPrizesMsg}}" hint-placeholder-val="{{ false }}"><span role="status" style="font-size: 13px; color: #17694F;">{{prizesMsg}}</span></sc-if>
 </div>
 </section>
+<sc-if value="{{canUi}}" hint-placeholder-val="{{ true }}">
+<section aria-labelledby="unit-ui-title" style="background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; padding: 22px 24px;">
+<h2 id="unit-ui-title" style="margin: 0; font-size: 20px; line-height: 1.3; font-weight: 600; color: #121413;">המסך של התלמידים</h2>
+<p style="margin: 6px 0 0; font-size: 14px; line-height: 1.55; color: #545D58;">{{uiIntro}}</p>
+<div role="radiogroup" aria-labelledby="unit-ui-title" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr)); gap: 10px; margin-top: 16px;">
+<sc-for list="{{uiOptions}}" as="ui" hint-placeholder-count="4">
+<label class="pick-row" style="display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; border-radius: 12px; border: 1.5px solid {{ui.border}}; background: {{ui.bg}}; cursor: pointer;"><input type="radio" name="{{ui.group}}" checked="{{ui.on}}" onChange="{{ui.pick}}" style="flex: none; width: 18px; height: 18px; margin: 2px 0 0; accent-color: #2A9171;"><span style="min-width: 0;"><span style="display: block; font-size: 15px; font-weight: 600; color: #121413;">{{ui.name}}</span><span style="display: block; margin-top: 2px; font-size: 13px; line-height: 1.45; color: #5E6762;">{{ui.sub}}</span></span></label>
+</sc-for>
+</div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-top: 16px;">
+<button type="button" class="btn-save" onClick="{{saveUi}}" disabled="{{mgrBusy}}" style="height: 42px; padding: 0 20px; border: 0; border-radius: 10px; background: #C7436A; color: #FFFFFF; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer;">שמירת המסך</button>
+<sc-if value="{{uiDirty}}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; color: #8A3550;">יש שינויים שלא נשמרו</span></sc-if>
+<sc-if value="{{hasUiMsg}}" hint-placeholder-val="{{ false }}"><span role="status" style="font-size: 13px; color: #17694F;">{{uiMsg}}</span></sc-if>
+</div>
+</section>
+</sc-if>
 </div>
 </sc-if>
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr)); gap: 24px; margin-top: 36px;">
@@ -675,7 +691,7 @@ class Component extends DCLogic {
     const draftPz = (s.pzDraft || {})[id];
     const pz = draftPz || savedPz;
     const msg = s.mgrMsg && s.mgrMsg.unit === id ? s.mgrMsg : null;
-    return {
+    const out = {
       canManage: true,
       canLevels: id !== 'none',
       allLevelsOn: all,
@@ -729,6 +745,76 @@ class Component extends DCLogic {
       hasPrizesMsg: !!(msg && msg.kind === 'prizes'), prizesMsg: msg && msg.kind === 'prizes' ? msg.text : '',
       mgrBusy: !!s.mgrBusy
     };
+    return Object.assign(out, this.uiVals(id, msg));
+  }
+
+  // ---------- the screen the group's students get: the regular one, or the game in one of its looks ----------
+  uiNames() {
+    return {
+      inherit: ['כמו בקבוצת האם', ''],
+      classic: ['המסך הרגיל', 'המסך שהתלמידים מכירים היום: לוח, נתיב, טיסות ופרסים.'],
+      race: ['משחק · מירוץ', 'האתר כמשחק, בסגנון סימולטור FPV: פסים לבנים, אייקוני קו וצבעי מירוץ.'],
+      regular: ['משחק · צבעוני', 'האתר כמשחק, בסגנון משחקי טלפון: כפתורים עגולים וצבעים חיים.'],
+      mil: ['משחק · צבאי', 'האתר כמשחק, בסגנון צבאי: ציר התקדמות, פקודות ותגי הסמכה.']
+    };
+  }
+
+  // The group's own choice; '' when it follows its parent group (or, without one, the regular screen).
+  savedUi(id) {
+    const u = this.unitObj(id);
+    return u && u.ui ? u.ui : '';
+  }
+
+  // What students of a group actually get, following parent groups the way the server does.
+  effectiveUi(id) {
+    let u = this.unitObj(id);
+    for (let i = 0; u && i < 6; i++) {
+      if (u.ui) return u.ui;
+      u = u.parent ? this.unitObj(u.parent) : null;
+    }
+    return 'classic';
+  }
+
+  uiVals(id, msg) {
+    const s = this.state || {};
+    const u = this.unitObj(id);
+    if (!u) return { canUi: false, uiOptions: [], uiIntro: '', uiDirty: false, saveUi: () => {}, hasUiMsg: false, uiMsg: '' };
+    const names = this.uiNames();
+    const parent = u.parent ? this.unitObj(u.parent) : null;
+    const saved = this.savedUi(id) || (parent ? 'inherit' : 'classic');
+    const draft = (s.uiDraft || {})[id];
+    const cur = draft || saved;
+    const keys = (parent ? ['inherit'] : []).concat(['classic', 'race', 'regular', 'mil']);
+    return {
+      canUi: true,
+      uiIntro: 'בוחרים מה התלמידים של הקבוצה רואים אחרי הכניסה. אפשר להתחיל בקבוצה אחת, ולחזור למסך הרגיל בכל רגע: ההתקדמות, המטבעות והטיסות נשארים אותו דבר בשני המסכים.',
+      uiOptions: keys.map((k) => {
+        const on = cur === k;
+        const sub = k === 'inherit' ? 'עכשיו: ' + names[this.effectiveUi(parent.id)][0] + ', כמו ב' + parent.name + '.' : names[k][1];
+        return {
+          id: 'ui-' + k, group: 'unit-ui-' + id, name: names[k][0], sub: sub, on: on,
+          border: on ? '#2A9171' : '#E1E5E2', bg: on ? '#EEFAF5' : '#FFFFFF',
+          pick: () => this.setState({ uiDraft: Object.assign({}, (this.state || {}).uiDraft, { [id]: k }), mgrMsg: null })
+        };
+      }),
+      uiDirty: !!draft && draft !== saved,
+      saveUi: () => this.saveUnitUi(id),
+      hasUiMsg: !!(msg && msg.kind === 'ui'), uiMsg: msg && msg.kind === 'ui' ? msg.text : ''
+    };
+  }
+
+  saveUnitUi(id) {
+    const A = window.Academy;
+    const s = this.state || {};
+    const u = this.unitObj(id);
+    const parent = u && u.parent ? this.unitObj(u.parent) : null;
+    const ui = (s.uiDraft || {})[id] || this.savedUi(id) || (parent ? 'inherit' : 'classic');
+    this.setState({ mgrBusy: true });
+    A.call('setUnitUi', { unit: id, ui: ui }).then((r) => {
+      const d = Object.assign({}, (this.state || {}).uiDraft); delete d[id];
+      const now = this.uiNames()[this.effectiveUi(id)][0];
+      this.setState({ mgrBusy: false, uiDraft: d, mgrMsg: { unit: id, kind: 'ui', text: r.ok ? 'נשמר. התלמידים בקבוצה יקבלו את ' + now + ' בכניסה הבאה.' : r.error } });
+    });
   }
 
   saveUnitLevels(id) {
@@ -841,7 +927,7 @@ class Component extends DCLogic {
       cardsBtnBg: listView ? 'transparent' : '#FFFFFF', cardsBtnColor: listView ? '#5E6762' : '#121413',
       listBtnBg: listView ? '#FFFFFF' : 'transparent', listBtnColor: listView ? '#121413' : '#5E6762'
     });
-    Object.assign(vals, { canManage: false, canLevels: false, unitLevels: [], unitPrizes: [], noPrizes: false });
+    Object.assign(vals, { canManage: false, canLevels: false, unitLevels: [], unitPrizes: [], noPrizes: false, canUi: false, uiOptions: [], uiIntro: '', uiDirty: false, hasUiMsg: false, uiMsg: '' });
     vals.noCards = vals.cards.length === 0;
     vals.hasNudge = false;
     vals.noNudge = true;

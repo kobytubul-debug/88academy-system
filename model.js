@@ -420,6 +420,12 @@ function acceptStudent(stored, incoming, ctx) {
     doc.timeDay = day;
   }
   if (inc.questVideoDay === day) doc.questVideoDay = day;
+  // level chests the student opened in the game, so each one opens once, on any device (only levels whose bonus was paid)
+  if (Array.isArray(inc.chests)) {
+    const opened = new Set(Array.isArray(doc.chests) ? doc.chests : []);
+    inc.chests.slice(0, 100).forEach((n) => { n = Number(n); if (Number.isInteger(n) && doc.ledger.some((e) => e.kind === 'level' && e.level === n)) opened.add(n); });
+    doc.chests = Array.from(opened);
+  }
   if (inc.dailyDismissedDay === day) doc.dailyDismissedDay = day;
   if (Number.isFinite(Number(inc.seq))) doc.seq = Math.max(doc.seq || 1, Math.floor(Number(inc.seq)));
 
