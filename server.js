@@ -166,6 +166,9 @@ const BASES = ['race', 'regular', 'mil'];
 const BASE_ICONS = { race: 'line', regular: 'emoji', mil: 'emoji' };
 const BUILTIN_NAMES = { 't-race': ['race', 'מירוץ FPV'], 't-regular': ['regular', 'משחקי צבעוני'], 't-mil': ['mil', 'צבאי'] };
 const LEGACY_UI = { race: 't-race', regular: 't-regular', mil: 't-mil' };
+// A group on a built-in theme keeps the older name on disk (race, regular, mil), so going back to the previous
+// version of the site still finds it; the server reads both names the same way.
+const STORED_UI = { 't-race': 'race', 't-regular': 'regular', 't-mil': 'mil' };
 const SCENES = ['field', 'city', 'street', 'garage', 'loft', 'forest', 'night'];
 const FONTS = ['Rubik', 'Open Sans', 'Heebo', 'Assistant', 'Varela Round', 'Secular One', 'Suez One', 'Karantina'];
 const TERM_KEYS = ['t1', 't2', 't3', 't4', 'world', 'chest', 'boss', 'league', 'mapTitle', 'questsTitle', 'go', 'lit'];
@@ -214,7 +217,6 @@ function ensureLooks() {
   Object.keys(sb).forEach((k) => { if (/^(w\d{1,3}|s\d{1,6}|c\d{1,3}|boss)$/.test(k)) { const v = cleanBg(sb[k]); if (v) assign[k] = v; } });
   st.stageBg = { assign };
   st.bgLib = (Array.isArray(st.bgLib) ? st.bgLib : []).filter((x) => x && imgOk(x.url)).map((x) => ({ url: String(x.url).slice(0, 500), name: String(x.name || 'תמונה').replace(/[<>]/g, '').slice(0, 60) })).slice(0, 80);
-  (db.units || []).forEach((u) => { if (LEGACY_UI[u.ui]) u.ui = LEGACY_UI[u.ui]; });
 }
 function themeById(id) {
   return db.settings.themes.find((t) => t.id === id) || null;
@@ -730,7 +732,7 @@ const ADMIN_ACTIONS = {
     const assign = b.assign && typeof b.assign === 'object' ? b.assign : {};
     Object.keys(assign).forEach((uid) => { const un = db.units.find((x) => x.id === uid); if (un) setUi(un, String(assign[uid] || '')); });
     // groups whose theme is gone move to the race theme
-    db.units.forEach((u) => { if (u.ui && u.ui !== 'classic' && !themeById(u.ui)) u.ui = 't-race'; });
+    db.units.forEach((u) => { if (u.ui && u.ui !== 'classic' && !themeById(LEGACY_UI[u.ui] || u.ui)) u.ui = 'race'; });
     cleanMedia();
     log(me, 'settings', 'עדכן את עיצוב האתר (' + list.length + ' ערכות נושא)');
     return { ok: true };
@@ -917,7 +919,7 @@ const ADMIN_ACTIONS = {
 function setUi(un, ui) {
   const id = LEGACY_UI[ui] || ui;
   if (id === 'inherit' || (id === 'classic' && !un.parent)) { delete un.ui; return true; }
-  if (id === 'classic' || themeById(id)) { un.ui = id; return true; }
+  if (id === 'classic' || themeById(id)) { un.ui = STORED_UI[id] || id; return true; }
   return 'בחירה לא מוכרת.';
 }
 function uiName(v) {
