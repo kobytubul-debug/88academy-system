@@ -158,6 +158,17 @@ function levelsFor(user) {
   }
   return { levels: [], skills: [] };
 }
+// Which screen a group's students get: the regular one, or the game in one of its looks.
+// The group's own choice, else its parent group's; nothing set = the regular screen.
+const UI_LOOKS = ['race', 'regular', 'mil'];
+function uiFor(user) {
+  let unit = user && user.unit ? db.units.find((x) => x.id === user.unit) : null;
+  for (let i = 0; unit && i < 6; i++) {
+    if (unit.ui === 'classic' || UI_LOOKS.indexOf(unit.ui) !== -1) return unit.ui;
+    unit = unit.parent ? db.units.find((x) => x.id === unit.parent) : null;
+  }
+  return 'classic';
+}
 function bootFor(user) {
   if (user.role === 'student') return M.scoped(levelsFor(user), () => bootFor0(user));
   return bootFor0(user);
@@ -175,6 +186,7 @@ function bootFor0(user) {
   }
   if (user.role === 'student') {
     base.progress = studentView(progressOf(user.id));
+    base.ui = uiFor(user);
   } else if (user.role === 'admin') {
     base.users = db.users.map(publicUser);
     base.progressAll = {};
@@ -188,6 +200,36 @@ function bootFor0(user) {
     base.activity = [];
   }
   return base;
+}
+
+// ---------- the game's league: this week's coins in the student's group ----------
+// The week runs Sunday to Saturday, Israel time. Only students who earn points take part; each one sees first names
+// and an initial, never usernames or ids.
+function weekStart(day) {
+  const d = new Date(day + 'T12:00:00Z');
+  d.setUTCDate(d.getUTCDate() - d.getUTCDay());
+  return d.toISOString().slice(0, 10);
+}
+function shortName(name) {
+  const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
+  if (!parts.length) return 'שחקן';
+  return parts[0] + (parts.length > 1 ? ' ' + parts[parts.length - 1].charAt(0) + '.' : '');
+}
+function leagueFor(user) {
+  const day = M.today();
+  const start = weekStart(day);
+  const endD = new Date(start + 'T12:00:00Z');
+  endD.setUTCDate(endD.getUTCDate() + 6);
+  const end = endD.toISOString().slice(0, 10);
+  const mates = user.unit ? db.users.filter((u) => u.role === 'student' && !u.disabled && u.earns && u.unit === user.unit) : [];
+  if (!mates.some((u) => u.id === user.id) && user.earns) mates.push(user);
+  const rows = mates.map((u) => {
+    const doc = db.progress[u.id] || M.emptyProgress();
+    const pts = (doc.ledger || []).filter((e) => String(e.at || '').slice(0, 10) >= start).reduce((s, e) => s + (Number(e.amount) || 0), 0);
+    return { name: shortName(u.name), pts: Math.max(0, pts), me: u.id === user.id };
+  }).sort((a, b) => b.pts - a.pts || (a.me ? -1 : b.me ? 1 : 0));
+  const un = db.units.find((x) => x.id === user.unit);
+  return { unit: un ? un.name : '', start, end, today: day, rows };
 }
 
 // ---------- http helpers ----------
@@ -241,15 +283,15 @@ function readBody(req) {
 function homeFor(user) {
   if (!user) return '/Login.dc.html';
   if (user.mustChange) return '/password';
-  if (user.role === 'student') return '/StudentApp.dc.html';
+  if (user.role === 'student') return uiFor(user) === 'classic' ? '/StudentApp.dc.html' : '/Game.html';
   if (user.role === 'observer') return '/Observer.dc.html';
   return '/Main.dc.html';
 }
 
 // Which screens each role may open. Imported screens must also be reachable (the observer view imports Leadership).
-const STUDENT_PAGES = new Set(['StudentApp.dc.html']);
+const STUDENT_PAGES = new Set(['StudentApp.dc.html', 'Game.html']);
 const OBSERVER_PAGES = new Set(['Observer.dc.html', 'Leadership.dc.html']);
-const ADMIN_BLOCKED = new Set(['StudentApp.dc.html', 'Observer.dc.html']);
+const ADMIN_BLOCKED = new Set(['StudentApp.dc.html', 'Observer.dc.html', 'Game.html']);
 function mayOpen(user, file) {
   if (user.role === 'student') return STUDENT_PAGES.has(file);
   if (user.role === 'observer') return OBSERVER_PAGES.has(file);
@@ -274,6 +316,7 @@ function boardHtml(file, user) {
   const boot = user ? bootFor(user) : null;
   const data = JSON.stringify(boot).replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
   const inject = '<script>window.__ACADEMY__=' + data + ';</script>\n<script src="./academy.js"></script>\n';
+  if (html.indexOf('<!--ACADEMY-->') !== -1) return html.replace('<!--ACADEMY-->', inject);
   return html.replace('<script src="./support.js"></script>', inject + '<script src="./support.js"></script>');
 }
 
@@ -525,6 +568,7 @@ const ADMIN_ACTIONS = {
       const o = old.get(x.id);
       if (o && Array.isArray(o.levels) && o.levels.length) x.levels = o.levels;
       if (o && Array.isArray(o.skills) && o.skills.length) x.skills = o.skills;
+      if (o && o.ui) x.ui = o.ui;
     });
     const ids = new Set(units.map((x) => x.id));
     units.forEach((x) => { if (!ids.has(x.parent)) x.parent = ''; });
@@ -546,6 +590,18 @@ const ADMIN_ACTIONS = {
     else delete un.levels;
     const names = un.levels ? un.levels.map((n) => (M.LEVELS.find((l) => l.n === n) || {}).name).join(', ') : 'כל הרמות';
     log(me, 'settings', 'שייך ל' + un.name + ' רמות: ' + names);
+    return { ok: true };
+  },
+  // The screen a group's students get: the regular one, the game in one of its looks, or the parent group's choice.
+  setUnitUi(me, b) {
+    const un = db.units.find((x) => x.id === String(b.unit || ''));
+    if (!un) return 'הקבוצה לא נמצאה.';
+    const ui = String(b.ui || '');
+    if (['inherit', 'classic'].concat(UI_LOOKS).indexOf(ui) === -1) return 'בחירה לא מוכרת.';
+    if (ui === 'inherit' || (ui === 'classic' && !un.parent)) delete un.ui;
+    else un.ui = ui;
+    const names = { inherit: 'כמו בקבוצת האם', classic: 'המסך הרגיל', race: 'משחק · מירוץ', regular: 'משחק · צבעוני', mil: 'משחק · צבאי' };
+    log(me, 'settings', 'המסך של התלמידים ב' + un.name + ': ' + names[ui]);
     return { ok: true };
   },
   // From the curriculum page: put one level or one skill in the chosen groups (and take it out of the others).
@@ -652,6 +708,7 @@ const ADMIN_ACTIONS = {
     db.units.forEach((u) => { if (Array.isArray(u.levels)) u.levels = u.levels.map(re); });
     Object.keys(db.progress).forEach((uid) => {
       (db.progress[uid].ledger || []).forEach((e) => { if (e.kind === 'level' && e.level != null) e.level = re(e.level); });
+      if (Array.isArray(db.progress[uid].chests)) db.progress[uid].chests = db.progress[uid].chests.map(re);
     });
     M.setCurriculum(cur);
     log(me, 'settings', 'הרמה ' + lv.name + ' היא עכשיו רמה ' + to);
@@ -1056,6 +1113,10 @@ async function handle(req, res) {
       save();
       return json(res, 200, Object.assign({ result: out }, { boot: bootFor(user) }));
     }
+    if (p === '/api/league' && req.method === 'GET') {
+      if (user.role !== 'student') return json(res, 403, { error: 'רק סטודנטים.' });
+      return json(res, 200, leagueFor(user));
+    }
     if (p === '/api/intro-seen' && req.method === 'POST') {
       if (user.role === 'student') {
         const doc = progressOf(user.id);
@@ -1117,7 +1178,7 @@ async function handle(req, res) {
   const full = path.join(PUBLIC, file);
   if (!fs.existsSync(full) || !fs.statSync(full).isFile()) return send(res, 404, 'Not found');
 
-  if (file.endsWith('.dc.html')) {
+  if (file.endsWith('.dc.html') || file === 'Game.html') {
     if (file === 'Login.dc.html') {
       if (user && req.headers['sec-fetch-dest'] === 'document') return redirect(res, homeFor(user));
       return send(res, 200, boardHtml(file, null), { 'Content-Type': TYPES['.html'] });
