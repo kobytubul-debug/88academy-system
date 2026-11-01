@@ -1374,6 +1374,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 .app:not(.race) .quest[style*="--qc"] { box-shadow: inset -6px 0 0 var(--qc), 0 5px 0 rgba(0,0,0,.35); padding-inline-start: 18px; }
 #app.day:not(.race) .quest[style*="--qc"] { box-shadow: inset -6px 0 0 var(--qc), 0 4px 0 rgba(0,0,0,.07), 0 2px 10px rgba(0,0,0,.06); }
 .app.race .quest[style*="--qc"] { padding-inline-start: 20px; }
+.qbar .qtx { font-style: normal; white-space: nowrap; }
 .streak .big { min-width: 1.1em; font: 900 56px/1 var(--n); text-align: center; filter: none; text-shadow: 0 4px 0 rgba(0,0,0,.18); }
 .app.race .streak .big { font-family: var(--f); font-style: italic; font-weight: 800; }
 
@@ -2423,7 +2424,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       { id: 'flight', bg: '#76DEB8', name: 'שולחים טיסה למדריך', done: q.flight, val: q.flight ? 1 : 0, goal: 1, coins: 0 }
     ];
     if (timeGoal) rows.push({ id: 'time', bg: '#5BC8FF', name: `${timeGoal} דקות למידה באתר`, done: timeMin >= timeGoal, val: Math.min(timeMin, timeGoal), goal: timeGoal, unit: 'ד׳', coins: r.timePoints ? `+${r.timePoints} כל ${r.timeMin} ד׳` : '' });
-    $('#questList').innerHTML = rows.map(x => `<div class="quest" style="--qc:${x.bg}"><div class="qb"><b>${esc(x.name)}</b><div class="qbar"><i style="width:${x.val / x.goal * 100}%; ${x.done ? 'background:var(--mint)' : ''}"></i><span>${x.unit ? `<bdi dir="ltr">${x.val} / ${x.goal}</bdi> ${x.unit}` : `<bdi dir="ltr">${x.done ? 1 : 0} / 1</bdi>`}</span></div></div>${x.done ? '<span class="qok">בוצע</span>' : earn && x.coins ? `<span class="qok qc">${typeof x.coins === 'number' ? '+' + x.coins : esc(x.coins)}</span>` : ''}</div>`).join('')
+    $('#questList').innerHTML = rows.map(x => `<div class="quest" style="--qc:${x.bg}"><div class="qb"><b>${esc(x.name)}</b><div class="qbar"><i style="width:${x.val / x.goal * 100}%; ${x.done ? 'background:var(--mint)' : ''}"></i><span><em class="qtx">${x.unit ? `<bdi dir="ltr">${x.val} / ${x.goal}</bdi> ${x.unit}` : `<bdi dir="ltr">${x.done ? 1 : 0} / 1</bdi>`}</em></span></div></div>${x.done ? '<span class="qok">בוצע</span>' : earn && x.coins ? `<span class="qok qc">${typeof x.coins === 'number' ? '+' + x.coins : esc(x.coins)}</span>` : ''}</div>`).join('')
       + (earn && r.quests ? `<div class="qbonus ${q.paid ? 'done' : ''}"><span class="coinic">88</span><span>${q.paid ? `שלוש המשימות הושלמו היום · +${r.quests} מטבעות` : `שלוש המשימות הראשונות היום: +${r.quests} מטבעות (${q.done} מתוך 3)`}</span></div>` : '');
     // challenges from the instructor (the final exam lives at the end of the path)
     const list = CHALS().filter(c => !c.final);
