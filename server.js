@@ -70,6 +70,7 @@ function load() {
   db.activity = db.activity || [];
   db.uploads = db.uploads || {};
   db.settings = Object.assign({ videoDays: 14 }, db.settings || {});
+  ensureLooks();
   db.settings.ai = Object.assign({ enabled: false, mode: 'suggest', threshold: 80, autoReject: true, extra: '', model: '', dailyLimit: 100 }, db.settings.ai || {});
   db.aiUsage = db.aiUsage || { day: '', count: 0 };
   db.progress = db.progress || {};
@@ -158,13 +159,82 @@ function levelsFor(user) {
   }
   return { levels: [], skills: [] };
 }
-// Which screen a group's students get: the regular one, or the game in one of its looks.
+// ---------- the game's look: themes the admin designs, chosen per group ----------
+// A theme is a base style (race, regular, military) plus the admin's colors, fonts, background, words and motion.
+// The three built-in themes always exist; they can be edited and reset, not deleted.
+const BASES = ['race', 'regular', 'mil'];
+const BASE_ICONS = { race: 'line', regular: 'emoji', mil: 'emoji' };
+const BUILTIN_NAMES = { 't-race': ['race', 'מירוץ FPV'], 't-regular': ['regular', 'משחקי צבעוני'], 't-mil': ['mil', 'צבאי'] };
+const LEGACY_UI = { race: 't-race', regular: 't-regular', mil: 't-mil' };
+// A group on a built-in theme keeps the older name on disk (race, regular, mil), so going back to the previous
+// version of the site still finds it; the server reads both names the same way.
+const STORED_UI = { 't-race': 'race', 't-regular': 'regular', 't-mil': 'mil' };
+const SCENES = ['field', 'city', 'street', 'garage', 'loft', 'forest', 'night'];
+const FONTS = ['Rubik', 'Open Sans', 'Heebo', 'Assistant', 'Varela Round', 'Secular One', 'Suez One', 'Karantina'];
+const TERM_KEYS = ['t1', 't2', 't3', 't4', 'world', 'chest', 'boss', 'league', 'mapTitle', 'questsTitle', 'go', 'lit'];
+function themeDefaults(id) {
+  const [base, name] = BUILTIN_NAMES[id];
+  return { id, name, base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default' }, icons: BASE_ICONS[base], bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', builtIn: true };
+}
+const hexOk = (v) => /^#[0-9a-f]{6}$/i.test(String(v || ''));
+const imgOk = (v) => /^\/media\/[A-Za-z0-9_-]+\.(jpg|jpeg|png|webp|gif)$/.test(String(v || '')) || /^https:\/\/\S+$/i.test(String(v || ''));
+function cleanTheme(t) {
+  if (!t || typeof t !== 'object') return null;
+  const id = /^t-[A-Za-z0-9-]{1,40}$/.test(String(t.id || '')) ? String(t.id) : M.newId('t-');
+  const base = BASES.indexOf(t.base) !== -1 ? t.base : 'race';
+  const pick = (o, keys) => { const out = {}; keys.forEach((k) => { if (o && hexOk(o[k])) out[k] = String(o[k]).toLowerCase(); }); return out; };
+  const surf = { night: pick(t.surf && t.surf.night, ['bg', 'card', 'text']), day: pick(t.surf && t.surf.day, ['bg', 'card', 'text']) };
+  const font = (v) => (FONTS.indexOf(v) !== -1 ? v : 'default');
+  let bg = { kind: 'look' };
+  const b = t.bg || {};
+  if (b.kind === 'color' && hexOk(b.color)) bg = { kind: 'color', color: String(b.color).toLowerCase() };
+  else if (b.kind === 'scene' && SCENES.indexOf(b.id) !== -1) bg = { kind: 'scene', id: b.id };
+  else if (b.kind === 'img' && imgOk(b.url)) bg = { kind: 'img', url: String(b.url).slice(0, 500), blur: b.blur !== false };
+  const terms = {};
+  TERM_KEYS.forEach((k) => { const v = String((t.terms && t.terms[k]) || '').replace(/[<>]/g, '').trim().slice(0, 40); if (v) terms[k] = v; });
+  return {
+    id, name: String(t.name || '').replace(/[<>]/g, '').trim().slice(0, 40) || 'ערכה ללא שם', base, mode: t.mode === 'day' ? 'day' : 'night', allowToggle: t.allowToggle !== false,
+    colors: pick(t.colors, ['accent', 'accent2', 'gold', 'sky']), surf, fonts: { head: font(t.fonts && t.fonts.head), body: font(t.fonts && t.fonts.body) },
+    icons: t.icons === 'line' || t.icons === 'emoji' ? t.icons : BASE_ICONS[base], bg, stageBg: t.stageBg !== false, terms, motion: t.motion === 'calm' ? 'calm' : 'full', builtIn: !!BUILTIN_NAMES[id]
+  };
+}
+// A background for one stage: none, a built-in scene, or an uploaded image (blurred a little unless told not to).
+function cleanBg(v) {
+  if (!v || typeof v !== 'object') return null;
+  const s = String(v.bg || '');
+  if (s === 'none') return { bg: 'none' };
+  if (/^scene:/.test(s) && SCENES.indexOf(s.slice(6)) !== -1) return { bg: s };
+  if (/^img:/.test(s) && imgOk(s.slice(4))) return { bg: s.slice(0, 504), blur: v.blur !== false };
+  return null;
+}
+function ensureLooks() {
+  const st = db.settings;
+  const list = (Array.isArray(st.themes) ? st.themes : []).map(cleanTheme).filter(Boolean);
+  Object.keys(BUILTIN_NAMES).forEach((id) => { if (!list.some((t) => t.id === id)) list.push(themeDefaults(id)); });
+  st.themes = list;
+  const sb = st.stageBg && st.stageBg.assign && typeof st.stageBg.assign === 'object' ? st.stageBg.assign : {};
+  const assign = {};
+  Object.keys(sb).forEach((k) => { if (/^(w\d{1,3}|s\d{1,6}|c\d{1,3}|boss)$/.test(k)) { const v = cleanBg(sb[k]); if (v) assign[k] = v; } });
+  st.stageBg = { assign };
+  st.bgLib = (Array.isArray(st.bgLib) ? st.bgLib : []).filter((x) => x && imgOk(x.url)).map((x) => ({ url: String(x.url).slice(0, 500), name: String(x.name || 'תמונה').replace(/[<>]/g, '').slice(0, 60) })).slice(0, 80);
+}
+function themeById(id) {
+  return db.settings.themes.find((t) => t.id === id) || null;
+}
+// What a group's value means now: the regular screen, a theme that exists, or (a deleted theme) the race theme.
+function uiValue(v) {
+  if (!v) return '';
+  if (v === 'classic') return 'classic';
+  const id = LEGACY_UI[v] || v;
+  return themeById(id) ? id : 't-race';
+}
+// Which screen a group's students get: the regular one, or the game in one of the themes.
 // The group's own choice, else its parent group's; nothing set = the regular screen.
-const UI_LOOKS = ['race', 'regular', 'mil'];
 function uiFor(user) {
   let unit = user && user.unit ? db.units.find((x) => x.id === user.unit) : null;
   for (let i = 0; unit && i < 6; i++) {
-    if (unit.ui === 'classic' || UI_LOOKS.indexOf(unit.ui) !== -1) return unit.ui;
+    const v = uiValue(unit.ui);
+    if (v) return v;
     unit = unit.parent ? db.units.find((x) => x.id === unit.parent) : null;
   }
   return 'classic';
@@ -187,10 +257,15 @@ function bootFor0(user) {
   if (user.role === 'student') {
     base.progress = studentView(progressOf(user.id));
     base.ui = uiFor(user);
+    base.theme = themeById(base.ui === 'classic' ? 't-race' : base.ui) || themeDefaults('t-race');
+    base.stageBg = db.settings.stageBg;
   } else if (user.role === 'admin') {
     base.users = db.users.map(publicUser);
     base.progressAll = {};
     db.users.filter((u) => u.role === 'student').forEach((u) => { base.progressAll[u.id] = progressOf(u.id); });
+    base.themes = db.settings.themes;
+    base.stageBg = db.settings.stageBg;
+    base.bgLib = db.settings.bgLib;
     base.activity = db.activity.slice(0, 1000);
   } else if (user.role === 'observer') {
     const mine = db.users.filter((u) => u.role === 'student' && u.unit && u.unit === user.unit);
@@ -200,6 +275,46 @@ function bootFor0(user) {
     base.activity = [];
   }
   return base;
+}
+
+// ---------- the admin's preview of the game (the design page shows it live) ----------
+// A sample student in the chosen group: a third of the path done, the next exercise waiting for the instructor.
+function previewBoot(unitId, themeId) {
+  const fake = { id: 'preview', username: 'preview', name: 'תלמיד לדוגמה', role: 'student', unit: db.units.some((x) => x.id === unitId) ? unitId : '', earns: true };
+  return M.scoped(levelsFor(fake), () => {
+    const sk = M.SKILLS.slice(), now = M.stamp(), day = M.today(), doc = M.emptyProgress();
+    // about a third of the path: whole levels done (their chest ready to open), then in the current level
+    // all but two exercises done, one waiting for the instructor and one open, so every state shows
+    const lvls = M.LEVELS.filter((l) => sk.some((k) => k.level === l.n));
+    const target = Math.max(1, Math.ceil(sk.length / 3)), done = [], full = [];
+    let wait = null;
+    for (let i = 0; i < lvls.length; i++) {
+      const ks = sk.filter((k) => k.level === lvls[i].n);
+      if (done.length + ks.length <= target && i < lvls.length - 1) { done.push(...ks); full.push(lvls[i].n); continue; }
+      done.push(...ks.slice(0, Math.max(0, ks.length - 2)));
+      if (ks.length >= 3) wait = ks[ks.length - 2];
+      break;
+    }
+    done.forEach((k, i) => {
+      doc.acquired[k.id] = 'flight';
+      doc.flights.push({ id: 'pf' + k.id, skill: k.id, at: now, status: 'approved', feedback: i === 0 ? 'יפה מאוד, ככה ממשיכים' : '', note: '', link: '', stars: 3 - (i % 3) });
+      doc.ledger.push({ id: 'pl' + k.id, at: now, cat: 'stage', kind: 'skill', text: 'טיסה אושרה: ' + k.name, amount: M.skillPoints(db.scoring, k.id), skill: k.id });
+    });
+    const lb = db.scoring.levelBonus || {};
+    full.forEach((n) => { const amount = lb.on ? Number(lb[n]) || 0 : 0; if (amount > 0) doc.ledger.push({ id: 'plv' + n, at: now, cat: 'stage', kind: 'level', level: n, text: 'בונוס סיום רמה', amount, skill: null }); });
+    if (wait) doc.flights.unshift({ id: 'pw', skill: wait.id, at: now, status: 'review', feedback: '', note: '', link: '' });
+    doc.ledger.push({ id: 'plg', at: day + ' 08:00', cat: 'habit', kind: 'login', text: 'כניסה יומית', amount: M.rule(db.scoring, 'login') });
+    doc.timeDay = day; doc.introSeen = true;
+    const ui = uiFor(fake);
+    return {
+      preview: true, me: publicUser(fake), today: day, now, units: db.units, rewards: db.rewards.map((p) => Object.assign({}, p, { left: stockLeft(p.id) })), scoring: db.scoring,
+      levels: M.LEVELS.slice(), skills: M.SKILLS.slice(), challenges: M.CHALLENGES.slice(),
+      allSkills: M.ALL_SKILLS.map((k) => ({ id: k.id, name: k.name, level: k.level, active: k.active })),
+      allChallenges: M.ALL_CHALLENGES.map((c) => ({ id: c.id, title: c.title, points: c.points, active: c.active, final: !!c.final })),
+      settings: { videoDays: db.settings.videoDays, maxFlightMb: Math.round(MAX_FLIGHT / 1048576) },
+      progress: doc, ui, theme: themeById(themeId) || themeById(ui === 'classic' ? 't-race' : ui) || themeDefaults('t-race'), stageBg: db.settings.stageBg
+    };
+  });
 }
 
 // ---------- the game's league: this week's coins in the student's group ----------
@@ -290,6 +405,8 @@ function homeFor(user) {
 
 // Which screens each role may open. Imported screens must also be reachable (the observer view imports Leadership).
 const STUDENT_PAGES = new Set(['StudentApp.dc.html', 'Game.html']);
+// Pages that are not built with the design tool: they get the same signed-in data in the spot they mark.
+const PLAIN_PAGES = new Set(['Game.html', 'Tower.html', 'Studio.html']);
 const OBSERVER_PAGES = new Set(['Observer.dc.html', 'Leadership.dc.html']);
 const ADMIN_BLOCKED = new Set(['StudentApp.dc.html', 'Observer.dc.html', 'Game.html']);
 function mayOpen(user, file) {
@@ -311,9 +428,9 @@ function failed(key) {
 }
 
 // ---------- pages ----------
-function boardHtml(file, user) {
+function boardHtml(file, user, bootOverride) {
   let html = fs.readFileSync(path.join(PUBLIC, file), 'utf8');
-  const boot = user ? bootFor(user) : null;
+  const boot = bootOverride || (user ? bootFor(user) : null);
   const data = JSON.stringify(boot).replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
   const inject = '<script>window.__ACADEMY__=' + data + ';</script>\n<script src="./academy.js"></script>\n';
   if (html.indexOf('<!--ACADEMY-->') !== -1) return html.replace('<!--ACADEMY-->', inject);
@@ -477,11 +594,13 @@ const ADMIN_ACTIONS = {
       const c = M.challengeById(f.challenge) || { title: 'אתגר', points: 0 };
       if (b.approve) {
         f.status = 'approved';
+        const cstars = Math.trunc(Number(b.stars));
+        if (cstars >= 1 && cstars <= 3) f.stars = cstars;
         const pts = u.earns ? Number(c.points) || 0 : 0;
         if (pts && !doc.ledger.some((e) => e.kind === 'challenge' && e.challenge === f.challenge && !e.reverted)) {
           doc.ledger.push({ id: M.newId('a'), at: M.stamp(), cat: 'bonus', kind: 'challenge', challenge: f.challenge, text: 'אתגר: ' + c.title, amount: pts, skill: null });
         }
-        M.notify(doc, { kind: 'approved', text: 'האתגר אושר: ' + c.title + (pts ? ' (' + M.sg(pts) + ' מטבעות).' : '.') + (feedback ? (me.ai ? ' משוב הבדיקה האוטומטית: ״' : ' מדריך: ״') + feedback + '״' : '') });
+        M.notify(doc, { kind: 'approved', text: 'האתגר אושר: ' + c.title + (f.stars ? ' · ' + '★'.repeat(f.stars) + '☆'.repeat(3 - f.stars) : '') + (pts ? ' (' + M.sg(pts) + ' מטבעות).' : '.') + (feedback ? (me.ai ? ' משוב הבדיקה האוטומטית: ״' : ' מדריך: ״') + feedback + '״' : '') });
         log(me, 'flight', 'אישר אתגר של ' + u.name + ': ' + c.title, { target: u.id });
       } else {
         f.status = 'rejected';
@@ -494,9 +613,11 @@ const ADMIN_ACTIONS = {
     if (b.approve) {
       const first = !doc.flights.some((x) => x.skill === f.skill && x.id !== f.id && x.status === 'rejected');
       f.status = 'approved';
+      const stars = Math.trunc(Number(b.stars));
+      if (stars >= 1 && stars <= 3) f.stars = stars;
       const added = M.grantSkill(doc, db.scoring, f.skill, 'flight', { first, points: !!u.earns });
       const sum = added.reduce((s, e) => s + e.amount, 0);
-      M.notify(doc, { kind: 'approved', skill: f.skill, text: 'מאושר: ' + k.name + (u.earns ? ' (' + M.sg(sum) + ' מטבעות).' : '.') + (feedback ? (me.ai ? ' משוב הבדיקה האוטומטית: ״' : ' מדריך: ״') + feedback + '״' : '') });
+      M.notify(doc, { kind: 'approved', skill: f.skill, text: 'מאושר: ' + k.name + (f.stars ? ' · ' + '★'.repeat(f.stars) + '☆'.repeat(3 - f.stars) : '') + (u.earns ? ' (' + M.sg(sum) + ' מטבעות).' : '.') + (feedback ? (me.ai ? ' משוב הבדיקה האוטומטית: ״' : ' מדריך: ״') + feedback + '״' : '') });
       log(me, 'flight', 'אישר טיסה של ' + u.name + ': ' + k.name, { target: u.id });
     } else {
       f.status = 'rejected';
@@ -592,17 +713,50 @@ const ADMIN_ACTIONS = {
     log(me, 'settings', 'שייך ל' + un.name + ' רמות: ' + names);
     return { ok: true };
   },
-  // The screen a group's students get: the regular one, the game in one of its looks, or the parent group's choice.
+  // The screen a group's students get: the regular one, the game in one of the themes, or the parent group's choice.
   setUnitUi(me, b) {
     const un = db.units.find((x) => x.id === String(b.unit || ''));
     if (!un) return 'הקבוצה לא נמצאה.';
-    const ui = String(b.ui || '');
-    if (['inherit', 'classic'].concat(UI_LOOKS).indexOf(ui) === -1) return 'בחירה לא מוכרת.';
-    if (ui === 'inherit' || (ui === 'classic' && !un.parent)) delete un.ui;
-    else un.ui = ui;
-    const names = { inherit: 'כמו בקבוצת האם', classic: 'המסך הרגיל', race: 'משחק · מירוץ', regular: 'משחק · צבעוני', mil: 'משחק · צבאי' };
-    log(me, 'settings', 'המסך של התלמידים ב' + un.name + ': ' + names[ui]);
+    const set = setUi(un, String(b.ui || ''));
+    if (typeof set === 'string') return set;
+    log(me, 'settings', 'המסך של התלמידים ב' + un.name + ': ' + uiName(uiValue(un.ui) || 'inherit'));
     return { ok: true };
+  },
+  // The design page saves all the themes at once, and which theme (or the regular screen) each group gets.
+  saveThemes(me, b) {
+    if (!Array.isArray(b.themes)) return 'נתונים חסרים.';
+    const list = [];
+    b.themes.slice(0, 30).forEach((t) => { const c = cleanTheme(t); if (c && !list.some((x) => x.id === c.id)) list.push(c); });
+    Object.keys(BUILTIN_NAMES).forEach((id) => { if (!list.some((t) => t.id === id)) list.push(themeDefaults(id)); });
+    db.settings.themes = list;
+    const assign = b.assign && typeof b.assign === 'object' ? b.assign : {};
+    Object.keys(assign).forEach((uid) => { const un = db.units.find((x) => x.id === uid); if (un) setUi(un, String(assign[uid] || '')); });
+    // groups whose theme is gone move to the race theme
+    db.units.forEach((u) => { if (u.ui && u.ui !== 'classic' && !themeById(LEGACY_UI[u.ui] || u.ui)) u.ui = 'race'; });
+    cleanMedia();
+    log(me, 'settings', 'עדכן את עיצוב האתר (' + list.length + ' ערכות נושא)');
+    return { ok: true };
+  },
+  // A background per stage of the game (a level, an exercise, a level's chest, the final exam), and the uploaded images.
+  saveStageBg(me, b) {
+    const sb = b.assign && typeof b.assign === 'object' ? b.assign : {};
+    const assign = {};
+    Object.keys(sb).forEach((k) => { if (/^(w\d{1,3}|s\d{1,6}|c\d{1,3}|boss)$/.test(k)) { const v = cleanBg(sb[k]); if (v) assign[k] = v; } });
+    db.settings.stageBg = { assign };
+    if (Array.isArray(b.lib)) db.settings.bgLib = b.lib.filter((x) => x && imgOk(x.url)).map((x) => ({ url: String(x.url).slice(0, 500), name: String(x.name || 'תמונה').replace(/[<>]/g, '').slice(0, 60) })).slice(0, 80);
+    cleanMedia();
+    log(me, 'settings', 'עדכן את הרקעים של השלבים במשחק');
+    return { ok: true };
+  },
+  // Points for a whole group at once: every student in it becomes a player (earns) or a student (doesn't).
+  setUnitEarns(me, b) {
+    const un = db.units.find((x) => x.id === String(b.unit || ''));
+    if (!un) return 'הקבוצה לא נמצאה.';
+    const earns = !!b.earns;
+    let n = 0;
+    db.users.forEach((u) => { if (u.role === 'student' && u.unit === un.id && !!u.earns !== earns) { u.earns = earns; n++; } });
+    log(me, 'user', (earns ? 'כל התלמידים ב' + un.name + ' צוברים נקודות' : 'התלמידים ב' + un.name + ' לא צוברים נקודות') + ' (' + n + ' עודכנו)');
+    return { changed: n };
   },
   // From the curriculum page: put one level or one skill in the chosen groups (and take it out of the others).
   assignToUnits(me, b) {
@@ -761,6 +915,20 @@ const ADMIN_ACTIONS = {
   }
 };
 
+// Sets a group's screen: 'inherit' (its parent's choice), 'classic', or a theme id.
+function setUi(un, ui) {
+  const id = LEGACY_UI[ui] || ui;
+  if (id === 'inherit' || (id === 'classic' && !un.parent)) { delete un.ui; return true; }
+  if (id === 'classic' || themeById(id)) { un.ui = STORED_UI[id] || id; return true; }
+  return 'בחירה לא מוכרת.';
+}
+function uiName(v) {
+  if (v === 'inherit') return 'כמו בקבוצת האם';
+  if (v === 'classic') return 'המסך הרגיל';
+  const t = themeById(v);
+  return t ? 'משחק · ' + t.name : v;
+}
+
 function roleName(r) {
   return { admin: 'מנהל', observer: 'משקיף', student: 'סטודנט' }[r] || r;
 }
@@ -852,6 +1020,12 @@ function cleanMedia() {
   const cur = db.curriculum || { skills: [], challenges: [] };
   cur.skills.concat(cur.challenges).forEach((x) => { if (x.video && x.video.startsWith('/media/')) used.add(x.video.slice(7)); });
   (db.rewards || []).forEach((r) => { if (r.image && r.image.startsWith('/media/')) used.add(r.image.slice(7)); });
+  // images of the game's look: theme backgrounds, stage backgrounds and the uploaded-images library
+  const st = db.settings || {};
+  (st.themes || []).forEach((t) => { if (t.bg && t.bg.kind === 'img' && String(t.bg.url).startsWith('/media/')) used.add(t.bg.url.slice(7)); });
+  const sb = (st.stageBg && st.stageBg.assign) || {};
+  Object.keys(sb).forEach((k) => { const v = String(sb[k].bg || ''); if (v.startsWith('img:/media/')) used.add(v.slice(11)); });
+  (st.bgLib || []).forEach((x) => { if (String(x.url).startsWith('/media/')) used.add(x.url.slice(7)); });
   fs.readdir(MEDIA_DIR, (err, files) => {
     if (err) return;
     files.forEach((f) => {
@@ -1178,13 +1352,18 @@ async function handle(req, res) {
   const full = path.join(PUBLIC, file);
   if (!fs.existsSync(full) || !fs.statSync(full).isFile()) return send(res, 404, 'Not found');
 
-  if (file.endsWith('.dc.html') || file === 'Game.html') {
+  if (file.endsWith('.dc.html') || PLAIN_PAGES.has(file)) {
     if (file === 'Login.dc.html') {
       if (user && req.headers['sec-fetch-dest'] === 'document') return redirect(res, homeFor(user));
       return send(res, 200, boardHtml(file, null), { 'Content-Type': TYPES['.html'] });
     }
     if (!user) return req.headers['sec-fetch-dest'] === 'document' || !req.headers['sec-fetch-dest'] ? redirect(res, '/Login.dc.html') : send(res, 401, 'Sign in');
     if (user.mustChange) return redirect(res, '/password');
+    // the admin sees the game only as a preview, inside the design page
+    if (file === 'Game.html' && user.role === 'admin') {
+      if (url.searchParams.get('preview') !== '1') return redirect(res, '/Studio.html');
+      return send(res, 200, boardHtml(file, user, previewBoot(String(url.searchParams.get('unit') || ''), String(url.searchParams.get('theme') || ''))), { 'Content-Type': TYPES['.html'] });
+    }
     if (!mayOpen(user, file)) return redirect(res, homeFor(user));
     return send(res, 200, boardHtml(file, user), { 'Content-Type': TYPES['.html'] });
   }

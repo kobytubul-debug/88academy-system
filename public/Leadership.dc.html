@@ -49,6 +49,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <li><a href="Rewards.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">פרסים</a></li>
 <li><a href="PointsSettings.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">ניקוד</a></li>
 <li><a href="Activity.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">פעילות</a></li>
+<li><a href="Tower.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">מגדל הפיקוח</a></li>
+<li><a href="Studio.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">עיצוב האתר</a></li>
 </ul>
 </nav>
 </sc-if>
@@ -224,6 +226,17 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <button type="button" class="btn-save" onClick="{{saveUi}}" disabled="{{mgrBusy}}" style="height: 42px; padding: 0 20px; border: 0; border-radius: 10px; background: #C7436A; color: #FFFFFF; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer;">שמירת המסך</button>
 <sc-if value="{{uiDirty}}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; color: #8A3550;">יש שינויים שלא נשמרו</span></sc-if>
 <sc-if value="{{hasUiMsg}}" hint-placeholder-val="{{ false }}"><span role="status" style="font-size: 13px; color: #17694F;">{{uiMsg}}</span></sc-if>
+</div>
+</section>
+</sc-if>
+<sc-if value="{{canEarn}}" hint-placeholder-val="{{ true }}">
+<section aria-labelledby="unit-earn-title" style="background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; padding: 22px 24px;">
+<h2 id="unit-earn-title" style="margin: 0; font-size: 20px; line-height: 1.3; font-weight: 600; color: #121413;">צבירת נקודות בקבוצה</h2>
+<p style="margin: 6px 0 0; font-size: 14px; line-height: 1.55; color: #545D58;">{{earnIntro}}</p>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 16px;">
+<button type="button" class="btn-save" onClick="{{earnAll}}" disabled="{{earnAllOff}}" style="height: 42px; padding: 0 20px; border: 0; border-radius: 10px; background: #C7436A; color: #FFFFFF; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer;">כולם צוברים נקודות</button>
+<button type="button" class="btn-ghost" onClick="{{earnNone}}" disabled="{{earnNoneOff}}" style="height: 42px; padding: 0 20px; border: 1.5px solid #D3D9D5; border-radius: 10px; background: #FFFFFF; color: #121413; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer;">אף אחד לא צובר</button>
+<sc-if value="{{hasEarnMsg}}" hint-placeholder-val="{{ false }}"><span role="status" style="font-size: 13px; color: #17694F;">{{earnMsg}}</span></sc-if>
 </div>
 </section>
 </sc-if>
@@ -745,31 +758,42 @@ class Component extends DCLogic {
       hasPrizesMsg: !!(msg && msg.kind === 'prizes'), prizesMsg: msg && msg.kind === 'prizes' ? msg.text : '',
       mgrBusy: !!s.mgrBusy
     };
-    return Object.assign(out, this.uiVals(id, msg));
+    return Object.assign(out, this.uiVals(id, msg), this.earnVals(id, msg));
   }
 
   // ---------- the screen the group's students get: the regular one, or the game in one of its looks ----------
   uiNames() {
-    return {
+    const A = window.Academy;
+    const style = { race: 'בסגנון סימולטור FPV: פסים לבנים, אייקוני קו וצבעי מירוץ.', regular: 'בסגנון משחקי טלפון: כפתורים עגולים וצבעים חיים.', mil: 'בסגנון צבאי: ציר התקדמות, פקודות ותגי הסמכה.' };
+    const baseName = { race: 'מירוץ', regular: 'צבעוני', mil: 'צבאי' };
+    const out = {
       inherit: ['כמו בקבוצת האם', ''],
-      classic: ['המסך הרגיל', 'המסך שהתלמידים מכירים היום: לוח, נתיב, טיסות ופרסים.'],
-      race: ['משחק · מירוץ', 'האתר כמשחק, בסגנון סימולטור FPV: פסים לבנים, אייקוני קו וצבעי מירוץ.'],
-      regular: ['משחק · צבעוני', 'האתר כמשחק, בסגנון משחקי טלפון: כפתורים עגולים וצבעים חיים.'],
-      mil: ['משחק · צבאי', 'האתר כמשחק, בסגנון צבאי: ציר התקדמות, פקודות ותגי הסמכה.']
+      classic: ['המסך הרגיל', 'המסך שהתלמידים מכירים היום: לוח, נתיב, טיסות ופרסים.']
     };
+    ((A && A.data.themes) || []).forEach((t) => { out[t.id] = ['משחק · ' + t.name, t.builtIn ? 'האתר כמשחק, ' + style[t.base] : 'ערכה מעמוד העיצוב, בסגנון ' + baseName[t.base] + (t.mode === 'day' ? ', מצב יום.' : '.')]; });
+    return out;
+  }
+
+  // A stored value as it works now: old look names become their themes, a deleted theme becomes the race theme.
+  uiNorm(v) {
+    const A = window.Academy;
+    if (!v) return '';
+    if (v === 'classic') return 'classic';
+    const id = ({ race: 't-race', regular: 't-regular', mil: 't-mil' })[v] || v;
+    return ((A && A.data.themes) || []).some((t) => t.id === id) ? id : 't-race';
   }
 
   // The group's own choice; '' when it follows its parent group (or, without one, the regular screen).
   savedUi(id) {
     const u = this.unitObj(id);
-    return u && u.ui ? u.ui : '';
+    return u && u.ui ? this.uiNorm(u.ui) : '';
   }
 
   // What students of a group actually get, following parent groups the way the server does.
   effectiveUi(id) {
     let u = this.unitObj(id);
     for (let i = 0; u && i < 6; i++) {
-      if (u.ui) return u.ui;
+      if (u.ui) return this.uiNorm(u.ui);
       u = u.parent ? this.unitObj(u.parent) : null;
     }
     return 'classic';
@@ -784,13 +808,14 @@ class Component extends DCLogic {
     const saved = this.savedUi(id) || (parent ? 'inherit' : 'classic');
     const draft = (s.uiDraft || {})[id];
     const cur = draft || saved;
-    const keys = (parent ? ['inherit'] : []).concat(['classic', 'race', 'regular', 'mil']);
+    const keys = (parent ? ['inherit'] : []).concat(['classic']).concat(Object.keys(names).filter((k) => k !== 'inherit' && k !== 'classic'));
     return {
       canUi: true,
-      uiIntro: 'בוחרים מה התלמידים של הקבוצה רואים אחרי הכניסה. אפשר להתחיל בקבוצה אחת, ולחזור למסך הרגיל בכל רגע: ההתקדמות, המטבעות והטיסות נשארים אותו דבר בשני המסכים.',
+      uiIntro: 'בוחרים מה התלמידים של הקבוצה רואים אחרי הכניסה. אפשר להתחיל בקבוצה אחת, ולחזור למסך הרגיל בכל רגע: ההתקדמות, המטבעות והטיסות נשארים אותו דבר בשני המסכים. את הערכות מעצבים בעמוד העיצוב.',
       uiOptions: keys.map((k) => {
         const on = cur === k;
-        const sub = k === 'inherit' ? 'עכשיו: ' + names[this.effectiveUi(parent.id)][0] + ', כמו ב' + parent.name + '.' : names[k][1];
+        const pe = parent ? this.effectiveUi(parent.id) : 'classic';
+        const sub = k === 'inherit' ? 'עכשיו: ' + (names[pe] || names.classic)[0] + ', כמו ב' + parent.name + '.' : names[k][1];
         return {
           id: 'ui-' + k, group: 'unit-ui-' + id, name: names[k][0], sub: sub, on: on,
           border: on ? '#2A9171' : '#E1E5E2', bg: on ? '#EEFAF5' : '#FFFFFF',
@@ -803,6 +828,31 @@ class Component extends DCLogic {
     };
   }
 
+  // ---------- points for the whole group: players earn, students don't ----------
+  earnVals(id, msg) {
+    const A = window.Academy;
+    const s = this.state || {};
+    const list = id === 'none' ? [] : A.users('student').filter((u) => u.unit === id);
+    const players = list.filter((u) => u.earns).length, learners = list.length - players;
+    const busy = !!s.mgrBusy;
+    return {
+      canEarn: list.length > 0,
+      earnIntro: 'בקבוצה ' + (list.length === 1 ? 'תלמיד אחד' : list.length + ' תלמידים') + ': ' + (players === 1 ? 'שחקן אחד שצובר' : players + ' שחקנים שצוברים') + ' נקודות, ו' + (learners === 1 ? 'סטודנט אחד שלא צובר' : learners + ' סטודנטים שלא צוברים') + '. שחקנים רואים מטבעות, דרגות, ליגה ופרסים; סטודנטים עוברים את אותו מסלול בלי נקודות. אפשר לשנות לכל הקבוצה בבת אחת, ולתלמיד בודד בעמוד שלו.',
+      earnAll: () => this.saveUnitEarns(id, true), earnNone: () => this.saveUnitEarns(id, false),
+      earnAllOff: busy || learners === 0, earnNoneOff: busy || players === 0,
+      hasEarnMsg: !!(msg && msg.kind === 'earn'), earnMsg: msg && msg.kind === 'earn' ? msg.text : ''
+    };
+  }
+
+  saveUnitEarns(id, earns) {
+    const A = window.Academy;
+    this.setState({ mgrBusy: true });
+    A.call('setUnitEarns', { unit: id, earns: earns }).then((r) => {
+      const n = r.ok && r.result ? r.result.changed : 0;
+      this.setState({ mgrBusy: false, mgrMsg: { unit: id, kind: 'earn', text: r.ok ? 'נשמר. ' + (n === 1 ? 'תלמיד אחד עודכן' : n + ' תלמידים עודכנו') + (earns ? ': כולם צוברים נקודות.' : ': אף אחד לא צובר נקודות.') : r.error } });
+    });
+  }
+
   saveUnitUi(id) {
     const A = window.Academy;
     const s = this.state || {};
@@ -812,7 +862,7 @@ class Component extends DCLogic {
     this.setState({ mgrBusy: true });
     A.call('setUnitUi', { unit: id, ui: ui }).then((r) => {
       const d = Object.assign({}, (this.state || {}).uiDraft); delete d[id];
-      const now = this.uiNames()[this.effectiveUi(id)][0];
+      const now = (this.uiNames()[this.effectiveUi(id)] || ['המסך הרגיל'])[0];
       this.setState({ mgrBusy: false, uiDraft: d, mgrMsg: { unit: id, kind: 'ui', text: r.ok ? 'נשמר. התלמידים בקבוצה יקבלו את ' + now + ' בכניסה הבאה.' : r.error } });
     });
   }
@@ -927,7 +977,7 @@ class Component extends DCLogic {
       cardsBtnBg: listView ? 'transparent' : '#FFFFFF', cardsBtnColor: listView ? '#5E6762' : '#121413',
       listBtnBg: listView ? '#FFFFFF' : 'transparent', listBtnColor: listView ? '#121413' : '#5E6762'
     });
-    Object.assign(vals, { canManage: false, canLevels: false, unitLevels: [], unitPrizes: [], noPrizes: false, canUi: false, uiOptions: [], uiIntro: '', uiDirty: false, hasUiMsg: false, uiMsg: '' });
+    Object.assign(vals, { canManage: false, canLevels: false, unitLevels: [], unitPrizes: [], noPrizes: false, canUi: false, uiOptions: [], uiIntro: '', uiDirty: false, hasUiMsg: false, uiMsg: '', canEarn: false, earnIntro: '', earnAllOff: true, earnNoneOff: true, hasEarnMsg: false, earnMsg: '' });
     vals.noCards = vals.cards.length === 0;
     vals.hasNudge = false;
     vals.noNudge = true;
