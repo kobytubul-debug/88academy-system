@@ -123,6 +123,20 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .bgpv { position: relative; display: block; height: 58px; overflow: hidden; background: #1B1F1E; }
 .bgl { display: block; margin-top: 5px; padding: 0 6px; font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .bgimg, .bgnone, .bgcol { position: absolute; inset: 0; background: center / cover no-repeat; }
+/* an uploaded image: its own delete button in the corner, and the question under the tiles */
+.bgt-w { position: relative; display: grid; }
+.bgt-w > .bgt { width: 100%; }
+.bgx { position: absolute; top: 4px; inset-inline-end: 4px; width: 28px; height: 28px; display: grid; place-items: center; padding: 0; border: 1.5px solid rgba(255,255,255,.9); border-radius: 50%; background: rgba(16,18,20,.72); color: #FFFFFF; font: 700 13px/1 'Rubik', sans-serif; cursor: pointer; }
+.bgx:hover, .bgx:focus-visible { background: #B3261E; border-color: #FFFFFF; }
+.bgx:focus-visible { outline: 3px solid #F2B8B5; outline-offset: 1px; }
+.bgt-w.del > .bgt { border-color: #B3261E; box-shadow: 0 0 0 3px #FDECEA; }
+.bgt-w.del .bgx { background: #B3261E; }
+.bgdel-box { margin-top: 10px; padding: 12px 14px; border: 1px solid #F2B8B5; border-radius: 12px; background: #FDF3F2; color: #5C1A15; font-size: 13px; line-height: 1.5; }
+.bgdel-box p { margin: 0 0 6px; }
+.bgdel-box b { color: #8C1D18; }
+.bgdel-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.st-btn.danger { border-color: #B3261E; background: #B3261E; color: #FFFFFF; }
+.st-btn.danger:hover { background: #941F19; }
 .bgnone { display: grid; place-items: center; background: linear-gradient(135deg, #2A3330, #141A18); color: #C9D0CC; font-size: 11px; font-weight: 600; }
 .bgpv .scn, .sb-thumb .scn { inset: 0; }
 .bgpv .scn, .bgpv .scn > i, .sb-thumb .scn, .sb-thumb .scn > i { filter: none !important; }
@@ -637,9 +651,47 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     if (s.item) return s.item.k ? ok(s.item.k) : s.w.items.some(x => x.k && ok(x.k));
     return s.w.items.some(x => x.k && ok(x.k));
   };
+  // ---------- deleting an uploaded image: where it is used, the question, and the deletion ----------
+  const stageLabel = (k) => { const s = stageInfo(k); return !s ? '' : s.item ? s.item.name : s.w.boss ? s.w.name : `רמה ${s.w.n}: ${s.w.name}`; };
+  const imgUse = (url) => {
+    const v = 'img:' + url, keys = {};
+    [savedBg(), BGD.assign].forEach(a => Object.keys(a).forEach(k => { if (a[k] && a[k].bg === v && stageInfo(k)) keys[k] = 1; }));
+    const th = {};
+    themes().forEach(t => { if (t.bg && t.bg.kind === 'img' && t.bg.url === url) th[t.id] = ED && ED.id === t.id ? ED.draft.name : t.name; });
+    if (ED && ED.draft.bg && ED.draft.bg.kind === 'img' && ED.draft.bg.url === url) th[ED.id] = ED.draft.name;
+    const ks = Object.keys(keys);
+    return { stages: ks.map(stageLabel), items: ks.filter(k => stageInfo(k).item).length, themes: Object.keys(th).map(id => th[id]) };
+  };
+  const delBox = () => {
+    const x = BGD.del && lib().find(i => i.url === BGD.del);
+    if (!x) { BGD.del = null; return ''; }
+    const u = imgUse(x.url), q = (n) => '"' + esc(n) + '"';
+    if (u.themes.length) return `<div class="bgdel-box" role="alert"><p><b>אי אפשר למחוק את ${q(x.name)} עכשיו.</b> היא הרקע של ${u.themes.length > 1 ? 'הערכות' : 'הערכה'} ${u.themes.map(q).join(', ')}. מחליפים לערכה רקע אחר בלשונית "ערכות נושא" ושומרים, ואז אפשר למחוק.</p><div class="bgdel-btns"><button class="st-btn" type="button" data-a="delno">הבנתי</button></div></div>`;
+    const n = u.stages.length, more = n > 6 ? ` ועוד ${n - 6}` : '';
+    // what those stages get instead: an exercise its level's background, a level the automatic one
+    const lv = n - u.items, after = n === 1 ? (u.items ? 'השלב יקבל את הרקע של הרמה שלו' : 'הרמה תקבל את הרקע האוטומטי')
+      : [u.items ? (u.items === 1 ? 'התרגיל יקבל את הרקע של הרמה שלו' : 'התרגילים יקבלו את הרקע של הרמה שלהם') : '', lv ? (u.items ? (lv === 1 ? 'הרמה את הרקע האוטומטי' : 'הרמות את הרקע האוטומטי') : 'הרמות יקבלו את הרקע האוטומטי') : ''].filter(Boolean).join(', ו');
+    const where = n ? `<p>היא הרקע של ${n === 1 ? 'שלב אחד' : n + ' שלבים'}: ${u.stages.slice(0, 6).map(esc).join(', ')}${more}. אחרי המחיקה ${after}.</p>` : '<p>אף שלב לא משתמש בה.</p>';
+    return `<div class="bgdel-box" role="alert"><p><b>למחוק את ${q(x.name)}?</b> התמונה תצא מהספרייה, והמחיקה נשמרת מיד.</p>${where}<div class="bgdel-btns"><button class="st-btn danger" type="button" data-a="delyes" ${BGD.busy ? 'disabled' : ''}>${BGD.busy ? 'מוחק…' : 'כן, למחוק'}</button><button class="st-btn" type="button" data-a="delno" ${BGD.busy ? 'disabled' : ''}>ביטול</button></div></div>`;
+  };
+  const bgRepaint = (focusSel) => { const keep = scrollPos(); renderBgTab(); scrollPos(keep); const f = focusSel && body.querySelector(focusSel); f && f.focus({ preventScroll: true }); };
+  const delImage = () => {
+    const url = BGD.del, v = 'img:' + url;
+    if (!url || BGD.busy || imgUse(url).themes.length) return;
+    // the saved backgrounds without this image; other unsaved changes stay a draft
+    const keep = savedBg(); Object.keys(keep).forEach(k => { if (keep[k] && keep[k].bg === v) delete keep[k]; });
+    BGD.busy = true; BGD.err = ''; bgRepaint('[data-a="delno"]'); renderFoot();
+    A.call('saveStageBg', { assign: keep, lib: lib().filter(x => x.url !== url) }).then(r => {
+      BGD.busy = false;
+      if (!r.ok) { BGD.err = r.error || 'המחיקה לא הצליחה. נסו שוב.'; bgRepaint('[data-a="delyes"]'); renderFoot(); return; }
+      Object.keys(BGD.assign).forEach(k => { if (BGD.assign[k] && BGD.assign[k].bg === v) delete BGD.assign[k]; });
+      BGD.del = null; BGD.msg = '✓ התמונה נמחקה.';
+      bgRepaint('[data-a="up"]'); renderFoot(); sendBg();
+    });
+  };
   const startBg = (msg) => {
     const keep = BGD ? BGD.sel : null;
-    BGD = { assign: savedBg(), sel: keep, msg: msg || '', err: '', busy: false, up: null, upErr: '', ask: null };
+    BGD = { assign: savedBg(), sel: keep, msg: msg || '', err: '', busy: false, up: null, upErr: '', ask: null, del: null };
   };
   const renderBgTab = () => {
     const W = worlds();
@@ -651,7 +703,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     const tiles = tile('', isStage ? 'כמו הרמה' : 'אוטומטי', inheritPv, !curVal, 'data-bgv')
       + tile('none', 'ללא רקע', '<span class="bgnone">רקע הערכה</span>', curVal === 'none', 'data-bgv')
       + Object.keys(SCN).map(k => tile('scene:' + k, SCN_NAMES[k], SCN[k], curVal === 'scene:' + k, 'data-bgv')).join('')
-      + lib().map(x => tile('img:' + x.url, x.name, imgPv(x.url), curVal === 'img:' + x.url, 'data-bgv')).join('');
+      + lib().map(x => `<div class="bgt-w ${BGD.del === x.url ? 'del' : ''}">${tile('img:' + x.url, x.name, imgPv(x.url), curVal === 'img:' + x.url, 'data-bgv')}<button class="bgx" type="button" data-bgdel="${esc(x.url)}" title="מחיקת התמונה" aria-label="מחיקת התמונה ${esc(x.name)}">✕</button></div>`).join('');
     const title = isStage ? s.item.name : w.boss ? w.name : `רמה ${w.n}: ${w.name}`;
     const where = isStage ? `${s.item.chest ? 'התיבה' : 'תרגיל'} ב${w.name}` : w.boss ? 'המבחן המסכם, בסוף המסלול' : 'רקע לכל התרגילים ברמה שאין להם רקע משלהם';
     const ownInLevel = w.items.filter(x => asg[x.key]).length;
@@ -667,6 +719,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
       <section class="st-sec" aria-labelledby="sh-sel"><h2 id="sh-sel">בעריכה: ${esc(title)}</h2>
         <p class="st-hint">${esc(where)}. הרקע מוצג מאחורי הדף של השלב ומתחלף כשגוללים לשלב הבא. במפת הנתיב המלאה מוצג הרקע של השלב שהתלמיד נמצא בו.</p>
         <div class="bgopts">${tiles}</div>
+        ${delBox()}
         ${upRow(BGD)}
         <label class="st-check ${cur && cur.k === 'img' ? '' : 'off'}"><input type="checkbox" id="sbBlur" ${cur && cur.k === 'img' ? '' : 'disabled'} ${!cur || cur.blur !== false ? 'checked' : ''}> טשטוש קל לתמונה, כדי שהטקסט יישאר קריא</label>
         <div class="st-newrow">${isStage ? `<button class="st-btn" type="button" data-a="tolevel" ${curVal ? '' : 'disabled'}>להחיל על כל ${esc(w.name)}</button>` : !w.boss && ownInLevel ? `<button class="st-btn" type="button" data-a="clearlevel">כל התרגילים ברמה כמו הרמה (${ownInLevel} עם רקע משלהם)</button>` : ''}</div>
@@ -749,6 +802,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     const ds = b.dataset;
     if (ds.a === 'up') { const f = $('#upFile'); f && f.click(); return; }
     if (TAB === 'bg') {
+      if (ds.bgdel) { if (BGD.busy) return; BGD.del = ds.bgdel; BGD.msg = ''; BGD.err = ''; bgRepaint('[data-a="delyes"], [data-a="delno"]'); renderFoot(); return; }
+      if (ds.a === 'delno') { const u = BGD.del; BGD.del = null; bgRepaint(u ? `[data-bgdel="${CSS.escape(u)}"]` : null); return; }
+      if (ds.a === 'delyes') return delImage();
       if (ds.st) { BGD.sel = ds.st; const keep = scrollPos(); renderBgTab(); scrollPos(keep); sendGo(nodeFor(ds.st)); const again = body.querySelector(`[data-st="${CSS.escape(ds.st)}"]`); again && again.focus({ preventScroll: true }); return; }
       if (ds.bgv !== undefined) {
         const prev = BGD.assign[BGD.sel];
