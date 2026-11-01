@@ -303,7 +303,10 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 
 /* ================= DECK: one full-screen window per exercise + a path rail that follows the scroll ================= */
 .view.deck { padding: 0; scroll-snap-type: y mandatory; overscroll-behavior: contain; scroll-behavior: auto; }
-.slide { position: relative; height: 100%; scroll-snap-align: start; scroll-snap-stop: always; display: flex; flex-direction: column; justify-content: center; gap: 10px; padding: 6px max(16px, env(safe-area-inset-right, 0px)) 104px 66px; overflow: hidden; }
+.slide { position: relative; height: 100%; scroll-snap-align: start; scroll-snap-stop: always; overflow: hidden; }
+/* a window taller than the screen scrolls inside itself; while it fits, its content sits in the middle (auto margins never cut the top) */
+.slide > .sbody { height: 100%; display: flex; flex-direction: column; padding: 6px max(16px, env(safe-area-inset-right, 0px)) 104px 66px; overflow-x: hidden; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.22) transparent; }
+.slide .sgrid { flex: none; margin-block: auto; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
 .slide .world { margin: 0; padding: 10px 16px 10px; }
 .slide .world h3 { font-size: 18px; }
 .slide .world p { display: none; }
@@ -420,7 +423,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 .app.race .node.fix .face { background: var(--sO); color: var(--ink); box-shadow: inset 0 0 0 3px #fff, 0 0 24px rgba(240,163,91,.6); }
 .app.mil .upl, .app.mil .inote, .app.mil .upl-done { border-radius: 6px; }
 @media (hover: none), (pointer: coarse) { .app .upl, .app.race .upl, .app.mil .upl { border: 0; padding: 0; background: none; } }
-@media (max-width: 899px) { .slide .inote.fixnote ~ .desc { display: none; } .rail { top: 50px; } .slide { padding-bottom: 142px; } .slide .nexthint { bottom: 98px; justify-content: flex-start; } .slide .step small { display: none; } .slide .hero { height: 112px; } .node.big { transform: scale(1.15); } .node.big.boss { transform: scale(1); } }
+@media (max-width: 899px) { .slide .inote.fixnote ~ .desc { display: none; } .rail { top: 50px; } .slide > .sbody { padding-bottom: 142px; } .slide .nexthint { bottom: 98px; justify-content: flex-start; } .slide .step small { display: none; } .slide .hero { height: 112px; } .node.big { transform: scale(1.15); } .node.big.boss { transform: scale(1); } }
 
 /* prototype controls: instructor view + look picker */
 .protobar { position: absolute; z-index: 35; top: calc(env(safe-area-inset-top, 0px) + 76px); left: max(14px, env(safe-area-inset-left, 0px)); display: flex; gap: 6px; }
@@ -722,12 +725,13 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   /* exercise windows: two columns */
   #app .view.mapwrap { padding: 0; }
   #app .mapwrap > .view { padding: 0; }
-  #app .slide { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); grid-auto-flow: row dense; column-gap: 56px; row-gap: 12px; align-content: center; padding: 28px max(40px, calc((100% - 1060px) / 2)) 70px max(100px, calc((100% - 1060px) / 2 + 60px)); }
-  #app .slide > .world, #app .slide > .count { grid-column: 1 / -1; }
-  #app .slide > .hero { grid-column: 1; grid-row: 3 / span 5; height: 320px; align-self: center; }
-  #app .slide > h2, #app .slide > .state, #app .slide > .desc, #app .slide > .steps, #app .slide > .act { grid-column: 2; text-align: start; }
-  #app .slide > h2 { margin-top: 0; }
-  #app .slide > .desc { font-size: 17px; }
+  #app .slide > .sbody { padding: 28px max(40px, calc((100% - 1060px) / 2)) 70px max(100px, calc((100% - 1060px) / 2 + 60px)); }
+  #app .slide .sgrid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); grid-auto-flow: row dense; column-gap: 56px; row-gap: 12px; }
+  #app .slide .sgrid > .world, #app .slide .sgrid > .count { grid-column: 1 / -1; }
+  #app .slide .sgrid > .hero { grid-column: 1; grid-row: 3 / span 5; height: 320px; align-self: center; }
+  #app .slide .sgrid > h2, #app .slide .sgrid > .state, #app .slide .sgrid > .desc, #app .slide .sgrid > .steps, #app .slide .sgrid > .act { grid-column: 2; text-align: start; }
+  #app .slide .sgrid > h2 { margin-top: 0; }
+  #app .slide .sgrid > .desc { font-size: 17px; }
   #app .slide h2 { font-size: 46px; }
   #app .node.big { transform: scale(2.3); }
   #app .node.big.boss { transform: scale(1.8); }
@@ -768,7 +772,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   #app .protobar .adminbtn { height: 40px; padding: 0 14px; justify-content: flex-start; font-size: 13px; }
   #app .protobar .pb-l { display: inline; }
   #app .protobar .tcount { margin-inline-start: auto; }
-  #app .slide > .inote { grid-column: 2; }
+  #app .slide .sgrid > .inote { grid-column: 2; }
 }
 
 /* ================= STUDENTS WHO DON'T EARN POINTS (same course, no coins/XP/ranks/league/prizes) ================= */
@@ -1135,130 +1139,132 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
    and the waypoint's number on the bezel. Open: a radar sweep and a turning arc. Waiting: a slow arc, like the
    tower thinking. Locked: dashed, grey, hatched. Chests are diamond supply drops; the final exam is locked on by a
    reticle. Colours come from the theme (pink, gold, sky…), so a theme the admin designs recolours the path too. */
-#pathmap .node.wp {
+:is(#pathmap, #deck) .node.wp {
   --wp: var(--lock); --wp-hi: #FFFFFF; --wp-tick: rgba(255,255,255,.3); --wp-face: #0C1714; --wp-chip: var(--ink);
   width: 80px; height: 80px; background: none;
 }
-#pathmap .node.wp::before { display: none; }
-#pathmap .node.wp.done { --wp: var(--gold); --wp-tick: color-mix(in srgb, var(--gold) 70%, transparent); }
-#pathmap .node.wp.now { --wp: var(--pink); --wp-tick: rgba(255,255,255,.72); }
-#pathmap .node.wp.wait { --wp: var(--sky); --wp-tick: color-mix(in srgb, var(--sky) 65%, transparent); }
-#pathmap .node.wp.fix { --wp: #F0A35B; --wp-tick: rgba(240,163,91,.7); }
-#pathmap .node.wp.lock { --wp: rgba(255,255,255,.24); --wp-tick: rgba(255,255,255,.14); --wp-chip: rgba(255,255,255,.75); }
+:is(#pathmap, #deck) .node.wp::before { display: none; }
+:is(#pathmap, #deck) .node.wp.done { --wp: var(--gold); --wp-tick: color-mix(in srgb, var(--gold) 70%, transparent); }
+:is(#pathmap, #deck) .node.wp.now { --wp: var(--pink); --wp-tick: rgba(255,255,255,.72); }
+:is(#pathmap, #deck) .node.wp.wait { --wp: var(--sky); --wp-tick: color-mix(in srgb, var(--sky) 65%, transparent); }
+:is(#pathmap, #deck) .node.wp.fix { --wp: #F0A35B; --wp-tick: rgba(240,163,91,.7); }
+:is(#pathmap, #deck) .node.wp.lock { --wp: rgba(255,255,255,.24); --wp-tick: rgba(255,255,255,.14); --wp-chip: rgba(255,255,255,.75); }
 
-#pathmap .node.wp .face { width: 80px; height: 80px; border-radius: 50%; background: none; box-shadow: none; filter: drop-shadow(0 8px 10px rgba(0,0,0,.45)); }
-#pathmap .node.wp .bez { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-#pathmap .bez .b-face { fill: var(--wp-face); }
-#pathmap .bez use { stroke: var(--wp-tick); stroke-linecap: round; }
-#pathmap .bez .b-ring { fill: none; stroke: var(--wp); stroke-width: 4.5; }
-#pathmap .bez .b-arc { display: none; fill: none; stroke: var(--wp-hi); stroke-width: 4.5; stroke-linecap: round; transform-box: fill-box; transform-origin: center; }
-#pathmap .node.lock .bez .b-ring { stroke-dasharray: 5 4.2; stroke-width: 3; }
+:is(#pathmap, #deck) .node.wp .face { width: 80px; height: 80px; border-radius: 50%; background: none; box-shadow: none; filter: drop-shadow(0 8px 10px rgba(0,0,0,.45)); }
+:is(#pathmap, #deck) .node.wp .bez { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+:is(#pathmap, #deck) .bez .b-face { fill: var(--wp-face); }
+:is(#pathmap, #deck) .bez use { stroke: var(--wp-tick); stroke-linecap: round; }
+:is(#pathmap, #deck) .bez .b-ring { fill: none; stroke: var(--wp); stroke-width: 4.5; }
+:is(#pathmap, #deck) .bez .b-arc { display: none; fill: none; stroke: var(--wp-hi); stroke-width: 4.5; stroke-linecap: round; transform-box: fill-box; transform-origin: center; }
+:is(#pathmap, #deck) .node.lock .bez .b-ring { stroke-dasharray: 5 4.2; stroke-width: 3; }
 
 /* the lens: the stage picture, glass glare and a dark rim */
-#pathmap .node.wp .nart { inset: 13px; z-index: 1; border-radius: 50%; box-shadow: 0 0 0 2px rgba(0,0,0,.55); }
-#pathmap .node.wp .nart .glass { position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+:is(#pathmap, #deck) .node.wp .nart { position: absolute; overflow: hidden; background: #1B1F1E; inset: 13px; z-index: 1; border-radius: 50%; box-shadow: 0 0 0 2px rgba(0,0,0,.55); }
+:is(#pathmap, #deck) .node.wp .nart .glass { position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
   background: linear-gradient(140deg, rgba(255,255,255,.42) 0%, rgba(255,255,255,.1) 30%, transparent 46%), radial-gradient(circle at 50% 50%, transparent 58%, rgba(0,0,0,.38) 100%); }
-#pathmap .node.wp.lock .nart::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(-45deg, rgba(0,0,0,.42) 0 3px, transparent 3px 7px); }
+:is(#pathmap, #deck) .node.wp.lock .nart { filter: grayscale(1) brightness(.6); }
+:is(#pathmap, #deck) .node.wp.wait .nart { filter: saturate(.8); }
+:is(#pathmap, #deck) .node.wp.lock .nart::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(-45deg, rgba(0,0,0,.42) 0 3px, transparent 3px 7px); }
 
 /* the waypoint's number, set into the bottom of the bezel */
-#pathmap .node.wp .wpn { position: absolute; left: 50%; bottom: -7px; z-index: 2; transform: translateX(-50%); min-width: 28px; padding: 3px 7px 2px; border-radius: 99px;
+:is(#pathmap, #deck) .node.wp .wpn { position: absolute; left: 50%; bottom: -7px; z-index: 2; transform: translateX(-50%); min-width: 28px; padding: 3px 7px 2px; border-radius: 99px;
   background: var(--wp); color: var(--wp-chip); font: 800 10px/1.1 var(--n); letter-spacing: .06em; text-align: center; white-space: nowrap; box-shadow: 0 0 0 2.5px var(--wp-face); }
-#pathmap .node.wp.lock .wpn { background: #2A3633; }
-#pathmap .node.wp .crown { z-index: 3; top: -9px; right: -12px; }
-#pathmap .node.wp .nl { margin-top: 15px; }
+:is(#pathmap, #deck) .node.wp.lock .wpn { background: #2A3633; }
+:is(#pathmap, #deck) .node.wp .crown { z-index: 3; top: -9px; right: -12px; }
+:is(#pathmap, #deck) .node.wp .nl { margin-top: 15px; }
 
 /* open: a turning arc on the ring; where the pilot is, also a radar sweep over the picture and a soft halo */
-#pathmap .node.wp.now .nart .sweep { position: absolute; inset: -1px; border-radius: 50%; pointer-events: none; mix-blend-mode: screen;
+:is(#pathmap, #deck) .node.wp.now .nart .sweep { position: absolute; inset: -1px; border-radius: 50%; pointer-events: none; mix-blend-mode: screen;
   background: conic-gradient(from 0deg, transparent 0 70%, color-mix(in srgb, var(--pink) 70%, transparent) 99%, rgba(255,255,255,.9) 100%); animation: spin 2.8s linear infinite; }
-#pathmap .node.wp.now .bez .b-arc { display: block; stroke-dasharray: 9 16.1; animation: spin 5s linear infinite; }
-#pathmap .node.wp.now.here .face::after, #pathmap .node.wp.fix .face::after, #pathmap .node.chest.ready .face::after { content: ""; position: absolute; inset: -8px; border-radius: 50%; border: 2.5px solid var(--wp); pointer-events: none; animation: wpHalo 2s ease-out infinite; }
+:is(#pathmap, #deck) .node.wp.now .bez .b-arc { display: block; stroke-dasharray: 9 16.1; animation: spin 5s linear infinite; }
+:is(#pathmap, #deck) .node.wp.now.here .face::after, :is(#pathmap, #deck) .node.wp.fix .face::after, :is(#pathmap, #deck) .node.chest.ready .face::after { content: ""; position: absolute; inset: -8px; border-radius: 50%; border: 2.5px solid var(--wp); pointer-events: none; animation: wpHalo 2s ease-out infinite; }
 @keyframes wpHalo { 0% { transform: scale(.92); opacity: .9; } 100% { transform: scale(1.28); opacity: 0; } }
 /* waiting for the instructor: one bright arc going round slowly */
-#pathmap .node.wp.wait .bez .b-arc { display: block; stroke-dasharray: 22 78; animation: spin 2.6s linear infinite; }
+:is(#pathmap, #deck) .node.wp.wait .bez .b-arc { display: block; stroke-dasharray: 22 78; animation: spin 2.6s linear infinite; }
 
 /* chests: a diamond supply drop with the level's picture */
-#pathmap .node.wp.chest { --wp: var(--gold); width: 66px; height: 66px; }
-#pathmap .node.wp.chest.lock { --wp: rgba(255,255,255,.26); }
-#pathmap .node.wp.chest.opened { --wp: color-mix(in srgb, var(--gold) 60%, #7A8A84); }
-#pathmap .node.wp.chest .face { width: 52px; height: 52px; border-radius: 12px; transform: rotate(45deg); background: var(--wp-face); box-shadow: inset 0 0 0 3.5px var(--wp), 0 9px 14px rgba(0,0,0,.4); filter: none; overflow: visible; }
-#pathmap .node.wp.chest .nart { inset: 7px; border-radius: 6px; box-shadow: none; }
-#pathmap .node.wp.chest .nart > :not(.glass) { transform: rotate(-45deg) scale(1.45); }
-#pathmap .node.wp.chest.lock .nart { filter: grayscale(1) brightness(.6); }
-#pathmap .node.wp.chest.ready .face { animation: wpDrop 1.8s ease-in-out infinite; box-shadow: inset 0 0 0 3.5px var(--wp), 0 0 22px color-mix(in srgb, var(--gold) 60%, transparent), 0 9px 14px rgba(0,0,0,.4); }
-#pathmap .node.wp.chest.ready .face::after { border-radius: 16px; }
+:is(#pathmap, #deck) .node.wp.chest { --wp: var(--gold); width: 66px; height: 66px; }
+:is(#pathmap, #deck) .node.wp.chest.lock { --wp: rgba(255,255,255,.26); }
+:is(#pathmap, #deck) .node.wp.chest.opened { --wp: color-mix(in srgb, var(--gold) 60%, #7A8A84); }
+:is(#pathmap, #deck) .node.wp.chest .face { width: 52px; height: 52px; border-radius: 12px; transform: rotate(45deg); background: var(--wp-face); box-shadow: inset 0 0 0 3.5px var(--wp), 0 9px 14px rgba(0,0,0,.4); filter: none; overflow: visible; }
+:is(#pathmap, #deck) .node.wp.chest .nart { inset: 7px; border-radius: 6px; box-shadow: none; }
+:is(#pathmap, #deck) .node.wp.chest .nart > :not(.glass) { transform: rotate(-45deg) scale(1.45); }
+:is(#pathmap, #deck) .node.wp.chest.lock .nart { filter: grayscale(1) brightness(.6); }
+:is(#pathmap, #deck) .node.wp.chest.ready .face { animation: wpDrop 1.8s ease-in-out infinite; box-shadow: inset 0 0 0 3.5px var(--wp), 0 0 22px color-mix(in srgb, var(--gold) 60%, transparent), 0 9px 14px rgba(0,0,0,.4); }
+:is(#pathmap, #deck) .node.wp.chest.ready .face::after { border-radius: 16px; }
 @keyframes wpDrop { 0%, 100% { transform: rotate(45deg) translate(0, 0); } 50% { transform: rotate(45deg) translate(-3px, -3px); } }
-#pathmap .node.wp.chest .nl { margin-top: 13px; }
+:is(#pathmap, #deck) .node.wp.chest .nl { margin-top: 13px; }
 
 /* the final exam: a bigger lens, locked on by a reticle */
-#pathmap .node.wp.boss { --wp: var(--pink); --wp-tick: color-mix(in srgb, var(--pink) 60%, transparent); width: 112px; height: 112px; }
-#pathmap .node.wp.boss.done { --wp: var(--gold); }
-#pathmap .node.wp.boss.lock { --wp: color-mix(in srgb, var(--pink) 45%, #555); --wp-tick: rgba(255,255,255,.16); }
-#pathmap .node.wp.boss .face { width: 112px; height: 112px; background: none; box-shadow: none; }
-#pathmap .node.wp.boss .nart { inset: 18px; }
-#pathmap .node.wp .ret { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; overflow: visible; fill: none; stroke: var(--wp); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
-#pathmap .node.wp .ret .ret-x { stroke: rgba(255,255,255,.85); stroke-width: 1.8; }
-#pathmap .node.wp.boss:not(.lock) .ret { animation: wpLock 2.4s ease-in-out infinite; transform-origin: center; }
+:is(#pathmap, #deck) .node.wp.boss { --wp: var(--pink); --wp-tick: color-mix(in srgb, var(--pink) 60%, transparent); width: 112px; height: 112px; }
+:is(#pathmap, #deck) .node.wp.boss.done { --wp: var(--gold); }
+:is(#pathmap, #deck) .node.wp.boss.lock { --wp: color-mix(in srgb, var(--pink) 45%, #555); --wp-tick: rgba(255,255,255,.16); }
+:is(#pathmap, #deck) .node.wp.boss .face { width: 112px; height: 112px; background: none; box-shadow: none; }
+:is(#pathmap, #deck) .node.wp.boss .nart { inset: 18px; }
+:is(#pathmap, #deck) .node.wp .ret { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; overflow: visible; fill: none; stroke: var(--wp); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
+:is(#pathmap, #deck) .node.wp .ret .ret-x { stroke: rgba(255,255,255,.85); stroke-width: 1.8; }
+:is(#pathmap, #deck) .node.wp.boss:not(.lock) .ret { animation: wpLock 2.4s ease-in-out infinite; transform-origin: center; }
 @keyframes wpLock { 0%, 100% { transform: scale(1); } 50% { transform: scale(.94); } }
 
 /* ---------- race: thin white instrument lines, square italic chips, green for done ---------- */
-.app.race #pathmap .node.wp { --wp-face: rgba(14,16,18,.92); }
-.app.race #pathmap .node.wp.done { --wp: var(--green, #5A9A7E); --wp-tick: rgba(255,255,255,.6); }
-.app.race #pathmap .node.wp.now { --wp-tick: rgba(255,255,255,.8); }
-.app.race #pathmap .node.wp .face { box-shadow: none; }
-.app.race #pathmap .bez .b-ring { stroke-width: 3.2; }
-.app.race #pathmap .node.wp:not(.lock):not(.chest) .bez .b-face { stroke: rgba(255,255,255,.85); stroke-width: 1.2; }
-.app.race #pathmap .node.wp .wpn { border-radius: 0; padding: 3px 9px 2px; font: italic 700 10.5px/1.1 var(--f); letter-spacing: .04em; clip-path: polygon(4px 0, 100% 0, calc(100% - 4px) 100%, 0 100%); box-shadow: none; }
-.app.race #pathmap .node.wp.done .wpn { color: #FFFFFF; }
-.app.race #pathmap .node.wp.now .wpn { color: #FFFFFF; }
-.app.race #pathmap .node.wp.chest { --wp: var(--sY, #F0D46A); }
-.app.race #pathmap .node.wp.chest .face { border-radius: 0; background: var(--wp-face); box-shadow: inset 0 0 0 3px var(--wp), 0 8px 18px rgba(0,0,0,.45); }
-.app.race #pathmap .node.wp.chest.ready .face { box-shadow: inset 0 0 0 3px var(--wp), 0 0 22px color-mix(in srgb, var(--wp) 55%, transparent), 0 8px 18px rgba(0,0,0,.45); }
-.app.race #pathmap .node.wp.chest .nart { border-radius: 0; }
-.app.race #pathmap .node.wp.chest.ready .face::after { border-radius: 0; }
+.app.race :is(#pathmap, #deck) .node.wp { --wp-face: rgba(14,16,18,.92); }
+.app.race :is(#pathmap, #deck) .node.wp.done { --wp: var(--green, #5A9A7E); --wp-tick: rgba(255,255,255,.6); }
+.app.race :is(#pathmap, #deck) .node.wp.now { --wp-tick: rgba(255,255,255,.8); }
+.app.race :is(#pathmap, #deck) .node.wp .face { box-shadow: none; }
+.app.race :is(#pathmap, #deck) .bez .b-ring { stroke-width: 3.2; }
+.app.race :is(#pathmap, #deck) .node.wp:not(.lock):not(.chest) .bez .b-face { stroke: rgba(255,255,255,.85); stroke-width: 1.2; }
+.app.race :is(#pathmap, #deck) .node.wp .wpn { border-radius: 0; padding: 3px 9px 2px; font: italic 700 10.5px/1.1 var(--f); letter-spacing: .04em; clip-path: polygon(4px 0, 100% 0, calc(100% - 4px) 100%, 0 100%); box-shadow: none; }
+.app.race :is(#pathmap, #deck) .node.wp.done .wpn { color: #FFFFFF; }
+.app.race :is(#pathmap, #deck) .node.wp.now .wpn { color: #FFFFFF; }
+.app.race :is(#pathmap, #deck) .node.wp.chest { --wp: var(--sY, #F0D46A); }
+.app.race :is(#pathmap, #deck) .node.wp.chest .face { border-radius: 0; background: var(--wp-face); box-shadow: inset 0 0 0 3px var(--wp), 0 8px 18px rgba(0,0,0,.45); }
+.app.race :is(#pathmap, #deck) .node.wp.chest.ready .face { box-shadow: inset 0 0 0 3px var(--wp), 0 0 22px color-mix(in srgb, var(--wp) 55%, transparent), 0 8px 18px rgba(0,0,0,.45); }
+.app.race :is(#pathmap, #deck) .node.wp.chest .nart { border-radius: 0; }
+.app.race :is(#pathmap, #deck) .node.wp.chest.ready .face::after { border-radius: 0; }
 
 /* ---------- military: a square viewfinder with corner brackets and a crosshair instead of the round bezel ---------- */
-.app.mil #pathmap .node.wp:not(.chest) .bez { display: none; }
-.app.mil #pathmap .node.wp:not(.chest) .face { border-radius: 6px; background: var(--wp-face); box-shadow: inset 0 0 0 3px var(--wp), 0 6px 0 rgba(0,0,0,.35); }
-.app.mil #pathmap .node.wp:not(.chest) .face::before { content: ""; position: absolute; inset: -7px; pointer-events: none; background:
+.app.mil :is(#pathmap, #deck) .node.wp:not(.chest) .bez { display: none; }
+.app.mil :is(#pathmap, #deck) .node.wp:not(.chest) .face { border-radius: 6px; background: var(--wp-face); box-shadow: inset 0 0 0 3px var(--wp), 0 6px 0 rgba(0,0,0,.35); }
+.app.mil :is(#pathmap, #deck) .node.wp:not(.chest) .face::before { content: ""; position: absolute; inset: -7px; pointer-events: none; background:
   linear-gradient(var(--wp), var(--wp)) left top / 15px 3px no-repeat, linear-gradient(var(--wp), var(--wp)) left top / 3px 15px no-repeat,
   linear-gradient(var(--wp), var(--wp)) right top / 15px 3px no-repeat, linear-gradient(var(--wp), var(--wp)) right top / 3px 15px no-repeat,
   linear-gradient(var(--wp), var(--wp)) left bottom / 15px 3px no-repeat, linear-gradient(var(--wp), var(--wp)) left bottom / 3px 15px no-repeat,
   linear-gradient(var(--wp), var(--wp)) right bottom / 15px 3px no-repeat, linear-gradient(var(--wp), var(--wp)) right bottom / 3px 15px no-repeat; }
-.app.mil #pathmap .node.wp:not(.chest) .nart { inset: 9px; border-radius: 2px; box-shadow: none; }
-.app.mil #pathmap .node.wp .nart .glass { background:
+.app.mil :is(#pathmap, #deck) .node.wp:not(.chest) .nart { inset: 9px; border-radius: 2px; box-shadow: none; }
+.app.mil :is(#pathmap, #deck) .node.wp .nart .glass { background:
   linear-gradient(rgba(232,226,200,.7), rgba(232,226,200,.7)) center top / 1.5px 26% no-repeat, linear-gradient(rgba(232,226,200,.7), rgba(232,226,200,.7)) center bottom / 1.5px 26% no-repeat,
   linear-gradient(rgba(232,226,200,.7), rgba(232,226,200,.7)) left center / 26% 1.5px no-repeat, linear-gradient(rgba(232,226,200,.7), rgba(232,226,200,.7)) right center / 26% 1.5px no-repeat,
   linear-gradient(180deg, rgba(255,255,255,.18), transparent 40%); }
-.app.mil #pathmap .node.wp .nart .sweep { border-radius: 0; }
-.app.mil #pathmap .node.wp.now.here .face::after, .app.mil #pathmap .node.wp.fix .face::after { border-radius: 10px; }
-.app.mil #pathmap .node.wp.now.here .face::before { animation: wpLock 1.6s ease-in-out infinite; }
-.app.mil #pathmap .node.wp .wpn { border-radius: 2px; font: 400 10px/1.1 var(--n); letter-spacing: .1em; }
-.app.mil #pathmap .node.wp.lock .wpn { background: #2A2F22; }
-.app.mil #pathmap .node.wp.boss .ret { display: none; }
-.app.mil #pathmap .node.wp.boss .face { background: repeating-linear-gradient(-45deg, #1E2117 0 10px, #12150D 10px 20px); }
-.app.mil #pathmap .node.wp.chest .face { border-radius: 4px; }
-.app.mil #pathmap .node.wp.chest .nart { border-radius: 2px; }
-.app.mil #pathmap .node.wp.chest.ready .face::after { border-radius: 6px; }
+.app.mil :is(#pathmap, #deck) .node.wp .nart .sweep { border-radius: 0; }
+.app.mil :is(#pathmap, #deck) .node.wp.now.here .face::after, .app.mil :is(#pathmap, #deck) .node.wp.fix .face::after { border-radius: 10px; }
+.app.mil :is(#pathmap, #deck) .node.wp.now.here .face::before { animation: wpLock 1.6s ease-in-out infinite; }
+.app.mil :is(#pathmap, #deck) .node.wp .wpn { border-radius: 2px; font: 400 10px/1.1 var(--n); letter-spacing: .1em; }
+.app.mil :is(#pathmap, #deck) .node.wp.lock .wpn { background: #2A2F22; }
+.app.mil :is(#pathmap, #deck) .node.wp.boss .ret { display: none; }
+.app.mil :is(#pathmap, #deck) .node.wp.boss .face { background: repeating-linear-gradient(-45deg, #1E2117 0 10px, #12150D 10px 20px); }
+.app.mil :is(#pathmap, #deck) .node.wp.chest .face { border-radius: 4px; }
+.app.mil :is(#pathmap, #deck) .node.wp.chest .nart { border-radius: 2px; }
+.app.mil :is(#pathmap, #deck) .node.wp.chest.ready .face::after { border-radius: 6px; }
 
 /* ---------- day: a white bezel with dark ticks ---------- */
-#app.day #pathmap .node.wp { --wp-face: #FFFFFF; --wp-tick: rgba(0,0,0,.26); }
-#app.day #pathmap .node.wp.done { --wp-tick: color-mix(in srgb, var(--gold-dd) 75%, transparent); }
-#app.day #pathmap .node.wp.now { --wp-tick: color-mix(in srgb, var(--pink) 75%, transparent); }
-#app.day #pathmap .node.wp.lock { --wp: rgba(0,0,0,.2); --wp-tick: rgba(0,0,0,.12); --wp-chip: #FFFFFF; }
-#app.day #pathmap .node.wp.lock .wpn { background: #9AA3A0; }
-#app.day #pathmap .node.wp .face { filter: drop-shadow(0 6px 10px rgba(0,0,0,.16)); }
-#app.day #pathmap .node.wp.chest .face { filter: none; box-shadow: inset 0 0 0 3.5px var(--wp), 0 6px 14px rgba(0,0,0,.14); }
-#app.day #pathmap .node.wp.chest.lock { --wp: rgba(0,0,0,.2); }
-#app.day.race #pathmap .node.wp:not(.lock):not(.chest) .bez .b-face { stroke: rgba(0,0,0,.18); }
-#app.day.race #pathmap .node.wp.done { --wp-tick: color-mix(in srgb, var(--green, #5A9A7E) 70%, transparent); }
-#app.day.race #pathmap .node.wp.chest .face { background: #FFFFFF; box-shadow: inset 0 0 0 3px var(--wp), 0 6px 14px rgba(0,0,0,.14); }
-#app.day.race #pathmap .node.wp.chest.ready .face { box-shadow: inset 0 0 0 3px var(--wp), 0 0 22px color-mix(in srgb, var(--wp) 55%, transparent); }
+#app.day :is(#pathmap, #deck) .node.wp { --wp-face: #FFFFFF; --wp-tick: rgba(0,0,0,.26); }
+#app.day :is(#pathmap, #deck) .node.wp.done { --wp-tick: color-mix(in srgb, var(--gold-dd) 75%, transparent); }
+#app.day :is(#pathmap, #deck) .node.wp.now { --wp-tick: color-mix(in srgb, var(--pink) 75%, transparent); }
+#app.day :is(#pathmap, #deck) .node.wp.lock { --wp: rgba(0,0,0,.2); --wp-tick: rgba(0,0,0,.12); --wp-chip: #FFFFFF; }
+#app.day :is(#pathmap, #deck) .node.wp.lock .wpn { background: #9AA3A0; }
+#app.day :is(#pathmap, #deck) .node.wp .face { filter: drop-shadow(0 6px 10px rgba(0,0,0,.16)); }
+#app.day :is(#pathmap, #deck) .node.wp.chest .face { filter: none; box-shadow: inset 0 0 0 3.5px var(--wp), 0 6px 14px rgba(0,0,0,.14); }
+#app.day :is(#pathmap, #deck) .node.wp.chest.lock { --wp: rgba(0,0,0,.2); }
+#app.day.race :is(#pathmap, #deck) .node.wp:not(.lock):not(.chest) .bez .b-face { stroke: rgba(0,0,0,.18); }
+#app.day.race :is(#pathmap, #deck) .node.wp.done { --wp-tick: color-mix(in srgb, var(--green, #5A9A7E) 70%, transparent); }
+#app.day.race :is(#pathmap, #deck) .node.wp.chest .face { background: #FFFFFF; box-shadow: inset 0 0 0 3px var(--wp), 0 6px 14px rgba(0,0,0,.14); }
+#app.day.race :is(#pathmap, #deck) .node.wp.chest.ready .face { box-shadow: inset 0 0 0 3px var(--wp), 0 0 22px color-mix(in srgb, var(--wp) 55%, transparent); }
 
 /* ================= THE WAY ON: the next stage as a button at the bottom of each window =================
-   A glass capsule with the next stage's picture in a small lens, its name, and a chevron that keeps pointing down. */
+   A glass capsule with the next stage's picture in a small lens and its name. */
 .slide .nexthint { pointer-events: none; }
 .slide .nexthint .nextbtn { pointer-events: auto; }
-.nextbtn { --nb: var(--mint); position: relative; display: inline-flex; align-items: center; gap: 9px; max-width: 100%; height: 50px; padding: 0 5px 0 6px; padding-inline-start: 5px;
+.nextbtn { --nb: var(--mint); position: relative; display: inline-flex; align-items: center; gap: 10px; max-width: 100%; height: 50px; padding: 0 5px; padding-inline-end: 20px;
   border: 1.5px solid transparent; border-radius: 99px; cursor: pointer; animation: none; text-align: start; color: var(--white);
   background: linear-gradient(rgba(9,20,17,.8), rgba(9,20,17,.8)) padding-box, linear-gradient(120deg, var(--nb), color-mix(in srgb, var(--sky) 80%, transparent) 55%, color-mix(in srgb, var(--pink) 75%, transparent)) border-box;
   -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: 0 10px 24px rgba(0,0,0,.38); transition: transform .15s, box-shadow .15s; }
@@ -1271,10 +1277,6 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 .nextbtn .nb-txt { display: flex; flex-direction: column; min-width: 0; line-height: 1.15; }
 .nextbtn .nb-txt small { font: 700 10.5px var(--f); letter-spacing: .02em; color: var(--nb); }
 .nextbtn .nb-txt b { font: 800 14px var(--f); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.nextbtn .nb-go { flex: none; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--nb); color: var(--ink); overflow: hidden; }
-.nextbtn .nb-go svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2.8; stroke-linecap: round; stroke-linejoin: round; animation: nbFly 1.5s ease-in-out infinite; }
-@keyframes nbFly { 0%, 100% { transform: translateY(-2px); } 50% { transform: translateY(3px); } }
-.nextbtn .kbd { margin-inline-start: 0; margin-inline-end: 6px; color: var(--dim); }
 .nextbtn:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 /* phone: beside the full-path button, as wide as the room it has */
 @media (max-width: 899px) {
@@ -1290,21 +1292,114 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 }
 
 /* race: a white chamfered tag with the green stripe, like the race look's other buttons */
-.app.race .nextbtn { --nb: var(--green, #5A9A7E); border: 0; border-radius: 0; height: 50px; padding: 0 6px 0 10px; color: var(--ink); background: var(--bar);
+.app.race .nextbtn { --nb: var(--green, #5A9A7E); border: 0; border-radius: 0; height: 50px; padding: 0 10px; padding-inline-end: 24px; color: var(--ink); background: var(--bar);
   clip-path: polygon(12px 0, 100% 0, 100% 100%, 0 100%, 0 12px); box-shadow: inset -6px 0 0 var(--nb); -webkit-backdrop-filter: none; backdrop-filter: none; }
 .app.race .nextbtn .nb-art { border-radius: 0; box-shadow: 0 0 0 2px var(--ink); margin-inline-start: 8px; }
 .app.race .nextbtn .nb-txt small { color: var(--nb); font-style: italic; letter-spacing: .08em; }
 .app.race .nextbtn .nb-txt b { font-style: italic; font-weight: 800; }
-.app.race .nextbtn .nb-go { border-radius: 0; background: var(--pink); color: #FFFFFF; clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%); width: 40px; }
-.app.race .nextbtn .kbd { color: #5D646A; }
 /* military: an olive plate with a stencil caption */
 .app.mil .nextbtn { --nb: var(--mint); border-radius: 6px; background: linear-gradient(#262D1C, #262D1C) padding-box, linear-gradient(90deg, var(--mint), var(--gold)) border-box; }
-.app.mil .nextbtn .nb-art, .app.mil .nextbtn .nb-go { border-radius: 4px; }
+.app.mil .nextbtn .nb-art { border-radius: 4px; }
 .app.mil .nextbtn .nb-txt small { font: 400 10px var(--n); letter-spacing: .12em; }
 /* day */
 #app.day .nextbtn { color: var(--d-fg); background: linear-gradient(var(--d-card), var(--d-card)) padding-box, linear-gradient(120deg, var(--nb), color-mix(in srgb, var(--sky) 80%, transparent) 55%, color-mix(in srgb, var(--pink) 75%, transparent)) border-box; box-shadow: 0 8px 20px rgba(0,0,0,.12); }
 #app.day:not(.race) .nextbtn .nb-txt small { color: var(--mint-dd); }
 #app.day.race .nextbtn { background: #FFFFFF; box-shadow: inset -6px 0 0 var(--nb), inset 0 0 0 1px rgba(0,0,0,.14); }
+
+/* ================= NO ICONS: the game speaks in words, numbers and pictures =================
+   No emoji or pictograms anywhere: the menu is words, the steps are numbered, the top bar says "התראות", "רצף" and
+   "יום/לילה", a prize without a picture shows its first letter, and the overlays show the stage's picture, the pilot's
+   drone or the 88 coin. The coin stays: it is the currency's mark. */
+
+/* top bar */
+.res .rlbl { font-family: var(--f); font-weight: 700; font-size: 12px; opacity: .82; }
+.res.streakres { gap: 6px; padding: 0 12px; }
+.modebtn { font: 700 13px var(--f); padding: 0 12px; }
+.bellbtn { gap: 0; padding: 0 12px; }
+/* the unread count sits after the word, inside the button (the race look's slanted buttons would cut a corner badge) */
+.bellbtn .tcount { position: static; margin-inline-start: 7px; }
+.app.race .res .rlbl { opacity: .9; }
+
+/* a phone: the day/night switch moves to the hangar's account section, so the name keeps its room */
+@media (max-width: 519px) {
+  #modeBtn { display: none !important; }
+  .topbar { gap: 6px; }
+  .res { padding: 0 9px; }
+  .res .rlbl { font-size: 11px; }
+  .bellbtn { padding: 0 10px; }
+}
+@media (min-width: 520px) { .acct .modeacct { display: none; } }
+
+/* the menu: words only, readable on any background */
+.tab { gap: 0; height: 52px; font-size: 13px; }
+.app:not(.race) .tab:not(.on):not(.tab-out) { color: color-mix(in srgb, var(--white) 86%, transparent); background: rgba(6,16,13,.42); }
+#app.day:not(.race) .tab:not(.on):not(.tab-out) { color: var(--d-fg); background: var(--d-card); }
+.app .tab.tab-out { color: color-mix(in srgb, var(--white) 72%, transparent); }
+#app.day .tab.tab-out { color: var(--d-dim); }
+.app.race .tab { height: 50px; font-size: 13px; }
+.app .tab.tab-out { min-width: 0; padding: 0 12px; font-size: 13px; }
+@media (min-width: 900px) {
+  #app .tab { height: 52px; font-size: 16px; padding: 0 22px; }
+  #app .tab.tab-out { height: 44px; padding: 0 22px; font-size: 15px; }
+}
+
+/* the exercise window: numbered steps, and the instructor's stars beside the stage's name */
+.step .si { font: 900 17px/1 var(--n); }
+.app.race .step .si { font-family: var(--f); font-style: italic; font-weight: 800; }
+.slide h2 .tstars { display: inline-block; margin-inline-start: .3em; font-size: .5em; line-height: 1; vertical-align: .22em; color: var(--gold); font-style: normal; letter-spacing: .06em; text-shadow: 0 2px 10px rgba(0,0,0,.35); white-space: nowrap; }
+.app.race .slide h2 .tstars { color: #FFD15C; }
+#app.day .slide h2 .tstars { color: var(--gold-dd); text-shadow: none; }
+
+/* a short screen: the window tightens up before anything needs scrolling */
+@media (min-width: 900px) and (max-height: 760px) {
+  #app .slide > .sbody { padding-top: 16px; padding-bottom: 74px; }
+  #app .slide .sgrid { row-gap: 9px; }
+  #app .slide h2 { font-size: 36px; }
+  #app .slide .sgrid > .hero { height: 240px; }
+  #app .slide .node.big { transform: scale(1.75); }
+  #app .slide .node.big.boss { transform: scale(1.4); }
+  #app .slide .sgrid > .desc { font-size: 15px; }
+  #app .slide .step { padding: 9px 14px; }
+  #app .slide .step .si { width: 36px; height: 36px; }
+}
+@media (min-width: 900px) and (max-height: 620px) {
+  #app .slide h2 { font-size: 30px; }
+  #app .slide .step small { display: none; }
+  #app .slide .sgrid > .hero { height: 190px; }
+  #app .slide .node.big { transform: scale(1.4); }
+  #app .slide .node.big.boss { transform: scale(1.1); }
+}
+
+/* daily tasks: a coloured edge instead of an icon; the streak is a big number */
+.app:not(.race) .quest[style*="--qc"] { box-shadow: inset -6px 0 0 var(--qc), 0 5px 0 rgba(0,0,0,.35); padding-inline-start: 18px; }
+#app.day:not(.race) .quest[style*="--qc"] { box-shadow: inset -6px 0 0 var(--qc), 0 4px 0 rgba(0,0,0,.07), 0 2px 10px rgba(0,0,0,.06); }
+.app.race .quest[style*="--qc"] { padding-inline-start: 20px; }
+.streak .big { min-width: 1.1em; font: 900 56px/1 var(--n); text-align: center; filter: none; text-shadow: 0 4px 0 rgba(0,0,0,.18); }
+.app.race .streak .big { font-family: var(--f); font-style: italic; font-weight: 800; }
+
+/* the league: the coin beside each score */
+.leaguehead { padding-top: 6px; }
+.leaguehead b { margin-top: 0; }
+.lrow .lx { display: inline-flex; align-items: center; gap: 6px; }
+.lrow .lx .coinic { width: 18px; height: 18px; font-size: 6px; flex: none; }
+
+/* a prize without a picture: its first letter */
+.prz .pimg.pl, .pzrow .pimg.pl { font: 900 30px/1 var(--f); }
+
+/* overlays: the stage's picture in a lens, the chest as a diamond, the pilot's drone, the coin */
+.rbig .rlens { position: relative; display: block; width: 150px; height: 150px; margin: 0 auto 6px; border-radius: 50%; overflow: hidden; background: #1B1F1E; box-shadow: 0 0 0 5px var(--gold), 0 0 0 10px rgba(0,0,0,.22), 0 18px 36px rgba(0,0,0,.45); }
+.rbig .rlens.dim { box-shadow: 0 0 0 5px #F0A35B, 0 0 0 10px rgba(0,0,0,.22), 0 18px 36px rgba(0,0,0,.45); }
+.rbig .rlens .scn, .rbig .rdia .scn { inset: 0; }
+.rbig .rlens .scn, .rbig .rlens .scn > i, .rbig .rdia .scn, .rbig .rdia .scn > i { filter: none !important; }
+.rbig .rlens .art-img, .rbig .rdia .art-img { position: absolute; inset: 0; }
+.rbig .rdia { position: relative; display: block; width: 118px; height: 118px; margin: 26px auto 28px; border-radius: 20px; overflow: hidden; transform: rotate(45deg); background: #1B1F1E; box-shadow: inset 0 0 0 5px var(--gold), 0 0 34px rgba(255,209,92,.45), 0 16px 30px rgba(0,0,0,.4); }
+.rbig .rdia > * { transform: rotate(-45deg) scale(1.45); }
+.rbig .rdrone { display: block; width: 180px; height: 180px; margin: 0 auto; }
+.rbig .rdrone .dr { filter: drop-shadow(0 14px 18px rgba(0,0,0,.4)); }
+.rbig .rcoin { width: 128px; height: 128px; margin: 0 auto 6px; font-size: 40px; box-shadow: inset 0 -7px 0 var(--gold-dd), 0 18px 34px rgba(0,0,0,.4); }
+.app.race .rbig .rcoin { box-shadow: 0 18px 34px rgba(0,0,0,.4); }
+.app.race .rbig .rlens, .app.race .rbig .rdia { border-radius: 0; }
+.app.mil .rbig .rlens { border-radius: 8px; }
 </style>
 </head>
 <body>
@@ -1320,9 +1415,9 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       <b><span id="meName"></span> · <span id="rankTxt" style="color:var(--gold)"></span></b>
       <div class="xp" id="xpBar"><i id="xpFill"></i><span id="xpTxt" dir="ltr"></span></div>
     </div>
-    <button class="res modebtn bellbtn" id="bellBtn" type="button" aria-label="התראות">🔔<span class="tcount" id="bellN" hidden>0</span></button>
-    <button class="res modebtn" id="modeBtn" type="button" aria-label="מעבר למצב יום" hidden>☀️</button>
-    <span class="res" title="ימים ברצף"><span class="ic flame">🔥</span><span id="streakN">0</span></span>
+    <button class="res modebtn bellbtn" id="bellBtn" type="button" aria-label="התראות"><span class="rlbl">התראות</span><span class="tcount" id="bellN" hidden>0</span></button>
+    <button class="res modebtn" id="modeBtn" type="button" aria-label="מעבר למצב יום" hidden>יום</button>
+    <span class="res streakres" title="ימים ברצף"><span class="rlbl">רצף</span><span id="streakN">0</span></span>
     <span class="res coin-only" title="מטבעות בארנק"><span class="ic"><span class="coinic">88</span></span><span id="coinN">0</span></span>
   </header>
 
@@ -1337,8 +1432,8 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       <h1 class="h1" data-t="questsTitle" data-code="DAILY ORDERS">משימות היום</h1>
       <p class="sub">מתחדשות כל יום בחצות. כל יום שנכנסים שומר על הרצף.</p>
       <div class="streak">
-        <span class="big">🔥</span>
-        <div><b id="streakBig">0 ימים ברצף</b><small id="streakSub"></small>
+        <span class="big" id="streakNum">0</span>
+        <div><b id="streakBig">ימים ברצף</b><small id="streakSub"></small>
           <div class="days" id="days"></div></div>
       </div>
       <div id="questList"></div>
@@ -1350,7 +1445,6 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       <div class="lg">
       <div class="lg-a">
       <div class="leaguehead">
-        <svg class="shield" viewBox="0 0 96 110" aria-hidden="true"><path class="s1" d="M48 4 L90 18 V54 C90 80 70 98 48 106 C26 98 6 80 6 54 V18 Z" fill="#5BC8FF" stroke="#1C5F8C" stroke-width="5"/><path class="s2" d="M48 16 L78 26 V54 C78 73 64 87 48 93 C32 87 18 73 18 54 V26 Z" fill="#2C8FD0"/><g fill="none" stroke="#fff" stroke-width="4"><circle cx="38" cy="44" r="8"/><circle cx="58" cy="44" r="8"/><circle cx="38" cy="64" r="8"/><circle cx="58" cy="64" r="8"/></g></svg>
         <b data-t="league">ליגת השבוע</b>
         <small id="leagueSub"></small><br>
         <span class="timer" id="leagueTimer"></span>
@@ -1385,11 +1479,11 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   </div>
 
   <nav class="tabs" aria-label="ניווט">
-    <button class="tab on" data-v="map" type="button"><span class="ti" data-t="i1">🗺️</span><span data-t="t1">מסלול</span></button>
-    <button class="tab" data-v="quests" type="button"><span class="ti" data-t="i2">🎯</span><span data-t="t2">משימות</span><span class="dot" id="qDot" hidden>0</span></button>
-    <button class="tab coin-only" data-v="league" type="button"><span class="ti" data-t="i3">🏆</span><span data-t="t3">ליגה</span></button>
-    <button class="tab" data-v="hangar" type="button"><span class="ti" data-t="i4">🛩️</span><span data-t="t4">האנגר</span></button>
-    <button class="tab tab-out" id="outBtn" type="button"><span class="ti"><svg class="lic" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M9 8l-4 4 4 4M5 12h10"/></svg></span><span>יציאה</span></button>
+    <button class="tab on" data-v="map" type="button"><span data-t="t1">מסלול</span></button>
+    <button class="tab" data-v="quests" type="button"><span data-t="t2">משימות</span><span class="dot" id="qDot" hidden>0</span></button>
+    <button class="tab coin-only" data-v="league" type="button"><span data-t="t3">ליגה</span></button>
+    <button class="tab" data-v="hangar" type="button"><span data-t="t4">האנגר</span></button>
+    <button class="tab tab-out" id="outBtn" type="button"><span>יציאה</span></button>
   </nav>
 
   <div class="scrim" id="scrim"></div>
@@ -1442,15 +1536,15 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   const RACE = () => LOOK === 'race';
   const LINEMODE = () => ACTIVE ? ACTIVE.icons === 'line' : RACE();
   const TXT = {
-    regular: { questsTitle: 'משימות היום', league: 'ליגת השבוע', badges: 'תגי מיומנות', shop: 'סקינים', t1: 'מסלול', t2: 'משימות', t3: 'ליגה', t4: 'האנגר', i1: '🗺️', i2: '🎯', i3: '🏆', i4: '🛩️',
+    regular: { questsTitle: 'משימות היום', league: 'ליגת השבוע', badges: 'תגי מיומנות', shop: 'סקינים', t1: 'מסלול', t2: 'משימות', t3: 'ליגה', t4: 'האנגר',
       mapTitle: 'המסלול שלי', mapSub: 'כל תחנה היא מיומנות אמיתית שמטיסים', go: 'לכאן טסים!', wait: 'מחכה למדריך', fixB: 'לתיקון', world: 'עולם', boss: 'הבוס', chest: 'תיבה', chestName: 'תיבת זהב', lit: 'התחנה נדלקה!', newRank: 'דרגה חדשה', tap: 'הקישו על התיבה כדי לפתוח', sent: 'הטיסה בדרך למדריך!', back: 'הוחזר לתיקון',
-      deco: ['🌴', '🌀', '⚡', '👑'], chestIc: ['🎁', '📭'], conf: ['#FF5C8A', '#76DEB8', '#FFD15C', '#5BC8FF', '#A774FF', '#fff'] },
-    race: { questsTitle: 'אתגרי היום', league: 'ליגת המירוץ', badges: 'רישיונות טיסה', shop: 'סקינים', t1: 'מסלול', t2: 'אתגרים', t3: 'ליגה', t4: 'סדנה', i1: '🗺️', i2: '🎯', i3: '🏆', i4: '🛩️',
+      conf: ['#FF5C8A', '#76DEB8', '#FFD15C', '#5BC8FF', '#A774FF', '#fff'] },
+    race: { questsTitle: 'אתגרי היום', league: 'ליגת המירוץ', badges: 'רישיונות טיסה', shop: 'סקינים', t1: 'מסלול', t2: 'אתגרים', t3: 'ליגה', t4: 'סדנה',
       mapTitle: 'המסלול שלי', mapSub: 'כל מקצה הוא מיומנות אמיתית שמטיסים', go: 'לכאן!', wait: 'אצל המדריך', fixB: 'לתיקון', world: 'מקצה', boss: 'הגמר', chest: 'ארגז', chestName: 'ארגז חלקים', lit: 'המקצה נסגר!', newRank: 'דרגה חדשה', tap: 'הקישו על הארגז כדי לפתוח', sent: 'הטיסה נשלחה לפיט!', back: 'חזרה לפיט',
-      deco: ['🛫', '🔄', '🚪', '👑'], chestIc: ['🎁', '📭'], conf: ['#FF2E7E', '#2FD3F5', '#FFFFFF', '#FF7AB0', '#9AE9FA', '#FF2E7E'] },
-    mil: { questsTitle: 'פקודות היום', league: 'טבלת המחלקה', badges: 'תגי הסמכה', shop: 'ציוד', t1: 'ציר', t2: 'פקודות', t3: 'טבלה', t4: 'בסיס', i1: '🧭', i2: '📋', i3: '🎖️', i4: '⛺',
+      conf: ['#FF2E7E', '#2FD3F5', '#FFFFFF', '#FF7AB0', '#9AE9FA', '#FF2E7E'] },
+    mil: { questsTitle: 'פקודות היום', league: 'טבלת המחלקה', badges: 'תגי הסמכה', shop: 'ציוד', t1: 'ציר', t2: 'פקודות', t3: 'טבלה', t4: 'בסיס',
       mapTitle: 'ציר ההתקדמות', mapSub: 'כל נקודת ציון היא מיומנות שמבצעים בשטח', go: 'יעד הבא', wait: 'ממתין לאישור', fixB: 'לתיקון', world: 'שלב', boss: 'מבחן גמר', chest: 'ארגז', chestName: 'ארגז ציוד', lit: 'משימה בוצעה!', newRank: 'דרגה חדשה', tap: 'הקישו על הארגז כדי לפרוץ אותו', sent: 'הדיווח נשלח לחמ״ל!', back: 'נדרש תיקון',
-      deco: ['🪖', '📡', '🎯', '⭐'], chestIc: ['📦', '🗃️'], conf: ['#A3B26B', '#D9B45A', '#E8742C', '#C9B27C', '#6E8088', '#E8E2C8'] }
+      conf: ['#A3B26B', '#D9B45A', '#E8742C', '#C9B27C', '#6E8088', '#E8E2C8'] }
   };
   // the words: the admin's own word for this theme, else the base style's
   const T = (k) => { const v = ACTIVE && ACTIVE.terms && ACTIVE.terms[k]; return v || TXT[LOOK][k]; };
@@ -1663,9 +1757,6 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   const ui = (id) => UI[id] || (UI[id] = {});
 
   // ---------- the path: one world per level, its exercises, the level-bonus chest, the final exam at the end ----------
-  const ICONS_BY = [[/המרא/, '🛫'], [/מדויק/, '🎯'], [/נחית/, '🛫'], [/שינוי גובה|מדרגות|עליי|ירידה/, '⬆️'], [/גובה/, '📏'], [/ישר/, '➡️'], [/בלימה|האטה|עציר/, '🛑'], [/שמינ/, '♾️'], [/360|סיבוב|פני/, '🔄'], [/מסלול|מעגל|הקפ/, '⭕'], [/סללום|שער|צינור|מעבר|פיגום|מנוף|פיר/, '🚪'], [/צליל/, '⚡'], [/עינוי|שליטה/, '🌀']];
-  const ROT = ['🛫', '📏', '➡️', '🛑', '🔄', '⭕', '♾️', '🚪', '🎯'];
-  const iconFor = (k, i) => { const hit = ICONS_BY.find(([re]) => re.test(k.name)); return hit ? hit[1] : ROT[i % ROT.length]; };
   // a level chest opens once: the server keeps which ones were opened, so another computer shows them open too
   const markChest = (n) => { if (P.chests.indexOf(n) === -1) { P.chests.push(n); ver++; queueSync(350); } };
   let WORLDS = [];
@@ -1676,13 +1767,13 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     return { id: 'c' + w.n, t: 'chest', n: w.n, bonus: e ? Number(e.amount) || b : b, got: !!e, state, name: T('chestName') };
   };
   const buildWorlds = () => {
-    const L = LEVELS(), sk = SKILLS(); let idx = 0;
+    const L = LEVELS(), sk = SKILLS();
     const W = L.map((l, i) => ({ id: 'w' + l.n, n: l.n, i, cls: 'w' + ((i % 3) + 1), name: l.name, blurb: l.desc || '', nodes: [] }));
-    sk.forEach(k => { const w = W.find(x => x.n === k.level); if (w) w.nodes.push({ id: 's' + k.id, t: 'skill', k, name: k.name, icon: iconFor(k, idx++), state: skillState(k) }); });
+    sk.forEach(k => { const w = W.find(x => x.n === k.level); if (w) w.nodes.push({ id: 's' + k.id, t: 'skill', k, name: k.name, state: skillState(k) }); });
     W.forEach(w => { const b = levelBonus(w.n); if (b > 0 && w.nodes.length) w.nodes.push(chestNode(w, b)); });
     const out = W.filter(w => w.nodes.length);
     const fin = CHALS().find(c => c.final);
-    if (fin) out.push({ id: 'wb', n: null, i: out.length, cls: 'wb', name: fin.title, blurb: 'המבחן המסכם של המסלול', nodes: [{ id: 'boss', t: 'boss', c: fin, name: fin.title, icon: '👑', state: ({ done: 'done', wait: 'wait', fix: 'fix', now: 'now', lock: 'lock', ended: 'lock' })[chalState(fin)] }] });
+    if (fin) out.push({ id: 'wb', n: null, i: out.length, cls: 'wb', name: fin.title, blurb: 'המבחן המסכם של המסלול', nodes: [{ id: 'boss', t: 'boss', c: fin, name: fin.title, state: ({ done: 'done', wait: 'wait', fix: 'fix', now: 'now', lock: 'lock', ended: 'lock' })[chalState(fin)] }] });
     WORLDS = out;
   };
   const allNodes = () => WORLDS.reduce((a, w) => a.concat(w.nodes), []);
@@ -1690,7 +1781,6 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   const findNode = (id) => allNodes().find(n => n.id === id);
   const worldOf = (n) => WORLDS.find(w => w.nodes.indexOf(n) !== -1);
   const worldTag = (w) => w.cls === 'wb' ? T('boss') : MIL() ? `${T('world')} ${w.i + 1} · OP-0${w.i + 1}` : `${T('world')} ${w.i + 1}`;
-  const decoOf = (w) => w.cls === 'wb' ? T('deco')[3] : T('deco')[w.i % 3];
   // where the student is: a flight sent back, else the first open exercise, else one waiting for the instructor
   const frontier = () => {
     const all = visibleNodes();
@@ -1705,7 +1795,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     if (q.done === 3 && !q.paid && q.login && r.quests > 0) P.ledger.push({ id: nid('g'), at: stamp(), cat: 'bonus', kind: 'quests', text: 'משימות היום הושלמו', amount: EARNS() ? r.quests : 0, skill: null });
     changed();
     const got = total() - before;
-    if (got > 0) { floatTxt(from && from.isConnected ? from : $('#coinN'), `+${got} 🪙`); bump(); }
+    if (got > 0) { floatTxt(from && from.isConnected ? from : $('#coinN'), `+${got}`); bump(); }
     checkRank();
   };
   // today's login: its coins, and the streak bonus when today completes 3 days or a whole week
@@ -1799,19 +1889,19 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   const pumpNotes = () => {
     if (busy()) return;
     const item = showQueue.shift(); if (!item) return;
-    if (item.rank != null) { showing = true; const rk = RANKS()[item.rank]; return toastOverlay('⬆️', `LEVEL ${item.rank + 1}!`, `${T('newRank')}: ${esc(rk ? rk.name : '')}`, 'המשך', () => { showing = false; setTimeout(pumpNotes, 250); }, true); }
+    if (item.rank != null) { showing = true; const rk = RANKS()[item.rank]; return toastOverlay(`<span class="rdrone">${skinArt(skinNow(), 'הרחפן שלך')}</span>`, `LEVEL ${item.rank + 1}!`, `${T('newRank')}: ${esc(rk ? rk.name : '')}`, 'המשך', () => { showing = false; setTimeout(pumpNotes, 250); }, true); }
     const n = P.notifications.find(x => x.id === item.note);
     if (!n || n.read) return pumpNotes();
     showing = true; markRead([n.id]);
     const done = () => { showing = false; setTimeout(pumpNotes, 250); };
     const toSkill = () => { done(); if (n.skill) { switchTab('map'); showPane('deck'); setTimeout(() => goNode('s' + n.skill, true), 300); } };
-    const text = esc(n.text);
-    if (n.kind === 'approved' || n.kind === 'marked') return toastOverlay(MIL() ? '🎖️' : '🌟', T('lit'), text, 'יש!', toSkill, true);
-    if (n.kind === 'rejected') return toastOverlay('🛠️', T('back'), text, n.skill ? 'לתרגיל' : 'הבנתי', toSkill);
-    if (n.kind === 'required') return toastOverlay('🛠️', 'ביצוע חוזר', text, 'לתרגיל', toSkill);
-    if (n.kind === 'revoked') return toastOverlay('🛠️', 'חזרה לתרגול', text, 'הבנתי', toSkill);
-    if (n.kind === 'reward') { const got = /נמסר/.test(n.text); return toastOverlay('🎁', got ? 'הפרס נמסר לך!' : 'עדכון על פרס', text, got ? 'יופי' : 'הבנתי', () => { done(); if (EARNS()) switchTab('league'); }, got); }
-    return toastOverlay('🪙', n.kind === 'bonus' ? 'בונוס מהמדריך' : 'עדכון מטבעות', text, 'הבנתי', done, n.kind === 'bonus');
+    const text = esc(n.text), pic = n.skill ? lensArt('s' + n.skill, n.kind !== 'approved' && n.kind !== 'marked') : '';
+    if (n.kind === 'approved' || n.kind === 'marked') return toastOverlay(pic, T('lit'), text, 'יש!', toSkill, true);
+    if (n.kind === 'rejected') return toastOverlay(pic, T('back'), text, n.skill ? 'לתרגיל' : 'הבנתי', toSkill);
+    if (n.kind === 'required') return toastOverlay(pic, 'ביצוע חוזר', text, 'לתרגיל', toSkill);
+    if (n.kind === 'revoked') return toastOverlay(pic, 'חזרה לתרגול', text, 'הבנתי', toSkill);
+    if (n.kind === 'reward') { const got = /נמסר/.test(n.text); return toastOverlay('', got ? 'הפרס נמסר לך!' : 'עדכון על פרס', text, got ? 'יופי' : 'הבנתי', () => { done(); if (EARNS()) switchTab('league'); }, got); }
+    return toastOverlay(BIGCOIN, n.kind === 'bonus' ? 'בונוס מהמדריך' : 'עדכון מטבעות', text, 'הבנתי', done, n.kind === 'bonus');
   };
   setInterval(pumpNotes, 1500);
   const RKEY = 'g88-rank-' + A.me.id;
@@ -1863,14 +1953,21 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   const say = (text, err) => { const s = $('#say'); s.textContent = text; s.classList.toggle('err', !!err); s.classList.add('on'); clearTimeout(sayT); sayT = setTimeout(() => s.classList.remove('on'), 4200); };
 
   // ---------- the exercise windows ----------
-  const nodeCls = (n) => { const st = n.state; return n.t === 'chest' ? 'chest' + (st === 'ready' ? ' ready' : '') : n.t === 'boss' ? 'boss' + (st === 'lock' ? ' lock' : st === 'done' ? ' done' : '') : ({ done: 'done', now: 'now', wait: 'wait', fix: 'fix', lock: 'lock' })[st]; };
-  const nodeFace = (n) => { const st = n.state; if (n.t === 'chest') return st === 'opened' ? T('chestIc')[1] : st === 'ready' ? T('chestIc')[0] : `<span style="filter:grayscale(1) brightness(.6)">${T('chestIc')[0]}</span>`; return st === 'lock' ? '🔒' : st === 'wait' ? '⏳' : n.icon; };
+  // a station's look on the path and at the top of its window: its state, and what kind of station it is
+  const wpCls = (n) => { const st = n.state; return n.t === 'chest' ? 'chest ' + (st === 'ready' ? 'ready' : st === 'lock' ? 'lock' : 'opened') : (n.t === 'boss' ? 'boss ' : '') + ({ done: 'done', now: 'now', wait: 'wait', fix: 'fix', lock: 'lock' })[st]; };
+  // the window's big station: the same waypoint lens as on the full path
+  const heroOf = (n) => `<div class="node big wp ${wpCls(n)}${n.state === 'now' ? ' here' : ''}"><span class="face">${n.t === 'chest' ? '' : WP_BEZEL}<span class="nart" aria-hidden="true">${stageArt(n.id)}${n.state === 'now' ? '<i class="sweep"></i>' : ''}<i class="glass"></i></span>${n.t === 'boss' ? WP_RETICLE : ''}</span></div>`;
+  // the instructor's stars, next to the stage's name
+  const titleStars = (n) => { const s = n.t === 'skill' && n.state === 'done' ? starsOf(n.k.id) : n.t === 'boss' && n.state === 'done' ? chalStars(n.c.id) : 0; return s ? `<span class="tstars">${starTxt(s)}</span>` : ''; };
+  // pictures for the overlays: a stage in a round lens, and the coin
+  const lensArt = (id, dim) => `<span class="rlens${dim ? ' dim' : ''}">${stageArt(id)}</span>`;
+  const BIGCOIN = '<span class="coinic rcoin">88</span>';
   const prevLevelName = (lvl) => { const L = LEVELS(), i = L.findIndex(l => l.n === lvl); return i > 0 ? L[i - 1].name : 'הרמה הקודמת'; };
   const uploadUI = (n) => {
     const u = ui(n.id);
     if (u.uploading) { const x = u.uploading; return `<div class="upl busy" data-upl="${n.id}"><div class="upl-file"><span class="upl-name">${esc(x.name)}</span><span class="upl-size">${fmtSize(x.size)}</span></div><div class="upl-bar" role="progressbar" aria-label="התקדמות ההעלאה" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(x.pct)}"><i style="width:${x.pct}%"></i></div><div class="upl-row"><span class="upl-pct">מעלה… ${Math.round(x.pct)}%</span><button class="upl-cancel" type="button" data-a="cancel">ביטול</button></div></div>`; }
-    if (u.ready) { const x = u.ready; return `<div class="upl-ready"><div class="upl-done"><span class="upl-name">${x.isLink ? '🔗' : '📤'} ${esc(x.name)}</span>${x.size ? `<span class="upl-size">${fmtSize(x.size)}</span>` : ''}</div><textarea class="upl-note" data-a="note" maxlength="500" placeholder="הערה למדריך (לא חובה)" aria-label="הערה למדריך">${esc(u.note || '')}</textarea><div class="row2"><button class="btn3 gold" type="button" data-a="send">שליחה למדריך</button><button class="btn3 ghost" type="button" data-a="discard">${x.isLink ? 'קישור אחר' : 'סרטון אחר'}</button></div></div>`; }
-    return `<div class="upl">${u.err ? `<p class="upl-err" role="alert">${esc(u.err)}</p>` : ''}<span class="upl-hint">גררו לכאן את סרטון הטיסה, או</span><button class="btn3 pink full" type="button" data-a="pick">📤 ${n.state === 'fix' ? 'העלאת הטיסה החוזרת' : 'העלאת סרטון הטיסה'}</button><small class="upl-meta">קובץ וידאו מהמחשב · עד ${MAXMB()}MB</small><input type="file" accept="video/*,.mp4,.mov,.m4v,.webm" hidden>
+    if (u.ready) { const x = u.ready; return `<div class="upl-ready"><div class="upl-done"><span class="upl-name">${esc(x.name)}</span>${x.size ? `<span class="upl-size">${fmtSize(x.size)}</span>` : ''}</div><textarea class="upl-note" data-a="note" maxlength="500" placeholder="הערה למדריך (לא חובה)" aria-label="הערה למדריך">${esc(u.note || '')}</textarea><div class="row2"><button class="btn3 gold" type="button" data-a="send">שליחה למדריך</button><button class="btn3 ghost" type="button" data-a="discard">${x.isLink ? 'קישור אחר' : 'סרטון אחר'}</button></div></div>`; }
+    return `<div class="upl">${u.err ? `<p class="upl-err" role="alert">${esc(u.err)}</p>` : ''}<span class="upl-hint">גררו לכאן את סרטון הטיסה, או</span><button class="btn3 pink full" type="button" data-a="pick">${n.state === 'fix' ? 'העלאת הטיסה החוזרת' : 'העלאת סרטון הטיסה'}</button><small class="upl-meta">קובץ וידאו מהמחשב · עד ${MAXMB()}MB</small><input type="file" accept="video/*,.mp4,.mov,.m4v,.webm" hidden>
       <div class="upl-or">או קישור ל־YouTube או ל־Drive</div><form class="upl-link" data-a="linkform" novalidate><input type="url" inputmode="url" dir="ltr" data-a="link" placeholder="https://" aria-label="קישור לסרטון הטיסה" value="${esc(u.link || '')}"><button class="btn3" type="submit">הוספה</button></form></div>`;
   };
   const paintUpl = (n) => {
@@ -1882,19 +1979,19 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const r = R();
     if (n.t === 'boss' || n.t === 'chal') {
       const c = n.c;
-      return `<div class="steps"><div class="step ${n.state === 'wait' ? 'ok' : 'on'}"><span class="si">${n.state === 'wait' ? '✓' : '🎮'}</span><span><b>${n.state === 'fix' ? 'טיסה חוזרת' : 'טיסה: מטיסים ומצלמים'}</b><small>מצלמים את כל האתגר, מתחילתו ועד סופו</small></span>${EARNS() && c.points ? `<span class="rw pts">+${c.points}</span>` : ''}</div><div class="step ${n.state === 'wait' ? 'on' : ''}"><span class="si">🗼</span><span><b>המדריך בודק</b><small>${n.state === 'wait' ? 'המדריך בודק עכשיו. התוצאה תגיע בהודעה' : 'צופה בטיסה, מאשר או מחזיר עם הערה'}</small></span></div></div>`;
+      return `<div class="steps"><div class="step ${n.state === 'wait' ? 'ok' : 'on'}"><span class="si">1</span><span><b>${n.state === 'fix' ? 'טיסה חוזרת' : 'טיסה: מטיסים ומצלמים'}</b><small>מצלמים את כל האתגר, מתחילתו ועד סופו</small></span>${EARNS() && c.points ? `<span class="rw pts">+${c.points}</span>` : ''}</div><div class="step ${n.state === 'wait' ? 'on' : ''}"><span class="si">2</span><span><b>המדריך בודק</b><small>${n.state === 'wait' ? 'המדריך בודק עכשיו. התוצאה תגיע בהודעה' : 'צופה בטיסה, מאשר או מחזיר עם הערה'}</small></span></div></div>`;
     }
     const k = n.k, v = vidOf(k), w = v && watched(k), wait = n.state === 'wait', vOk = !v || w || ui(n.id).skipVideo || wait;
     const neverBack = !flightsOf(k.id).some(f => f.status === 'rejected');
     const flightPts = skillPts(k.id) + (neverBack ? r.first : 0);
     const how = [k.pass, k.map ? 'מפה: ' + k.map : '', k.caption].filter(Boolean).join(' · ');
     return `<div class="steps">
-        ${v ? `<div class="step ${w || wait ? 'ok' : 'on'}"><span class="si">${w || wait ? '✓' : '🎬'}</span><span><b>תדריך: סרטון ההדגמה</b><small>${w ? 'צפיתם עד הסוף' : wait ? 'אפשר לצפות שוב בכל זמן' : EARNS() && r.video ? 'המטבעות נאספים בסוף הסרטון' : 'צפו עד הסוף לפני שמטיסים'}</small></span>${EARNS() && r.video && !w ? `<span class="rw pts">+${r.video}</span>` : ''}</div>` : ''}
-        <div class="step ${wait ? 'ok' : vOk ? 'on' : ''}"><span class="si">${wait ? '✓' : '🎮'}</span><span><b>${n.state === 'fix' ? 'טיסה חוזרת: מטיסים שוב ומצלמים' : 'טיסה: מטיסים ומצלמים'}</b><small>${esc(how || 'מצלמים את כל התרגיל, מתחילתו ועד סופו')}</small></span>${EARNS() && flightPts && !wait ? `<span class="rw pts">${neverBack && r.first ? 'עד ' : ''}+${flightPts}</span>` : ''}</div>
-        <div class="step ${wait ? 'on' : ''}"><span class="si">🗼</span><span><b>המדריך בודק</b><small>${wait ? 'המדריך בודק עכשיו. התוצאה תגיע בהודעה' : 'צופה בטיסה, מאשר או מחזיר עם הערה'}</small></span></div>
+        ${v ? `<div class="step ${w || wait ? 'ok' : 'on'}"><span class="si">1</span><span><b>תדריך: סרטון ההדגמה</b><small>${w ? 'צפיתם עד הסוף' : wait ? 'אפשר לצפות שוב בכל זמן' : EARNS() && r.video ? 'המטבעות נאספים בסוף הסרטון' : 'צפו עד הסוף לפני שמטיסים'}</small></span>${EARNS() && r.video && !w ? `<span class="rw pts">+${r.video}</span>` : ''}</div>` : ''}
+        <div class="step ${wait ? 'ok' : vOk ? 'on' : ''}"><span class="si">${v ? 2 : 1}</span><span><b>${n.state === 'fix' ? 'טיסה חוזרת: מטיסים שוב ומצלמים' : 'טיסה: מטיסים ומצלמים'}</b><small>${esc(how || 'מצלמים את כל התרגיל, מתחילתו ועד סופו')}</small></span>${EARNS() && flightPts && !wait ? `<span class="rw pts">${neverBack && r.first ? 'עד ' : ''}+${flightPts}</span>` : ''}</div>
+        <div class="step ${wait ? 'on' : ''}"><span class="si">${v ? 3 : 2}</span><span><b>המדריך בודק</b><small>${wait ? 'המדריך בודק עכשיו. התוצאה תגיע בהודעה' : 'צופה בטיסה, מאשר או מחזיר עם הערה'}</small></span></div>
       </div>`;
   };
-  const sentBox = (f) => f ? `<div class="upl-done"><span class="upl-name">📤 נשלח ${esc(agoText(f.at))}${f.note ? ' · “' + esc(f.note) + '”' : ''}</span>${f.link && !/^\/media\//.test(f.link) ? `<span class="upl-size">קישור</span>` : ''}</div>` : '';
+  const sentBox = (f) => f ? `<div class="upl-done"><span class="upl-name">נשלח ${esc(agoText(f.at))}${f.note ? ' · “' + esc(f.note) + '”' : ''}</span>${f.link && !/^\/media\//.test(f.link) ? `<span class="upl-size">קישור</span>` : ''}</div>` : '';
   const slideBody = (n) => {
     const st = n.state;
     if (n.t === 'chest') {
@@ -1906,27 +2003,27 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     if (n.t === 'boss') {
       const c = n.c, mine = P.flights.filter(f => f.challenge === c.id), last = mine[0];
       const desc = c.desc ? `<p class="desc">${esc(c.desc)}</p>` : '';
-      if (st === 'lock') return `<p class="state" style="color:var(--dim)">🔒 ${chalEnded(c) ? 'נסגר' : 'נעול'}</p>${desc}<p class="desc" style="font-size:12px">${chalEnded(c) ? 'מועד ההגשה עבר.' : 'נפתח כשמסיימים את כל התרגילים במסלול.'}</p>`;
-      if (st === 'done') { const ok = mine.find(f => f.status === 'approved'), s = chalStars(c.id); return `<p class="state" style="color:var(--gold)">✓ עברתם את ${esc(T('boss'))}!${s ? ` · ${starTxt(s)}` : ''}</p>${ok && ok.feedback ? `<div class="inote"><b>המדריך כתב</b><span>“${esc(ok.feedback)}”</span></div>` : ''}${desc}`; }
-      if (st === 'wait') return `<p class="state" style="color:var(--sky)">⏳ ${T('wait')}</p>${desc}${stepsFor(n)}<div class="act">${sentBox(mine.find(f => f.status === 'review'))}</div>`;
+      if (st === 'lock') return `<p class="state" style="color:var(--dim)">${chalEnded(c) ? 'נסגר' : 'נעול'}</p>${desc}<p class="desc" style="font-size:12px">${chalEnded(c) ? 'מועד ההגשה עבר.' : 'נפתח כשמסיימים את כל התרגילים במסלול.'}</p>`;
+      if (st === 'done') { const ok = mine.find(f => f.status === 'approved'); return `<p class="state" style="color:var(--gold)">עברתם את ${esc(T('boss'))}!</p>${ok && ok.feedback ? `<div class="inote"><b>המדריך כתב</b><span>“${esc(ok.feedback)}”</span></div>` : ''}${desc}`; }
+      if (st === 'wait') return `<p class="state" style="color:var(--sky)">${T('wait')}</p>${desc}${stepsFor(n)}<div class="act">${sentBox(mine.find(f => f.status === 'review'))}</div>`;
       const fixNote = st === 'fix' ? `<div class="inote fixnote"><b>${T('back')}</b><span>${last && last.feedback ? '“' + esc(last.feedback) + '”' : 'המדריך החזיר את הטיסה. נסו שוב.'}</span></div>` : '';
-      return `${fixNote}${desc}${c.ends ? `<p class="desc" style="font-size:12px">אפשר להגיש עד ${esc(fmtDay(c.ends.slice(0, 10)))}${c.ends.length > 10 ? ' ' + esc(c.ends.slice(11)) : ''}</p>` : ''}${stepsFor(n)}<div class="act">${c.video ? `<button class="btn3 ghost full" type="button" data-a="play">▶ סרטון ההסבר</button>` : ''}${uploadUI(n)}</div>`;
+      return `${fixNote}${desc}${c.ends ? `<p class="desc" style="font-size:12px">אפשר להגיש עד ${esc(fmtDay(c.ends.slice(0, 10)))}${c.ends.length > 10 ? ' ' + esc(c.ends.slice(11)) : ''}</p>` : ''}${stepsFor(n)}<div class="act">${c.video ? `<button class="btn3 ghost full" type="button" data-a="play">סרטון ההסבר</button>` : ''}${uploadUI(n)}</div>`;
     }
     const k = n.k, fl = flightsOf(k.id), last = fl[0];
     const desc = k.desc ? `<p class="desc">${esc(k.desc)}</p>` : '';
-    if (st === 'lock') return `<p class="state" style="color:var(--dim)">🔒 נעול</p>${desc}<p class="desc" style="font-size:12px">נפתח כשמסיימים את התרגילים ב${esc(prevLevelName(k.level))}.</p>`;
+    if (st === 'lock') return `<p class="state" style="color:var(--dim)">נעול</p>${desc}<p class="desc" style="font-size:12px">נפתח כשמסיימים את התרגילים ב${esc(prevLevelName(k.level))}.</p>`;
     if (st === 'done') {
-      const ok = fl.find(f => f.status === 'approved'), got = skillEarned(k.id), s = starsOf(k.id);
-      return `<p class="state" style="color:var(--gold)">✓ ${P.acquired[k.id] === 'instructor' ? 'המדריך סימן כנרכש' : 'הטיסה אושרה'}${s ? ` · ${starTxt(s)}` : ''}${EARNS() && got ? ` · +${got} מטבעות` : ''}</p>${ok && ok.feedback ? `<div class="inote"><b>המדריך כתב</b><span>“${esc(ok.feedback)}”</span></div>` : ''}${desc}${vidOf(k) ? `<div class="act"><button class="btn3 ghost full" type="button" data-a="play">▶ לצפייה חוזרת בסרטון</button></div>` : ''}`;
+      const ok = fl.find(f => f.status === 'approved'), got = skillEarned(k.id);
+      return `<p class="state" style="color:var(--gold)">${P.acquired[k.id] === 'instructor' ? 'המדריך סימן כנרכש' : 'הטיסה אושרה'}${EARNS() && got ? ` · +${got} מטבעות` : ''}</p>${ok && ok.feedback ? `<div class="inote"><b>המדריך כתב</b><span>“${esc(ok.feedback)}”</span></div>` : ''}${desc}${vidOf(k) ? `<div class="act"><button class="btn3 ghost full" type="button" data-a="play">לצפייה חוזרת בסרטון</button></div>` : ''}`;
     }
     if (st === 'wait') {
       const f = fl.find(x => x.status === 'review'), auto = f && f.ai && (f.ai.status === 'queued' || f.ai.status === 'checking');
-      return `<p class="state" style="color:var(--sky)">⏳ ${auto ? 'בבדיקה אוטומטית' : T('wait')}</p>${desc}${stepsFor(n)}<div class="act">${sentBox(f)}${vidOf(k) ? `<button class="btn3 ghost full" type="button" data-a="play">▶ לצפייה בסרטון ההדגמה</button>` : ''}</div>`;
+      return `<p class="state" style="color:var(--sky)">${auto ? 'בבדיקה אוטומטית' : T('wait')}</p>${desc}${stepsFor(n)}<div class="act">${sentBox(f)}${vidOf(k) ? `<button class="btn3 ghost full" type="button" data-a="play">לצפייה בסרטון ההדגמה</button>` : ''}</div>`;
     }
     const redo = !!(P.redo && P.redo[k.id]);
     const fixNote = st === 'fix' ? (redo ? `<div class="inote fixnote"><b>המדריך ביקש ביצוע חוזר</b><span>מטיסים שוב ושולחים טיסה חדשה.</span></div>` : `<div class="inote fixnote"><b>${T('back')}</b><span>${last && last.feedback ? '“' + esc(last.feedback) + '”' : 'המדריך החזיר את הטיסה. נסו שוב.'}</span></div>`) : '';
     const v = vidOf(k), vOk = !v || watched(k) || ui(n.id).skipVideo;
-    const act = !vOk ? `<div class="vid"><button class="btn3 pink" type="button" data-a="play">▶ לצפייה בסרטון</button><div class="bar"><i></i></div></div>` : uploadUI(n);
+    const act = !vOk ? `<div class="vid"><button class="btn3 pink" type="button" data-a="play">לצפייה בסרטון</button><div class="bar"><i></i></div></div>` : uploadUI(n);
     return `${fixNote}${desc}${stepsFor(n)}<div class="act">${act}</div>`;
   };
   // re-drawing keeps the field (and the text cursor) the student was in
@@ -1940,20 +2037,20 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   const renderMap = () => {
     const v = $('#deck'); const keep = v.scrollTop;
     const all = visibleNodes(); slideIds = all.map(n => n.id);
-    if (!all.length) { v.innerHTML = `<section class="slide"><h2>עוד אין תרגילים</h2><p class="desc">המדריך עוד לא הוסיף תרגילים לקבוצה שלכם. כשיוסיף, הם יופיעו כאן.</p></section>`; $('#rail').innerHTML = ''; renderPath(); return; }
+    if (!all.length) { v.innerHTML = `<section class="slide"><div class="sbody"><div class="sgrid"><h2>עוד אין תרגילים</h2><p class="desc">המדריך עוד לא הוסיף תרגילים לקבוצה שלכם. כשיוסיף, הם יופיעו כאן.</p></div></div></section>`; $('#rail').innerHTML = ''; renderPath(); return; }
     const nSkills = all.filter(x => x.t === 'skill').length;
     let k = 0;
     keepFocus(v, () => {
       v.innerHTML = all.map((n, i) => {
         const w = worldOf(n), open = w.nodes.some(x => x.state !== 'lock');
         if (n.t === 'skill') k++;
-        return `<section class="slide" data-n="${n.id}" aria-label="${esc(n.name)}">
-          <div class="world ${w.cls} ${open ? '' : 'locked'}"><span class="tagw">${esc(worldTag(w))}</span><h3>${esc(w.name)}</h3><span class="deco">${decoOf(w)}</span></div>
+        return `<section class="slide" data-n="${n.id}" aria-label="${esc(n.name)}"><div class="sbody"><div class="sgrid">
+          <div class="world ${w.cls} ${open ? '' : 'locked'}"><span class="tagw">${esc(worldTag(w))}</span><h3>${esc(w.name)}</h3></div>
           <div class="count"><span>${n.t === 'chest' ? T('chest') : n.t === 'boss' ? T('boss') : 'תרגיל'}</span><b dir="ltr">${n.t === 'skill' ? `${k} / ${nSkills}` : ''}</b></div>
-          <div class="hero"><div class="node big ${nodeCls(n)}"><span class="face">${nodeFace(n)}${crownOf(n)}</span></div></div>
-          <h2>${esc(n.name)}</h2>
+          <div class="hero">${heroOf(n)}</div>
+          <h2>${esc(n.name)}${titleStars(n)}</h2>
           ${slideBody(n)}
-          ${i < all.length - 1 ? nextBtn(all[i + 1], i + 1) : ''}
+          </div></div>${i < all.length - 1 ? nextBtn(all[i + 1], i + 1) : ''}
         </section>`;
       }).join('');
     });
@@ -2060,7 +2157,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     if (n.t === 'chal') closeSheet();
     award([]);
     showing = true;
-    toastOverlay('🛰️', T('sent'), 'המדריך יקבל אותה לבדיקה. כשיבדוק, תגיע לכאן הודעה עם ההערה שלו', 'מעולה', () => { showing = false; if (n.t !== 'chal') goNextOpen(n); });
+    toastOverlay(n.t === 'chal' ? '' : lensArt(n.id), T('sent'), 'המדריך יקבל אותה לבדיקה. כשיבדוק, תגיע לכאן הודעה עם ההערה שלו', 'מעולה', () => { showing = false; if (n.t !== 'chal') goNextOpen(n); });
   };
   const goNextOpen = (n) => {
     const all = visibleNodes(), i = all.findIndex(x => x.id === n.id);
@@ -2084,7 +2181,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const scrim = document.createElement('div'); scrim.className = 'vscrim'; app.append(scrim);
     const pl = document.createElement('div'); pl.className = 'vplayer'; pl.setAttribute('role', 'dialog'); pl.setAttribute('aria-label', 'סרטון הדגמה: ' + title);
     pl.innerHTML = `<div class="vscreen">${isFile(src) ? `<video src="${esc(src)}" controls autoplay playsinline preload="auto"></video>` : `<iframe src="${esc(trackable(emb))}" title="${esc(title)}" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen></iframe>`}
-      <div class="vtop"><button class="vbtn" type="button" data-v="x">✕ סגירה</button><button class="vbtn go" type="button" data-v="done" hidden>✓ צפיתי עד הסוף</button></div></div>
+      <div class="vtop"><button class="vbtn" type="button" data-v="x">סגירה</button><button class="vbtn go" type="button" data-v="done" hidden>צפיתי עד הסוף</button></div></div>
       <div class="vmeta"><b>סרטון הדגמה · ${esc(title)}</b><small>${coins && EARNS() && R().video ? 'המטבעות נאספים כשהסרטון מסתיים' : 'צפו עד הסוף, ואז ממשיכים לטיסה'}</small></div>
       <div class="vprog"><i></i></div>`;
     app.append(pl);
@@ -2144,10 +2241,9 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   };
 
   // ---------- the way on: a button at the bottom of each window with the next stage's picture and name ----------
-  const NB_CHEV = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 8.5l6 6 6-6"/><path d="M6 3.5l6 6 6-6" opacity=".45"/></svg>';
   const nextBtn = (nx, at) => {
     const cap = nx.t === 'skill' ? 'התרגיל הבא' : 'בהמשך';
-    return `<div class="nexthint"><button class="nextbtn ${nx.state === 'lock' ? 'nb-lock' : ''}" type="button" data-next="${at}" aria-label="${esc(cap + ': ' + nx.name)}"><span class="nb-art" aria-hidden="true">${stageArt(nx.id)}</span><span class="nb-txt" aria-hidden="true"><small>${cap}</small><b>${esc(nx.name)}</b></span><span class="nb-go" aria-hidden="true">${NB_CHEV}</span><span class="kbd" aria-hidden="true">↓</span></button></div>`;
+    return `<div class="nexthint"><button class="nextbtn ${nx.state === 'lock' ? 'nb-lock' : ''}" type="button" data-next="${at}" aria-label="${esc(cap + ': ' + nx.name)}"><span class="nb-art" aria-hidden="true">${stageArt(nx.id)}</span><span class="nb-txt" aria-hidden="true"><small>${cap}</small><b>${esc(nx.name)}</b></span></button></div>`;
   };
 
   // ---------- the full path map, one swipe away from the windows ----------
@@ -2168,7 +2264,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     let wpNo = 0;
     WORLDS.forEach((w) => {
       const open = w.nodes.some(n => n.state !== 'lock');
-      html += `<div class="world ${w.cls} ${open ? '' : 'locked'}"><span class="tagw">${esc(worldTag(w))}</span><h3>${esc(w.name)}</h3><p>${open ? esc(w.blurb || '') : '🔒 נפתח כשמסיימים את השלב הקודם'}</p><span class="deco">${decoOf(w)}</span></div>`;
+      html += `<div class="world ${w.cls} ${open ? '' : 'locked'}"><span class="tagw">${esc(worldTag(w))}</span><h3>${esc(w.name)}</h3><p>${open ? esc(w.blurb || '') : 'נפתח כשמסיימים את השלב הקודם'}</p></div>`;
       const wn = w.nodes.filter(n => EARNS() || n.t !== 'chest');
       if (!wn.length) return;
       const step = 118, h = wn.length * step + 30;
@@ -2176,7 +2272,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       html += `<div class="trail" style="--h:${h}px"><svg class="path" viewBox="0 0 100 ${h}" preserveAspectRatio="none" aria-hidden="true"><polyline points="${pts.map(p => p.join(',')).join(' ')}" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><polyline points="${pts.map(p => p.join(',')).join(' ')}" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="3" stroke-dasharray="2 12" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>`;
       wn.forEach((n, i) => {
         const [x, y] = pts[i], st = n.state;
-        const cls = n.t === 'chest' ? 'chest ' + (st === 'ready' ? 'ready' : st === 'lock' ? 'lock' : 'opened') : (n.t === 'boss' ? 'boss ' : '') + ({ done: 'done', now: 'now', wait: 'wait', fix: 'fix', lock: 'lock' })[st];
+        const cls = wpCls(n);
         const said = n.t === 'chest' ? ({ ready: 'מוכן לפתיחה', lock: 'נעול', opened: 'נפתח' })[st] : ({ done: 'הושלם', now: 'פתוח', wait: T('wait'), fix: 'לתיקון', lock: 'נעול' })[st];
         const num = n.t === 'chest' ? '' : n.t === 'boss' ? 'גמר' : String(++wpNo).padStart(2, '0');
         // where the pilot is gets the radar sweep; other open stations just turn their arc
@@ -2198,7 +2294,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const f = paneFrac(); const rail = $('#rail');
     rail.style.opacity = String(1 - f); rail.style.visibility = f > .95 ? 'hidden' : '';
     pane = f > .5 ? 'path' : 'deck';
-    $('#peek').textContent = pane === 'deck' ? '⇠ מפת הנתיב המלאה' : 'חזרה לתרגילים ⇢';
+    $('#peek').textContent = pane === 'deck' ? 'מפת הנתיב המלאה' : 'חזרה לתרגילים';
     syncStageBg();
   };
   wrap.addEventListener('scroll', syncPane, { passive: true });
@@ -2272,7 +2368,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   const toastOverlay = (big, title, sub, btn, then, conf) => {
     const rw = $('#reward'), rb = $('#rbox');
     rw.classList.add('on');
-    rb.innerHTML = `<div class="rbig burst">${big}</div><p class="rt">${title}</p><p class="rs">${sub}</p><button class="btn3 gold" type="button" id="ok">${btn}</button>`;
+    rb.innerHTML = `${big ? `<div class="rbig burst">${big}</div>` : ''}<p class="rt">${title}</p><p class="rs">${sub}</p><button class="btn3 gold" type="button" id="ok">${btn}</button>`;
     if (conf) confetti();
     rb.onclick = null;
     const ok = rb.querySelector('#ok'); ok.focus();
@@ -2292,14 +2388,14 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   const openChest = (n) => {
     const rb = $('#rbox'), rw = $('#reward');
     showing = true; rw.classList.add('on');
-    rb.innerHTML = `<div class="rbig shake" id="cb">${T('chestIc')[0]}</div><p class="rt">${esc(n.name)}</p><p class="hint">${T('tap')}</p><button class="btn3 gold" type="button" id="cbOpen">פתיחה</button>`;
+    rb.innerHTML = `<div class="rbig shake" id="cb"><span class="rdia">${stageArt(n.id)}</span></div><p class="rt">${esc(n.name)}</p><p class="hint">${T('tap')}</p><button class="btn3 gold" type="button" id="cbOpen">פתיחה</button>`;
     let taps = 0;
     const hit = () => {
       taps++;
       if (taps < 3) { rb.querySelector('#cb').style.transform = `scale(${1 + taps * .12})`; rb.querySelector('.hint').textContent = taps === 1 ? 'עוד קצת…' : 'עוד אחת!'; return; }
       rb.onclick = null; markChest(n.n); confetti();
       const w = WORLDS.find(x => x.n === n.n), all = visibleNodes(), nx = all[all.findIndex(x => x.id === n.id) + 1];
-      rb.innerHTML = `<div class="rbig burst">🏅</div><p class="rt">+${n.bonus} מטבעות</p><p class="rs">הבונוס על סיום ${esc(w ? w.name : 'הרמה')}${nx ? ' · ' + esc(worldOf(nx) && worldOf(nx) !== w ? 'השלב הבא פתוח!' : 'ממשיכים!') : ''}</p><button class="btn3 gold" type="button" id="ok">אסוף</button>`;
+      rb.innerHTML = `<div class="rbig burst">${BIGCOIN}</div><p class="rt">+${n.bonus} מטבעות</p><p class="rs">הבונוס על סיום ${esc(w ? w.name : 'הרמה')}${nx ? ' · ' + esc(worldOf(nx) && worldOf(nx) !== w ? 'השלב הבא פתוח!' : 'ממשיכים!') : ''}</p><button class="btn3 gold" type="button" id="ok">אסוף</button>`;
       const ok = rb.querySelector('#ok'); ok.focus();
       ok.onclick = (e) => { e.stopPropagation(); rw.classList.remove('on'); showing = false; renderAll(); setTimeout(() => goNode(nx ? nx.id : n.id, true), 60); };
     };
@@ -2312,7 +2408,8 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const q = questState(), r = R(), t = today(), earn = EARNS();
     // the streak card: this week's days (Sunday to Saturday) and the next bonus
     const st = streak(), days = loginDays(), dow = new Date(t + 'T12:00:00Z').getUTCDay(), names = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ש'];
-    $('#streakBig').textContent = st === 1 ? 'יום 1 ברצף' : `${st} ימים ברצף`;
+    $('#streakNum').textContent = st;
+    $('#streakBig').textContent = st === 1 ? 'יום ברצף' : 'ימים ברצף';
     $('#days').innerHTML = names.map((nm, i) => { const d = addDays(t, i - dow); return `<span class="${days[d] ? 'y' : ''}" title="${fmtDay(d)}">${nm}</span>`; }).join('');
     let sub = '';
     if (earn && r.streak3 && st < 3) sub = `עוד ${3 - st} ${3 - st === 1 ? 'יום' : 'ימים'} לבונוס רצף (+${r.streak3})`;
@@ -2321,22 +2418,22 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     $('#streakSub').textContent = sub;
     const timeMin = Math.floor((P.timeToday || 0) / 60), timeGoal = r.timeMax ? r.timeMax * r.timeMin : 0;
     const rows = [
-      { id: 'login', icon: '⚡', bg: '#FFD15C', name: 'נכנסים לאתר', done: q.login, val: q.login ? 1 : 0, goal: 1, coins: r.login },
-      { id: 'video', icon: '🎬', bg: '#FF5C8A', name: 'צופים בסרטון הדגמה עד הסוף', done: q.video, val: q.video ? 1 : 0, goal: 1, coins: 0 },
-      { id: 'flight', icon: '📤', bg: '#76DEB8', name: 'שולחים טיסה למדריך', done: q.flight, val: q.flight ? 1 : 0, goal: 1, coins: 0 }
+      { id: 'login', bg: '#FFD15C', name: 'נכנסים לאתר', done: q.login, val: q.login ? 1 : 0, goal: 1, coins: r.login },
+      { id: 'video', bg: '#FF5C8A', name: 'צופים בסרטון הדגמה עד הסוף', done: q.video, val: q.video ? 1 : 0, goal: 1, coins: 0 },
+      { id: 'flight', bg: '#76DEB8', name: 'שולחים טיסה למדריך', done: q.flight, val: q.flight ? 1 : 0, goal: 1, coins: 0 }
     ];
-    if (timeGoal) rows.push({ id: 'time', icon: '⏱️', bg: '#5BC8FF', name: `${timeGoal} דקות למידה באתר`, done: timeMin >= timeGoal, val: Math.min(timeMin, timeGoal), goal: timeGoal, unit: 'ד׳', coins: r.timePoints ? `+${r.timePoints} כל ${r.timeMin} ד׳` : '' });
-    $('#questList').innerHTML = rows.map(x => `<div class="quest"><span class="qi" style="background:${x.bg}">${x.icon}</span><div class="qb"><b>${esc(x.name)}</b><div class="qbar"><i style="width:${x.val / x.goal * 100}%; ${x.done ? 'background:var(--mint)' : ''}"></i><span>${x.unit ? `${x.val} / ${x.goal} ${x.unit}` : x.done ? '✓' : '0 / 1'}</span></div></div>${x.done ? '<span class="qok">✓ בוצע</span>' : earn && x.coins ? `<span class="qok qc">${typeof x.coins === 'number' ? '+' + x.coins : esc(x.coins)}</span>` : ''}</div>`).join('')
-      + (earn && r.quests ? `<div class="qbonus ${q.paid ? 'done' : ''}"><span class="coinic">88</span><span>${q.paid ? `✓ שלוש המשימות הושלמו היום · +${r.quests} מטבעות` : `שלוש המשימות הראשונות היום → +${r.quests} מטבעות (${q.done} מתוך 3)`}</span></div>` : '');
+    if (timeGoal) rows.push({ id: 'time', bg: '#5BC8FF', name: `${timeGoal} דקות למידה באתר`, done: timeMin >= timeGoal, val: Math.min(timeMin, timeGoal), goal: timeGoal, unit: 'ד׳', coins: r.timePoints ? `+${r.timePoints} כל ${r.timeMin} ד׳` : '' });
+    $('#questList').innerHTML = rows.map(x => `<div class="quest" style="--qc:${x.bg}"><div class="qb"><b>${esc(x.name)}</b><div class="qbar"><i style="width:${x.val / x.goal * 100}%; ${x.done ? 'background:var(--mint)' : ''}"></i><span>${x.unit ? `<bdi dir="ltr">${x.val} / ${x.goal}</bdi> ${x.unit}` : `<bdi dir="ltr">${x.done ? 1 : 0} / 1</bdi>`}</span></div></div>${x.done ? '<span class="qok">בוצע</span>' : earn && x.coins ? `<span class="qok qc">${typeof x.coins === 'number' ? '+' + x.coins : esc(x.coins)}</span>` : ''}</div>`).join('')
+      + (earn && r.quests ? `<div class="qbonus ${q.paid ? 'done' : ''}"><span class="coinic">88</span><span>${q.paid ? `שלוש המשימות הושלמו היום · +${r.quests} מטבעות` : `שלוש המשימות הראשונות היום: +${r.quests} מטבעות (${q.done} מתוך 3)`}</span></div>` : '');
     // challenges from the instructor (the final exam lives at the end of the path)
     const list = CHALS().filter(c => !c.final);
     if (!list.length) { $('#chalBox').innerHTML = ''; return; }
     const order = { fix: 0, now: 1, wait: 2, lock: 3, done: 4, ended: 5 };
-    const chip = { now: ['פתוח', 'pink'], fix: [T('back'), 'pink'], wait: [T('wait'), 'sky'], done: ['✓ הושלם', 'mint'], lock: ['נעול', ''], ended: ['נסגר', ''] };
+    const chip = { now: ['פתוח', 'pink'], fix: [T('back'), 'pink'], wait: [T('wait'), 'sky'], done: ['הושלם', 'mint'], lock: ['נעול', ''], ended: ['נסגר', ''] };
     $('#chalBox').innerHTML = `<div class="sect"><span>אתגרים מהמדריך</span> <small>${list.length}</small></div>` + list.map(c => ({ c, s: chalState(c) })).sort((a, b) => order[a.s] - order[b.s]).map(({ c, s }) => {
       const lv = LEVELS().find(l => l.n === c.level);
       const meta = [earn && c.points ? `+${c.points} מטבעות` : '', c.ends ? 'עד ' + fmtDay(c.ends.slice(0, 10)) : '', s === 'lock' && lv ? 'נפתח ב' + lv.name : ''].filter(Boolean).join(' · ');
-      return `<button class="chal ${s === 'lock' || s === 'ended' ? 'lock' : ''}" type="button" data-c="${esc(c.id)}"><span class="qi">🏁</span><span style="min-width:0"><b>${esc(c.title)}</b><small>${esc(meta || (c.desc || '').slice(0, 80))}</small></span><span class="cw"><span class="chip ${chip[s][1]}">${chip[s][0]}</span></span></button>`;
+      return `<button class="chal ${s === 'lock' || s === 'ended' ? 'lock' : ''}" type="button" data-c="${esc(c.id)}"><span style="min-width:0"><b>${esc(c.title)}</b><small>${esc(meta || (c.desc || '').slice(0, 80))}</small></span><span class="cw"><span class="chip ${chip[s][1]}">${chip[s][0]}</span></span></button>`;
     }).join('');
     $('#chalBox').querySelectorAll('[data-c]').forEach(b => b.onclick = () => openChal(b.dataset.c));
   };
@@ -2347,11 +2444,11 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const lv = LEVELS().find(l => l.n === c.level);
     const head = `<div class="kick">אתגר מהמדריך${EARNS() && c.points ? ` · +${c.points} מטבעות` : ''}</div><h2>${esc(c.title)}</h2>${c.desc ? `<p class="desc">${esc(c.desc)}</p>` : ''}${c.ends ? `<p class="desc" style="font-size:12px">אפשר להגיש עד ${esc(fmtDay(c.ends.slice(0, 10)))}${c.ends.length > 10 ? ' ' + esc(c.ends.slice(11)) : ''}</p>` : ''}`;
     let body = '';
-    if (s === 'done') { const ok = mine.find(f => f.status === 'approved'); body = `<p class="state" style="color:var(--gold); text-align:start">✓ האתגר אושר</p>${ok && ok.feedback ? `<div class="inote"><b>המדריך כתב</b><span>“${esc(ok.feedback)}”</span></div>` : ''}`; }
+    if (s === 'done') { const ok = mine.find(f => f.status === 'approved'); body = `<p class="state" style="color:var(--gold); text-align:start">האתגר אושר</p>${ok && ok.feedback ? `<div class="inote"><b>המדריך כתב</b><span>“${esc(ok.feedback)}”</span></div>` : ''}`; }
     else if (s === 'wait') body = `${stepsFor(n)}${sentBox(mine.find(f => f.status === 'review'))}`;
-    else if (s === 'lock') body = `<p class="desc">🔒 ${lv ? 'האתגר נפתח כשמגיעים ל' + esc(lv.name) + '.' : 'האתגר עוד לא פתוח.'}</p>`;
+    else if (s === 'lock') body = `<p class="desc">${lv ? 'האתגר נפתח כשמגיעים ל' + esc(lv.name) + '.' : 'האתגר עוד לא פתוח.'}</p>`;
     else if (s === 'ended') body = `<p class="desc">מועד ההגשה של האתגר עבר.</p>`;
-    else body = `${s === 'fix' ? `<div class="inote fixnote"><b>${T('back')}</b><span>${last && last.feedback ? '“' + esc(last.feedback) + '”' : 'המדריך החזיר את הטיסה. נסו שוב.'}</span></div>` : ''}${stepsFor(n)}<div class="act">${c.video ? `<button class="btn3 ghost full" type="button" data-a="play">▶ סרטון ההסבר</button>` : ''}${uploadUI(n)}</div>`;
+    else body = `${s === 'fix' ? `<div class="inote fixnote"><b>${T('back')}</b><span>${last && last.feedback ? '“' + esc(last.feedback) + '”' : 'המדריך החזיר את הטיסה. נסו שוב.'}</span></div>` : ''}${stepsFor(n)}<div class="act">${c.video ? `<button class="btn3 ghost full" type="button" data-a="play">סרטון ההסבר</button>` : ''}${uploadUI(n)}</div>`;
     keepFocus(sheet, () => { sheet.innerHTML = `<div class="grab"></div><div data-n="${n.id}">${head}${body}<div style="height:14px"></div><button class="btn3 ghost full" type="button" data-a="close">סגירה</button></div>`; });
     const box = sheet.querySelector('[data-n]');
     wireNode(n, box);
@@ -2377,7 +2474,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   const COLORS = ['#5BC8FF', '#A774FF', '#FFD15C', '#76DEB8', '#FF9A3C', '#9DBDB3', '#36C6E8', '#F0D46A'];
   const renderLeague = () => {
     $('#leagueSub').textContent = (unitName() ? unitName() + ' · ' : '') + 'מתאפסת בכל יום ראשון';
-    $('#leagueTimer').textContent = '⏱ ' + weekLeft();
+    $('#leagueTimer').textContent = weekLeft();
     const me = { name: firstName(A.me.name), pts: myWeek(), me: true };
     let rows = LG && Array.isArray(LG.rows) ? LG.rows.map(r => r.me ? Object.assign({}, r, { pts: Math.max(r.pts, me.pts) }) : r) : [me];
     if (!rows.some(r => r.me)) rows.push(me);
@@ -2385,14 +2482,14 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const top = rows.slice(0, 3), order = [top[1], top[0], top[2]], hts = [92, 124, 74], bg = ['#C8D6D1', '#FFD15C', '#E3A06B'];
     $('#podium').innerHTML = order.map((p, i) => p ? `<div class="pod"><div class="pa" style="background:${p.c}; color:var(--ink); ${p.me ? 'outline:3px solid #fff' : ''}">${esc(p.name.charAt(0))}</div><div class="pn">${esc(p.name)}${p.me ? ' (את/ה)' : ''}</div><div class="pb" style="height:${hts[i]}px; background:${bg[i]}">${[2, 1, 3][i]}</div></div>` : '<div class="pod"></div>').join('');
     const mi = rows.findIndex(p => p.me), above = rows[mi - 1];
-    $('#ladder').innerHTML = rows.map((p, i) => `<div class="lrow ${p.me ? 'me' : ''}"><span class="pos">${i + 1}</span><span class="la" style="background:${p.c}; color:var(--ink)">${esc(p.name.charAt(0))}</span><span class="ln">${esc(p.name)}${p.me ? ' · את/ה' : ''}${p.me && above ? `<small style="display:block; font-size:12px; color:var(--gold); font-weight:700">עוד ${above.pts - p.pts + 1} מטבעות השבוע כדי לעקוף את ${esc(above.name)}</small>` : ''}</span><span class="lx">${p.pts} 🪙</span></div>`).join('')
+    $('#ladder').innerHTML = rows.map((p, i) => `<div class="lrow ${p.me ? 'me' : ''}"><span class="pos">${i + 1}</span><span class="la" style="background:${p.c}; color:var(--ink)">${esc(p.name.charAt(0))}</span><span class="ln">${esc(p.name)}${p.me ? ' · את/ה' : ''}${p.me && above ? `<small style="display:block; font-size:12px; color:var(--gold); font-weight:700">עוד ${above.pts - p.pts + 1} מטבעות השבוע כדי לעקוף את ${esc(above.name)}</small>` : ''}</span><span class="lx">${p.pts}<span class="coinic">88</span></span></div>`).join('')
       + (rows.length < 2 ? `<p class="lgempty">${unitName() ? 'עוד אין שחקנים אחרים בקבוצה השבוע. כשיצטרפו, הם יופיעו כאן.' : 'כשתשובצו לקבוצה, תראו כאן את כל השחקנים שלה.'}</p>` : '');
     renderPrizes();
   };
 
   // ---------- prizes the admin approved for the group, redeemed with coins (the site's own prizes) ----------
-  const PZICON = { ticket: '🎟️', food: '🍽️' };
-  const pzImg = (p) => p.image ? `<span class="pimg ph"><img src="${esc(p.image)}" alt=""></span>` : `<span class="pimg ic-${p.icon === 'food' ? 'food' : 'ticket'}" aria-hidden="true">${PZICON[p.icon] || '🎁'}</span>`;
+  // a prize without a picture shows its first letter on the prize's colour
+  const pzImg = (p) => p.image ? `<span class="pimg ph"><img src="${esc(p.image)}" alt=""></span>` : `<span class="pimg pl ic-${p.icon === 'food' ? 'food' : 'ticket'}" aria-hidden="true">${esc(String(p.title || '').trim().charAt(0))}</span>`;
   const myPrizes = () => (A.data.rewards || []).filter(p => p.active !== false && (p.groups === 'all' || (Array.isArray(p.groups) && p.groups.indexOf(unitId()) !== -1))).sort((a, b) => a.cost - b.cost);
   const stockLeft = (p) => p.left != null ? p.left - P.requests.filter(r => r.prize === p.id && r.status === 'pending' && !synced.has(r.id)).length : p.stock - P.requests.filter(r => r.prize === p.id && r.status !== 'cancelled' && r.status !== 'declined').length;
   const pendingOf = (p) => P.requests.find(r => r.prize === p.id && r.status === 'pending');
@@ -2405,8 +2502,8 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     let act;
     if (pend) act = `<p class="pnote">ביקשת את הפרס, והמדריך ימסור לך אותו. ביטול הבקשה מחזיר את ${p.cost} המטבעות.</p><button class="linkbtn" type="button" data-cancel="${esc(pend.id)}">ביטול הבקשה</button>`;
     else if (asking) act = `<p class="pnote">לממש ב־${p.cost} מטבעות? הם יוצאים מהארנק עכשיו. הדרגה והמקום בליגה נשארים.</p><div class="pbtns"><button class="btn3 gold" type="button" data-yes="${esc(p.id)}">כן, לממש</button><button class="btn3 ghost" type="button" data-no="${esc(p.id)}">לא עכשיו</button></div>`;
-    else act = `<div class="qbar" role="img" aria-label="${enough ? 'יש לך מספיק מטבעות' : `${bal} מתוך ${p.cost} מטבעות`}"><i style="width:${pct}%"></i>${enough ? '<span>✓ יש לך מספיק</span>' : `<span dir="ltr">${Math.max(0, bal)} / ${p.cost}</span>`}</div><button class="btn3 ${can ? 'gold' : ''} pgo" type="button" data-ask="${esc(p.id)}" ${can ? '' : 'disabled'}>${left <= 0 ? 'אזל מהמלאי' : enough ? 'מימוש' : `חסרים ${p.cost - bal}`}</button>`;
-    return `<article class="prz ${st}${asking ? ' asking' : ''}" data-pz="${esc(p.id)}">${pzImg(p)}<div class="pbody"><b class="pt">${esc(p.title)}</b>${p.desc ? `<small class="pd">${esc(p.desc)}</small>` : ''}<div class="pmeta"><span class="pcost"><span class="coinic">88</span>${p.cost}</span><span class="pstock">${left > 0 ? `${left} במלאי` : 'אזל מהמלאי'}</span>${pend ? '<span class="ptag">ממתין למסירה</span>' : ''}${got && !pend ? `<span class="pgot">✓ קיבלת${got > 1 ? ` ${got} פעמים` : ''}</span>` : ''}</div></div><div class="pact">${act}</div></article>`;
+    else act = `<div class="qbar" role="img" aria-label="${enough ? 'יש לך מספיק מטבעות' : `${bal} מתוך ${p.cost} מטבעות`}"><i style="width:${pct}%"></i>${enough ? '<span>יש לך מספיק</span>' : `<span dir="ltr">${Math.max(0, bal)} / ${p.cost}</span>`}</div><button class="btn3 ${can ? 'gold' : ''} pgo" type="button" data-ask="${esc(p.id)}" ${can ? '' : 'disabled'}>${left <= 0 ? 'אזל מהמלאי' : enough ? 'מימוש' : `חסרים ${p.cost - bal}`}</button>`;
+    return `<article class="prz ${st}${asking ? ' asking' : ''}" data-pz="${esc(p.id)}">${pzImg(p)}<div class="pbody"><b class="pt">${esc(p.title)}</b>${p.desc ? `<small class="pd">${esc(p.desc)}</small>` : ''}<div class="pmeta"><span class="pcost"><span class="coinic">88</span>${p.cost}</span><span class="pstock">${left > 0 ? `${left} במלאי` : 'אזל מהמלאי'}</span>${pend ? '<span class="ptag">ממתין למסירה</span>' : ''}${got && !pend ? `<span class="pgot">קיבלת${got > 1 ? ` ${got} פעמים` : ''}</span>` : ''}</div></div><div class="pact">${act}</div></article>`;
   };
   const renderPrizes = () => {
     const box = $('#prizes'); if (!box) return;
@@ -2425,7 +2522,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     P.requests.unshift({ id: nid('q'), prize: p.id, cost: p.cost, at: stamp(), status: 'pending' });
     P.notifications.unshift({ id: nid('nr'), kind: 'reward', reward: p.id, text: 'ביקשתם לממש את ' + p.title + '. נעדכן כשהמדריך ימסור לכם את הפרס.', when: 'עכשיו', read: true });
     seen.add(P.notifications[0].id);
-    floatTxt(from, `-${p.cost} 🪙`);
+    floatTxt(from, `-${p.cost}`);
     changed();
     say('הבקשה נשלחה! ' + p.cost + ' מטבעות יצאו מהארנק, והדרגה נשארת.');
     const c = $(`#prizes [data-pz="${id}"] [data-cancel]`); c && c.focus();
@@ -2433,7 +2530,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   const cancelReq = (rid, from) => {
     const r = P.requests.find(x => x.id === rid); if (!r || r.status !== 'pending') return;
     r.status = 'cancelled';
-    floatTxt(from, `+${r.cost} 🪙`);
+    floatTxt(from, `+${r.cost}`);
     changed();
     say('הבקשה בוטלה, והמטבעות חזרו לארנק.');
     const a = $(`#prizes [data-pz="${r.prize}"] [data-ask]`); a && a.focus();
@@ -2473,11 +2570,11 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     $('#stDone').textContent = `${done}/${sk.length}`;
     $('#stTime').textContent = Math.floor((P.timeToday || 0) / 60);
     $('#badges').innerHTML = sk.map((k) => `<div class="bdg"><div class="badge ${P.acquired[k.id] ? 'got' : 'no'}" role="img" aria-label="${esc(k.name + (P.acquired[k.id] ? ' · הושלם' : ' · עוד לא'))}"><span class="bart">${stageArt('s' + k.id)}</span></div><small aria-hidden="true">${esc(k.name)}</small></div>`).join('');
-    const L = LEVELS(), lockTxt = (k) => { const lv = L[skinNeed(k) - 1]; return lv ? `🔒 בסיום ${lv.name}` : '🔒 נעול'; };
+    const L = LEVELS(), lockTxt = (k) => { const lv = L[skinNeed(k) - 1]; return lv ? `נפתח בסיום ${lv.name}` : 'נעול'; };
     $('#skins').innerHTML = SKINS.map(k => { const open = skinOpen(k); return `<button class="skin ${s.id === k.id ? 'sel' : ''} ${open ? '' : 'locked'}" data-k="${k.id}" type="button" aria-pressed="${s.id === k.id}" ${open ? '' : 'aria-disabled="true"'}>${skinArt(k)}<b>${esc(skinLabel(k))}</b>${open ? `<span class="price" style="color:var(--mint)">${s.id === k.id ? 'בשימוש' : 'פתוח · לבחירה'}</span>` : `<span class="price">${esc(lockTxt(k))}</span>`}</button>`; }).join('');
     $('#skins').querySelectorAll('[data-k]').forEach(b => b.onclick = () => {
       const k = SKINS.find(x => x.id === b.dataset.k);
-      if (!skinOpen(k)) { floatTxt(b, lockTxt(k).replace('🔒 ', 'נפתח ')); return; }
+      if (!skinOpen(k)) { floatTxt(b, lockTxt(k)); return; }
       skinId = k.id; if (!PREVIEW) { try { localStorage.setItem(SKEY, k.id); } catch (e) {} }
       renderHangar(); renderMap();
       const again = $(`#skins [data-k="${k.id}"]`); again && again.focus();
@@ -2488,7 +2585,8 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const rows = [[`כל תרגיל שהמדריך מאשר`, span(pts)], ['טיסה שעוברת בניסיון הראשון', r.first ? '+' + r.first : ''], ['סיום רמה', span(lb)], ['כניסה יומית', r.login ? '+' + r.login : ''], ['3 ימים ברצף', r.streak3 ? '+' + r.streak3 : ''], ['שבוע שלם ברצף', r.streak7 ? '+' + r.streak7 : ''], [`כל ${r.timeMin} דקות באתר (עד ${r.timeMax} פעמים ביום)`, r.timePoints && r.timeMax ? '+' + r.timePoints : ''], ['צפייה בסרטון הדגמה', r.video ? '+' + r.video : ''], ['שלוש משימות היום', r.quests ? '+' + r.quests : '']].filter(x => x[1]);
     $('#guide').innerHTML = rows.length ? `<div class="sect"><span>איך צוברים מטבעות</span></div><div class="guide">${rows.map(x => `<div><span>${esc(x[0])}</span><b dir="ltr">${x[1]}</b></div>`).join('')}</div>` : '';
     if (PREVIEW) { $('#acct').innerHTML = '<p class="lgempty" style="margin:0; width:100%">כאן התלמיד מחליף סיסמה. בתצוגה המקדימה הכפתור מוסתר.</p>'; return; }
-    $('#acct').innerHTML = `<a href="/password">החלפת סיסמה</a>`;
+    $('#acct').innerHTML = `<a href="/password">החלפת סיסמה</a>${ACTIVE && ACTIVE.allowToggle ? `<button class="modeacct" type="button" id="modeAcct">${modeOf(ACTIVE) === 'day' ? 'מצב לילה' : 'מצב יום'}</button>` : ''}`;
+    const ma = $('#modeAcct'); if (ma) ma.onclick = toggleMode;
   };
 
   // ---------- notifications ----------
@@ -2579,7 +2677,8 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     $('#stagebg').classList.toggle('off', t.stageBg === false);
     const mb = $('#modeBtn');
     mb.hidden = !t.allowToggle || PREVIEW;
-    mb.textContent = mode === 'day' ? '🌙' : '☀️';
+    mb.textContent = mode === 'day' ? 'לילה' : 'יום';
+    const ma = $('#modeAcct'); if (ma) ma.textContent = mode === 'day' ? 'מצב לילה' : 'מצב יום';
     mb.setAttribute('aria-label', mode === 'day' ? 'מעבר למצב לילה' : 'מעבר למצב יום');
   };
   const applyLook = () => {
@@ -2598,13 +2697,14 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const t = themeOf(raw), shape = (x) => JSON.stringify([x.base, x.icons, x.terms]);
     if (ACTIVE && shape(ACTIVE) === shape(t)) { ACTIVE = t; applyVars(t); syncStageBg(); } else applyTheme(t);
   };
-  $('#modeBtn').onclick = () => {
+  const toggleMode = () => {
     if (PREVIEW) return;
     const cur = modeOf(ACTIVE);
     studentMode = cur === 'day' ? 'night' : 'day';
     try { localStorage.setItem('g88-mode', studentMode); } catch (e) {}
     applyVars(ACTIVE);
   };
+  $('#modeBtn').onclick = toggleMode;
 
   const renderAll = () => { buildWorlds(); renderMap(); renderQuests(); if (!$('#v-league').hidden) renderLeague(); if (!$('#v-hangar').hidden) renderHangar(); hud(); checkSkins(); };
 
