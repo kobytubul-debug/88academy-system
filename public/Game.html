@@ -1025,6 +1025,9 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 #app.day:not(.race) .guide b { color: var(--gold-dd); }
 #app.day .say { background: rgba(20,24,22,.92); }
 #app.day.race .chal { box-shadow: inset -7px 0 0 var(--sR), inset 0 0 0 1px rgba(0,0,0,.1); }
+/* the instructor's stars on a finished exercise: the missing ones dimmed */
+.stars { white-space: nowrap; letter-spacing: .04em; }
+.stars i.off { font-style: normal; opacity: .32; }
 </style>
 </head>
 <body>
@@ -1131,6 +1134,9 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   const app = $('#app');
   const A = window.Academy;
   if (!A || !A.on || !A.me || A.me.role !== 'student') { location.replace('/'); return; }
+  // the admin's live preview inside the design page: a sample student, nothing is saved or sent
+  const PREVIEW = !!A.data.preview;
+  const PV = { stageBg: null };
 
   // the 88ACADEMY logo (four hollow rings) with a spinning three-blade prop inside each ring
   const DRONE = (body = '#0B1513', front = '#FF5C8A', back = '#76DEB8', ring = '#FFFFFF') => `
@@ -1145,8 +1151,8 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       ${[[28,28],[72,28],[28,72],[72,72]].map(([x,y]) => `<circle cx="${x}" cy="${y}" r="20" fill="none" stroke="${ring}" stroke-width="8"/>`).join('')}
     </svg>`;
 
-  // ---------- look: the group's choice on the server (race, regular or military) ----------
-  let LOOK = ['race', 'regular', 'mil'].indexOf(A.data.ui) !== -1 ? A.data.ui : 'race';
+  // ---------- look: the theme of the student's group on the server (a base style plus the admin's design) ----------
+  let LOOK = A.data.theme && ['race', 'regular', 'mil'].indexOf(A.data.theme.base) !== -1 ? A.data.theme.base : 'race';
   let ACTIVE = null;
   const MIL = () => LOOK === 'mil';
   const RACE = () => LOOK === 'race';
@@ -1162,7 +1168,8 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       mapTitle: 'ציר ההתקדמות', mapSub: 'כל נקודת ציון היא מיומנות שמבצעים בשטח', go: 'יעד הבא', wait: 'ממתין לאישור', fixB: 'לתיקון', world: 'שלב', boss: 'מבחן גמר', chest: 'ארגז', chestName: 'ארגז ציוד', lit: 'משימה בוצעה!', newRank: 'דרגה חדשה', tap: 'הקישו על הארגז כדי לפרוץ אותו', sent: 'הדיווח נשלח לחמ״ל!', back: 'נדרש תיקון',
       deco: ['🪖', '📡', '🎯', '⭐'], chestIc: ['📦', '🗃️'], conf: ['#A3B26B', '#D9B45A', '#E8742C', '#C9B27C', '#6E8088', '#E8E2C8'] }
   };
-  const T = (k) => TXT[LOOK][k];
+  // the words: the admin's own word for this theme, else the base style's
+  const T = (k) => { const v = ACTIVE && ACTIVE.terms && ACTIVE.terms[k]; return v || TXT[LOOK][k]; };
 
   // ---------- race look: thin white line icons that replace the emoji everywhere ----------
   const L = (d, extra = '') => `<svg class="lic" viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/>${extra}</svg>`;
@@ -1349,6 +1356,12 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   const vidOf = (k) => k && k.video && k.showVideo !== false ? k.video : '';
   const watched = (k) => P.ledger.some(e => e.kind === 'video' && e.skill === k.id) || !!ui('s' + k.id).watched;
   const skillEarned = (id) => P.ledger.filter(e => e.skill === id && (e.kind === 'skill' || e.kind === 'first') && !e.reverted).reduce((s, e) => s + (Number(e.amount) || 0), 0);
+  // the instructor's stars: the best approved flight (none when the skill was marked done without a flight)
+  const starsOf = (sid) => P.flights.reduce((m, f) => f.skill === sid && !f.challenge && f.status === 'approved' ? Math.max(m, Math.min(3, Number(f.stars) || 0)) : m, 0);
+  const chalStars = (cid) => P.flights.reduce((m, f) => f.challenge === cid && f.status === 'approved' ? Math.max(m, Math.min(3, Number(f.stars) || 0)) : m, 0);
+  // filled stars, then the missing ones dimmed (an outline star is too thin to see at this size)
+  const starTxt = (s) => `<span class="stars" role="img" aria-label="${s} מתוך 3 כוכבים">${'★'.repeat(s)}${s < 3 ? `<i class="off">${'★'.repeat(3 - s)}</i>` : ''}</span>`;
+  const crownOf = (n) => { const s = n.t === 'skill' && n.state === 'done' ? starsOf(n.k.id) : n.t === 'boss' && n.state === 'done' ? chalStars(n.c.id) : 0; return s ? `<span class="crown">${starTxt(s)}</span>` : ''; };
   const loginDays = () => { const d = {}; P.ledger.forEach(e => { if (e.kind === 'login') d[dayOf(e.at)] = true; }); return d; };
   const streakFrom = (days) => { let d = today(); if (!days[d]) d = addDays(d, -1); let n = 0; while (days[d]) { n++; d = addDays(d, -1); } return n; };
   const streak = () => streakFrom(loginDays());
@@ -1426,7 +1439,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 
   // learning time: coins for every few minutes the site is open in front of the student, a few times a day
   setInterval(() => {
-    if (document.visibilityState === 'hidden') return;
+    if (PREVIEW || document.visibilityState === 'hidden') return;
     const t = today(); if (P.timeDay !== t) { P.timeDay = t; P.timeToday = 0; }
     P.timeToday = (P.timeToday || 0) + 1;
     const r = R(), got = P.ledger.filter(e => e.kind === 'time' && dayOf(e.at) === t).length;
@@ -1439,7 +1452,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   let ver = 0, syncing = false, again = false, timer = null, lastTimeSent = P.timeToday || 0, netWarned = 0;
   const persist = () => ({ acquired: P.acquired, flights: P.flights, ledger: P.ledger, notifications: P.notifications, requests: P.requests, timeToday: P.timeToday || 0, timeDay: today(), questVideoDay: P.questVideoDay === today() ? today() : '', dailyDismissedDay: P.dailyDismissedDay === today() ? today() : '', seq: P.seq || 1, chests: P.chests });
   const changed = () => { ver++; queueSync(350); renderAll(); };
-  const queueSync = (ms) => { if (timer) return; timer = setTimeout(() => { timer = null; syncNow(); }, ms); };
+  const queueSync = (ms) => { if (PREVIEW || timer) return; timer = setTimeout(() => { timer = null; syncNow(); }, ms); };
   const syncNow = () => {
     if (syncing) { again = true; return; }
     syncing = true; const v = ver; lastTimeSent = P.timeToday || 0;
@@ -1452,12 +1465,12 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   };
   // leaving the page: send what is not saved yet, even as the page closes
   const flush = () => {
-    if (!timer && (P.timeToday || 0) === lastTimeSent) return;
+    if (PREVIEW || (!timer && (P.timeToday || 0) === lastTimeSent)) return;
     clearTimeout(timer); timer = null; lastTimeSent = P.timeToday || 0;
     try { fetch('/api/progress', { method: 'PUT', keepalive: true, credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'X-Academy': '1' }, body: JSON.stringify({ progress: persist() }) }); } catch (e) { syncNow(); }
   };
   const pull = () => {
-    if (syncing || timer) return;
+    if (PREVIEW || syncing || timer) return;
     const v = ver;
     A.request('GET', '/api/boot').then(r => { if (r.ok && r.json && r.json.progress) applyServer(r.json, v); });
     if (!$('#v-league').hidden) loadLeague();
@@ -1466,18 +1479,20 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') pull(); else flush(); });
   addEventListener('pagehide', flush);
   const applyServer = (j, v) => {
-    const wasEarns = EARNS(), wasUi = A.data.ui;
-    ['rewards', 'scoring', 'levels', 'skills', 'challenges', 'allSkills', 'allChallenges', 'units', 'settings', 'now', 'today', 'ui'].forEach(k => { if (j[k] !== undefined) A.data[k] = j[k]; });
+    const wasEarns = EARNS(), wasTheme = JSON.stringify(A.data.theme || null);
+    ['rewards', 'scoring', 'levels', 'skills', 'challenges', 'allSkills', 'allChallenges', 'units', 'settings', 'now', 'today', 'ui', 'theme', 'stageBg'].forEach(k => { if (j[k] !== undefined) A.data[k] = j[k]; });
     if (j.me) A.data.me = A.me = j.me;
     A.data.progress = j.progress;
     synced = new Set((j.progress.requests || []).map(r => r.id));
+    // the admin changed the group's design: show it now (the student's own day or night choice stays)
+    const newLook = JSON.stringify(A.data.theme || null) !== wasTheme;
     // things done here while this was on its way go out with the next save: take nothing now
-    if (ver !== v) { renderAll(); return; }
+    if (ver !== v) { if (newLook) applyTheme(themeOf(A.data.theme)); else renderAll(); return; }
     const keepT = P.timeToday || 0, keepDay = P.timeDay;
     P = norm(j.progress);
     if (keepDay === P.timeDay) P.timeToday = Math.max(P.timeToday || 0, keepT);
     if (wasEarns !== EARNS()) app.classList.toggle('noearn', !EARNS());
-    if (j.ui && j.ui !== wasUi && ['race', 'regular', 'mil'].indexOf(j.ui) !== -1) applyTheme(newTheme(j.ui)); else renderAll();
+    if (newLook) applyTheme(themeOf(A.data.theme)); else renderAll();
     afterServer();
   };
 
@@ -1517,7 +1532,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   setInterval(pumpNotes, 1500);
   const RKEY = 'g88-rank-' + A.me.id;
   const checkRank = () => {
-    if (!EARNS()) return;
+    if (PREVIEW || !EARNS()) return;
     const ri = rankIndex(total());
     let was = null; try { const v = localStorage.getItem(RKEY); was = v == null ? null : Number(v); } catch (e) {}
     try { localStorage.setItem(RKEY, String(ri)); } catch (e) {}
@@ -1608,7 +1623,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       const c = n.c, mine = P.flights.filter(f => f.challenge === c.id), last = mine[0];
       const desc = c.desc ? `<p class="desc">${esc(c.desc)}</p>` : '';
       if (st === 'lock') return `<p class="state" style="color:var(--dim)">🔒 ${chalEnded(c) ? 'נסגר' : 'נעול'}</p>${desc}<p class="desc" style="font-size:12px">${chalEnded(c) ? 'מועד ההגשה עבר.' : 'נפתח כשמסיימים את כל התרגילים במסלול.'}</p>`;
-      if (st === 'done') { const ok = mine.find(f => f.status === 'approved'); return `<p class="state" style="color:var(--gold)">✓ עברתם את ${esc(T('boss'))}!</p>${ok && ok.feedback ? `<div class="inote"><b>המדריך כתב</b><span>“${esc(ok.feedback)}”</span></div>` : ''}${desc}`; }
+      if (st === 'done') { const ok = mine.find(f => f.status === 'approved'), s = chalStars(c.id); return `<p class="state" style="color:var(--gold)">✓ עברתם את ${esc(T('boss'))}!${s ? ` · ${starTxt(s)}` : ''}</p>${ok && ok.feedback ? `<div class="inote"><b>המדריך כתב</b><span>“${esc(ok.feedback)}”</span></div>` : ''}${desc}`; }
       if (st === 'wait') return `<p class="state" style="color:var(--sky)">⏳ ${T('wait')}</p>${desc}${stepsFor(n)}<div class="act">${sentBox(mine.find(f => f.status === 'review'))}</div>`;
       const fixNote = st === 'fix' ? `<div class="inote fixnote"><b>${T('back')}</b><span>${last && last.feedback ? '“' + esc(last.feedback) + '”' : 'המדריך החזיר את הטיסה. נסו שוב.'}</span></div>` : '';
       return `${fixNote}${desc}${c.ends ? `<p class="desc" style="font-size:12px">אפשר להגיש עד ${esc(fmtDay(c.ends.slice(0, 10)))}${c.ends.length > 10 ? ' ' + esc(c.ends.slice(11)) : ''}</p>` : ''}${stepsFor(n)}<div class="act">${c.video ? `<button class="btn3 ghost full" type="button" data-a="play">▶ סרטון ההסבר</button>` : ''}${uploadUI(n)}</div>`;
@@ -1617,8 +1632,8 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const desc = k.desc ? `<p class="desc">${esc(k.desc)}</p>` : '';
     if (st === 'lock') return `<p class="state" style="color:var(--dim)">🔒 נעול</p>${desc}<p class="desc" style="font-size:12px">נפתח כשמסיימים את התרגילים ב${esc(prevLevelName(k.level))}.</p>`;
     if (st === 'done') {
-      const ok = fl.find(f => f.status === 'approved'), got = skillEarned(k.id);
-      return `<p class="state" style="color:var(--gold)">✓ ${P.acquired[k.id] === 'instructor' ? 'המדריך סימן כנרכש' : 'הטיסה אושרה'}${EARNS() && got ? ` · +${got} מטבעות` : ''}</p>${ok && ok.feedback ? `<div class="inote"><b>המדריך כתב</b><span>“${esc(ok.feedback)}”</span></div>` : ''}${desc}${vidOf(k) ? `<div class="act"><button class="btn3 ghost full" type="button" data-a="play">▶ לצפייה חוזרת בסרטון</button></div>` : ''}`;
+      const ok = fl.find(f => f.status === 'approved'), got = skillEarned(k.id), s = starsOf(k.id);
+      return `<p class="state" style="color:var(--gold)">✓ ${P.acquired[k.id] === 'instructor' ? 'המדריך סימן כנרכש' : 'הטיסה אושרה'}${s ? ` · ${starTxt(s)}` : ''}${EARNS() && got ? ` · +${got} מטבעות` : ''}</p>${ok && ok.feedback ? `<div class="inote"><b>המדריך כתב</b><span>“${esc(ok.feedback)}”</span></div>` : ''}${desc}${vidOf(k) ? `<div class="act"><button class="btn3 ghost full" type="button" data-a="play">▶ לצפייה חוזרת בסרטון</button></div>` : ''}`;
     }
     if (st === 'wait') {
       const f = fl.find(x => x.status === 'review'), auto = f && f.ai && (f.ai.status === 'queued' || f.ai.status === 'checking');
@@ -1651,7 +1666,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
         return `<section class="slide" data-n="${n.id}" aria-label="${esc(n.name)}">
           <div class="world ${w.cls} ${open ? '' : 'locked'}"><span class="tagw">${esc(worldTag(w))}</span><h3>${esc(w.name)}</h3><span class="deco">${decoOf(w)}</span></div>
           <div class="count"><span>${n.t === 'chest' ? T('chest') : n.t === 'boss' ? T('boss') : 'תרגיל'}</span><b dir="ltr">${n.t === 'skill' ? `${k} / ${nSkills}` : ''}</b></div>
-          <div class="hero"><div class="node big ${nodeCls(n)}"><span class="face">${nodeFace(n)}</span></div></div>
+          <div class="hero"><div class="node big ${nodeCls(n)}"><span class="face">${nodeFace(n)}${crownOf(n)}</span></div></div>
           <h2>${esc(n.name)}</h2>
           ${slideBody(n)}
           ${i < all.length - 1 ? `<div class="nexthint"><button class="nextbtn" type="button" data-next="${i + 1}">לתרגיל הבא ↓<span class="kbd">↓</span></button></div>` : ''}
@@ -1699,6 +1714,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     if (form) form.onsubmit = (e) => {
       e.preventDefault();
       const u = ui(n.id), v = String(u.link || '').trim();
+      if (PREVIEW) { u.err = NO_SEND; paint(n); return; }
       if (!/^https?:\/\/\S+$/i.test(v)) { u.err = v ? 'הקישור צריך להתחיל ב־https://' : 'הדביקו קישור לסרטון הטיסה, או העלו את הקובץ.'; paint(n); return; }
       u.err = ''; u.ready = { url: v, name: v.replace(/^https?:\/\//, '').slice(0, 60), isLink: true }; paint(n);
       const t = (n.t === 'chal' ? sheet : $('#deck')).querySelector(n.t === 'chal' ? '[data-a="note"]' : `[data-n="${n.id}"] [data-a="note"]`); t && t.focus();
@@ -1717,8 +1733,10 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   const paint = (n) => { if (n.t === 'chal') { if (openChalId === n.c.id) drawChal(); } else renderMap(); };
 
   // ---------- sending a flight ----------
+  const NO_SEND = 'זו תצוגה מקדימה של מנהל, אז לא שולחים ממנה טיסות. התלמידים מעלים כאן את הסרטון או מדביקים קישור.';
   const startUpload = (n, f) => {
     const u = ui(n.id); u.err = '';
+    if (PREVIEW) { u.err = NO_SEND; return paint(n); }
     const max = MAXMB() * 1048576;
     if (!/^video\//.test(f.type || '') && !/\.(mp4|m4v|mov|webm)$/i.test(f.name)) { u.err = 'זה לא קובץ וידאו. בחרו את סרטון הטיסה (MP4, MOV או WEBM).'; return paint(n); }
     if (!/\.(mp4|m4v|mov|webm)$/i.test(f.name) && !/(mp4|quicktime|webm)/.test(f.type || '')) { u.err = 'אפשר להעלות סרטונים מסוג MP4, MOV או WEBM. אפשר גם להדביק קישור.'; return paint(n); }
@@ -1857,7 +1875,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
         const [x, y] = pts[i], st = n.state;
         let cls = n.t === 'chest' ? 'chest' + (st === 'ready' ? ' ready' : '') : (n.t === 'boss' ? 'boss ' : '') + ({ done: 'done', now: 'now', wait: 'wait', fix: 'fix', lock: 'lock' })[st];
         let face = n.t === 'chest' ? (st === 'opened' ? T('chestIc')[1] : st === 'ready' ? T('chestIc')[0] : `<span style="filter:grayscale(1) brightness(.6)">${T('chestIc')[0]}</span>`) : st === 'lock' ? '🔒' : st === 'wait' ? '⏳' : n.icon;
-        html += `<button class="node ${cls}" style="left:${x}%; top:${y}px" data-n="${n.id}" type="button" aria-label="${esc(n.name)}"><span class="face">${face}</span><span class="nl">${esc(n.name)}</span></button>`;
+        html += `<button class="node ${cls}" style="left:${x}%; top:${y}px" data-n="${n.id}" type="button" aria-label="${esc(n.name)}"><span class="face">${face}${crownOf(n)}</span><span class="nl">${esc(n.name)}</span></button>`;
         if (fr && n.id === fr.id && (st === 'now' || st === 'wait' || st === 'fix' || st === 'ready')) html += `<div class="pilot" style="left:${x}%; top:${y - 44}px"><span class="bubble">${st === 'fix' ? T('fixB') : st === 'wait' ? T('wait') : T('go')}</span>${pilotDrone()}</div>`;
       });
       html += `</div>`;
@@ -1879,13 +1897,32 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   wrap.addEventListener('scroll', syncPane, { passive: true });
   $('#peek').onclick = () => showPane(pane === 'deck' ? 'path' : 'deck');
 
-  // ---------- a background scene per stage; it crossfades while scrolling ----------
+  // ---------- a background per stage; it crossfades while scrolling ----------
+  // The admin's choice on the design page: for one exercise, a level's chest or the final exam, else for the whole
+  // level, else a built-in scene by the level's place in the path. "none" shows the theme's own background.
   const SCENE_ORDER = ['field', 'city', 'garage', 'loft', 'forest', 'street'];
-  const sceneOf = (id) => { const n = findNode(id), w = n && worldOf(n); if (!w) return null; return w.cls === 'wb' ? 'night' : SCENE_ORDER[w.i % SCENE_ORDER.length]; };
+  const stageKey = (n) => n.t === 'boss' ? 'boss' : n.t === 'chest' ? 'c' + n.n : n.t === 'skill' ? 's' + n.k.id : '';
+  const bgAssign = () => ((PV.stageBg || A.data.stageBg || {}).assign) || {};
+  const bgFor = (id) => {
+    const n = findNode(id), w = n && worldOf(n); if (!w) return null;
+    const a = bgAssign(), pick = a[stageKey(n)] || (w.n != null ? a['w' + w.n] : null);
+    if (pick && pick.bg) {
+      if (pick.bg === 'none') return null;
+      const i = pick.bg.indexOf(':'), k = pick.bg.slice(0, i), v = pick.bg.slice(i + 1);
+      if ((k === 'scene' && SCN[v]) || (k === 'img' && v)) return { k, v, blur: pick.blur !== false };
+    }
+    return { k: 'scene', v: w.cls === 'wb' ? 'night' : SCENE_ORDER[w.i % SCENE_ORDER.length] };
+  };
+  const cssUrl = (u) => String(u || '').replace(/["\\\n\r]/g, encodeURIComponent);
   const fillLayer = (el, id) => {
-    const s = id ? sceneOf(id) : null, key = s || '';
-    if (el.dataset.key !== key) { el.dataset.key = key; el.innerHTML = s && SCN[s] ? SCN[s] + '<div class="sbg-shade"></div>' : ''; }
-    return !!s;
+    const a = id ? bgFor(id) : null, key = a ? a.k + ':' + a.v + (a.k === 'img' && !a.blur ? ':sharp' : '') : '';
+    if (el.dataset.key !== key) {
+      el.dataset.key = key; el.innerHTML = '';
+      if (a && a.k === 'scene') el.innerHTML = SCN[a.v];
+      else if (a) { const im = document.createElement('div'); im.className = 'sbg-img' + (a.blur ? '' : ' sharp'); im.style.backgroundImage = `url("${cssUrl(a.v)}")`; el.append(im); }
+      if (a) el.insertAdjacentHTML('beforeend', '<div class="sbg-shade"></div>');
+    }
+    return !!a;
   };
   const syncStageBg = () => {
     const d = $('#deck'), LA = $('#sbgA'), LB = $('#sbgB'), LC = $('#sbgC');
@@ -2012,7 +2049,11 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 
   // ---------- the league: this week's coins in the group ----------
   let LG = null;
-  const loadLeague = () => A.request('GET', '/api/league').then(r => { if (r.ok) { LG = r.json; if (!$('#v-league').hidden) renderLeague(); } });
+  const loadLeague = () => {
+    // the preview shows a made-up group around the sample student
+    if (PREVIEW) { LG = { rows: [['נועה', 168], ['איתי', 131], ['מאיה', 96], ['עומר', 54]].map(([name, pts]) => ({ name, pts })).concat([{ name: firstName(A.me.name), pts: 0, me: true }]) }; if (!$('#v-league').hidden) renderLeague(); return Promise.resolve(); }
+    return A.request('GET', '/api/league').then(r => { if (r.ok) { LG = r.json; if (!$('#v-league').hidden) renderLeague(); } });
+  };
   const weekStart = () => { const t = today(), dow = new Date(t + 'T12:00:00Z').getUTCDay(); return addDays(t, -dow); };
   const weekLeft = () => {
     const t = today(), dow = new Date(t + 'T12:00:00Z').getUTCDay(), p = parts();
@@ -2118,6 +2159,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const span = (a) => !a.length ? '' : Math.min(...a) === Math.max(...a) ? `+${a[0]}` : `+${Math.min(...a)}–${Math.max(...a)}`;
     const rows = [[`כל תרגיל שהמדריך מאשר`, span(pts)], ['טיסה שעוברת בניסיון הראשון', r.first ? '+' + r.first : ''], ['סיום רמה', span(lb)], ['כניסה יומית', r.login ? '+' + r.login : ''], ['3 ימים ברצף', r.streak3 ? '+' + r.streak3 : ''], ['שבוע שלם ברצף', r.streak7 ? '+' + r.streak7 : ''], [`כל ${r.timeMin} דקות באתר (עד ${r.timeMax} פעמים ביום)`, r.timePoints && r.timeMax ? '+' + r.timePoints : ''], ['צפייה בסרטון הדגמה', r.video ? '+' + r.video : ''], ['שלוש משימות היום', r.quests ? '+' + r.quests : '']].filter(x => x[1]);
     $('#guide').innerHTML = rows.length ? `<div class="sect"><span>איך צוברים מטבעות</span></div><div class="guide">${rows.map(x => `<div><span>${esc(x[0])}</span><b dir="ltr">${x[1]}</b></div>`).join('')}</div>` : '';
+    if (PREVIEW) { $('#acct').innerHTML = '<p class="lgempty" style="margin:0; width:100%">כאן התלמיד מחליף סיסמה, עובר למסך הרגיל או יוצא. בתצוגה המקדימה הכפתורים מוסתרים.</p>'; return; }
     $('#acct').innerHTML = `<a href="/password">החלפת סיסמה</a><a href="/StudentApp.dc.html">למסך הרגיל</a><button type="button" id="logoutBtn">יציאה</button>`;
     $('#logoutBtn').onclick = () => { flush(); A.logout(); };
   };
@@ -2153,27 +2195,57 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   };
   document.querySelectorAll('.tab').forEach(t => t.onclick = () => switchTab(t.dataset.v));
 
-  // ---------- theme: the group's look, day or night as the student likes ----------
+  // ---------- theme: the group's design (base style, day/night, colors, fonts, icons, background, words, motion) ----------
   const newTheme = (base) => ({ id: 't-' + base, name: BASES[base].name, base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default' }, icons: BASES[base].icons, bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full' });
+  // what the server sent, with every part filled in
+  const themeOf = (t) => {
+    const base = t && BASES[t.base] ? t.base : 'race', d = newTheme(base);
+    if (!t || typeof t !== 'object') return d;
+    return Object.assign(d, t, { base, colors: Object.assign({}, t.colors), surf: { night: Object.assign({}, t.surf && t.surf.night), day: Object.assign({}, t.surf && t.surf.day) }, fonts: Object.assign({ head: 'default', body: 'default' }, t.fonts), bg: t.bg && t.bg.kind ? t.bg : { kind: 'look' }, terms: Object.assign({}, t.terms) });
+  };
   let studentMode = null;
-  try { studentMode = localStorage.getItem('g88-mode'); } catch (e) {}
-  const modeOf = (t) => t.allowToggle && (studentMode === 'day' || studentMode === 'night') ? studentMode : t.mode;
+  if (!PREVIEW) { try { studentMode = localStorage.getItem('g88-mode'); } catch (e) {} }
+  const modeOf = (t) => !PREVIEW && t.allowToggle && (studentMode === 'day' || studentMode === 'night') ? studentMode : t.mode === 'day' ? 'day' : 'night';
   const MANAGED = ['--pink', '--pink-d', '--pink-dd', '--mint', '--mint-d', '--mint-dd', '--green', '--gold', '--gold-d', '--gold-dd', '--sky', '--sky-d', '--night', '--night2', '--panel', '--bar', '--white', '--dim', '--d-bg', '--d-bg2', '--d-card', '--d-fg', '--d-dim', '--d-lock', '--d-lock2', '--f', '--fh'];
   const applyVars = (t) => {
-    const st = app.style, mode = modeOf(t), base = t.base;
+    const st = app.style, mode = modeOf(t), base = t.base, co = t.colors || {};
     MANAGED.forEach(p => st.removeProperty(p));
     const set = (p, v) => st.setProperty(p, v);
-    const S = Object.assign({}, BASES[base].surf[mode], (t.surf && t.surf[mode]) || {});
-    if (mode === 'day') {
+    if (isHex(co.accent || '')) { set('--pink', co.accent); set('--pink-d', shade(co.accent, .2)); set('--pink-dd', shade(co.accent, .45)); }
+    if (isHex(co.accent2 || '')) { set('--mint', co.accent2); set('--mint-d', shade(co.accent2, .2)); set('--mint-dd', shade(co.accent2, .45)); if (base === 'race') set('--green', co.accent2); }
+    if (isHex(co.gold || '')) { set('--gold', co.gold); set('--gold-d', shade(co.gold, .18)); set('--gold-dd', shade(co.gold, .5)); }
+    if (isHex(co.sky || '')) { set('--sky', co.sky); set('--sky-d', shade(co.sky, .25)); }
+    const so = (t.surf && t.surf[mode]) || {}, S = Object.assign({}, BASES[base].surf[mode], so);
+    if (mode === 'night') {
+      if (isHex(so.bg || '')) { set('--night', so.bg); set('--night2', mix(so.bg, '#ffffff', .06)); }
+      if (isHex(so.card || '')) set(base === 'race' ? '--bar' : '--panel', so.card);
+      if (isHex(so.text || '')) set('--white', so.text);
+      if (so.text || so.bg) set('--dim', mix(S.text, S.bg, .38));
+    } else {
       set('--d-bg', S.bg); set('--d-bg2', mix(S.bg, '#ffffff', .45)); set('--d-card', S.card); set('--d-fg', S.text);
       set('--d-dim', mix(S.text, S.bg, .4)); set('--d-lock', mix(S.text, S.card, .1)); set('--d-lock2', mix(S.text, S.card, .2));
       if (base === 'race') set('--bar', S.card);
     }
+    const F = t.fonts || {}, fam = (f) => `'${String(f).replace(/['\\]/g, '')}', 'Rubik', system-ui, sans-serif`;
+    if (F.body && F.body !== 'default') set('--f', fam(F.body));
+    if (F.head && F.head !== 'default') set('--fh', fam(F.head));
+    app.classList.toggle('fh', !!(F.head && F.head !== 'default'));
     app.classList.toggle('day', mode === 'day');
     app.classList.toggle('calm', t.motion === 'calm');
-    $('#themebg').hidden = true;
+    // the theme's own background, behind every screen (a stage with a background of its own shows that one on top)
+    const tb = $('#themebg'), bg = t.bg || { kind: 'look' }, key = JSON.stringify(bg);
+    const has = (bg.kind === 'color' && isHex(bg.color || '')) || (bg.kind === 'scene' && !!SCN[bg.id]) || (bg.kind === 'img' && !!bg.url);
+    app.classList.toggle('tbg', has);
+    if (tb.dataset.key !== key) {
+      tb.dataset.key = key; tb.innerHTML = '';
+      if (bg.kind === 'color' && has) tb.innerHTML = `<div class="tbg-color" style="background:linear-gradient(180deg, ${mix(bg.color, '#ffffff', .07)}, ${bg.color})"></div>`;
+      else if (bg.kind === 'scene' && has) tb.innerHTML = SCN[bg.id] + '<div class="sbg-shade"></div>';
+      else if (bg.kind === 'img' && has) { const d = document.createElement('div'); d.className = 'sbg-img' + (bg.blur === false ? ' sharp' : ''); d.style.backgroundImage = `url("${cssUrl(bg.url)}")`; tb.append(d); tb.insertAdjacentHTML('beforeend', '<div class="sbg-shade"></div>'); }
+    }
+    tb.hidden = !has;
+    $('#stagebg').classList.toggle('off', t.stageBg === false);
     const mb = $('#modeBtn');
-    mb.hidden = !t.allowToggle;
+    mb.hidden = !t.allowToggle || PREVIEW;
     mb.textContent = mode === 'day' ? '🌙' : '☀️';
     mb.setAttribute('aria-label', mode === 'day' ? 'מעבר למצב לילה' : 'מעבר למצב יום');
   };
@@ -2187,7 +2259,14 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     lineify(app);
   };
   const applyTheme = (t) => { ACTIVE = t; LOOK = t.base; applyVars(t); applyLook(); };
+  // the design page changes one thing at a time: colors and the like only need the variables, a new base style,
+  // icons or words need the whole screen drawn again
+  const previewTheme = (raw) => {
+    const t = themeOf(raw), shape = (x) => JSON.stringify([x.base, x.icons, x.terms]);
+    if (ACTIVE && shape(ACTIVE) === shape(t)) { ACTIVE = t; applyVars(t); syncStageBg(); } else applyTheme(t);
+  };
   $('#modeBtn').onclick = () => {
+    if (PREVIEW) return;
     const cur = modeOf(ACTIVE);
     studentMode = cur === 'day' ? 'night' : 'day';
     try { localStorage.setItem('g88-mode', studentMode); } catch (e) {}
@@ -2206,15 +2285,32 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       A.data.progress.introSeen = true; A.request('POST', '/api/intro-seen', {}); closeSheet();
     });
 
+  // ---------- the design page's live preview: it sends the theme and the stage backgrounds being edited ----------
+  if (PREVIEW) {
+    addEventListener('message', (ev) => {
+      if (ev.origin !== location.origin || ev.source !== parent) return;
+      const d = ev.data || {};
+      if (d.type === 'g88-theme' && d.theme) previewTheme(d.theme);
+      else if (d.type === 'g88-stagebg' && d.stageBg) { PV.stageBg = d.stageBg; syncStageBg(); }
+      else if (d.type === 'g88-go' && d.node) {
+        if (!findNode(d.node)) return;
+        if (sheet.classList.contains('on')) closeSheet();
+        switchTab('map'); showPane('deck', false);
+        setTimeout(() => goNode(d.node, !d.jump), 60);
+      }
+    });
+  }
+
   // ---------- start ----------
   app.classList.toggle('noearn', !EARNS());
   initNotes();
-  applyTheme(newTheme(LOOK));
+  applyTheme(themeOf(A.data.theme));
   checkRank();
   setTimeout(() => { const f = frontier(); if (f) goNode(f.id); syncRail(); syncPane(); }, 80);
-  setTimeout(claimLogin, 900);
-  if (A.data.progress && !A.data.progress.introSeen) setTimeout(showIntro, 600);
+  if (!PREVIEW) setTimeout(claimLogin, 900);
+  if (!PREVIEW && A.data.progress && !A.data.progress.introSeen) setTimeout(showIntro, 600);
   loadLeague();
+  if (PREVIEW && parent !== window) { try { parent.postMessage({ type: 'g88-ready' }, location.origin); } catch (e) {} }
 })();
 </script>
 </body>
