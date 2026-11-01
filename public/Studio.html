@@ -1,0 +1,895 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>עיצוב האתר</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Karantina:wght@400;700&family=Rubik:wght@400;500;600;700&family=Unbounded:wght@500;700;800&family=Assistant:wght@400;700;800&family=Heebo:wght@400;700;900&family=Secular+One&family=Suez+One&family=Varela+Round&family=Open+Sans:wght@400;600;700;800&display=swap">
+<style>
+/* the admin site's look (same as the design-tool pages) */
+html, body { margin: 0; }
+body { background: #F5F6F4; color: #1E2320; font-family: 'Rubik', system-ui, 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.5; color-scheme: light; }
+a { color: #17694F; }
+a:hover { color: #0E4F3A; }
+.pill-hover:hover { background: #EEF1EF !important; color: #121413 !important; }
+.btn-ghost:hover { background: #EEF1EF !important; border-color: #B9C2BD !important; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 2px solid #C7436A; outline-offset: 2px; }
+.vh { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+[hidden] { display: none !important; }
+/* ================= DESIGN STUDIO: themes for the game, and a background per stage ================= */
+.ws { display: grid; grid-template-columns: minmax(0, 1fr); }
+.ed { display: flex; flex-direction: column; min-width: 0; background: #F5F6F4; }
+.ed-head { padding: 18px clamp(16px, 3vw, 24px) 0; }
+.ed-hrow { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.ed-head h1 { margin: 0; font-family: 'Karantina', 'Rubik', system-ui, sans-serif; font-size: 46px; line-height: 1; font-weight: 700; letter-spacing: .005em; color: #121413; }
+.ed-hrow .ed-peek { margin-inline-start: auto; }
+.ed-sub { margin: 4px 0 0; font-size: 14px; line-height: 1.5; color: #545D58; }
+.ed-tabs { display: flex; gap: 4px; margin-top: 12px; border-bottom: 1px solid #D3D9D5; }
+.ed-tabs button { height: 44px; padding: 0 16px; border: 0; border-bottom: 3px solid transparent; margin-bottom: -1px; background: none; color: #545D58; font: 600 15px 'Rubik', sans-serif; cursor: pointer; }
+.ed-tabs button:hover { color: #121413; }
+.ed-tabs button[aria-selected="true"] { color: #121413; border-bottom-color: #C7436A; }
+.ed-body { display: flex; flex-direction: column; gap: 12px; padding: 14px clamp(16px, 3vw, 24px) 24px; }
+.ed-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 12px clamp(16px, 3vw, 24px) calc(env(safe-area-inset-bottom, 0px) + 12px); background: #FFFFFF; border-top: 1px solid #E1E5E2; }
+
+.st-sec { display: flex; flex-direction: column; gap: 10px; padding: 14px 16px 16px; border-radius: 16px; border: 1px solid #E1E5E2; background: #FFFFFF; }
+.st-sec h2 { margin: 0; font-size: 16px; font-weight: 600; color: #121413; }
+.st-h3 { margin: 4px 0 0; font-size: 13px; font-weight: 600; color: #3D4541; }
+.st-hint { margin: -4px 0 0; font-size: 13px; line-height: 1.5; color: #545D58; }
+.st-now { margin: 0; font-size: 14px; color: #3D4541; }
+.st-themes { display: flex; flex-direction: column; gap: 8px; }
+.st-theme { display: flex; align-items: center; gap: 6px; padding: 8px; border-radius: 12px; border: 1.5px solid #E1E5E2; }
+.st-theme.on { border-color: #2A9171; box-shadow: 0 0 0 3px #D3F4E6; }
+.st-pick { flex: 1; min-width: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 1px 10px; align-items: center; padding: 2px; border: 0; background: none; color: inherit; font: inherit; text-align: start; cursor: pointer; }
+.st-sw { grid-row: span 2; display: flex; border-radius: 8px; overflow: hidden; box-shadow: 0 0 0 1px rgba(0,0,0,.14); }
+.st-sw i { display: block; width: 11px; height: 30px; }
+.st-pick b { font-size: 15px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.st-pick small { font-size: 12px; color: #545D58; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.st-tact { display: flex; align-items: center; gap: 2px; flex: none; }
+.st-delq { font-size: 13px; font-weight: 600; color: #B3261E; padding: 0 4px; }
+.st-link { height: 32px; padding: 0 8px; border: 0; border-radius: 8px; background: none; color: #17694F; font: 500 13px 'Rubik', sans-serif; cursor: pointer; }
+.st-link:hover { background: #EEFAF5; }
+.st-link.danger { color: #B3261E; }
+.st-link.danger:hover { background: #FDECEA; }
+.st-link:disabled { opacity: .45; cursor: default; }
+.st-newrow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.st-bases { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.st-base { padding: 0; border-radius: 12px; border: 2px solid #E1E5E2; background: #FFFFFF; color: inherit; font: inherit; text-align: start; overflow: hidden; cursor: pointer; }
+.st-base.on { border-color: #2A9171; box-shadow: 0 0 0 3px #D3F4E6; }
+.st-base .pv { position: relative; display: block; height: 62px; overflow: hidden; }
+.st-base .pv span { position: absolute; display: block; }
+.st-base b { display: block; padding: 6px 8px 8px; font-size: 13px; font-weight: 600; }
+.st-seg { display: inline-flex; align-self: flex-start; flex-wrap: wrap; border: 1.5px solid #D3D9D5; border-radius: 10px; overflow: hidden; background: #FFFFFF; }
+.st-seg button { height: 40px; padding: 0 16px; border: 0; background: none; color: #3D4541; font: 600 14px 'Rubik', sans-serif; cursor: pointer; }
+.st-seg button + button { border-inline-start: 1.5px solid #D3D9D5; }
+.st-seg button.on { background: #121413; color: #FFFFFF; }
+.st-check { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; line-height: 1.45; cursor: pointer; }
+.st-check input { flex: none; width: 18px; height: 18px; margin: 1px 0 0; accent-color: #2A9171; }
+.st-check.off { opacity: .5; cursor: default; }
+.st-pals { display: flex; flex-wrap: wrap; gap: 6px; }
+.st-pal { display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 12px 0 8px; border-radius: 99px; border: 1px solid #D3D9D5; background: #FFFFFF; color: #1E2320; font: 13px 'Rubik', sans-serif; cursor: pointer; }
+.st-pal:hover { border-color: #9FDDC4; background: #EEFAF5; }
+.st-pal span { display: inline-flex; }
+.st-pal i { display: block; width: 12px; height: 12px; border-radius: 50%; margin-inline-end: -3px; box-shadow: 0 0 0 1.5px #FFFFFF; }
+.st-colors { display: flex; flex-direction: column; gap: 8px; }
+.st-color { display: grid; grid-template-columns: minmax(0, 1fr) 46px 96px 30px; align-items: center; gap: 8px; }
+.st-color label { font-size: 14px; font-weight: 500; min-width: 0; }
+.st-color label small { display: block; font-size: 12px; font-weight: 400; color: #6B746F; }
+.st-color input[type="color"] { width: 46px; height: 36px; padding: 2px; border: 1px solid #D3D9D5; border-radius: 10px; background: #FFFFFF; cursor: pointer; box-sizing: border-box; }
+.st-hex { width: 100%; height: 36px; padding: 0 8px; border: 1px solid #D3D9D5; border-radius: 10px; background: #FFFFFF; color: #1E2320; font: 13px 'IBM Plex Mono', ui-monospace, Menlo, monospace; text-transform: uppercase; box-sizing: border-box; }
+.st-hex.bad { border-color: #B3261E; }
+.st-reset { width: 30px; height: 30px; border: 0; border-radius: 8px; background: none; color: #545D58; font-size: 17px; cursor: pointer; }
+.st-reset:hover { background: #F2F4F3; }
+.st-warn { display: flex; flex-direction: column; gap: 4px; padding: 10px 12px; border-radius: 12px; background: #FFF4E5; color: #8A4B12; font-size: 13px; line-height: 1.45; }
+.st-terms { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.st-fonts { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+.st-field { display: flex; flex-direction: column; gap: 4px; min-width: 0; font-size: 13px; font-weight: 500; color: #3D4541; }
+.st-field input, .st-field select { width: 100%; height: 38px; padding: 0 10px; border: 1px solid #D3D9D5; border-radius: 10px; background: #FFFFFF; color: #1E2320; font: 14px 'Rubik', sans-serif; box-sizing: border-box; }
+.st-field input::placeholder { color: #8A938E; }
+.st-field input:focus, .st-field select:focus, .st-hex:focus, .st-saveas input:focus, .st-group select:focus { outline: none; border-color: #2A9171; box-shadow: 0 0 0 3px #D3F4E6; }
+.st-sample { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 12px; background: #F2F4F3; }
+.st-sample b { font-size: 28px; line-height: 1.1; font-weight: 800; }
+.st-sample span { font-size: 14px; color: #3D4541; }
+.st-groups { display: flex; flex-direction: column; gap: 6px; }
+.st-group { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 210px); align-items: center; gap: 4px 10px; padding: 10px 12px; border-radius: 12px; border: 1px solid #E1E5E2; }
+.st-group.mine { background: #F2FBF7; border-color: #BFE6D5; }
+.st-group label { min-width: 0; font-size: 14px; font-weight: 500; }
+.st-group label small { display: block; font-size: 12px; font-weight: 400; color: #545D58; }
+.st-group label small.chg { color: #9C5A1E; font-weight: 600; }
+.st-group select { width: 100%; height: 38px; padding: 0 8px; border: 1px solid #D3D9D5; border-radius: 10px; background: #FFFFFF; color: #1E2320; font: 14px 'Rubik', sans-serif; }
+@media (max-width: 520px) { .st-group { grid-template-columns: minmax(0, 1fr); } }
+.st-err { margin: 0; font-size: 13px; font-weight: 600; color: #B3261E; }
+.st-ok { color: #17694F; font-weight: 600; }
+.st-dirty { color: #9C5A1E; font-weight: 600; }
+.st-status { flex: 1; min-width: 140px; font-size: 13px; color: #545D58; }
+.st-ask { width: 100%; margin: 0; font-size: 14px; font-weight: 600; color: #8A4B12; }
+.st-fbtns { display: flex; flex-wrap: wrap; gap: 6px; }
+.st-btn { height: 42px; padding: 0 16px; border-radius: 10px; border: 1px solid #D3D9D5; background: #FFFFFF; color: #1E2320; font: 600 14px 'Rubik', sans-serif; cursor: pointer; white-space: nowrap; }
+.st-btn:hover { border-color: #9FDDC4; background: #F7FBF9; }
+.st-btn.primary { border-color: #C7436A; background: #C7436A; color: #FFFFFF; }
+.st-btn.primary:hover { background: #B13A5D; }
+.st-btn:disabled { opacity: .45; cursor: default; }
+.st-saveas { display: flex; flex-wrap: wrap; gap: 6px; width: 100%; }
+.st-saveas input { flex: 1; min-width: 160px; height: 42px; padding: 0 12px; border: 1px solid #D3D9D5; border-radius: 10px; font: 15px 'Rubik', sans-serif; color: #1E2320; box-sizing: border-box; }
+.st-up { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+.st-up small { font-size: 12px; color: #6B746F; }
+.st-up.over { outline: 2px dashed #2A9171; outline-offset: 4px; border-radius: 8px; }
+
+/* background tiles */
+.bgopts { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; }
+.bgt { padding: 0 0 6px; border: 2px solid transparent; border-radius: 12px; background: #F2F4F3; color: #1E2320; font: inherit; text-align: center; cursor: pointer; overflow: hidden; }
+.bgt:hover { background: #E8ECEA; }
+.bgt.sel { border-color: #2A9171; box-shadow: 0 0 0 3px #D3F4E6; }
+.bgpv { position: relative; display: block; height: 58px; overflow: hidden; background: #1B1F1E; }
+.bgl { display: block; margin-top: 5px; padding: 0 6px; font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bgimg, .bgnone, .bgcol { position: absolute; inset: 0; background: center / cover no-repeat; }
+.bgnone { display: grid; place-items: center; background: linear-gradient(135deg, #2A3330, #141A18); color: #C9D0CC; font-size: 11px; font-weight: 600; }
+.bgpv .scn, .sb-thumb .scn { inset: 0; }
+.bgpv .scn, .bgpv .scn > i, .sb-thumb .scn, .sb-thumb .scn > i { filter: none !important; }
+
+/* the stages of the path */
+.sb-world { display: flex; flex-direction: column; border: 1px solid #E1E5E2; border-radius: 14px; background: #FFFFFF; overflow: hidden; }
+.sb-row { display: grid; grid-template-columns: 58px minmax(0, 1fr); gap: 1px 10px; align-items: center; width: 100%; padding: 8px 10px; border: 0; border-top: 1px solid #EEF1EF; border-inline-start: 4px solid transparent; background: #FFFFFF; color: inherit; font: inherit; text-align: start; cursor: pointer; }
+.sb-row:first-child { border-top: 0; }
+.sb-row:hover { background: #F7FBF9; }
+.sb-row.lvl { background: #F7F8F7; }
+.sb-row.lvl b { font-size: 15px; }
+.sb-row.on { background: #EEFAF5; border-inline-start-color: #2A9171; }
+.sb-row b { min-width: 0; font-size: 14px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sb-row small { grid-column: 2; min-width: 0; font-size: 12px; color: #545D58; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sb-row small.own { color: #17694F; font-weight: 600; }
+.sb-thumb { grid-row: span 2; position: relative; width: 58px; height: 38px; border-radius: 8px; overflow: hidden; background: #1B1F1E; }
+.sb-sub { padding-inline-start: 26px; }
+.sb-list { display: flex; flex-direction: column; gap: 8px; }
+.sb-warn { margin: 0; padding: 10px 12px; border-radius: 12px; background: #FFF4E5; color: #8A4B12; font-size: 13px; line-height: 1.45; }
+
+/* the live preview */
+.pv { display: flex; flex-direction: column; min-width: 0; min-height: 0; background: #D9DFDB; }
+.pv-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 10px 16px; background: #FFFFFF; border-bottom: 1px solid #E1E5E2; }
+.pv-unit { display: flex; align-items: center; gap: 8px; min-width: 0; font-size: 14px; color: #3D4541; }
+.pv-unit select { height: 38px; max-width: 240px; min-width: 0; padding: 0 8px; border: 1px solid #D3D9D5; border-radius: 10px; background: #FFFFFF; color: #121413; font: 14px 'Rubik', sans-serif; }
+.pv-theme { min-width: 0; font-size: 13px; color: #545D58; }
+.pv-sp { flex: 1; }
+.pv-note { margin: 0; padding: 8px 16px; background: #FFF4E5; color: #8A4B12; font-size: 13px; }
+.pv-frame { flex: 1; min-height: 0; display: flex; justify-content: center; }
+.pv-frame iframe { display: block; width: 100%; height: 100%; border: 0; background: #0E1F1C; }
+.pv.phone .pv-frame { padding: 18px; }
+.pv.phone .pv-frame iframe { width: 390px; max-width: 100%; border-radius: 24px; box-shadow: 0 0 0 8px #121413, 0 18px 50px rgba(0,0,0,.3); }
+@media (min-width: 1200px) {
+  body.studio-page { height: 100vh; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
+  body.studio-page > header { flex: none; }
+  .ws { flex: 1; min-height: 0; grid-template-columns: 470px minmax(0, 1fr); }
+  .ed { min-height: 0; border-inline-end: 1px solid #D3D9D5; }
+  .ed-body { flex: 1; min-height: 0; overflow-y: auto; }
+  .ed-peek, .pv-back { display: none; }
+}
+@media (max-width: 1199px) {
+  .pv { position: fixed; inset: 0; z-index: 100; visibility: hidden; padding-top: env(safe-area-inset-top, 0px); }
+  body.peek .pv { visibility: visible; }
+  body.peek { overflow: hidden; }
+  .ed-foot { position: sticky; bottom: 0; z-index: 5; }
+  .pv-dev { display: none; }
+}
+@media (max-width: 480px) { .st-color { grid-template-columns: minmax(0, 1fr) 44px 84px 28px; } .st-bases { gap: 6px; } .st-terms { grid-template-columns: minmax(0, 1fr); } }
+.studio-page button:focus-visible, .studio-page input:focus-visible, .studio-page select:focus-visible { outline: 3px solid #2A9171; outline-offset: 2px; }
+.scn { position: absolute; inset: -30px; overflow: hidden; }
+.scn > i { position: absolute; inset: 0; display: block; }
+.scn-field { background: linear-gradient(180deg, #7FB6DE 0%, #BFDFF0 40%, #DCEBD8 47%, #9CC27A 48%, #6E9E4E 66%, #456F32 100%); }
+.scn-field .s-sun { background: radial-gradient(circle at 78% 16%, rgba(255,250,225,.95) 0, rgba(255,240,200,.5) 8%, transparent 30%); }
+.scn-field .s-trees { top: 34%; bottom: 51%; filter: blur(5px); background: radial-gradient(12% 70% at 6% 100%, #3E6A34 60%, transparent 62%), radial-gradient(10% 80% at 18% 100%, #355E2D 60%, transparent 62%), radial-gradient(14% 65% at 33% 100%, #47743A 60%, transparent 62%), radial-gradient(9% 75% at 61% 100%, #3B6531 60%, transparent 62%), radial-gradient(13% 70% at 77% 100%, #426E36 60%, transparent 62%), radial-gradient(11% 80% at 93% 100%, #36602E 60%, transparent 62%); }
+.scn-field .s-mow { top: 48%; filter: blur(1.5px); background: repeating-linear-gradient(90deg, rgba(255,255,255,.1) 0 9%, transparent 9% 18%); transform: perspective(260px) rotateX(48deg); transform-origin: 50% 0; }
+.scn-field .s-cones { top: 48%; filter: blur(2px); background: radial-gradient(1.2% 2.4% at 30% 40%, #F08A2E 60%, transparent 62%), radial-gradient(1.2% 2.4% at 50% 46%, #F08A2E 60%, transparent 62%), radial-gradient(1.6% 3% at 70% 56%, #F08A2E 60%, transparent 62%), radial-gradient(10% 2.2% at 52% 72%, rgba(255,209,92,.9) 60%, transparent 62%); }
+.scn-city { background: linear-gradient(180deg, #5E7A92 0%, #A8B6BE 28%, #F2C890 48%, #F7B26A 55%, #6B5A4E 58%, #3B342F 100%); }
+.scn-city .s-sun { background: radial-gradient(circle at 62% 50%, rgba(255,236,190,1) 0, rgba(255,214,150,.85) 6%, rgba(255,190,120,.35) 18%, transparent 40%); }
+.scn-city .s-far { filter: blur(5px); opacity: .75; background: linear-gradient(180deg, transparent 22%, #6F7C84 22%) 6% 0/9% 58% no-repeat, linear-gradient(180deg, transparent 12%, #5E6B73 12%) 17% 0/7% 58% no-repeat, linear-gradient(180deg, transparent 30%, #75828A 30%) 27% 0/10% 58% no-repeat, linear-gradient(180deg, transparent 8%, #56636B 8%) 78% 0/8% 58% no-repeat, linear-gradient(180deg, transparent 26%, #6A777F 26%) 88% 0/11% 58% no-repeat; }
+.scn-city .s-near { filter: blur(2.5px); background: repeating-linear-gradient(180deg, rgba(255,210,150,0) 0 14px, rgba(255,220,160,.35) 14px 18px) 0 18%/16% 62% no-repeat, linear-gradient(180deg, transparent 18%, #2C2C2E 18%) 0 0/16% 80% no-repeat, repeating-linear-gradient(90deg, #262628 0 26px, #3A3A3D 26px 30px) 0 18%/16% 62% no-repeat, repeating-linear-gradient(180deg, rgba(255,210,150,0) 0 16px, rgba(255,220,160,.28) 16px 20px) 100% 10%/18% 70% no-repeat, linear-gradient(180deg, transparent 10%, #252527 10%) 100% 0/18% 80% no-repeat, linear-gradient(180deg, transparent 40%, #3A3530 40%) 22% 0/9% 62% no-repeat; }
+.scn-city .s-road { top: 58%; background: linear-gradient(180deg, #5A5550, #2E2B29); clip-path: polygon(38% 0, 62% 0, 100% 100%, 0 100%); }
+.scn-city .s-stripes { top: 58%; clip-path: polygon(38% 0, 62% 0, 100% 100%, 0 100%); background: repeating-linear-gradient(90deg, transparent 0 4%, rgba(255,255,255,.75) 4% 6.5%) 0 70%/100% 9% no-repeat; filter: blur(1.5px); }
+.scn-city .s-lot { top: 56%; background: linear-gradient(90deg, #8A6A4C 0 30%, transparent 30% 70%, #7D6249 70%); opacity: .8; filter: blur(3px); }
+.scn-city .s-haze { background: linear-gradient(180deg, transparent 40%, rgba(247,178,106,.25) 55%, transparent 70%); }
+.scn-street { filter: blur(9px) saturate(1.05); background:
+  radial-gradient(5px 5px at 18% 34%, rgba(255,244,210,.9), transparent), radial-gradient(7px 7px at 64% 28%, rgba(255,244,210,.8), transparent), radial-gradient(6px 6px at 82% 40%, rgba(255,240,200,.8), transparent), radial-gradient(5px 5px at 40% 22%, rgba(255,240,200,.7), transparent),
+  radial-gradient(34% 20% at 18% 12%, #2E3A22 40%, transparent 72%), radial-gradient(40% 22% at 72% 8%, #3A4A2A 40%, transparent 72%), radial-gradient(26% 16% at 46% 20%, #46552F 30%, transparent 72%),
+  linear-gradient(90deg, transparent 0 8%, rgba(60,46,36,.9) 8% 9.5%, transparent 9.5% 46%, rgba(50,40,32,.9) 46% 47.4%, transparent 47.4% 84%, rgba(56,44,34,.9) 84% 85.4%, transparent 85.4%) 0 30%/100% 60% no-repeat,
+  linear-gradient(180deg, transparent 22%, #B7A386 22%, #A08D72 56%, transparent 56%) 0 0/100% 100% no-repeat,
+  linear-gradient(90deg, rgba(120,40,60,.55) 0 30%, transparent 30% 70%, rgba(110,90,70,.5) 70%) 0 52%/100% 6% no-repeat,
+  linear-gradient(180deg, transparent 70%, #3E4A34 70% 73%, transparent 73%),
+  linear-gradient(180deg, #7E8C78 0%, #5F6B54 18%, #8A7C68 40%, #6E665C 60%, #4E4C48 74%, #3A3937 100%); }
+.scn-garage { background: linear-gradient(180deg, #1A1F2A 0%, #2A2F3B 40%, #34303A 62%, #1C1A22 100%); }
+.scn-garage .s-ceil { background: repeating-linear-gradient(90deg, transparent 0 9%, rgba(0,0,0,.35) 9% 10%) 0 0/100% 34% no-repeat, linear-gradient(180deg, #11141B, transparent 34%); }
+.scn-garage .s-glow { background: radial-gradient(circle at 8% 70%, rgba(255,62,134,.7), transparent 30%), radial-gradient(circle at 92% 40%, rgba(47,211,245,.55), transparent 35%), radial-gradient(circle at 70% 75%, rgba(47,211,245,.35), transparent 30%), radial-gradient(circle at 30% 20%, rgba(255,62,134,.35), transparent 30%); }
+.scn-garage .s-lamps { filter: blur(1px); background: radial-gradient(ellipse 14% 2.2% at 30% 14%, #fff, rgba(255,62,134,.9) 40%, transparent 70%), radial-gradient(ellipse 12% 2% at 74% 18%, #fff, rgba(47,211,245,.9) 40%, transparent 70%), radial-gradient(ellipse 8% 1.6% at 52% 22%, #fff, rgba(47,211,245,.8) 40%, transparent 70%); }
+.scn-garage .s-pillar { filter: blur(1.5px); background: linear-gradient(90deg, transparent 84%, #15171D 84% 96%, transparent 96%); }
+.scn-garage .s-gate { filter: blur(1px); background: radial-gradient(ellipse 13% 22% at 74% 50%, transparent 62%, rgba(47,211,245,.9) 64%, rgba(47,211,245,.9) 74%, transparent 76%); }
+.scn-garage .s-floor { top: 64%; background: linear-gradient(180deg, rgba(47,211,245,.18), rgba(255,62,134,.12) 40%, #121017); }
+.scn-loft { background: linear-gradient(180deg, #E7DED3 0%, #CFC2B2 50%, #8C7A66 100%); }
+.scn-loft .s-beams { filter: blur(2px); background: repeating-linear-gradient(-28deg, transparent 0 8%, #8B5A33 8% 10.5%) 0 0/100% 45% no-repeat, linear-gradient(180deg, rgba(255,255,255,.9), transparent 30%) 55% 0/20% 40% no-repeat; }
+.scn-loft .s-window { filter: blur(3px); background: linear-gradient(90deg, transparent 10%, rgba(120,170,110,.7) 10% 34%, transparent 34%) 0 55%/100% 30% no-repeat; }
+.scn-loft .s-table { top: 70%; filter: blur(2px); background: linear-gradient(180deg, #A0703F, #6B4A2A); clip-path: polygon(5% 0, 70% 0, 80% 100%, 0 100%); }
+.scn-forest { background: linear-gradient(180deg, #B9C6B8 0%, #6E7F5B 40%, #3C4A2B 70%, #2A2A18 100%); }
+.scn-forest .s-trees { filter: blur(3px); background: repeating-linear-gradient(90deg, transparent 0 5%, rgba(40,30,20,.85) 5% 6.2%, transparent 6.2% 13%), radial-gradient(circle at 60% 20%, rgba(220,90,40,.7), transparent 25%), radial-gradient(circle at 25% 15%, rgba(120,150,70,.7), transparent 30%), radial-gradient(circle at 85% 30%, rgba(200,120,50,.6), transparent 25%); }
+.scn-forest .s-rays { background: linear-gradient(115deg, transparent 30%, rgba(255,240,200,.25) 40%, transparent 50%, rgba(255,240,200,.18) 58%, transparent 66%); }
+.scn-forest .s-grass { top: 62%; filter: blur(1px); background: linear-gradient(180deg, #6C7A3A, #3E4A20); }
+.scn-night { background: linear-gradient(180deg, #05070D 0%, #121A2B 50%, #1D1420 100%); }
+.scn-night .s-stars { background-image: radial-gradient(1.5px 1.5px at 12% 18%, #fff, transparent), radial-gradient(1px 1px at 32% 8%, #fff, transparent), radial-gradient(1.5px 1.5px at 58% 22%, #fff, transparent), radial-gradient(1px 1px at 76% 12%, #fff, transparent), radial-gradient(1px 1px at 90% 28%, #fff, transparent), radial-gradient(1.5px 1.5px at 44% 30%, #fff, transparent); }
+.scn-night .s-glow { background: radial-gradient(circle at 50% 30%, rgba(255,62,134,.45), transparent 35%); }
+.scn-night .s-twr { background: linear-gradient(90deg, transparent 44%, #000 44% 56%, transparent 56%) 0 30%/100% 70% no-repeat, radial-gradient(ellipse 10% 3% at 50% 30%, rgba(255,62,134,1), transparent 70%); }
+</style>
+</head>
+<body class="studio-page">
+<header style="border-bottom: 5px solid #BDEFDB; background: #FFFFFF;">
+<div style="max-width: 1280px; margin: 0 auto; padding: 10px clamp(16px, 4vw, 32px); box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 28px;">
+<a href="Main.dc.html" aria-label="88ACADEMY — לעמוד הסקירה" style="display: flex; align-items: center; gap: 10px; text-decoration: none; white-space: nowrap;">
+<svg width="32.6" height="34" viewBox="0 0 100 104.15" aria-hidden="true" style="flex: none; display: block;"><path d="M74.4 104L71.1 104 67.8 103.6 66.6 103.3 64.3 102.7 61.5 101.5 59 100.2 56.6 98.7 55.4 97.7 53.7 96.2 52.2 94.5 52.1 94.2 54 90.9 55.5 87.7 55.6 87.6 55.8 87.6 58.1 90.4 59 91.3 60.1 92.3 61.5 93.3 62.7 94 65.1 95.3 67.9 96.2 70.9 96.7 73.6 96.8 76.6 96.4 78.1 96.1 80.4 95.3 82.2 94.4 84.2 93.1 86 91.7 87.4 90.4 88.9 88.6 89.7 87.4 90.8 85.4 91.7 83.2 92.3 81.6 92.6 80.2 92.8 78.7 92.9 76.2 92.6 73.3 92.2 71.4 91.3 68.8 90.4 66.9 89 64.8 87.3 62.8 85.4 61.1 83.6 59.7 81.6 58.6 79.6 57.8 76.6 57 74.9 56.8 73.4 56.7 71.1 56.7 68.8 57.1 66.3 57.8 64.1 58.7 61.6 60.2 59.8 61.6 58.6 62.7 57.5 64 56 65.9 54.7 68.3 53.7 70.4 53.1 72.8 52.8 74.9 52.7 77.4 52.9 80.1 53.7 83.4 53.2 84.9 51.7 88.4 50.5 90.5 49.6 92 47.8 94.4 46.1 96.2 44.4 97.8 41.9 99.6 40.4 100.5 38 101.7 36.2 102.4 33.6 103.3 31.4 103.7 28.6 104 26.4 104 24.4 103.9 21.3 103.4 18.8 102.7 16.1 101.6 13.5 100.3 11.1 98.7 9.8 97.7 8.1 96.2 6.5 94.4 5.2 92.7 3.7 90.3 2.6 88.4 1.4 85.4 0.8 83.2 0.2 80.1 0 77.4 0.1 74.6 0.3 72.4 1 69.3 1.8 66.6 3.3 63.3 5.1 60.3 6.1 59 8 57 10 55.2 12.5 53.4 15 52 14.9 51.8 14.7 51.7 12.5 50.4 10.8 49.2 9.8 48.4 8.1 46.8 6.8 45.5 5.3 43.7 4.4 42.4 3.4 40.7 2.7 39.2 1.6 36.7 0.9 34.4 0.5 32.7 0.3 31.4 0 28.7 -0 25.9 0.1 24.4 0.7 20.9 1.7 17.8 2.9 15 4.4 12.3 6 10.1 6.8 9.1 8.3 7.6 10.5 5.7 11.8 4.8 13.3 3.8 15 2.9 16.9 2 19.1 1.2 22.1 0.4 24.4 0.1 26.7 -0 29.6 0.1 31.6 0.3 35.2 1.2 37.5 2.1 40.2 3.3 42.5 4.8 44.3 6.1 46.2 7.8 47.8 9.6 47.8 9.8 47.7 10.1 46.5 12.1 44.9 15.1 44.4 16.4 44.2 16.6 44 16.6 43.9 16.4 42.8 15 41.8 13.8 40.2 12.3 37.9 10.6 37 10.1 35.2 9.1 32.9 8.3 29.6 7.6 26.6 7.5 23.8 7.7 21.4 8.3 20.1 8.7 18.4 9.4 15.9 10.8 14.1 12.2 12.5 13.8 10.9 15.6 9.7 17.4 8.9 18.9 8.4 20.1 7.6 22.6 7.2 24.6 7 26.9 7.2 29.6 7.6 32.1 8.3 34.2 9.3 36.5 10.7 38.9 12.5 41 14.1 42.6 15.8 43.9 17.6 45 19.8 46.1 22.3 46.9 25.2 47.4 28.1 47.5 30.1 47.2 32.6 46.7 34.9 45.9 37.2 44.7 39.4 43.2 41.5 41.4 42.5 40.2 44.3 37.7 45.3 35.7 46.1 33.9 46.8 31.4 47 30.1 47.2 28.2 47.1 25.9 46.9 23.6 46.2 21.1 46.2 20.6 46.7 19.1 48.1 15.8 49.3 13.6 50.7 11.5 52.2 9.6 53.4 8.1 54.8 6.8 57.1 4.9 58.3 4.1 60.6 2.8 62.6 1.9 65 1.1 67.6 0.4 70.3 0.1 73.1 -0 75.4 0.1 77.9 0.4 80.7 1.1 83.1 2 85.4 3.1 87.4 4.3 89.7 6 91.4 7.5 93.1 9.1 94.6 11 96.2 13.5 97.3 15.6 98.5 18.5 99.3 21.3 99.7 23.9 99.9 25.9 99.8 30 99.4 32.7 98.9 35 98 37.5 96.6 40.5 95.4 42.5 93.7 44.8 92 46.7 90 48.5 87.7 50.2 85 51.8 84.9 52 87.4 53.4 89.1 54.7 90.8 56 92.5 57.6 94.1 59.5 95.3 61.2 96.4 63 97.4 64.8 98.2 66.7 98.9 68.9 99.5 71.6 99.8 73.6 99.9 76.1 99.8 79.2 99.5 81.4 99.2 83.1 98.7 84.9 98 86.7 97.1 88.9 95.6 91.5 94.4 93.2 93 94.9 91.7 96.3 90 97.8 88.5 98.9 86.5 100.2 84.4 101.4 82.7 102.1 81.2 102.7 78.7 103.4 75.9 103.9ZM75 47.3L76.7 47.1 78.2 46.7 80.6 45.9 82.2 45.1 84.1 43.9 85.4 42.9 87.2 41.3 88.4 39.9 89.4 38.5 90.6 36.5 91.4 34.9 92.1 32.9 92.5 31.1 92.8 29.6 92.9 27.2 92.7 25.1 92.5 23.8 92.1 21.8 91.5 20.3 90.7 18.4 89.9 16.9 88.4 14.9 87.3 13.6 85.5 12 84.1 10.9 82.7 10.1 81.1 9.2 78.7 8.3 76.1 7.7 74.6 7.5 72.4 7.4 70.4 7.6 69.1 7.8 66.6 8.4 64.8 9.1 63 10 61.5 10.9 60 12.1 58.3 13.6 57.1 14.9 56.2 16.1 55.3 17.6 54.5 19.1 53.6 21.4 53 23.9 52.8 25.2 52.7 27.2 52.8 29.6 53.1 31.4 53.7 33.7 54.5 35.7 55.5 37.5 56.5 39 57.6 40.5 58.9 41.9 60.3 43.1 61.6 44 63.6 45.2 65.1 45.9 67.4 46.8 69.6 47.2 71.3 47.4 73.3 47.5ZM50.1 61.8L51.5 60 52.6 58.6 54.5 56.6 56.1 55.3 57.3 54.4 60.8 52.2 60.8 52 60.6 51.8 59 50.9 56.6 49.4 54.5 47.6 53.6 46.7 52.1 45 50 42.3 49.8 42.4 49.7 42.5 47.7 45.2 46.2 46.8 45.2 47.7 43.2 49.4 41 50.8 39.3 51.8 39 52 39 52.2 39.2 52.4 41.9 54 44.5 56 45.6 57 47.2 58.6 48.5 60.2 49.7 61.8 49.8 62 50 61.9ZM29 96.7L30.9 96.4 32.6 96 34.9 95.2 36.5 94.4 37.9 93.6 39.6 92.4 40.9 91.2 42.4 89.6 43.5 88.1 44.6 86.4 45.5 84.6 46.2 82.7 46.7 80.6 47 78.9 47.1 76.9 47 74.6 46.7 73.3 46.1 70.6 45.2 68.6 44.4 66.9 43.3 65.3 42.4 64 40.9 62.4 39.2 61 37.9 60 35.7 58.8 33.9 58 32.2 57.4 30.2 56.9 28.2 56.7 26.6 56.7 24.4 56.8 22.6 57.1 20.4 57.7 18.3 58.6 16.8 59.4 15 60.6 14.1 61.3 12.7 62.6 11.3 64.2 10.3 65.6 9.2 67.4 8.4 69.1 7.8 71.1 7.3 73.3 7.1 74.9 7 76.7 7.1 78.7 7.4 80.6 7.7 81.9 8.5 84.1 9.5 86.2 10.5 87.8 11.8 89.5 13.5 91.3 14.9 92.5 16.3 93.6 17.9 94.5 19.6 95.3 21.8 96.1 23.9 96.5 25.7 96.7 27.2 96.8Z" fill="#121413" fill-rule="evenodd"></path></svg>
+<svg width="93.9" height="13" viewBox="0 0 72.24 10" aria-hidden="true" style="flex: none; display: block;"><path d="M8.7 9.9L1 9.9 0.4 9.6 0.1 9.1 0 8.5 0.5 7.2 3.7 0.7 4 0.3 4.3 0.1 4.6 -0 5.2 -0 5.6 0.1 5.9 0.4 8.2 5.1 9.6 7.9 9.8 8.5 9.7 9.1 9.6 9.4 9.3 9.7ZM18.4 9.9L15.2 9.8 14.6 9.8 13.8 9.6 13.1 9.3 12.7 9 12.1 8.5 11.6 7.9 11.3 7.2 11 6.1 11 4.9 11 3.9 11.3 2.7 11.6 1.9 12.1 1.3 12.8 0.7 13.8 0.3 14.5 0.1 15.7 -0 18.5 0 19 0.1 19.4 0.5 19.6 0.9 19.6 1.5 19.4 1.9 19.1 2.2 18.5 2.4 15.7 2.5 14.8 2.7 14.2 3 13.9 3.3 13.6 3.9 13.5 4.5 13.5 5.4 13.7 6.1 14 6.7 14.5 7.1 14.9 7.2 15.5 7.4 18.5 7.4 19.1 7.6 19.3 7.8 19.5 8.1 19.6 8.4 19.6 9 19.5 9.3 19.3 9.5 19 9.7ZM29.4 9.9L21.8 9.9 21.5 9.8 21.2 9.6 20.8 9.1 20.7 8.7 20.8 8.4 21.4 6.9 24.5 0.8 24.8 0.3 25.2 0 25.5 -0 26 0 26.4 0.2 26.7 0.6 29 5.1 30.4 7.9 30.6 8.7 30.5 9.1 30.3 9.4 30 9.7ZM37 9.9L32.8 9.9 32.3 9.7 32.1 9.5 31.9 9.3 31.7 8.5 31.7 1.2 31.9 0.6 32.1 0.3 32.4 0.1 33.3 -0 36.9 -0 37.8 0.1 38.7 0.3 39.6 0.6 40.1 1 40.6 1.5 41.1 2.2 41.3 2.7 41.5 3.6 41.6 5.1 41.5 6.3 41.2 7.3 41 7.7 40.4 8.7 39.6 9.3 39 9.5 38.1 9.7ZM50.1 9.9L43.9 9.9 43.4 9.8 43 9.4 42.8 9.1 42.7 8.5 42.7 1.3 42.8 0.7 42.9 0.4 43.1 0.2 43.6 0 44 -0 50 -0 50.7 0.1 51.2 0.4 51.4 1 51.3 1.6 51 2.1 50.6 2.4 50 2.5 45.5 2.5 45.3 2.5 45.2 2.7 45.2 7 45.3 7.3 45.7 7.4 50.1 7.4 50.9 7.6 51.2 7.9 51.3 8.2 51.3 8.7 51.3 9.1 51.1 9.4 50.9 9.6 50.6 9.8ZM61.2 9.9L60.7 9.8 60.5 9.7 60.1 9.4 60 9.1 59.9 8.5 59.9 4.8 59.9 4.6 59.7 4.5 58.2 5.9 57.9 6.1 57.5 6.1 57 6.1 56.7 6 55.4 4.7 55.1 4.5 55 4.8 55 8.7 54.8 9.3 54.4 9.7 53.9 9.9 53.1 9.8 52.7 9.4 52.6 9.1 52.5 8.5 52.5 1.3 52.6 0.7 52.8 0.3 53.1 0.1 53.6 -0 54.2 0.1 54.5 0.2 54.9 0.6 57.2 2.8 57.5 3 57.7 2.8 59.9 0.7 60.4 0.2 60.7 0.1 61.2 0 61.6 0.1 62.1 0.4 62.3 0.7 62.4 1.3 62.4 8.8 62.3 9.3 62.1 9.5 61.6 9.8ZM67.8 9.9L67.2 9.8 66.9 9.6 66.6 9.3 66.5 8.5 66.5 5.4 66.3 5.1 63.6 1.8 63.4 1.2 63.5 0.6 63.7 0.3 64.2 0 64.8 -0 65.2 0.1 65.7 0.4 67.5 2.5 67.8 2.7 68 2.5 70 0.2 70.4 -0 71.4 0 71.9 0.3 72.1 0.6 72.1 1.2 72.1 1.6 71.8 2.1 69.1 5.2 69 5.7 69 8.4 68.9 9.1 68.7 9.4 68.5 9.6 68.2 9.8ZM37.4 7.3L37.9 7.2 38.4 6.9 38.7 6.6 38.9 6.1 39.1 5.4 39.1 4.6 39 3.9 38.8 3.4 38.5 3.1 38.2 2.8 37.3 2.5 36.4 2.5 34.6 2.5 34.3 2.5 34.2 2.8 34.2 7 34.3 7.3 34.5 7.4 35.1 7.4 36.9 7.4ZM49.7 6.1L47.2 6.1 46.4 6 46.1 5.8 45.9 5.4 45.8 4.8 46 4.3 46.3 3.9 47 3.7 49.4 3.7 50.1 3.8 50.4 4.1 50.6 4.3 50.8 4.9 50.7 5.2 50.6 5.5 50.4 5.8 50.1 6ZM6.4 7.3L6.5 7.2 6.4 7 5.1 4.3 4.9 4.1 4.8 4.2 3.4 7 3.3 7.2 3.4 7.3 3.6 7.4 4.5 7.4 6.1 7.4ZM27.2 7.3L27.2 7.2 27.2 7 25.9 4.3 25.7 4.1 25.5 4.2 24.7 5.8 24.1 7.2 24.1 7.3 24.3 7.4 25.7 7.4 27 7.4Z" fill="#121413" fill-rule="evenodd"></path></svg>
+</a>
+<nav aria-label="ניווט ראשי" style="flex: 1 1 auto; min-width: 0;">
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 2px;">
+<li><a href="Main.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">סקירה</a></li>
+<li><a href="Leadership.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">הקורסים</a></li>
+<li><a href="Students.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">סטודנטים</a></li>
+<li><a href="Curriculum.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">תוכנית לימודים</a></li>
+<li><a href="Rewards.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">פרסים</a></li>
+<li><a href="PointsSettings.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">ניקוד</a></li>
+<li><a href="Activity.dc.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">פעילות</a></li>
+<li><a href="Tower.html" class="pill-hover" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid transparent; color: #3D4541; text-decoration: none; font-size: 15px; white-space: nowrap;">מגדל הפיקוח</a></li>
+<li><a href="Studio.html" aria-current="page" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid #9FDDC4; background: #D3F4E6; color: #121413; font-weight: 600; text-decoration: none; font-size: 15px; white-space: nowrap;">עיצוב האתר</a></li>
+</ul>
+</nav>
+<div style="display: flex; align-items: center; gap: 8px;">
+<span style="display: flex; align-items: center; gap: 10px; color: #3D4541; font-size: 15px; white-space: nowrap;"><span aria-hidden="true" style="width: 30px; height: 30px; border-radius: 50%; background: #76DEB8; color: #121413; display: grid; place-items: center; font-size: 14px; font-weight: 600;" id="meI"></span><span id="meN"></span></span>
+<a href="/password" class="btn-ghost" aria-label="החלפת סיסמה" title="החלפת סיסמה" style="width: 40px; height: 40px; box-sizing: border-box; display: grid; place-items: center; padding: 0; background: transparent; border: 1px solid transparent; border-radius: 10px; color: #545D58; text-decoration: none;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"></circle><path d="M10.8 12.2L20 3M17 6l2.5 2.5M14.5 8.5L17 11"></path></svg></a>
+<a href="/logout" class="btn-ghost" aria-label="התנתקות" style="width: 40px; height: 40px; box-sizing: border-box; display: grid; place-items: center; padding: 0; background: transparent; border: 1px solid transparent; border-radius: 10px; color: #545D58; text-decoration: none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3"></path><path d="M10 8l-4 4 4 4"></path><path d="M6 12h10"></path></svg></a>
+</div>
+</div>
+</header>
+<div class="ws" id="ws">
+  <section class="ed" id="ed" aria-labelledby="edTitle">
+    <div class="ed-head">
+      <div class="ed-hrow">
+        <h1 id="edTitle">עיצוב האתר</h1>
+        <button class="st-btn ed-peek" type="button" id="peekBtn">תצוגה מקדימה</button>
+      </div>
+      <p class="ed-sub">איך המשחק נראה לתלמידים של כל קבוצה. התצוגה המקדימה מתעדכנת בזמן העריכה, והתלמידים רואים את השינוי אחרי שמירה.</p>
+      <div class="ed-tabs" role="tablist" aria-label="מה עורכים">
+        <button type="button" role="tab" id="tabThemes" aria-controls="edBody" data-tab="themes">ערכות נושא</button>
+        <button type="button" role="tab" id="tabBg" aria-controls="edBody" data-tab="bg">רקע לשלב</button>
+      </div>
+    </div>
+    <div class="ed-body" id="edBody" role="tabpanel"></div>
+    <footer class="ed-foot" id="edFoot"></footer>
+  </section>
+  <section class="pv" id="pv" aria-label="תצוגה מקדימה">
+    <div class="pv-bar">
+      <label class="pv-unit"><span>תצוגה של</span><select id="pvUnit"></select></label>
+      <span class="pv-theme" id="pvTheme"></span>
+      <span class="pv-sp"></span>
+      <div class="st-seg pv-dev" role="group" aria-label="גודל המסך בתצוגה"><button type="button" data-dev="desk" aria-pressed="true" class="on">מחשב</button><button type="button" data-dev="phone" aria-pressed="false">טלפון</button></div>
+      <button class="st-btn pv-back" type="button" id="pvBack">חזרה לעריכה</button>
+    </div>
+    <p class="pv-note" id="pvNote" role="status" hidden></p>
+    <div class="pv-frame" id="pvFrame"><iframe id="pvIframe" title="תצוגה מקדימה: המסך של התלמידים" src="about:blank"></iframe></div>
+  </section>
+</div>
+<!--ACADEMY-->
+<script>
+(() => {
+  'use strict';
+  // 88ACADEMY · the design page: themes for the game (what each group sees) and a background per stage of the path.
+  // Everything is a draft until it is saved; the preview on the side shows the draft as a student would see it.
+  const $ = (s, r = document) => r.querySelector(s);
+  const A = window.Academy;
+  if (!A || !A.on || !A.me || A.me.role !== 'admin') { location.replace('/'); return; }
+  $('#meI').textContent = (A.me.name || '?').trim().charAt(0);
+  $('#meN').textContent = A.me.name || '';
+
+  const SCN = {
+    field: '<div class="scn scn-field"><i class="s-sun"></i><i class="s-trees"></i><i class="s-mow"></i><i class="s-cones"></i></div>',
+    city: '<div class="scn scn-city"><i class="s-sun"></i><i class="s-far"></i><i class="s-lot"></i><i class="s-road"></i><i class="s-stripes"></i><i class="s-near"></i><i class="s-haze"></i></div>',
+    street: '<div class="scn scn-street"></div>',
+    garage: '<div class="scn scn-garage"><i class="s-ceil"></i><i class="s-glow"></i><i class="s-lamps"></i><i class="s-pillar"></i><i class="s-gate"></i><i class="s-floor"></i></div>',
+    loft: '<div class="scn scn-loft"><i class="s-beams"></i><i class="s-window"></i><i class="s-table"></i></div>',
+    forest: '<div class="scn scn-forest"><i class="s-trees"></i><i class="s-rays"></i><i class="s-grass"></i></div>',
+    night: '<div class="scn scn-night"><i class="s-stars"></i><i class="s-glow"></i><i class="s-twr"></i></div>'
+  };
+  const SCN_NAMES = { field: 'מגרש אימונים', city: 'עיר בשקיעה', street: 'רחוב עירוני', garage: 'חניון ניאון', loft: 'חדר אימון', forest: 'יער', night: 'לילה' };
+
+  const hex2rgb = (h) => { h = String(h).replace('#', ''); if (h.length === 3) h = h.split('').map(c => c + c).join(''); const n = parseInt(h, 16) || 0; return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
+  const rgb2hex = (r, g, b) => '#' + [r, g, b].map(v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0')).join('');
+  const mix = (a, b, t) => { const A = hex2rgb(a), B = hex2rgb(b); return rgb2hex(A[0] + (B[0] - A[0]) * t, A[1] + (B[1] - A[1]) * t, A[2] + (B[2] - A[2]) * t); };
+  const shade = (c, t) => mix(c, '#000000', t);
+  const lum = (c) => { const v = hex2rgb(c).map(x => { x /= 255; return x <= .03928 ? x / 12.92 : Math.pow((x + .055) / 1.055, 2.4); }); return .2126 * v[0] + .7152 * v[1] + .0722 * v[2]; };
+  const contrast = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); };
+  const isHex = (v) => /^#[0-9a-f]{6}$/i.test(v);
+  const clone = (o) => JSON.parse(JSON.stringify(o));
+  const BASES = {
+    race: { name: 'מירוץ', icons: 'line', head: 'Open Sans', body: 'Open Sans',
+      colors: { accent: '#e8296f', accent2: '#5a9a7e', gold: '#f6f7f8', sky: '#36c6e8' },
+      surf: { night: { bg: '#101214', card: '#f6f7f8', text: '#ffffff' }, day: { bg: '#e6e9eb', card: '#ffffff', text: '#1e2326' } },
+      pv: '<span style="inset:0;background:linear-gradient(180deg,#6E7B62,#3A3937)"></span><span style="right:8px;top:9px;width:64px;height:12px;background:#5A9A7E;clip-path:polygon(6px 0,100% 0,100% 100%,0 100%)"></span><span style="right:8px;top:26px;width:64px;height:12px;background:#F6F7F8;box-shadow:inset -5px 0 0 #F0D46A;clip-path:polygon(6px 0,100% 0,100% 100%,0 100%)"></span><span style="right:8px;top:43px;width:64px;height:12px;background:#F6F7F8;box-shadow:inset -5px 0 0 #F0A35B;clip-path:polygon(6px 0,100% 0,100% 100%,0 100%)"></span><span style="left:-18px;bottom:2px;width:70px;height:16px;background:#E8296F;transform:rotate(-12deg)"></span>' },
+    regular: { name: 'משחקי', icons: 'emoji', head: 'Rubik', body: 'Rubik',
+      colors: { accent: '#ff5c8a', accent2: '#76deb8', gold: '#ffd15c', sky: '#5bc8ff' },
+      surf: { night: { bg: '#0e1f1c', card: '#1b3d36', text: '#ffffff' }, day: { bg: '#eaf5ef', card: '#ffffff', text: '#1e2320' } },
+      pv: '<span style="inset:0;background:linear-gradient(180deg,#13302A,#0E1F1C)"></span><span style="right:10px;top:10px;width:56px;height:28px;border-radius:12px;background:#76DEB8"></span><span style="left:14px;top:22px;width:30px;height:30px;border-radius:50%;background:#FF5C8A;box-shadow:0 4px 0 #8E2346"></span><span style="right:24px;top:42px;width:20px;height:20px;border-radius:50%;background:#FFD15C;box-shadow:0 3px 0 #9A6A0A"></span>' },
+    mil: { name: 'צבאי', icons: 'emoji', head: 'Rubik', body: 'Rubik',
+      colors: { accent: '#e8742c', accent2: '#a3b26b', gold: '#d9b45a', sky: '#93a7ab' },
+      surf: { night: { bg: '#171b11', card: '#30382a', text: '#ffffff' }, day: { bg: '#ece6d2', card: '#fbf8ef', text: '#23271b' } },
+      pv: '<span style="inset:0;background:linear-gradient(rgba(163,178,107,.14) 1px,transparent 1px) 0 0/14px 14px,linear-gradient(90deg,rgba(163,178,107,.14) 1px,transparent 1px) 0 0/14px 14px,#232A19"></span><span style="right:0;left:0;top:0;height:5px;background:repeating-linear-gradient(-45deg,#D9B45A 0 5px,#12150D 5px 10px)"></span><span style="right:10px;top:12px;width:56px;height:26px;border-radius:5px;background:#7D8C49"></span><span style="left:14px;top:24px;width:30px;height:30px;border-radius:8px;background:#E8742C;box-shadow:0 4px 0 #7A3610"></span><span style="right:24px;top:42px;width:20px;height:20px;border-radius:6px;background:#D9B45A"></span>' }
+  };
+
+  const esc = (x) => String(x == null ? '' : x).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+  const stable = (o) => JSON.stringify(o === undefined ? null : o, (k, v) => v && typeof v === 'object' && !Array.isArray(v) ? Object.keys(v).sort().reduce((a, x) => { a[x] = v[x]; return a; }, {}) : v);
+  const fmtSize = (b) => b >= 1048576 ? (b / 1048576).toFixed(1) + 'MB' : Math.max(1, Math.round(b / 1024)) + 'KB';
+  const cssUrl = (u) => String(u || '').replace(/["\\\n\r]/g, encodeURIComponent);
+  const clean = (v) => String(v).replace(/[<>]/g, '');
+  const newId = () => 't-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+
+  // ---------- what a theme can change ----------
+  const WORDS = {
+    regular: { t1: 'מסלול', t2: 'משימות', t3: 'ליגה', t4: 'האנגר', world: 'עולם', chest: 'תיבה', boss: 'הבוס', league: 'ליגת השבוע', mapTitle: 'המסלול שלי', questsTitle: 'משימות היום', go: 'לכאן טסים!', lit: 'התחנה נדלקה!' },
+    race: { t1: 'מסלול', t2: 'אתגרים', t3: 'ליגה', t4: 'סדנה', world: 'מקצה', chest: 'ארגז', boss: 'הגמר', league: 'ליגת המירוץ', mapTitle: 'המסלול שלי', questsTitle: 'אתגרי היום', go: 'לכאן!', lit: 'המקצה נסגר!' },
+    mil: { t1: 'ציר', t2: 'פקודות', t3: 'טבלה', t4: 'בסיס', world: 'שלב', chest: 'ארגז', boss: 'מבחן גמר', league: 'טבלת המחלקה', mapTitle: 'ציר ההתקדמות', questsTitle: 'פקודות היום', go: 'יעד הבא', lit: 'משימה בוצעה!' }
+  };
+  const FONTS_BODY = ['Rubik', 'Open Sans', 'Heebo', 'Assistant', 'Varela Round'];
+  const FONTS_HEAD = ['Rubik', 'Open Sans', 'Heebo', 'Assistant', 'Varela Round', 'Secular One', 'Suez One', 'Karantina'];
+  const PALETTES = [
+    { name: '88 קלאסי', accent: '#ff5c8a', accent2: '#76deb8', gold: '#ffd15c', sky: '#5bc8ff' },
+    { name: 'מירוץ', accent: '#e8296f', accent2: '#5a9a7e', gold: '#f6f7f8', sky: '#36c6e8' },
+    { name: 'צבאי', accent: '#e8742c', accent2: '#a3b26b', gold: '#d9b45a', sky: '#93a7ab' },
+    { name: 'אוקיינוס', accent: '#2f80ed', accent2: '#2dd4bf', gold: '#fcd34d', sky: '#7dd3fc' },
+    { name: 'שקיעה', accent: '#f97316', accent2: '#fb7185', gold: '#fde68a', sky: '#a78bfa' },
+    { name: 'סגול חשמלי', accent: '#8b5cf6', accent2: '#22d3ee', gold: '#fbbf24', sky: '#60a5fa' }
+  ];
+  const COLOR_ROWS = [['accent', 'צבע ראשי', 'כפתורים, התרגיל הנוכחי'], ['accent2', 'צבע משני', 'הצלחה ופסים פעילים'], ['gold', 'צבע הדגשה', 'מטבעות, כוכבים ודרגה'], ['sky', 'צבע מידע', 'ממתין לבדיקת המדריך']];
+  const SURF_ROWS = [['bg', 'רקע', 'מאחורי כל המסכים'], ['card', 'כרטיסים', 'משימות, שורות וכפתורים'], ['text', 'טקסט', 'כותרות ותוכן']];
+  const TERMS = [['t1', 'לשונית 1 (המסלול)'], ['t2', 'לשונית 2 (המשימות)'], ['t3', 'לשונית 3 (הליגה)'], ['t4', 'לשונית 4 (הפרופיל)'], ['world', 'שם ל"עולם"'], ['chest', 'שם ל"תיבה"'], ['boss', 'שם למבחן המסכם'], ['league', 'שם הליגה'], ['mapTitle', 'כותרת מפת הנתיב'], ['questsTitle', 'כותרת המשימות'], ['go', 'בועה מעל התרגיל הנוכחי'], ['lit', 'הודעה כשתרגיל מאושר']];
+  const BUILT = { 't-race': ['race', 'מירוץ FPV'], 't-regular': ['regular', 'משחקי צבעוני'], 't-mil': ['mil', 'צבאי'] };
+  const AUTO = ['field', 'city', 'garage', 'loft', 'forest', 'street'];
+  const newTheme = (base, extra) => Object.assign({ id: newId(), name: 'ערכה חדשה', base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default' }, icons: BASES[base].icons, bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', builtIn: false }, extra || {});
+  const defaultsOf = (id) => BUILT[id] ? newTheme(BUILT[id][0], { id, name: BUILT[id][1], builtIn: true }) : null;
+  const effColors = (t) => Object.assign({}, BASES[t.base].colors, t.colors || {});
+  const effSurf = (t, mode) => Object.assign({}, BASES[t.base].surf[mode], (t.surf && t.surf[mode]) || {});
+
+  // ---------- what the server has (saved) ----------
+  const themes = () => A.data.themes || [];
+  const savedTheme = (id) => themes().find(t => t.id === id) || null;
+  const units = () => A.data.units || [];
+  const unitById = (id) => units().find(u => u.id === id) || null;
+  const treeOrder = () => {
+    const out = [], seen = new Set();
+    const add = (u, depth) => { if (seen.has(u.id) || depth > 6) return; seen.add(u.id); out.push({ u, depth }); units().filter(x => x.parent === u.id).forEach(x => add(x, depth + 1)); };
+    units().filter(u => !u.parent || !unitById(u.parent)).forEach(u => add(u, 0));
+    units().forEach(u => add(u, 0));
+    return out;
+  };
+  const normUi = (v) => !v ? '' : v === 'classic' ? 'classic' : (({ race: 't-race', regular: 't-regular', mil: 't-mil' })[v] || (savedTheme(v) ? v : 't-race'));
+  const savedAssign = () => { const o = {}; units().forEach(u => { o[u.id] = normUi(u.ui) || (u.parent && unitById(u.parent) ? 'inherit' : 'classic'); }); return o; };
+  // what a group's students get, following "like the parent group" upwards
+  const effUi = (uid, asg) => { let u = unitById(uid); for (let i = 0; u && i < 7; i++) { const v = asg[u.id]; if (v && v !== 'inherit') return v; u = u.parent ? unitById(u.parent) : null; } return 'classic'; };
+  const lib = () => A.data.bgLib || [];
+  const savedBg = () => clone(((A.data.stageBg || {}).assign) || {});
+
+  // ---------- page state ----------
+  let TAB = location.hash === '#bg' ? 'bg' : 'themes';
+  let ED = null;   // the theme being edited
+  let BGD = null;  // the stage backgrounds being edited
+  const PVS = { unit: null, loaded: null, ready: false, dev: 'desk' };
+  try { const d = localStorage.getItem('g88-studio-dev'); if (d === 'phone') PVS.dev = 'phone'; } catch (e) {}
+  const body = $('#edBody'), foot = $('#edFoot'), frame = $('#pvIframe');
+
+  const themeName = (id) => { if (ED && ED.id === id) return ED.draft.name; const t = savedTheme(id); return t ? t.name : BUILT[id] ? BUILT[id][1] : 'ערכה'; };
+  const uiLabel = (v) => v === 'classic' ? 'המסך הרגיל' : v === 'inherit' ? 'כמו קבוצת האם' : 'משחק · ' + themeName(v);
+  const groupsUsing = (id, asg) => units().filter(u => effUi(u.id, asg) === id);
+  const isDirty = () => !!ED && (stable(ED.draft) !== stable(savedTheme(ED.id)) || stable(ED.assign) !== stable(savedAssign()));
+  const bgDirty = () => !!BGD && stable(BGD.assign) !== stable(savedBg());
+
+  // ---------- the live preview (the game itself, with a sample student) ----------
+  const post = (m) => { if (!PVS.ready || !frame.contentWindow) return; try { frame.contentWindow.postMessage(m, location.origin); } catch (e) {} };
+  // the themes tab shows the theme being edited; the backgrounds tab shows the previewed group's own theme
+  const previewTheme = () => {
+    if (TAB === 'themes' && ED) return ED.draft;
+    const asg = ED ? ED.assign : savedAssign(), v = PVS.unit ? effUi(PVS.unit, asg) : 'classic';
+    const id = v === 'classic' ? (ED ? ED.id : 't-race') : v;
+    return ED && ED.id === id ? ED.draft : (savedTheme(id) || savedTheme('t-race') || defaultsOf('t-race'));
+  };
+  const sendTheme = () => post({ type: 'g88-theme', theme: previewTheme() });
+  const sendBg = () => post({ type: 'g88-stagebg', stageBg: { assign: BGD ? BGD.assign : savedBg() } });
+  const sendGo = (node, jump) => { if (node) post({ type: 'g88-go', node, jump: !!jump }); };
+  addEventListener('message', (ev) => {
+    if (ev.origin !== location.origin || ev.source !== frame.contentWindow) return;
+    if (!ev.data || ev.data.type !== 'g88-ready') return;
+    PVS.ready = true; sendTheme(); sendBg();
+    if (TAB === 'bg' && BGD && BGD.sel) sendGo(nodeFor(BGD.sel), true);
+  });
+  const loadPreview = () => {
+    const u = PVS.unit || '';
+    if (PVS.loaded === u) return;
+    PVS.loaded = u; PVS.ready = false;
+    frame.src = '/Game.html?preview=1&unit=' + encodeURIComponent(u) + '&theme=' + encodeURIComponent((previewTheme() || {}).id || '');
+  };
+  const renderPvBar = () => {
+    const sel = $('#pvUnit');
+    const opts = treeOrder().map(({ u, depth }) => `<option value="${esc(u.id)}">${'— '.repeat(depth)}${esc(u.name)}</option>`).join('') + '<option value="">בלי קבוצה (כל הרמות)</option>';
+    if (sel.dataset.opts !== opts) { sel.innerHTML = opts; sel.dataset.opts = opts; }
+    if (sel.value !== (PVS.unit || '')) sel.value = PVS.unit || '';
+    const t = previewTheme(), asg = ED ? ED.assign : savedAssign(), v = PVS.unit ? effUi(PVS.unit, asg) : 'classic';
+    $('#pvTheme').textContent = 'בערכה: ' + (t ? t.name : '') + (TAB === 'themes' && ED ? ' (בעריכה)' : '');
+    const note = $('#pvNote');
+    const msg = PVS.unit && v === 'classic' ? 'התלמידים בקבוצה הזו רואים עכשיו את המסך הרגיל, לא את המשחק. משייכים להם ערכה ב"שיוך לקבוצות".' : '';
+    note.hidden = !msg; note.textContent = msg;
+    $('#pv').classList.toggle('phone', PVS.dev === 'phone');
+    document.querySelectorAll('[data-dev]').forEach(b => { const on = b.dataset.dev === PVS.dev; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); });
+  };
+  $('#pvUnit').onchange = (e) => { PVS.unit = e.target.value; loadPreview(); renderPvBar(); if (TAB === 'bg') renderBody(); };
+  document.querySelectorAll('[data-dev]').forEach(b => b.onclick = () => { PVS.dev = b.dataset.dev; try { localStorage.setItem('g88-studio-dev', PVS.dev); } catch (e) {} renderPvBar(); });
+  $('#peekBtn').onclick = () => { document.body.classList.add('peek'); $('#pvBack').focus(); };
+  $('#pvBack').onclick = () => { document.body.classList.remove('peek'); $('#peekBtn').focus(); };
+  addEventListener('keydown', (e) => { if (e.key === 'Escape' && document.body.classList.contains('peek')) $('#pvBack').click(); });
+
+  // ================= THEMES =================
+  const pickPreviewUnit = () => {
+    if (!ED) return;
+    const using = groupsUsing(ED.id, ED.assign);
+    if (PVS.unit && using.some(u => u.id === PVS.unit)) return;
+    if (using[0]) PVS.unit = using[0].id;
+    else if (PVS.unit == null) PVS.unit = units()[0] ? treeOrder()[0].u.id : '';
+  };
+  const startEdit = (id, msg) => {
+    const t = savedTheme(id) || savedTheme('t-race') || themes()[0];
+    // the saved theme as it is (the server keeps every part), so an untouched theme is not "changed"
+    ED = { id: t.id, draft: clone(t), assign: savedAssign(), msg: msg || '', err: '', ask: null, del: null, newMenu: false, saveAs: false, busy: false, up: null, upErr: '' };
+    pickPreviewUnit(); loadPreview(); renderPvBar();
+    if (TAB === 'themes') { renderBody(); renderFoot(); }
+    sendTheme();
+  };
+  // the draft with every part present, for drawing (the saved theme may leave parts out)
+  const D = () => { const d = ED.draft; d.colors = d.colors || {}; d.surf = d.surf || { night: {}, day: {} }; d.surf.night = d.surf.night || {}; d.surf.day = d.surf.day || {}; d.fonts = d.fonts || { head: 'default', body: 'default' }; d.terms = d.terms || {}; d.bg = d.bg || { kind: 'look' }; return d; };
+  const swatches = (t) => { const C = effColors(t), S = effSurf(t, t.mode === 'day' ? 'day' : 'night'); return [C.accent, C.accent2, C.gold, S.bg, S.card].map(c => `<i style="background:${esc(c)}"></i>`).join(''); };
+  const bgVal = (bg) => !bg || bg.kind === 'look' ? 'look' : bg.kind === 'color' ? 'color' : bg.kind === 'scene' ? 'scene:' + bg.id : 'img:' + bg.url;
+  const tile = (val, label, pv, sel, attr) => `<button class="bgt ${sel ? 'sel' : ''}" type="button" ${attr}="${esc(val)}" aria-pressed="${sel}"><span class="bgpv">${pv}</span><span class="bgl">${esc(label)}</span></button>`;
+  const imgPv = (url) => `<span class="bgimg" style="background-image:url(&quot;${esc(cssUrl(url))}&quot;)"></span>`;
+  const colorRow = (k, label, hint, val, over) => `<div class="st-color"><label for="stc-${k}">${label}<small>${hint}</small></label><input type="color" id="stc-${k}" value="${esc(val)}" data-c="${k}"><input class="st-hex" value="${esc(String(val).toUpperCase())}" data-hex="${k}" maxlength="7" dir="ltr" spellcheck="false" aria-label="${label}: קוד צבע"><button class="st-reset" type="button" data-reset="${k}" title="חזרה לצבע של הסגנון" aria-label="איפוס ${label}" ${over ? '' : 'hidden'}>↺</button></div>`;
+  const upRow = (st) => `<div class="st-up" id="upZone"><button class="st-btn" type="button" data-a="up" ${st && st.up ? 'disabled' : ''}>העלאת תמונה מהמחשב</button><input type="file" accept="image/*" id="upFile" hidden><small>${st && st.up ? `מעלה… ${st.up}%` : 'JPG או PNG. אפשר גם לגרור תמונה לכאן.'}</small></div>${st && st.upErr ? `<p class="st-err" role="alert">${esc(st.upErr)}</p>` : ''}`;
+
+  const renderThemes = () => {
+    const d = D(), mode = d.mode === 'day' ? 'day' : 'night', C = effColors(d), S = effSurf(d, mode), B = BASES[d.base], saved = savedTheme(ED.id) || {};
+    const list = themes().map(t => {
+      const on = t.id === ED.id, src = on ? d : t, gs = groupsUsing(t.id, ED.assign);
+      const acts = ED.del === t.id
+        ? `<span class="st-delq">למחוק?</span><button class="st-link danger" type="button" data-delyes="${esc(t.id)}">כן, למחוק</button><button class="st-link" type="button" data-delno="1">לא</button>`
+        : `<button class="st-link" type="button" data-dup="${esc(t.id)}">שכפול</button>${t.builtIn ? '' : `<button class="st-link danger" type="button" data-del="${esc(t.id)}">מחיקה</button>`}`;
+      return `<div class="st-theme ${on ? 'on' : ''}"><button class="st-pick" type="button" data-th="${esc(t.id)}" aria-pressed="${on}"><span class="st-sw" ${on ? 'id="stSw"' : ''}>${swatches(src)}</span><b>${esc(src.name)}</b><small>${esc(BASES[src.base] ? BASES[src.base].name : '')} · ${src.mode === 'day' ? 'יום' : 'לילה'} · ${gs.length ? gs.map(u => esc(u.name)).join(', ') : 'לא משויכת לקבוצה'}</small></button><div class="st-tact">${acts}</div></div>`;
+    }).join('');
+    const sel = bgVal(d.bg);
+    const bgTiles = tile('look', 'לפי הסגנון', `<span class="bgnone">${esc(B.name)}</span>`, sel === 'look', 'data-tbg')
+      + tile('color', 'צבע אחיד', `<span class="bgcol" style="background:${esc(d.bg.kind === 'color' && isHex(d.bg.color || '') ? d.bg.color : S.bg)}"></span>`, sel === 'color', 'data-tbg')
+      + Object.keys(SCN).map(k => tile('scene:' + k, SCN_NAMES[k], SCN[k], sel === 'scene:' + k, 'data-tbg')).join('')
+      + lib().map(x => tile('img:' + x.url, x.name, imgPv(x.url), sel === 'img:' + x.url, 'data-tbg')).join('')
+      + (d.bg.kind === 'img' && d.bg.url && !lib().some(x => x.url === d.bg.url) ? tile('img:' + d.bg.url, 'התמונה של הערכה', imgPv(d.bg.url), true, 'data-tbg') : '');
+    const fontOpts = (fl, cur, def) => `<option value="default" ${cur === 'default' ? 'selected' : ''}>${def} · ברירת המחדל של הסגנון</option>` + fl.map(f => `<option value="${f}" ${cur === f ? 'selected' : ''}>${f}</option>`).join('');
+    const headF = d.fonts.head !== 'default' ? d.fonts.head : B.head, bodyF = d.fonts.body !== 'default' ? d.fonts.body : B.body;
+    const saved0 = savedAssign();
+    const groups = treeOrder().map(({ u, depth }) => {
+      const cur = ED.assign[u.id] || 'classic', was = saved0[u.id], eff = effUi(u.id, ED.assign), parent = u.parent && unitById(u.parent);
+      const opts = (parent ? [['inherit', `כמו קבוצת האם (${uiLabel(effUi(parent.id, ED.assign))})`]] : []).concat([['classic', 'המסך הרגיל (בלי משחק)']]).concat(themes().map(t => [t.id, 'משחק · ' + themeName(t.id)]));
+      const status = cur !== was ? `<small class="chg">ישתנה בשמירה · היה: ${esc(was === 'inherit' ? 'כמו קבוצת האם' : uiLabel(was))}</small>` : eff === ED.id ? '<small>רואה את הערכה הזו</small>' : `<small>רואה: ${esc(uiLabel(eff))}</small>`;
+      return `<div class="st-group ${eff === ED.id ? 'mine' : ''}"><label for="asg-${esc(u.id)}">${'— '.repeat(depth)}${esc(u.name)}${status}</label><select id="asg-${esc(u.id)}" data-asg="${esc(u.id)}">${opts.map(([v, l]) => `<option value="${esc(v)}" ${cur === v ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select></div>`;
+    }).join('');
+    const using = groupsUsing(ED.id, ED.assign);
+    body.innerHTML = `
+      <section class="st-sec" aria-labelledby="sh-themes"><h2 id="sh-themes">ערכות נושא</h2>
+        <p class="st-hint">ערכה היא כל מה שקבוצה רואה במשחק. בוחרים ערכה כדי לערוך אותה.</p>
+        <div class="st-themes">${list}</div>
+        <div class="st-newrow">${ED.newMenu ? `<span class="st-hint" style="margin:0">ערכה חדשה בסגנון:</span>${Object.keys(BASES).map(k => `<button class="st-btn" type="button" data-newbase="${k}">${esc(BASES[k].name)}</button>`).join('')}<button class="st-link" type="button" data-a="newx">ביטול</button>` : `<button class="st-btn" type="button" data-a="new">+ ערכה חדשה</button>${saved.builtIn ? '<button class="st-link" type="button" data-a="resetb">איפוס הערכה לברירת המחדל</button>' : ''}`}</div>
+      </section>
+      <section class="st-sec" aria-labelledby="sh-name"><h2 id="sh-name">שם הערכה</h2>
+        <p class="st-now">${using.length ? 'רואים אותה עכשיו: ' + using.map(u => esc(u.name)).join(', ') : 'אף קבוצה לא רואה אותה עדיין. משייכים בסוף הדף.'}</p>
+        <label class="st-field"><span class="vh">שם הערכה</span><input type="text" id="stName" value="${esc(d.name)}" maxlength="40"></label>
+      </section>
+      <section class="st-sec" aria-labelledby="sh-base"><h2 id="sh-base">סגנון בסיס</h2>
+        <p class="st-hint">קובע צורות, מילים ורקע. הצבעים, הגופנים והמילים שבחרתם נשמרים כשמחליפים סגנון.</p>
+        <div class="st-bases">${Object.keys(BASES).map(k => `<button class="st-base ${d.base === k ? 'on' : ''}" type="button" data-base="${k}" aria-pressed="${d.base === k}"><span class="pv">${BASES[k].pv}</span><b>${esc(BASES[k].name)}</b></button>`).join('')}</div>
+      </section>
+      <section class="st-sec" aria-labelledby="sh-mode"><h2 id="sh-mode">מצב יום ולילה</h2>
+        <div class="st-seg" role="group" aria-label="מצב ברירת המחדל"><button type="button" data-mode="night" class="${mode === 'night' ? 'on' : ''}" aria-pressed="${mode === 'night'}">🌙 לילה</button><button type="button" data-mode="day" class="${mode === 'day' ? 'on' : ''}" aria-pressed="${mode === 'day'}">☀️ יום</button></div>
+        <label class="st-check"><input type="checkbox" id="stAllow" ${d.allowToggle !== false ? 'checked' : ''}> להציג לתלמידים כפתור מעבר בין יום ללילה בבר העליון</label>
+      </section>
+      <section class="st-sec" aria-labelledby="sh-colors"><h2 id="sh-colors">צבעים</h2>
+        <p class="st-hint">פלטות מוכנות, או צבע לכל תפקיד. ↺ מחזיר לצבע של הסגנון.</p>
+        <div class="st-pals">${PALETTES.map((p, i) => `<button class="st-pal" type="button" data-pal="${i}"><span>${[p.accent, p.accent2, p.gold, p.sky].map(c => `<i style="background:${c}"></i>`).join('')}</span>${esc(p.name)}</button>`).join('')}</div>
+        <h3 class="st-h3">צבעי המותג</h3>
+        <div class="st-colors">${COLOR_ROWS.map(([k, l, h]) => colorRow(k, l, h, C[k], !!d.colors[k])).join('')}</div>
+        <h3 class="st-h3">רקע, כרטיסים וטקסט · ${mode === 'day' ? 'מצב יום' : 'מצב לילה'}</h3>
+        <div class="st-colors">${SURF_ROWS.map(([k, l, h]) => colorRow(k, l, h, S[k], !!d.surf[mode][k])).join('')}</div>
+        <div class="st-warn" id="stWarn" role="status" hidden></div>
+      </section>
+      <section class="st-sec" aria-labelledby="sh-fonts"><h2 id="sh-fonts">גופנים</h2>
+        <div class="st-fonts"><label class="st-field">כותרות<select id="stFh">${fontOpts(FONTS_HEAD, d.fonts.head, B.head)}</select></label><label class="st-field">טקסט<select id="stFb">${fontOpts(FONTS_BODY, d.fonts.body, B.body)}</select></label></div>
+        <div class="st-sample" id="stSample"><b style="font-family:'${headF}', 'Rubik', sans-serif">האטה ובלימה</b><span style="font-family:'${bodyF}', 'Rubik', sans-serif">מאטים בהדרגה ועוצרים בדיוק מעל הנקודה המסומנת.</span></div>
+      </section>
+      <section class="st-sec" aria-labelledby="sh-icons"><h2 id="sh-icons">אייקונים</h2>
+        <div class="st-seg" role="group" aria-label="סגנון אייקונים"><button type="button" data-icons="emoji" class="${d.icons === 'emoji' ? 'on' : ''}" aria-pressed="${d.icons === 'emoji'}">🎯 צבעוניים</button><button type="button" data-icons="line" class="${d.icons === 'line' ? 'on' : ''}" aria-pressed="${d.icons === 'line'}">קוויים ודקים</button></div>
+      </section>
+      <section class="st-sec" aria-labelledby="sh-bg"><h2 id="sh-bg">רקע</h2>
+        <p class="st-hint">רקע לכל המסכים. בשלבים שיש להם רקע משלהם (בלשונית "רקע לשלב") הוא מוצג מעליו.</p>
+        <div class="bgopts">${bgTiles}</div>
+        ${sel === 'color' ? colorRow('bgcolor', 'צבע הרקע', 'צבע אחיד מאחורי הכל', isHex(d.bg.color || '') ? d.bg.color : S.bg, false) : ''}
+        ${upRow(ED)}
+        ${d.bg.kind === 'img' ? `<label class="st-check"><input type="checkbox" id="stBgBlur" ${d.bg.blur !== false ? 'checked' : ''}> טשטוש קל לתמונה, כדי שהטקסט יישאר קריא</label>` : ''}
+        <label class="st-check"><input type="checkbox" id="stStageBg" ${d.stageBg !== false ? 'checked' : ''}> להציג רקע לפי שלב (נבחר בלשונית "רקע לשלב")</label>
+      </section>
+      <section class="st-sec" aria-labelledby="sh-terms"><h2 id="sh-terms">מילים ושמות</h2>
+        <p class="st-hint">שדה ריק משתמש במילה של הסגנון. את שמות הדרגות קובעים בעמוד הניקוד.</p>
+        <div class="st-terms">${TERMS.map(([k, l]) => `<label class="st-field">${l}<input type="text" data-term="${k}" value="${esc(d.terms[k] || '')}" placeholder="${esc(WORDS[d.base][k])}" maxlength="40"></label>`).join('')}</div>
+      </section>
+      <section class="st-sec" aria-labelledby="sh-motion"><h2 id="sh-motion">תנועה</h2>
+        <div class="st-seg" role="group" aria-label="אנימציות"><button type="button" data-motion="full" class="${d.motion !== 'calm' ? 'on' : ''}" aria-pressed="${d.motion !== 'calm'}">אנימציות מלאות</button><button type="button" data-motion="calm" class="${d.motion === 'calm' ? 'on' : ''}" aria-pressed="${d.motion === 'calm'}">מופחתות</button></div>
+        <p class="st-hint">מופחתות: בלי פרופלורים מסתובבים, הבהובים וקונפטי. מתאים לתלמידים שתנועה מסיחה אותם.</p>
+      </section>
+      <section class="st-sec" aria-labelledby="sh-groups"><h2 id="sh-groups">שיוך לקבוצות</h2>
+        <p class="st-hint">מה התלמידים בכל קבוצה רואים אחרי הכניסה. אפשר לחזור למסך הרגיל בכל רגע: ההתקדמות, המטבעות והטיסות נשארים.</p>
+        ${groups ? `<div class="st-groups">${groups}</div>` : '<p class="st-now">עוד אין קבוצות. יוצרים קבוצות בעמוד הקורסים.</p>'}
+      </section>`;
+    checkContrast();
+  };
+  const checkContrast = () => {
+    const el = $('#stWarn'); if (!el || !ED) return;
+    const d = D(), mode = d.mode === 'day' ? 'day' : 'night', S = effSurf(d, mode), bgc = d.bg.kind === 'color' && isHex(d.bg.color || '') ? d.bg.color : S.bg;
+    const r1 = contrast(S.text, bgc), r2 = d.base === 'race' ? contrast('#1e2326', S.card) : contrast(S.text, S.card), w = [];
+    if (r1 < 4.5) w.push(`הטקסט על הרקע קשה לקריאה (ניגודיות ${r1.toFixed(1)}:1, מומלץ לפחות 4.5:1).`);
+    if (r2 < 4.5) w.push(`הטקסט על הכרטיסים קשה לקריאה (ניגודיות ${r2.toFixed(1)}:1, מומלץ לפחות 4.5:1).`);
+    el.hidden = !w.length; el.innerHTML = w.map(x => `<span>⚠ ${x}</span>`).join('');
+  };
+  const touched = () => { ED.msg = ''; ED.err = ''; renderFoot(); renderPvBar(); };
+  const refreshSw = () => { const sw = $('#stSw'); if (sw) sw.innerHTML = swatches(D()); };
+  const redraw = () => { const keep = scrollPos(); renderThemes(); scrollPos(keep); sendTheme(); touched(); };
+  const setColor = (k, v, from) => {
+    if (!isHex(v)) return false;
+    v = v.toLowerCase();
+    const d = D(), mode = d.mode === 'day' ? 'day' : 'night';
+    if (k === 'bgcolor') d.bg = { kind: 'color', color: v };
+    else if (['bg', 'card', 'text'].indexOf(k) !== -1) d.surf[mode][k] = v;
+    else d.colors[k] = v;
+    const pick = body.querySelector(`[data-c="${k}"]`), hex = body.querySelector(`[data-hex="${k}"]`), rs = body.querySelector(`[data-reset="${k}"]`);
+    if (pick && from !== 'pick') pick.value = v;
+    if (hex && from !== 'hex') hex.value = v.toUpperCase();
+    if (hex) hex.classList.remove('bad');
+    if (rs && k !== 'bgcolor') rs.hidden = false;
+    if (k === 'bgcolor') { const t = body.querySelector('[data-tbg="color"] .bgcol'); if (t) t.style.background = v; }
+    checkContrast(); refreshSw(); sendTheme(); touched();
+    return true;
+  };
+  // saving: all the themes go together, with the groups whose screen changed
+  const assignChanges = () => { const was = savedAssign(), out = {}; Object.keys(ED.assign).forEach(id => { if (ED.assign[id] !== was[id]) out[id] = ED.assign[id]; }); return out; };
+  const saveThemes = (list, assign) => A.call('saveThemes', { themes: list, assign: assign || {} });
+  const doSave = (then) => {
+    if (ED.busy) return;
+    const d = D();
+    if (!String(d.name || '').trim()) d.name = 'ערכה ללא שם';
+    const list = themes().map(t => t.id === ED.id ? d : t);
+    if (!list.some(t => t.id === ED.id)) list.push(d);
+    ED.busy = true; renderFoot();
+    saveThemes(list, assignChanges()).then(r => {
+      ED.busy = false;
+      if (!r.ok) { ED.err = r.error || 'השמירה לא הצליחה. נסו שוב.'; ED.ask = null; renderFoot(); return; }
+      const t = savedTheme(ED.id);
+      if (t) ED.draft = clone(t);
+      ED.assign = savedAssign(); ED.ask = null;
+      ED.msg = '✓ נשמר. תלמידים שהמשחק פתוח אצלם יראו את השינוי תוך חצי דקה.';
+      const keep = scrollPos(); renderThemes(); scrollPos(keep); renderFoot(); renderPvBar(); sendTheme();
+      if (then) then();
+    });
+  };
+  const create = (t, msg) => {
+    ED.busy = true; renderFoot();
+    saveThemes(themes().concat([t]), {}).then(r => {
+      ED.busy = false;
+      if (!r.ok) { ED.err = r.error || 'לא הצלחתי ליצור את הערכה. נסו שוב.'; renderFoot(); return; }
+      startEdit(t.id, msg); scrollPos(0);
+      setTimeout(() => { const n = $('#stName'); if (n) { n.focus(); n.select(); } }, 30);
+    });
+  };
+  const doDelete = (id) => {
+    ED.busy = true; renderFoot();
+    const name = themeName(id);
+    saveThemes(themes().filter(t => t.id !== id), {}).then(r => {
+      ED.busy = false;
+      if (!r.ok) { ED.err = r.error || 'המחיקה לא הצליחה. נסו שוב.'; ED.del = null; renderBody(); renderFoot(); return; }
+      const msg = `הערכה "${name}" נמחקה. קבוצות שראו אותה עברו ל"מירוץ FPV".`;
+      if (ED.id === id) return startEdit('t-race', msg);
+      Object.keys(ED.assign).forEach(g => { if (ED.assign[g] === id) ED.assign[g] = 't-race'; });
+      ED.del = null; ED.msg = msg; renderBody(); renderFoot(); renderPvBar();
+    });
+  };
+  // a switch away from unsaved changes asks first
+  const guard = (fn) => { if (!isDirty()) return fn(); ED.ask = { kind: 'switch', fn }; renderFoot(); const f = foot.querySelector('button'); f && f.focus(); };
+
+  // ================= STAGE BACKGROUNDS =================
+  const LB = () => (A.data.scoring && A.data.scoring.levelBonus) || {};
+  const worlds = () => {
+    const sk = A.data.skills || [], lb = LB();
+    const out = (A.data.levels || []).filter(l => sk.some(k => k.level === l.n)).map((l, i) => ({
+      key: 'w' + l.n, n: l.n, i, name: l.name,
+      items: sk.filter(k => k.level === l.n).map(k => ({ key: 's' + k.id, name: k.name, k })).concat(lb.on && Number(lb[l.n]) > 0 ? [{ key: 'c' + l.n, name: 'התיבה של סוף הרמה', chest: true }] : [])
+    }));
+    const fin = (A.data.challenges || []).find(c => c.final);
+    if (fin) out.push({ key: 'boss', n: null, i: out.length, name: fin.title, boss: true, items: [] });
+    return out;
+  };
+  const stageInfo = (key) => { for (const w of worlds()) { if (w.key === key) return { w, item: null }; const it = w.items.find(x => x.key === key); if (it) return { w, item: it }; } return null; };
+  const nodeFor = (key) => { const s = stageInfo(key); if (!s) return null; if (s.item) return s.item.key; if (s.w.boss) return 'boss'; return s.w.items[0] ? s.w.items[0].key : null; };
+  const parseBg = (v) => { if (!v || !v.bg) return null; if (v.bg === 'none') return { k: 'none' }; const i = v.bg.indexOf(':'); return i < 0 ? null : { k: v.bg.slice(0, i), v: v.bg.slice(i + 1), blur: v.blur !== false }; };
+  const autoOf = (w) => w.boss ? 'night' : AUTO[w.i % AUTO.length];
+  const effBg = (asg, w, key) => {
+    if (key && key !== w.key) { const own = parseBg(asg[key]); if (own) return Object.assign(own, { from: 'own' }); }
+    const lvl = parseBg(asg[w.key]);
+    if (lvl) return Object.assign(lvl, { from: key && key !== w.key ? 'level' : 'own' });
+    return { k: 'scene', v: autoOf(w), from: 'auto' };
+  };
+  const bgName = (b) => !b ? '' : b.k === 'none' ? 'ללא רקע' : b.k === 'scene' ? (SCN_NAMES[b.v] || b.v) : ((lib().find(x => x.url === b.v) || {}).name || 'תמונה');
+  const bgPv = (b) => !b || b.k === 'none' ? '<span class="bgnone">רקע הערכה</span>' : b.k === 'scene' ? (SCN[b.v] || '') : imgPv(b.v);
+  const inPreview = (key) => {
+    const sc = PVS.unit ? A.scopeFor({ unit: PVS.unit }) : null;
+    if (!sc) return true;
+    const s = stageInfo(key); if (!s) return false;
+    if (s.w.boss) return true;
+    const ok = (k) => sc.levels.indexOf(k.level) !== -1 || sc.skills.indexOf(k.id) !== -1;
+    if (s.item) return s.item.k ? ok(s.item.k) : s.w.items.some(x => x.k && ok(x.k));
+    return s.w.items.some(x => x.k && ok(x.k));
+  };
+  const startBg = (msg) => {
+    const keep = BGD ? BGD.sel : null;
+    BGD = { assign: savedBg(), sel: keep, msg: msg || '', err: '', busy: false, up: null, upErr: '', ask: null };
+  };
+  const renderBgTab = () => {
+    const W = worlds();
+    if (!W.length) { body.innerHTML = '<section class="st-sec"><h2>רקע לשלב</h2><p class="st-now">עוד אין תרגילים בתוכנית הלימודים. כשיהיו, תוכלו לבחור כאן רקע לכל שלב.</p></section>'; return; }
+    if (!BGD.sel || !stageInfo(BGD.sel)) BGD.sel = W[0].key;
+    const asg = BGD.assign, s = stageInfo(BGD.sel), w = s.w, key = BGD.sel, isStage = !!s.item;
+    const cur = parseBg(asg[key]), curVal = asg[key] && asg[key].bg ? asg[key].bg : '';
+    const inheritPv = isStage ? bgPv(effBg(asg, w, w.key)) : SCN[autoOf(w)];
+    const tiles = tile('', isStage ? 'כמו הרמה' : 'אוטומטי', inheritPv, !curVal, 'data-bgv')
+      + tile('none', 'ללא רקע', '<span class="bgnone">רקע הערכה</span>', curVal === 'none', 'data-bgv')
+      + Object.keys(SCN).map(k => tile('scene:' + k, SCN_NAMES[k], SCN[k], curVal === 'scene:' + k, 'data-bgv')).join('')
+      + lib().map(x => tile('img:' + x.url, x.name, imgPv(x.url), curVal === 'img:' + x.url, 'data-bgv')).join('');
+    const title = isStage ? s.item.name : w.boss ? w.name : `רמה ${w.n}: ${w.name}`;
+    const where = isStage ? `${s.item.chest ? 'התיבה' : 'תרגיל'} ב${w.name}` : w.boss ? 'המבחן המסכם, בסוף המסלול' : 'רקע לכל התרגילים ברמה שאין להם רקע משלהם';
+    const ownInLevel = w.items.filter(x => asg[x.key]).length;
+    // one row per stage: its picture and where it comes from (its own, its level's, or the automatic scene)
+    const row = (x, k, name, cls, info) => {
+      const e = effBg(asg, x, k), on = BGD.sel === k;
+      const txt = (e.from === 'auto' ? 'אוטומטי · ' : e.from === 'level' ? 'כמו הרמה · ' : '') + bgName(e) + (e.k === 'img' && !e.blur ? ' · בלי טשטוש' : '');
+      return `<button class="sb-row ${cls} ${on ? 'on' : ''}" type="button" data-st="${esc(k)}" aria-pressed="${on}"><span class="sb-thumb">${bgPv(e)}</span><b>${esc(name)}</b><small class="${e.from === 'own' ? 'own' : ''}">${esc(info ? info + ' · ' + txt : txt)}</small></button>`;
+    };
+    const listHtml = W.map(x => `<div class="sb-world">${row(x, x.key, x.boss ? x.name : `רמה ${x.n}: ${x.name}`, 'lvl', x.boss ? 'המבחן המסכם' : 'כל הרמה')}${x.items.map(it => row(x, it.key, it.name, 'sb-sub', it.chest ? 'תיבה' : '')).join('')}</div>`).join('');
+    const visible = inPreview(key), g = PVS.unit && unitById(PVS.unit);
+    body.innerHTML = `
+      <section class="st-sec" aria-labelledby="sh-sel"><h2 id="sh-sel">בעריכה: ${esc(title)}</h2>
+        <p class="st-hint">${esc(where)}. הרקע מוצג מאחורי הדף של השלב ומתחלף כשגוללים לשלב הבא. במפת הנתיב המלאה מוצג הרקע של השלב שהתלמיד נמצא בו.</p>
+        <div class="bgopts">${tiles}</div>
+        ${upRow(BGD)}
+        <label class="st-check ${cur && cur.k === 'img' ? '' : 'off'}"><input type="checkbox" id="sbBlur" ${cur && cur.k === 'img' ? '' : 'disabled'} ${!cur || cur.blur !== false ? 'checked' : ''}> טשטוש קל לתמונה, כדי שהטקסט יישאר קריא</label>
+        <div class="st-newrow">${isStage ? `<button class="st-btn" type="button" data-a="tolevel" ${curVal ? '' : 'disabled'}>להחיל על כל ${esc(w.name)}</button>` : !w.boss && ownInLevel ? `<button class="st-btn" type="button" data-a="clearlevel">כל התרגילים ברמה כמו הרמה (${ownInLevel} עם רקע משלהם)</button>` : ''}</div>
+        ${visible ? '' : `<p class="sb-warn">השלב הזה לא נמצא במסלול של ${esc(g ? g.name : 'הקבוצה שבתצוגה')}, אז התצוגה המקדימה לא מגיעה אליו. בחרו בתצוגה קבוצה אחרת.</p>`}
+      </section>
+      <section class="st-sec" aria-labelledby="sh-stages"><h2 id="sh-stages">השלבים במסלול</h2>
+        <p class="st-hint">הרקעים משותפים לכל הקבוצות. בוחרים שלב כדי לערוך את הרקע שלו, והתצוגה המקדימה קופצת אליו. ערכה שכיבתה "רקע לפי שלב" לא מציגה אותם.</p>
+        <div class="sb-list">${listHtml}</div>
+      </section>`;
+  };
+  const bgTouched = () => { BGD.msg = ''; BGD.err = ''; const keep = scrollPos(); renderBgTab(); scrollPos(keep); renderFoot(); sendBg(); };
+
+  // ---------- image uploads: made smaller here, kept on the server, added to the shared library ----------
+  const shrink = (file) => new Promise((ok, no) => {
+    if (!/^image\//.test(file.type || '')) return no('זה לא קובץ תמונה. בחרו JPG או PNG.');
+    if (file.size > 30 * 1048576) return no(`התמונה שוקלת ${fmtSize(file.size)}. המקסימום הוא 30MB.`);
+    const url = URL.createObjectURL(file), im = new Image();
+    im.onerror = () => { URL.revokeObjectURL(url); no('לא הצלחתי לפתוח את התמונה. נסו JPG או PNG.'); };
+    im.onload = () => {
+      const k = Math.min(1, 1920 / Math.max(im.naturalWidth, im.naturalHeight)), c = document.createElement('canvas');
+      c.width = Math.max(1, Math.round(im.naturalWidth * k)); c.height = Math.max(1, Math.round(im.naturalHeight * k));
+      const g = c.getContext('2d'); g.fillStyle = '#101214'; g.fillRect(0, 0, c.width, c.height); g.drawImage(im, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      c.toBlob((b) => b ? ok(new File([b], (file.name.replace(/\.[^.]+$/, '') || 'image').replace(/[^\w֐-׿-]+/g, '-').slice(0, 50) + '.jpg', { type: 'image/jpeg' })) : no('לא הצלחתי להכין את התמונה. נסו קובץ אחר.'), 'image/jpeg', .82);
+    };
+    im.src = url;
+  });
+  const addImage = (file, st, done) => {
+    st.upErr = ''; st.up = 0; repaint();
+    const name = (file.name.replace(/\.[^.]+$/, '') || 'תמונה').replace(/[<>]/g, '').slice(0, 60);
+    shrink(file)
+      .then(f => A.upload(f, (p) => { st.up = p; const s = body.querySelector('#upZone small'); if (s) s.textContent = `מעלה… ${p}%`; }, '/api/admin/upload-image'))
+      .then(r => { if (!r.ok) throw r.error; return A.call('saveStageBg', { assign: savedBg(), lib: lib().concat([{ url: r.url, name }]) }).then(s => { if (!s.ok) throw s.error; return r.url; }); })
+      .then(url => { st.up = null; done(url); })
+      .catch(msg => { st.up = null; st.upErr = typeof msg === 'string' ? msg : 'ההעלאה נכשלה. נסו שוב.'; repaint(); });
+  };
+  const repaint = () => { const keep = scrollPos(); renderBody(); scrollPos(keep); };
+
+  // ================= the page =================
+  const scroller = () => matchMedia('(min-width: 1200px)').matches ? body : document.scrollingElement;
+  const scrollPos = (v) => { const el = scroller(); if (v == null) return el.scrollTop; el.scrollTop = v; return v; };
+  const renderTabs = () => {
+    document.querySelectorAll('[data-tab]').forEach(b => { const on = b.dataset.tab === TAB; b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1; });
+    body.setAttribute('aria-labelledby', TAB === 'bg' ? 'tabBg' : 'tabThemes');
+  };
+  const renderBody = () => { if (TAB === 'bg') renderBgTab(); else renderThemes(); };
+  const renderFoot = () => {
+    if (TAB === 'bg') {
+      const dirty = bgDirty();
+      foot.innerHTML = `<span class="st-status" role="status">${BGD.err ? `<span class="st-err">${esc(BGD.err)}</span>` : BGD.msg ? `<span class="st-ok">${esc(BGD.msg)}</span>` : dirty ? '<span class="st-dirty">● יש שינויים שלא נשמרו</span>' : 'הכל שמור'}</span><div class="st-fbtns"><button class="st-btn" type="button" data-f="bgundo" ${dirty && !BGD.busy ? '' : 'disabled'}>ביטול שינויים</button><button class="st-btn primary" type="button" data-f="bgsave" ${dirty && !BGD.busy ? '' : 'disabled'}>${BGD.busy ? 'שומר…' : 'שמירת הרקעים'}</button></div>`;
+      return;
+    }
+    if (!ED) { foot.innerHTML = ''; return; }
+    const dirty = isDirty();
+    if (ED.ask) {
+      foot.innerHTML = `<p class="st-ask" role="alert">יש שינויים שלא נשמרו ב"${esc(ED.draft.name)}".</p><div class="st-fbtns"><button class="st-btn primary" type="button" data-f="asksave" ${ED.busy ? 'disabled' : ''}>שמירה והמשך</button><button class="st-btn" type="button" data-f="askdrop">המשך בלי לשמור</button><button class="st-btn" type="button" data-f="askback">חזרה לעריכה</button></div>`;
+    } else if (ED.saveAs) {
+      foot.innerHTML = `<form class="st-saveas" id="saveAsForm"><label class="vh" for="saveAsName">שם הערכה החדשה</label><input id="saveAsName" type="text" maxlength="40" value="${esc(ED.draft.name)} (חדשה)" required><button class="st-btn primary" type="submit" ${ED.busy ? 'disabled' : ''}>שמירה כערכה חדשה</button><button class="st-btn" type="button" data-f="saveasx">ביטול</button></form>`;
+      setTimeout(() => { const i = $('#saveAsName'); if (i) { i.focus(); i.select(); } }, 20);
+    } else {
+      foot.innerHTML = `<span class="st-status" role="status">${ED.err ? `<span class="st-err">${esc(ED.err)}</span>` : ED.msg ? `<span class="st-ok">${esc(ED.msg)}</span>` : dirty ? '<span class="st-dirty">● יש שינויים שלא נשמרו</span>' : 'הכל שמור'}</span><div class="st-fbtns"><button class="st-btn" type="button" data-f="undo" ${dirty && !ED.busy ? '' : 'disabled'}>ביטול שינויים</button><button class="st-btn" type="button" data-f="saveas" ${ED.busy ? 'disabled' : ''}>שמירה בשם…</button><button class="st-btn primary" type="button" data-f="save" ${dirty && !ED.busy ? '' : 'disabled'}>${ED.busy ? 'שומר…' : 'שמירה'}</button></div>`;
+    }
+  };
+  const setTab = (t) => {
+    if (t === TAB) return;
+    TAB = t;
+    try { history.replaceState(null, '', t === 'bg' ? '#bg' : '#themes'); } catch (e) {}
+    renderTabs(); renderBody(); renderFoot(); renderPvBar(); scrollPos(0);
+    sendTheme(); sendBg();
+    if (TAB === 'bg' && BGD.sel) sendGo(nodeFor(BGD.sel));
+  };
+  document.querySelectorAll('[data-tab]').forEach(b => {
+    b.onclick = () => setTab(b.dataset.tab);
+    b.onkeydown = (e) => { if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); const t = TAB === 'bg' ? 'themes' : 'bg'; setTab(t); $(t === 'bg' ? '#tabBg' : '#tabThemes').focus(); } };
+  });
+
+  // ---------- clicks, typing and choices in the editor ----------
+  body.addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b || !body.contains(b)) return;
+    const ds = b.dataset;
+    if (ds.a === 'up') { const f = $('#upFile'); f && f.click(); return; }
+    if (TAB === 'bg') {
+      if (ds.st) { BGD.sel = ds.st; const keep = scrollPos(); renderBgTab(); scrollPos(keep); sendGo(nodeFor(ds.st)); const again = body.querySelector(`[data-st="${CSS.escape(ds.st)}"]`); again && again.focus({ preventScroll: true }); return; }
+      if (ds.bgv !== undefined) {
+        const prev = BGD.assign[BGD.sel];
+        if (!ds.bgv) delete BGD.assign[BGD.sel];
+        else BGD.assign[BGD.sel] = ds.bgv.indexOf('img:') === 0 ? { bg: ds.bgv, blur: !prev || prev.blur !== false } : { bg: ds.bgv };
+        bgTouched(); const again = body.querySelector(`[data-bgv="${CSS.escape(ds.bgv)}"]`); again && again.focus({ preventScroll: true }); return;
+      }
+      if (ds.a === 'tolevel') {
+        const s = stageInfo(BGD.sel), v = BGD.assign[BGD.sel]; if (!s || !s.item || !v) return;
+        BGD.assign[s.w.key] = clone(v); s.w.items.forEach(x => { delete BGD.assign[x.key]; });
+        BGD.sel = s.w.key; bgTouched(); BGD.msg = `הרקע הוחל על כל ${s.w.name}. אפשר עדיין לבחור לתרגיל בודד רקע אחר.`; renderFoot(); return;
+      }
+      if (ds.a === 'clearlevel') { const s = stageInfo(BGD.sel); if (!s) return; s.w.items.forEach(x => { delete BGD.assign[x.key]; }); bgTouched(); return; }
+      return;
+    }
+    if (!ED || ED.busy) return;
+    const d = D();
+    if (ds.th) { if (ds.th !== ED.id) guard(() => { startEdit(ds.th); scrollPos(0); }); return; }
+    if (ds.dup) { guard(() => { const src = savedTheme(ds.dup); if (!src) return; const t = clone(src); t.id = newId(); t.name = (src.name + ' (עותק)').slice(0, 40); t.builtIn = false; create(t, '✓ נוצר עותק. אפשר לערוך אותו בלי לשנות את המקור.'); }); return; }
+    if (ds.del) { ED.del = ds.del; const keep = scrollPos(); renderThemes(); scrollPos(keep); const y = body.querySelector('[data-delyes]'); y && y.focus(); return; }
+    if (ds.delyes) return doDelete(ds.delyes);
+    if (ds.delno) { const id = ED.del; ED.del = null; const keep = scrollPos(); renderThemes(); scrollPos(keep); const x = body.querySelector(`[data-del="${CSS.escape(id)}"]`); x && x.focus(); return; }
+    if (ds.a === 'new') { ED.newMenu = true; const keep = scrollPos(); renderThemes(); scrollPos(keep); const n = body.querySelector('[data-newbase]'); n && n.focus(); return; }
+    if (ds.a === 'newx') { ED.newMenu = false; const keep = scrollPos(); renderThemes(); scrollPos(keep); return; }
+    if (ds.newbase) { guard(() => { const t = newTheme(ds.newbase, { name: 'ערכה חדשה · ' + BASES[ds.newbase].name }); create(t, '✓ נוצרה ערכה חדשה. תנו לה שם, עצבו, שייכו לקבוצה ושמרו.'); }); return; }
+    if (ds.a === 'resetb') { const fresh = defaultsOf(ED.id); if (fresh) { fresh.name = d.name; ED.draft = fresh; redraw(); } return; }
+    if (ds.base) { if (d.base !== ds.base) { if (d.icons === BASES[d.base].icons) d.icons = BASES[ds.base].icons; d.base = ds.base; redraw(); } return; }
+    if (ds.mode) { if (d.mode !== ds.mode) { d.mode = ds.mode; redraw(); } return; }
+    if (ds.pal) { const p = PALETTES[+ds.pal]; d.colors = Object.assign({}, d.colors, { accent: p.accent, accent2: p.accent2, gold: p.gold, sky: p.sky }); redraw(); return; }
+    if (ds.reset) { const k = ds.reset, mode = d.mode === 'day' ? 'day' : 'night'; if (['bg', 'card', 'text'].indexOf(k) !== -1) delete d.surf[mode][k]; else delete d.colors[k]; redraw(); return; }
+    if (ds.icons) { if (d.icons !== ds.icons) { d.icons = ds.icons; redraw(); } return; }
+    if (ds.motion) { d.motion = ds.motion; redraw(); return; }
+    if (ds.tbg) {
+      const v = ds.tbg, S = effSurf(d, d.mode === 'day' ? 'day' : 'night');
+      d.bg = v === 'look' ? { kind: 'look' } : v === 'color' ? { kind: 'color', color: d.bg.kind === 'color' && isHex(d.bg.color || '') ? d.bg.color : S.bg } : v.indexOf('scene:') === 0 ? { kind: 'scene', id: v.slice(6) } : { kind: 'img', url: v.slice(4), blur: true };
+      redraw(); const again = body.querySelector(`[data-tbg="${CSS.escape(v)}"]`); again && again.focus({ preventScroll: true }); return;
+    }
+  });
+  let termTimer = null;
+  body.addEventListener('input', (e) => {
+    if (TAB !== 'themes' || !ED) return;
+    const t = e.target, d = D();
+    if (t.dataset.c) return void setColor(t.dataset.c, t.value, 'pick');
+    if (t.dataset.hex) { let v = t.value.trim(); if (v && v[0] !== '#') v = '#' + v; if (!setColor(t.dataset.hex, v, 'hex')) t.classList.toggle('bad', v.length >= 7); return; }
+    if (t.id === 'stName') {
+      d.name = clean(t.value).slice(0, 40);
+      const nm = body.querySelector('.st-theme.on .st-pick b'); if (nm) nm.textContent = d.name || 'ללא שם';
+      // the groups' lists name the theme too
+      body.querySelectorAll(`select[data-asg] option[value="${CSS.escape(ED.id)}"]`).forEach(o => { o.textContent = 'משחק · ' + (d.name || 'ללא שם'); });
+      clearTimeout(termTimer); termTimer = setTimeout(sendTheme, 260); touched(); return;
+    }
+    if (t.dataset.term) {
+      const v = clean(t.value).trim();
+      if (v) d.terms[t.dataset.term] = v; else delete d.terms[t.dataset.term];
+      clearTimeout(termTimer); termTimer = setTimeout(sendTheme, 260); touched(); return;
+    }
+  });
+  body.addEventListener('change', (e) => {
+    const t = e.target;
+    if (t.id === 'upFile') {
+      const f = t.files && t.files[0]; t.value = ''; if (!f) return;
+      if (TAB === 'bg') addImage(f, BGD, (url) => { BGD.assign[BGD.sel] = { bg: 'img:' + url, blur: true }; bgTouched(); });
+      else if (ED) addImage(f, ED, (url) => { D().bg = { kind: 'img', url, blur: true }; redraw(); });
+      return;
+    }
+    if (TAB === 'bg') {
+      if (t.id === 'sbBlur') { const v = BGD.assign[BGD.sel]; if (v && String(v.bg).indexOf('img:') === 0) { v.blur = t.checked; bgTouched(); } }
+      return;
+    }
+    if (!ED) return;
+    const d = D();
+    if (t.id === 'stAllow') { d.allowToggle = t.checked; sendTheme(); touched(); return; }
+    if (t.id === 'stStageBg') { d.stageBg = t.checked; sendTheme(); touched(); return; }
+    if (t.id === 'stBgBlur') { d.bg.blur = t.checked; sendTheme(); touched(); return; }
+    if (t.id === 'stFh' || t.id === 'stFb') {
+      d.fonts[t.id === 'stFh' ? 'head' : 'body'] = t.value; sendTheme();
+      const B = BASES[d.base], s = $('#stSample');
+      if (s) { s.querySelector('b').style.fontFamily = `'${d.fonts.head !== 'default' ? d.fonts.head : B.head}', 'Rubik', sans-serif`; s.querySelector('span').style.fontFamily = `'${d.fonts.body !== 'default' ? d.fonts.body : B.body}', 'Rubik', sans-serif`; }
+      touched(); return;
+    }
+    if (t.dataset.asg) { ED.assign[t.dataset.asg] = t.value; const id = t.id, keep = scrollPos(); renderThemes(); scrollPos(keep); const again = document.getElementById(id); again && again.focus(); pickPreviewUnit(); loadPreview(); touched(); return; }
+  });
+  // drag an image onto the upload row
+  body.addEventListener('dragover', (e) => { const z = e.target.closest && e.target.closest('#upZone'); if (z) { e.preventDefault(); z.classList.add('over'); } });
+  body.addEventListener('dragleave', (e) => { const z = e.target.closest && e.target.closest('#upZone'); if (z && !z.contains(e.relatedTarget)) z.classList.remove('over'); });
+  body.addEventListener('drop', (e) => {
+    const z = e.target.closest && e.target.closest('#upZone'); if (!z) return;
+    e.preventDefault(); z.classList.remove('over');
+    const f = e.dataTransfer && e.dataTransfer.files[0]; if (!f) return;
+    if (TAB === 'bg') addImage(f, BGD, (url) => { BGD.assign[BGD.sel] = { bg: 'img:' + url, blur: true }; bgTouched(); });
+    else if (ED) addImage(f, ED, (url) => { D().bg = { kind: 'img', url, blur: true }; redraw(); });
+  });
+  addEventListener('dragover', (e) => e.preventDefault());
+  addEventListener('drop', (e) => e.preventDefault());
+
+  // ---------- the footer: save, undo, save as ----------
+  foot.addEventListener('click', (e) => {
+    const b = e.target.closest('button[data-f]'); if (!b) return;
+    const f = b.dataset.f;
+    if (f === 'bgundo') { startBg(); bgTouched(); return; }
+    if (f === 'bgsave') {
+      BGD.busy = true; renderFoot();
+      A.call('saveStageBg', { assign: BGD.assign, lib: lib() }).then(r => {
+        BGD.busy = false;
+        if (!r.ok) { BGD.err = r.error || 'השמירה לא הצליחה. נסו שוב.'; renderFoot(); return; }
+        startBg('✓ נשמר. תלמידים שהמשחק פתוח אצלם יראו את הרקעים תוך חצי דקה.');
+        const keep = scrollPos(); renderBgTab(); scrollPos(keep); renderFoot(); sendBg();
+      });
+      return;
+    }
+    if (!ED) return;
+    if (f === 'undo') { const id = ED.id; startEdit(id); return; }
+    if (f === 'save') return doSave();
+    if (f === 'saveas') { ED.saveAs = true; renderFoot(); return; }
+    if (f === 'saveasx') { ED.saveAs = false; renderFoot(); return; }
+    if (f === 'asksave') { const a = ED.ask; doSave(() => a.fn()); return; }
+    if (f === 'askdrop') { const a = ED.ask; ED.ask = null; a.fn(); return; }
+    if (f === 'askback') { ED.ask = null; renderFoot(); return; }
+  });
+  foot.addEventListener('submit', (e) => {
+    if (e.target.id !== 'saveAsForm') return;
+    e.preventDefault();
+    const v = clean($('#saveAsName').value).trim().slice(0, 40); if (!v) return;
+    const t = clone(D()); t.id = newId(); t.name = v; t.builtIn = false;
+    ED.saveAs = false;
+    create(t, '✓ נשמרה ערכה חדשה. שייכו אותה לקבוצות בסוף הדף, ושמרו.');
+  });
+
+  // leaving with unsaved changes asks first
+  addEventListener('beforeunload', (e) => { if (isDirty() || bgDirty()) { e.preventDefault(); e.returnValue = ''; } });
+  // the data is refreshed every half minute: drafts stay, the footer and the preview's labels follow
+  A.listen(() => { renderFoot(); renderPvBar(); });
+
+  // ---------- start ----------
+  startBg();
+  const firstTheme = (() => { const asg = savedAssign(), t = treeOrder().map(x => effUi(x.u.id, asg)).find(v => v && v !== 'classic'); return t && savedTheme(t) ? t : 't-race'; })();
+  renderTabs();
+  startEdit(firstTheme);
+  if (TAB === 'bg') { renderBody(); renderFoot(); }
+  renderPvBar();
+})();
+</script>
+</body>
+</html>
