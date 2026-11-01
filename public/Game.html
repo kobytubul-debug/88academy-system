@@ -1064,6 +1064,38 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 @media (min-width: 900px) { #app.day .tabs, #app.day.race .tabs { background: none; } }
 /* the race look's highlight color is white: the lock line on its white skin cards needs a dark one */
 .app.race .skin .price { color: #5D646A; }
+
+/* ================= STAGE PICTURES: the hangar's badges and the full path show each stage's own background ================= */
+.art-img { position: absolute; inset: 0; background: center / cover no-repeat; }
+.bart .scn, .nart .scn { inset: 0; }
+.bart .scn, .bart .scn > i, .nart .scn, .nart .scn > i { filter: none !important; }
+
+/* skill badges: the picture in the tile, the name on its own line(s) under it */
+.badges { row-gap: 16px; align-items: start; }
+.bdg { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+.bdg > small { font-size: 11.5px; font-weight: 700; line-height: 1.3; color: var(--dim); text-align: center; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.badge .bart { position: absolute; inset: 4px; border-radius: 16px; overflow: hidden; background: #1B1F1E; }
+.badge.no .bart { filter: grayscale(1) brightness(.75); }
+.app.race .badge .bart { border-radius: 0; }
+.app.mil .badge .bart { border-radius: 4px; }
+.app.race .bdg > small { color: rgba(255,255,255,.88); }
+#app.day .bdg > small { color: var(--d-dim); }
+#app.day.race .bdg > small { color: var(--d-fg); }
+
+/* the full path: the picture inside each station's ring; the ring's color still says done, open, waiting or locked */
+#pathmap .nart { position: absolute; inset: 5px; border-radius: 50%; overflow: hidden; background: #1B1F1E; }
+#pathmap .node.boss .nart { inset: 7px; }
+#pathmap .node.lock .nart { filter: grayscale(1) brightness(.6); }
+#pathmap .node.wait .nart { filter: saturate(.8); }
+#pathmap .node.chest .face { width: 70px; height: 66px; border-radius: 50%; filter: none; background: linear-gradient(180deg, #FFE48A, var(--gold)); box-shadow: 0 7px 0 var(--gold-dd); }
+#pathmap .node.chest.lock .face { background: var(--lock); box-shadow: 0 7px 0 var(--lock-d); }
+.app.mil #pathmap .nart { border-radius: 12px; }
+.app.mil #pathmap .node.chest .face { border-radius: 16px; }
+.app.race #pathmap .nart { inset: 4px; }
+.app.race #pathmap .node.chest .face { background: rgba(16,18,20,.82); box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.45); }
+.app.race #pathmap .node.chest.ready .face { background: var(--bar); box-shadow: inset 0 0 0 3px var(--sY), 0 0 24px rgba(240,212,106,.55); }
+#app.day.race #pathmap .node.chest .face { background: #FFFFFF; box-shadow: inset 0 0 0 1.5px rgba(0,0,0,.18), 0 6px 16px rgba(0,0,0,.12); }
+#app.day.race #pathmap .node.chest.ready .face { box-shadow: inset 0 0 0 3px var(--sY), 0 0 24px rgba(240,212,106,.55); }
 </style>
 </head>
 <body>
@@ -1679,7 +1711,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const redo = !!(P.redo && P.redo[k.id]);
     const fixNote = st === 'fix' ? (redo ? `<div class="inote fixnote"><b>המדריך ביקש ביצוע חוזר</b><span>מטיסים שוב ושולחים טיסה חדשה.</span></div>` : `<div class="inote fixnote"><b>${T('back')}</b><span>${last && last.feedback ? '“' + esc(last.feedback) + '”' : 'המדריך החזיר את הטיסה. נסו שוב.'}</span></div>`) : '';
     const v = vidOf(k), vOk = !v || watched(k) || ui(n.id).skipVideo;
-    const act = !vOk ? `<div class="vid"><button class="btn3 pink" type="button" data-a="play">▶ לצפייה בסרטון</button><div class="bar"><i></i></div></div><button class="skipv" type="button" data-a="skip">כבר צפיתי · להעלאת הטיסה</button>` : uploadUI(n);
+    const act = !vOk ? `<div class="vid"><button class="btn3 pink" type="button" data-a="play">▶ לצפייה בסרטון</button><div class="bar"><i></i></div></div>` : uploadUI(n);
     return `${fixNote}${desc}${stepsFor(n)}<div class="act">${act}</div>`;
   };
   // re-drawing keeps the field (and the text cursor) the student was in
@@ -1740,7 +1772,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     if (btn('play')) btn('play').onclick = (e) => {
       const src = n.t === 'skill' ? vidOf(n.k) : n.c && n.c.video; if (!src) return;
       e.currentTarget.disabled = true;
-      playDemo(src, n.name, box.querySelector('.vid') || e.currentTarget, n.t === 'skill' && !watched(n.k), (ended) => { if (ended && n.t === 'skill') videoDone(n.k, box.querySelector('.step')); else paint(n); });
+      playDemo(src, n.name, box.querySelector('.vid') || e.currentTarget, n.t === 'skill' && !watched(n.k), (ended) => { if (ended === 'broken') { ui(n.id).skipVideo = true; paint(n); } else if (ended && n.t === 'skill') videoDone(n.k, box.querySelector('.step')); else paint(n); });
     };
     if (btn('cancel')) btn('cancel').onclick = () => { const x = ui(n.id).uploading; if (x && x.xhr) x.xhr.abort(); ui(n.id).uploading = null; paint(n); };
     if (btn('discard')) btn('discard').onclick = () => { const u = ui(n.id); u.ready = null; u.err = ''; paint(n); };
@@ -1851,7 +1883,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       if (over) return; over = true; curPlayer = null;
       const vid = pl.querySelector('video'); if (vid) { try { vid.pause(); } catch (e) {} }
       pl.classList.remove('open'); scrim.classList.remove('on'); place(small);
-      setTimeout(() => { pl.remove(); scrim.remove(); done(!!ended); }, 420);
+      setTimeout(() => { pl.remove(); scrim.remove(); done(ended === 'broken' ? 'broken' : !!ended); }, 420);
     };
     const manual = () => { const b = pl.querySelector('[data-v="done"]'); if (b) b.hidden = false; };
     pl.querySelector('[data-v="x"]').onclick = () => finish(false);
@@ -1860,7 +1892,10 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     if (vid) {
       vid.addEventListener('timeupdate', () => { if (vid.duration) bar.style.width = (vid.currentTime / vid.duration * 100) + '%'; });
       vid.addEventListener('ended', () => { bar.style.width = '100%'; setTimeout(() => finish(true), 500); });
-      vid.addEventListener('error', () => { pl.querySelector('.vmeta small').textContent = 'הסרטון לא נטען. נסו שוב, או ספרו למדריך.'; });
+      vid.addEventListener('error', () => {
+        pl.querySelector('.vmeta small').textContent = 'הסרטון לא נטען. ספרו למדריך, ובינתיים אפשר להמשיך לטיסה.';
+        const b = pl.querySelector('[data-v="done"]'); if (b) { b.textContent = 'להמשיך לטיסה'; b.hidden = false; b.onclick = () => finish('broken'); }
+      });
       setTimeout(() => { try { vid.focus(); } catch (e) {} }, 450);
     } else if (!yt) manual();   // Drive and the like can't tell when they end
     curPlayer = { yt, frame: pl.querySelector('iframe'), finish, manual, tries: 0 };
@@ -1910,9 +1945,9 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       html += `<div class="trail" style="--h:${h}px"><svg class="path" viewBox="0 0 100 ${h}" preserveAspectRatio="none" aria-hidden="true"><polyline points="${pts.map(p => p.join(',')).join(' ')}" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><polyline points="${pts.map(p => p.join(',')).join(' ')}" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="3" stroke-dasharray="2 12" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>`;
       wn.forEach((n, i) => {
         const [x, y] = pts[i], st = n.state;
-        let cls = n.t === 'chest' ? 'chest' + (st === 'ready' ? ' ready' : '') : (n.t === 'boss' ? 'boss ' : '') + ({ done: 'done', now: 'now', wait: 'wait', fix: 'fix', lock: 'lock' })[st];
-        let face = n.t === 'chest' ? (st === 'opened' ? T('chestIc')[1] : st === 'ready' ? T('chestIc')[0] : `<span style="filter:grayscale(1) brightness(.6)">${T('chestIc')[0]}</span>`) : st === 'lock' ? '🔒' : st === 'wait' ? '⏳' : n.icon;
-        html += `<button class="node ${cls}" style="left:${x}%; top:${y}px" data-n="${n.id}" type="button" aria-label="${esc(n.name)}"><span class="face">${face}${crownOf(n)}</span><span class="nl">${esc(n.name)}</span></button>`;
+        const cls = n.t === 'chest' ? 'chest ' + (st === 'ready' ? 'ready' : st === 'lock' ? 'lock' : 'opened') : (n.t === 'boss' ? 'boss ' : '') + ({ done: 'done', now: 'now', wait: 'wait', fix: 'fix', lock: 'lock' })[st];
+        const said = n.t === 'chest' ? ({ ready: 'מוכן לפתיחה', lock: 'נעול', opened: 'נפתח' })[st] : ({ done: 'הושלם', now: 'פתוח', wait: T('wait'), fix: 'לתיקון', lock: 'נעול' })[st];
+        html += `<button class="node ${cls}" style="left:${x}%; top:${y}px" data-n="${n.id}" type="button" aria-label="${esc(n.name + (said ? ' · ' + said : ''))}"><span class="face"><span class="nart" aria-hidden="true">${stageArt(n.id)}</span>${crownOf(n)}</span><span class="nl">${esc(n.name)}</span></button>`;
         if (fr && n.id === fr.id && (st === 'now' || st === 'wait' || st === 'fix' || st === 'ready')) html += `<div class="pilot" style="left:${x}%; top:${y - 44}px"><span class="bubble">${st === 'fix' ? T('fixB') : st === 'wait' ? T('wait') : T('go')}</span>${pilotDrone()}</div>`;
       });
       html += `</div>`;
@@ -1951,6 +1986,11 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     return { k: 'scene', v: w.cls === 'wb' ? 'night' : SCENE_ORDER[w.i % SCENE_ORDER.length] };
   };
   const cssUrl = (u) => String(u || '').replace(/["\\\n\r]/g, encodeURIComponent);
+  const stageArt = (id) => {
+    const n = findNode(id), w = n && worldOf(n); if (!w) return '';
+    const a = bgFor(id) || { k: 'scene', v: w.cls === 'wb' ? 'night' : SCENE_ORDER[w.i % SCENE_ORDER.length] };
+    return a.k === 'scene' ? (SCN[a.v] || '') : `<span class="art-img" style="background-image:url(&quot;${esc(cssUrl(a.v))}&quot;)"></span>`;
+  };
   const fillLayer = (el, id) => {
     const a = id ? bgFor(id) : null, key = a ? a.k + ':' + a.v + (a.k === 'img' && !a.blur ? ':sharp' : '') : '';
     if (el.dataset.key !== key) {
@@ -2197,7 +2237,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     $('#stFlights').textContent = P.flights.filter(f => f.status === 'approved').length;
     $('#stDone').textContent = `${done}/${sk.length}`;
     $('#stTime').textContent = Math.floor((P.timeToday || 0) / 60);
-    $('#badges').innerHTML = sk.map((k, i) => `<div class="badge ${P.acquired[k.id] ? 'got' : 'no'}" title="${esc(k.name)}">${iconFor(k, i)}<small>${esc(k.name)}</small></div>`).join('');
+    $('#badges').innerHTML = sk.map((k) => `<div class="bdg"><div class="badge ${P.acquired[k.id] ? 'got' : 'no'}" role="img" aria-label="${esc(k.name + (P.acquired[k.id] ? ' · הושלם' : ' · עוד לא'))}"><span class="bart">${stageArt('s' + k.id)}</span></div><small aria-hidden="true">${esc(k.name)}</small></div>`).join('');
     const L = LEVELS(), lockTxt = (k) => { const lv = L[skinNeed(k) - 1]; return lv ? `🔒 בסיום ${lv.name}` : '🔒 נעול'; };
     $('#skins').innerHTML = SKINS.map(k => { const open = skinOpen(k); return `<button class="skin ${s.id === k.id ? 'sel' : ''} ${open ? '' : 'locked'}" data-k="${k.id}" type="button" aria-pressed="${s.id === k.id}" ${open ? '' : 'aria-disabled="true"'}>${skinArt(k)}<b>${esc(skinLabel(k))}</b>${open ? `<span class="price" style="color:var(--mint)">${s.id === k.id ? 'בשימוש' : 'פתוח · לבחירה'}</span>` : `<span class="price">${esc(lockTxt(k))}</span>`}</button>`; }).join('');
     $('#skins').querySelectorAll('[data-k]').forEach(b => b.onclick = () => {
@@ -2349,7 +2389,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       if (ev.origin !== location.origin || ev.source !== parent) return;
       const d = ev.data || {};
       if (d.type === 'g88-theme' && d.theme) previewTheme(d.theme);
-      else if (d.type === 'g88-stagebg' && d.stageBg) { PV.stageBg = d.stageBg; syncStageBg(); }
+      else if (d.type === 'g88-stagebg' && d.stageBg) { PV.stageBg = d.stageBg; syncStageBg(); renderPath(); if (!$('#v-hangar').hidden) renderHangar(); }
       else if (d.type === 'g88-go' && d.node) {
         if (!findNode(d.node)) return;
         if (sheet.classList.contains('on')) closeSheet();
