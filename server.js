@@ -404,13 +404,13 @@ function homeFor(user) {
 }
 
 // Which screens each role may open. Imported screens must also be reachable (the observer view imports Leadership).
-const STUDENT_PAGES = new Set(['StudentApp.dc.html', 'Game.html']);
 // Pages that are not built with the design tool: they get the same signed-in data in the spot they mark.
 const PLAIN_PAGES = new Set(['Game.html', 'Tower.html', 'Studio.html']);
 const OBSERVER_PAGES = new Set(['Observer.dc.html', 'Leadership.dc.html']);
 const ADMIN_BLOCKED = new Set(['StudentApp.dc.html', 'Observer.dc.html', 'Game.html']);
 function mayOpen(user, file) {
-  if (user.role === 'student') return STUDENT_PAGES.has(file);
+  // a student gets the one screen chosen for their group: the regular screen or the game
+  if (user.role === 'student') return file === (uiFor(user) === 'classic' ? 'StudentApp.dc.html' : 'Game.html');
   if (user.role === 'observer') return OBSERVER_PAGES.has(file);
   return !ADMIN_BLOCKED.has(file);
 }
