@@ -1,0 +1,30 @@
+/* The admin menu. On a wide screen it is a list down the right side of the page; on a phone or a narrow
+   window it stays the bar across the top. Every admin page loads this file (server.js adds it). */
+header nav[aria-label="ניווט ראשי"] .nvi { display: none; flex: none; }
+
+@media (min-width: 1000px) {
+  body:has(header nav[aria-label="ניווט ראשי"]) { padding-right: 240px !important; }
+  header:has(nav[aria-label="ניווט ראשי"]) {
+    position: fixed !important; top: 0; right: 0; bottom: 0; width: 240px; z-index: 40;
+    box-sizing: border-box; overflow-y: auto; overscroll-behavior: contain;
+    border-bottom: 0 !important; border-left: 4px solid #BDEFDB;
+  }
+  header:has(nav[aria-label="ניווט ראשי"]) > div {
+    max-width: none !important; min-height: 100%; margin: 0 !important; box-sizing: border-box;
+    padding: 22px 14px 18px !important;
+    flex-direction: column !important; flex-wrap: nowrap !important; align-items: stretch !important; gap: 22px !important;
+  }
+  header:has(nav[aria-label="ניווט ראשי"]) > div > a:first-child,
+  header:has(nav[aria-label="ניווט ראשי"]) > div > button:first-child { padding: 2px 10px 6px; }
+  header nav[aria-label="ניווט ראשי"] { flex: 1 1 auto !important; }
+  header nav[aria-label="ניווט ראשי"] ul { flex-direction: column !important; flex-wrap: nowrap !important; gap: 3px !important; }
+  header nav[aria-label="ניווט ראשי"] a {
+    border-radius: 12px !important; padding: 10px 12px !important; gap: 12px !important; font-size: 15.5px !important;
+  }
+  header nav[aria-label="ניווט ראשי"] .nvi { display: block; opacity: .75; }
+  header nav[aria-label="ניווט ראשי"] a[aria-current="page"] .nvi { opacity: 1; }
+  /* the signed-in user, the password key and sign-out sit at the bottom */
+  header:has(nav[aria-label="ניווט ראשי"]) > div > div:last-child {
+    flex-wrap: wrap; justify-content: flex-start; border-top: 1px solid #E3E9E6; padding: 14px 6px 0;
+  }
+}
