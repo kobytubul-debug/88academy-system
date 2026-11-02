@@ -1736,6 +1736,26 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 @keyframes shArt { from { opacity: .3; transform: scale(1.06); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .slide.sh.live .sh-info > *, .slide.sh.live .sh-art, .slide.sh.live .sh-tab { animation: none; } }
 .app.calm .slide.sh.live .sh-info > *, .app.calm .slide.sh.live .sh-art, .app.calm .slide.sh.live .sh-tab { animation: none; }
+
+/* the step on show, named in the square; the arrow under it moves to the next step */
+.sh-step { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 10px; background: color-mix(in srgb, var(--shk) 9%, transparent); }
+.app.shsoft .sh-step { border-radius: 14px; }
+.sh-step small { font-size: 11.5px; font-weight: 800; letter-spacing: .06em; opacity: .75; }
+.sh-step b { font-size: 16px; font-weight: 900; }
+.sh-step span { font-size: 13px; line-height: 1.4; opacity: .85; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.sh-step.ok b::after { content: " ✓"; }
+.slide.sh.live .sh-step { animation: shIn .45s cubic-bezier(.2,.8,.2,1) both; animation-delay: .2s; }
+
+/* wide screens: the showcase takes the right half, from below the menu to the next-exercise button */
+@media (min-width: 900px) {
+  #app .slide.sh > .sbody { padding-left: max(96px, 46%); }
+  #app .show { grid-template-columns: minmax(280px, 38%) minmax(0, 1fr); }
+  #app .sh-tab { padding: 10px 10px; gap: 8px; }
+  #app .sh-tab .si { width: 30px; height: 30px; font-size: 13px; }
+  #app .sh-tab b { font-size: 13px; }
+  #app .sh-tab small { display: none; }
+}
+@media (min-width: 900px) and (max-width: 1280px) { #app .slide.sh > .sbody { padding-left: max(96px, 36%); } }
 </style>
 </head>
 <body>
@@ -2466,19 +2486,18 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const want = ui(n.id).tab, cur = tabs.find(t => t.key === want) || tabs.find(t => t.on) || tabs.find(t => !t.ok) || tabs[tabs.length - 1];
     const body = n.t === 'skill' ? '' : slideBody(n);
     const desc = n.t === 'skill' ? (n.k.desc ? `<p class="sh-desc">${esc(n.k.desc)}</p>` : '') : '';
-    // the link at the foot of the square: what to do now (like "learn more" in the reference)
-    const next = cur && tabs.find(t => t.on && t !== cur);
+    // the arrow at the foot of the square walks through the steps (briefing, flight, instructor); the step on show is named in the square
+    const at = cur ? tabs.indexOf(cur) : -1, after = at >= 0 ? tabs[at + 1] : null;
     const link = (attrs, label) => `<button class="sh-cta" type="button" ${attrs}><span>${esc(label)}</span><svg class="sh-arr" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7"/></svg></button>`;
-    const cta = cur && cur.on && cur.key === 'video' ? link('data-run="play"', 'לצפייה בסרטון ההדגמה')
-      : cur && cur.on && cur.key === 'flight' ? link('data-run="pick"', n.state === 'fix' ? 'העלאת הטיסה החוזרת' : 'העלאת סרטון הטיסה')
-      : next ? link(`data-tab="${next.key}"`, 'השלב הבא: ' + next.title)
-      : (n.state === 'done' || n.state === 'wait') && nextAt != null ? link(`data-next="${nextAt}"`, 'לתרגיל הבא') : '';
+    const cta = after ? link(`data-tab="${after.key}"`, 'הבא: ' + after.title) : nextAt != null ? link(`data-next="${nextAt}"`, 'לתרגיל הבא') : '';
+    const stepBox = cur ? `<div class="sh-step${cur.ok ? ' ok' : cur.on ? ' on' : ''}"><small>שלב ${at + 1} מתוך ${tabs.length}</small><b>${esc(cur.title)}</b><span>${cur.sub}</span></div>` : '';
     const state = showState(n);
     return `<div class="show ${tabs.length ? '' : 'notabs'}">
       <div class="sh-info">
         <div class="sh-top"><span class="sh-tag">${esc(w.name)} · ${esc(worldTag(w))}</span><b class="sh-count" dir="ltr">${n.t === 'skill' ? `${k} / ${nSkills}` : esc(n.t === 'chest' ? T('chest') : T('boss'))}</b></div>
         <h2>${esc(n.name)}${titleStars(n)}</h2>
         ${desc}${state ? `<p class="sh-state s-${n.state}">${esc(state)}</p>` : ''}
+        ${stepBox}
         <div class="sh-foot">${lensArt(n.id, n.state === 'lock')}${cta}</div>
       </div>
       <div class="sh-media"><div class="sh-art" aria-hidden="true">${ACTIVE && ACTIVE.show && ACTIVE.show.img ? `<div class="art-img" style="background-image:url(&quot;${esc(cssUrl(ACTIVE.show.img))}&quot;)"></div>` : stageArt(n.id)}</div><div class="sh-pane" ${cur ? `role="tabpanel" aria-label="${esc(cur.title)}"` : ''}>${cur ? cur.pane() : body}</div></div>
