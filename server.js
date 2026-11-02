@@ -897,6 +897,28 @@ const ADMIN_ACTIONS = {
     if (a.enabled && !was) queueWaiting();
     return { ok: true };
   },
+  // Clears AI check records from the "recent checks" list: chosen ones, or all of them.
+  // Only the record goes; a decision the AI already applied (approved or sent back) stays as it is.
+  aiClear(me, b) {
+    const pick = Array.isArray(b.items) ? b.items.slice(0, 1000) : [];
+    if (!b.all && !pick.length) return 'לא נבחרו בדיקות למחיקה.';
+    const want = new Set(pick.map((x) => String(x && x.user) + '|' + String(x && x.flight)));
+    let n = 0;
+    db.users.filter((u) => u.role === 'student').forEach((u) => {
+      (progressOf(u.id).flights || []).forEach((f) => {
+        if (!f.ai || !(b.all || want.has(u.id + '|' + f.id))) return;
+        if (f.ai.status === 'checking') return; // a check that is running now finishes first
+        const q = aiQueue.findIndex((j) => j.fid === f.id);
+        if (q !== -1) aiQueue.splice(q, 1);
+        delete f.ai;
+        n++;
+      });
+    });
+    if (!n) return 'אין מה למחוק: הבדיקות שבחרתם כבר נמחקו או רצות עכשיו.';
+    log(me, 'settings', 'מחק ' + (n === 1 ? 'בדיקת AI אחת' : n + ' בדיקות AI') + ' מהרשימה');
+    save();
+    return { ok: true, count: n };
+  },
   aiRecheck(me, b) {
     const u = findUser(b.id);
     if (!u || u.role !== 'student') return 'הסטודנט לא נמצא.';
