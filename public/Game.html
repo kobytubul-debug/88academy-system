@@ -948,7 +948,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 .upl-or { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--dim); }
 .upl-or::before, .upl-or::after { content: ""; flex: 1; height: 1px; background: rgba(255,255,255,.18); }
 .upl-link { display: flex; gap: 6px; }
-.upl-link input, .upl-note { flex: 1; min-width: 0; height: 40px; padding: 0 12px; border-radius: 12px; border: 1.5px solid rgba(255,255,255,.22); background: rgba(0,0,0,.25); color: inherit; font: inherit; font-size: 14px; }
+.upl-link input, .upl-note1, .upl-note { flex: 1; min-width: 0; height: 40px; padding: 0 12px; border-radius: 12px; border: 1.5px solid rgba(255,255,255,.22); background: rgba(0,0,0,.25); color: inherit; font: inherit; font-size: 14px; }
 .upl-note { display: block; width: 100%; box-sizing: border-box; height: 64px; padding: 8px 12px; resize: vertical; text-align: right; }
 .upl-link input:focus, .upl-note:focus { outline: 2px solid var(--mint); outline-offset: 1px; }
 .upl-link .btn3 { height: 40px; font-size: 14px; padding: 0 14px; border-radius: 12px; box-shadow: 0 4px 0 var(--mint-dd); }
@@ -1485,6 +1485,28 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 #app.day .mico.sun path { stroke: #F2A900; }
 .modebtn { gap: 6px; }
 .acct .modeacct { gap: 8px; }
+
+/* ================= the side rail: more presence, and level labels you can read ================= */
+.rail { width: 58px; }
+.rail .line { left: 26px; width: 5px; border-radius: 5px; background: rgba(255,255,255,.2); }
+.rail .fill { left: 26px; width: 5px; border-radius: 5px; box-shadow: 0 0 10px rgba(255,255,255,.28); }
+.rail .dot { left: 28.5px; width: 17px; height: 17px; box-shadow: 0 2px 6px rgba(0,0,0,.35); }
+.rail .dot.chest { width: 15px; height: 15px; }
+.rail .dot.boss { width: 24px; height: 24px; }
+.rail .dot.cur { transform: translate(-50%, -50%) scale(1.45); box-shadow: 0 0 0 5px rgba(255,255,255,.2), 0 2px 8px rgba(0,0,0,.4); }
+.rail .me { left: 28.5px; width: 46px; height: 46px; }
+.rail .me .skn { width: 50px; height: 50px; }
+.rail .wl { left: -4px; font-size: 11.5px; letter-spacing: .02em; padding: 8px 2px; border-radius: 6px; background: rgba(0,0,0,.62); opacity: 1; box-shadow: 0 2px 6px rgba(0,0,0,.3); }
+.slide > .sbody { padding-left: 72px; }
+#app.day .rail .line { background: rgba(0,0,0,.16); }
+@media (min-width: 900px) {
+  #app .rail { width: 64px; }
+  #app .rail .wl { font-size: 13.5px; padding: 10px 3px; left: -6px; }
+  #app .rail .dot { width: 19px; height: 19px; }
+  #app .rail .dot.boss { width: 26px; height: 26px; }
+}
+.rail .wl.up { transform: translateY(calc(-100% - 4px)); }
+.upl .upl-note1 { flex: none; width: 100%; box-sizing: border-box; }
 </style>
 </head>
 <body>
@@ -2112,10 +2134,10 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   const prevLevelName = (lvl) => { const L = LEVELS(), i = L.findIndex(l => l.n === lvl); return i > 0 ? L[i - 1].name : 'הרמה הקודמת'; };
   const uploadUI = (n) => {
     const u = ui(n.id);
-    if (u.uploading) { const x = u.uploading; return `<div class="upl busy" data-upl="${n.id}"><div class="upl-file"><span class="upl-name">${esc(x.name)}</span><span class="upl-size">${fmtSize(x.size)}</span></div><div class="upl-bar" role="progressbar" aria-label="התקדמות ההעלאה" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(x.pct)}"><i style="width:${x.pct}%"></i></div><div class="upl-row"><span class="upl-pct">מעלה… ${Math.round(x.pct)}%</span><button class="upl-cancel" type="button" data-a="cancel">ביטול</button></div></div>`; }
+    if (u.uploading) { const x = u.uploading; return `<div class="upl busy" data-upl="${n.id}"><div class="upl-file"><span class="upl-name">${esc(x.name)}</span><span class="upl-size">${fmtSize(x.size)}</span></div><div class="upl-bar" role="progressbar" aria-label="התקדמות ההעלאה" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(x.pct)}"><i style="width:${x.pct}%"></i></div><div class="upl-row"><span class="upl-pct">מעלה ושולח למדריך… ${Math.round(x.pct)}%</span><button class="upl-cancel" type="button" data-a="cancel">ביטול</button></div></div>`; }
     if (u.ready) { const x = u.ready; return `<div class="upl-ready"><div class="upl-done"><span class="upl-name">${esc(x.name)}</span>${x.size ? `<span class="upl-size">${fmtSize(x.size)}</span>` : ''}</div><textarea class="upl-note" data-a="note" maxlength="500" placeholder="הערה למדריך (לא חובה)" aria-label="הערה למדריך">${esc(u.note || '')}</textarea><div class="row2"><button class="btn3 gold" type="button" data-a="send">שליחה למדריך</button><button class="btn3 ghost" type="button" data-a="discard">${x.isLink ? 'קישור אחר' : 'סרטון אחר'}</button></div></div>`; }
-    return `<div class="upl">${u.err ? `<p class="upl-err" role="alert">${esc(u.err)}</p>` : ''}<span class="upl-hint">גררו לכאן את סרטון הטיסה, או</span><button class="btn3 pink full" type="button" data-a="pick">${n.state === 'fix' ? 'העלאת הטיסה החוזרת' : 'העלאת סרטון הטיסה'}</button><small class="upl-meta">קובץ וידאו מהמחשב · עד ${MAXMB()}MB</small><input type="file" accept="video/*,.mp4,.mov,.m4v,.webm" hidden>
-      <div class="upl-or">או קישור ל־YouTube או ל־Drive</div><form class="upl-link" data-a="linkform" novalidate><input type="url" inputmode="url" dir="ltr" data-a="link" placeholder="https://" aria-label="קישור לסרטון הטיסה" value="${esc(u.link || '')}"><button class="btn3" type="submit">הוספה</button></form></div>`;
+    return `<div class="upl">${u.err ? `<p class="upl-err" role="alert">${esc(u.err)}</p>` : ''}<input class="upl-note1" type="text" data-a="note" maxlength="500" placeholder="הערה למדריך (לא חובה, כותבים לפני ההעלאה)" aria-label="הערה למדריך, לא חובה" value="${esc(u.note || '')}"><span class="upl-hint">גררו לכאן את סרטון הטיסה, או</span><button class="btn3 pink full" type="button" data-a="pick">${n.state === 'fix' ? 'העלאת הטיסה החוזרת' : 'העלאת סרטון הטיסה'}</button><small class="upl-meta">עד ${MAXMB()}MB · נשלח למדריך מיד כשהסרטון עולה</small><input type="file" accept="video/*,.mp4,.mov,.m4v,.webm" hidden>
+      <div class="upl-or">או קישור ל־YouTube או ל־Drive</div><form class="upl-link" data-a="linkform" novalidate><input type="url" inputmode="url" dir="ltr" data-a="link" placeholder="https://" aria-label="קישור לסרטון הטיסה" value="${esc(u.link || '')}"><button class="btn3" type="submit">שליחה</button></form></div>`;
   };
   const paintUpl = (n) => {
     const box = document.querySelector(`[data-upl="${n.id}"]`), x = ui(n.id).uploading; if (!box || !x) return;
@@ -2207,7 +2229,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     v.scrollTop = keep;
     const rail = $('#rail'), N = all.length, at = (i) => N > 1 ? i / (N - 1) : 0;
     rail.innerHTML = `<div class="line"></div><div class="fill" id="rfill"></div>` + all.map((x, i) => `<button class="dot ${x.t === 'chest' ? 'chest ' + x.state : x.t === 'boss' ? 'boss' : x.state}" type="button" data-i="${i}" style="top:calc(16px + (100% - 32px) * ${at(i)})" aria-label="${esc(x.name)}"></button>`).join('')
-      + WORLDS.map(w => { const i = all.indexOf(w.nodes.find(x => all.indexOf(x) !== -1)); return i < 0 ? '' : `<span class="wl" style="top:calc(16px + (100% - 32px) * ${at(i)})">${esc(w.cls === 'wb' ? T('boss') : T('world') + ' ' + (w.i + 1))}</span>`; }).join('')
+      + WORLDS.map(w => { const i = all.indexOf(w.nodes.find(x => all.indexOf(x) !== -1)); return i < 0 ? '' : `<span class="wl${at(i) > .82 ? ' up' : ''}" style="top:calc(16px + (100% - 32px) * ${at(i)})">${esc(w.cls === 'wb' ? T('boss') : T('world') + ' ' + (w.i + 1))}</span>`; }).join('')
       + `<div class="me" id="rme">${pilotDrone()}</div>`;
     rail.querySelectorAll('.dot').forEach(d => d.onclick = () => goSlide(+d.dataset.i, true));
     v.querySelectorAll('[data-next]').forEach(b => b.onclick = () => goSlide(+b.dataset.next, true));
@@ -2247,8 +2269,8 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       const u = ui(n.id), v = String(u.link || '').trim();
       if (PREVIEW) { u.err = NO_SEND; paint(n); return; }
       if (!/^https?:\/\/\S+$/i.test(v)) { u.err = v ? 'הקישור צריך להתחיל ב־https://' : 'הדביקו קישור לסרטון הטיסה, או העלו את הקובץ.'; paint(n); return; }
-      u.err = ''; u.ready = { url: v, name: v.replace(/^https?:\/\//, '').slice(0, 60), isLink: true }; paint(n);
-      const t = (n.t === 'chal' ? sheet : $('#deck')).querySelector(n.t === 'chal' ? '[data-a="note"]' : `[data-n="${n.id}"] [data-a="note"]`); t && t.focus();
+      u.err = ''; u.ready = { url: v, name: v.replace(/^https?:\/\//, '').slice(0, 60), isLink: true };
+      sendFlight(n);
     };
     const inp = box.querySelector('input[type="file"]'), drop = box.querySelector('.upl:not(.busy)');
     if (btn('pick') && inp) btn('pick').onclick = () => inp.click();
@@ -2283,8 +2305,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       if (x.status === 401) { location.href = '/Login.dc.html'; return; }
       u.uploading = null;
       if (x.status === 200 && j.url) u.ready = { url: j.url, name: f.name, size: f.size }; else u.err = j.error || `ההעלאה נכשלה (${x.status}). נסו שוב.`;
-      paint(n);
-      if (u.ready) { const t = (n.t === 'chal' ? sheet : $('#deck')).querySelector(n.t === 'chal' ? '[data-a="send"]' : `[data-n="${n.id}"] [data-a="send"]`); t && t.focus({ preventScroll: true }); }
+      if (u.ready) sendFlight(n); else paint(n);
     };
     x.onerror = () => { u.uploading = null; u.err = 'אין חיבור לשרת. בדקו את האינטרנט ונסו שוב.'; paint(n); };
     x.onabort = () => { u.uploading = null; paint(n); };

@@ -415,6 +415,7 @@ function homeFor(user) {
 const PLAIN_PAGES = new Set(['Game.html', 'Tower.html', 'Studio.html']);
 const OBSERVER_PAGES = new Set(['Observer.dc.html', 'Leadership.dc.html']);
 const ADMIN_BLOCKED = new Set(['StudentApp.dc.html', 'Observer.dc.html', 'Game.html']);
+const STUDENT_FILES = new Set(['StudentApp.dc.html', 'Game.html', 'Login.dc.html']);
 function mayOpen(user, file) {
   // a student gets the one screen chosen for their group: the regular screen or the game
   if (user.role === 'student') return file === (uiFor(user) === 'classic' ? 'StudentApp.dc.html' : 'Game.html');
@@ -439,7 +440,9 @@ function boardHtml(file, user, bootOverride) {
   let html = fs.readFileSync(path.join(PUBLIC, file), 'utf8');
   const boot = bootOverride || (user ? bootFor(user) : null);
   const data = JSON.stringify(boot).replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
-  const inject = '<script>window.__ACADEMY__=' + data + ';</script>\n<script src="./academy.js"></script>\n';
+  // admin pages also get the side menu's look (public/adminnav.css); the student screens keep their own
+  const nav = STUDENT_FILES.has(file) ? '' : '<link rel="stylesheet" href="./adminnav.css">\n';
+  const inject = '<script>window.__ACADEMY__=' + data + ';</script>\n<script src="./academy.js"></script>\n' + nav;
   if (html.indexOf('<!--ACADEMY-->') !== -1) return html.replace('<!--ACADEMY-->', inject);
   return html.replace('<script src="./support.js"></script>', inject + '<script src="./support.js"></script>');
 }
