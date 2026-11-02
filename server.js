@@ -202,7 +202,9 @@ function cleanTheme(t) {
   return {
     id, name: String(t.name || '').replace(/[<>]/g, '').trim().slice(0, 40) || 'ערכה ללא שם', base, mode: t.mode === 'day' ? 'day' : 'night', allowToggle: t.allowToggle !== false,
     colors: pick(t.colors, COLOR_KEYS), surf, fonts: { head: font(tf.head, FONTS_HEAD), body: font(tf.body, FONTS_BODY), num: font(tf.num, FONTS_NUM) },
-    icons: t.icons === 'line' || t.icons === 'emoji' ? t.icons : BASE_ICONS[base], bg, stageBg: t.stageBg !== false, terms, motion: t.motion === 'calm' ? 'calm' : 'full', builtIn: !!BUILTIN_NAMES[id]
+    icons: t.icons === 'line' || t.icons === 'emoji' ? t.icons : BASE_ICONS[base], bg, stageBg: t.stageBg !== false, terms, motion: t.motion === 'calm' ? 'calm' : 'full',
+    // how an exercise window is laid out: one panel at the bottom, or the showcase (an info square beside a big media window, with a tab per step)
+    layout: t.layout === 'show' ? 'show' : 'panel', builtIn: !!BUILTIN_NAMES[id]
   };
 }
 // A background for one stage: none, a built-in scene, or an uploaded image (blurred a little unless told not to).
@@ -218,6 +220,11 @@ function ensureLooks() {
   const st = db.settings;
   const list = (Array.isArray(st.themes) ? st.themes : []).map(cleanTheme).filter(Boolean);
   Object.keys(BUILTIN_NAMES).forEach((id) => { if (!list.some((t) => t.id === id)) list.push(themeDefaults(id)); });
+  // once: a ready theme with the showcase layout, to assign to a group or copy (an ordinary theme, so it can be edited or deleted)
+  if (!st.showSeeded) {
+    st.showSeeded = true;
+    if (!list.some((t) => t.id === 't-show')) list.push(cleanTheme({ id: 't-show', name: 'תצוגת משימה', base: 'regular', mode: 'night', layout: 'show', colors: { accent: '#8cfac8' } }));
+  }
   st.themes = list;
   const sb = st.stageBg && st.stageBg.assign && typeof st.stageBg.assign === 'object' ? st.stageBg.assign : {};
   const assign = {};

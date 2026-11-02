@@ -1599,6 +1599,111 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 }
 @media (min-width: 900px) and (max-width: 1180px) { #app .mpanel .mp-c, #app .mpanel .mp-c:not(:has(.upl)) { flex-basis: 210px; } #app .mpanel .mp-c:has(.upl) { flex-basis: 260px; } }
 @media (min-width: 900px) and (max-width: 1180px) { #app .mpanel .step small { display: none; } #app .mpanel h2 { font-size: 30px; } }
+
+/* ================= the showcase layout (theme option "layout: show") =================
+   An info square in the theme's main colour on the reading side, a big media window beside it (the stage's picture,
+   the demo video, the upload, or the instructor's note), and under the media a grey tab for each step of the exercise. */
+.show { --sh-ink: #0C1424; --sh-tab: #EFEFEF; --sh-tab2: #FFFFFF;
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; width: 100%; color: var(--sh-ink); }
+.sh-info { background: var(--mint); color: var(--sh-ink); padding: 22px 22px 18px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.sh-top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; font-weight: 800; font-size: 13px; letter-spacing: .04em; }
+.sh-tag { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sh-count { font-family: var(--n); font-size: 15px; opacity: .8; }
+.slide.sh .sh-info h2 { margin: 0; font-size: 34px; font-weight: 900; line-height: 1.02; text-align: start; color: var(--sh-ink); text-shadow: none; font-style: normal; text-wrap: balance; }
+.slide.sh .sh-info h2 .tstars { color: var(--sh-ink); text-shadow: none; }
+.sh-desc { margin: 0; font-size: 15px; line-height: 1.5; color: color-mix(in srgb, var(--sh-ink) 86%, transparent); }
+.sh-state { margin: 0; font-size: 13px; font-weight: 800; letter-spacing: .03em; display: inline-flex; align-items: center; gap: 8px; }
+.sh-state::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--sh-ink); }
+.sh-state.s-now::before { background: var(--pink); } .sh-state.s-fix::before { background: var(--fixc); } .sh-state.s-wait::before { background: var(--sky); } .sh-state.s-done::before { background: var(--done); }
+.sh-foot { margin-top: auto; padding-top: 14px; border-top: 2px solid var(--sh-ink); display: flex; align-items: center; gap: 12px; }
+.sh-foot .rlens { position: relative; display: block; flex: none; width: 54px; height: 54px; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 3px var(--sh-ink), 0 0 0 6px rgba(255,255,255,.55); }
+.sh-foot .rlens .scn { position: absolute; inset: 0; }
+.sh-foot .rlens.dim { filter: grayscale(1) brightness(.75); }
+.sh-cta { flex: 1 1 auto; min-width: 0; display: flex; align-items: center; justify-content: space-between; gap: 10px; border: 0; background: none; padding: 6px 0; cursor: pointer;
+  color: var(--sh-ink); font: 800 15px var(--f); letter-spacing: .03em; text-align: start; }
+.sh-cta i { font-style: normal; font-size: 26px; line-height: 1; transition: transform .15s; }
+.sh-cta:hover i { transform: translateX(-4px); }
+.sh-cta:focus-visible, .sh-tab:focus-visible { outline: 3px solid var(--sh-ink); outline-offset: 2px; }
+
+/* the big media window */
+.sh-media { position: relative; min-height: 230px; overflow: hidden; background: #0A0F0E; display: grid; }
+.sh-art { position: absolute; inset: 0; }
+.sh-art .scn { position: absolute; inset: 0; }
+.sh-media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.05), rgba(0,0,0,.45)); pointer-events: none; }
+.sh-pane { position: relative; z-index: 1; align-self: center; justify-self: center; width: min(460px, calc(100% - 28px)); margin: 16px 0; display: flex; flex-direction: column; gap: 10px; color: #fff; }
+.sh-pane .act { margin: 0; }
+.sh-pane .upl, .sh-pane .upl-ready, .sh-pane .upl-done { background: rgba(8,12,12,.72); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.sh-pane .inote { background: rgba(8,12,12,.78); color: #fff; backdrop-filter: blur(8px); }
+.sh-msg { margin: 0; padding: 12px 16px; border-radius: 14px; background: rgba(8,12,12,.72); backdrop-filter: blur(8px); font-size: 15px; line-height: 1.5; text-align: center; }
+.sh-play { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.sh-play .vid { width: min(340px, 100%); }
+.sh-play .vid .btn3 { width: 100%; height: 62px; font-size: 19px; }
+.sh-play small { font-weight: 700; color: var(--gold); text-shadow: 0 1px 6px rgba(0,0,0,.7); }
+.sh-pane > .btn3 { align-self: center; }
+.show.notabs .sh-pane { width: min(520px, calc(100% - 28px)); }
+.show.notabs .sh-pane > *:not(.act):not(.inote) { color: #fff; }
+.show.notabs .sh-pane .state, .show.notabs .sh-pane .desc { text-align: center; background: rgba(8,12,12,.6); padding: 8px 12px; border-radius: 12px; }
+
+/* the demo video plays inside the media window */
+.vplayer.inl { border-radius: 0; box-shadow: none; }
+
+/* the grey step tabs */
+.sh-tabs { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 6px; }
+.sh-tab { position: relative; display: flex; align-items: center; gap: 10px; min-width: 0; padding: 14px 14px 12px; border: 0; background: var(--sh-tab); color: var(--sh-ink); cursor: pointer; text-align: start; font: inherit; }
+.sh-tab::before { content: ""; position: absolute; inset: 0 0 auto; height: 5px; background: transparent; transition: background .15s; }
+.sh-tab.cur { background: var(--sh-tab2); }
+.sh-tab.cur::before { background: var(--mint); }
+.sh-tab:hover:not(.cur) { background: #E4E6E5; }
+.sh-tab .si { flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font: 900 15px var(--n); background: rgba(12,20,36,.08); color: var(--sh-ink); }
+.sh-tab.ok .si { background: var(--mint); }
+.sh-tab.on:not(.ok) .si { background: var(--pink); color: #fff; }
+.sh-tab .si .ckp { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.sh-tab .tx { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.sh-tab b { font-size: 14px; font-weight: 800; line-height: 1.2; }
+.sh-tab small { font-size: 12px; color: #4B5563; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.sh-tab .rw { margin-inline-start: auto; flex: none; font: 900 12px var(--n); color: #0E7A55; }
+.app.noearn .sh-tab .rw, .app.noearn .sh-play small { display: none; }
+
+/* the other looks keep their own corners */
+.app:not(.race):not(.mil) .sh-info, .app:not(.race):not(.mil) .sh-media, .app:not(.race):not(.mil) .sh-tab { border-radius: 4px; }
+.app.mil .sh-info, .app.mil .sh-media, .app.mil .sh-tab { border-radius: 6px; }
+
+/* phones: the square, then the media, then the tabs */
+@media (max-width: 899px) {
+  .slide.sh .sh-info h2 { font-size: 26px; }
+  .sh-info { padding: 16px 16px 12px; gap: 8px; }
+  .sh-desc { font-size: 13.5px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .sh-foot { padding-top: 10px; } .sh-foot .rlens { width: 44px; height: 44px; }
+  .sh-media { min-height: 200px; }
+  .sh-tab { flex-direction: column; text-align: center; gap: 4px; padding: 10px 4px 8px; }
+  .sh-tab small { display: none; } .sh-tab b { font-size: 11.5px; }
+  .sh-tab .si { width: 28px; height: 28px; font-size: 13px; }
+  .sh-tab .rw { margin: 0; }
+}
+
+/* wide screens: mirrored from the reference: the square on the reading side, spanning the media and the tabs */
+@media (min-width: 900px) {
+  #app .slide.sh .sgrid { justify-content: flex-end; }
+  #app .show { grid-template-columns: minmax(310px, .4fr) minmax(0, 1fr); grid-template-rows: minmax(300px, 1fr) auto; gap: 6px; max-height: calc(100% - 10px); }
+  #app .sh-info { grid-row: 1 / 3; grid-column: 1; padding: 34px 32px 26px; gap: 14px; }
+  #app .sh-media { grid-row: 1; grid-column: 2; min-height: 300px; }
+  #app .sh-tabs { grid-row: 2; grid-column: 2; }
+  #app .show.notabs { grid-template-rows: minmax(300px, 1fr); }
+  #app .show.notabs .sh-info { grid-row: 1; }
+  #app .slide.sh .sh-info h2 { font-size: 38px; }
+  #app .sh-desc { font-size: 16px; }
+  #app .sh-tab { padding: 18px 18px 16px; min-height: 84px; }
+  #app .sh-tab b { font-size: 15.5px; }
+  #app .sh-foot .rlens { width: 64px; height: 64px; }
+}
+@media (min-width: 900px) and (max-height: 820px) { #app .show { grid-template-rows: minmax(240px, 1fr) auto; } #app .sh-media { min-height: 240px; } #app .slide.sh .sh-info h2 { font-size: 34px; } #app .sh-tab small { display: none; } }
+.sh-art .art-img, .sh-foot .rlens .art-img { position: absolute; inset: 0; }
+.sh-art .scn, .sh-art .scn > i, .sh-foot .rlens .scn, .sh-foot .rlens .scn > i { filter: none !important; }
+.sh-media { grid-template-columns: minmax(0, 1fr); }
+.sh-pane .upl, .sh-pane .upl-ready, .sh-pane .upl-done, .sh-pane .inote, .sh-pane .act { box-sizing: border-box; width: 100%; min-width: 0; }
+.sh-cta .sh-arr { flex: none; width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; transition: transform .15s; }
+.sh-cta:hover .sh-arr { transform: translateX(-4px); }
+@media (min-width: 900px) { #app .show { grid-template-columns: minmax(340px, .42fr) minmax(0, 1fr); } }
 </style>
 </head>
 <body>
@@ -2292,6 +2397,62 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const act = !vOk ? `<div class="vid"><button class="btn3 pink" type="button" data-a="play">לצפייה בסרטון</button><div class="bar"><i></i></div></div>` : uploadUI(n);
     return `${fixNote}${desc}${stepsFor(n)}<div class="act">${act}</div>`;
   };
+  // ---------- the showcase layout (a theme option): an info square beside a big media window, with a tab per step ----------
+  const SHOW = () => !!(ACTIVE && ACTIVE.layout === 'show');
+  const showTabs = (n) => {
+    const r = R(), k = n.k, st = n.state, v = vidOf(k), seen = v && watched(k), done = st === 'done', wait = st === 'wait', sent = done || wait;
+    const vOk = !v || seen || sent || ui(n.id).skipVideo, fl = flightsOf(k.id), last = fl[0];
+    const neverBack = !fl.some(f => f.status === 'rejected'), flightPts = skillPts(k.id) + (neverBack ? r.first : 0);
+    const how = [k.pass, k.map ? 'מפה: ' + k.map : '', k.caption].filter(Boolean).join(' · ');
+    const tabs = [];
+    if (v) tabs.push({ key: 'video', title: 'תדריך: סרטון הדגמה', sub: seen ? 'צפיתם עד הסוף' : sent ? 'אפשר לצפות שוב' : 'צופים עד הסוף לפני שמטיסים', ok: seen || sent, on: !vOk && st !== 'lock', rw: EARNS() && r.video && !seen && !sent ? r.video : 0,
+      pane: () => `<div class="sh-play"><div class="vid"><button class="btn3 pink" type="button" data-a="play">${seen || sent ? 'לצפייה חוזרת בסרטון' : 'לצפייה בסרטון ההדגמה'}</button><div class="bar"><i></i></div></div>${EARNS() && r.video && !seen && !sent ? `<small>+${r.video} מטבעות בסוף הסרטון</small>` : ''}</div>` });
+    const fixNote = st === 'fix' ? `<div class="inote fixnote"><b>${P.redo && P.redo[k.id] ? 'המדריך ביקש ביצוע חוזר' : T('back')}</b><span>${P.redo && P.redo[k.id] ? 'מטיסים שוב ושולחים טיסה חדשה.' : last && last.feedback ? '“' + esc(last.feedback) + '”' : 'המדריך החזיר את הטיסה. נסו שוב.'}</span></div>` : '';
+    tabs.push({ key: 'flight', title: st === 'fix' ? 'טיסה חוזרת' : 'טיסה: מטיסים ומצלמים', sub: sent ? 'הטיסה נשלחה למדריך' : esc(how || 'מצלמים את כל התרגיל מתחילתו ועד סופו'), ok: sent, on: vOk && (st === 'now' || st === 'fix'), rw: EARNS() && flightPts && !sent ? flightPts : 0,
+      pane: () => st === 'lock' ? `<p class="sh-msg">התרגיל עוד נעול. הוא נפתח כשמסיימים את התרגילים ב${esc(prevLevelName(k.level))}.</p>`
+        : done ? `<p class="sh-msg">${P.acquired[k.id] === 'instructor' ? 'המדריך סימן את התרגיל כנרכש.' : 'הטיסה אושרה.'}</p>`
+        : wait ? `<div class="act">${sentBox(fl.find(x => x.status === 'review'))}</div><p class="sh-msg">הטיסה אצל המדריך. כשיבדוק, תגיע הודעה עם ההערה שלו.</p>`
+        : !vOk ? `<p class="sh-msg">קודם צופים בסרטון ההדגמה עד הסוף, ואז אפשר להעלות את הטיסה.</p><button class="btn3 ghost" type="button" data-tab="video">לתדריך</button>`
+        : `${fixNote}<div class="act">${uploadUI(n)}</div>` });
+    const f = fl.find(x => x.status === 'review'), auto = f && f.ai && (f.ai.status === 'queued' || f.ai.status === 'checking'), ok = fl.find(x => x.status === 'approved');
+    tabs.push({ key: 'tower', title: 'המדריך בודק', sub: done ? 'המדריך אישר' : wait ? (auto ? 'בבדיקה אוטומטית עכשיו' : 'המדריך בודק עכשיו') : st === 'fix' ? 'הוחזר לתיקון' : 'מאשר, או מחזיר עם הערה', ok: done, on: wait, live: wait, rw: 0,
+      pane: () => done ? (ok && ok.feedback ? `<div class="inote"><b>המדריך כתב</b><span>“${esc(ok.feedback)}”</span></div>` : `<p class="sh-msg">המדריך אישר את הטיסה.</p>`)
+        : wait ? `<p class="sh-msg">${auto ? 'הטיסה בבדיקה אוטומטית. התוצאה תגיע בהודעה.' : 'המדריך צופה בטיסה. התוצאה תגיע בהודעה עם ההערה שלו.'}</p>`
+        : st === 'fix' ? fixNote : `<p class="sh-msg">אחרי שתשלחו טיסה, המדריך יצפה בה ויאשר אותה או יחזיר עם הערה.</p>` });
+    return tabs;
+  };
+  const showState = (n) => {
+    const st = n.state;
+    if (n.t === 'skill') {
+      if (st === 'done') { const got = skillEarned(n.k.id); return `${P.acquired[n.k.id] === 'instructor' ? 'המדריך סימן כנרכש' : 'הטיסה אושרה'}${EARNS() && got ? ` · +${got} מטבעות` : ''}`; }
+      return st === 'wait' ? T('wait') : st === 'fix' ? 'חוזרים לתיקון' : st === 'lock' ? 'נעול' : 'פעיל עכשיו';
+    }
+    return '';
+  };
+  const showHtml = (n, w, k, nSkills, nextAt) => {
+    const tabs = n.t === 'skill' ? showTabs(n) : [];
+    const want = ui(n.id).tab, cur = tabs.find(t => t.key === want) || tabs.find(t => t.on) || tabs.find(t => !t.ok) || tabs[tabs.length - 1];
+    const body = n.t === 'skill' ? '' : slideBody(n);
+    const desc = n.t === 'skill' ? (n.k.desc ? `<p class="sh-desc">${esc(n.k.desc)}</p>` : '') : '';
+    // the link at the foot of the square: what to do now (like "learn more" in the reference)
+    const next = cur && tabs.find(t => t.on && t !== cur);
+    const link = (attrs, label) => `<button class="sh-cta" type="button" ${attrs}><span>${esc(label)}</span><svg class="sh-arr" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7"/></svg></button>`;
+    const cta = cur && cur.on && cur.key === 'video' ? link('data-run="play"', 'לצפייה בסרטון ההדגמה')
+      : cur && cur.on && cur.key === 'flight' ? link('data-run="pick"', n.state === 'fix' ? 'העלאת הטיסה החוזרת' : 'העלאת סרטון הטיסה')
+      : next ? link(`data-tab="${next.key}"`, 'השלב הבא: ' + next.title)
+      : (n.state === 'done' || n.state === 'wait') && nextAt != null ? link(`data-next="${nextAt}"`, 'לתרגיל הבא') : '';
+    const state = showState(n);
+    return `<div class="show ${tabs.length ? '' : 'notabs'}">
+      <div class="sh-info">
+        <div class="sh-top"><span class="sh-tag">${esc(w.name)} · ${esc(worldTag(w))}</span><b class="sh-count" dir="ltr">${n.t === 'skill' ? `${k} / ${nSkills}` : esc(n.t === 'chest' ? T('chest') : T('boss'))}</b></div>
+        <h2>${esc(n.name)}${titleStars(n)}</h2>
+        ${desc}${state ? `<p class="sh-state s-${n.state}">${esc(state)}</p>` : ''}
+        <div class="sh-foot">${lensArt(n.id, n.state === 'lock')}${cta}</div>
+      </div>
+      <div class="sh-media"><div class="sh-art" aria-hidden="true">${stageArt(n.id)}</div><div class="sh-pane" ${cur ? `role="tabpanel" aria-label="${esc(cur.title)}"` : ''}>${cur ? cur.pane() : body}</div></div>
+      ${tabs.length ? `<div class="sh-tabs" role="tablist" aria-label="שלבי התרגיל">${tabs.map((t, i) => `<button class="sh-tab${t === cur ? ' cur' : ''}${t.ok ? ' ok' : ''}${t.on ? ' on' : ''}" type="button" role="tab" aria-selected="${t === cur}" data-tab="${t.key}"><span class="si">${t.ok ? CKP : i + 1}</span><span class="tx"><b>${esc(t.title)}</b><small>${t.sub}</small></span>${t.rw ? `<span class="rw pts">+${t.rw}</span>` : ''}</button>`).join('')}</div>` : ''}
+    </div>`;
+  };
   // re-drawing keeps the field (and the text cursor) the student was in
   const keepFocus = (root, fn) => {
     const a = document.activeElement; let key = null, sel = null;
@@ -2327,6 +2488,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       v.innerHTML = all.map((n, i) => {
         const w = worldOf(n), open = w.nodes.some(x => x.state !== 'lock');
         if (n.t === 'skill') k++;
+        if (SHOW()) return `<section class="slide sh" data-n="${n.id}" aria-label="${esc(n.name)}"><div class="sbody"><div class="sgrid">${showHtml(n, w, k, nSkills, i < all.length - 1 ? i + 1 : null)}</div></div>${i < all.length - 1 ? nextBtn(all[i + 1], i + 1) : ''}</section>`;
         return `<section class="slide" data-n="${n.id}" aria-label="${esc(n.name)}"><div class="sbody"><div class="sgrid">
           <div class="world ${w.cls} ${open ? '' : 'locked'}"><span class="tagw">${esc(worldTag(w))}</span><h3>${esc(w.name)}</h3></div>
           <div class="count"><span>${n.t === 'chest' ? T('chest') : n.t === 'boss' ? T('boss') : 'תרגיל'}</span><b dir="ltr">${n.t === 'skill' ? `${k} / ${nSkills}` : ''}</b></div>
@@ -2336,7 +2498,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
           </div></div>${i < all.length - 1 ? nextBtn(all[i + 1], i + 1) : ''}
         </section>`;
       }).join('');
-      v.querySelectorAll('.slide .sgrid').forEach(panelize);
+      v.querySelectorAll('.slide:not(.sh) .sgrid').forEach(panelize);
     });
     v.scrollTop = keep;
     const rail = $('#rail'), N = all.length, at = (i) => N > 1 ? i / (N - 1) : 0;
@@ -2365,10 +2527,13 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const btn = (a) => box.querySelector(`[data-a="${a}"]`);
     if (btn('open')) btn('open').onclick = () => openChest(n);
     if (btn('skip')) btn('skip').onclick = () => { ui(n.id).skipVideo = true; paint(n); const p = (n.t === 'chal' ? sheet : $('#deck')).querySelector(n.t === 'chal' ? '[data-a="pick"]' : `[data-n="${n.id}"] [data-a="pick"]`); p && p.focus(); };
+    box.querySelectorAll('[data-run]').forEach(b => b.onclick = () => { const t = box.querySelector(`.sh-pane [data-a="${b.dataset.run}"]`); t && t.click(); });
+    box.querySelectorAll('[data-tab]').forEach(t => t.onclick = () => { ui(n.id).tab = t.dataset.tab; paint(n); const again = $('#deck').querySelector(`[data-n="${n.id}"] .sh-tab[data-tab="${t.dataset.tab}"]`); again && again.focus({ preventScroll: true }); });
     if (btn('play')) btn('play').onclick = (e) => {
       const src = n.t === 'skill' ? vidOf(n.k) : n.c && n.c.video; if (!src) return;
       e.currentTarget.disabled = true;
-      playDemo(src, n.name, box.querySelector('.vid') || e.currentTarget, n.t === 'skill' && !watched(n.k), (ended) => { if (ended === 'broken') { ui(n.id).skipVideo = true; paint(n); } else if (ended && n.t === 'skill') videoDone(n.k, box.querySelector('.step')); else paint(n); });
+      const media = box.querySelector('.sh-media');
+      playDemo(src, n.name, media || box.querySelector('.vid') || e.currentTarget, n.t === 'skill' && !watched(n.k), (ended) => { if (ended && media) ui(n.id).tab = 'flight'; if (ended === 'broken') { ui(n.id).skipVideo = true; paint(n); } else if (ended && n.t === 'skill') videoDone(n.k, box.querySelector('.step, .sh-tab.cur')); else paint(n); });
     };
     if (btn('cancel')) btn('cancel').onclick = () => { const x = ui(n.id).uploading; if (x && x.xhr) x.xhr.abort(); ui(n.id).uploading = null; paint(n); };
     if (btn('discard')) btn('discard').onclick = () => { const u = ui(n.id); u.ready = null; u.err = ''; paint(n); };
@@ -2468,11 +2633,18 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       <div class="vmeta"><b>סרטון הדגמה · ${esc(title)}</b><small>${coins && EARNS() && R().video ? 'המטבעות נאספים כשהסרטון מסתיים' : 'צפו עד הסוף, ואז ממשיכים לטיסה'}</small></div>
       <div class="vprog"><i></i></div>`;
     app.append(pl);
-    const big = () => { const w = Math.min(ar.width - 24, 900), h = Math.min(w * 9 / 16 + 86, ar.height - 40); return { left: (ar.width - w) / 2, top: Math.max(20, (ar.height - h) / 2), width: w, height: h }; };
+    const inl = !!(from.classList && from.classList.contains('sh-media'));
+    const big = () => { if (inl) { const r = from.getBoundingClientRect(), a2 = app.getBoundingClientRect(); return { left: r.left - a2.left, top: r.top - a2.top, width: r.width, height: r.height }; } const w = Math.min(ar.width - 24, 900), h = Math.min(w * 9 / 16 + 86, ar.height - 40); return { left: (ar.width - w) / 2, top: Math.max(20, (ar.height - h) / 2), width: w, height: h }; };
     const small = { left: fr.left - ar.left, top: fr.top - ar.top, width: fr.width, height: fr.height };
     const place = (r) => Object.assign(pl.style, { left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px' });
     place(small); pl.getBoundingClientRect();
-    requestAnimationFrame(() => { pl.classList.add('open'); scrim.classList.add('on'); place(big()); });
+    if (inl) pl.classList.add('inl');
+    requestAnimationFrame(() => { pl.classList.add('open'); if (!inl) scrim.classList.add('on'); place(big()); });
+    // inside the media window: it follows the window if the screen is resized, and closes if the student moves to another exercise
+    if (inl) {
+      const deck = $('#deck'), y0 = deck.scrollTop, follow = () => { if (over) return; if (Math.abs(deck.scrollTop - y0) > 40) finish(false); else place(big()); };
+      deck.addEventListener('scroll', follow, { passive: true }); addEventListener('resize', follow);
+    }
     let over = false;
     const finish = (ended) => {
       if (over) return; over = true; curPlayer = null;
@@ -3006,7 +3178,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   // the design page changes one thing at a time: colors and the like only need the variables, a new base style,
   // icons or words need the whole screen drawn again
   const previewTheme = (raw) => {
-    const t = themeOf(raw), shape = (x) => JSON.stringify([x.base, x.icons, x.terms]);
+    const t = themeOf(raw), shape = (x) => JSON.stringify([x.base, x.icons, x.terms, x.layout || 'panel']);
     if (ACTIVE && shape(ACTIVE) === shape(t)) { ACTIVE = t; applyVars(t); syncStageBg(); } else applyTheme(t);
   };
   // the switch shows where it leads: a sun to day, a moon to night

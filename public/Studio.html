@@ -414,7 +414,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   const TERMS = [['t1', 'לשונית 1 (המסלול)'], ['t2', 'לשונית 2 (המשימות)'], ['t3', 'לשונית 3 (הליגה)'], ['t4', 'לשונית 4 (הפרופיל)'], ['world', 'שם ל"עולם"'], ['chest', 'שם ל"תיבה"'], ['boss', 'שם למבחן המסכם'], ['league', 'שם הליגה'], ['mapTitle', 'כותרת מפת הנתיב'], ['questsTitle', 'כותרת המשימות'], ['go', 'בועה מעל התרגיל הנוכחי'], ['lit', 'הודעה כשתרגיל מאושר']];
   const BUILT = { 't-race': ['race', 'מירוץ FPV'], 't-regular': ['regular', 'משחקי צבעוני'], 't-mil': ['mil', 'צבאי'] };
   const AUTO = ['field', 'city', 'garage', 'loft', 'forest', 'street'];
-  const newTheme = (base, extra) => Object.assign({ id: newId(), name: 'ערכה חדשה', base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default', num: 'default' }, icons: BASES[base].icons, bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', builtIn: false }, extra || {});
+  const newTheme = (base, extra) => Object.assign({ id: newId(), name: 'ערכה חדשה', base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default', num: 'default' }, icons: BASES[base].icons, bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', layout: 'panel', builtIn: false }, extra || {});
   const defaultsOf = (id) => BUILT[id] ? newTheme(BUILT[id][0], { id, name: BUILT[id][1], builtIn: true }) : null;
   // the colours in use: the theme's own, else the style's (the extra roles follow the brand colours until they are set)
   const effColors = (t) => { const C = Object.assign({}, BASES[t.base].colors, t.colors || {}), M = moreColors(t.base, C); Object.keys(M).forEach(k => { if (!isHex(C[k] || '')) C[k] = M[k]; }); return C; };
@@ -602,6 +602,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
       <section class="st-sec" aria-labelledby="sh-terms"><h2 id="sh-terms">מילים ושמות</h2>
         <p class="st-hint">שדה ריק משתמש במילה של הסגנון. את שמות הדרגות קובעים בעמוד הניקוד.</p>
         <div class="st-terms">${TERMS.map(([k, l]) => `<label class="st-field">${l}<input type="text" data-term="${k}" value="${esc(d.terms[k] || '')}" placeholder="${esc(WORDS[d.base][k])}" maxlength="40"></label>`).join('')}</div>
+      </section>
+      <section class="st-sec" aria-labelledby="sh-layout"><h2 id="sh-layout">פריסת חלון התרגיל</h2>
+        <div class="st-seg" role="group" aria-label="פריסת חלון התרגיל"><button type="button" data-layout="panel" class="${d.layout !== 'show' ? 'on' : ''}" aria-pressed="${d.layout !== 'show'}">חלון בתחתית</button><button type="button" data-layout="show" class="${d.layout === 'show' ? 'on' : ''}" aria-pressed="${d.layout === 'show'}">תצוגת משימה</button></div>
+        <p class="st-hint">${d.layout === 'show' ? 'ריבוע פרטי המשימה בצבע הראשי, לידו חלון גדול עם תמונת השלב, ומתחתיו לשונית לכל שלב: תדריך, טיסה, המדריך בודק. לחיצה על לשונית מחליפה את מה שבחלון הגדול: הסרטון מתנגן בתוכו, ההעלאה והמשוב מופיעים בו.' : 'כל הטקסט של התרגיל בחלון אחד רחב בתחתית המסך, ועדשת השלב מעליו.'}</p>
       </section>
       <section class="st-sec" aria-labelledby="sh-motion"><h2 id="sh-motion">תנועה</h2>
         <div class="st-seg" role="group" aria-label="אנימציות"><button type="button" data-motion="full" class="${d.motion !== 'calm' ? 'on' : ''}" aria-pressed="${d.motion !== 'calm'}">אנימציות מלאות</button><button type="button" data-motion="calm" class="${d.motion === 'calm' ? 'on' : ''}" aria-pressed="${d.motion === 'calm'}">מופחתות</button></div>
@@ -905,6 +909,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     if (ds.reset) { const k = ds.reset, mode = d.mode === 'day' ? 'day' : 'night'; if (SURF_KEYS.indexOf(k) !== -1) delete d.surf[mode][k]; else delete d.colors[k]; redraw(); return; }
     if (ds.icons) { if (d.icons !== ds.icons) { d.icons = ds.icons; redraw(); } return; }
     if (ds.motion) { d.motion = ds.motion; redraw(); return; }
+    if (ds.layout) { d.layout = ds.layout === 'show' ? 'show' : 'panel'; redraw(); return; }
     if (ds.tbg) {
       const v = ds.tbg, S = effSurf(d, d.mode === 'day' ? 'day' : 'night');
       d.bg = v === 'look' ? { kind: 'look' } : v === 'color' ? { kind: 'color', color: d.bg.kind === 'color' && isHex(d.bg.color || '') ? d.bg.color : S.bg } : v.indexOf('scene:') === 0 ? { kind: 'scene', id: v.slice(6) } : { kind: 'img', url: v.slice(4), blur: true };
