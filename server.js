@@ -218,7 +218,9 @@ function cleanTheme(t) {
     icons: t.icons === 'line' || t.icons === 'emoji' ? t.icons : BASE_ICONS[base], bg, stageBg: t.stageBg !== false, terms, motion: t.motion === 'calm' ? 'calm' : 'full',
     // how an exercise window is laid out: as it always was (classic), one panel at the bottom, or the showcase
     // (an info square beside a big media window, with a tab per step). Only a theme that picks one gets it.
-    layout: ['show', 'panel', 'bar'].indexOf(t.layout) !== -1 ? t.layout : 'classic', show: cleanShow(t.show), builtIn: !!BUILTIN_NAMES[id]
+    layout: ['show', 'panel', 'bar'].indexOf(t.layout) !== -1 ? t.layout : 'classic', show: cleanShow(t.show),
+    // a special look over the base style: 'pixel' turns the whole student screen into a retro 8-bit arcade
+    look: t.look === 'pixel' ? 'pixel' : '', builtIn: !!BUILTIN_NAMES[id]
   };
 }
 // A background for one stage: none, a built-in scene, or an uploaded image (blurred a little unless told not to).
@@ -240,6 +242,14 @@ function ensureLooks() {
   if (!st.showSeeded) {
     st.showSeeded = true;
     if (!list.some((t) => t.id === 't-show')) list.push(cleanTheme({ id: 't-show', name: 'תצוגת משימה', base: 'regular', mode: 'night', layout: 'show', colors: { accent: '#8cfac8' } }));
+  }
+  // once: a ready retro-arcade theme (an original pixel look, no game's characters or brands)
+  if (!st.pixelSeeded) {
+    st.pixelSeeded = true;
+    if (!list.some((t) => t.id === 't-pixel')) list.push(cleanTheme({ id: 't-pixel', name: 'פיקסל 88', base: 'regular', mode: 'day', allowToggle: false, look: 'pixel',
+      colors: { accent: '#e83b2e', accent2: '#2e5ce8', gold: '#ffc61a', sky: '#4fc3f7', done: '#3cb043', fix: '#ff8a1a', lock: '#7a6a5a', coin: '#ffc61a' },
+      surf: { day: { bg: '#6bb8ff', card: '#fff6e0', text: '#1a1020', dim: '#5a4a60' } },
+      terms: { world: 'עולם', chest: 'תיבת בונוס', boss: 'השלב האחרון', lit: '1-UP!', go: 'יוצאים לדרך!' } }));
   }
   // once: a ready theme with the bottom bar (headings that open their own windows)
   if (!st.barSeeded) {
