@@ -218,7 +218,7 @@ function cleanTheme(t) {
     icons: t.icons === 'line' || t.icons === 'emoji' ? t.icons : BASE_ICONS[base], bg, stageBg: t.stageBg !== false, terms, motion: t.motion === 'calm' ? 'calm' : 'full',
     // how an exercise window is laid out: as it always was (classic), one panel at the bottom, or the showcase
     // (an info square beside a big media window, with a tab per step). Only a theme that picks one gets it.
-    layout: t.layout === 'show' || t.layout === 'panel' ? t.layout : 'classic', show: cleanShow(t.show), builtIn: !!BUILTIN_NAMES[id]
+    layout: ['show', 'panel', 'bar'].indexOf(t.layout) !== -1 ? t.layout : 'classic', show: cleanShow(t.show), builtIn: !!BUILTIN_NAMES[id]
   };
 }
 // A background for one stage: none, a built-in scene, or an uploaded image (blurred a little unless told not to).
@@ -240,6 +240,11 @@ function ensureLooks() {
   if (!st.showSeeded) {
     st.showSeeded = true;
     if (!list.some((t) => t.id === 't-show')) list.push(cleanTheme({ id: 't-show', name: 'תצוגת משימה', base: 'regular', mode: 'night', layout: 'show', colors: { accent: '#8cfac8' } }));
+  }
+  // once: a ready theme with the bottom bar (headings that open their own windows)
+  if (!st.barSeeded) {
+    st.barSeeded = true;
+    if (!list.some((t) => t.id === 't-bar')) list.push(cleanTheme({ id: 't-bar', name: 'בר תחתון', base: 'regular', mode: 'night', layout: 'bar' }));
   }
   st.themes = list;
   const sb = st.stageBg && st.stageBg.assign && typeof st.stageBg.assign === 'object' ? st.stageBg.assign : {};
