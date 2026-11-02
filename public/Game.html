@@ -1519,6 +1519,86 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 .app.race .rs .rnote b { color: #fff; opacity: .8; }
 .app.mil .rs .rnote { border-radius: 6px; }
 @media (max-width: 519px) { .rs .rnote { padding: 12px 14px; } .rs .rnote .rq { font-size: 15px; max-height: 30vh; } .rt { font-size: 32px; } }
+
+/* ================= one panel per window: everything the window says, in one wide box at the bottom =================
+   The stage's lens stays above it, over the background. The level tag and the count head the panel. */
+.slide .sgrid { min-height: 100%; justify-content: flex-end; }
+.slide .sgrid > .hero { flex: 1 1 auto; min-height: 120px; }
+.mpanel {
+  display: flex; flex-direction: column; gap: 14px; padding: 16px; border-radius: 22px; box-sizing: border-box;
+  background: color-mix(in srgb, var(--night) 80%, transparent); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 18px 50px rgba(0,0,0,.4), inset 0 0 0 1px rgba(255,255,255,.12);
+}
+.mpanel > div { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.mp-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.mpanel .mp-head .world { margin: 0; padding: 6px 14px; border-radius: 12px; display: flex; align-items: baseline; gap: 10px; flex: 0 1 auto; min-width: 0; }
+.mpanel .mp-head .world .tagw { position: static; flex: none; }
+.mpanel .mp-head .world h3 { font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mpanel .mp-head .world .deco { display: none; }
+.mpanel .mp-head .count { gap: 8px; justify-content: flex-start; }
+.mpanel h2 { margin: 0; text-align: start; }
+.mpanel .state { text-align: start; }
+.mpanel .desc { text-align: start; }
+.mpanel .inote { margin: 0; }
+.mpanel .steps { margin: 0; }
+.mpanel .act { margin: 0; }
+.app.race .mpanel { border-radius: 0; background: color-mix(in srgb, #0B0C0D 72%, transparent); }
+.app.race .mpanel .mp-head .world { padding: 6px 28px 6px 18px; }
+.app.mil .mpanel { border-radius: 8px; }
+#app.day .mpanel { background: color-mix(in srgb, var(--d-card, #FFFFFF) 88%, transparent); box-shadow: 0 18px 44px rgba(0,0,0,.18), inset 0 0 0 1px rgba(0,0,0,.08); }
+
+/* phones: the panel stacks; the steps become a row of three small tiles */
+@media (max-width: 899px) {
+  .slide .sgrid > .hero { height: auto; min-height: 104px; max-height: 150px; }
+  .mpanel h2 { font-size: 26px; }
+  .mpanel .desc { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; font-size: 13.5px; }
+  .mpanel .steps { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 6px; }
+  .mpanel .step { flex-direction: column; text-align: center; gap: 4px; padding: 8px 4px; }
+  .mpanel .step .si { width: 32px; height: 32px; font-size: 17px; }
+  .mpanel .step b { font-size: 11.5px; line-height: 1.2; }
+  .mpanel .step small { display: none; }
+  .mpanel .step .rw { margin: 0; font-size: 11px; }
+}
+
+/* wide screens: the panel runs across, in three columns: what this is / what was said and the steps / what to do now */
+@media (min-width: 900px) {
+  #app .slide .sgrid { display: flex; flex-direction: column; gap: 18px; }
+  #app .slide .sgrid > .hero { grid-column: auto; grid-row: auto; height: auto; min-height: 180px; max-height: 300px; align-self: stretch; margin: 0; }
+  #app .mpanel { flex-direction: row; align-items: stretch; gap: 26px; padding: 22px 26px; border-radius: 26px; }
+  #app .app.race .mpanel, #app.race .mpanel { border-radius: 0; }
+  #app .mpanel > div + div { padding-inline-start: 26px; border-inline-start: 1px solid rgba(255,255,255,.12); }
+  #app.day .mpanel > div + div { border-inline-start-color: rgba(0,0,0,.1); }
+  #app .mpanel .mp-a { flex: 1.35 1 0; }
+  #app .mpanel .mp-b { flex: 1.3 1 0; justify-content: center; }
+  #app .mpanel .mp-c { flex: 1 1 0; justify-content: center; }
+  #app .mpanel.n1 .mp-a { flex: 1 1 auto; }
+  #app .mpanel h2 { font-size: 34px; }
+  #app .mpanel .desc { font-size: 15px; }
+  #app .mpanel .steps { gap: 8px; }
+  #app .mpanel .step { padding: 10px 12px; }
+  #app .mpanel .step .si { width: 38px; height: 38px; font-size: 20px; }
+  #app .mpanel .step b { font-size: 14.5px; }
+  #app .slide > .sbody { padding-bottom: 86px; }
+}
+@media (min-width: 900px) and (max-height: 800px) { #app .mpanel h2 { font-size: 32px; } #app .mpanel .step small { display: none; } #app .slide .sgrid > .hero { min-height: 130px; } }
+
+/* the next exercise: reads as the way down to the next screen */
+.nextbtn .nb-down { flex: none; display: grid; place-items: center; width: 34px; height: 34px; margin-inline-start: 4px; border-radius: 50%; background: var(--nb); color: var(--ink, #0B1513); animation: nbdown 1.8s ease-in-out infinite; }
+.nextbtn .nb-down svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+@keyframes nbdown { 0%, 100% { transform: translateY(-2px); } 50% { transform: translateY(4px); } }
+.nextbtn.nb-lock .nb-down { background: rgba(255,255,255,.2); color: #fff; animation: none; }
+.app.race .nextbtn .nb-down { border-radius: 0; }
+.app.mil .nextbtn .nb-down { border-radius: 4px; }
+@media (prefers-reduced-motion: reduce) { .nextbtn .nb-down { animation: none; } }
+@media (min-width: 900px) { #app .mpanel .mp-c:not(:has(.upl)) { flex: .85 1 0; } #app .mpanel h2 { text-wrap: balance; } }
+/* the action column keeps a fixed, comfortable width so its button never wraps */
+@media (min-width: 900px) {
+  #app .mpanel .mp-a { flex: 1.1 1 0; } #app .mpanel .mp-b { flex: 1 1 0; }
+  #app .mpanel .mp-c, #app .mpanel .mp-c:not(:has(.upl)) { flex: 0 0 250px; }
+  #app .mpanel .mp-c:has(.upl) { flex: 0 0 300px; }
+}
+@media (min-width: 900px) and (max-width: 1180px) { #app .mpanel .mp-c, #app .mpanel .mp-c:not(:has(.upl)) { flex-basis: 210px; } #app .mpanel .mp-c:has(.upl) { flex-basis: 260px; } }
+@media (min-width: 900px) and (max-width: 1180px) { #app .mpanel .step small { display: none; } #app .mpanel h2 { font-size: 30px; } }
 </style>
 </head>
 <body>
@@ -2219,6 +2299,23 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     fn();
     if (key) { const el = root.querySelector(`[data-n="${key.n}"] [data-a="${key.a}"]`); if (el) { try { el.focus({ preventScroll: true }); if (sel && sel[0] != null) el.setSelectionRange(sel[0], sel[1]); } catch (e) {} } }
   };
+  // everything a window says goes into one wide panel at the bottom: the level and count, the title and state,
+  // the instructor's note and the steps, and what to do now. The stage's lens stays above it.
+  const panelize = (g) => {
+    const mk = (c) => { const d = document.createElement('div'); d.className = c; return d; };
+    const p = mk('mpanel'), a = mk('mp-a'), b = mk('mp-b'), c = mk('mp-c'), head = mk('mp-head');
+    a.append(head);
+    [...g.children].forEach(el => {
+      if (el.classList.contains('hero')) return;
+      if (el.matches('.world, .count')) head.append(el);
+      else if (el.matches('.inote, .steps')) b.append(el);
+      else if (el.matches('.act')) c.append(el);
+      else a.append(el);
+    });
+    [a, b, c].forEach(x => { if (x.children.length) p.append(x); });
+    p.classList.add('n' + p.children.length);
+    g.append(p);
+  };
   let slideIds = [];
   const renderMap = () => {
     const v = $('#deck'); const keep = v.scrollTop;
@@ -2239,6 +2336,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
           </div></div>${i < all.length - 1 ? nextBtn(all[i + 1], i + 1) : ''}
         </section>`;
       }).join('');
+      v.querySelectorAll('.slide .sgrid').forEach(panelize);
     });
     v.scrollTop = keep;
     const rail = $('#rail'), N = all.length, at = (i) => N > 1 ? i / (N - 1) : 0;
@@ -2427,8 +2525,8 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 
   // ---------- the way on: a button at the bottom of each window with the next stage's picture and name ----------
   const nextBtn = (nx, at) => {
-    const cap = nx.t === 'skill' ? 'התרגיל הבא' : 'בהמשך';
-    return `<div class="nexthint"><button class="nextbtn ${nx.state === 'lock' ? 'nb-lock' : ''}" type="button" data-next="${at}" aria-label="${esc(cap + ': ' + nx.name)}"><span class="nb-art" aria-hidden="true">${stageArt(nx.id)}</span><span class="nb-txt" aria-hidden="true"><small>${cap}</small><b>${esc(nx.name)}</b></span></button></div>`;
+    const cap = nx.t === 'skill' ? 'לתרגיל הבא' : nx.t === 'chest' ? 'לתיבת הרמה' : 'לשלב הבא';
+    return `<div class="nexthint"><button class="nextbtn ${nx.state === 'lock' ? 'nb-lock' : ''}" type="button" data-next="${at}" aria-label="${esc(cap + ': ' + nx.name)}"><span class="nb-art" aria-hidden="true">${stageArt(nx.id)}</span><span class="nb-txt" aria-hidden="true"><small>${cap}</small><b>${esc(nx.name)}</b></span><span class="nb-down" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M6 9.5l6 6 6-6"/></svg></span></button></div>`;
   };
 
   // ---------- the full path map, one swipe away from the windows ----------
