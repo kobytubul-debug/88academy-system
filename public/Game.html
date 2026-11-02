@@ -1875,15 +1875,28 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   #app.bbl > .tabs { z-index: 6; }
   #app.bbl > .views > .view:not(#v-map) { margin-inline-start: 250px; }
   #app.bbl .rail, #app.bbl .peek { z-index: 7; }
-  #app .slide.bb > .sbody { padding: 0; }
-  #app .slide.bb .sgrid { display: block; height: 100%; margin: 0; }
-  #app .slide.bb .bbwrap { position: absolute; z-index: 8; top: var(--sh-top, 420px); right: 22px; width: 228px; margin: 0; }
-  #app .slide.bb .bbar { flex-direction: column; gap: 8px; padding: 8px; }
-  #app .slide.bb .bbi, #app .slide.bb .bbi.bb-main { flex: none; width: 100%; min-height: 56px; box-sizing: border-box; }
-  #app .slide.bb .bbi .bbc { transform: rotate(90deg); }
-  #app .slide.bb .bbi.open .bbc { transform: rotate(-90deg); }
-  #app .bpop { bottom: auto; top: 0; inset-inline-start: calc(100% + 18px); inset-inline-end: auto; margin: 0; width: min(560px, calc(100vw - 420px)); max-height: calc(100vh - var(--sh-top, 420px) - 40px); transform-origin: 100% 0; }
-  @keyframes bpopIn { from { opacity: 0; transform: translateX(14px) scale(.96); } to { opacity: 1; transform: none; } }
+  #app.bbl .slide.bb > .sbody { padding: 0; }
+  #app.bbl .slide.bb .sgrid { display: block; height: 100%; margin: 0; }
+  #app.bbl .slide.bb .bbwrap { position: absolute; z-index: 8; top: var(--sh-top, 420px); right: 22px; width: 228px; margin: 0; }
+  #app.bbl .slide.bb .bbar { flex-direction: column; gap: 8px; padding: 8px; }
+  #app.bbl .slide.bb .bbi, #app.bbl .slide.bb .bbi.bb-main { flex: none; width: 100%; min-height: 56px; box-sizing: border-box; }
+  #app.bbl .slide.bb .bbi .bbc { transform: rotate(90deg); }
+  #app.bbl .slide.bb .bbi.open .bbc { transform: rotate(-90deg); }
+  #app.bbl .bpop { bottom: auto; top: 0; inset-inline-start: calc(100% + 18px); inset-inline-end: auto; margin: 0; width: min(560px, calc(100vw - 420px)); max-height: calc(100vh - var(--sh-top, 420px) - 40px); transform-origin: 100% 0; }
+  #app.bbl .bpop { animation-name: bpopSide; }
+  @keyframes bpopSide { from { opacity: 0; transform: translateX(14px) scale(.96); } to { opacity: 1; transform: none; } }
+}
+
+/* the switch between the row at the bottom and the list at the side (wide screens only) */
+.bbsw { display: none; }
+@media (min-width: 900px) {
+  .bbsw { display: grid; place-items: center; position: absolute; z-index: 2; top: -16px; inset-inline-end: -16px; width: 34px; height: 34px; border-radius: 50%; border: 0; cursor: pointer;
+    background: var(--night2); color: var(--white); box-shadow: 0 0 0 2px var(--ring, var(--mint)), 0 4px 12px rgba(0,0,0,.4); }
+  .bbsw svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .bbsw:hover { background: var(--mint); color: var(--ink, #0B1513); }
+  .bbsw:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+  #app.bbl .bbsw { top: -14px; inset-inline-end: auto; inset-inline-start: -14px; }
+  #app.day .bbsw { background: #fff; color: var(--d-fg); }
 }
 
 /* ================= the pixel look (theme option look: 'pixel'): an original retro 8-bit arcade =================
@@ -2740,6 +2753,9 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   // ---------- the bottom-bar layout (a theme option): everything a window says sits in a bar of headings at the bottom;
   // each heading opens its own window above the bar (like the demo video opening), the stage's lens stays in the middle ----------
   const BAR = () => !!(ACTIVE && ACTIVE.layout === 'bar');
+  // the bar sits as a row at the bottom, or as a list under the side menu; the theme sets the default, the student can switch
+  const barMode = () => { let m = ''; try { m = localStorage.getItem('g88-barpos') || ''; } catch (e) {} return m === 'side' || m === 'bottom' ? m : (ACTIVE && ACTIVE.barPos === 'side' ? 'side' : 'bottom'); };
+  const setBarMode = (m) => { try { localStorage.setItem('g88-barpos', m); } catch (e) {} syncShow(); };
   // the automatic flow (a theme option): the student moves on without clicking to continue
   const FLOW = () => (ACTIVE && ACTIVE.flow && ACTIVE.flow.on ? ACTIVE.flow : null);
   // a window has come up: open the step that is waiting for the student
@@ -2768,6 +2784,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const cur = items.find(x => x.key === open);
     return `<div class="bbwrap">
         ${cur ? `<div class="bpop" role="dialog" aria-label="${esc(cur.title)}" data-popfor="${cur.key}"><button class="bpx" type="button" data-pop="" aria-label="סגירה">✕</button>${cur.pane()}</div>` : ''}
+        <button class="bbsw" type="button" data-barsw aria-label="${barMode() === 'side' ? 'להעביר את הבר לשורה בתחתית' : 'להעביר את הבר לרשימה בצד'}" title="${barMode() === 'side' ? 'שורה בתחתית' : 'רשימה בצד'}"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">${barMode() === 'side' ? '<rect x="3" y="14" width="18" height="6" rx="1.5"/><path d="M8 10l4-4 4 4"/>' : '<rect x="15" y="3" width="6" height="18" rx="1.5"/><path d="M10 8l-4 4 4 4"/>'}</svg></button>
         <div class="bbar st-${n.t === 'chest' ? (n.state === 'ready' ? 'now' : n.state === 'opened' ? 'done' : 'lock') : n.state}" role="toolbar" aria-label="${esc(n.name)}">${items.map(x => `<button class="bbi ${x.cls || ''}${x.key === open ? ' open' : ''}${x.ok ? ' ok' : ''}${x.on ? ' on' : ''}" type="button" data-pop="${x.key === open ? '' : x.key}" aria-expanded="${x.key === open}">
           ${x.cls ? (x.ok ? `<span class="bb-ck" aria-label="הושלם">${CKP}</span>` : '') : `<span class="si">${x.ok ? CKP : x.num}</span>`}<span class="tx"><b>${esc(x.title)}${x.stars || ''}</b><small>${x.sub}</small></span>${x.rw ? `<span class="rw pts">+${x.rw}</span>` : ''}<svg class="bbc" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 15l6-6 6 6"/></svg></button>`).join('')}</div>
       </div>`;
@@ -2847,8 +2864,8 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   };
   // the showcase sits under the side menu (below "exit") and down to the next-exercise button
   const syncShow = () => {
-    app.classList.toggle('shw', SHOW()); app.classList.toggle('bbl', BAR());
-    if (!(SHOW() || BAR()) || innerWidth < 900) { app.style.removeProperty('--sh-top'); return; }
+    app.classList.toggle('shw', SHOW()); app.classList.toggle('bbl', BAR() && barMode() === 'side');
+    if (!(SHOW() || (BAR() && barMode() === 'side')) || innerWidth < 900) { app.style.removeProperty('--sh-top'); return; }
     const tabs = app.querySelector(':scope > .tabs'), vm = $('#v-map'); if (!tabs || !vm) return;
     const top = tabs.getBoundingClientRect().bottom - vm.getBoundingClientRect().top + 14;
     app.style.setProperty('--sh-top', Math.max(20, Math.round(top)) + 'px');
@@ -2860,6 +2877,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const btn = (a) => box.querySelector(`[data-a="${a}"]`);
     if (btn('open')) btn('open').onclick = () => openChest(n);
     if (btn('skip')) btn('skip').onclick = () => { ui(n.id).skipVideo = true; paint(n); const p = (n.t === 'chal' ? sheet : $('#deck')).querySelector(n.t === 'chal' ? '[data-a="pick"]' : `[data-n="${n.id}"] [data-a="pick"]`); p && p.focus(); };
+    box.querySelectorAll('[data-barsw]').forEach(b => b.onclick = () => { setBarMode(barMode() === 'side' ? 'bottom' : 'side'); renderMap(); const again = $('#deck').querySelector(`[data-n="${n.id}"] [data-barsw]`); again && again.focus({ preventScroll: true }); });
     box.querySelectorAll('[data-pop]').forEach(b => b.onclick = () => { const k2 = b.dataset.pop; ui(n.id).pop = k2; paint(n); const sel = k2 ? `.bpop .bpx` : `.bbi[data-pop]`; const again = $('#deck').querySelector(`[data-n="${n.id}"] ${sel}`); again && again.focus({ preventScroll: true }); });
     box.querySelectorAll('[data-run]').forEach(b => b.onclick = () => { const t = box.querySelector(`.sh-pane [data-a="${b.dataset.run}"]`); t && t.click(); });
     box.querySelectorAll('[data-tab]').forEach(t => t.onclick = () => { ui(n.id).tab = t.dataset.tab; paint(n); const again = $('#deck').querySelector(`[data-n="${n.id}"] .sh-tab[data-tab="${t.dataset.tab}"]`); again && again.focus({ preventScroll: true }); });

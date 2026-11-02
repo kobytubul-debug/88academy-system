@@ -221,6 +221,8 @@ function cleanTheme(t) {
     layout: ['show', 'panel', 'bar'].indexOf(t.layout) !== -1 ? t.layout : 'classic', show: cleanShow(t.show),
     // a special look over the base style: 'pixel' turns the whole student screen into a retro 8-bit arcade
     look: t.look === 'pixel' ? 'pixel' : '',
+    // the bottom bar's default place: a row at the bottom, or a list under the side menu (the student can switch)
+    barPos: t.barPos === 'side' ? 'side' : 'bottom',
     // the automatic flow: open the waiting step on arrival, move on after sending, close messages after some seconds
     flow: (() => { const f = t.flow && typeof t.flow === 'object' ? t.flow : {}; const c = Math.round(Number(f.close)); return { on: !!f.on, open: f.open !== false, next: f.next !== false, close: Number.isFinite(c) ? Math.max(0, Math.min(15, c)) : 4 }; })(), builtIn: !!BUILTIN_NAMES[id]
   };
@@ -262,6 +264,10 @@ function ensureLooks() {
   if (!st.barFlowSeeded) {
     st.barFlowSeeded = true;
     const tb = list.find((t) => t.id === 't-bar'); if (tb && !tb.flow.on) tb.flow = { on: true, open: true, next: true, close: 4 };
+  }
+  if (!st.barSideSeeded) {
+    st.barSideSeeded = true;
+    if (!list.some((t) => t.id === 't-side')) list.push(cleanTheme({ id: 't-side', name: 'רשימה בצד', base: 'regular', mode: 'night', layout: 'bar', barPos: 'side', flow: { on: true, open: true, next: true, close: 4 } }));
   }
   st.themes = list;
   const sb = st.stageBg && st.stageBg.assign && typeof st.stageBg.assign === 'object' ? st.stageBg.assign : {};
