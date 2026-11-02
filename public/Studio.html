@@ -90,6 +90,17 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .st-sample { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 12px; background: #F2F4F3; }
 .st-sample b { font-size: 28px; line-height: 1.1; font-weight: 800; }
 .st-sample span { font-size: 14px; color: #3D4541; }
+.st-sample .st-num { font-size: 20px; font-weight: 700; color: #1E2320; letter-spacing: .02em; }
+.st-cur { font-weight: 500; color: #17694F; }
+/* a font picker: every font written in itself, grouped, in a box that scrolls */
+.st-fontgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(124px, 1fr)); gap: 8px; max-height: 286px; overflow-y: auto; padding: 2px 2px 6px; margin-top: 2px; overscroll-behavior: contain; }
+.st-fg { grid-column: 1 / -1; margin-top: 6px; font-size: 12px; font-weight: 600; color: #6B746F; }
+.st-ft { display: flex; flex-direction: column; align-items: stretch; gap: 2px; min-width: 0; padding: 9px 10px 7px; border: 2px solid transparent; border-radius: 12px; background: #F2F4F3; color: #1E2320; text-align: start; cursor: pointer; }
+.st-ft:hover { background: #E8ECEA; }
+.st-ft.on { border-color: #2A9171; background: #EEFAF5; box-shadow: 0 0 0 3px #D3F4E6; }
+.st-ft .ft-s { font-size: 21px; line-height: 1.25; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.st-ft small { font: 400 11.5px 'Rubik', sans-serif; color: #6B746F; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; direction: ltr; text-align: right; }
+.st-ft:focus-visible { outline: 3px solid #2A9171; outline-offset: 2px; }
 .st-groups { display: flex; flex-direction: column; gap: 6px; }
 .st-group { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 210px); align-items: center; gap: 4px 10px; padding: 10px 12px; border-radius: 12px; border: 1px solid #E1E5E2; }
 .st-group.mine { background: #F2FBF7; border-color: #BFE6D5; }
@@ -330,6 +341,29 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
       surf: { night: { bg: '#171b11', card: '#30382a', text: '#ffffff' }, day: { bg: '#ece6d2', card: '#fbf8ef', text: '#23271b' } },
       pv: '<span style="inset:0;background:linear-gradient(rgba(163,178,107,.14) 1px,transparent 1px) 0 0/14px 14px,linear-gradient(90deg,rgba(163,178,107,.14) 1px,transparent 1px) 0 0/14px 14px,#232A19"></span><span style="right:0;left:0;top:0;height:5px;background:repeating-linear-gradient(-45deg,#D9B45A 0 5px,#12150D 5px 10px)"></span><span style="right:10px;top:12px;width:56px;height:26px;border-radius:5px;background:#7D8C49"></span><span style="left:14px;top:24px;width:30px;height:30px;border-radius:8px;background:#E8742C;box-shadow:0 4px 0 #7A3610"></span><span style="right:24px;top:42px;width:20px;height:20px;border-radius:6px;background:#D9B45A"></span>' }
   };
+  // colours a theme can also set, and what they are when it doesn't: the station states and a few parts of the screen
+  const LOCK_OF = { race: '#3a3e42', regular: '#3a5650', mil: '#3e4433' };
+  const MENU_OF = { regular: '#2f6b5d', mil: '#4a5434' };
+  const moreColors = (base, C) => ({ done: base === 'race' ? C.accent2 : C.gold, fix: '#f0a35b', lock: LOCK_OF[base], coin: C.gold, xp: C.accent2, menu: base === 'race' ? C.accent2 : MENU_OF[base] });
+  // dark or white writing on a colour, whichever reads better
+  const inkOn = (c) => contrast(c, '#ffffff') >= contrast(c, '#0b1513') ? '#ffffff' : '#0b1513';
+  // fonts a theme can use: Hebrew Google fonts for titles and text, and any font for numbers
+  const FONT_GROUPS = {
+    head: [['נקיים', ['Rubik', 'Heebo', 'Assistant', 'Open Sans', 'Noto Sans Hebrew', 'IBM Plex Sans Hebrew', 'Alef', 'Miriam Libre']], ['עגולים', ['Varela Round', 'Fredoka']], ['כותרת', ['Secular One', 'Suez One', 'Karantina', 'Amatic SC', 'Bellefair']], ['עם סריף', ['Frank Ruhl Libre', 'David Libre', 'Noto Serif Hebrew', 'Bona Nova']], ['משחקיים', ['Rubik Dirt', 'Rubik Glitch', 'Rubik Wet Paint', 'Rubik Puddles', 'Rubik Moonrocks', 'Rubik Iso', 'Rubik Microbe', 'Rubik Beastly', 'Rubik Burned', 'Rubik Distressed']]],
+    body: [['נקיים', ['Rubik', 'Heebo', 'Assistant', 'Open Sans', 'Noto Sans Hebrew', 'IBM Plex Sans Hebrew', 'Alef', 'Miriam Libre', 'Arimo']], ['עגולים', ['Varela Round', 'Fredoka']], ['עם סריף', ['Frank Ruhl Libre', 'David Libre', 'Noto Serif Hebrew']]],
+    num: [['ספרות', ['Unbounded', 'Russo One', 'Black Ops One', 'Orbitron', 'Audiowide', 'Bungee', 'Press Start 2P', 'Teko', 'Oswald', 'Bebas Neue', 'Chakra Petch', 'Rubik', 'Heebo', 'Open Sans', 'Secular One']]]
+  };
+  // the weights each family has (asking Google for a weight a family lacks fails the whole request)
+  const FONT_W = { 'Rubik': '400;700;900', 'Heebo': '400;700;900', 'Assistant': '400;700;800', 'Open Sans': '400;700;800', 'Noto Sans Hebrew': '400;700;900', 'IBM Plex Sans Hebrew': '400;700', 'Alef': '400;700', 'Miriam Libre': '400;700', 'Arimo': '400;700', 'Fredoka': '400;700', 'Karantina': '400;700', 'Amatic SC': '400;700', 'Frank Ruhl Libre': '400;700;900', 'David Libre': '400;700', 'Noto Serif Hebrew': '400;700;900', 'Bona Nova': '400;700', 'Unbounded': '700;900', 'Orbitron': '700;900', 'Teko': '500;700', 'Oswald': '500;700', 'Chakra Petch': '600;700' };
+  const NUM_OF = { race: 'Open Sans', regular: 'Unbounded', mil: 'Black Ops One' };
+  // one stylesheet per family, added when a theme needs it
+  const loadFont = (f, have) => {
+    if (!f || f === 'default' || (have && have.has(f))) return;
+    if ([...document.querySelectorAll('link[data-font]')].some(l => l.dataset.font === f)) return;
+    const l = document.createElement('link'); l.rel = 'stylesheet'; l.dataset.font = f;
+    l.href = 'https://fonts.googleapis.com/css2?family=' + f.replace(/ /g, '+') + (FONT_W[f] ? ':wght@' + FONT_W[f] : '') + '&display=swap';
+    document.head.append(l);
+  };
 
   const esc = (x) => String(x == null ? '' : x).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
   const stable = (o) => JSON.stringify(o === undefined ? null : o, (k, v) => v && typeof v === 'object' && !Array.isArray(v) ? Object.keys(v).sort().reduce((a, x) => { a[x] = v[x]; return a; }, {}) : v);
@@ -344,8 +378,6 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     race: { t1: 'מסלול', t2: 'אתגרים', t3: 'ליגה', t4: 'סדנה', world: 'מקצה', chest: 'ארגז', boss: 'הגמר', league: 'ליגת המירוץ', mapTitle: 'המסלול שלי', questsTitle: 'אתגרי היום', go: 'לכאן!', lit: 'המקצה נסגר!' },
     mil: { t1: 'ציר', t2: 'פקודות', t3: 'טבלה', t4: 'בסיס', world: 'שלב', chest: 'ארגז', boss: 'מבחן גמר', league: 'טבלת המחלקה', mapTitle: 'ציר ההתקדמות', questsTitle: 'פקודות היום', go: 'יעד הבא', lit: 'משימה בוצעה!' }
   };
-  const FONTS_BODY = ['Rubik', 'Open Sans', 'Heebo', 'Assistant', 'Varela Round'];
-  const FONTS_HEAD = ['Rubik', 'Open Sans', 'Heebo', 'Assistant', 'Varela Round', 'Secular One', 'Suez One', 'Karantina'];
   const PALETTES = [
     { name: '88 קלאסי', accent: '#ff5c8a', accent2: '#76deb8', gold: '#ffd15c', sky: '#5bc8ff' },
     { name: 'מירוץ', accent: '#e8296f', accent2: '#5a9a7e', gold: '#f6f7f8', sky: '#36c6e8' },
@@ -355,14 +387,21 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     { name: 'סגול חשמלי', accent: '#8b5cf6', accent2: '#22d3ee', gold: '#fbbf24', sky: '#60a5fa' }
   ];
   const COLOR_ROWS = [['accent', 'צבע ראשי', 'כפתורים, התרגיל הנוכחי'], ['accent2', 'צבע משני', 'הצלחה ופסים פעילים'], ['gold', 'צבע הדגשה', 'מטבעות, כוכבים ודרגה'], ['sky', 'צבע מידע', 'ממתין לבדיקת המדריך']];
-  const SURF_ROWS = [['bg', 'רקע', 'מאחורי כל המסכים'], ['card', 'כרטיסים', 'משימות, שורות וכפתורים'], ['text', 'טקסט', 'כותרות ותוכן']];
+  const STATE_ROWS = [['done', 'הושלם', 'תחנות שהושלמו, סימני ה־✓ ושלבים שבוצעו'], ['fix', 'לתיקון', 'תרגיל שהמדריך החזיר לתיקון'], ['lock', 'נעול', 'תחנות ותרגילים שעוד לא נפתחו']];
+  const UI_ROWS = [['coin', 'מטבעות', 'המטבע, הארנק והמטבעות שעפים אליו'], ['xp', 'פסי התקדמות', 'פס הדרגה ופסי המשימות'], ['menu', 'התפריט', 'הלשונית הפעילה בתפריט']];
+  const SURF_ROWS = [['bg', 'רקע', 'מאחורי כל המסכים'], ['card', 'כרטיסים', 'משימות, שורות וכפתורים'], ['text', 'טקסט', 'כותרות ותוכן'], ['dim', 'טקסט משני', 'הסברים, תוויות ומספרים קטנים']];
+  const SURF_KEYS = ['bg', 'card', 'text', 'dim'];
+  // samples for the font pickers, and the fonts this page already loads
+  const FONT_SLOTS = [['head', 'כותרות', 'אבני יסוד'], ['body', 'טקסט', 'טסים בקו ישר ועוצרים'], ['num', 'מספרים', '1,250']];
+  const PAGE_FONTS = new Set(['Rubik', 'Karantina', 'Unbounded', 'Assistant', 'Heebo', 'Secular One', 'Suez One', 'Varela Round', 'Open Sans']);
   const TERMS = [['t1', 'לשונית 1 (המסלול)'], ['t2', 'לשונית 2 (המשימות)'], ['t3', 'לשונית 3 (הליגה)'], ['t4', 'לשונית 4 (הפרופיל)'], ['world', 'שם ל"עולם"'], ['chest', 'שם ל"תיבה"'], ['boss', 'שם למבחן המסכם'], ['league', 'שם הליגה'], ['mapTitle', 'כותרת מפת הנתיב'], ['questsTitle', 'כותרת המשימות'], ['go', 'בועה מעל התרגיל הנוכחי'], ['lit', 'הודעה כשתרגיל מאושר']];
   const BUILT = { 't-race': ['race', 'מירוץ FPV'], 't-regular': ['regular', 'משחקי צבעוני'], 't-mil': ['mil', 'צבאי'] };
   const AUTO = ['field', 'city', 'garage', 'loft', 'forest', 'street'];
-  const newTheme = (base, extra) => Object.assign({ id: newId(), name: 'ערכה חדשה', base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default' }, icons: BASES[base].icons, bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', builtIn: false }, extra || {});
+  const newTheme = (base, extra) => Object.assign({ id: newId(), name: 'ערכה חדשה', base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default', num: 'default' }, icons: BASES[base].icons, bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', builtIn: false }, extra || {});
   const defaultsOf = (id) => BUILT[id] ? newTheme(BUILT[id][0], { id, name: BUILT[id][1], builtIn: true }) : null;
-  const effColors = (t) => Object.assign({}, BASES[t.base].colors, t.colors || {});
-  const effSurf = (t, mode) => Object.assign({}, BASES[t.base].surf[mode], (t.surf && t.surf[mode]) || {});
+  // the colours in use: the theme's own, else the style's (the extra roles follow the brand colours until they are set)
+  const effColors = (t) => { const C = Object.assign({}, BASES[t.base].colors, t.colors || {}), M = moreColors(t.base, C); Object.keys(M).forEach(k => { if (!isHex(C[k] || '')) C[k] = M[k]; }); return C; };
+  const effSurf = (t, mode) => { const S = Object.assign({}, BASES[t.base].surf[mode], (t.surf && t.surf[mode]) || {}); if (!isHex(S.dim || '')) S.dim = mix(S.text, S.bg, mode === 'day' ? .4 : .38); return S; };
 
   // ---------- what the server has (saved) ----------
   const themes = () => A.data.themes || [];
@@ -457,7 +496,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     sendTheme();
   };
   // the draft with every part present, for drawing (the saved theme may leave parts out)
-  const D = () => { const d = ED.draft; d.colors = d.colors || {}; d.surf = d.surf || { night: {}, day: {} }; d.surf.night = d.surf.night || {}; d.surf.day = d.surf.day || {}; d.fonts = d.fonts || { head: 'default', body: 'default' }; d.terms = d.terms || {}; d.bg = d.bg || { kind: 'look' }; return d; };
+  const D = () => { const d = ED.draft; d.colors = d.colors || {}; d.surf = d.surf || { night: {}, day: {} }; d.surf.night = d.surf.night || {}; d.surf.day = d.surf.day || {}; d.fonts = d.fonts || { head: 'default', body: 'default', num: 'default' }; d.fonts.num = d.fonts.num || 'default'; d.terms = d.terms || {}; d.bg = d.bg || { kind: 'look' }; return d; };
   const swatches = (t) => { const C = effColors(t), S = effSurf(t, t.mode === 'day' ? 'day' : 'night'); return [C.accent, C.accent2, C.gold, S.bg, S.card].map(c => `<i style="background:${esc(c)}"></i>`).join(''); };
   const bgVal = (bg) => !bg || bg.kind === 'look' ? 'look' : bg.kind === 'color' ? 'color' : bg.kind === 'scene' ? 'scene:' + bg.id : 'img:' + bg.url;
   const tile = (val, label, pv, sel, attr) => `<button class="bgt ${sel ? 'sel' : ''}" type="button" ${attr}="${esc(val)}" aria-pressed="${sel}"><span class="bgpv">${pv}</span><span class="bgl">${esc(label)}</span></button>`;
@@ -480,8 +519,12 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
       + Object.keys(SCN).map(k => tile('scene:' + k, SCN_NAMES[k], SCN[k], sel === 'scene:' + k, 'data-tbg')).join('')
       + lib().map(x => tile('img:' + x.url, x.name, imgPv(x.url), sel === 'img:' + x.url, 'data-tbg')).join('')
       + (d.bg.kind === 'img' && d.bg.url && !lib().some(x => x.url === d.bg.url) ? tile('img:' + d.bg.url, 'התמונה של הערכה', imgPv(d.bg.url), true, 'data-tbg') : '');
-    const fontOpts = (fl, cur, def) => `<option value="default" ${cur === 'default' ? 'selected' : ''}>${def} · ברירת המחדל של הסגנון</option>` + fl.map(f => `<option value="${f}" ${cur === f ? 'selected' : ''}>${f}</option>`).join('');
-    const headF = d.fonts.head !== 'default' ? d.fonts.head : B.head, bodyF = d.fonts.body !== 'default' ? d.fonts.body : B.body;
+    const defOf = { head: B.head, body: B.body, num: NUM_OF[d.base] };
+    const fontOf = (slot) => d.fonts[slot] && d.fonts[slot] !== 'default' ? d.fonts[slot] : defOf[slot];
+    const ff = (f) => `font-family:'${esc(f)}', 'Rubik', sans-serif`;
+    const fontTile = (slot, f, label, sample) => { const on = (d.fonts[slot] || 'default') === f; return `<button class="st-ft ${on ? 'on' : ''}" type="button" data-fslot="${slot}" data-font="${esc(f)}" aria-pressed="${on}"><span class="ft-s" style="${ff(f === 'default' ? defOf[slot] : f)}">${esc(sample)}</span><small>${esc(label)}</small></button>`; };
+    const fontPick = ([slot, title, sample]) => `<h3 class="st-h3">${title} · <span class="st-cur">${esc(fontOf(slot))}</span></h3><div class="st-fontgrid" role="group" aria-label="גופן ל${title}">${fontTile(slot, 'default', defOf[slot] + ' · של הסגנון', sample)}${FONT_GROUPS[slot].map(([g, list]) => `<span class="st-fg">${g}</span>${list.map(f => fontTile(slot, f, f, sample)).join('')}`).join('')}</div>`;
+    const headF = fontOf('head'), bodyF = fontOf('body'), numF = fontOf('num');
     const saved0 = savedAssign();
     const groups = treeOrder().map(({ u, depth }) => {
       const cur = ED.assign[u.id] || 'classic', was = saved0[u.id], eff = effUi(u.id, ED.assign), parent = u.parent && unitById(u.parent);
@@ -513,13 +556,18 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
         <div class="st-pals">${PALETTES.map((p, i) => `<button class="st-pal" type="button" data-pal="${i}"><span>${[p.accent, p.accent2, p.gold, p.sky].map(c => `<i style="background:${c}"></i>`).join('')}</span>${esc(p.name)}</button>`).join('')}</div>
         <h3 class="st-h3">צבעי המותג</h3>
         <div class="st-colors">${COLOR_ROWS.map(([k, l, h]) => colorRow(k, l, h, C[k], !!d.colors[k])).join('')}</div>
+        <h3 class="st-h3">מצבים במסלול</h3>
+        <div class="st-colors">${STATE_ROWS.map(([k, l, h]) => colorRow(k, l, h, C[k], !!d.colors[k])).join('')}</div>
+        <h3 class="st-h3">חלקי המסך</h3>
+        <div class="st-colors">${UI_ROWS.map(([k, l, h]) => colorRow(k, l, h, C[k], !!d.colors[k])).join('')}</div>
         <h3 class="st-h3">רקע, כרטיסים וטקסט · ${mode === 'day' ? 'מצב יום' : 'מצב לילה'}</h3>
         <div class="st-colors">${SURF_ROWS.map(([k, l, h]) => colorRow(k, l, h, S[k], !!d.surf[mode][k])).join('')}</div>
         <div class="st-warn" id="stWarn" role="status" hidden></div>
       </section>
       <section class="st-sec" aria-labelledby="sh-fonts"><h2 id="sh-fonts">גופנים</h2>
-        <div class="st-fonts"><label class="st-field">כותרות<select id="stFh">${fontOpts(FONTS_HEAD, d.fonts.head, B.head)}</select></label><label class="st-field">טקסט<select id="stFb">${fontOpts(FONTS_BODY, d.fonts.body, B.body)}</select></label></div>
-        <div class="st-sample" id="stSample"><b style="font-family:'${headF}', 'Rubik', sans-serif">האטה ובלימה</b><span style="font-family:'${bodyF}', 'Rubik', sans-serif">מאטים בהדרגה ועוצרים בדיוק מעל הנקודה המסומנת.</span></div>
+        <p class="st-hint">כל גופן מוצג בעצמו. כותרות וטקסט: גופנים עם עברית. מספרים: המטבעות, הדרגה ומספרי התחנות.</p>
+        <div class="st-sample" id="stSample"><b style="${ff(headF)}">האטה ובלימה</b><span style="${ff(bodyF)}">מאטים בהדרגה ועוצרים בדיוק מעל הנקודה המסומנת.</span><span class="st-num" style="${ff(numF)}">1,250 · LV 3 · 07</span></div>
+        ${FONT_SLOTS.map(fontPick).join('')}
       </section>
       <section class="st-sec" aria-labelledby="sh-bg"><h2 id="sh-bg">רקע</h2>
         <p class="st-hint">רקע לכל המסכים. בשלבים שיש להם רקע משלהם (בלשונית "רקע לשלב") הוא מוצג מעליו.</p>
@@ -559,7 +607,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     v = v.toLowerCase();
     const d = D(), mode = d.mode === 'day' ? 'day' : 'night';
     if (k === 'bgcolor') d.bg = { kind: 'color', color: v };
-    else if (['bg', 'card', 'text'].indexOf(k) !== -1) d.surf[mode][k] = v;
+    else if (SURF_KEYS.indexOf(k) !== -1) d.surf[mode][k] = v;
     else d.colors[k] = v;
     const pick = body.querySelector(`[data-c="${k}"]`), hex = body.querySelector(`[data-hex="${k}"]`), rs = body.querySelector(`[data-reset="${k}"]`);
     if (pick && from !== 'pick') pick.value = v;
@@ -830,8 +878,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     if (ds.a === 'resetb') { const fresh = defaultsOf(ED.id); if (fresh) { fresh.name = d.name; ED.draft = fresh; redraw(); } return; }
     if (ds.base) { if (d.base !== ds.base) { if (d.icons === BASES[d.base].icons) d.icons = BASES[ds.base].icons; d.base = ds.base; redraw(); } return; }
     if (ds.mode) { if (d.mode !== ds.mode) { d.mode = ds.mode; redraw(); } return; }
+    if (ds.fslot) { if ((d.fonts[ds.fslot] || 'default') !== ds.font) { d.fonts[ds.fslot] = ds.font; redraw(); const again = body.querySelector(`[data-fslot="${ds.fslot}"][data-font="${CSS.escape(ds.font)}"]`); again && again.focus({ preventScroll: true }); } return; }
     if (ds.pal) { const p = PALETTES[+ds.pal]; d.colors = Object.assign({}, d.colors, { accent: p.accent, accent2: p.accent2, gold: p.gold, sky: p.sky }); redraw(); return; }
-    if (ds.reset) { const k = ds.reset, mode = d.mode === 'day' ? 'day' : 'night'; if (['bg', 'card', 'text'].indexOf(k) !== -1) delete d.surf[mode][k]; else delete d.colors[k]; redraw(); return; }
+    if (ds.reset) { const k = ds.reset, mode = d.mode === 'day' ? 'day' : 'night'; if (SURF_KEYS.indexOf(k) !== -1) delete d.surf[mode][k]; else delete d.colors[k]; redraw(); return; }
     if (ds.icons) { if (d.icons !== ds.icons) { d.icons = ds.icons; redraw(); } return; }
     if (ds.motion) { d.motion = ds.motion; redraw(); return; }
     if (ds.tbg) {
@@ -876,12 +925,6 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     if (t.id === 'stAllow') { d.allowToggle = t.checked; sendTheme(); touched(); return; }
     if (t.id === 'stStageBg') { d.stageBg = t.checked; sendTheme(); touched(); return; }
     if (t.id === 'stBgBlur') { d.bg.blur = t.checked; sendTheme(); touched(); return; }
-    if (t.id === 'stFh' || t.id === 'stFb') {
-      d.fonts[t.id === 'stFh' ? 'head' : 'body'] = t.value; sendTheme();
-      const B = BASES[d.base], s = $('#stSample');
-      if (s) { s.querySelector('b').style.fontFamily = `'${d.fonts.head !== 'default' ? d.fonts.head : B.head}', 'Rubik', sans-serif`; s.querySelector('span').style.fontFamily = `'${d.fonts.body !== 'default' ? d.fonts.body : B.body}', 'Rubik', sans-serif`; }
-      touched(); return;
-    }
     if (t.dataset.asg) { ED.assign[t.dataset.asg] = t.value; const id = t.id, keep = scrollPos(); renderThemes(); scrollPos(keep); const again = document.getElementById(id); again && again.focus(); pickPreviewUnit(); loadPreview(); touched(); return; }
   });
   // drag an image onto the upload row
@@ -936,6 +979,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   A.listen(() => { renderFoot(); renderPvBar(); });
 
   // ---------- start ----------
+  // every font the pickers offer, so each one shows in itself
+  Object.keys(FONT_GROUPS).forEach(k => FONT_GROUPS[k].forEach(([, list]) => list.forEach(f => loadFont(f, PAGE_FONTS))));
   startBg();
   const firstTheme = (() => { const asg = savedAssign(), t = treeOrder().map(x => effUi(x.u.id, asg)).find(v => v && v !== 'classic'); return t && savedTheme(t) ? t : 't-race'; })();
   renderTabs();
