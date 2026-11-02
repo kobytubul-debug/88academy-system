@@ -180,7 +180,7 @@ const SURF_KEYS = ['bg', 'card', 'text', 'dim'];
 const TERM_KEYS = ['t1', 't2', 't3', 't4', 'world', 'chest', 'boss', 'league', 'mapTitle', 'questsTitle', 'go', 'lit'];
 function themeDefaults(id) {
   const [base, name] = BUILTIN_NAMES[id];
-  return { id, name, base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default', num: 'default' }, icons: BASE_ICONS[base], bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', builtIn: true };
+  return { id, name, base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default', num: 'default' }, icons: BASE_ICONS[base], bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', story: 'none', builtIn: true };
 }
 const hexOk = (v) => /^#[0-9a-f]{6}$/i.test(String(v || ''));
 const imgOk = (v) => /^\/media\/[A-Za-z0-9_-]+\.(jpg|jpeg|png|webp|gif)$/.test(String(v || '')) || /^https:\/\/\S+$/i.test(String(v || ''));
@@ -202,7 +202,7 @@ function cleanTheme(t) {
   return {
     id, name: String(t.name || '').replace(/[<>]/g, '').trim().slice(0, 40) || 'ערכה ללא שם', base, mode: t.mode === 'day' ? 'day' : 'night', allowToggle: t.allowToggle !== false,
     colors: pick(t.colors, COLOR_KEYS), surf, fonts: { head: font(tf.head, FONTS_HEAD), body: font(tf.body, FONTS_BODY), num: font(tf.num, FONTS_NUM) },
-    icons: t.icons === 'line' || t.icons === 'emoji' ? t.icons : BASE_ICONS[base], bg, stageBg: t.stageBg !== false, terms, motion: t.motion === 'calm' ? 'calm' : 'full', builtIn: !!BUILTIN_NAMES[id]
+    icons: t.icons === 'line' || t.icons === 'emoji' ? t.icons : BASE_ICONS[base], bg, stageBg: t.stageBg !== false, terms, motion: t.motion === 'calm' ? 'calm' : 'full', story: t.story === 'diary' ? 'diary' : 'none', builtIn: !!BUILTIN_NAMES[id]
   };
 }
 // A background for one stage: none, a built-in scene, or an uploaded image (blurred a little unless told not to).

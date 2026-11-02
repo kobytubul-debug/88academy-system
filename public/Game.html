@@ -1485,6 +1485,39 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 #app.day .mico.sun path { stroke: #F2A900; }
 .modebtn { gap: 6px; }
 .acct .modeacct { gap: 8px; }
+
+/* ================= THE STORY: "יומן הטייס", pages of a pilot's notebook ================= */
+.diary, .dpage, .diarycard { position: relative; padding: 11px 16px 12px 14px; border-radius: 6px 14px 14px 6px; color: #2B2A26; text-align: start;
+  background: repeating-linear-gradient(180deg, transparent 0 23px, rgba(70,110,170,.17) 23px 24px) 0 9px / 100% 100% no-repeat, #FBF6E9;
+  border-inline-start: 3px solid #E07A6A; box-shadow: 0 6px 16px rgba(0,0,0,.25); }
+.diary { transform: rotate(-.5deg); }
+.diary .dk, .dpage .dk, .diarycard .dk { display: block; margin-bottom: 2px; font: 700 11px/1.5 var(--f); letter-spacing: .03em; color: #B05A4C; }
+.diary p, .dpage p, .diarycard p { margin: 0; font-size: 14px; line-height: 24px; font-weight: 500; }
+.diary.big p { font-size: 15.5px; }
+.app.race .diary, .app.race .dpage, .app.race .diarycard { border-radius: 0; }
+.app.mil .diary, .app.mil .dpage, .app.mil .diarycard { border-radius: 3px; background-color: #F1EBD6; border-inline-start-color: #8A6D2E; }
+.app.mil .diary .dk, .app.mil .dpage .dk, .app.mil .diarycard .dk { color: #6B5218; }
+@media (min-width: 900px) { #app .slide .sgrid > .diary { grid-column: 2; max-width: 560px; } #app .slide .diary p { font-size: 15px; } }
+@media (max-height: 700px) { .slide .diary p { font-size: 13px; line-height: 21px; } .slide .diary { padding-block: 8px 9px; } }
+/* the hangar: the latest page, a button to the whole book */
+#diaryBox:not(:empty) { margin-bottom: 22px; }
+.diarycard { display: block; width: 100%; margin-top: 12px; border-top: 0; border-bottom: 0; border-inline-end: 0; cursor: pointer; font: inherit; }
+.diarycard b { display: block; font-size: 16px; margin-bottom: 2px; }
+.diarycard .dmore { display: inline-block; margin-top: 8px; padding: 4px 12px; border-radius: 99px; background: #2B2A26; color: #FBF6E9; font-size: 12px; font-weight: 700; }
+.diarycard:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+/* the whole diary in a sheet */
+.diarybook { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+.diarybook .dch { margin: 10px 0 0; font-size: 17px; font-weight: 800; }
+.diarybook .dline { margin: 0; font-size: 13px; color: var(--dim); }
+.diarybook .dpage { box-shadow: 0 3px 10px rgba(0,0,0,.18); }
+/* overlays: the page added to the diary */
+.rdiary { display: block; margin: 12px auto 0; max-width: 340px; padding: 9px 12px; border-radius: 6px 12px 12px 6px; background: #FBF6E9; color: #2B2A26; border-inline-start: 3px solid #E07A6A; font-size: 13px; line-height: 1.55; text-align: start; }
+.rdiary b { display: block; font-size: 11px; color: #B05A4C; }
+/* the game's frame never scrolls: focusing something half off screen (a sheet sliding in) must not push the whole game up */
+.app { overflow: clip; }
+/* the hangar's drone hovers by moving itself, not its margin (which made the whole hangar below it bob) */
+#bigDrone { animation: bigHover 2.4s ease-in-out infinite !important; }
+@keyframes bigHover { 0%, 100% { transform: translateY(3px); } 50% { transform: translateY(-7px); } }
 </style>
 </head>
 <body>
@@ -1553,6 +1586,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
           <div><b id="stTime">0</b><small>דקות למידה היום</small></div>
         </div>
       </div>
+      <div id="diaryBox"></div>
       <div class="sect"><span data-t="badges">תגי מיומנות</span> <small>מאושרים ע״י המדריך</small></div>
       <div class="badges" id="badges" style="margin-bottom:22px"></div>
       <div class="sect"><span data-t="shop">סקינים</span> <small>נפתחים כשמתקדמים</small></div>
@@ -1632,7 +1666,9 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       conf: ['#A3B26B', '#D9B45A', '#E8742C', '#C9B27C', '#6E8088', '#E8E2C8'] }
   };
   // the words: the admin's own word for this theme, else the base style's
-  const T = (k) => { const v = ACTIVE && ACTIVE.terms && ACTIVE.terms[k]; return v || TXT[LOOK][k]; };
+  const T = (k) => { const v = ACTIVE && ACTIVE.terms && ACTIVE.terms[k]; return v || (k === 'world' && STORY() ? 'פרק' : TXT[LOOK][k]); };
+  // the theme's story, if it has one: the pilot's diary
+  const STORY = () => !!(ACTIVE && ACTIVE.story === 'diary');
 
   // ---------- race look: thin white line icons that replace the emoji everywhere ----------
   const L = (d, extra = '') => `<svg class="lic" viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/>${extra}</svg>`;
@@ -1755,6 +1791,44 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const l = document.createElement('link'); l.rel = 'stylesheet'; l.dataset.font = f;
     l.href = 'https://fonts.googleapis.com/css2?family=' + f.replace(/ /g, '+') + (FONT_W[f] ? ':wght@' + FONT_W[f] : '') + '&display=swap';
     document.head.append(l);
+  };
+
+  // ---------- the story "יומן הטייס": a new FPV pilot's diary, one page before each flight and one after it ----------
+  // Written so it reads the same for anyone (no he/she forms). Exercises the admin adds later get a page from the
+  // general lines; levels past the third get a general chapter.
+  const DIARY = {
+    open: 'עמוד ראשון. קניתי משקפות, התיישבתי מול המסך ונשבעתי שלא אתרסק בדקה הראשונה. התרסקתי אחרי עשרים שניות. אז פתחתי את היומן הזה: כל תרגיל שאעבור ייכתב כאן, עד שאטוס כמו בסרטונים שגרמו לי להתחיל.',
+    chapters: [
+      { title: 'ללמוד לרחף', line: 'הרחפן עוד מרגיש כמו חרק משוגע. המטרה של הפרק הזה: שיעשה מה שאני אומר לו.', end: 'סוף הפרק הראשון. הרחפן כבר לא בורח לי. עוד לא חברים, אבל כבר מכרים טובים.' },
+      { title: 'ללמוד לשלוט', line: 'עכשיו כשהוא מקשיב, מגיע החלק האמיתי: מקומות צפופים, צלילות, ונחיתות שלא נשמעות כמו נפילה.', end: 'סוף הפרק השני. בפעם הראשונה זה הרגיש כמו טיסה, ולא כמו תפילה שזה יעבוד.' },
+      { title: 'לטוס כמו מקצוענים', line: 'מדרגות, פירים ומנופים. מקומות שעד לפני חודש ראיתי רק בסרטונים של אחרים.', end: 'סוף הפרק השלישי. נשאר עמוד אחד לכתוב.' }
+    ],
+    chapterMore: { line: 'עוד פרק, עוד שמיים. מה שלמדתי עד עכשיו בא איתי.', end: 'עוד פרק נסגר. ממשיכים לעמוד הבא.' },
+    finale: ['העמוד שחיכיתי לו. כל מה שכתבתי ביומן הזה מוביל לטיסה אחת.', 'עברתי. סוגרים את היומן הזה ופותחים חדש: יומן של טייס.'],
+    skills: {
+      'שמירה על גובה': ['התרגיל הראשון נשמע פשוט: להחזיק את הרחפן בגובה קבוע. פשוט, עד שמנסים.', 'החזקתי גובה בלי שהרחפן יקפוץ כמו יו־יו. האגודל השמאלי סוף סוף מבין מה הוא עושה.'],
+      'טיסה בקו ישר': ['קו ישר. מסתבר שהרחפן אוהב לנדוד הצידה, והמשימה שלי היא לא לתת לו.', 'טסתי מקצה לקצה בלי לסטות. קו ישר אחד, ופתאום כל השדה נראה אחרת.'],
+      'האטה ובלימה': ['לטוס זה דבר אחד. לעצור בדיוק איפה שרוצים, זה כבר סיפור אחר.', 'עצרתי מעל הנקודה. לא לפניה, לא אחריה. יש משהו מספק בבלימה נקייה.'],
+      'סללום ימינה ושמאלה': ['עמודים מימין ומשמאל. היום הידיים צריכות לחשוב צעד אחד קדימה.', 'עברתי את כל העמודים ברצף. בפעם הראשונה זה הרגיש כמו ריקוד ולא כמו מכשול.'],
+      'שינוי גובה': ['למעלה ולמטה, בלי לאבד שליטה. נשמע קל, אבל הגז הוא עניין עדין.', 'עלייה, ירידה, ושוב. הגז והרחפן כבר מדברים באותה שפה.'],
+      'פניות': ['פנייה חלקה סביב נקודה. לא חדה, לא רחבה. בדיוק באמצע.', 'פנייה מלאה סביב העמוד, עגולה כמו שצריך. אפשר להרגיש את הקשת עוד לפני שהיא מתחילה.'],
+      'שמיניות': ['שמינייה: שתי פניות שמתחברות לאחת, וכל טעות קטנה הופכת אותה לתפוח אדמה.', 'שתי שמיניות רצופות. מלמעלה זה היה נראה כמו 8 מושלם. נו, כמעט מושלם.'],
+      'עינוי סיני': ['השם לא מבשר טובות. רצף של תנועות קטנות במקום צפוף, וכל נגיעה מחזירה להתחלה.', 'שרדתי את העינוי הסיני. הידיים רועדות, אבל הרחפן לא נגע בכלום.'],
+      'מסלול': ['להקיף נקודה ולהשאיר אותה במרכז המצלמה. הרחפן זז, המבט נשאר.', 'הקפה מלאה, והנקודה לא זזה מהמרכז. זה התרגיל שבו המצלמה התחילה לעבוד בשבילי.'],
+      'נחיתות': ['נחיתה רכה. עד היום הנחיתות שלי נשמעו כמו מגש שנפל.', 'נחתתי בתוך המשטח בלי קפיצה אחת. שקט מוחלט, הצליל הכי יפה ששמעתי השבוע.'],
+      'צלילות': ['צלילה מגובה וחזרה לטיסה ישרה. הבטן כבר מתכווצת.', 'צללתי והתיישרתי בגובה בטוח. שנייה של פחד, ואז הדבר הכי כיפי שעשיתי עם רחפן.'],
+      'מדרגות': ['גרם מדרגות, וצריך לטוס לאורכו בלי לגעת באף מדרגה.', 'כל המדרגות, בלי נגיעה. התחלתי לסמוך על מה שרואים במשקפות.'],
+      'צינורות': ['צינורות. מבפנים הכל נראה צר יותר ממה שזה באמת. או שזה באמת צר.', 'עברתי את כל הצינורות ברצף. יצאתי מהאחרון וצעקתי לבד בחדר.'],
+      'נחיתות מדויקות': ['נחיתה על מטרה קטנה ממרחק. כאן אין מקום ל"בערך".', 'נחתתי בתוך המטרה, מרחוק, בלי לעצור באמצע לתקן. דיוק זה הרגל, לא מזל.'],
+      'ירידה במדרגות': ['הפעם למטה: ירידה במדרגות בקצב קבוע. בירידה הכל קורה מהר יותר.', 'ירדתי את כל המדרגות בקצב אחד, בלי בלימות של פאניקה באמצע.'],
+      'פיגומים': ['פיגום. קומה אחרי קומה, דרך פתחים שנראים קטנים מדי.', 'עברתי את כל הקומות לפי הסדר. הפתחים לא גדלו. פשוט השתפרתי.'],
+      'עליית מדרגות - שמאל': ['עלייה במדרגות עם פנייה שמאלה. הצד שהכי פחות נוח לי.', 'עליתי את כל המדרגות בפנייה שמאלה. הצד החלש כבר לא כל כך חלש.'],
+      'סיבוב 360 בפיר מעלית': ['סיבוב מלא בתוך פיר מעלית. מקום שאין בו מקום לטעויות.', 'סיבוב מלא בפיר, בלי לגעת בדפנות. הטיסה הזו נכנסת לתיקייה של הטובות.'],
+      'מעבר בתוך המנוף': ['המנוף. מקצה לקצה, בין ברזלים שלא סולחים.', 'עברתי את המנוף מקצה לקצה. מלמטה הוא נראה ענק. מבפנים הוא נראה כמו מסלול.'],
+      'שמיניות קצרות': ['שמיניות הדוקות במקום קטן. כל מה שלמדתי, דחוס לשתי לולאות.', 'שתי שמיניות הדוקות ברצף. אם זה מה שנשאר לפני המבחן, אפשר לגשת אליו.']
+    },
+    // an exercise with no page of its own
+    more: [(name) => `היום: ${name}. קראתי את ההסבר פעמיים, ועכשיו נשארנו רק אני והסטיקים.`, (name) => `${name}: עבר. עוד שורה ביומן, ועוד קצת ביטחון באוויר.`]
   };
 
   // ---------- small helpers ----------
@@ -2039,7 +2113,8 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const toSkill = () => { done(); if (n.skill) { switchTab('map'); showPane('deck'); setTimeout(() => goNode('s' + n.skill, true), 300); } };
     const text = esc(n.text), pic = n.skill ? lensArt('s' + n.skill, n.kind !== 'approved' && n.kind !== 'marked') : '';
     const coins = (() => { const m = String(n.text || '').match(/\+\s*(\d+)/); return m ? Number(m[1]) : 0; })();
-    if (n.kind === 'approved' || n.kind === 'marked') return toastOverlay(pic, T('lit'), text, 'יש!', toSkill, true, coins);
+    const sk = n.skill && STORY() ? findNode('s' + n.skill) : null, pg = sk && pageOf(sk);
+    if (n.kind === 'approved' || n.kind === 'marked') return toastOverlay(pic, T('lit'), text + (pg ? `<span class="rdiary"><b>נוסף ליומן</b>“${esc(pg[1])}”</span>` : ''), 'יש!', toSkill, true, coins);
     if (n.kind === 'rejected') return toastOverlay(pic, T('back'), text, n.skill ? 'לתרגיל' : 'הבנתי', toSkill);
     if (n.kind === 'required') return toastOverlay(pic, 'ביצוע חוזר', text, 'לתרגיל', toSkill);
     if (n.kind === 'revoked') return toastOverlay(pic, 'חזרה לתרגול', text, 'הבנתי', toSkill);
@@ -2102,6 +2177,51 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   const heroOf = (n) => `<div class="node big wp ${wpCls(n)}${n.state === 'now' ? ' here' : ''}"><span class="face">${n.t === 'chest' ? '' : WP_BEZEL}<span class="nart" aria-hidden="true">${stageArt(n.id)}${n.state === 'now' ? '<i class="sweep"></i>' : ''}<i class="glass"></i></span>${n.t === 'boss' ? WP_RETICLE : ''}${isDone(n) ? CK : ''}</span></div>`;
   // the instructor's stars, next to the stage's name
   const titleStars = (n) => { const s = n.t === 'skill' && n.state === 'done' ? starsOf(n.k.id) : n.t === 'boss' && n.state === 'done' ? chalStars(n.c.id) : 0; return s ? `<span class="tstars">${starTxt(s)}</span>` : ''; };
+  // ---------- the diary: a page before each flight, a page after it, a chapter per level ----------
+  const chapterOf = (w) => w && w.cls !== 'wb' ? Object.assign({ title: w.name }, DIARY.chapters[w.i] || DIARY.chapterMore) : null;
+  const pageOf = (n) => n.t === 'boss' ? DIARY.finale : n.t === 'skill' ? (DIARY.skills[n.k.name] || DIARY.more.map(f => f(n.k.name))) : null;
+  const doneAt = (n) => {
+    if (n.t === 'skill') { const e = P.ledger.find(x => x.skill === n.k.id && x.kind === 'skill' && !x.reverted), f = P.flights.find(x => x.skill === n.k.id && x.status === 'approved'); return (e && e.at) || (f && (f.reviewedAt || f.at)) || ''; }
+    if (n.t === 'boss') { const f = P.flights.find(x => x.challenge === n.c.id && x.status === 'approved'); return (f && (f.reviewedAt || f.at)) || ''; }
+    return '';
+  };
+  // the page shown in a window: what was written before the flight, or after it once the stage is done
+  const diaryNote = (n) => {
+    if (!STORY() || n.state === 'lock') return '';
+    let kick = 'מהיומן · לפני הטיסה', text = '';
+    if (n.t === 'chest') { const ch = chapterOf(worldOf(n)); if (!ch) return ''; kick = 'מהיומן · סוף פרק'; text = ch.end; }
+    else { const pg = pageOf(n); if (!pg) return ''; if (n.state === 'done') { const at = doneAt(n); kick = 'מהיומן' + (at ? ' · ' + fmtDay(String(at).slice(0, 10)) : ''); text = pg[1]; } else text = pg[0]; }
+    return `<div class="diary"><span class="dk">${esc(kick)}</span><p>${esc(text)}</p></div>`;
+  };
+  // the whole diary so far: page one, then each chapter with the pages of the stages done in it
+  const diaryPages = () => {
+    const out = [{ title: 'עמוד ראשון', text: DIARY.open, at: '' }];
+    WORLDS.forEach(w => {
+      if (w.cls === 'wb') { const b = w.nodes[0]; if (b && b.state === 'done') out.push({ title: b.name, text: DIARY.finale[1], at: doneAt(b) }); return; }
+      const done = w.nodes.filter(n => n.t === 'skill' && n.state === 'done'); if (!done.length) return;
+      const ch = chapterOf(w);
+      out.push({ chapter: `${T('world')} ${w.i + 1} · ${ch.title}`, text: ch.line });
+      done.forEach(n => out.push({ title: n.name, text: pageOf(n)[1], at: doneAt(n) }));
+      const c = w.nodes.find(n => n.t === 'chest');
+      if ((c && c.state === 'opened') || (!c && done.length === w.nodes.filter(n => n.t === 'skill').length)) out.push({ title: 'סוף פרק', text: ch.end, at: '' });
+    });
+    return out;
+  };
+  const pageHtml = (pg) => pg.chapter ? `<h3 class="dch">${esc(pg.chapter)}</h3><p class="dline">${esc(pg.text)}</p>` : `<div class="dpage"><span class="dk">${esc(pg.title)}${pg.at ? ' · ' + esc(fmtDay(String(pg.at).slice(0, 10))) : ''}</span><p>${esc(pg.text)}</p></div>`;
+  const openDiary = () => {
+    const pages = diaryPages();
+    openSheet(`<div class="kick">היומן שלי</div><h2>יומן הטייס</h2><p class="desc">${pages.length} עמודים. עמוד נוסף נכתב כל פעם שהמדריך מאשר טיסה.</p><div class="diarybook">${pages.map(pageHtml).join('')}</div><div style="height:14px"></div><button class="btn3 ghost full" type="button" id="diaryX">סגירה</button>`, s => { s.querySelector('#diaryX').onclick = closeSheet; });
+  };
+  // the diary's first page, once, the first time a student meets the story
+  const DKEY = 'g88-diary-open-' + A.me.id;
+  const diaryWelcome = () => {
+    if (PREVIEW || !STORY()) return;
+    try { if (localStorage.getItem(DKEY)) return; } catch (e) { return; }
+    if (sheet.classList.contains('on')) { afterSheet = diaryWelcome; return; }
+    try { localStorage.setItem(DKEY, '1'); } catch (e) {}
+    openSheet(`<div class="kick">יומן הטייס</div><h2>עמוד ראשון</h2><div class="diary big"><span class="dk">${esc(firstName(A.me.name))}</span><p>${esc(DIARY.open)}</p></div><p class="desc">בכל תרגיל מחכה עמוד מהיומן, וכל טיסה שהמדריך מאשר מוסיפה עמוד. את היומן כולו קוראים בהאנגר.</p><div style="height:14px"></div><button class="btn3 gold full" type="button" id="diaryGo">לעמוד הבא</button>`, s => { s.querySelector('#diaryGo').onclick = closeSheet; });
+  };
+
   // the designed check: a disc in the "done" colour with a bold tick (on a station), and the tick alone (in a step's box)
   const CK = '<span class="ck" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="12" r="10.6"/><path class="sh" d="M1.4 12a10.6 10.6 0 0 1 21.2 0z"/><path class="tk" d="M6.9 12.5l3.4 3.4 6.9-7.3"/></svg></span>';
   const CKP = '<svg class="ckp" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5.6 12.6l4.2 4.2 8.6-9"/></svg>';
@@ -2199,6 +2319,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
           <div class="count"><span>${n.t === 'chest' ? T('chest') : n.t === 'boss' ? T('boss') : 'תרגיל'}</span><b dir="ltr">${n.t === 'skill' ? `${k} / ${nSkills}` : ''}</b></div>
           <div class="hero">${heroOf(n)}</div>
           <h2>${esc(n.name)}${titleStars(n)}</h2>
+          ${diaryNote(n)}
           ${slideBody(n)}
           </div></div>${i < all.length - 1 ? nextBtn(all[i + 1], i + 1) : ''}
         </section>`;
@@ -2414,7 +2535,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     let wpNo = 0;
     WORLDS.forEach((w) => {
       const open = w.nodes.some(n => n.state !== 'lock');
-      html += `<div class="world ${w.cls} ${open ? '' : 'locked'}"><span class="tagw">${esc(worldTag(w))}</span><h3>${esc(w.name)}</h3><p>${open ? esc(w.blurb || '') : 'נפתח כשמסיימים את השלב הקודם'}</p></div>`;
+      html += `<div class="world ${w.cls} ${open ? '' : 'locked'}"><span class="tagw">${esc(worldTag(w))}</span><h3>${esc(w.name)}</h3><p>${open ? esc((STORY() && chapterOf(w) ? chapterOf(w).title + ' · ' + chapterOf(w).line : w.blurb) || '') : 'נפתח כשמסיימים את השלב הקודם'}</p></div>`;
       const wn = w.nodes.filter(n => EARNS() || n.t !== 'chest');
       if (!wn.length) return;
       const step = 118, h = wn.length * step + 30;
@@ -2523,7 +2644,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   // ---------- sheets and celebrations ----------
   const sheet = $('#sheet'), scrim = $('#scrim');
   let afterSheet = null, openChalId = null;
-  const openSheet = (html, wire) => { afterSheet = null; sheet.innerHTML = '<div class="grab"></div>' + html; sheet.classList.add('on'); scrim.classList.add('on'); wire && wire(sheet); setTimeout(() => { const f = sheet.querySelector('button, textarea, input'); f && f.focus(); }, 320); };
+  const openSheet = (html, wire) => { afterSheet = null; sheet.innerHTML = '<div class="grab"></div>' + html; sheet.classList.add('on'); scrim.classList.add('on'); wire && wire(sheet); setTimeout(() => { const f = sheet.querySelector('button, textarea, input'); f && f.focus({ preventScroll: true }); }, 320); };
   const closeSheet = () => { sheet.classList.remove('on'); scrim.classList.remove('on'); openChalId = null; const f = afterSheet; afterSheet = null; if (f) setTimeout(f, 280); setTimeout(pumpNotes, 400); };
   scrim.onclick = closeSheet;
   addEventListener('keydown', e => { if (e.key !== 'Escape') return; if (curPlayer) { curPlayer.finish(false); return; } if (sheet.classList.contains('on')) closeSheet(); });
@@ -2557,7 +2678,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       if (taps < 3) { rb.querySelector('#cb').style.transform = `scale(${1 + taps * .12})`; rb.querySelector('.hint').textContent = taps === 1 ? 'עוד קצת…' : 'עוד אחת!'; return; }
       rb.onclick = null; markChest(n.n); confetti();
       const w = WORLDS.find(x => x.n === n.n), all = visibleNodes(), nx = all[all.findIndex(x => x.id === n.id) + 1];
-      rb.innerHTML = `<div class="rbig burst">${BIGCOIN}</div><p class="rt">+${n.bonus} מטבעות</p><p class="rs">הבונוס על סיום ${esc(w ? w.name : 'הרמה')}${nx ? ' · ' + esc(worldOf(nx) && worldOf(nx) !== w ? 'השלב הבא פתוח!' : 'ממשיכים!') : ''}</p><button class="btn3 gold" type="button" id="ok">אסוף</button>`;
+      rb.innerHTML = `<div class="rbig burst">${BIGCOIN}</div><p class="rt">+${n.bonus} מטבעות</p><p class="rs">הבונוס על סיום ${esc(w ? w.name : 'הרמה')}${nx ? ' · ' + esc(worldOf(nx) && worldOf(nx) !== w ? 'השלב הבא פתוח!' : 'ממשיכים!') : ''}${STORY() && chapterOf(w) ? `<span class="rdiary"><b>מהיומן</b>“${esc(chapterOf(w).end)}”</span>` : ''}</p><button class="btn3 gold" type="button" id="ok">אסוף</button>`;
       const ok = rb.querySelector('#ok'); ok.focus();
       ok.onclick = (e) => { e.stopPropagation(); coinBurst(ok, n.bonus); rw.classList.remove('on'); showing = false; renderAll(); setTimeout(() => goNode(nx ? nx.id : n.id, true), 60); };
     };
@@ -2616,7 +2737,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     wireNode(n, box);
     box.querySelector('[data-a="close"]').onclick = closeSheet;
   };
-  const openChal = (id) => { afterSheet = null; openChalId = id; sheet.classList.add('on'); scrim.classList.add('on'); drawChal(); setTimeout(() => { const f = sheet.querySelector('button'); f && f.focus(); }, 320); };
+  const openChal = (id) => { afterSheet = null; openChalId = id; sheet.classList.add('on'); scrim.classList.add('on'); drawChal(); setTimeout(() => { const f = sheet.querySelector('button'); f && f.focus({ preventScroll: true }); }, 320); };
 
   // ---------- the league: this week's coins in the group ----------
   let LG = null;
@@ -2731,6 +2852,13 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     $('#stFlights').textContent = P.flights.filter(f => f.status === 'approved').length;
     $('#stDone').textContent = `${done}/${sk.length}`;
     $('#stTime').textContent = Math.floor((P.timeToday || 0) / 60);
+    // the diary: its latest page, and the whole book in a sheet
+    const dbx = $('#diaryBox');
+    if (STORY()) {
+      const pages = diaryPages().filter(p => !p.chapter), last = pages[pages.length - 1];
+      dbx.innerHTML = `<div class="sect"><span>היומן שלי</span> <small>${pages.length} עמודים</small></div><button class="diarycard" type="button" id="diaryOpen"><span class="dk">העמוד האחרון${last.at ? ' · ' + esc(fmtDay(String(last.at).slice(0, 10))) : ''}</span><b>${esc(last.title)}</b><p>${esc(last.text)}</p><span class="dmore">לכל היומן</span></button>`;
+      $('#diaryOpen').onclick = openDiary;
+    } else dbx.innerHTML = '';
     $('#badges').innerHTML = sk.map((k) => { const got = !!P.acquired[k.id]; return `<div class="bdg"><div class="badge wpb ${got ? 'done' : 'lock'}" role="img" aria-label="${esc(k.name + (got ? ' · הושלם' : ' · עוד לא'))}">${WP_BEZEL}<span class="bart">${stageArt('s' + k.id)}<i class="glass"></i></span>${got ? CK : ''}</div><small aria-hidden="true">${esc(k.name)}</small></div>`; }).join('');
     const L = LEVELS(), lockTxt = (k) => { const lv = L[skinNeed(k) - 1]; return lv ? `נפתח בסיום ${lv.name}` : 'נעול'; };
     $('#skins').innerHTML = SKINS.map(k => { const open = skinOpen(k); return `<button class="skin ${s.id === k.id ? 'sel' : ''} ${open ? '' : 'locked'}" data-k="${k.id}" type="button" aria-pressed="${s.id === k.id}" ${open ? '' : 'aria-disabled="true"'}>${skinArt(k)}<b>${esc(skinLabel(k))}</b>${open ? `<span class="price" style="color:var(--mint)">${s.id === k.id ? 'בשימוש' : 'פתוח · לבחירה'}</span>` : `<span class="price">${esc(lockTxt(k))}</span>`}</button>`; }).join('');
@@ -2873,7 +3001,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   // the design page changes one thing at a time: colors and the like only need the variables, a new base style,
   // icons or words need the whole screen drawn again
   const previewTheme = (raw) => {
-    const t = themeOf(raw), shape = (x) => JSON.stringify([x.base, x.icons, x.terms]);
+    const t = themeOf(raw), shape = (x) => JSON.stringify([x.base, x.icons, x.terms, x.story || 'none']);
     if (ACTIVE && shape(ACTIVE) === shape(t)) { ACTIVE = t; applyVars(t); syncStageBg(); } else applyTheme(t);
   };
   // the switch shows where it leads: a sun to day, a moon to night
@@ -2925,6 +3053,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   setTimeout(() => { const f = frontier(); if (f) goNode(f.id); syncRail(); syncPane(); }, 80);
   if (!PREVIEW) setTimeout(claimLogin, 900);
   if (!PREVIEW && A.data.progress && !A.data.progress.introSeen) setTimeout(showIntro, 600);
+  setTimeout(diaryWelcome, 1100);
   loadLeague();
   if (PREVIEW && parent !== window) { try { parent.postMessage({ type: 'g88-ready' }, location.origin); } catch (e) {} }
 })();
