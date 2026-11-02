@@ -213,6 +213,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .st-fsels { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
 .st-fsel select { font-size: 15px; }
 .st-sum .st-sw i { height: 18px; }
+.st-flow { display: flex; flex-direction: column; gap: 8px; padding: 10px 12px; border-radius: 12px; background: #F2F4F3; }
 .scn { position: absolute; inset: -30px; overflow: hidden; }
 .scn > i { position: absolute; inset: 0; display: block; }
 .scn-field { background: linear-gradient(180deg, #7FB6DE 0%, #BFDFF0 40%, #DCEBD8 47%, #9CC27A 48%, #6E9E4E 66%, #456F32 100%); }
@@ -414,7 +415,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   const TERMS = [['t1', 'לשונית 1 (המסלול)'], ['t2', 'לשונית 2 (המשימות)'], ['t3', 'לשונית 3 (הליגה)'], ['t4', 'לשונית 4 (הפרופיל)'], ['world', 'שם ל"עולם"'], ['chest', 'שם ל"תיבה"'], ['boss', 'שם למבחן המסכם'], ['league', 'שם הליגה'], ['mapTitle', 'כותרת מפת הנתיב'], ['questsTitle', 'כותרת המשימות'], ['go', 'בועה מעל התרגיל הנוכחי'], ['lit', 'הודעה כשתרגיל מאושר']];
   const BUILT = { 't-race': ['race', 'מירוץ FPV'], 't-regular': ['regular', 'משחקי צבעוני'], 't-mil': ['mil', 'צבאי'] };
   const AUTO = ['field', 'city', 'garage', 'loft', 'forest', 'street'];
-  const newTheme = (base, extra) => Object.assign({ id: newId(), name: 'ערכה חדשה', base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default', num: 'default' }, icons: BASES[base].icons, bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', layout: 'classic', look: '', show: { img: '', dim: 35, info: '', tab: '', corners: 'square' }, builtIn: false }, extra || {});
+  const newTheme = (base, extra) => Object.assign({ id: newId(), name: 'ערכה חדשה', base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default', num: 'default' }, icons: BASES[base].icons, bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', layout: 'classic', look: '', flow: { on: false, open: true, next: true, close: 4 }, show: { img: '', dim: 35, info: '', tab: '', corners: 'square' }, builtIn: false }, extra || {});
   const defaultsOf = (id) => BUILT[id] ? newTheme(BUILT[id][0], { id, name: BUILT[id][1], builtIn: true }) : null;
   // the colours in use: the theme's own, else the style's (the extra roles follow the brand colours until they are set)
   const effColors = (t) => { const C = Object.assign({}, BASES[t.base].colors, t.colors || {}), M = moreColors(t.base, C); Object.keys(M).forEach(k => { if (!isHex(C[k] || '')) C[k] = M[k]; }); return C; };
@@ -617,6 +618,16 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
       <section class="st-sec" aria-labelledby="sh-terms"><h2 id="sh-terms">מילים ושמות</h2>
         <p class="st-hint">שדה ריק משתמש במילה של הסגנון. את שמות הדרגות קובעים בעמוד הניקוד.</p>
         <div class="st-terms">${TERMS.map(([k, l]) => `<label class="st-field">${l}<input type="text" data-term="${k}" value="${esc(d.terms[k] || '')}" placeholder="${esc(WORDS[d.base][k])}" maxlength="40"></label>`).join('')}</div>
+      </section>
+      <section class="st-sec" aria-labelledby="sh-flow"><h2 id="sh-flow">פלאו אוטומטי</h2>
+        ${(() => { const f = Object.assign({ on: false, open: true, next: true, close: 4 }, d.flow || {}); return `
+        <label class="st-check"><input type="checkbox" data-flow="on" ${f.on ? 'checked' : ''}> התלמיד מתקדם לבד, בלי ללחוץ "המשך" בכל צעד</label>
+        ${f.on ? `<div class="st-flow">
+          <label class="st-check"><input type="checkbox" data-flow="open" ${f.open ? 'checked' : ''}> כשמגיעים לתרגיל, השלב שמחכה (סרטון או העלאה) נפתח לבד</label>
+          <label class="st-check"><input type="checkbox" data-flow="next" ${f.next ? 'checked' : ''}> אחרי שליחת טיסה, עוברים לבד לתרגיל הבא הפתוח</label>
+          <label class="st-field">הודעות (נשלח, אושר, הוחזר) נסגרות לבד אחרי · <output id="flOut">${f.close ? f.close + ' שניות' : 'לא נסגרות לבד'}</output><input type="range" min="0" max="15" step="1" value="${f.close}" data-flowclose aria-label="שניות עד שהודעה נסגרת"></label>
+          <p class="st-hint" style="margin:0">אחרי סרטון ההדגמה תמיד עוברים לבד להעלאת הטיסה. 0 שניות: ההודעות מחכות ללחיצה.</p>
+        </div>` : '<p class="st-hint" style="margin:0">כבוי: כמו היום, כל הודעה מחכה ללחיצה, והתלמיד בוחר מתי להמשיך.</p>'}`; })()}
       </section>
       <section class="st-sec" aria-labelledby="sh-look"><h2 id="sh-look">נראות מיוחדת</h2>
         <div class="st-seg" role="group" aria-label="נראות מיוחדת"><button type="button" data-look="" class="${d.look !== 'pixel' ? 'on' : ''}" aria-pressed="${d.look !== 'pixel'}">רגילה</button><button type="button" data-look="pixel" class="${d.look === 'pixel' ? 'on' : ''}" aria-pressed="${d.look === 'pixel'}">פיקסל · ארקייד</button></div>
@@ -947,6 +958,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     if (TAB !== 'themes' || !ED) return;
     const t = e.target, d = D();
     if (t.dataset.c) return void setColor(t.dataset.c, t.value, 'pick');
+    if ('flowclose' in t.dataset) { const f = d.flow = Object.assign({ on: false, open: true, next: true, close: 4 }, d.flow || {}); f.close = Math.max(0, Math.min(15, Number(t.value) || 0)); const o = $('#flOut'); if (o) o.textContent = f.close ? f.close + ' שניות' : 'לא נסגרות לבד'; sendTheme(); touched(); return; }
     if ('shdim' in t.dataset) { SH(d).dim = Math.max(0, Math.min(80, Number(t.value) || 0)); const o = $('#shDimOut'); if (o) o.textContent = SH(d).dim + '%'; sendTheme(); touched(); return; }
     if (t.dataset.hex) { let v = t.value.trim(); if (v && v[0] !== '#') v = '#' + v; if (!setColor(t.dataset.hex, v, 'hex')) t.classList.toggle('bad', v.length >= 7); return; }
     if (t.id === 'stName') {
@@ -966,6 +978,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   body.addEventListener('toggle', (e) => { const k = e.target && e.target.dataset && e.target.dataset.fold; if (k) OPEN[k] = e.target.open; }, true);
   body.addEventListener('change', (e) => {
     const t = e.target;
+    if (t.dataset.flow) { const f = d.flow = Object.assign({ on: false, open: true, next: true, close: 4 }, d.flow || {}); f[t.dataset.flow] = t.checked; redraw(); return; }
     if (t.id === 'upShow') { const f = t.files && t.files[0]; t.value = ''; if (f && ED) addImage(f, ED, (url) => { SH(D()).img = url; redraw(); }); return; }
     if (t.id === 'upFile') {
       const f = t.files && t.files[0]; t.value = ''; if (!f) return;

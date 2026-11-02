@@ -220,7 +220,9 @@ function cleanTheme(t) {
     // (an info square beside a big media window, with a tab per step). Only a theme that picks one gets it.
     layout: ['show', 'panel', 'bar'].indexOf(t.layout) !== -1 ? t.layout : 'classic', show: cleanShow(t.show),
     // a special look over the base style: 'pixel' turns the whole student screen into a retro 8-bit arcade
-    look: t.look === 'pixel' ? 'pixel' : '', builtIn: !!BUILTIN_NAMES[id]
+    look: t.look === 'pixel' ? 'pixel' : '',
+    // the automatic flow: open the waiting step on arrival, move on after sending, close messages after some seconds
+    flow: (() => { const f = t.flow && typeof t.flow === 'object' ? t.flow : {}; const c = Math.round(Number(f.close)); return { on: !!f.on, open: f.open !== false, next: f.next !== false, close: Number.isFinite(c) ? Math.max(0, Math.min(15, c)) : 4 }; })(), builtIn: !!BUILTIN_NAMES[id]
   };
 }
 // A background for one stage: none, a built-in scene, or an uploaded image (blurred a little unless told not to).
@@ -255,6 +257,11 @@ function ensureLooks() {
   if (!st.barSeeded) {
     st.barSeeded = true;
     if (!list.some((t) => t.id === 't-bar')) list.push(cleanTheme({ id: 't-bar', name: 'בר תחתון', base: 'regular', mode: 'night', layout: 'bar' }));
+  }
+  // once: the ready bottom-bar theme runs on the automatic flow
+  if (!st.barFlowSeeded) {
+    st.barFlowSeeded = true;
+    const tb = list.find((t) => t.id === 't-bar'); if (tb && !tb.flow.on) tb.flow = { on: true, open: true, next: true, close: 4 };
   }
   st.themes = list;
   const sb = st.stageBg && st.stageBg.assign && typeof st.stageBg.assign === 'object' ? st.stageBg.assign : {};
