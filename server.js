@@ -1111,6 +1111,7 @@ function studentView(doc) {
     const ai = Object.assign({}, f.ai);
     delete ai.notes;
     delete ai.error;
+    delete ai.checks;
     return Object.assign({}, f, { ai });
   }) });
   return copy;
@@ -1124,6 +1125,14 @@ function videoSource(f) {
   if (f.link && f.link.startsWith('/media/') && db.uploads[f.link.slice(7)]) return { file: path.join(MEDIA_DIR, f.link.slice(7)) };
   const yt = AI.youtubeUrl(f.link);
   return yt ? { youtube: yt } : null;
+}
+
+// the instructor's demo video of the exercise (or challenge), so the AI can see the right map and exercise
+function refSource(x) {
+  const v = x && x.video ? String(x.video) : '';
+  if (v.startsWith('/media/')) { const full = path.join(MEDIA_DIR, path.basename(v.slice(7))); return fs.existsSync(full) ? { refFile: full } : {}; }
+  const yt = AI.youtubeUrl(v);
+  return yt ? { refYoutube: yt } : {};
 }
 
 function aiWanted(f) {
@@ -1195,7 +1204,7 @@ async function checkOne(job) {
   save();
   let result;
   try {
-    result = await AI.check(Object.assign({}, src, {
+    result = await AI.check(Object.assign({}, src, refSource(c || k), {
       skillName: c ? 'אתגר: ' + c.title : k.name,
       desc: c ? c.desc : k.desc,
       pass: c ? c.desc : k.pass,
