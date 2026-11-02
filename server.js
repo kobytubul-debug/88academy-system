@@ -218,7 +218,7 @@ function cleanTheme(t) {
     icons: t.icons === 'line' || t.icons === 'emoji' ? t.icons : BASE_ICONS[base], bg, stageBg: t.stageBg !== false, terms, motion: t.motion === 'calm' ? 'calm' : 'full',
     // how an exercise window is laid out: as it always was (classic), one panel at the bottom, or the showcase
     // (an info square beside a big media window, with a tab per step). Only a theme that picks one gets it.
-    layout: ['show', 'panel', 'bar'].indexOf(t.layout) !== -1 ? t.layout : 'classic', show: cleanShow(t.show),
+    layout: ['show', 'panel', 'bar', 'story'].indexOf(t.layout) !== -1 ? t.layout : 'classic', show: cleanShow(t.show),
     // a special look over the base style: 'pixel' turns the whole student screen into a retro 8-bit arcade
     look: t.look === 'pixel' ? 'pixel' : '',
     // the bottom bar's default place: a row at the bottom, or a list under the side menu (the student can switch)
@@ -264,6 +264,11 @@ function ensureLooks() {
   if (!st.barFlowSeeded) {
     st.barFlowSeeded = true;
     const tb = list.find((t) => t.id === 't-bar'); if (tb && !tb.flow.on) tb.flow = { on: true, open: true, next: true, close: 4 };
+  }
+  // once: a ready theme where each exercise plays itself, stage by stage
+  if (!st.storySeeded) {
+    st.storySeeded = true;
+    if (!list.some((t) => t.id === 't-story')) list.push(cleanTheme({ id: 't-story', name: 'זרימה אוטומטית', base: 'regular', mode: 'night', layout: 'story', flow: { on: true, open: true, next: true, close: 3 } }));
   }
   if (!st.barSideSeeded) {
     st.barSideSeeded = true;

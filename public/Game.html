@@ -1988,6 +1988,74 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 @media (max-width: 899px) { #app.pixel .tabs { background: transparent; } .pxhill.h1 { width: 200px; height: 100px; } .pxhill.h2 { display: none; } }
 @media (max-width: 899px) { .pxsun { display: none; } }
 #app.pixel .rt { unicode-bidi: plaintext; }
+
+/* ================= the story layout (theme option "layout: story"): each exercise plays itself, one stage at a time =================
+   One clean card in the middle of the screen. The mission comes up first, then (by itself) the demo video with the full
+   explanation, then the upload, then the instructor. Each stage arrives with a soft rise and a blur that clears. */
+.slide.sty .sgrid { min-height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; margin: 0; }
+.stcard { position: relative; width: min(600px, 100%); box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; padding: 26px 26px 22px; border-radius: 28px;
+  background: color-mix(in srgb, var(--night) 82%, transparent); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 30px 80px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.12); }
+.stcard.enter { animation: stIn .7s cubic-bezier(.16,.84,.24,1) both; }
+@keyframes stIn { from { opacity: 0; transform: translateY(22px) scale(.97); filter: blur(10px); } to { opacity: 1; transform: none; filter: none; } }
+.stcard.enter > * { animation: stItem .6s cubic-bezier(.16,.84,.24,1) both; }
+.stcard.enter > :nth-child(2) { animation-delay: .08s; } .stcard.enter > :nth-child(3) { animation-delay: .16s; } .stcard.enter > :nth-child(4) { animation-delay: .24s; } .stcard.enter > :nth-child(n+5) { animation-delay: .32s; }
+@keyframes stItem { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.stcard.st-video { width: min(880px, 100%); }
+.st-top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-size: 13px; font-weight: 800; letter-spacing: .05em; color: var(--mint); }
+.st-top b { font-family: var(--n); color: var(--white); }
+.slide.sty .stcard h2 { margin: 0; font-size: 38px; line-height: 1.05; text-align: start; text-wrap: balance; }
+.st-task { margin: 0; font-size: 17px; line-height: 1.55; color: color-mix(in srgb, var(--white) 86%, transparent); }
+.stcard .sh-state { color: var(--white); }
+.stcard .sh-state::before { background: currentColor; }
+.stcard .sh-msg { background: rgba(255,255,255,.06); text-align: start; }
+.stcard .act, .stcard .upl, .stcard .inote { box-sizing: border-box; width: 100%; margin: 0; }
+.st-lens { align-self: center; height: 132px; display: grid; place-items: center; margin: -4px 0 4px; }
+.st-lens .node.big { transform: scale(1.1); }
+/* the intro's clock: a thin line that fills before the next stage comes by itself */
+.st-timer { height: 4px; border-radius: 4px; background: rgba(255,255,255,.12); overflow: hidden; }
+.st-timer i { display: block; height: 100%; width: 100%; background: var(--mint); transform-origin: right; }
+.stcard.enter .st-timer i { animation: stTime 3.8s linear both; }
+@keyframes stTime { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.st-next { margin: -4px 0 0; font-size: 13px; font-weight: 700; color: var(--dim); }
+/* the video stage: a 16:9 frame the demo plays in, and the full explanation under it */
+.st-media { position: relative; width: 100%; aspect-ratio: 16 / 9; max-width: 100%; border-radius: 18px; overflow: hidden; background: #050807; }
+.st-load { position: absolute; inset: 0; margin: auto; width: 38px; height: 38px; border-radius: 50%; border: 3px solid rgba(255,255,255,.18); border-top-color: var(--mint); animation: spin 1s linear infinite; }
+.st-how { display: flex; flex-direction: column; gap: 6px; font-size: 15px; line-height: 1.55; }
+.st-how p { margin: 0; }
+.st-how ul { margin: 0; padding-inline-start: 18px; color: color-mix(in srgb, var(--white) 82%, transparent); }
+.vplayer.inl { border-radius: 18px; }
+/* the stage dots above the card: where the exercise is; a dot can be tapped to look back */
+.st-dots { list-style: none; margin: 0; padding: 0; display: flex; gap: 6px; align-items: center; }
+.st-dots li { display: flex; align-items: center; gap: 6px; }
+.st-dots li + li::before { content: ""; width: 18px; height: 2px; background: rgba(255,255,255,.25); }
+.st-dots button { border: 0; cursor: pointer; padding: 6px 12px; border-radius: 999px; font: 800 12px var(--f); letter-spacing: .03em; color: var(--white);
+  background: color-mix(in srgb, var(--night) 60%, transparent); box-shadow: inset 0 0 0 1px rgba(255,255,255,.18); transition: background .25s, color .25s; }
+.st-dots li.ok button { background: color-mix(in srgb, var(--done) 30%, transparent); }
+.st-dots li.cur button { background: var(--mint); color: var(--ink, #0B1513); box-shadow: none; }
+.st-dots button:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+/* looks */
+.app.race .stcard, .app.race .st-media, .app.race .st-dots button { border-radius: 0; }
+.app.mil .stcard, .app.mil .st-media { border-radius: 8px; }
+#app.day .stcard { background: color-mix(in srgb, var(--d-card, #FFFFFF) 92%, transparent); box-shadow: 0 30px 70px rgba(0,0,0,.18), inset 0 0 0 1px rgba(0,0,0,.08); }
+#app.day .st-task, #app.day .st-how ul { color: var(--d-dim); }
+#app.day .st-dots button { background: rgba(255,255,255,.8); color: var(--d-fg); }
+#app.day .st-dots li.cur button { background: var(--mint); color: var(--ink, #0B1513); }
+#app.pixel .stcard { background: #fff6e0 !important; color: var(--px-ink); border: 3px solid var(--px-ink); box-shadow: 6px 6px 0 var(--px-ink) !important; backdrop-filter: none; }
+#app.pixel .st-task, #app.pixel .st-how { color: var(--px-ink); }
+@media (prefers-reduced-motion: reduce) { .stcard, .stcard > *, .st-timer i { animation: none; } }
+.app.calm .stcard, .app.calm .stcard.enter > * { animation: none; }
+/* phones */
+@media (max-width: 899px) {
+  .slide.sty .stcard h2 { font-size: 28px; }
+  .stcard { padding: 18px 16px 16px; border-radius: 22px; }
+  .st-task { font-size: 15px; }
+  .st-dots button { padding: 5px 9px; font-size: 11px; }
+  .st-dots li + li::before { width: 8px; }
+  .st-lens { height: 100px; } .st-lens .node.big { transform: scale(1.05); }
+}
+@media (min-width: 900px) { #app .slide.sty > .sbody { padding-bottom: 90px; } #app .slide.sty .sgrid { display: flex; } }
+@media (min-width: 900px) { #app .st-lens { height: 190px; margin-top: 6px; } }
 </style>
 </head>
 <body>
@@ -2756,11 +2824,65 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   // the bar sits as a row at the bottom, or as a list under the side menu; the theme sets the default, the student can switch
   const barMode = () => { let m = ''; try { m = localStorage.getItem('g88-barpos') || ''; } catch (e) {} return m === 'side' || m === 'bottom' ? m : (ACTIVE && ACTIVE.barPos === 'side' ? 'side' : 'bottom'); };
   const setBarMode = (m) => { try { localStorage.setItem('g88-barpos', m); } catch (e) {} syncShow(); };
+  // ---------- the story layout (a theme option): no bar; each exercise plays itself one stage at a time ----------
+  // the mission (name and task) -> the demo video, playing by itself with the full explanation -> the upload -> the instructor
+  const STORY = () => !!(ACTIVE && ACTIVE.layout === 'story');
+  const STG_NAMES = { intro: 'המשימה', video: 'תדריך', up: 'טיסה', tower: 'המדריך' };
+  const stagesOf = (n) => n.t !== 'skill' ? ['intro'] : ['intro'].concat(vidOf(n.k) ? ['video'] : []).concat(['up', 'tower']);
+  const afterIntro = (n) => { if (n.t !== 'skill') return 'intro'; const st = n.state, v = vidOf(n.k); if (st === 'wait' || st === 'done') return 'tower'; if (st === 'lock') return 'intro'; return v && !watched(n.k) && !ui(n.id).skipVideo && st !== 'fix' ? 'video' : 'up'; };
+  let storyT = null;
+  const storyGo = (n, stg) => { ui(n.id).stg = stg; paint(n); if (stg === 'video') setTimeout(() => storyPlay(n), 650); };
+  const storyStart = (n) => {
+    clearTimeout(storyT); if (!n) return;
+    if ($('#introOk') && $('#sheet').classList.contains('on')) { storyT = setTimeout(() => storyStart(n), 700); return; }
+    if (curPlayer) curPlayer.finish(false);
+    ui(n.id).shown = '';
+    storyGo(n, 'intro');
+    const to = afterIntro(n);
+    if (to !== 'intro') storyT = setTimeout(() => { if (lastArrived === n.id && ui(n.id).stg === 'intro') storyGo(n, to); }, 3800);
+  };
+  const storyPlay = (n) => {
+    if (lastArrived !== n.id || ui(n.id).stg !== 'video') return;
+    const sl = $('#deck').querySelector(`[data-n="${n.id}"]`), media = sl && sl.querySelector('.st-media'); if (!media) return;
+    playDemo(vidOf(n.k), n.name, media, !watched(n.k), (ended) => {
+      if (ended === 'broken') ui(n.id).skipVideo = true; else if (ended) videoDone(n.k, media);
+      if (ended && lastArrived === n.id) setTimeout(() => storyGo(n, 'up'), 500);
+    });
+    // it plays by itself: muted if the browser will not start it with sound (the player's own controls can unmute)
+    setTimeout(() => { const v = document.querySelector('.vplayer.inl video'); if (v) { const go = v.play(); if (go && go.catch) go.catch(() => { v.muted = true; v.play().catch(() => {}); }); } }, 80);
+  };
+  const storyHtml = (n, w, k, nSkills) => {
+    const stages = stagesOf(n), cur = stages.indexOf(ui(n.id).stg) !== -1 ? ui(n.id).stg : 'intro', tabs = n.t === 'skill' ? showTabs(n) : [];
+    const tab = (key) => tabs.find(t => t.key === key), st = showState(n);
+    const head = `<div class="st-top"><span>${esc(w.name)} · ${esc(worldTag(w))}</span>${n.t === 'skill' ? `<b dir="ltr">${k} / ${nSkills}</b>` : ''}</div>`;
+    let body = '';
+    if (cur === 'intro') {
+      const auto = afterIntro(n) !== 'intro';
+      body = `<div class="st-lens">${heroOf(n)}</div>${head}<h2>${esc(n.name)}${titleStars(n)}</h2>${st ? `<p class="sh-state s-${n.state}">${esc(st)}</p>` : ''}
+        ${n.t === 'skill' ? `${n.k.desc ? `<p class="st-task">${esc(n.k.desc)}</p>` : ''}${n.state === 'lock' ? `<p class="sh-msg">התרגיל עוד נעול. הוא נפתח כשמסיימים את התרגילים ב${esc(prevLevelName(n.k.level))}.</p>` : ''}` : slideBody(n)}
+        ${auto ? `<div class="st-timer" aria-hidden="true"><i></i></div><p class="st-next">בעוד רגע: ${esc(STG_NAMES[afterIntro(n)] === 'תדריך' ? 'סרטון ההדגמה' : STG_NAMES[afterIntro(n)] === 'טיסה' ? 'העלאת הטיסה' : 'המדריך')}</p>` : ''}`;
+    } else if (cur === 'video') {
+      const how = [n.k.pass, n.k.map ? 'מפה: ' + n.k.map : '', n.k.caption].filter(Boolean);
+      body = `${head}<h2>תדריך: ${esc(n.name)}</h2><div class="st-media" aria-label="סרטון ההדגמה"><span class="st-load"></span></div>
+        <div class="st-how">${n.k.desc ? `<p>${esc(n.k.desc)}</p>` : ''}${how.length ? `<ul>${how.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}</div>`;
+    } else if (cur === 'up') {
+      const t = tab('flight');
+      body = `${head}<h2>${n.state === 'fix' ? 'טיסה חוזרת' : 'עכשיו טסים'}: ${esc(n.name)}</h2><p class="st-task">${t ? t.sub : ''}</p>${t ? t.pane() : ''}`;
+    } else {
+      const t = tab('tower');
+      body = `<div class="st-lens">${heroOf(n)}</div>${head}<h2>${n.state === 'done' ? 'אושר!' : 'המדריך בודק'}${titleStars(n)}</h2>${st ? `<p class="sh-state s-${n.state}">${esc(st)}</p>` : ''}${t ? t.pane() : ''}`;
+    }
+    const dots = stages.length > 1 ? `<ol class="st-dots" aria-label="שלבי התרגיל">${stages.map(x => `<li class="${x === cur ? 'cur' : stages.indexOf(x) < stages.indexOf(cur) || isDone(n) ? 'ok' : ''}"><button type="button" data-stg="${x}" aria-current="${x === cur}">${STG_NAMES[x]}</button></li>`).join('')}</ol>` : '';
+    // the arrival animation plays only when the stage changes, not each time the screen is drawn again
+    const u = ui(n.id), fresh = u.shown !== cur; u.shown = cur;
+    return `${dots}<div class="stcard st-${cur}${fresh ? ' enter' : ''}" data-stage="${cur}">${body}</div>`;
+  };
   // the automatic flow (a theme option): the student moves on without clicking to continue
-  const FLOW = () => (ACTIVE && ACTIVE.flow && ACTIVE.flow.on ? ACTIVE.flow : null);
+  const FLOW = () => (ACTIVE && ACTIVE.flow && ACTIVE.flow.on ? ACTIVE.flow : STORY() ? { on: true, open: true, next: true, close: 3 } : null);
   // a window has come up: open the step that is waiting for the student
   let arriveT = null;
   const arrive = (n) => {
+    if (STORY()) { storyStart(n); return; }
     const F = FLOW(); clearTimeout(arriveT); if (!F || !F.open || !n) return;
     const u = ui(n.id), tabs = n.t === 'skill' ? showTabs(n) : [], cur = tabs.find(t => t.on);
     const focusStep = (key) => setTimeout(() => { const sl = $('#deck').querySelector(`[data-n="${n.id}"]`), b = sl && sl.querySelector(key === 'video' ? '[data-a="play"]' : '[data-a="pick"]'); b && b.focus({ preventScroll: true }); }, 120);
@@ -2824,6 +2946,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       v.innerHTML = all.map((n, i) => {
         const w = worldOf(n), open = w.nodes.some(x => x.state !== 'lock');
         if (n.t === 'skill') k++;
+        if (STORY()) return `<section class="slide sty" data-n="${n.id}" aria-label="${esc(n.name)}"><div class="sbody"><div class="sgrid">${storyHtml(n, w, k, nSkills)}</div></div>${i < all.length - 1 ? nextBtn(all[i + 1], i + 1) : ''}</section>`;
         if (BAR()) return `<section class="slide bb" data-n="${n.id}" aria-label="${esc(n.name)}"><div class="sbody"><div class="sgrid">${barHtml(n, w, k, nSkills)}</div></div>${i < all.length - 1 ? nextBtn(all[i + 1], i + 1) : ''}</section>`;
         if (SHOW()) return `<section class="slide sh" data-n="${n.id}" aria-label="${esc(n.name)}"><div class="sbody"><div class="sgrid">${showHtml(n, w, k, nSkills, i < all.length - 1 ? i + 1 : null)}</div></div>${i < all.length - 1 ? nextBtn(all[i + 1], i + 1) : ''}</section>`;
         return `<section class="slide" data-n="${n.id}" aria-label="${esc(n.name)}"><div class="sbody"><div class="sgrid">
@@ -2877,6 +3000,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const btn = (a) => box.querySelector(`[data-a="${a}"]`);
     if (btn('open')) btn('open').onclick = () => openChest(n);
     if (btn('skip')) btn('skip').onclick = () => { ui(n.id).skipVideo = true; paint(n); const p = (n.t === 'chal' ? sheet : $('#deck')).querySelector(n.t === 'chal' ? '[data-a="pick"]' : `[data-n="${n.id}"] [data-a="pick"]`); p && p.focus(); };
+    box.querySelectorAll('[data-stg]').forEach(b => b.onclick = () => { clearTimeout(storyT); if (curPlayer) curPlayer.finish(false); storyGo(n, b.dataset.stg); });
     box.querySelectorAll('[data-barsw]').forEach(b => b.onclick = () => { setBarMode(barMode() === 'side' ? 'bottom' : 'side'); renderMap(); const again = $('#deck').querySelector(`[data-n="${n.id}"] [data-barsw]`); again && again.focus({ preventScroll: true }); });
     box.querySelectorAll('[data-pop]').forEach(b => b.onclick = () => { const k2 = b.dataset.pop; ui(n.id).pop = k2; paint(n); const sel = k2 ? `.bpop .bpx` : `.bbi[data-pop]`; const again = $('#deck').querySelector(`[data-n="${n.id}"] ${sel}`); again && again.focus({ preventScroll: true }); });
     box.querySelectorAll('[data-run]').forEach(b => b.onclick = () => { const t = box.querySelector(`.sh-pane [data-a="${b.dataset.run}"]`); t && t.click(); });
@@ -2987,7 +3111,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       <div class="vmeta"><b>סרטון הדגמה · ${esc(title)}</b><small>${coins && EARNS() && R().video ? 'המטבעות נאספים כשהסרטון מסתיים' : 'צפו עד הסוף, ואז ממשיכים לטיסה'}</small></div>
       <div class="vprog"><i></i></div>`;
     app.append(pl);
-    const inl = !!(from.classList && from.classList.contains('sh-media'));
+    const inl = !!(from.classList && (from.classList.contains('sh-media') || from.classList.contains('st-media')));
     const big = () => { if (inl) { const r = from.getBoundingClientRect(), a2 = app.getBoundingClientRect(); return { left: r.left - a2.left, top: r.top - a2.top, width: r.width, height: r.height }; } const w = Math.min(ar.width - 24, 900), h = Math.min(w * 9 / 16 + 86, ar.height - 40); return { left: (ar.width - w) / 2, top: Math.max(20, (ar.height - h) / 2), width: w, height: h }; };
     const small = { left: fr.left - ar.left, top: fr.top - ar.top, width: fr.width, height: fr.height };
     const place = (r) => Object.assign(pl.style, { left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px' });
