@@ -2858,7 +2858,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     let body = '';
     if (cur === 'intro') {
       const auto = afterIntro(n) !== 'intro';
-      body = `<div class="st-lens">${heroOf(n)}</div>${head}<h2>${esc(n.name)}${titleStars(n)}</h2>${st ? `<p class="sh-state s-${n.state}">${esc(st)}</p>` : ''}
+      body = `${head}<h2>${esc(n.name)}${titleStars(n)}</h2>${st ? `<p class="sh-state s-${n.state}">${esc(st)}</p>` : ''}
         ${n.t === 'skill' ? `${n.k.desc ? `<p class="st-task">${esc(n.k.desc)}</p>` : ''}${n.state === 'lock' ? `<p class="sh-msg">התרגיל עוד נעול. הוא נפתח כשמסיימים את התרגילים ב${esc(prevLevelName(n.k.level))}.</p>` : ''}` : slideBody(n)}
         ${auto ? `<div class="st-timer" aria-hidden="true"><i></i></div><p class="st-next">בעוד רגע: ${esc(STG_NAMES[afterIntro(n)] === 'תדריך' ? 'סרטון ההדגמה' : STG_NAMES[afterIntro(n)] === 'טיסה' ? 'העלאת הטיסה' : 'המדריך')}</p>` : ''}`;
     } else if (cur === 'video') {
@@ -2870,7 +2870,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       body = `${head}<h2>${n.state === 'fix' ? 'טיסה חוזרת' : 'עכשיו טסים'}: ${esc(n.name)}</h2><p class="st-task">${t ? t.sub : ''}</p>${t ? t.pane() : ''}`;
     } else {
       const t = tab('tower');
-      body = `<div class="st-lens">${heroOf(n)}</div>${head}<h2>${n.state === 'done' ? 'אושר!' : 'המדריך בודק'}${titleStars(n)}</h2>${st ? `<p class="sh-state s-${n.state}">${esc(st)}</p>` : ''}${t ? t.pane() : ''}`;
+      body = `${head}<h2>${n.state === 'done' ? 'אושר!' : 'המדריך בודק'}${titleStars(n)}</h2>${st ? `<p class="sh-state s-${n.state}">${esc(st)}</p>` : ''}${t ? t.pane() : ''}`;
     }
     const dots = stages.length > 1 ? `<ol class="st-dots" aria-label="שלבי התרגיל">${stages.map(x => `<li class="${x === cur ? 'cur' : stages.indexOf(x) < stages.indexOf(cur) || isDone(n) ? 'ok' : ''}"><button type="button" data-stg="${x}" aria-current="${x === cur}">${STG_NAMES[x]}</button></li>`).join('')}</ol>` : '';
     // the arrival animation plays only when the stage changes, not each time the screen is drawn again
