@@ -1862,6 +1862,30 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 @media (min-width: 900px) { #app .slide.bb > .sbody { padding-inline: max(96px, calc((100% - 1180px) / 2)); } }
 .bbi.bb-main.open { background: var(--mint); color: var(--ink, #0B1513); }
 
+/* the mission tile wears a check once the exercise is done */
+.bbi .bb-ck { position: absolute; top: -10px; inset-inline-end: -8px; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--done); color: var(--done-ink, #0B1513); box-shadow: 0 0 0 3px var(--night), 0 4px 10px rgba(0,0,0,.35); z-index: 1; }
+.bbi .bb-ck .ckp { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+#app.day .bbi .bb-ck { box-shadow: 0 0 0 3px #fff, 0 4px 10px rgba(0,0,0,.2); }
+
+/* wide screens: the bar becomes a list under the side menu (below "exit"), as wide as the menu, with its coloured frame;
+   a heading's window opens beside the list */
+@media (min-width: 900px) {
+  #app.bbl > .views { grid-column: 1 / -1; }
+  #app.bbl > .tabs { z-index: 6; }
+  #app.bbl > .views > .view:not(#v-map) { margin-inline-start: 250px; }
+  #app.bbl .rail, #app.bbl .peek { z-index: 7; }
+  #app .slide.bb > .sbody { padding: 0; }
+  #app .slide.bb .sgrid { display: block; height: 100%; margin: 0; }
+  #app .slide.bb .bbwrap { position: absolute; z-index: 8; top: var(--sh-top, 420px); right: 22px; width: 228px; margin: 0; }
+  #app .slide.bb .bbar { flex-direction: column; gap: 8px; padding: 8px; }
+  #app .slide.bb .bbi, #app .slide.bb .bbi.bb-main { flex: none; width: 100%; min-height: 56px; box-sizing: border-box; }
+  #app .slide.bb .bbi .bbc { transform: rotate(90deg); }
+  #app .slide.bb .bbi.open .bbc { transform: rotate(-90deg); }
+  #app .bpop { bottom: auto; top: 0; inset-inline-start: calc(100% + 18px); inset-inline-end: auto; margin: 0; width: min(560px, calc(100vw - 420px)); max-height: calc(100vh - var(--sh-top, 420px) - 40px); transform-origin: 100% 0; }
+  @keyframes bpopIn { from { opacity: 0; transform: translateX(14px) scale(.96); } to { opacity: 1; transform: none; } }
+}
+
 /* ================= the pixel look (theme option look: 'pixel'): an original retro 8-bit arcade =================
    Sky, pixel clouds, stepped hills and a brick floor behind everything; thick outlines and hard shadows on every card,
    tab and button; numbers in a pixel font; little 8-bit sounds for coins and approvals (in game.js). */
@@ -2738,14 +2762,14 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const tabs = n.t === 'skill' ? showTabs(n) : [];
     const st = showState(n), open = ui(n.id).pop || '';
     const fb = n.t === 'skill' ? (() => { const ok = flightsOf(n.k.id).find(f => f.status === 'approved'); return ok && ok.feedback && n.state === 'done' ? `<div class="inote"><b>המדריך כתב</b><span>“${esc(ok.feedback)}”</span></div>` : ''; })() : '';
-    const items = [{ key: 'info', title: n.name, sub: `${esc(w.name)} · ${esc(worldTag(w))}${n.t === 'skill' ? ` · <bdi dir="ltr">${k}/${nSkills}</bdi>` : ''}`, cls: 'bb-main', stars: titleStars(n),
+    const items = [{ key: 'info', ok: isDone(n), title: n.name, sub: `${esc(w.name)} · ${esc(worldTag(w))}${n.t === 'skill' ? ` · <bdi dir="ltr">${k}/${nSkills}</bdi>` : ''}`, cls: 'bb-main', stars: titleStars(n),
       pane: () => `<div class="bb-head"><small>${esc(w.name)} · ${esc(worldTag(w))}</small><h2>${esc(n.name)}${titleStars(n)}</h2>${st ? `<p class="sh-state s-${n.state}">${esc(st)}</p>` : ''}</div>${n.t === 'skill' ? (n.k.desc ? `<p class="desc">${esc(n.k.desc)}</p>` : '') + fb : slideBody(n)}` }]
       .concat(tabs.map((t, i) => ({ key: t.key, title: t.title, sub: t.sub, num: i + 1, ok: t.ok, on: t.on, rw: t.rw, pane: () => `<div class="bb-head"><small>שלב ${i + 1} מתוך ${tabs.length}</small><h2>${esc(t.title)}</h2></div>${t.pane()}` })));
     const cur = items.find(x => x.key === open);
     return `<div class="bbwrap">
         ${cur ? `<div class="bpop" role="dialog" aria-label="${esc(cur.title)}" data-popfor="${cur.key}"><button class="bpx" type="button" data-pop="" aria-label="סגירה">✕</button>${cur.pane()}</div>` : ''}
         <div class="bbar st-${n.t === 'chest' ? (n.state === 'ready' ? 'now' : n.state === 'opened' ? 'done' : 'lock') : n.state}" role="toolbar" aria-label="${esc(n.name)}">${items.map(x => `<button class="bbi ${x.cls || ''}${x.key === open ? ' open' : ''}${x.ok ? ' ok' : ''}${x.on ? ' on' : ''}" type="button" data-pop="${x.key === open ? '' : x.key}" aria-expanded="${x.key === open}">
-          ${x.cls ? '' : `<span class="si">${x.ok ? CKP : x.num}</span>`}<span class="tx"><b>${esc(x.title)}${x.stars || ''}</b><small>${x.sub}</small></span>${x.rw ? `<span class="rw pts">+${x.rw}</span>` : ''}<svg class="bbc" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 15l6-6 6 6"/></svg></button>`).join('')}</div>
+          ${x.cls ? (x.ok ? `<span class="bb-ck" aria-label="הושלם">${CKP}</span>` : '') : `<span class="si">${x.ok ? CKP : x.num}</span>`}<span class="tx"><b>${esc(x.title)}${x.stars || ''}</b><small>${x.sub}</small></span>${x.rw ? `<span class="rw pts">+${x.rw}</span>` : ''}<svg class="bbc" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 15l6-6 6 6"/></svg></button>`).join('')}</div>
       </div>`;
   };
   // re-drawing keeps the field (and the text cursor) the student was in
@@ -2823,8 +2847,8 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   };
   // the showcase sits under the side menu (below "exit") and down to the next-exercise button
   const syncShow = () => {
-    app.classList.toggle('shw', SHOW());
-    if (!SHOW() || innerWidth < 900) { app.style.removeProperty('--sh-top'); return; }
+    app.classList.toggle('shw', SHOW()); app.classList.toggle('bbl', BAR());
+    if (!(SHOW() || BAR()) || innerWidth < 900) { app.style.removeProperty('--sh-top'); return; }
     const tabs = app.querySelector(':scope > .tabs'), vm = $('#v-map'); if (!tabs || !vm) return;
     const top = tabs.getBoundingClientRect().bottom - vm.getBoundingClientRect().top + 14;
     app.style.setProperty('--sh-top', Math.max(20, Math.round(top)) + 'px');
