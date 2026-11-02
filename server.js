@@ -170,11 +170,17 @@ const LEGACY_UI = { race: 't-race', regular: 't-regular', mil: 't-mil' };
 // version of the site still finds it; the server reads both names the same way.
 const STORED_UI = { 't-race': 'race', 't-regular': 'regular', 't-mil': 'mil' };
 const SCENES = ['field', 'city', 'street', 'garage', 'loft', 'forest', 'night'];
-const FONTS = ['Rubik', 'Open Sans', 'Heebo', 'Assistant', 'Varela Round', 'Secular One', 'Suez One', 'Karantina'];
+// the fonts the design page offers (the same lists as the page): Hebrew fonts for titles and text, any for numbers
+const FONTS_HEAD = ['Rubik', 'Heebo', 'Assistant', 'Open Sans', 'Noto Sans Hebrew', 'IBM Plex Sans Hebrew', 'Alef', 'Miriam Libre', 'Varela Round', 'Fredoka', 'Secular One', 'Suez One', 'Karantina', 'Amatic SC', 'Bellefair', 'Frank Ruhl Libre', 'David Libre', 'Noto Serif Hebrew', 'Bona Nova', 'Rubik Dirt', 'Rubik Glitch', 'Rubik Wet Paint', 'Rubik Puddles', 'Rubik Moonrocks', 'Rubik Iso', 'Rubik Microbe', 'Rubik Beastly', 'Rubik Burned', 'Rubik Distressed'];
+const FONTS_BODY = ['Rubik', 'Heebo', 'Assistant', 'Open Sans', 'Noto Sans Hebrew', 'IBM Plex Sans Hebrew', 'Alef', 'Miriam Libre', 'Arimo', 'Varela Round', 'Fredoka', 'Frank Ruhl Libre', 'David Libre', 'Noto Serif Hebrew'];
+const FONTS_NUM = ['Unbounded', 'Russo One', 'Black Ops One', 'Orbitron', 'Audiowide', 'Bungee', 'Press Start 2P', 'Teko', 'Oswald', 'Bebas Neue', 'Chakra Petch', 'Rubik', 'Heebo', 'Open Sans', 'Secular One'];
+// colours: the brand four, the stations' states and a few parts of the screen; per mode: background, cards, text, secondary text
+const COLOR_KEYS = ['accent', 'accent2', 'gold', 'sky', 'done', 'fix', 'lock', 'coin', 'xp', 'menu'];
+const SURF_KEYS = ['bg', 'card', 'text', 'dim'];
 const TERM_KEYS = ['t1', 't2', 't3', 't4', 'world', 'chest', 'boss', 'league', 'mapTitle', 'questsTitle', 'go', 'lit'];
 function themeDefaults(id) {
   const [base, name] = BUILTIN_NAMES[id];
-  return { id, name, base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default' }, icons: BASE_ICONS[base], bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', builtIn: true };
+  return { id, name, base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default', num: 'default' }, icons: BASE_ICONS[base], bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', builtIn: true };
 }
 const hexOk = (v) => /^#[0-9a-f]{6}$/i.test(String(v || ''));
 const imgOk = (v) => /^\/media\/[A-Za-z0-9_-]+\.(jpg|jpeg|png|webp|gif)$/.test(String(v || '')) || /^https:\/\/\S+$/i.test(String(v || ''));
@@ -183,8 +189,9 @@ function cleanTheme(t) {
   const id = /^t-[A-Za-z0-9-]{1,40}$/.test(String(t.id || '')) ? String(t.id) : M.newId('t-');
   const base = BASES.indexOf(t.base) !== -1 ? t.base : 'race';
   const pick = (o, keys) => { const out = {}; keys.forEach((k) => { if (o && hexOk(o[k])) out[k] = String(o[k]).toLowerCase(); }); return out; };
-  const surf = { night: pick(t.surf && t.surf.night, ['bg', 'card', 'text']), day: pick(t.surf && t.surf.day, ['bg', 'card', 'text']) };
-  const font = (v) => (FONTS.indexOf(v) !== -1 ? v : 'default');
+  const surf = { night: pick(t.surf && t.surf.night, SURF_KEYS), day: pick(t.surf && t.surf.day, SURF_KEYS) };
+  const font = (v, list) => (list.indexOf(v) !== -1 ? v : 'default');
+  const tf = t.fonts || {};
   let bg = { kind: 'look' };
   const b = t.bg || {};
   if (b.kind === 'color' && hexOk(b.color)) bg = { kind: 'color', color: String(b.color).toLowerCase() };
@@ -194,7 +201,7 @@ function cleanTheme(t) {
   TERM_KEYS.forEach((k) => { const v = String((t.terms && t.terms[k]) || '').replace(/[<>]/g, '').trim().slice(0, 40); if (v) terms[k] = v; });
   return {
     id, name: String(t.name || '').replace(/[<>]/g, '').trim().slice(0, 40) || 'ערכה ללא שם', base, mode: t.mode === 'day' ? 'day' : 'night', allowToggle: t.allowToggle !== false,
-    colors: pick(t.colors, ['accent', 'accent2', 'gold', 'sky']), surf, fonts: { head: font(t.fonts && t.fonts.head), body: font(t.fonts && t.fonts.body) },
+    colors: pick(t.colors, COLOR_KEYS), surf, fonts: { head: font(tf.head, FONTS_HEAD), body: font(tf.body, FONTS_BODY), num: font(tf.num, FONTS_NUM) },
     icons: t.icons === 'line' || t.icons === 'emoji' ? t.icons : BASE_ICONS[base], bg, stageBg: t.stageBg !== false, terms, motion: t.motion === 'calm' ? 'calm' : 'full', builtIn: !!BUILTIN_NAMES[id]
   };
 }
