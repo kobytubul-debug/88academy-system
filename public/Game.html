@@ -1844,6 +1844,96 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   #app .bbi:not(.bb-main) b { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
   #app .bbi.bb-main { flex: 1.25 1 0; }
 }
+
+/* ================= the pixel look (theme option look: 'pixel'): an original retro 8-bit arcade =================
+   Sky, pixel clouds, stepped hills and a brick floor behind everything; thick outlines and hard shadows on every card,
+   tab and button; numbers in a pixel font; little 8-bit sounds for coins and approvals (in game.js). */
+.pxdeco { display: none; }
+#app.pixel { --px-ink: #1a1020; --px-sky1: #6bb8ff; --px-sky2: #9fd4ff; --px-brick: #c8552a; --px-brick2: #8e3214; --px-mortar: #f2b48a;
+  --n: 'Press Start 2P', 'Rubik', monospace; background: linear-gradient(180deg, var(--px-sky1) 0 55%, var(--px-sky2) 55% 75%, #bfe4ff 75%); color: var(--px-ink); }
+#app.pixel .pxdeco { display: block; position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; image-rendering: pixelated; }
+#app.pixel .themebg, #app.pixel .stagebg { display: none !important; }
+.pxcloud { position: absolute; width: 8px; height: 8px; box-shadow: 40px 0px 0 #ffffff,48px 0px 0 #ffffff,56px 0px 0 #ffffff,64px 0px 0 #ffffff,24px 8px 0 #ffffff,32px 8px 0 #ffffff,40px 8px 0 #ffffff,48px 8px 0 #ffffff,56px 8px 0 #ffffff,64px 8px 0 #ffffff,72px 8px 0 #ffffff,80px 8px 0 #ffffff,96px 8px 0 #ffffff,104px 8px 0 #ffffff,16px 16px 0 #ffffff,24px 16px 0 #ffffff,32px 16px 0 #ffffff,40px 16px 0 #ffffff,48px 16px 0 #ffffff,56px 16px 0 #ffffff,64px 16px 0 #ffffff,72px 16px 0 #ffffff,80px 16px 0 #ffffff,88px 16px 0 #ffffff,96px 16px 0 #ffffff,104px 16px 0 #ffffff,112px 16px 0 #ffffff,8px 24px 0 #ffffff,16px 24px 0 #ffffff,24px 24px 0 #ffffff,32px 24px 0 #ffffff,40px 24px 0 #ffffff,48px 24px 0 #ffffff,56px 24px 0 #ffffff,64px 24px 0 #ffffff,72px 24px 0 #ffffff,80px 24px 0 #ffffff,88px 24px 0 #ffffff,96px 24px 0 #ffffff,104px 24px 0 #ffffff,112px 24px 0 #ffffff,8px 32px 0 #ffffff,16px 32px 0 #ffffff,24px 32px 0 #ffffff,32px 32px 0 #ffffff,40px 32px 0 #ffffff,48px 32px 0 #ffffff,56px 32px 0 #ffffff,64px 32px 0 #ffffff,72px 32px 0 #ffffff,80px 32px 0 #ffffff,88px 32px 0 #ffffff,96px 32px 0 #ffffff,104px 32px 0 #ffffff,112px 32px 0 #ffffff,16px 40px 0 #d6ecff,24px 40px 0 #d6ecff,32px 40px 0 #d6ecff,40px 40px 0 #d6ecff,48px 40px 0 #d6ecff,56px 40px 0 #d6ecff,64px 40px 0 #d6ecff,72px 40px 0 #d6ecff,80px 40px 0 #d6ecff,88px 40px 0 #d6ecff,96px 40px 0 #d6ecff,104px 40px 0 #d6ecff; animation: pxdrift 60s linear infinite; }
+.pxcloud.c1 { top: 14%; left: 8%; } .pxcloud.c2 { top: 26%; left: 46%; transform: scale(.7); animation-duration: 85s; } .pxcloud.c3 { top: 10%; left: 72%; animation-duration: 70s; }
+@keyframes pxdrift { from { translate: 0 0; } to { translate: -160px 0; } }
+.pxsun { position: absolute; top: 9%; left: 22%; width: 10px; height: 10px; box-shadow: 30px 0px 0 #ffd23f,40px 0px 0 #ffd23f,50px 0px 0 #ffd23f,60px 0px 0 #ffd23f,20px 10px 0 #ffd23f,30px 10px 0 #ffd23f,40px 10px 0 #ffd23f,50px 10px 0 #ffd23f,60px 10px 0 #ffd23f,70px 10px 0 #ffd23f,10px 20px 0 #ffd23f,20px 20px 0 #ffd23f,30px 20px 0 #ffd23f,40px 20px 0 #ffd23f,50px 20px 0 #ffd23f,60px 20px 0 #ffd23f,70px 20px 0 #ffd23f,80px 20px 0 #ffd23f,10px 30px 0 #ffd23f,20px 30px 0 #ffd23f,30px 30px 0 #ffd23f,40px 30px 0 #ffd23f,50px 30px 0 #ffd23f,60px 30px 0 #ffd23f,70px 30px 0 #ffd23f,80px 30px 0 #ffd23f,10px 40px 0 #ffd23f,20px 40px 0 #ffd23f,30px 40px 0 #ffd23f,40px 40px 0 #ffd23f,50px 40px 0 #ffd23f,60px 40px 0 #ffd23f,70px 40px 0 #ffd23f,80px 40px 0 #ffd23f,10px 50px 0 #ffd23f,20px 50px 0 #ffd23f,30px 50px 0 #ffd23f,40px 50px 0 #ffd23f,50px 50px 0 #ffd23f,60px 50px 0 #ffd23f,70px 50px 0 #ffd23f,80px 50px 0 #ffd23f,20px 60px 0 #ffd23f,30px 60px 0 #ffd23f,40px 60px 0 #ffd23f,50px 60px 0 #ffd23f,60px 60px 0 #ffd23f,70px 60px 0 #ffd23f,30px 70px 0 #ffd23f,40px 70px 0 #ffd23f,50px 70px 0 #ffd23f,60px 70px 0 #ffd23f; }
+.pxhill { position: absolute; bottom: 48px; background: #43b047; box-shadow: inset 0 -8px 0 #2e8a32;
+  clip-path: polygon(0 100%, 0 80%, 10% 80%, 10% 60%, 20% 60%, 20% 40%, 30% 40%, 30% 20%, 40% 20%, 40% 0, 60% 0, 60% 20%, 70% 20%, 70% 40%, 80% 40%, 80% 60%, 90% 60%, 90% 80%, 100% 80%, 100% 100%); }
+.pxhill.h1 { left: 4%; width: 320px; height: 160px; } .pxhill.h2 { left: 58%; width: 220px; height: 110px; background: #5fc45f; }
+.pxbush { position: absolute; bottom: 48px; width: 8px; height: 8px; }
+.pxbush.b1 { left: 36%; box-shadow: 32px 0px 0 #43b047,40px 0px 0 #43b047,64px 0px 0 #43b047,72px 0px 0 #43b047,16px 8px 0 #43b047,24px 8px 0 #43b047,32px 8px 0 #43b047,40px 8px 0 #43b047,48px 8px 0 #43b047,56px 8px 0 #43b047,64px 8px 0 #43b047,72px 8px 0 #43b047,80px 8px 0 #43b047,88px 8px 0 #43b047,8px 16px 0 #43b047,16px 16px 0 #43b047,24px 16px 0 #43b047,32px 16px 0 #43b047,40px 16px 0 #43b047,48px 16px 0 #43b047,56px 16px 0 #43b047,64px 16px 0 #43b047,72px 16px 0 #43b047,80px 16px 0 #43b047,88px 16px 0 #43b047,96px 16px 0 #43b047,8px 24px 0 #43b047,16px 24px 0 #43b047,24px 24px 0 #2e8a32,32px 24px 0 #43b047,40px 24px 0 #43b047,48px 24px 0 #43b047,56px 24px 0 #43b047,64px 24px 0 #43b047,72px 24px 0 #2e8a32,80px 24px 0 #43b047,88px 24px 0 #43b047,96px 24px 0 #43b047; transform: translateY(-24px); } .pxbush.b2 { left: 82%; box-shadow: 32px 0px 0 #43b047,40px 0px 0 #43b047,64px 0px 0 #43b047,72px 0px 0 #43b047,16px 8px 0 #43b047,24px 8px 0 #43b047,32px 8px 0 #43b047,40px 8px 0 #43b047,48px 8px 0 #43b047,56px 8px 0 #43b047,64px 8px 0 #43b047,72px 8px 0 #43b047,80px 8px 0 #43b047,88px 8px 0 #43b047,8px 16px 0 #43b047,16px 16px 0 #43b047,24px 16px 0 #43b047,32px 16px 0 #43b047,40px 16px 0 #43b047,48px 16px 0 #43b047,56px 16px 0 #43b047,64px 16px 0 #43b047,72px 16px 0 #43b047,80px 16px 0 #43b047,88px 16px 0 #43b047,96px 16px 0 #43b047,8px 24px 0 #43b047,16px 24px 0 #43b047,24px 24px 0 #2e8a32,32px 24px 0 #43b047,40px 24px 0 #43b047,48px 24px 0 #43b047,56px 24px 0 #43b047,64px 24px 0 #43b047,72px 24px 0 #2e8a32,80px 24px 0 #43b047,88px 24px 0 #43b047,96px 24px 0 #43b047; transform: translateY(-24px); }
+.pxground { position: absolute; left: 0; right: 0; bottom: 0; height: 48px; border-top: 4px solid var(--px-ink);
+  background-color: var(--px-brick);
+  background-image: linear-gradient(var(--px-mortar) 2px, transparent 2px), linear-gradient(90deg, var(--px-mortar) 2px, transparent 2px), linear-gradient(90deg, transparent 22px, var(--px-mortar) 22px 24px, transparent 24px);
+  background-size: 48px 24px, 48px 48px, 48px 48px; background-position: 0 0, 0 0, 0 24px; box-shadow: inset 0 -6px 0 var(--px-brick2); }
+@media (prefers-reduced-motion: reduce) { .pxcloud { animation: none; } }
+#app.pixel.calm .pxcloud { animation: none; }
+
+/* every block: square corners, a thick outline, a hard shadow */
+#app.pixel *:not(.node):not(.node *):not(.dr):not(.dr *):not(.scn):not(.scn *):not(.coinic):not(.rail .me):not(.rail .me *):not(svg):not(svg *) { border-radius: 0 !important; }
+#app.pixel .tab, #app.pixel .res, #app.pixel .btn3, #app.pixel .step, #app.pixel .world, #app.pixel .inote, #app.pixel .quest, #app.pixel .lrow, #app.pixel .prz, #app.pixel .badge,
+#app.pixel .upl, #app.pixel .upl-ready, #app.pixel .upl-done, #app.pixel .nextbtn, #app.pixel .peek, #app.pixel .avatar, #app.pixel .streak, #app.pixel .weekchest, #app.pixel .skin, #app.pixel .pilotcard,
+#app.pixel .mpanel, #app.pixel .bbar, #app.pixel .bbi, #app.pixel .bpop, #app.pixel .sh-info, #app.pixel .sh-media, #app.pixel .sh-tab, #app.pixel .rail .wl, #app.pixel .sheet, #app.pixel .rbox .btn3 {
+  border: 3px solid var(--px-ink) !important; box-shadow: 4px 4px 0 var(--px-ink) !important; clip-path: none !important; }
+#app.pixel .btn3:active, #app.pixel .tab:active, #app.pixel .nextbtn:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--px-ink) !important; }
+/* the side menu and top pills: bright blocks */
+#app.pixel .tab { background: #fff6e0 !important; color: var(--px-ink) !important; font-weight: 900; }
+#app.pixel .tab.on, #app.pixel .tab[aria-selected="true"], #app.pixel .tab.active { background: #e83b2e !important; color: #fff !important; }
+#app.pixel .tab-out { background: transparent !important; border: 0 !important; box-shadow: none !important; color: var(--px-ink) !important; }
+#app.pixel .res { background: #fff6e0 !important; color: var(--px-ink) !important; font-family: var(--n); font-size: 11px; }
+#app.pixel .avatar { background: #e83b2e !important; }
+#app.pixel .avatar .lv { border: 2px solid var(--px-ink); font-size: 9px; }
+#app.pixel .topbar .who, #app.pixel .topbar .who b { color: var(--px-ink); text-shadow: none; }
+#app.pixel .xpbar, #app.pixel .bar { border: 2px solid var(--px-ink); background: #fff6e0; }
+/* titles: chunky with a hard drop */
+#app.pixel h1, #app.pixel h2, #app.pixel .h1, #app.pixel .world h3, #app.pixel .rt { color: #fff !important; text-shadow: 3px 3px 0 var(--px-ink), -1px -1px 0 var(--px-ink), 1px -1px 0 var(--px-ink), -1px 1px 0 var(--px-ink) !important; font-style: normal !important; letter-spacing: .01em; }
+#app.pixel .slide .desc, #app.pixel .slide .count, #app.pixel .sub, #app.pixel .slide .state { color: var(--px-ink) !important; text-shadow: 0 0 0 transparent, 1px 1px 0 rgba(255,255,255,.7) !important; font-weight: 700; }
+#app.pixel .slide .count b, #app.pixel .tstars { font-family: var(--n); font-size: 12px; color: var(--px-ink) !important; text-shadow: none !important; }
+/* cards in the window: cream blocks with ink text */
+#app.pixel .step, #app.pixel .inote, #app.pixel .quest, #app.pixel .lrow, #app.pixel .upl, #app.pixel .upl-ready, #app.pixel .upl-done, #app.pixel .prz { background: #fff6e0 !important; color: var(--px-ink) !important; }
+#app.pixel .step small, #app.pixel .inote span, #app.pixel .upl-meta, #app.pixel .upl-hint, #app.pixel .upl-or { color: #5a4a60 !important; }
+#app.pixel .step.on { background: #ffe9a8 !important; }
+#app.pixel .step.ok .si, #app.pixel .step .si { border: 2px solid var(--px-ink); font-family: var(--n); font-size: 14px; }
+#app.pixel .step.ok .si { background: #3cb043 !important; color: #fff; }
+#app.pixel .step .rw { font-family: var(--n); font-size: 10px; color: #c27a00 !important; }
+#app.pixel .world { background: #2e5ce8 !important; color: #fff !important; }
+#app.pixel .world .tagw { font-family: var(--n); font-size: 9px; background: #ffc61a; color: var(--px-ink); }
+/* buttons: red, gold, blue blocks */
+#app.pixel .btn3 { background: #ffc61a !important; color: var(--px-ink) !important; font-weight: 900; }
+#app.pixel .btn3.pink { background: #e83b2e !important; color: #fff !important; }
+#app.pixel .btn3.ghost { background: #fff6e0 !important; color: var(--px-ink) !important; }
+#app.pixel .btn3:disabled { background: #b8a898 !important; color: #5a4a60 !important; }
+#app.pixel input, #app.pixel textarea { border: 3px solid var(--px-ink) !important; background: #fff !important; color: var(--px-ink) !important; }
+#app.pixel .nextbtn { background: #fff6e0 !important; color: var(--px-ink) !important; }
+#app.pixel .nextbtn .nb-down { background: #e83b2e; color: #fff; }
+#app.pixel .peek { background: #fff6e0 !important; color: var(--px-ink) !important; }
+/* the path rail: blocks for stations */
+#app.pixel .rail .line { background: var(--px-ink); width: 4px; }
+#app.pixel .rail .fill { background: #ffc61a; width: 4px; }
+#app.pixel .rail .dot { border-radius: 0 !important; border: 3px solid var(--px-ink) !important; }
+#app.pixel .rail .dot.done { background: #ffc61a; } #app.pixel .rail .dot.now { background: #e83b2e; }
+#app.pixel .rail .wl { background: #fff6e0 !important; color: var(--px-ink) !important; font-family: 'Rubik', sans-serif; font-weight: 900; font-size: 12px !important; }
+/* the lens on the stage: a block frame */
+#app.pixel .node.big .face { filter: drop-shadow(6px 6px 0 var(--px-ink)); }
+/* sheets and the reward overlay */
+#app.pixel .sheet { background: #fff6e0 !important; color: var(--px-ink) !important; }
+#app.pixel .sheet .desc, #app.pixel .sheet .kick { color: #5a4a60 !important; }
+#app.pixel .reward { background: repeating-linear-gradient(0deg, rgba(26,16,32,.82) 0 4px, rgba(26,16,32,.74) 4px 8px) !important; }
+#app.pixel .rays { display: none; }
+#app.pixel .rt { font-family: var(--n) !important; font-size: 30px !important; color: #ffc61a !important; animation: pxup .6s steps(4) both; }
+@keyframes pxup { from { transform: translateY(20px); opacity: 0; } to { transform: none; opacity: 1; } }
+#app.pixel .rs { color: #fff !important; }
+#app.pixel .float { font-family: var(--n); font-size: 14px; color: #ffc61a; text-shadow: 2px 2px 0 var(--px-ink); }
+#app.pixel .conf { width: 10px; height: 10px; }
+/* the special windows keep the same blocks */
+#app.pixel .sh-info { background: #ffc61a !important; }
+#app.pixel .bbi.bb-main { background: #ffc61a !important; color: var(--px-ink) !important; }
+#app.pixel .mpanel, #app.pixel .bbar, #app.pixel .bpop { background: rgba(255,246,224,.96) !important; color: var(--px-ink) !important; backdrop-filter: none !important; }
+#app.pixel .mpanel .desc, #app.pixel .bpop .desc { color: var(--px-ink) !important; }
+/* phones: the bottom tab bar as a row of blocks over the brick floor */
+@media (max-width: 899px) { #app.pixel .tabs { background: transparent; } .pxhill.h1 { width: 200px; height: 100px; } .pxhill.h2 { display: none; } }
+@media (max-width: 899px) { .pxsun { display: none; } }
+#app.pixel .rt { unicode-bidi: plaintext; }
 </style>
 </head>
 <body>
@@ -1851,6 +1941,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 <div class="app" id="app" dir="rtl" lang="he">
   <div class="racefx" aria-hidden="true"><div class="street"></div><div class="shade"></div><span class="sp1"></span><span class="sp2"></span><span class="sp3"></span><svg><filter id="grit"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2"/></filter><rect width="100%" height="100%" filter="url(#grit)"/></svg></div>
   <div class="themebg" id="themebg" aria-hidden="true" hidden></div>
+  <div class="pxdeco" id="pxdeco" aria-hidden="true"><i class="pxsun"></i><i class="pxcloud c1"></i><i class="pxcloud c2"></i><i class="pxcloud c3"></i><i class="pxhill h1"></i><i class="pxhill h2"></i><i class="pxbush b1"></i><i class="pxbush b2"></i><i class="pxground"></i></div>
   <div class="stagebg" id="stagebg" aria-hidden="true"><div id="sbgA"></div><div id="sbgB"></div><div id="sbgC"></div></div>
 
   <header class="topbar">
@@ -2278,7 +2369,19 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   };
   // Coins earned burst out of where they were earned and fly into the wallet, which counts up as they land.
   // Calm mode and reduced motion show just the amount.
+  // the pixel look's little 8-bit sounds (only after the student has clicked something, as browsers require)
+  let AC = null;
+  const blip = (notes) => {
+    if (!PIXEL() || app.classList.contains('calm')) return;
+    try {
+      AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+      let t = AC.currentTime;
+      notes.forEach(([f, d]) => { const o = AC.createOscillator(), g = AC.createGain(); o.type = 'square'; o.frequency.value = f; g.gain.setValueAtTime(.06, t); g.gain.exponentialRampToValueAtTime(.0001, t + d); o.connect(g).connect(AC.destination); o.start(t); o.stop(t + d); t += d * .85; });
+    } catch (e) {}
+  };
+  const PIXEL = () => !!(ACTIVE && ACTIVE.look === 'pixel');
   const coinBurst = (from, got, countFrom) => {
+    if (got > 0) blip([[988, .08], [1319, .22]]);
     const wallet = $('#coinN'), pill = wallet && wallet.closest('.res'), target = pill && pill.querySelector('.coinic');
     if (!EARNS() || !(got > 0) || !wallet) return;
     const src = from && from.isConnected && from.getClientRects().length ? from : wallet;
@@ -2400,6 +2503,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const fb = String(n.text || '').match(/^(.*?)\s*(מדריך|משוב הבדיקה האוטומטית): ״([\s\S]*)״\s*$/);
     const text = fb ? `${esc(fb[1])}<span class="rnote"><b>${fb[2] === 'מדריך' ? 'המדריך כתב' : 'משוב הבדיקה האוטומטית'}</b><span class="rq">“${esc(fb[3])}”</span></span>` : esc(n.text), pic = n.skill ? lensArt('s' + n.skill, n.kind !== 'approved' && n.kind !== 'marked') : '';
     const coins = (() => { const m = String(n.text || '').match(/\+\s*(\d+)/); return m ? Number(m[1]) : 0; })();
+    if (n.kind === 'approved' || n.kind === 'marked') blip([[659, .1], [784, .1], [1319, .1], [1047, .1], [1175, .1], [1568, .3]]);
     if (n.kind === 'approved' || n.kind === 'marked') return toastOverlay(pic, T('lit'), text, 'יש!', toSkill, true, coins);
     if (n.kind === 'rejected') return toastOverlay(pic, T('back'), text, n.skill ? 'לתרגיל' : 'הבנתי', toSkill);
     if (n.kind === 'required') return toastOverlay(pic, 'ביצוע חוזר', text, 'לתרגיל', toSkill);
@@ -3324,6 +3428,8 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     set('--sh-dim', String(Math.max(0, Math.min(80, Number(so2.dim == null ? 35 : so2.dim))) / 100));
     app.classList.toggle('shsoft', so2.corners === 'soft');
     app.classList.toggle('lpanel', t.layout === 'panel');
+    app.classList.toggle('pixel', t.look === 'pixel');
+    if (t.look === 'pixel') loadFont('Press Start 2P', PAGE_FONTS);
     // the theme's own background, behind every screen (a stage with a background of its own shows that one on top)
     const tb = $('#themebg'), bg = t.bg || { kind: 'look' }, key = JSON.stringify(bg);
     const has = (bg.kind === 'color' && isHex(bg.color || '')) || (bg.kind === 'scene' && !!SCN[bg.id]) || (bg.kind === 'img' && !!bg.url);
