@@ -1507,6 +1507,18 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 }
 .rail .wl.up { transform: translateY(calc(-100% - 4px)); }
 .upl .upl-note1 { flex: none; width: 100%; box-sizing: border-box; }
+
+/* ================= the reward overlay: a box of its own width, the instructor's note framed and centred ================= */
+.reward .rbox { width: min(560px, 100%); max-height: 100%; display: flex; flex-direction: column; align-items: center; }
+.reward .rs { max-width: 100%; text-wrap: balance; line-height: 1.45; }
+.rs .rnote { display: flex; flex-direction: column; align-items: center; gap: 6px; width: min(480px, 100%); margin: 14px auto 0; padding: 14px 18px; box-sizing: border-box;
+  border-radius: 16px; background: rgba(0,0,0,.42); box-shadow: inset 0 0 0 1px rgba(255,255,255,.16); text-align: center; color: #fff; }
+.rs .rnote b { font-size: 12px; letter-spacing: .06em; color: var(--gold); }
+.rs .rnote .rq { display: block; max-height: min(34vh, 260px); overflow-y: auto; font-size: 16px; font-weight: 500; line-height: 1.6; white-space: pre-line; overflow-wrap: anywhere; text-wrap: pretty; scrollbar-width: thin; }
+.app.race .rs .rnote { border-radius: 0; background: rgba(10,11,12,.72); }
+.app.race .rs .rnote b { color: #fff; opacity: .8; }
+.app.mil .rs .rnote { border-radius: 6px; }
+@media (max-width: 519px) { .rs .rnote { padding: 12px 14px; } .rs .rnote .rq { font-size: 15px; max-height: 30vh; } .rt { font-size: 32px; } }
 </style>
 </head>
 <body>
@@ -2059,7 +2071,9 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     showing = true; markRead([n.id]);
     const done = () => { showing = false; setTimeout(pumpNotes, 250); };
     const toSkill = () => { done(); if (n.skill) { switchTab('map'); showPane('deck'); setTimeout(() => goNode('s' + n.skill, true), 300); } };
-    const text = esc(n.text), pic = n.skill ? lensArt('s' + n.skill, n.kind !== 'approved' && n.kind !== 'marked') : '';
+    // the instructor's (or the AI check's) words get their own framed box, so a long note stays readable and centred
+    const fb = String(n.text || '').match(/^(.*?)\s*(מדריך|משוב הבדיקה האוטומטית): ״([\s\S]*)״\s*$/);
+    const text = fb ? `${esc(fb[1])}<span class="rnote"><b>${fb[2] === 'מדריך' ? 'המדריך כתב' : 'משוב הבדיקה האוטומטית'}</b><span class="rq">“${esc(fb[3])}”</span></span>` : esc(n.text), pic = n.skill ? lensArt('s' + n.skill, n.kind !== 'approved' && n.kind !== 'marked') : '';
     const coins = (() => { const m = String(n.text || '').match(/\+\s*(\d+)/); return m ? Number(m[1]) : 0; })();
     if (n.kind === 'approved' || n.kind === 'marked') return toastOverlay(pic, T('lit'), text, 'יש!', toSkill, true, coins);
     if (n.kind === 'rejected') return toastOverlay(pic, T('back'), text, n.skill ? 'לתרגיל' : 'הבנתי', toSkill);
