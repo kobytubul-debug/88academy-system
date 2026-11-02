@@ -1848,14 +1848,19 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   #app .bbi:not(.bb-main) b { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
   #app .bbi.bb-main { flex: 1.25 1 0; }
 }
-/* wide screens: the stage's lens sits beside the bar, on its right */
-@media (min-width: 900px) {
-  #app .slide.bb .sgrid { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: end; column-gap: 18px; }
-  #app .slide.bb .sgrid > .hero { grid-column: 1; width: 150px; height: 150px; min-height: 0; flex: none; align-self: end; display: grid; place-items: center; }
-  #app .slide.bb .sgrid > .hero .node.big { transform: scale(1.3); }
-  #app .slide.bb > .sbody { padding-inline: max(96px, calc((100% - 1240px) / 2)) max(24px, calc((100% - 1240px) / 2)); }
-  #app .slide.bb .sgrid > .bbwrap { grid-column: 2; }
-}
+/* the bar is centred; instead of the lens, the bar's own frame wears the lens's ring colour for the window's state */
+.slide.bb .sgrid { justify-content: flex-end; }
+.bbwrap { width: min(1120px, 100%); margin-inline: auto; }
+.bbar { --ring: var(--lock); box-shadow: 0 16px 44px rgba(0,0,0,.4), 0 0 0 4px var(--ring), 0 0 26px color-mix(in srgb, var(--ring) 45%, transparent); }
+.bbar.st-now { --ring: var(--pink); } .bbar.st-fix { --ring: var(--fixc); } .bbar.st-wait { --ring: var(--sky); } .bbar.st-done { --ring: var(--done); } .bbar.st-lock { --ring: rgba(255,255,255,.35); }
+.bbar.st-now { animation: bbring 2.4s ease-in-out infinite; }
+@keyframes bbring { 50% { box-shadow: 0 16px 44px rgba(0,0,0,.4), 0 0 0 4px var(--ring), 0 0 40px color-mix(in srgb, var(--ring) 70%, transparent); } }
+@media (prefers-reduced-motion: reduce) { .bbar.st-now { animation: none; } }
+.app.calm .bbar.st-now { animation: none; }
+#app.day .bbar { box-shadow: 0 16px 44px rgba(0,0,0,.18), 0 0 0 4px var(--ring), 0 0 22px color-mix(in srgb, var(--ring) 40%, transparent); }
+#app.pixel .bbar { box-shadow: 4px 4px 0 var(--px-ink), 0 0 0 4px var(--ring) !important; }
+@media (min-width: 900px) { #app .slide.bb > .sbody { padding-inline: max(96px, calc((100% - 1180px) / 2)); } }
+.bbi.bb-main.open { background: var(--mint); color: var(--ink, #0B1513); }
 
 /* ================= the pixel look (theme option look: 'pixel'): an original retro 8-bit arcade =================
    Sky, pixel clouds, stepped hills and a brick floor behind everything; thick outlines and hard shadows on every card,
@@ -2714,13 +2719,20 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   // the automatic flow (a theme option): the student moves on without clicking to continue
   const FLOW = () => (ACTIVE && ACTIVE.flow && ACTIVE.flow.on ? ACTIVE.flow : null);
   // a window has come up: open the step that is waiting for the student
+  let arriveT = null;
   const arrive = (n) => {
-    const F = FLOW(); if (!F || !F.open || !n || n.t !== 'skill' || !(n.state === 'now' || n.state === 'fix')) return;
-    const u = ui(n.id); if (u.arrived) return; u.arrived = true;
-    const tabs = showTabs(n), cur = tabs.find(t => t.on); if (!cur) return;
-    if (BAR()) { if (!u.pop) { u.pop = cur.key; paint(n); } }
-    else if (SHOW()) { if (!u.tab) { u.tab = cur.key; paint(n); } }
-    setTimeout(() => { const sl = $('#deck').querySelector(`[data-n="${n.id}"]`), b = sl && sl.querySelector(cur.key === 'video' ? '[data-a="play"]' : '[data-a="pick"]'); b && b.focus({ preventScroll: true }); }, 120);
+    const F = FLOW(); clearTimeout(arriveT); if (!F || !F.open || !n) return;
+    const u = ui(n.id), tabs = n.t === 'skill' ? showTabs(n) : [], cur = tabs.find(t => t.on);
+    const focusStep = (key) => setTimeout(() => { const sl = $('#deck').querySelector(`[data-n="${n.id}"]`), b = sl && sl.querySelector(key === 'video' ? '[data-a="play"]' : '[data-a="pick"]'); b && b.focus({ preventScroll: true }); }, 120);
+    if (BAR()) {
+      // every time a window comes up: first its mission window, then (if a step is waiting) that step's window
+      u.pop = 'info'; paint(n);
+      if (cur) arriveT = setTimeout(() => { if (lastArrived === n.id && ui(n.id).pop === 'info') { ui(n.id).pop = cur.key; paint(n); focusStep(cur.key); } }, 2600);
+      return;
+    }
+    if (!cur || u.arrived) return; u.arrived = true;
+    if (SHOW()) { if (!u.tab) { u.tab = cur.key; paint(n); } }
+    focusStep(cur.key);
   };
   const barHtml = (n, w, k, nSkills) => {
     const tabs = n.t === 'skill' ? showTabs(n) : [];
@@ -2730,10 +2742,9 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       pane: () => `<div class="bb-head"><small>${esc(w.name)} · ${esc(worldTag(w))}</small><h2>${esc(n.name)}${titleStars(n)}</h2>${st ? `<p class="sh-state s-${n.state}">${esc(st)}</p>` : ''}</div>${n.t === 'skill' ? (n.k.desc ? `<p class="desc">${esc(n.k.desc)}</p>` : '') + fb : slideBody(n)}` }]
       .concat(tabs.map((t, i) => ({ key: t.key, title: t.title, sub: t.sub, num: i + 1, ok: t.ok, on: t.on, rw: t.rw, pane: () => `<div class="bb-head"><small>שלב ${i + 1} מתוך ${tabs.length}</small><h2>${esc(t.title)}</h2></div>${t.pane()}` })));
     const cur = items.find(x => x.key === open);
-    return `<div class="hero">${heroOf(n)}</div>
-      <div class="bbwrap">
+    return `<div class="bbwrap">
         ${cur ? `<div class="bpop" role="dialog" aria-label="${esc(cur.title)}" data-popfor="${cur.key}"><button class="bpx" type="button" data-pop="" aria-label="סגירה">✕</button>${cur.pane()}</div>` : ''}
-        <div class="bbar" role="toolbar" aria-label="${esc(n.name)}">${items.map(x => `<button class="bbi ${x.cls || ''}${x.key === open ? ' open' : ''}${x.ok ? ' ok' : ''}${x.on ? ' on' : ''}" type="button" data-pop="${x.key === open ? '' : x.key}" aria-expanded="${x.key === open}">
+        <div class="bbar st-${n.t === 'chest' ? (n.state === 'ready' ? 'now' : n.state === 'opened' ? 'done' : 'lock') : n.state}" role="toolbar" aria-label="${esc(n.name)}">${items.map(x => `<button class="bbi ${x.cls || ''}${x.key === open ? ' open' : ''}${x.ok ? ' ok' : ''}${x.on ? ' on' : ''}" type="button" data-pop="${x.key === open ? '' : x.key}" aria-expanded="${x.key === open}">
           ${x.cls ? '' : `<span class="si">${x.ok ? CKP : x.num}</span>`}<span class="tx"><b>${esc(x.title)}${x.stars || ''}</b><small>${x.sub}</small></span>${x.rw ? `<span class="rw pts">+${x.rw}</span>` : ''}<svg class="bbc" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 15l6-6 6 6"/></svg></button>`).join('')}</div>
       </div>`;
   };
