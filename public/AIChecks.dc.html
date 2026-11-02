@@ -106,12 +106,24 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 </section>
 
 <h2 style="margin: 36px 0 12px; font-size: 22px; font-weight: 600; color: #121413;">בדיקות אחרונות</h2>
+<sc-if value="{{hasChecks}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin: 0 0 12px;">
+<label style="display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: #3D4541; cursor: pointer;"><input type="checkbox" checked="{{allSel}}" onChange="{{toggleAll}}" style="width: 18px; height: 18px; accent-color: #C7436A; margin: 0;">בחירת הכל</label>
+<button type="button" onClick="{{delSelected}}" disabled="{{noSel}}" style="height: 36px; padding: 0 14px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 500; cursor: pointer; border: 1px solid #F2B8B8; background: #FFFFFF; color: #B42318;">{{delSelLabel}}</button>
+<sc-if value="{{notConfirming}}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{askAll}}" style="height: 36px; padding: 0 14px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 500; cursor: pointer; border: 1px solid #D3D9D5; background: #FFFFFF; color: #3D4541;">מחיקת כל הבדיקות</button></sc-if>
+<sc-if value="{{confirming}}" hint-placeholder-val="{{ false }}"><span role="group" aria-label="אישור מחיקה" style="display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 6px 8px 6px 14px; border-radius: 999px; background: #FDECEC; border: 1px solid #F2B8B8; font-size: 14px; color: #7A1A12;">{{confirmText}}<button type="button" onClick="{{delAll}}" style="height: 36px; padding: 0 14px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 500; cursor: pointer; height: 32px; border: 0; background: #B42318; color: #FFFFFF;">מחיקה</button><button type="button" onClick="{{cancelAll}}" style="height: 36px; padding: 0 14px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 500; cursor: pointer; height: 32px; border: 1px solid #D3D9D5; background: #FFFFFF; color: #3D4541;">ביטול</button></span></sc-if>
+</div>
+<p style="margin: -4px 0 12px; font-size: 13px; color: #5E6762;">המחיקה מסירה רק את רשומת הבדיקה. טיסה שה־AI כבר אישר או החזיר נשארת כך, ובדיקה שרצה עכשיו נמחקת רק אחרי שתסתיים.</p>
+<sc-if value="{{hasDelMsg}}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 0 0 12px; padding: 10px 14px; border-radius: 12px; background: #DDF6EC; border: 1px solid #A3DEC6; color: #17694F; font-size: 14px;">{{delMsg}}</p></sc-if>
+</sc-if>
 <sc-if value="{{noChecks}}" hint-placeholder-val="{{ false }}"><p style="margin: 0; padding: 18px 20px; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; font-size: 14px; color: #5E6762;">עוד אין בדיקות.</p></sc-if>
 <ul style="list-style: none; margin: 0; padding: 0; background: #FFFFFF; border: 1px solid #E1E5E2; border-radius: 16px; overflow: hidden;">
 <sc-for list="{{checks}}" as="c" hint-placeholder-count="3">
-<li style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; padding: 14px 20px; border-top: 1px solid {{c.divider}};">
+<li style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; padding: 14px 20px; border-top: 1px solid {{c.divider}}; background: {{c.rowBg}};">
+<input type="checkbox" checked="{{c.sel}}" onChange="{{c.toggle}}" disabled="{{c.running}}" aria-label="{{c.selLabel}}" style="width: 18px; height: 18px; accent-color: #C7436A; margin: 0; flex: none;">
 <span style="flex: 1 1 260px; min-width: 0;"><a href="{{c.href}}" style="font-size: 15px; font-weight: 600; color: #121413; text-decoration: underline; text-underline-offset: 3px;">{{c.student}}</a><span style="font-size: 15px; color: #3D4541;"> · {{c.item}}</span><span style="display: block; margin-top: 2px; font-size: 13px; color: #5E6762;">{{c.meta}}</span></span>
 <span style="display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border-radius: 999px; background: {{c.bg}}; border: 1px solid {{c.border}}; color: {{c.color}}; font-size: 13px; font-weight: 500; white-space: nowrap;">{{c.label}}</span>
+<button type="button" class="btn-ghost" onClick="{{c.del}}" disabled="{{c.running}}" aria-label="{{c.delLabel}}" title="מחיקת הבדיקה" style="width: 36px; height: 36px; display: grid; place-items: center; padding: 0; border: 1px solid transparent; border-radius: 10px; background: transparent; color: #8A4B45; cursor: pointer; flex: none;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"></path></svg></button>
 </li>
 </sc-for>
 </ul>
@@ -133,7 +145,7 @@ class Component extends DCLogic {
   st() {
     if (this.state && this.state.ready) return this.state;
     const a = this.saved();
-    return { ready: true, enabled: !!a.enabled, mode: a.mode, threshold: String(a.threshold), autoReject: !!a.autoReject, extra: a.extra || '', model: a.model || '', dailyLimit: String(a.dailyLimit), busy: false, flash: '', error: '' };
+    return { ready: true, sel: {}, confirmAll: false, delMsg: '', enabled: !!a.enabled, mode: a.mode, threshold: String(a.threshold), autoReject: !!a.autoReject, extra: a.extra || '', model: a.model || '', dailyLimit: String(a.dailyLimit), busy: false, flash: '', error: '' };
   }
 
   set(patch) {
@@ -144,6 +156,7 @@ class Component extends DCLogic {
     if (super.componentWillUnmount) super.componentWillUnmount();
     if (this._acaOff) this._acaOff();
     clearTimeout(this._flashTimer);
+    clearTimeout(this._delTimer);
   }
 
   save() {
@@ -157,6 +170,20 @@ class Component extends DCLogic {
       this.setState(Object.assign({}, this.st(), { busy: false, flash: msg }));
       clearTimeout(this._flashTimer);
       this._flashTimer = setTimeout(() => this.setState(Object.assign({}, this.st(), { flash: '' })), 5000);
+    });
+  }
+
+  // removing AI check records from the list (chosen ones, one row, or all)
+  clear(body, done) {
+    const A = this.A();
+    if (!A) return;
+    this.setState(Object.assign({}, this.st(), { busy: true, error: '', confirmAll: false }));
+    A.call('aiClear', body).then((r) => {
+      if (!r.ok) { this.setState(Object.assign({}, this.st(), { busy: false, error: r.error })); return; }
+      const n = (r.result && r.result.count) || 0;
+      this.setState(Object.assign({}, this.st(), { busy: false, sel: done ? {} : this.st().sel, delMsg: n === 1 ? 'בדיקה אחת נמחקה.' : n + ' בדיקות נמחקו.' }));
+      clearTimeout(this._delTimer);
+      this._delTimer = setTimeout(() => this.setState(Object.assign({}, this.st(), { delMsg: '' })), 5000);
     });
   }
 
@@ -179,8 +206,16 @@ class Component extends DCLogic {
       } else if (ai.status === 'error') look = ['#FDECEC', '#F2B8B8', '#B42318', 'נכשלה'];
       else if (ai.status === 'skipped') look = ['#F1F3F2', '#D3D9D5', '#545D58', ai.reason === 'limit' ? 'מגבלה יומית' : 'לא נבדקה'];
       else look = ['#F1F3F2', '#D3D9D5', '#545D58', ai.status === 'checking' ? 'בבדיקה…' : 'בתור'];
+      const key = x.u.id + '|' + x.f.id, s = this.st(), running = ai.status === 'checking';
       return {
         id: x.u.id + x.f.id,
+        key: key, user: x.u.id, flight: x.f.id, running: running,
+        sel: !!s.sel[key] && !running,
+        rowBg: s.sel[key] && !running ? '#FFF6F8' : '#FFFFFF',
+        selLabel: 'בחירת הבדיקה של ' + x.u.name + ', ' + A.flightName(x.f),
+        delLabel: 'מחיקת הבדיקה של ' + x.u.name + ', ' + A.flightName(x.f),
+        toggle: () => { const cur = this.st(); const sel = Object.assign({}, cur.sel); if (sel[key]) delete sel[key]; else sel[key] = true; this.setState(Object.assign({}, cur, { sel: sel })); },
+        del: () => this.clear({ items: [{ user: x.u.id, flight: x.f.id }] }, false),
         student: x.u.name,
         item: A.flightName(x.f),
         meta: A.fmtDate(ai.at) + (ai.status === 'error' && ai.error ? ' · ' + ai.error : '') + (x.f.status === 'review' ? ' · ממתינה להחלטה שלכם' : ''),
@@ -224,7 +259,18 @@ class Component extends DCLogic {
       defaultModel: a.defaultModel || 'gemini-3.8-flash',
       extra: s.extra, onExtra: (e) => this.set({ extra: e.target.value }),
       busy: !!s.busy, saveLabel: s.busy ? 'שומר…' : 'שמירה', save: () => this.save(),
-      checks: checks, noChecks: checks.length === 0
+      checks: checks, noChecks: checks.length === 0, hasChecks: checks.length > 0,
+      allSel: checks.some((c) => !c.running) && checks.every((c) => c.running || c.sel),
+      toggleAll: () => { const cur = this.st(); const all = checks.some((c) => !c.running) && checks.every((c) => c.running || c.sel); const sel = {}; if (!all) checks.forEach((c) => { if (!c.running) sel[c.key] = true; }); this.setState(Object.assign({}, cur, { sel: sel })); },
+      noSel: !!s.busy || !checks.some((c) => c.sel),
+      delSelLabel: (() => { const n = checks.filter((c) => c.sel).length; return n ? 'מחיקת הנבחרות (' + n + ')' : 'מחיקת הנבחרות'; })(),
+      delSelected: () => { const items = checks.filter((c) => c.sel).map((c) => ({ user: c.user, flight: c.flight })); if (items.length) this.clear({ items: items }, true); },
+      confirming: !!s.confirmAll, notConfirming: !s.confirmAll,
+      confirmText: 'למחוק את כל הבדיקות מהרשימה?',
+      askAll: () => this.set({ confirmAll: true }),
+      cancelAll: () => this.set({ confirmAll: false }),
+      delAll: () => this.clear({ all: true }, true),
+      hasDelMsg: !!s.delMsg, delMsg: s.delMsg
     };
   }
 }
