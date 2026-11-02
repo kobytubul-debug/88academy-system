@@ -1519,6 +1519,10 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 .app.race .rs .rnote b { color: #fff; opacity: .8; }
 .app.mil .rs .rnote { border-radius: 6px; }
 @media (max-width: 519px) { .rs .rnote { padding: 12px 14px; } .rs .rnote .rq { font-size: 15px; max-height: 30vh; } .rt { font-size: 32px; } }
+/* the automatic flow: a message closes by itself; its button fills as the seconds pass */
+.btn3.fl-run { position: relative; overflow: hidden; }
+.btn3.fl-run::after { content: ""; position: absolute; inset: auto 0 0 0; height: 5px; background: rgba(0,0,0,.35); transform-origin: right; animation: flrun var(--fl-s, 4s) linear forwards; }
+@keyframes flrun { from { transform: scaleX(1); } to { transform: scaleX(0); } }
 
 /* ================= one panel per window: everything the window says, in one wide box at the bottom =================
    The stage's lens stays above it, over the background. The level tag and the count head the panel. */
@@ -1843,6 +1847,14 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 @media (min-width: 900px) {
   #app .bbi:not(.bb-main) b { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
   #app .bbi.bb-main { flex: 1.25 1 0; }
+}
+/* wide screens: the stage's lens sits beside the bar, on its right */
+@media (min-width: 900px) {
+  #app .slide.bb .sgrid { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: end; column-gap: 18px; }
+  #app .slide.bb .sgrid > .hero { grid-column: 1; width: 150px; height: 150px; min-height: 0; flex: none; align-self: end; display: grid; place-items: center; }
+  #app .slide.bb .sgrid > .hero .node.big { transform: scale(1.3); }
+  #app .slide.bb > .sbody { padding-inline: max(96px, calc((100% - 1240px) / 2)) max(24px, calc((100% - 1240px) / 2)); }
+  #app .slide.bb .sgrid > .bbwrap { grid-column: 2; }
 }
 
 /* ================= the pixel look (theme option look: 'pixel'): an original retro 8-bit arcade =================
@@ -2699,6 +2711,17 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   // ---------- the bottom-bar layout (a theme option): everything a window says sits in a bar of headings at the bottom;
   // each heading opens its own window above the bar (like the demo video opening), the stage's lens stays in the middle ----------
   const BAR = () => !!(ACTIVE && ACTIVE.layout === 'bar');
+  // the automatic flow (a theme option): the student moves on without clicking to continue
+  const FLOW = () => (ACTIVE && ACTIVE.flow && ACTIVE.flow.on ? ACTIVE.flow : null);
+  // a window has come up: open the step that is waiting for the student
+  const arrive = (n) => {
+    const F = FLOW(); if (!F || !F.open || !n || n.t !== 'skill' || !(n.state === 'now' || n.state === 'fix')) return;
+    const u = ui(n.id); if (u.arrived) return; u.arrived = true;
+    const tabs = showTabs(n), cur = tabs.find(t => t.on); if (!cur) return;
+    if (BAR()) { if (!u.pop) { u.pop = cur.key; paint(n); } }
+    else if (SHOW()) { if (!u.tab) { u.tab = cur.key; paint(n); } }
+    setTimeout(() => { const sl = $('#deck').querySelector(`[data-n="${n.id}"]`), b = sl && sl.querySelector(cur.key === 'video' ? '[data-a="play"]' : '[data-a="pick"]'); b && b.focus({ preventScroll: true }); }, 120);
+  };
   const barHtml = (n, w, k, nSkills) => {
     const tabs = n.t === 'skill' ? showTabs(n) : [];
     const st = showState(n), open = ui(n.id).pop || '';
@@ -2776,12 +2799,14 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   };
   const goSlide = (i, smooth) => { const v = $('#deck'); v.scrollTo({ top: i * v.clientHeight, behavior: smooth ? 'smooth' : 'auto' }); };
   const goNode = (id, smooth) => { const i = slideIds.indexOf(id); if (i !== -1) goSlide(i, smooth); };
+  let lastArrived = null;
   const syncRail = () => {
     const v = $('#deck'), rail = $('#rail'); if (!rail.firstChild || !$('#rme')) return;
     const n = slideIds.length, pos = Math.max(0, Math.min(n - 1, v.scrollTop / Math.max(1, v.clientHeight)));
     const H = rail.clientHeight - 32, y = 16 + (n > 1 ? H * pos / (n - 1) : 0);
     $('#rme').style.top = y + 'px'; $('#rfill').style.height = (y - 16) + 'px';
     const cur = Math.round(pos); rail.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('cur', i === cur));
+    if (Math.abs(pos - cur) < .08 && slideIds[cur] && lastArrived !== slideIds[cur]) { lastArrived = slideIds[cur]; const an = findNode(lastArrived); setTimeout(() => arrive(an), 60); }
     if (SHOW() && Math.abs(pos - cur) < .08) { const sl = v.children[cur]; if (sl && !sl.classList.contains('live')) { v.querySelectorAll('.slide.live').forEach(x => x.classList.remove('live')); sl.classList.add('live'); } }
     syncStageBg();
   };
@@ -2807,7 +2832,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       const src = n.t === 'skill' ? vidOf(n.k) : n.c && n.c.video; if (!src) return;
       e.currentTarget.disabled = true;
       const media = box.querySelector('.sh-media');
-      playDemo(src, n.name, media || box.querySelector('.vid') || e.currentTarget, n.t === 'skill' && !watched(n.k), (ended) => { if (ended && media) ui(n.id).tab = 'flight'; if (ended && BAR()) ui(n.id).pop = 'flight'; if (ended === 'broken') { ui(n.id).skipVideo = true; paint(n); } else if (ended && n.t === 'skill') videoDone(n.k, box.querySelector('.step, .sh-tab.cur')); else paint(n); });
+      playDemo(src, n.name, media || box.querySelector('.vid') || e.currentTarget, n.t === 'skill' && !watched(n.k), (ended) => { if (ended && media) ui(n.id).tab = 'flight'; if (ended && BAR()) ui(n.id).pop = 'flight'; if (ended && FLOW()) setTimeout(() => { const sl = $('#deck').querySelector(`[data-n="${n.id}"]`), b = sl && sl.querySelector('[data-a="pick"]'); b && b.focus({ preventScroll: true }); }, 200); if (ended === 'broken') { ui(n.id).skipVideo = true; paint(n); } else if (ended && n.t === 'skill') videoDone(n.k, box.querySelector('.step, .sh-tab.cur')); else paint(n); });
     };
     if (btn('cancel')) btn('cancel').onclick = () => { const x = ui(n.id).uploading; if (x && x.xhr) x.xhr.abort(); ui(n.id).uploading = null; paint(n); };
     if (btn('discard')) btn('discard').onclick = () => { const u = ui(n.id); u.ready = null; u.err = ''; paint(n); };
@@ -2879,7 +2904,9 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     if (n.t === 'chal') closeSheet();
     award([]);
     showing = true;
-    toastOverlay(n.t === 'chal' ? '' : lensArt(n.id), T('sent'), 'המדריך יקבל אותה לבדיקה. כשיבדוק, תגיע לכאן הודעה עם ההערה שלו', 'מעולה', () => { showing = false; if (n.t !== 'chal') goNextOpen(n); });
+    const F0 = FLOW();
+    if (F0 && F0.next && !(Number(F0.close) > 0)) { showing = false; say(T('sent')); if (n.t !== 'chal') goNextOpen(n); return; }
+    toastOverlay(n.t === 'chal' ? '' : lensArt(n.id), T('sent'), 'המדריך יקבל אותה לבדיקה. כשיבדוק, תגיע לכאן הודעה עם ההערה שלו', 'מעולה', () => { showing = false; if (n.t !== 'chal' && !(F0 && !F0.next)) goNextOpen(n); });
   };
   const goNextOpen = (n) => {
     const all = visibleNodes(), i = all.findIndex(x => x.id === n.id);
@@ -3114,7 +3141,15 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     if (conf) confetti();
     rb.onclick = null;
     const ok = rb.querySelector('#ok'); ok.focus();
-    ok.onclick = () => { if (coins > 0) coinBurst(ok, coins); rw.classList.remove('on'); then && then(); };
+    let timer = null;
+    ok.onclick = () => { clearTimeout(timer); if (coins > 0) coinBurst(ok, coins); rw.classList.remove('on'); then && then(); };
+    // the automatic flow: the message closes by itself after a few seconds (a bar on the button shows the time)
+    const F = FLOW(), secs = F ? Number(F.close) || 0 : 0;
+    if (secs > 0) {
+      ok.classList.add('fl-run'); ok.style.setProperty('--fl-s', secs + 's');
+      timer = setTimeout(() => { if (rw.classList.contains('on') && rb.contains(ok)) ok.click(); }, secs * 1000);
+      rb.onclick = (e) => { if (e.target !== ok) { clearTimeout(timer); ok.classList.remove('fl-run'); } };
+    }
   };
   const confetti = () => {
     if (matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
