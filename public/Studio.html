@@ -197,6 +197,22 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 }
 @media (max-width: 480px) { .st-color { grid-template-columns: minmax(0, 1fr) 44px 84px 28px; } .st-bases { gap: 6px; } .st-terms { grid-template-columns: minmax(0, 1fr); } }
 .studio-page button:focus-visible, .studio-page input:focus-visible, .studio-page select:focus-visible { outline: 3px solid #2A9171; outline-offset: 2px; }
+/* folding sections (colours, fonts, groups): a heading row that opens and closes, with a short summary */
+.st-fold { display: block; padding: 0; }
+.st-fold > summary { list-style: none; display: flex; align-items: center; gap: 10px; padding: 14px 16px; cursor: pointer; border-radius: 16px; }
+.st-fold > summary::-webkit-details-marker { display: none; }
+.st-fold > summary:hover { background: #F7F9F8; }
+.st-fold > summary:focus-visible { outline: 2px solid #2A9171; outline-offset: 2px; }
+.st-fold > summary h2 { flex: none; }
+.st-fold .st-sum { flex: 1 1 auto; min-width: 0; display: flex; align-items: center; justify-content: flex-end; gap: 6px; font-size: 13px; color: #545D58; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.st-fold .st-sum .chg { color: #9C5A1E; font-weight: 600; }
+.st-fold .st-chev { flex: none; width: 9px; height: 9px; border-left: 2px solid #545D58; border-bottom: 2px solid #545D58; transform: rotate(-45deg); margin: -4px 4px 0 2px; transition: transform .15s; }
+.st-fold[open] .st-chev { transform: rotate(135deg); margin-top: 4px; }
+.st-fold[open] > summary { border-bottom: 1px solid #E8EBE9; border-radius: 16px 16px 0 0; }
+.st-foldin { display: flex; flex-direction: column; gap: 10px; padding: 12px 16px 16px; }
+.st-fsels { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
+.st-fsel select { font-size: 15px; }
+.st-sum .st-sw i { height: 18px; }
 .scn { position: absolute; inset: -30px; overflow: hidden; }
 .scn > i { position: absolute; inset: 0; display: block; }
 .scn-field { background: linear-gradient(180deg, #7FB6DE 0%, #BFDFF0 40%, #DCEBD8 47%, #9CC27A 48%, #6E9E4E 66%, #456F32 100%); }
@@ -505,6 +521,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   const colorRow = (k, label, hint, val, over) => `<div class="st-color"><label for="stc-${k}">${label}<small>${hint}</small></label><input type="color" id="stc-${k}" value="${esc(val)}" data-c="${k}"><input class="st-hex" value="${esc(String(val).toUpperCase())}" data-hex="${k}" maxlength="7" dir="ltr" spellcheck="false" aria-label="${label}: קוד צבע"><button class="st-reset" type="button" data-reset="${k}" title="חזרה לצבע של הסגנון" aria-label="איפוס ${label}" ${over ? '' : 'hidden'}>↺</button></div>`;
   const upRow = (st) => `<div class="st-up" id="upZone"><button class="st-btn" type="button" data-a="up" ${st && st.up ? 'disabled' : ''}>העלאת תמונה מהמחשב</button><input type="file" accept="image/*" id="upFile" hidden><small>${st && st.up ? `מעלה… ${st.up}%` : 'JPG או PNG. אפשר גם לגרור תמונה לכאן.'}</small></div>${st && st.upErr ? `<p class="st-err" role="alert">${esc(st.upErr)}</p>` : ''}`;
 
+  // which folding sections are open (colours, fonts, groups); kept across redraws
+  const OPEN = { colors: false, fonts: false, groups: false };
+  const fold = (key, title, sum) => `<details class="st-sec st-fold" data-fold="${key}" ${OPEN[key] ? 'open' : ''}><summary><h2 id="sh-${key}">${title}</h2><span class="st-sum">${sum}</span><span class="st-chev" aria-hidden="true"></span></summary><div class="st-foldin">`;
   const renderThemes = () => {
     const d = D(), mode = d.mode === 'day' ? 'day' : 'night', C = effColors(d), S = effSurf(d, mode), B = BASES[d.base], saved = savedTheme(ED.id) || {};
     const list = themes().map(t => {
@@ -524,7 +543,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     const fontOf = (slot) => d.fonts[slot] && d.fonts[slot] !== 'default' ? d.fonts[slot] : defOf[slot];
     const ff = (f) => `font-family:'${esc(f)}', 'Rubik', sans-serif`;
     const fontTile = (slot, f, label, sample) => { const on = (d.fonts[slot] || 'default') === f; return `<button class="st-ft ${on ? 'on' : ''}" type="button" data-fslot="${slot}" data-font="${esc(f)}" aria-pressed="${on}"><span class="ft-s" style="${ff(f === 'default' ? defOf[slot] : f)}">${esc(sample)}</span><small>${esc(label)}</small></button>`; };
-    const fontPick = ([slot, title, sample]) => `<h3 class="st-h3">${title} · <span class="st-cur">${esc(fontOf(slot))}</span></h3><div class="st-fontgrid" role="group" aria-label="גופן ל${title}">${fontTile(slot, 'default', defOf[slot] + ' · של הסגנון', sample)}${FONT_GROUPS[slot].map(([g, list]) => `<span class="st-fg">${g}</span>${list.map(f => fontTile(slot, f, f, sample)).join('')}`).join('')}</div>`;
+    const fontSel = ([slot, title]) => { const cur = d.fonts[slot] || 'default', opt = (v, l) => `<option value="${esc(v)}" ${cur === v ? 'selected' : ''} style="${ff(v === 'default' ? defOf[slot] : v)}">${esc(l)}</option>`; return `<label class="st-field st-fsel">${title}<select data-fsel="${slot}" style="${ff(fontOf(slot))}">${opt('default', defOf[slot] + ' · של הסגנון')}${FONT_GROUPS[slot].map(([g, list]) => `<optgroup label="${esc(g)}">${list.map(f => opt(f, f)).join('')}</optgroup>`).join('')}</select></label>`; };
     const headF = fontOf('head'), bodyF = fontOf('body'), numF = fontOf('num');
     const saved0 = savedAssign();
     const groups = treeOrder().map(({ u, depth }) => {
@@ -534,6 +553,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
       return `<div class="st-group ${eff === ED.id ? 'mine' : ''}"><label for="asg-${esc(u.id)}">${'— '.repeat(depth)}${esc(u.name)}${status}</label><select id="asg-${esc(u.id)}" data-asg="${esc(u.id)}">${opts.map(([v, l]) => `<option value="${esc(v)}" ${cur === v ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select></div>`;
     }).join('');
     const using = groupsUsing(ED.id, ED.assign);
+    const changed = units().filter(u => (ED.assign[u.id] || 'classic') !== saved0[u.id]).length;
+    const groupsSum = (using.length ? (using.length === 1 ? 'קבוצה אחת רואה את הערכה' : using.length + ' קבוצות רואות את הערכה') : 'אף קבוצה לא רואה את הערכה') + (changed ? ` · <b class="chg">${changed === 1 ? 'שינוי אחד' : changed + ' שינויים'} לשמירה</b>` : '');
     body.innerHTML = `
       <section class="st-sec" aria-labelledby="sh-themes"><h2 id="sh-themes">ערכות נושא</h2>
         <p class="st-hint">ערכה היא כל מה שקבוצה רואה במשחק. בוחרים ערכה כדי לערוך אותה.</p>
@@ -552,7 +573,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
         <div class="st-seg" role="group" aria-label="מצב ברירת המחדל"><button type="button" data-mode="night" class="${mode === 'night' ? 'on' : ''}" aria-pressed="${mode === 'night'}">🌙 לילה</button><button type="button" data-mode="day" class="${mode === 'day' ? 'on' : ''}" aria-pressed="${mode === 'day'}">☀️ יום</button></div>
         <label class="st-check"><input type="checkbox" id="stAllow" ${d.allowToggle !== false ? 'checked' : ''}> להציג לתלמידים כפתור מעבר בין יום ללילה בבר העליון</label>
       </section>
-      <section class="st-sec" aria-labelledby="sh-colors"><h2 id="sh-colors">צבעים</h2>
+      ${fold('colors', 'צבעים', `<span class="st-sw">${swatches(d)}</span>`)}
         <p class="st-hint">פלטות מוכנות, או צבע לכל תפקיד. ↺ מחזיר לצבע של הסגנון.</p>
         <div class="st-pals">${PALETTES.map((p, i) => `<button class="st-pal" type="button" data-pal="${i}"><span>${[p.accent, p.accent2, p.gold, p.sky].map(c => `<i style="background:${c}"></i>`).join('')}</span>${esc(p.name)}</button>`).join('')}</div>
         <h3 class="st-h3">צבעי המותג</h3>
@@ -563,13 +584,13 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
         <div class="st-colors">${UI_ROWS.map(([k, l, h]) => colorRow(k, l, h, C[k], !!d.colors[k])).join('')}</div>
         <h3 class="st-h3">רקע, כרטיסים וטקסט · ${mode === 'day' ? 'מצב יום' : 'מצב לילה'}</h3>
         <div class="st-colors">${SURF_ROWS.map(([k, l, h]) => colorRow(k, l, h, S[k], !!d.surf[mode][k])).join('')}</div>
-        <div class="st-warn" id="stWarn" role="status" hidden></div>
-      </section>
-      <section class="st-sec" aria-labelledby="sh-fonts"><h2 id="sh-fonts">גופנים</h2>
+      </div></details>
+      <div class="st-warn" id="stWarn" role="status" hidden></div>
+      ${fold('fonts', 'גופנים', `${esc(headF)} · ${esc(bodyF)} · ${esc(numF)}`)}
         <p class="st-hint">כל גופן מוצג בעצמו. כותרות וטקסט: גופנים עם עברית. מספרים: המטבעות, הדרגה ומספרי התחנות.</p>
         <div class="st-sample" id="stSample"><b style="${ff(headF)}">האטה ובלימה</b><span style="${ff(bodyF)}">מאטים בהדרגה ועוצרים בדיוק מעל הנקודה המסומנת.</span><span class="st-num" style="${ff(numF)}">1,250 · LV 3 · 07</span></div>
-        ${FONT_SLOTS.map(fontPick).join('')}
-      </section>
+        <div class="st-fsels">${FONT_SLOTS.map(fontSel).join('')}</div>
+      </div></details>
       <section class="st-sec" aria-labelledby="sh-bg"><h2 id="sh-bg">רקע</h2>
         <p class="st-hint">רקע לכל המסכים. בשלבים שיש להם רקע משלהם (בלשונית "רקע לשלב") הוא מוצג מעליו.</p>
         <div class="bgopts">${bgTiles}</div>
@@ -586,10 +607,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
         <div class="st-seg" role="group" aria-label="אנימציות"><button type="button" data-motion="full" class="${d.motion !== 'calm' ? 'on' : ''}" aria-pressed="${d.motion !== 'calm'}">אנימציות מלאות</button><button type="button" data-motion="calm" class="${d.motion === 'calm' ? 'on' : ''}" aria-pressed="${d.motion === 'calm'}">מופחתות</button></div>
         <p class="st-hint">מופחתות: בלי פרופלורים מסתובבים, הבהובים וקונפטי. מתאים לתלמידים שתנועה מסיחה אותם.</p>
       </section>
-      <section class="st-sec" aria-labelledby="sh-groups"><h2 id="sh-groups">שיוך לקבוצות</h2>
+      ${fold('groups', 'שיוך לקבוצות', groupsSum)}
         <p class="st-hint">מה התלמידים בכל קבוצה רואים אחרי הכניסה. אפשר לחזור למסך הרגיל בכל רגע: ההתקדמות, המטבעות והטיסות נשארים.</p>
         ${groups ? `<div class="st-groups">${groups}</div>` : '<p class="st-now">עוד אין קבוצות. יוצרים קבוצות בעמוד הקורסים.</p>'}
-      </section>`;
+      </div></details>`;
     checkContrast();
   };
   const checkContrast = () => {
@@ -909,6 +930,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
       clearTimeout(termTimer); termTimer = setTimeout(sendTheme, 260); touched(); return;
     }
   });
+  // remember which folding sections are open
+  body.addEventListener('toggle', (e) => { const k = e.target && e.target.dataset && e.target.dataset.fold; if (k) OPEN[k] = e.target.open; }, true);
   body.addEventListener('change', (e) => {
     const t = e.target;
     if (t.id === 'upFile') {
@@ -926,6 +949,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     if (t.id === 'stAllow') { d.allowToggle = t.checked; sendTheme(); touched(); return; }
     if (t.id === 'stStageBg') { d.stageBg = t.checked; sendTheme(); touched(); return; }
     if (t.id === 'stBgBlur') { d.bg.blur = t.checked; sendTheme(); touched(); return; }
+    if (t.dataset.fsel) { d.fonts[t.dataset.fsel] = t.value; const sl = t.dataset.fsel; redraw(); const again = body.querySelector(`select[data-fsel="${sl}"]`); again && again.focus({ preventScroll: true }); return; }
     if (t.dataset.asg) { ED.assign[t.dataset.asg] = t.value; const id = t.id, keep = scrollPos(); renderThemes(); scrollPos(keep); const again = document.getElementById(id); again && again.focus(); pickPreviewUnit(); loadPreview(); touched(); return; }
   });
   // drag an image onto the upload row
