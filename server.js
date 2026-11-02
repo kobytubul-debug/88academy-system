@@ -184,6 +184,19 @@ function themeDefaults(id) {
 }
 const hexOk = (v) => /^#[0-9a-f]{6}$/i.test(String(v || ''));
 const imgOk = (v) => /^\/media\/[A-Za-z0-9_-]+\.(jpg|jpeg|png|webp|gif)$/.test(String(v || '')) || /^https:\/\/\S+$/i.test(String(v || ''));
+// the showcase's own look: a picture for the media window (empty = each stage's picture), how dark it is,
+// the colours of the info square and the tabs (empty = the theme's), and the corners
+function cleanShow(v) {
+  const o = v && typeof v === 'object' ? v : {};
+  const dim = Math.max(0, Math.min(80, Math.round(Number(o.dim))));
+  return {
+    img: imgOk(o.img) ? String(o.img).slice(0, 500) : '',
+    dim: Number.isFinite(dim) && o.dim !== undefined && o.dim !== '' ? dim : 35,
+    info: hexOk(o.info) ? String(o.info).toLowerCase() : '',
+    tab: hexOk(o.tab) ? String(o.tab).toLowerCase() : '',
+    corners: o.corners === 'soft' ? 'soft' : 'square'
+  };
+}
 function cleanTheme(t) {
   if (!t || typeof t !== 'object') return null;
   const id = /^t-[A-Za-z0-9-]{1,40}$/.test(String(t.id || '')) ? String(t.id) : M.newId('t-');
@@ -204,7 +217,7 @@ function cleanTheme(t) {
     colors: pick(t.colors, COLOR_KEYS), surf, fonts: { head: font(tf.head, FONTS_HEAD), body: font(tf.body, FONTS_BODY), num: font(tf.num, FONTS_NUM) },
     icons: t.icons === 'line' || t.icons === 'emoji' ? t.icons : BASE_ICONS[base], bg, stageBg: t.stageBg !== false, terms, motion: t.motion === 'calm' ? 'calm' : 'full',
     // how an exercise window is laid out: one panel at the bottom, or the showcase (an info square beside a big media window, with a tab per step)
-    layout: t.layout === 'show' ? 'show' : 'panel', builtIn: !!BUILTIN_NAMES[id]
+    layout: t.layout === 'show' ? 'show' : 'panel', show: cleanShow(t.show), builtIn: !!BUILTIN_NAMES[id]
   };
 }
 // A background for one stage: none, a built-in scene, or an uploaded image (blurred a little unless told not to).

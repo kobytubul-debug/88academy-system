@@ -414,7 +414,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   const TERMS = [['t1', 'לשונית 1 (המסלול)'], ['t2', 'לשונית 2 (המשימות)'], ['t3', 'לשונית 3 (הליגה)'], ['t4', 'לשונית 4 (הפרופיל)'], ['world', 'שם ל"עולם"'], ['chest', 'שם ל"תיבה"'], ['boss', 'שם למבחן המסכם'], ['league', 'שם הליגה'], ['mapTitle', 'כותרת מפת הנתיב'], ['questsTitle', 'כותרת המשימות'], ['go', 'בועה מעל התרגיל הנוכחי'], ['lit', 'הודעה כשתרגיל מאושר']];
   const BUILT = { 't-race': ['race', 'מירוץ FPV'], 't-regular': ['regular', 'משחקי צבעוני'], 't-mil': ['mil', 'צבאי'] };
   const AUTO = ['field', 'city', 'garage', 'loft', 'forest', 'street'];
-  const newTheme = (base, extra) => Object.assign({ id: newId(), name: 'ערכה חדשה', base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default', num: 'default' }, icons: BASES[base].icons, bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', layout: 'panel', builtIn: false }, extra || {});
+  const newTheme = (base, extra) => Object.assign({ id: newId(), name: 'ערכה חדשה', base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default', num: 'default' }, icons: BASES[base].icons, bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', layout: 'panel', show: { img: '', dim: 35, info: '', tab: '', corners: 'square' }, builtIn: false }, extra || {});
   const defaultsOf = (id) => BUILT[id] ? newTheme(BUILT[id][0], { id, name: BUILT[id][1], builtIn: true }) : null;
   // the colours in use: the theme's own, else the style's (the extra roles follow the brand colours until they are set)
   const effColors = (t) => { const C = Object.assign({}, BASES[t.base].colors, t.colors || {}), M = moreColors(t.base, C); Object.keys(M).forEach(k => { if (!isHex(C[k] || '')) C[k] = M[k]; }); return C; };
@@ -516,6 +516,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   const D = () => { const d = ED.draft; d.colors = d.colors || {}; d.surf = d.surf || { night: {}, day: {} }; d.surf.night = d.surf.night || {}; d.surf.day = d.surf.day || {}; d.fonts = d.fonts || { head: 'default', body: 'default', num: 'default' }; d.fonts.num = d.fonts.num || 'default'; d.terms = d.terms || {}; d.bg = d.bg || { kind: 'look' }; return d; };
   const swatches = (t) => { const C = effColors(t), S = effSurf(t, t.mode === 'day' ? 'day' : 'night'); return [C.accent, C.accent2, C.gold, S.bg, S.card].map(c => `<i style="background:${esc(c)}"></i>`).join(''); };
   const bgVal = (bg) => !bg || bg.kind === 'look' ? 'look' : bg.kind === 'color' ? 'color' : bg.kind === 'scene' ? 'scene:' + bg.id : 'img:' + bg.url;
+  const SH = (t) => { t.show = Object.assign({ img: '', dim: 35, info: '', tab: '', corners: 'square' }, t.show || {}); return t.show; };
   const tile = (val, label, pv, sel, attr) => `<button class="bgt ${sel ? 'sel' : ''}" type="button" ${attr}="${esc(val)}" aria-pressed="${sel}"><span class="bgpv">${pv}</span><span class="bgl">${esc(label)}</span></button>`;
   const imgPv = (url) => `<span class="bgimg" style="background-image:url(&quot;${esc(cssUrl(url))}&quot;)"></span>`;
   const colorRow = (k, label, hint, val, over) => `<div class="st-color"><label for="stc-${k}">${label}<small>${hint}</small></label><input type="color" id="stc-${k}" value="${esc(val)}" data-c="${k}"><input class="st-hex" value="${esc(String(val).toUpperCase())}" data-hex="${k}" maxlength="7" dir="ltr" spellcheck="false" aria-label="${label}: קוד צבע"><button class="st-reset" type="button" data-reset="${k}" title="חזרה לצבע של הסגנון" aria-label="איפוס ${label}" ${over ? '' : 'hidden'}>↺</button></div>`;
@@ -553,6 +554,20 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
       return `<div class="st-group ${eff === ED.id ? 'mine' : ''}"><label for="asg-${esc(u.id)}">${'— '.repeat(depth)}${esc(u.name)}${status}</label><select id="asg-${esc(u.id)}" data-asg="${esc(u.id)}">${opts.map(([v, l]) => `<option value="${esc(v)}" ${cur === v ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select></div>`;
     }).join('');
     const using = groupsUsing(ED.id, ED.assign);
+    // the showcase's own look: the picture in the media window, how dark it is, the square's and the tabs' colours, the corners
+    const showOpts = (d, C) => {
+      const o = SH(d);
+      const pics = tile('', 'תמונת השלב', '<span class="bgnone">לכל שלב התמונה שלו</span>', !o.img, 'data-shimg')
+        + lib().map(x => tile(x.url, x.name, imgPv(x.url), o.img === x.url, 'data-shimg')).join('')
+        + (o.img && !lib().some(x => x.url === o.img) ? tile(o.img, 'התמונה שנבחרה', imgPv(o.img), true, 'data-shimg') : '');
+      return `<h3 class="st-h3">התמונה בחלון האמצעי</h3>
+        <p class="st-hint" style="margin:0">"תמונת השלב" מראה בכל תרגיל את התמונה שלו (מהלשונית "רקע לשלב"). תמונה מהגלריה תופיע בכל התרגילים.</p>
+        <div class="bgopts">${pics}</div>
+        <div class="st-up"><button class="st-btn" type="button" data-a="upshow" ${ED.up ? 'disabled' : ''}>העלאת תמונה חדשה לגלריה</button><input type="file" accept="image/*" id="upShow" hidden><small>${ED.up ? `מעלה… ${ED.up}%` : 'JPG או PNG. התמונה נבחרת לחלון האמצעי ונשמרת בגלריה.'}</small></div>
+        <label class="st-field">הכהיית התמונה · <output id="shDimOut">${o.dim}%</output><input type="range" min="0" max="80" step="5" value="${o.dim}" data-shdim aria-label="הכהיית התמונה באחוזים"></label>
+        <div class="st-colors">${colorRow('shinfo', 'צבע הריבוע', 'ריבוע פרטי המשימה', o.info || C.accent, !!o.info)}${colorRow('shtab', 'צבע הלשוניות', 'הלשוניות שמתחת לחלון', o.tab || '#efefef', !!o.tab)}</div>
+        <div class="st-seg" role="group" aria-label="פינות"><button type="button" data-shcorner="square" class="${o.corners !== 'soft' ? 'on' : ''}" aria-pressed="${o.corners !== 'soft'}">פינות ישרות</button><button type="button" data-shcorner="soft" class="${o.corners === 'soft' ? 'on' : ''}" aria-pressed="${o.corners === 'soft'}">פינות מעוגלות</button></div>`;
+    };
     const changed = units().filter(u => (ED.assign[u.id] || 'classic') !== saved0[u.id]).length;
     const groupsSum = (using.length ? (using.length === 1 ? 'קבוצה אחת רואה את הערכה' : using.length + ' קבוצות רואות את הערכה') : 'אף קבוצה לא רואה את הערכה') + (changed ? ` · <b class="chg">${changed === 1 ? 'שינוי אחד' : changed + ' שינויים'} לשמירה</b>` : '');
     body.innerHTML = `
@@ -606,6 +621,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
       <section class="st-sec" aria-labelledby="sh-layout"><h2 id="sh-layout">פריסת חלון התרגיל</h2>
         <div class="st-seg" role="group" aria-label="פריסת חלון התרגיל"><button type="button" data-layout="panel" class="${d.layout !== 'show' ? 'on' : ''}" aria-pressed="${d.layout !== 'show'}">חלון בתחתית</button><button type="button" data-layout="show" class="${d.layout === 'show' ? 'on' : ''}" aria-pressed="${d.layout === 'show'}">תצוגת משימה</button></div>
         <p class="st-hint">${d.layout === 'show' ? 'ריבוע פרטי המשימה בצבע הראשי, לידו חלון גדול עם תמונת השלב, ומתחתיו לשונית לכל שלב: תדריך, טיסה, המדריך בודק. לחיצה על לשונית מחליפה את מה שבחלון הגדול: הסרטון מתנגן בתוכו, ההעלאה והמשוב מופיעים בו.' : 'כל הטקסט של התרגיל בחלון אחד רחב בתחתית המסך, ועדשת השלב מעליו.'}</p>
+        ${d.layout === 'show' ? showOpts(d, C) : ''}
       </section>
       <section class="st-sec" aria-labelledby="sh-motion"><h2 id="sh-motion">תנועה</h2>
         <div class="st-seg" role="group" aria-label="אנימציות"><button type="button" data-motion="full" class="${d.motion !== 'calm' ? 'on' : ''}" aria-pressed="${d.motion !== 'calm'}">אנימציות מלאות</button><button type="button" data-motion="calm" class="${d.motion === 'calm' ? 'on' : ''}" aria-pressed="${d.motion === 'calm'}">מופחתות</button></div>
@@ -633,6 +649,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     v = v.toLowerCase();
     const d = D(), mode = d.mode === 'day' ? 'day' : 'night';
     if (k === 'bgcolor') d.bg = { kind: 'color', color: v };
+    else if (k === 'shinfo' || k === 'shtab') SH(d)[k === 'shinfo' ? 'info' : 'tab'] = v;
     else if (SURF_KEYS.indexOf(k) !== -1) d.surf[mode][k] = v;
     else d.colors[k] = v;
     const pick = body.querySelector(`[data-c="${k}"]`), hex = body.querySelector(`[data-hex="${k}"]`), rs = body.querySelector(`[data-reset="${k}"]`);
@@ -872,6 +889,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     const b = e.target.closest('button'); if (!b || !body.contains(b)) return;
     const ds = b.dataset;
     if (ds.a === 'up') { const f = $('#upFile'); f && f.click(); return; }
+    if (ds.a === 'upshow') { const f = $('#upShow'); f && f.click(); return; }
     if (TAB === 'bg') {
       if (ds.bgdel) { if (BGD.busy) return; BGD.del = ds.bgdel; BGD.msg = ''; BGD.err = ''; bgRepaint('[data-a="delyes"], [data-a="delno"]'); renderFoot(); return; }
       if (ds.a === 'delno') { const u = BGD.del; BGD.del = null; bgRepaint(u ? `[data-bgdel="${CSS.escape(u)}"]` : null); return; }
@@ -906,9 +924,12 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     if (ds.mode) { if (d.mode !== ds.mode) { d.mode = ds.mode; redraw(); } return; }
     if (ds.fslot) { if ((d.fonts[ds.fslot] || 'default') !== ds.font) { d.fonts[ds.fslot] = ds.font; redraw(); const again = body.querySelector(`[data-fslot="${ds.fslot}"][data-font="${CSS.escape(ds.font)}"]`); again && again.focus({ preventScroll: true }); } return; }
     if (ds.pal) { const p = PALETTES[+ds.pal]; d.colors = Object.assign({}, d.colors, { accent: p.accent, accent2: p.accent2, gold: p.gold, sky: p.sky }); redraw(); return; }
+    if (ds.reset === 'shinfo' || ds.reset === 'shtab') { SH(d)[ds.reset === 'shinfo' ? 'info' : 'tab'] = ''; redraw(); return; }
     if (ds.reset) { const k = ds.reset, mode = d.mode === 'day' ? 'day' : 'night'; if (SURF_KEYS.indexOf(k) !== -1) delete d.surf[mode][k]; else delete d.colors[k]; redraw(); return; }
     if (ds.icons) { if (d.icons !== ds.icons) { d.icons = ds.icons; redraw(); } return; }
     if (ds.motion) { d.motion = ds.motion; redraw(); return; }
+    if ('shimg' in ds) { SH(d).img = ds.shimg; redraw(); const again = body.querySelector(`[data-shimg="${CSS.escape(ds.shimg)}"]`); again && again.focus({ preventScroll: true }); return; }
+    if (ds.shcorner) { SH(d).corners = ds.shcorner === 'soft' ? 'soft' : 'square'; redraw(); return; }
     if (ds.layout) { d.layout = ds.layout === 'show' ? 'show' : 'panel'; redraw(); return; }
     if (ds.tbg) {
       const v = ds.tbg, S = effSurf(d, d.mode === 'day' ? 'day' : 'night');
@@ -921,6 +942,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     if (TAB !== 'themes' || !ED) return;
     const t = e.target, d = D();
     if (t.dataset.c) return void setColor(t.dataset.c, t.value, 'pick');
+    if ('shdim' in t.dataset) { SH(d).dim = Math.max(0, Math.min(80, Number(t.value) || 0)); const o = $('#shDimOut'); if (o) o.textContent = SH(d).dim + '%'; sendTheme(); touched(); return; }
     if (t.dataset.hex) { let v = t.value.trim(); if (v && v[0] !== '#') v = '#' + v; if (!setColor(t.dataset.hex, v, 'hex')) t.classList.toggle('bad', v.length >= 7); return; }
     if (t.id === 'stName') {
       d.name = clean(t.value).slice(0, 40);
@@ -939,6 +961,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   body.addEventListener('toggle', (e) => { const k = e.target && e.target.dataset && e.target.dataset.fold; if (k) OPEN[k] = e.target.open; }, true);
   body.addEventListener('change', (e) => {
     const t = e.target;
+    if (t.id === 'upShow') { const f = t.files && t.files[0]; t.value = ''; if (f && ED) addImage(f, ED, (url) => { SH(D()).img = url; redraw(); }); return; }
     if (t.id === 'upFile') {
       const f = t.files && t.files[0]; t.value = ''; if (!f) return;
       if (TAB === 'bg') addImage(f, BGD, (url) => { BGD.assign[BGD.sel] = { bg: 'img:' + url, blur: true }; bgTouched(); });

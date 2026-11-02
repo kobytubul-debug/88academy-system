@@ -1603,33 +1603,33 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 /* ================= the showcase layout (theme option "layout: show") =================
    An info square in the theme's main colour on the reading side, a big media window beside it (the stage's picture,
    the demo video, the upload, or the instructor's note), and under the media a grey tab for each step of the exercise. */
-.show { --sh-ink: #0C1424; --sh-tab: #EFEFEF; --sh-tab2: #FFFFFF;
-  display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; width: 100%; color: var(--sh-ink); }
-.sh-info { background: var(--mint); color: var(--sh-ink); padding: 22px 22px 18px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.show { --shk: var(--sh-ink, #0C1424); --sht: var(--sh-tab, #EFEFEF); --shtk: var(--sh-tabink, #0C1424); --shi: var(--sh-info, var(--mint));
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; width: 100%; color: var(--shk); }
+.sh-info { background: var(--shi); color: var(--shk); padding: 22px 22px 18px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
 .sh-top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; font-weight: 800; font-size: 13px; letter-spacing: .04em; }
 .sh-tag { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sh-count { font-family: var(--n); font-size: 15px; opacity: .8; }
-.slide.sh .sh-info h2 { margin: 0; font-size: 34px; font-weight: 900; line-height: 1.02; text-align: start; color: var(--sh-ink); text-shadow: none; font-style: normal; text-wrap: balance; }
-.slide.sh .sh-info h2 .tstars { color: var(--sh-ink); text-shadow: none; }
-.sh-desc { margin: 0; font-size: 15px; line-height: 1.5; color: color-mix(in srgb, var(--sh-ink) 86%, transparent); }
+.slide.sh .sh-info h2 { margin: 0; font-size: 34px; font-weight: 900; line-height: 1.02; text-align: start; color: var(--shk); text-shadow: none; font-style: normal; text-wrap: balance; }
+.slide.sh .sh-info h2 .tstars { color: var(--shk); text-shadow: none; }
+.sh-desc { margin: 0; font-size: 15px; line-height: 1.5; color: color-mix(in srgb, var(--shk) 86%, transparent); }
 .sh-state { margin: 0; font-size: 13px; font-weight: 800; letter-spacing: .03em; display: inline-flex; align-items: center; gap: 8px; }
-.sh-state::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--sh-ink); }
+.sh-state::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--shk); }
 .sh-state.s-now::before { background: var(--pink); } .sh-state.s-fix::before { background: var(--fixc); } .sh-state.s-wait::before { background: var(--sky); } .sh-state.s-done::before { background: var(--done); }
-.sh-foot { margin-top: auto; padding-top: 14px; border-top: 2px solid var(--sh-ink); display: flex; align-items: center; gap: 12px; }
-.sh-foot .rlens { position: relative; display: block; flex: none; width: 54px; height: 54px; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 3px var(--sh-ink), 0 0 0 6px rgba(255,255,255,.55); }
+.sh-foot { margin-top: auto; padding-top: 14px; border-top: 2px solid var(--shk); display: flex; align-items: center; gap: 12px; }
+.sh-foot .rlens { position: relative; display: block; flex: none; width: 54px; height: 54px; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 3px var(--shk), 0 0 0 6px rgba(255,255,255,.55); }
 .sh-foot .rlens .scn { position: absolute; inset: 0; }
 .sh-foot .rlens.dim { filter: grayscale(1) brightness(.75); }
 .sh-cta { flex: 1 1 auto; min-width: 0; display: flex; align-items: center; justify-content: space-between; gap: 10px; border: 0; background: none; padding: 6px 0; cursor: pointer;
-  color: var(--sh-ink); font: 800 15px var(--f); letter-spacing: .03em; text-align: start; }
+  color: var(--shk); font: 800 15px var(--f); letter-spacing: .03em; text-align: start; }
 .sh-cta i { font-style: normal; font-size: 26px; line-height: 1; transition: transform .15s; }
 .sh-cta:hover i { transform: translateX(-4px); }
-.sh-cta:focus-visible, .sh-tab:focus-visible { outline: 3px solid var(--sh-ink); outline-offset: 2px; }
+.sh-cta:focus-visible, .sh-tab:focus-visible { outline: 3px solid var(--shk); outline-offset: 2px; }
 
 /* the big media window */
 .sh-media { position: relative; min-height: 230px; overflow: hidden; background: #0A0F0E; display: grid; }
 .sh-art { position: absolute; inset: 0; }
 .sh-art .scn { position: absolute; inset: 0; }
-.sh-media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.05), rgba(0,0,0,.45)); pointer-events: none; }
+.sh-media::after { content: ""; position: absolute; inset: 0; background: rgba(0,0,0,var(--sh-dim, .35)); pointer-events: none; }
 .sh-pane { position: relative; z-index: 1; align-self: center; justify-self: center; width: min(460px, calc(100% - 28px)); margin: 16px 0; display: flex; flex-direction: column; gap: 10px; color: #fff; }
 .sh-pane .act { margin: 0; }
 .sh-pane .upl, .sh-pane .upl-ready, .sh-pane .upl-done { background: rgba(8,12,12,.72); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
@@ -1649,24 +1649,24 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 
 /* the grey step tabs */
 .sh-tabs { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 6px; }
-.sh-tab { position: relative; display: flex; align-items: center; gap: 10px; min-width: 0; padding: 14px 14px 12px; border: 0; background: var(--sh-tab); color: var(--sh-ink); cursor: pointer; text-align: start; font: inherit; }
+.sh-tab { position: relative; display: flex; align-items: center; gap: 10px; min-width: 0; padding: 14px 14px 12px; border: 0; background: var(--sht); color: var(--shtk); cursor: pointer; text-align: start; font: inherit; }
 .sh-tab::before { content: ""; position: absolute; inset: 0 0 auto; height: 5px; background: transparent; transition: background .15s; }
-.sh-tab.cur { background: var(--sh-tab2); }
-.sh-tab.cur::before { background: var(--mint); }
-.sh-tab:hover:not(.cur) { background: #E4E6E5; }
-.sh-tab .si { flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font: 900 15px var(--n); background: rgba(12,20,36,.08); color: var(--sh-ink); }
-.sh-tab.ok .si { background: var(--mint); }
+.sh-tab.cur { background: color-mix(in srgb, var(--sht) 55%, #ffffff); }
+.sh-tab.cur::before { background: var(--shi); }
+.sh-tab:hover:not(.cur) { background: color-mix(in srgb, var(--sht) 88%, #000000); }
+.sh-tab .si { flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font: 900 15px var(--n); background: color-mix(in srgb, var(--shtk) 10%, transparent); color: var(--shtk); }
+.sh-tab.ok .si { background: var(--shi); color: var(--shk); }
 .sh-tab.on:not(.ok) .si { background: var(--pink); color: #fff; }
 .sh-tab .si .ckp { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
 .sh-tab .tx { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
 .sh-tab b { font-size: 14px; font-weight: 800; line-height: 1.2; }
-.sh-tab small { font-size: 12px; color: #4B5563; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.sh-tab small { font-size: 12px; color: color-mix(in srgb, var(--shtk) 70%, transparent); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .sh-tab .rw { margin-inline-start: auto; flex: none; font: 900 12px var(--n); color: #0E7A55; }
 .app.noearn .sh-tab .rw, .app.noearn .sh-play small { display: none; }
 
 /* the other looks keep their own corners */
-.app:not(.race):not(.mil) .sh-info, .app:not(.race):not(.mil) .sh-media, .app:not(.race):not(.mil) .sh-tab { border-radius: 4px; }
-.app.mil .sh-info, .app.mil .sh-media, .app.mil .sh-tab { border-radius: 6px; }
+.app.shsoft .sh-info, .app.shsoft .sh-media, .app.shsoft .sh-tab { border-radius: 18px; }
+.app.shsoft .sh-tab::before { border-radius: 18px 18px 0 0; }
 
 /* phones: the square, then the media, then the tabs */
 @media (max-width: 899px) {
@@ -1704,6 +1704,38 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 .sh-cta .sh-arr { flex: none; width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; transition: transform .15s; }
 .sh-cta:hover .sh-arr { transform: translateX(-4px); }
 @media (min-width: 900px) { #app .show { grid-template-columns: minmax(340px, .42fr) minmax(0, 1fr); } }
+
+.sh-art .art-img { background-size: cover; background-position: center; }
+
+/* wide screens: the showcase sits under the side menu (from below "exit") and down to the next-exercise button */
+@media (min-width: 900px) {
+  #app.shw > .views { grid-column: 1 / -1; }
+  #app.shw > .tabs { z-index: 6; }
+  #app.shw > .views > .view:not(#v-map) { margin-inline-start: 250px; }
+  #app.shw .rail, #app.shw .peek { z-index: 7; }
+  #app .slide.sh > .sbody { padding: var(--sh-top, 120px) 22px 84px max(96px, calc((100% - 1320px) / 2)); }
+  #app .slide.sh .sgrid { height: 100%; min-height: 0; margin: 0; display: block; }
+  #app .show { height: 100%; max-height: none; grid-template-columns: minmax(300px, 340px) minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; }
+  #app .sh-info { padding: 24px 24px 20px; gap: 10px; }
+  #app .slide.sh .sh-info h2 { font-size: 32px; }
+  #app .sh-desc { font-size: 14.5px; }
+  #app .sh-media { min-height: 0; }
+  #app .sh-tab { min-height: 70px; padding: 12px 14px; }
+  #app .sh-tab b { font-size: 14px; }
+  #app .sh-foot .rlens { width: 56px; height: 56px; }
+}
+@media (min-width: 900px) and (max-height: 820px) { #app .show { grid-template-rows: minmax(0, 1fr) auto; } #app .sh-media { min-height: 0; } #app .slide.sh .sh-info h2 { font-size: 28px; } #app .sh-desc { -webkit-line-clamp: 3; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; } }
+
+/* each time a mission comes up, its details play into the green square and its picture into the media window */
+.slide.sh.live .sh-info > * { animation: shIn .5s cubic-bezier(.2,.8,.2,1) both; }
+.slide.sh.live .sh-info > :nth-child(2) { animation-delay: .06s; } .slide.sh.live .sh-info > :nth-child(3) { animation-delay: .12s; }
+.slide.sh.live .sh-info > :nth-child(4) { animation-delay: .18s; } .slide.sh.live .sh-info > :nth-child(n+5) { animation-delay: .24s; }
+.slide.sh.live .sh-art { animation: shArt .7s ease-out both; }
+.slide.sh.live .sh-tab { animation: shIn .45s cubic-bezier(.2,.8,.2,1) both; } .slide.sh.live .sh-tab:nth-child(2) { animation-delay: .08s; } .slide.sh.live .sh-tab:nth-child(3) { animation-delay: .16s; }
+@keyframes shIn { from { opacity: 0; transform: translateX(-18px); } to { opacity: 1; transform: none; } }
+@keyframes shArt { from { opacity: .3; transform: scale(1.06); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .slide.sh.live .sh-info > *, .slide.sh.live .sh-art, .slide.sh.live .sh-tab { animation: none; } }
+.app.calm .slide.sh.live .sh-info > *, .app.calm .slide.sh.live .sh-art, .app.calm .slide.sh.live .sh-tab { animation: none; }
 </style>
 </head>
 <body>
@@ -2449,7 +2481,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
         ${desc}${state ? `<p class="sh-state s-${n.state}">${esc(state)}</p>` : ''}
         <div class="sh-foot">${lensArt(n.id, n.state === 'lock')}${cta}</div>
       </div>
-      <div class="sh-media"><div class="sh-art" aria-hidden="true">${stageArt(n.id)}</div><div class="sh-pane" ${cur ? `role="tabpanel" aria-label="${esc(cur.title)}"` : ''}>${cur ? cur.pane() : body}</div></div>
+      <div class="sh-media"><div class="sh-art" aria-hidden="true">${ACTIVE && ACTIVE.show && ACTIVE.show.img ? `<div class="art-img" style="background-image:url(&quot;${esc(cssUrl(ACTIVE.show.img))}&quot;)"></div>` : stageArt(n.id)}</div><div class="sh-pane" ${cur ? `role="tabpanel" aria-label="${esc(cur.title)}"` : ''}>${cur ? cur.pane() : body}</div></div>
       ${tabs.length ? `<div class="sh-tabs" role="tablist" aria-label="שלבי התרגיל">${tabs.map((t, i) => `<button class="sh-tab${t === cur ? ' cur' : ''}${t.ok ? ' ok' : ''}${t.on ? ' on' : ''}" type="button" role="tab" aria-selected="${t === cur}" data-tab="${t.key}"><span class="si">${t.ok ? CKP : i + 1}</span><span class="tx"><b>${esc(t.title)}</b><small>${t.sub}</small></span>${t.rw ? `<span class="rw pts">+${t.rw}</span>` : ''}</button>`).join('')}</div>` : ''}
     </div>`;
   };
@@ -2501,6 +2533,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       v.querySelectorAll('.slide:not(.sh) .sgrid').forEach(panelize);
     });
     v.scrollTop = keep;
+    syncShow();
     const rail = $('#rail'), N = all.length, at = (i) => N > 1 ? i / (N - 1) : 0;
     rail.innerHTML = `<div class="line"></div><div class="fill" id="rfill"></div>` + all.map((x, i) => `<button class="dot ${x.t === 'chest' ? 'chest ' + x.state : x.t === 'boss' ? 'boss' : x.state}" type="button" data-i="${i}" style="top:calc(16px + (100% - 32px) * ${at(i)})" aria-label="${esc(x.name)}"></button>`).join('')
       + WORLDS.map(w => { const i = all.indexOf(w.nodes.find(x => all.indexOf(x) !== -1)); return i < 0 ? '' : `<span class="wl${at(i) > .82 ? ' up' : ''}" style="top:calc(16px + (100% - 32px) * ${at(i)})">${esc(w.cls === 'wb' ? T('boss') : T('world') + ' ' + (w.i + 1))}</span>`; }).join('')
@@ -2519,8 +2552,18 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const H = rail.clientHeight - 32, y = 16 + (n > 1 ? H * pos / (n - 1) : 0);
     $('#rme').style.top = y + 'px'; $('#rfill').style.height = (y - 16) + 'px';
     const cur = Math.round(pos); rail.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('cur', i === cur));
+    if (SHOW() && Math.abs(pos - cur) < .08) { const sl = v.children[cur]; if (sl && !sl.classList.contains('live')) { v.querySelectorAll('.slide.live').forEach(x => x.classList.remove('live')); sl.classList.add('live'); } }
     syncStageBg();
   };
+  // the showcase sits under the side menu (below "exit") and down to the next-exercise button
+  const syncShow = () => {
+    app.classList.toggle('shw', SHOW());
+    if (!SHOW() || innerWidth < 900) { app.style.removeProperty('--sh-top'); return; }
+    const tabs = app.querySelector(':scope > .tabs'), vm = $('#v-map'); if (!tabs || !vm) return;
+    const top = tabs.getBoundingClientRect().bottom - vm.getBoundingClientRect().top + 14;
+    app.style.setProperty('--sh-top', Math.max(20, Math.round(top)) + 'px');
+  };
+  addEventListener('resize', syncShow);
   $('#deck').addEventListener('scroll', syncRail, { passive: true });
   addEventListener('resize', syncRail);
   const wireNode = (n, box) => {
@@ -3147,6 +3190,11 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     app.classList.toggle('fh', !!(F.head && F.head !== 'default'));
     app.classList.toggle('day', mode === 'day');
     app.classList.toggle('calm', t.motion === 'calm');
+    const so2 = t.show || {}, shInfo = isHex(so2.info || '') ? so2.info : '', shTab = isHex(so2.tab || '') ? so2.tab : '';
+    if (shInfo) { set('--sh-info', shInfo); set('--sh-ink', inkOn(shInfo)); } else { app.style.removeProperty('--sh-info'); app.style.removeProperty('--sh-ink'); }
+    if (shTab) { set('--sh-tab', shTab); set('--sh-tabink', inkOn(shTab)); } else { app.style.removeProperty('--sh-tab'); app.style.removeProperty('--sh-tabink'); }
+    set('--sh-dim', String(Math.max(0, Math.min(80, Number(so2.dim == null ? 35 : so2.dim))) / 100));
+    app.classList.toggle('shsoft', so2.corners === 'soft');
     // the theme's own background, behind every screen (a stage with a background of its own shows that one on top)
     const tb = $('#themebg'), bg = t.bg || { kind: 'look' }, key = JSON.stringify(bg);
     const has = (bg.kind === 'color' && isHex(bg.color || '')) || (bg.kind === 'scene' && !!SCN[bg.id]) || (bg.kind === 'img' && !!bg.url);
@@ -3178,7 +3226,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   // the design page changes one thing at a time: colors and the like only need the variables, a new base style,
   // icons or words need the whole screen drawn again
   const previewTheme = (raw) => {
-    const t = themeOf(raw), shape = (x) => JSON.stringify([x.base, x.icons, x.terms, x.layout || 'panel']);
+    const t = themeOf(raw), shape = (x) => JSON.stringify([x.base, x.icons, x.terms, x.layout || 'panel', (x.show && x.show.img) || '']);
     if (ACTIVE && shape(ACTIVE) === shape(t)) { ACTIVE = t; applyVars(t); syncStageBg(); } else applyTheme(t);
   };
   // the switch shows where it leads: a sun to day, a moon to night
