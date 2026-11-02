@@ -52,7 +52,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 </header>
 <main style="max-width: 1080px; margin: 0 auto; padding: 40px clamp(16px, 4vw, 32px) 72px; box-sizing: border-box;">
 <h1 style="margin: 0; font-family: 'Karantina', 'Rubik', system-ui, sans-serif; font-size: 50px; line-height: 1; font-weight: 700; letter-spacing: 0.005em; color: #121413;">בדיקת AI</h1>
-<p style="margin: 10px 0 0; font-size: 15px; line-height: 1.6; color: #3D4541;">כשסטודנט שולח טיסה, Google Gemini צופה בסרטון, משווה אותו ל"איך עוברים" של המיומנות, וכותב משוב. אתם מחליטים אם הוא רק ממליץ לכם, או גם מאשר ומחזיר לבד.</p>
+<p style="margin: 10px 0 0; font-size: 15px; line-height: 1.6; color: #3D4541;">כשסטודנט שולח טיסה, Google Gemini צופה בה לצד סרטון ההדגמה של המיומנות ובודק בשלבים: האם זו אותה מפה, האם זה אותו תרגיל, והאם כל דרישה ב"איך עוברים" מתקיימת. טיסה עוברת רק אם הכל מתקיים, וכל ספק מחכה לכם. כדי שזה יעבוד טוב, לכל מיומנות כדאי שיהיה סרטון הדגמה במפה הנכונה ו"איך עוברים" מפורט. אתם מחליטים אם הוא רק ממליץ לכם, או גם מאשר ומחזיר לבד.</p>
 <div aria-live="polite">
 <sc-if value="{{hasFlash}}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 10px; margin-top: 16px; padding: 12px 16px; background: #DDF6EC; border: 1px solid #A3DEC6; border-radius: 12px; color: #145C45; font-size: 14px;">{{flash}}</div></sc-if>
 <sc-if value="{{hasError}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 16px 0 0; padding: 12px 16px; background: #FDECEC; border: 1px solid #F2B8B8; border-radius: 12px; font-size: 14px; color: #7F1D1D;">{{error}}</p></sc-if>

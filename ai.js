@@ -80,31 +80,45 @@ async function deleteFile(name) {
 }
 
 function prompt(job) {
+  const ref = !!job.hasRef;
   const lines = [
     'אתה מדריך טיסת רחפני FPV באקדמיה 88ACADEMY. סטודנט שלח סרטון של טיסה שלו כדי לעבור מיומנות.',
-    'צפה בסרטון כולו ובדוק אם הוא עומד בדרישות המיומנות.',
+    ref ? 'קיבלת שני סרטונים. סרטון 1 הוא סרטון ההדגמה של המדריך: הוא מראה את המפה הנכונה ואת התרגיל הנכון. סרטון 2 הוא הטיסה של הסטודנט, ואותו אתה בודק.'
+      : 'קיבלת סרטון אחד: הטיסה של הסטודנט. אין סרטון הדגמה, אז השווה לתיאור המפה והתרגיל שבטקסט.',
     '',
     'המיומנות: ' + job.skillName,
     job.desc ? 'תיאור: ' + job.desc : '',
     job.pass ? 'איך עוברים (מה בודקים): ' + job.pass : '',
-    job.map ? 'מפה / מסלול: ' + job.map : '',
+    job.map ? 'המפה / המסלול הנדרש: ' + job.map : 'לא נדרשה מפה מסוימת.',
     job.note ? 'הערת הסטודנט: ' + job.note : '',
     job.extra ? 'הנחיות נוספות מהמדריך: ' + job.extra : '',
     '',
+    'בודקים בשלושה שלבים, בסדר הזה:',
+    '1. מפה: האם הטיסה של הסטודנט היא באותה מפה / סביבה' + (ref ? ' כמו בסרטון ההדגמה' : ' שתוארה') + '? השווה סימנים שרואים: סוג השטח, מבנים, מכשולים, צבעים, שמיים. אם לא נדרשה מפה מסוימת, ענה "yes".',
+    '2. תרגיל: האם הסטודנט מבצע את אותו תרגיל' + (ref ? ' כמו בהדגמה' : ' שתואר') + ' (אותה תנועה, אותו מסלול, אותם מכשולים)? טיסה טובה של תרגיל אחר היא "no".',
+    '3. דרישות: כל דרישה מ"איך עוברים" בנפרד: מתקיימת או לא, ובאיזה זמן בסרטון 2 רואים את זה.',
+    '',
     'כללים:',
-    '- אם הסרטון לא מראה טיסת רחפן, או לא מראה את התרגיל הזה, או שאי אפשר לראות מספיק כדי להחליט, החזר verdict "unclear".',
-    '- "pass" רק כשרואים בבירור שכל הדרישות מתקיימות. "fail" כשרואים בבירור שדרישה לא מתקיימת.',
-    '- confidence הוא מספר בין 0 ל־100: כמה אתה בטוח בהחלטה.',
-    '- feedback: משוב לסטודנט בעברית, בגוף שני רבים, 2–4 משפטים, מעודד וענייני: מה היה טוב, ומה לשפר (עם זמנים בסרטון אם אפשר).',
+    '- לכל שלב ענה "yes", "no" או "unsure". "yes" רק כשאתה רואה את זה בבירור. אם אתה לא בטוח, "unsure", לא "yes".',
+    '- אל תניח שהסטודנט טס במפה הנכונה או בתרגיל הנכון רק כי הוא שלח את הסרטון לתרגיל הזה.',
+    '- verdict: "pass" רק אם המפה "yes", התרגיל "yes" וכל הדרישות "yes". "fail" אם משהו מהם "no". אחרת "unclear".',
+    '- confidence: מספר בין 0 ל־100, כמה אתה בטוח בהחלטה.',
+    '- map_seen ו־exercise_seen: במשפט קצר בעברית, מה רואים בסרטון 2 (למשל "שדה דשא עם חבילות קש", "חניון בעיר, טיסה ישרה בין עמודים").',
+    '- feedback: משוב לסטודנט בעברית, בגוף שני רבים, 2–4 משפטים, מעודד וענייני. אם המפה או התרגיל לא נכונים, אמור את זה קודם ובמפורש.',
     '- notes: הערה קצרה למדריך בעברית: על מה התבססת ומה כדאי לו לבדוק בעצמו.',
     '',
     'ענה ב־JSON בלבד, בדיוק במבנה הזה:',
-    '{"verdict": "pass" | "fail" | "unclear", "confidence": 0-100, "feedback": "...", "notes": "..."}'
+    '{"map_match": "yes" | "no" | "unsure", "map_seen": "...", "exercise_match": "yes" | "no" | "unsure", "exercise_seen": "...", "requirements": [{"text": "...", "met": "yes" | "no" | "unsure", "at": "0:12"}], "verdict": "pass" | "fail" | "unclear", "confidence": 0-100, "feedback": "...", "notes": "..."}'
   ];
-  return lines.filter((l) => l !== '').join('\n').replace(/\n(כללים:|ענה ב)/g, '\n\n$1');
+  return lines.filter((l) => l !== '').join('\n').replace(/\n(בודקים בשלושה|כללים:|ענה ב)/g, '\n\n$1');
 }
 
-function parse(text) {
+const YNU = (v) => (['yes', 'no', 'unsure'].indexOf(v) !== -1 ? v : 'unsure');
+const MARK = { yes: '✓', no: '✗', unsure: '?' };
+
+// The decision is made here, from the checks, not taken from the model's own verdict:
+// pass only when the map, the exercise and every requirement are a clear yes; any no is a fail; anything else is unclear.
+function parse(text, opts) {
   const t = String(text || '').trim().replace(/^```(?:json)?/i, '').replace(/```$/, '').trim();
   let o = null;
   try { o = JSON.parse(t); } catch (e) {
@@ -112,21 +126,43 @@ function parse(text) {
     if (m) { try { o = JSON.parse(m[0]); } catch (e2) {} }
   }
   if (!o || typeof o !== 'object') throw new Error('Gemini answered in an unexpected format.');
-  const verdict = ['pass', 'fail', 'unclear'].indexOf(o.verdict) !== -1 ? o.verdict : 'unclear';
+  const needMap = !(opts && opts.noMap);
+  const map = needMap ? YNU(o.map_match) : 'yes';
+  const ex = YNU(o.exercise_match);
+  const reqs = (Array.isArray(o.requirements) ? o.requirements : []).slice(0, 12).map((r) => ({
+    text: String((r && r.text) || '').trim().slice(0, 200),
+    met: YNU(r && r.met),
+    at: String((r && r.at) || '').trim().slice(0, 20)
+  })).filter((r) => r.text);
+  const said = ['pass', 'fail', 'unclear'].indexOf(o.verdict) !== -1 ? o.verdict : 'unclear';
+  const all = [map, ex].concat(reqs.map((r) => r.met));
+  let verdict;
+  if (all.indexOf('no') !== -1) verdict = 'fail';
+  else if (all.indexOf('unsure') !== -1 || !reqs.length) verdict = said === 'fail' ? 'fail' : 'unclear';
+  else verdict = said === 'fail' ? 'fail' : said === 'unclear' ? 'unclear' : 'pass';
   const confidence = Math.max(0, Math.min(100, Math.round(Number(o.confidence) || 0)));
+  const mapSeen = String(o.map_seen || '').trim().slice(0, 200), exSeen = String(o.exercise_seen || '').trim().slice(0, 200);
+  const okReqs = reqs.filter((r) => r.met === 'yes').length;
+  const summary = [
+    needMap ? 'מפה ' + MARK[map] + (mapSeen ? ' (בסרטון: ' + mapSeen + ')' : '') : '',
+    'תרגיל ' + MARK[ex] + (exSeen ? ' (בסרטון: ' + exSeen + ')' : ''),
+    reqs.length ? 'דרישות ' + okReqs + '/' + reqs.length : 'לא פורטו דרישות',
+    opts && opts.hasRef ? 'הושווה לסרטון ההדגמה' : 'בלי סרטון הדגמה להשוואה'
+  ].filter(Boolean).join(' · ');
   return {
     verdict,
     confidence,
     feedback: String(o.feedback || '').trim().slice(0, 1000),
-    notes: String(o.notes || '').trim().slice(0, 1000)
+    notes: (summary + (o.notes ? ' · ' + String(o.notes).trim() : '')).slice(0, 1200),
+    checks: { map, mapSeen, exercise: ex, exerciseSeen: exSeen, requirements: reqs, said, ref: !!(opts && opts.hasRef) }
   };
 }
 
-// job: { file (full path) | youtube (url), skillName, desc, pass, map, note, extra, model }
+// job: { file (full path) | youtube (url), refFile | refYoutube (the demo video), skillName, desc, pass, map, note, extra, model }
 async function check(job) {
   if (!hasKey()) throw new Error('חסר מפתח GEMINI_API_KEY בהגדרות של Render.');
   const model = (job.model || DEFAULT_MODEL).replace(/^models\//, '');
-  let uploaded = null;
+  let uploaded = null, refUp = null;
   try {
     let part;
     if (job.file) {
@@ -137,21 +173,29 @@ async function check(job) {
     } else {
       throw new Error('אין סרטון שאפשר לבדוק.');
     }
-    const body = {
-      contents: [{ role: 'user', parts: [part, { text: prompt(job) }] }],
-      generationConfig: { responseMimeType: 'application/json', temperature: 0.2 }
+    // the instructor's demo video of the same exercise, when there is one: the model compares against it
+    let refPart = null;
+    if (job.refFile) {
+      try { const r = await uploadFile(job.refFile); refUp = r; refPart = { file_data: { mime_type: r.mime, file_uri: r.uri } }; } catch (e) { refPart = null; }
+    } else if (job.refYoutube) refPart = { file_data: { file_uri: job.refYoutube } };
+    const ask = async (ref) => {
+      const pj = Object.assign({}, job, { hasRef: !!ref });
+      const parts = ref ? [{ text: 'סרטון 1: סרטון ההדגמה של המדריך (המפה והתרגיל הנכונים).' }, ref, { text: 'סרטון 2: הטיסה של הסטודנט, לבדיקה.' }, part, { text: prompt(pj) }] : [part, { text: prompt(pj) }];
+      const out = await call(BASE + '/v1beta/models/' + encodeURIComponent(model) + ':generateContent', {
+        method: 'POST',
+        headers: { 'x-goog-api-key': KEY(), 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ role: 'user', parts }], generationConfig: { responseMimeType: 'application/json', temperature: 0.2 } })
+      }, 5 * 60000);
+      const cand = out.json && out.json.candidates && out.json.candidates[0];
+      const text = cand && cand.content && cand.content.parts ? cand.content.parts.map((p) => p.text || '').join('') : '';
+      if (!text) throw new Error('Gemini did not answer' + (cand && cand.finishReason ? ' (' + cand.finishReason + ')' : '') + '.');
+      return Object.assign(parse(text, { hasRef: !!ref, noMap: !job.map && !ref }), { model });
     };
-    const out = await call(BASE + '/v1beta/models/' + encodeURIComponent(model) + ':generateContent', {
-      method: 'POST',
-      headers: { 'x-goog-api-key': KEY(), 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    }, 5 * 60000);
-    const cand = out.json && out.json.candidates && out.json.candidates[0];
-    const text = cand && cand.content && cand.content.parts ? cand.content.parts.map((p) => p.text || '').join('') : '';
-    if (!text) throw new Error('Gemini did not answer' + (cand && cand.finishReason ? ' (' + cand.finishReason + ')' : '') + '.');
-    return Object.assign(parse(text), { model });
+    // if Gemini refuses the pair of videos (for example a demo it cannot open), the flight is checked on its own
+    try { return await ask(refPart); } catch (e) { if (refPart && e.status >= 400 && e.status < 500) return await ask(null); throw e; }
   } finally {
     if (uploaded) deleteFile(uploaded.name);
+    if (refUp) deleteFile(refUp.name);
   }
 }
 
