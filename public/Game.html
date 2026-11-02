@@ -1522,8 +1522,8 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 
 /* ================= one panel per window: everything the window says, in one wide box at the bottom =================
    The stage's lens stays above it, over the background. The level tag and the count head the panel. */
-.slide .sgrid { min-height: 100%; justify-content: flex-end; }
-.slide .sgrid > .hero { flex: 1 1 auto; min-height: 120px; }
+.app.lpanel .slide .sgrid { min-height: 100%; justify-content: flex-end; }
+.app.lpanel .slide .sgrid > .hero { flex: 1 1 auto; min-height: 120px; }
 .mpanel {
   display: flex; flex-direction: column; gap: 14px; padding: 16px; border-radius: 22px; box-sizing: border-box;
   background: color-mix(in srgb, var(--night) 80%, transparent); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
@@ -1545,11 +1545,11 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 .app.race .mpanel { border-radius: 0; background: color-mix(in srgb, #0B0C0D 72%, transparent); }
 .app.race .mpanel .mp-head .world { padding: 6px 28px 6px 18px; }
 .app.mil .mpanel { border-radius: 8px; }
-#app.day .mpanel { background: color-mix(in srgb, var(--d-card, #FFFFFF) 88%, transparent); box-shadow: 0 18px 44px rgba(0,0,0,.18), inset 0 0 0 1px rgba(0,0,0,.08); }
+#app.lpanel.day .mpanel { background: color-mix(in srgb, var(--d-card, #FFFFFF) 88%, transparent); box-shadow: 0 18px 44px rgba(0,0,0,.18), inset 0 0 0 1px rgba(0,0,0,.08); }
 
 /* phones: the panel stacks; the steps become a row of three small tiles */
 @media (max-width: 899px) {
-  .slide .sgrid > .hero { height: auto; min-height: 104px; max-height: 150px; }
+  .app.lpanel .slide .sgrid > .hero { height: auto; min-height: 104px; max-height: 150px; }
   .mpanel h2 { font-size: 26px; }
   .mpanel .desc { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; font-size: 13.5px; }
   .mpanel .steps { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 6px; }
@@ -1562,25 +1562,25 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 
 /* wide screens: the panel runs across, in three columns: what this is / what was said and the steps / what to do now */
 @media (min-width: 900px) {
-  #app .slide .sgrid { display: flex; flex-direction: column; gap: 18px; }
-  #app .slide .sgrid > .hero { grid-column: auto; grid-row: auto; height: auto; min-height: 180px; max-height: 300px; align-self: stretch; margin: 0; }
-  #app .mpanel { flex-direction: row; align-items: stretch; gap: 26px; padding: 22px 26px; border-radius: 26px; }
-  #app .app.race .mpanel, #app.race .mpanel { border-radius: 0; }
-  #app .mpanel > div + div { padding-inline-start: 26px; border-inline-start: 1px solid rgba(255,255,255,.12); }
-  #app.day .mpanel > div + div { border-inline-start-color: rgba(0,0,0,.1); }
-  #app .mpanel .mp-a { flex: 1.35 1 0; }
-  #app .mpanel .mp-b { flex: 1.3 1 0; justify-content: center; }
-  #app .mpanel .mp-c { flex: 1 1 0; justify-content: center; }
-  #app .mpanel.n1 .mp-a { flex: 1 1 auto; }
-  #app .mpanel h2 { font-size: 34px; }
-  #app .mpanel .desc { font-size: 15px; }
-  #app .mpanel .steps { gap: 8px; }
-  #app .mpanel .step { padding: 10px 12px; }
-  #app .mpanel .step .si { width: 38px; height: 38px; font-size: 20px; }
-  #app .mpanel .step b { font-size: 14.5px; }
-  #app .slide > .sbody { padding-bottom: 86px; }
+  #app.lpanel .slide .sgrid { display: flex; flex-direction: column; gap: 18px; }
+  #app.lpanel .slide .sgrid > .hero { grid-column: auto; grid-row: auto; height: auto; min-height: 180px; max-height: 300px; align-self: stretch; margin: 0; }
+  #app.lpanel .mpanel { flex-direction: row; align-items: stretch; gap: 26px; padding: 22px 26px; border-radius: 26px; }
+  #app.lpanel .app.race .mpanel, #app.race .mpanel { border-radius: 0; }
+  #app.lpanel .mpanel > div + div { padding-inline-start: 26px; border-inline-start: 1px solid rgba(255,255,255,.12); }
+  #app.lpanel.day .mpanel > div + div { border-inline-start-color: rgba(0,0,0,.1); }
+  #app.lpanel .mpanel .mp-a { flex: 1.35 1 0; }
+  #app.lpanel .mpanel .mp-b { flex: 1.3 1 0; justify-content: center; }
+  #app.lpanel .mpanel .mp-c { flex: 1 1 0; justify-content: center; }
+  #app.lpanel .mpanel.n1 .mp-a { flex: 1 1 auto; }
+  #app.lpanel .mpanel h2 { font-size: 34px; }
+  #app.lpanel .mpanel .desc { font-size: 15px; }
+  #app.lpanel .mpanel .steps { gap: 8px; }
+  #app.lpanel .mpanel .step { padding: 10px 12px; }
+  #app.lpanel .mpanel .step .si { width: 38px; height: 38px; font-size: 20px; }
+  #app.lpanel .mpanel .step b { font-size: 14.5px; }
+  #app.lpanel .slide > .sbody { padding-bottom: 86px; }
 }
-@media (min-width: 900px) and (max-height: 800px) { #app .mpanel h2 { font-size: 32px; } #app .mpanel .step small { display: none; } #app .slide .sgrid > .hero { min-height: 130px; } }
+@media (min-width: 900px) and (max-height: 800px) { #app.lpanel .mpanel h2 { font-size: 32px; } #app.lpanel .mpanel .step small { display: none; } #app.lpanel .slide .sgrid > .hero { min-height: 130px; } }
 
 /* the next exercise: reads as the way down to the next screen */
 .nextbtn .nb-down { flex: none; display: grid; place-items: center; width: 34px; height: 34px; margin-inline-start: 4px; border-radius: 50%; background: var(--nb); color: var(--ink, #0B1513); animation: nbdown 1.8s ease-in-out infinite; }
@@ -1590,15 +1590,15 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 .app.race .nextbtn .nb-down { border-radius: 0; }
 .app.mil .nextbtn .nb-down { border-radius: 4px; }
 @media (prefers-reduced-motion: reduce) { .nextbtn .nb-down { animation: none; } }
-@media (min-width: 900px) { #app .mpanel .mp-c:not(:has(.upl)) { flex: .85 1 0; } #app .mpanel h2 { text-wrap: balance; } }
+@media (min-width: 900px) { #app.lpanel .mpanel .mp-c:not(:has(.upl)) { flex: .85 1 0; } #app.lpanel .mpanel h2 { text-wrap: balance; } }
 /* the action column keeps a fixed, comfortable width so its button never wraps */
 @media (min-width: 900px) {
-  #app .mpanel .mp-a { flex: 1.1 1 0; } #app .mpanel .mp-b { flex: 1 1 0; }
-  #app .mpanel .mp-c, #app .mpanel .mp-c:not(:has(.upl)) { flex: 0 0 250px; }
-  #app .mpanel .mp-c:has(.upl) { flex: 0 0 300px; }
+  #app.lpanel .mpanel .mp-a { flex: 1.1 1 0; } #app.lpanel .mpanel .mp-b { flex: 1 1 0; }
+  #app.lpanel .mpanel .mp-c, #app.lpanel .mpanel .mp-c:not(:has(.upl)) { flex: 0 0 250px; }
+  #app.lpanel .mpanel .mp-c:has(.upl) { flex: 0 0 300px; }
 }
-@media (min-width: 900px) and (max-width: 1180px) { #app .mpanel .mp-c, #app .mpanel .mp-c:not(:has(.upl)) { flex-basis: 210px; } #app .mpanel .mp-c:has(.upl) { flex-basis: 260px; } }
-@media (min-width: 900px) and (max-width: 1180px) { #app .mpanel .step small { display: none; } #app .mpanel h2 { font-size: 30px; } }
+@media (min-width: 900px) and (max-width: 1180px) { #app.lpanel .mpanel .mp-c, #app.lpanel .mpanel .mp-c:not(:has(.upl)) { flex-basis: 210px; } #app.lpanel .mpanel .mp-c:has(.upl) { flex-basis: 260px; } }
+@media (min-width: 900px) and (max-width: 1180px) { #app.lpanel .mpanel .step small { display: none; } #app.lpanel .mpanel h2 { font-size: 30px; } }
 
 /* ================= the showcase layout (theme option "layout: show") =================
    An info square in the theme's main colour on the reading side, a big media window beside it (the stage's picture,
@@ -2549,7 +2549,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
           </div></div>${i < all.length - 1 ? nextBtn(all[i + 1], i + 1) : ''}
         </section>`;
       }).join('');
-      v.querySelectorAll('.slide:not(.sh) .sgrid').forEach(panelize);
+      if (ACTIVE && ACTIVE.layout === 'panel') v.querySelectorAll('.slide:not(.sh) .sgrid').forEach(panelize);
     });
     v.scrollTop = keep;
     syncShow();
@@ -3214,6 +3214,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     if (shTab) { set('--sh-tab', shTab); set('--sh-tabink', inkOn(shTab)); } else { app.style.removeProperty('--sh-tab'); app.style.removeProperty('--sh-tabink'); }
     set('--sh-dim', String(Math.max(0, Math.min(80, Number(so2.dim == null ? 35 : so2.dim))) / 100));
     app.classList.toggle('shsoft', so2.corners === 'soft');
+    app.classList.toggle('lpanel', t.layout === 'panel');
     // the theme's own background, behind every screen (a stage with a background of its own shows that one on top)
     const tb = $('#themebg'), bg = t.bg || { kind: 'look' }, key = JSON.stringify(bg);
     const has = (bg.kind === 'color' && isHex(bg.color || '')) || (bg.kind === 'scene' && !!SCN[bg.id]) || (bg.kind === 'img' && !!bg.url);
@@ -3245,7 +3246,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   // the design page changes one thing at a time: colors and the like only need the variables, a new base style,
   // icons or words need the whole screen drawn again
   const previewTheme = (raw) => {
-    const t = themeOf(raw), shape = (x) => JSON.stringify([x.base, x.icons, x.terms, x.layout || 'panel', (x.show && x.show.img) || '']);
+    const t = themeOf(raw), shape = (x) => JSON.stringify([x.base, x.icons, x.terms, x.layout || 'classic', (x.show && x.show.img) || '']);
     if (ACTIVE && shape(ACTIVE) === shape(t)) { ACTIVE = t; applyVars(t); syncStageBg(); } else applyTheme(t);
   };
   // the switch shows where it leads: a sun to day, a moon to night
