@@ -493,6 +493,12 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   const sendGo = (node, jump) => { if (node) post({ type: 'g88-go', node, jump: !!jump }); };
   addEventListener('message', (ev) => {
     if (ev.origin !== location.origin || ev.source !== frame.contentWindow) return;
+    if (ev.data && ev.data.type === 'g88-wcpos' && ED && TAB === 'themes') {
+      // the exercise window was dragged in the preview
+      const O = WC(D()); O.x = Math.max(-700, Math.min(700, Math.round(Number(ev.data.x) || 0))); O.y = Math.max(-400, Math.min(400, Math.round(Number(ev.data.y) || 0)));
+      ['x', 'y'].forEach(k => { const r = body.querySelector(`[data-wcr="${k}"]`), o = $('#wco-' + k); if (r) r.value = O[k]; if (o) o.textContent = O[k] + 'px'; });
+      touched(); return;
+    }
     if (!ev.data || ev.data.type !== 'g88-ready') return;
     PVS.ready = true; sendTheme(); sendBg();
     if (TAB === 'bg' && BGD && BGD.sel) sendGo(nodeFor(BGD.sel), true);
@@ -545,7 +551,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   const SH = (t) => { t.show = Object.assign({ img: '', dim: 35, info: '', tab: '', corners: 'square' }, t.show || {}); return t.show; };
   const LZ = (t) => { t.lens = Object.assign({ show: 'auto', size: 100, shape: 'round', x: 0, y: 0, ring: '' }, t.lens || {}); return t.lens; };
   const PC_DEF = { drone: 100, name: 100, num: 100, corners: 'auto', width: 'normal', side: 'start', align: 'center', stats: true, badge: true, float: true, bg: '', bg2: '', fg: '', badgeBg: '', badgeFg: '', statBg: '', numC: '', lbl: '', line: '' };
-  const WC_DEF = { title: 100, text: 100, width: 100, alpha: 85, y: 0, corners: 'auto', glass: true, align: 'start', bg: '', fg: '', head: '', kick: '', btn: '', btnFg: '', line: '' };
+  const WC_DEF = { title: 100, text: 100, width: 100, alpha: 85, y: 0, x: 0, corners: 'auto', glass: true, align: 'start', bg: '', fg: '', head: '', kick: '', btn: '', btnFg: '', line: '' };
   const PCD = (t) => Object.assign({}, PC_DEF, t.pcard || {}), WCD = (t) => Object.assign({}, WC_DEF, t.wcard || {});
   const PC = (t) => (t.pcard = Object.assign({}, PC_DEF, t.pcard || {})), WC = (t) => (t.wcard = Object.assign({}, WC_DEF, t.wcard || {}));
   const SD_DEF = { show: true, size: 100, gap: 6, shape: 'pill', place: 'above', lines: true, ticks: true, stamp: true, bg: '', fg: '', curBg: '', curFg: '', okBg: '', okFg: '', line: '', edge: '', stampBg: '', stampFg: '', names: { intro: '', video: '', up: '', tower: '' } };
@@ -802,13 +808,15 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
         ${d.layout === 'show' ? showOpts(d, C) : ''}
         ${d.layout === 'bar' ? `<h3 class="st-h3">מיקום הבר במחשב</h3><div class="st-seg" role="group" aria-label="מיקום הבר"><button type="button" data-barpos="bottom" class="${d.barPos !== 'side' ? 'on' : ''}" aria-pressed="${d.barPos !== 'side'}">שורה בתחתית</button><button type="button" data-barpos="side" class="${d.barPos === 'side' ? 'on' : ''}" aria-pressed="${d.barPos === 'side'}">רשימה בצד</button></div><p class="st-hint" style="margin:0">זו ברירת המחדל. לתלמיד יש כפתור קטן בפינת הבר שמחליף בין השתיים, והבחירה שלו נשמרת אצלו. בטלפון הבר תמיד בתחתית.</p>` : ''}
       </div></details>
-      ${fold('wcard', 'חלון התרגיל', (d.wcard && (d.wcard.bg || d.wcard.head || d.wcard.btn || d.wcard.corners !== 'auto' || Number(d.wcard.width) !== 100) ? 'מותאם' : 'לפי הסגנון'), 'data-pv="map"')}
+      ${fold('wcard', 'חלון התרגיל', (d.wcard && (d.wcard.bg || d.wcard.head || d.wcard.btn || d.wcard.corners !== 'auto' || Number(d.wcard.width) !== 100 || Number(d.wcard.x) || Number(d.wcard.y)) ? 'מותאם' : 'לפי הסגנון'), 'data-pv="map"')}
         ${(() => { const C = WCD(d), seg = (k, v, label) => `<button type="button" data-wc="${k}" data-wcv="${v}" class="${String(C[k]) === v ? 'on' : ''}" aria-pressed="${String(C[k]) === v}">${label}</button>`;
           const range = (k, label, lo, hi, step, unit) => `<label class="st-field">${label} · <output id="wco-${k}">${C[k]}${unit}</output><input type="range" min="${lo}" max="${hi}" step="${step}" value="${C[k]}" data-wcr="${k}" data-unit="${unit}" aria-label="${label}"></label>`;
           const col = (k, label, def) => colorRow('wc-' + k, label, '↺ מחזיר לצבע של הסגנון', C[k] || def, !!C[k]);
           return `<p class="st-hint" style="margin:0">הכרטיס במרכז מסך התרגיל: בזרימה האוטומטית, בחלונית האחת ובחלון שנפתח מהבר התחתון. בפריסה הקלאסית אין חלון: הטקסט מוצג ישר על הרקע.</p>
           <div class="st-colors">${col('bg', 'רקע החלון', '#14201d')}${col('line', 'מסגרת', '#ffffff')}${col('kick', 'שורת השלב (למעלה)', '#5cf0b4')}${col('head', 'הכותרת', '#ffffff')}${col('fg', 'הטקסט', '#dfe9e6')}${col('btn', 'הכפתור · רקע', '#ffd15c')}${col('btnFg', 'הכפתור · טקסט', '#0b1513')}</div>
-          ${range('alpha', 'אטימות הרקע', 30, 100, 5, '%')}${range('title', 'גודל הכותרת', 60, 160, 5, '%')}${range('text', 'גודל הטקסט', 80, 140, 5, '%')}${range('width', 'רוחב החלון', 60, 150, 5, '%')}${range('y', 'הזזה למעלה ולמטה', -250, 250, 10, 'px')}
+          ${range('alpha', 'אטימות הרקע', 30, 100, 5, '%')}${range('title', 'גודל הכותרת', 60, 160, 5, '%')}${range('text', 'גודל הטקסט', 80, 140, 5, '%')}${range('width', 'רוחב החלון', 60, 150, 5, '%')}${range('x', 'הזזה לצדדים', -700, 700, 10, 'px')}${range('y', 'הזזה למעלה ולמטה', -400, 400, 10, 'px')}
+          <p class="st-hint" style="margin:0">אפשר גם לגרור: בתצוגה המקדימה (במחשב) יש לחלון ידית ✥ למעלה. תופסים וגוררים למקום, והמיקום נשמר כאן.</p>
+          <div class="st-seg" role="group" aria-label="מיקום מהיר">${[['0,0', 'באמצע'], ['0,-200', 'למעלה'], ['0,160', 'למטה'], ['-300,0', 'שמאלה'], ['300,0', 'ימינה']].map(([v, l]) => `<button type="button" data-wcpos="${v}" class="${C.x + ',' + C.y === v ? 'on' : ''}">${l}</button>`).join('')}</div>
           <div class="st-seg" role="group" aria-label="פינות">${seg('corners', 'auto', 'פינות לפי הסגנון')}${seg('corners', '0', 'ישרות')}${seg('corners', '16', 'מעוגלות')}${seg('corners', '40', 'עגולות מאוד')}</div>
           <div class="st-seg" role="group" aria-label="יישור">${seg('align', 'start', 'יישור לימין')}${seg('align', 'center', 'יישור למרכז')}</div>
           <label class="st-check"><input type="checkbox" data-wcb="glass" ${C.glass ? 'checked' : ''}> רקע זכוכית (טשטוש של מה שמאחור)</label>
@@ -1198,6 +1206,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     if (ds.reset && ds.reset.indexOf('pc-') === 0) { PC(d)[ds.reset.slice(3)] = ''; redraw(); pvView('hangar'); return; }
     if (ds.reset && ds.reset.indexOf('wc-') === 0) { WC(d)[ds.reset.slice(3)] = ''; redraw(); pvView('map'); return; }
     if (ds.pc) { PC(d)[ds.pc] = ds.pcv; redraw(); pvView('hangar'); return; }
+    if (ds.wcpos) { const [x, y] = ds.wcpos.split(',').map(Number); Object.assign(WC(d), { x, y }); redraw(); pvView('map'); return; }
     if (ds.wc) { WC(d)[ds.wc] = ds.wcv; redraw(); pvView('map'); return; }
     if ('pcreset' in ds) { d.pcard = Object.assign({}, PC_DEF); redraw(); pvView('hangar'); return; }
     if ('wcreset' in ds) { d.wcard = Object.assign({}, WC_DEF); redraw(); pvView('map'); return; }

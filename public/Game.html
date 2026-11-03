@@ -2174,9 +2174,9 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 #app.wc-mid .stcard, #app.wc-mid .stcard h2, #app.wc-mid .stcard .st-task, #app.wc-mid .stcard .sh-state { text-align: center; }
 #app.wc-mid .stcard .st-top { justify-content: center; gap: 18px; }
 #app.wc-mid .stcard .st-donelbl { align-self: center; }
-#app .stcard { width: min(calc(600px * var(--wc-w, 1)), 100%); translate: 0 var(--wc-y, 0); }
+#app .stcard { width: min(calc(600px * var(--wc-w, 1)), 100%); translate: var(--wc-x, 0) var(--wc-y, 0); }
 #app .stcard.st-video { width: min(calc(880px * var(--wc-w, 1)), 100%); }
-#app .slide.sty .st-dots { translate: 0 var(--wc-y, 0); }
+#app .slide.sty .st-dots { translate: var(--wc-x, 0) var(--wc-y, 0); }
 @media (max-width: 899px) { #app .stcard h2, #app .mpanel h2 { font-size: calc(28px * var(--wc-title, 1)) !important; } #app .stcard, #app .slide.sty .st-dots { translate: 0 calc(var(--wc-y, 0) * .4); } }
 
 /* ================= windows of the admin's own (design page) ================= */
@@ -2318,6 +2318,15 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 @media (min-width: 900px) { #app.gd-r .sheet.gd { border-radius: var(--gd-r) !important; } }
 #app.gd-r .sheet.gd .gd-steps li { border-radius: calc(var(--gd-r) * .5) !important; }
 #app.gd-sqn .sheet.gd .gd-n { border-radius: 8px; }
+
+/* dragging the exercise window in the design page's preview */
+.wc-grip { position: absolute; top: 8px; left: 50%; translate: -50% 0; z-index: 3; width: 44px; height: 26px; border: 0; border-radius: 99px; cursor: grab; font-size: 16px; line-height: 1;
+  background: color-mix(in srgb, var(--white) 22%, transparent); color: var(--white); touch-action: none; }
+.wc-grip:active, #app.wc-dragging .wc-grip { cursor: grabbing; background: var(--gold); color: var(--ink, #0B1513); }
+#app.wc-dragging .stcard, #app.wc-dragging .st-dots { transition: none !important; animation: none !important; }
+#app.wc-dragging .stcard { box-shadow: 0 0 0 3px var(--gold), 0 30px 80px rgba(0,0,0,.45) !important; }
+.stcard.st-ok .wc-grip { top: 36px; }
+@media (max-width: 899px) { .wc-grip { display: none; } }
 </style>
 </head>
 <body>
@@ -4012,10 +4021,10 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     set('--wc-text', String(Math.max(80, Math.min(140, Number(WC.text) || 100)) / 100));
     set('--wc-w', String(Math.max(60, Math.min(150, Number(WC.width) || 100)) / 100));
     set('--wc-a', String(WC.alpha == null ? 85 : Math.max(30, Math.min(100, Number(WC.alpha)))) + '%');
-    set('--wc-y', (Number(WC.y) || 0) + 'px');
+    set('--wc-y', (Number(WC.y) || 0) + 'px'); set('--wc-x', (Number(WC.x) || 0) + 'px');
     app.classList.toggle('wc-r', ['0', '16', '40'].indexOf(String(WC.corners)) !== -1); set('--wc-r', (Number(WC.corners) || 0) + 'px');
     app.classList.toggle('wc-flat', WC.glass === false); app.classList.toggle('wc-mid', WC.align === 'center');
-    app.classList.toggle('wc-set', !!(t.wcard && (Number(WC.width) !== 100 || Number(WC.y) || WC.alpha != null && Number(WC.alpha) !== 85)));
+    app.classList.toggle('wc-set', !!(t.wcard && (Number(WC.width) !== 100 || Number(WC.y) || Number(WC.x) || WC.alpha != null && Number(WC.alpha) !== 85)));
     // open editing: the theme's own CSS
     let tcss = document.getElementById('themecss'); if (!tcss) { tcss = document.createElement('style'); tcss.id = 'themecss'; document.head.appendChild(tcss); }
     const css0 = String(t.css || '').replace(/<\/?\s*style/gi, '').replace(/@import/gi, ''); if (tcss.textContent !== css0) tcss.textContent = css0;
@@ -4094,6 +4103,21 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       A.data.progress.introSeen = true; A.request('POST', '/api/intro-seen', {}); closeSheet();
     });
 
+  // the design page's preview: the exercise window can be dragged to its place (wide screens); the place goes back to the design page
+  if (PREVIEW) {
+    let drag = null;
+    const handle = () => { if (innerWidth < 900) return; document.querySelectorAll('#deck .stcard').forEach(c => { if (!c.querySelector(':scope > .wc-grip')) { const g = document.createElement('button'); g.type = 'button'; g.className = 'wc-grip'; g.setAttribute('aria-label', 'גרירת חלון התרגיל'); g.textContent = '✥'; c.prepend(g); } }); };
+    new MutationObserver(() => handle()).observe(document.getElementById('deck'), { childList: true, subtree: true });
+    document.addEventListener('pointerdown', (e) => {
+      const g = e.target.closest && e.target.closest('.wc-grip'); if (!g) return;
+      e.preventDefault(); const cs = getComputedStyle(app);
+      drag = { sx: e.clientX, sy: e.clientY, x: parseFloat(cs.getPropertyValue('--wc-x')) || 0, y: parseFloat(cs.getPropertyValue('--wc-y')) || 0, id: e.pointerId };
+      g.setPointerCapture && g.setPointerCapture(e.pointerId); app.classList.add('wc-dragging');
+    });
+    document.addEventListener('pointermove', (e) => { if (!drag) return; const x = Math.round(drag.x + e.clientX - drag.sx), y = Math.round(drag.y + e.clientY - drag.sy); drag.nx = Math.max(-700, Math.min(700, x)); drag.ny = Math.max(-400, Math.min(400, y)); app.style.setProperty('--wc-x', drag.nx + 'px'); app.style.setProperty('--wc-y', drag.ny + 'px'); });
+    const end = () => { if (!drag) return; const d0 = drag; drag = null; app.classList.remove('wc-dragging'); if (d0.nx == null) return; if (ACTIVE) { ACTIVE.wcard = Object.assign({}, ACTIVE.wcard, { x: d0.nx, y: d0.ny }); } try { parent.postMessage({ type: 'g88-wcpos', x: d0.nx, y: d0.ny }, location.origin); } catch (er) {} };
+    document.addEventListener('pointerup', end); document.addEventListener('pointercancel', end);
+  }
   // ---------- the design page's live preview: it sends the theme and the stage backgrounds being edited ----------
   if (PREVIEW) {
     addEventListener('message', (ev) => {
