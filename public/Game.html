@@ -2491,7 +2491,7 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 .fb-i.s-wait .fb-n { background: var(--sky); color: var(--ink, #0B1513); } .fb-i.s-fix .fb-n { background: var(--fixc); color: var(--ink, #0B1513); } .fb-i.s-now .fb-n { background: var(--pink); color: #fff; }
 .fb-i.cur { background: var(--fc-curBg, var(--white)); color: var(--fc-curFg, var(--ink, #0B1513)); }
 .fb-i:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
-#app.fb-sq .fb-i, #app.fb-sq .fb-n, #app.fb-sq #fbar { border-radius: 4px; } #app.fb-rd .fb-i, #app.fb-rd .fb-n { border-radius: 10px; }
+#app.fb-sq .fb-i, #app.fb-sq .fb-n { border-radius: 4px; } #app.fb-rd .fb-i, #app.fb-rd .fb-n { border-radius: 10px; }
 @media (min-width: 900px) { #fbar { top: 84px; left: 205px; right: 145px; } #app.lfocus .slide.fc > .sbody { padding-top: 150px; } }
 
 /* the entrance of a mission */
@@ -2548,6 +2548,14 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 @media (max-width: 899px) { #fbar { top: calc(env(safe-area-inset-top, 0px) + 128px); } }
 /* side menu buttons hidden by the theme */
 #app .tabs .tab.mn-off { display: none !important; }
+/* the missions list: its look, set on the design page */
+#fbar { background: color-mix(in srgb, var(--fc-barBg, var(--night)) var(--fl-a, 70%), transparent); border-radius: var(--fl-r, 18px); gap: calc(var(--fl-gap, 5px) * var(--fc-bs, 1)); }
+#fbar.on-side { gap: calc(var(--fl-gap, 5px) * var(--fc-bs, 1)); }
+#app.fl-flat #fbar { backdrop-filter: none; -webkit-backdrop-filter: none; }
+#app.fl-frame #fbar { box-shadow: inset 0 0 0 2px var(--fl-frame); }
+#fbar.at-bottom { top: auto; bottom: 20px; }
+@media (min-width: 900px) { #app.fbar-bottom.lfocus .slide.fc > .sbody { padding-top: 96px; padding-bottom: 96px; } }
+@media (min-width: 900px) { #app.fbar-left.lfocus .slide.fc > .sbody { padding-left: max(205px, var(--fl-w, 280px)); } }
 </style>
 </head>
 <body>
@@ -3469,11 +3477,30 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   // wide screens: the list of missions sits in the side column, under the menu ("exit"), down to the bottom
   const placeFbar = () => {
     const fb = document.getElementById('fbar'); if (!fb) return;
-    const tabs = app.querySelector(':scope > .tabs'), side = fb.classList.contains('side') && innerWidth >= 900 && tabs;
-    fb.classList.toggle('on-side', !!side);
-    if (side) { const r = tabs.getBoundingClientRect(), t0 = ([...tabs.querySelectorAll('.tab')].find(x => x.offsetWidth > 0 && !x.classList.contains('tab-out')) || tabs).getBoundingClientRect(), a = app.getBoundingClientRect();
-      Object.assign(fb.style, { top: Math.round(r.bottom - a.top + 8) + 'px', width: Math.max(220, Math.round(t0.width)) + 'px', right: Math.max(16, Math.round(a.right - t0.right)) + 'px', left: 'auto', bottom: '20px' }); }
-    else ['top', 'width', 'right', 'left', 'bottom'].forEach(k => fb.style.removeProperty(k));
+    const F = FC(), pos = F.barPos || 'side', tabs = app.querySelector(':scope > .tabs'), wide = innerWidth >= 900;
+    const col = wide && (pos === 'side' || pos === 'left');
+    fb.classList.toggle('on-side', col); fb.classList.toggle('at-bottom', wide && pos === 'bottom');
+    ['top', 'width', 'right', 'left', 'bottom', 'height', 'max-height'].forEach(k => fb.style.removeProperty(k));
+    if (!wide) return;
+    const a = app.getBoundingClientRect(), X = Number(F.lX) || 0, Y = Number(F.lY) || 0, Hp = Math.max(20, Math.min(100, Number(F.lH) || 100)) / 100;
+    if (col) {
+      let top = 96, w = Number(F.lW) || 0, edge = 24;
+      if (pos === 'side' && tabs) {
+        // under the side menu: below its lowest visible button (the exit included)
+        const vis = [...tabs.children].filter(x => x.offsetWidth > 0 && getComputedStyle(x).display !== 'none');
+        top = Math.max(...vis.map(x => x.getBoundingClientRect().bottom), tabs.getBoundingClientRect().top) - a.top + 10;
+        const t0 = vis.find(x => !x.classList.contains('tab-out') && !x.classList.contains('tab-help'));
+        if (!w) w = t0 ? Math.round(t0.getBoundingClientRect().width) : 230; edge = t0 ? Math.round(a.right - t0.getBoundingClientRect().right) : 24;
+      }
+      if (!w) w = 230; w = Math.max(160, w);
+      const avail = a.height - top - Y - 20, h = Math.max(120, Math.round(avail * Hp));
+      Object.assign(fb.style, { top: Math.round(top + Y) + 'px', width: w + 'px', height: h + 'px', bottom: 'auto' });
+      if (pos === 'left') { fb.style.left = Math.max(8, Math.round(24 + X)) + 'px'; fb.style.right = 'auto'; app.style.setProperty('--fl-w', (w + Math.max(8, 24 + X) + 24) + 'px'); }
+      else { fb.style.right = Math.max(8, Math.round(Math.max(16, edge) - X)) + 'px'; fb.style.left = 'auto'; }
+    } else {
+      if (X) { fb.style.left = (205 - X) + 'px'; fb.style.right = (145 + X) + 'px'; }
+      if (pos === 'bottom') { fb.style.top = 'auto'; fb.style.bottom = (20 - Y) + 'px'; } else if (Y) fb.style.top = (84 + Y) + 'px';
+    }
   };
   addEventListener('resize', () => placeFbar());
   const fbarHtml = (all) => { const F = FC(); let k = 0; return all.map((x, i) => { if (x.t === 'skill') k++; const lbl = x.t === 'chest' ? '🎁' : x.t === 'boss' ? '★' : String(k);
@@ -3537,7 +3564,7 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     rail.querySelectorAll('.dot').forEach(d => { d.onclick = () => { hideTip(); goSlide(+d.dataset.i, true); }; d.onpointerenter = d.onfocus = () => showTip(d, all[+d.dataset.i]); d.onpointerleave = d.onblur = hideTip; });
     v.querySelectorAll('[data-next]').forEach(b => b.onclick = () => goSlide(+b.dataset.next, true));
     v.querySelectorAll('.slide[data-n]').forEach(sl => { const n = findNode(sl.dataset.n); if (n) wireNode(n, sl); });
-    { let fb = document.getElementById('fbar'); if (FOCUS() && FC().bar !== false) { if (!fb) { fb = document.createElement('nav'); fb.id = 'fbar'; fb.setAttribute('aria-label', 'כל המשימות'); app.appendChild(fb); } fb.hidden = $('#v-map').hidden; fb.className = FC().barPos === 'top' ? '' : 'side'; fb.innerHTML = fbarHtml(all); fb.querySelectorAll('[data-fi]').forEach(b => b.onclick = () => { const id = slideIds[+b.dataset.fi]; if (id && id !== slideIds[Math.round($('#deck').scrollTop / Math.max(1, $('#deck').clientHeight))]) { ui(id).tab = 'info'; const tn = findNode(id); if (tn) paint(tn); } goSlide(+b.dataset.fi, true); }); setTimeout(placeFbar, 0); } else if (fb) fb.remove(); }
+    { let fb = document.getElementById('fbar'); if (FOCUS() && FC().bar !== false) { if (!fb) { fb = document.createElement('nav'); fb.id = 'fbar'; fb.setAttribute('aria-label', 'כל המשימות'); app.appendChild(fb); } fb.hidden = $('#v-map').hidden; fb.className = FC().barPos === 'top' || FC().barPos === 'bottom' ? '' : 'side'; fb.innerHTML = fbarHtml(all); fb.querySelectorAll('[data-fi]').forEach(b => b.onclick = () => { const id = slideIds[+b.dataset.fi]; if (id && id !== slideIds[Math.round($('#deck').scrollTop / Math.max(1, $('#deck').clientHeight))]) { ui(id).tab = 'info'; const tn = findNode(id); if (tn) paint(tn); } goSlide(+b.dataset.fi, true); }); setTimeout(placeFbar, 0); } else if (fb) fb.remove(); }
     syncRail();
     renderPath();
   };
@@ -4390,7 +4417,7 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       ['zoomin', 'zoomout', 'right', 'left', 'up', 'down', 'fade', 'flip'].forEach(a => app.classList.toggle('fa-' + a, (F.anim || 'zoomin') === a));
       app.classList.toggle('fb-sq', F.barShape === 'square'); app.classList.toggle('fb-rd', F.barShape === 'round');
       ['square', 'diamond'].forEach(x => app.classList.toggle('fr-' + x, F.rShape === x)); ['center', 'start'].forEach(x => app.classList.toggle('fr-a' + x, F.rAlign === x));
-      app.classList.toggle('fc-sides', F.navPlace === 'sides'); set('--fc-h', (F.cardH == null ? 540 : Number(F.cardH)) + 'px'); app.classList.toggle('fc-fixh', F.cardH == null || Number(F.cardH) > 0); app.classList.toggle('fbar-side', F.barPos !== 'top'); }
+      app.classList.toggle('fc-sides', F.navPlace === 'sides'); set('--fc-h', (F.cardH == null ? 540 : Number(F.cardH)) + 'px'); set('--fl-gap', (F.lGap == null ? 5 : Number(F.lGap)) + 'px'); set('--fl-r', (F.lR == null ? 18 : Number(F.lR)) + 'px'); set('--fl-a', (F.lAlpha == null ? 70 : Number(F.lAlpha)) + '%'); app.classList.toggle('fl-flat', F.lBlur === false); if (isHex(F.lFrame || '')) set('--fl-frame', F.lFrame); else app.style.removeProperty('--fl-frame'); app.classList.toggle('fl-frame', isHex(F.lFrame || '')); setTimeout(placeFbar, 0); app.classList.toggle('fc-fixh', F.cardH == null || Number(F.cardH) > 0); app.classList.toggle('fbar-side', F.barPos !== 'top' && F.barPos !== 'bottom'); app.classList.toggle('fbar-bottom', F.barPos === 'bottom'); app.classList.toggle('fbar-left', F.barPos === 'left'); }
     // the "how we learn" window
     const GD = t.guide || {};
     ['bg', 'bg2', 'head', 'text', 'card', 'numBg', 'numFg', 'btnBg', 'btnFg', 'sub'].forEach(k => { const on = isHex(GD[k] || ''); if (on) set('--gd-' + k, GD[k]); else app.style.removeProperty('--gd-' + k); app.classList.toggle('gd-' + k, on); });
