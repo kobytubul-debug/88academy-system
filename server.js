@@ -221,6 +221,10 @@ function cleanTheme(t) {
     layout: ['show', 'panel', 'bar', 'story'].indexOf(t.layout) !== -1 ? t.layout : 'classic', show: cleanShow(t.show),
     // a special look over the base style: 'pixel' turns the whole student screen into a retro 8-bit arcade
     look: t.look === 'pixel' ? 'pixel' : '',
+    // the stage lens in the exercise window: shown or not (auto = as the layout has it), size, shape, place, ring colour
+    lens: (() => { const l = t.lens && typeof t.lens === 'object' ? t.lens : {}; const num = (v, lo, hi, d) => { const n = Math.round(Number(v)); return Number.isFinite(n) && v !== '' && v != null ? Math.max(lo, Math.min(hi, n)) : d; };
+      return { show: ['on', 'off'].indexOf(l.show) !== -1 ? l.show : 'auto', size: num(l.size, 50, 200, 100), shape: ['round', 'square', 'hex', 'diamond'].indexOf(l.shape) !== -1 ? l.shape : 'round',
+        x: num(l.x, -400, 400, 0), y: num(l.y, -300, 300, 0), ring: hexOk(l.ring) ? String(l.ring).toLowerCase() : '' }; })(),
     // the bottom bar's default place: a row at the bottom, or a list under the side menu (the student can switch)
     barPos: t.barPos === 'side' ? 'side' : 'bottom',
     // the automatic flow: open the waiting step on arrival, move on after sending, close messages after some seconds
