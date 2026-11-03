@@ -2467,7 +2467,7 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 .fc-navs { display: flex; justify-content: space-between; gap: 12px; margin-top: 4px; }
 .fc-nav { display: inline-flex; align-items: center; gap: 8px; border: 0; cursor: pointer; height: 46px; padding: 0 18px; border-radius: 14px; font: 800 15px var(--f);
   background: var(--fc-navBg, rgba(255,255,255,.12)); color: var(--fc-navFg, var(--white)); box-shadow: inset 0 0 0 1px rgba(255,255,255,.18); transition: background .2s, transform .1s; }
-.fc-nav:hover:not(:disabled) { background: var(--fc-navBg, rgba(255,255,255,.2)); filter: brightness(1.1); }
+.fc-nav:hover:not(:disabled) { filter: brightness(1.12); }
 .fc-nav:active:not(:disabled) { transform: translateY(2px); }
 .fc-nav:disabled { opacity: .35; cursor: default; }
 .fc-nav.next { background: var(--fc-navBg, var(--mint)); color: var(--fc-navFg, var(--ink, #0B1513)); box-shadow: none; }
@@ -2480,7 +2480,7 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 #fbar { position: absolute; z-index: 7; top: 10px; left: max(12px, env(safe-area-inset-left, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); display: flex; gap: calc(6px * var(--fc-bs, 1)); overflow-x: auto; scrollbar-width: none; padding: 6px;
   border-radius: 18px; background: var(--fc-barBg, color-mix(in srgb, var(--night) 70%, transparent)); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); }
 #fbar::-webkit-scrollbar { display: none; }
-#v-map[hidden] #fbar { display: none; }
+#fbar[hidden] { display: none !important; }
 .fb-i { flex: none; display: inline-flex; align-items: center; gap: 7px; border: 0; cursor: pointer; height: calc(36px * var(--fc-bs, 1)); padding: 0 calc(12px * var(--fc-bs, 1)) 0 calc(6px * var(--fc-bs, 1)); border-radius: 999px;
   background: var(--fc-chipBg, rgba(255,255,255,.08)); color: var(--fc-chipFg, var(--white)); font: 800 calc(13px * var(--fc-bs, 1)) var(--f); white-space: nowrap; transition: background .2s, color .2s; }
 .fb-n { display: grid; place-items: center; min-width: calc(24px * var(--fc-bs, 1)); height: calc(24px * var(--fc-bs, 1)); border-radius: 999px; background: rgba(255,255,255,.14); font: 900 calc(12px * var(--fc-bs, 1)) var(--n); }
@@ -2528,6 +2528,24 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   #app.fc-sides .slide.fc .sgrid > .fc-navs { position: static; translate: none; padding: 0; width: min(calc(680px * var(--wc-w, 1)), 100%); margin-top: 10px; }
   #app.fc-sides .slide.fc .fc-navs .fc-nav { width: auto; height: 44px; border-radius: 14px; flex-direction: row; padding: 0 16px; }
 }
+/* the same card size on every point of the mission: the content scrolls inside when it is long */
+@media (min-width: 900px) {
+  #app.fc-fixh .fcard { height: min(var(--fc-h, 540px), calc(100vh - 190px)); }
+  #app.fc-fixh .fc-body { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+  #app.fc-fixh .fc-body > .fc-pane, #app.fc-fixh .fc-split { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding-inline-end: 4px; }
+  #app.fc-fixh .fc-split > .fc-pane { overflow: visible; }
+  #app.fc-fixh .fcard > .fc-navs { margin-top: auto; }
+}
+@media (max-width: 899px) { #app.fc-fixh .fcard { min-height: min(calc(var(--fc-h, 540px) * .85), calc(100vh - 240px)); } #app.fc-fixh .fcard > .fc-navs { margin-top: auto; } }
+.fc-pane.fc-swap { animation: stItem .35s cubic-bezier(.16,.84,.24,1) both; }
+.fc-nav span:last-child { white-space: nowrap; }
+/* the list of missions under the side menu */
+#fbar.on-side { flex-direction: column; overflow-x: hidden; overflow-y: auto; gap: calc(5px * var(--fc-bs, 1)); padding: 8px; scrollbar-width: thin; }
+#fbar.on-side .fb-i { width: 100%; justify-content: flex-start; height: auto; min-height: calc(38px * var(--fc-bs, 1)); padding-block: 4px; border-radius: 12px; }
+#fbar.on-side .fb-t { white-space: normal; text-align: start; line-height: 1.25; }
+#app.fb-sq #fbar.on-side .fb-i { border-radius: 4px; } #app.fb-rd #fbar.on-side .fb-i { border-radius: 10px; }
+@media (min-width: 900px) { #app.fbar-side.lfocus .slide.fc > .sbody { padding-top: 96px; } }
+@media (max-width: 899px) { #fbar { top: calc(env(safe-area-inset-top, 0px) + 128px); } }
 </style>
 </head>
 <body>
@@ -3429,10 +3447,13 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     if (!tabs.length) body = slideBody(n);
     else if (!cur || cur.key === 'info') body = `${n.k.desc ? `<p class="fc-desc">${esc(n.k.desc)}</p>` : ''}${n.state === 'lock' ? `<p class="sh-msg">התרגיל עוד נעול. הוא נפתח כשמסיימים את התרגילים ב${esc(prevLevelName(n.k.level))}.</p>` : ''}`;
     else { const t = tabs.find(x => x.key === cur.key); body = `<h3 class="fc-h">${esc(t.title)}</h3><p class="fc-sub">${t.sub}</p>${t.pane()}`; }
-    const stepGo = nxt && n.state !== 'lock' ? `<button class="fc-step" type="button" data-tab="${nxt.key}">לשלב הבא: ${esc(nxt.name)} <span aria-hidden="true">←</span></button>` : '';
-    const lab = (dir) => dir < 0 ? (F.prev || 'הקודם') : (F.next || 'הבא');
-    const nav = (dir, dis) => `<button class="fc-nav ${dir < 0 ? 'prev' : 'next'}" type="button" data-fgo="${dir}" ${dis ? 'disabled' : ''} aria-label="${dir < 0 ? 'לתרגיל הקודם' : 'לתרגיל הבא'}">${F.navStyle !== 'text' ? `<span class="fc-arr" aria-hidden="true">${dir < 0 ? '→' : '←'}</span>` : ''}${F.navStyle !== 'arrows' ? `<span>${esc(lab(dir))}</span>` : ''}</button>`;
-    const navs = F.nav !== false ? `<div class="fc-navs">${nav(-1, i === 0)}${nav(1, i >= N - 1)}</div>` : '';
+    const stepGo = '';
+    // back / forward walk through the mission's points first (the mission, briefing, flight, instructor), then on to the next mission
+    const prv = at > 0 ? pts[at - 1] : null;
+    const target = (dir) => dir > 0 ? (nxt ? { tab: nxt.key, what: nxt.name } : i < N - 1 ? { mission: 1, what: 'למשימה הבאה' } : null) : (prv ? { tab: prv.key, what: prv.name } : i > 0 ? { mission: -1, what: 'למשימה הקודמת' } : null);
+    const lab = (dir, tg) => { const base = dir < 0 ? (F.prev || 'הקודם') : (F.next || 'הבא'); return tg && tg.tab ? `${base}: ${tg.what}` : tg ? tg.what : base; };
+    const nav = (dir) => { const tg = target(dir); return `<button class="fc-nav ${dir < 0 ? 'prev' : 'next'}" type="button" ${tg ? (tg.tab ? `data-tab="${tg.tab}"` : `data-fgo="${tg.mission}"`) : 'disabled'} aria-label="${esc(dir < 0 ? 'אחורה' : 'קדימה')}${tg ? ': ' + esc(tg.what) : ''}">${F.navStyle !== 'text' ? `<span class="fc-arr" aria-hidden="true">${dir < 0 ? '→' : '←'}</span>` : ''}${F.navStyle !== 'arrows' ? `<span>${esc(lab(dir, tg))}</span>` : ''}</button>`; };
+    const navs = F.nav !== false ? `<div class="fc-navs">${nav(-1)}${nav(1)}</div>` : '';
     return `<div class="fcard st-${n.state}${isDone(n) ? ' fc-done' : ''}">
       <div class="fc-top"><span>${esc(w.name)} · ${esc(worldTag(w))}</span><b dir="ltr">${n.t === 'skill' ? `${k} / ${nSkills}` : esc(n.t === 'chest' ? T('chest') : T('boss'))}</b></div>
       ${F.rPlace === 'top' ? ruler : ''}
@@ -3443,6 +3464,16 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     </div>${F.navPlace === 'sides' ? navs : ''}`;
   };
   // the bar of all missions at the top of the screen
+  // wide screens: the list of missions sits in the side column, under the menu ("exit"), down to the bottom
+  const placeFbar = () => {
+    const fb = document.getElementById('fbar'); if (!fb) return;
+    const tabs = app.querySelector(':scope > .tabs'), side = fb.classList.contains('side') && innerWidth >= 900 && tabs;
+    fb.classList.toggle('on-side', !!side);
+    if (side) { const r = tabs.getBoundingClientRect(), t0 = (tabs.querySelector('.tab') || tabs).getBoundingClientRect(), a = app.getBoundingClientRect();
+      Object.assign(fb.style, { top: Math.round(r.bottom - a.top + 8) + 'px', width: Math.round(t0.width) + 'px', right: Math.round(a.right - t0.right) + 'px', left: 'auto', bottom: '20px' }); }
+    else ['top', 'width', 'right', 'left', 'bottom'].forEach(k => fb.style.removeProperty(k));
+  };
+  addEventListener('resize', () => placeFbar());
   const fbarHtml = (all) => { const F = FC(); let k = 0; return all.map((x, i) => { if (x.t === 'skill') k++; const lbl = x.t === 'chest' ? '🎁' : x.t === 'boss' ? '★' : String(k);
     return `<button class="fb-i s-${x.t === 'chest' ? (x.state === 'ready' ? 'now' : x.state === 'opened' ? 'done' : 'lock') : x.state}" type="button" data-fi="${i}" title="${esc(x.name)}" aria-label="${esc(x.name)}"><span class="fb-n">${isDone(x) ? '✓' : lbl}</span>${F.barNames !== false ? `<span class="fb-t">${esc(x.name)}</span>` : ''}</button>`; }).join(''); };
   // re-drawing keeps the field (and the text cursor) the student was in
@@ -3504,7 +3535,7 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     rail.querySelectorAll('.dot').forEach(d => { d.onclick = () => { hideTip(); goSlide(+d.dataset.i, true); }; d.onpointerenter = d.onfocus = () => showTip(d, all[+d.dataset.i]); d.onpointerleave = d.onblur = hideTip; });
     v.querySelectorAll('[data-next]').forEach(b => b.onclick = () => goSlide(+b.dataset.next, true));
     v.querySelectorAll('.slide[data-n]').forEach(sl => { const n = findNode(sl.dataset.n); if (n) wireNode(n, sl); });
-    { let fb = document.getElementById('fbar'); if (FOCUS() && FC().bar !== false) { if (!fb) { fb = document.createElement('nav'); fb.id = 'fbar'; fb.setAttribute('aria-label', 'כל המשימות'); $('#v-map').appendChild(fb); } fb.innerHTML = fbarHtml(all); fb.querySelectorAll('[data-fi]').forEach(b => b.onclick = () => goSlide(+b.dataset.fi, true)); } else if (fb) fb.remove(); }
+    { let fb = document.getElementById('fbar'); if (FOCUS() && FC().bar !== false) { if (!fb) { fb = document.createElement('nav'); fb.id = 'fbar'; fb.setAttribute('aria-label', 'כל המשימות'); app.appendChild(fb); } fb.hidden = $('#v-map').hidden; fb.className = FC().barPos === 'top' ? '' : 'side'; fb.innerHTML = fbarHtml(all); fb.querySelectorAll('[data-fi]').forEach(b => b.onclick = () => { const id = slideIds[+b.dataset.fi]; if (id && id !== slideIds[Math.round($('#deck').scrollTop / Math.max(1, $('#deck').clientHeight))]) { ui(id).tab = 'info'; const tn = findNode(id); if (tn) paint(tn); } goSlide(+b.dataset.fi, true); }); setTimeout(placeFbar, 0); } else if (fb) fb.remove(); }
     syncRail();
     renderPath();
   };
@@ -3581,8 +3612,8 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     box.querySelectorAll('[data-barsw]').forEach(b => b.onclick = () => { setBarMode(barMode() === 'side' ? 'bottom' : 'side'); renderMap(); const again = $('#deck').querySelector(`[data-n="${n.id}"] [data-barsw]`); again && again.focus({ preventScroll: true }); });
     box.querySelectorAll('[data-pop]').forEach(b => b.onclick = () => { const k2 = b.dataset.pop; ui(n.id).pop = k2; paint(n); const sel = k2 ? `.bpop .bpx` : `.bbi[data-pop]`; const again = $('#deck').querySelector(`[data-n="${n.id}"] ${sel}`); again && again.focus({ preventScroll: true }); });
     box.querySelectorAll('[data-run]').forEach(b => b.onclick = () => { const t = box.querySelector(`.sh-pane [data-a="${b.dataset.run}"]`); t && t.click(); });
-    box.querySelectorAll('[data-fgo]').forEach(b => b.onclick = () => { const i = slideIds.indexOf(n.id); goSlide(i + Number(b.dataset.fgo), true); const sl = $('#deck').children[i + Number(b.dataset.fgo)], f = sl && sl.querySelector(`[data-fgo="${b.dataset.fgo}"]:not([disabled])`); f && f.focus({ preventScroll: true }); });
-    box.querySelectorAll('[data-tab]').forEach(t => t.onclick = () => { ui(n.id).tab = t.dataset.tab; paint(n); const again = $('#deck').querySelector(`[data-n="${n.id}"] .sh-tab[data-tab="${t.dataset.tab}"]`); again && again.focus({ preventScroll: true }); });
+    box.querySelectorAll('[data-fgo]').forEach(b => b.onclick = () => { const i = slideIds.indexOf(n.id), to = slideIds[i + Number(b.dataset.fgo)]; if (to) { ui(to).tab = 'info'; const tn = findNode(to); if (tn) paint(tn); } goSlide(i + Number(b.dataset.fgo), true); const sl = $('#deck').children[i + Number(b.dataset.fgo)], f = sl && sl.querySelector(`[data-fgo="${b.dataset.fgo}"]:not([disabled])`); f && f.focus({ preventScroll: true }); });
+    box.querySelectorAll('[data-tab]').forEach(t => t.onclick = () => { ui(n.id).tab = t.dataset.tab; paint(n); if (FOCUS() && t.classList.contains('fc-nav')) { const sl = $('#deck').querySelector(`[data-n="${n.id}"]`), same = sl && sl.querySelector(`.fc-nav.${t.classList.contains('next') ? 'next' : 'prev'}:not([disabled])`); if (sl) { const c = sl.querySelector('.fc-pane'); if (c) { c.classList.remove('fc-swap'); void c.offsetWidth; c.classList.add('fc-swap'); } } if (same) { same.focus({ preventScroll: true }); return; } } const again = $('#deck').querySelector(`[data-n="${n.id}"] .sh-tab[data-tab="${t.dataset.tab}"]`); again && again.focus({ preventScroll: true }); });
     if (btn('play')) btn('play').onclick = (e) => {
       const src = n.t === 'skill' ? vidOf(n.k) : n.c && n.c.video; if (!src) return;
       e.currentTarget.disabled = true;
@@ -4167,7 +4198,7 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     if (v === 'league' && !EARNS()) v = 'map';
     document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.dataset.v === v));
     document.querySelectorAll('.views > .view').forEach(x => x.hidden = x.id !== 'v-' + v);
-    $('#rail').hidden = v !== 'map'; $('#peek').hidden = v !== 'map'; $('#stagebg').hidden = v !== 'map'; if (v === 'map') setTimeout(() => { syncRail(); syncPane(); }, 0);
+    $('#rail').hidden = v !== 'map'; if ($('#fbar')) $('#fbar').hidden = v !== 'map'; $('#peek').hidden = v !== 'map'; $('#stagebg').hidden = v !== 'map'; if (v === 'map') setTimeout(() => { syncRail(); syncPane(); }, 0);
     if (v === 'quests') renderQuests();
     if (v === 'league') { renderLeague(); loadLeague(); }
     if (v === 'hangar') renderHangar();
@@ -4355,7 +4386,7 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       ['zoomin', 'zoomout', 'right', 'left', 'up', 'down', 'fade', 'flip'].forEach(a => app.classList.toggle('fa-' + a, (F.anim || 'zoomin') === a));
       app.classList.toggle('fb-sq', F.barShape === 'square'); app.classList.toggle('fb-rd', F.barShape === 'round');
       ['square', 'diamond'].forEach(x => app.classList.toggle('fr-' + x, F.rShape === x)); ['center', 'start'].forEach(x => app.classList.toggle('fr-a' + x, F.rAlign === x));
-      app.classList.toggle('fc-sides', F.navPlace === 'sides'); }
+      app.classList.toggle('fc-sides', F.navPlace === 'sides'); set('--fc-h', (F.cardH == null ? 540 : Number(F.cardH)) + 'px'); app.classList.toggle('fc-fixh', F.cardH == null || Number(F.cardH) > 0); app.classList.toggle('fbar-side', F.barPos !== 'top'); }
     // the "how we learn" window
     const GD = t.guide || {};
     ['bg', 'bg2', 'head', 'text', 'card', 'numBg', 'numFg', 'btnBg', 'btnFg', 'sub'].forEach(k => { const on = isHex(GD[k] || ''); if (on) set('--gd-' + k, GD[k]); else app.style.removeProperty('--gd-' + k); app.classList.toggle('gd-' + k, on); });

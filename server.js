@@ -289,7 +289,7 @@ function cleanTheme(t) {
         bar: c.bar !== false, barNames: c.barNames !== false, barSize: num(c.barSize, 70, 150, 100), barShape: pick(c.barShape, ['pill', 'round', 'square'], 'pill'),
         ruler: c.ruler !== false, rPlace: pick(c.rPlace, ['top', 'bottom', 'side'], 'top'), rSize: num(c.rSize, 60, 200, 100), rLine: num(c.rLine, 1, 12, 3), rShape: pick(c.rShape, ['round', 'square', 'diamond'], 'round'),
         rLabels: c.rLabels !== false, rNums: c.rNums !== false, rAlign: pick(c.rAlign, ['stretch', 'center', 'start'], 'stretch'), rX: num(c.rX, -300, 300, 0), rY: num(c.rY, -200, 200, 0),
-        nav: c.nav !== false, navStyle: pick(c.navStyle, ['both', 'text', 'arrows'], 'both'), navPlace: pick(c.navPlace, ['bottom', 'sides'], 'bottom'), prev: str(c.prev, 24), next: str(c.next, 24) };
+        barPos: c.barPos === 'top' ? 'top' : 'side', cardH: num(c.cardH, 0, 900, 540), nav: c.nav !== false, navStyle: pick(c.navStyle, ['both', 'text', 'arrows'], 'both'), navPlace: pick(c.navPlace, ['bottom', 'sides'], 'bottom'), prev: str(c.prev, 24), next: str(c.next, 24) };
       ['barBg', 'chipBg', 'chipFg', 'curBg', 'curFg', 'okBg', 'okFg', 'rLineC', 'rDot', 'rOk', 'rCur', 'rText', 'navBg', 'navFg'].forEach((k) => { o[k] = hexOk(c[k]) ? String(c[k]).toLowerCase() : ''; });
       return o; })(),
     // the bottom bar's default place: a row at the bottom, or a list under the side menu (the student can switch)
