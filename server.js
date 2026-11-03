@@ -236,7 +236,8 @@ function cleanTheme(t) {
     wcard: (() => { const c = t.wcard && typeof t.wcard === 'object' ? t.wcard : {}; const num = (v, lo, hi, d) => { const n = Math.round(Number(v)); return Number.isFinite(n) && v !== '' && v != null ? Math.max(lo, Math.min(hi, n)) : d; };
       const o = { title: num(c.title, 60, 160, 100), text: num(c.text, 80, 140, 100), width: num(c.width, 60, 150, 100), alpha: num(c.alpha, 30, 100, 85), y: num(c.y, -400, 400, 0), x: num(c.x, -700, 700, 0),
         corners: ['0', '16', '40'].indexOf(String(c.corners)) !== -1 ? String(c.corners) : 'auto', glass: c.glass !== false, align: c.align === 'center' ? 'center' : 'start' };
-      ['bg', 'fg', 'head', 'kick', 'btn', 'btnFg', 'line'].forEach((k) => { o[k] = hexOk(c[k]) ? String(c[k]).toLowerCase() : ''; });
+      ['bg', 'fg', 'head', 'kick', 'btn', 'btnFg', 'line', 'msgBg', 'msgFg', 'msgLine', 'noteBg', 'noteFg'].forEach((k) => { o[k] = hexOk(c[k]) ? String(c[k]).toLowerCase() : ''; });
+      o.msgA = num(c.msgA, 0, 100, 72); o.msgS = num(c.msgS, 80, 160, 100); o.msgR = num(c.msgR, 0, 30, 14); o.msgAlign = ['center', 'start'].indexOf(c.msgAlign) !== -1 ? c.msgAlign : 'start';
       return o; })(),
     // windows of the admin's own: a title, text, picture and button, shown in a chosen screen
     boxes: (Array.isArray(t.boxes) ? t.boxes : []).slice(0, 8).map((x, i) => { x = x && typeof x === 'object' ? x : {}; const str = (v, n) => String(v == null ? '' : v).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, '').slice(0, n);

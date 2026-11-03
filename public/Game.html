@@ -2413,6 +2413,16 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   .wl-body { padding: 24px 20px 22px; } #welcome h1 { font-size: calc(32px * var(--wl-ts, 1)); } .wl-text { font-size: calc(15.5px * var(--wl-xs, 1)); } .wl-go { width: 100%; }
 }
 
+/* the message box inside the exercise window ("the flight was approved", "the instructor is checking"...) and the instructor's note */
+#app .stcard .sh-msg, #app .fcard .sh-msg, #app .bpop .sh-msg, #app .mpanel .sh-msg { font-size: calc(15px * var(--wc-msgS, 1)); border-radius: var(--wc-msgR, 14px); }
+#app.wc-msgBg .stcard .sh-msg, #app.wc-msgBg .fcard .sh-msg, #app.wc-msgBg .bpop .sh-msg, #app.wc-msgBg .mpanel .sh-msg, #app.wc-msgBg .show .sh-msg { background: color-mix(in srgb, var(--wc-msgBg) var(--wc-msgA, 72%), transparent) !important; }
+#app.wc-msgSet:not(.wc-msgBg) .fcard .sh-msg, #app.wc-msgSet:not(.wc-msgBg) .stcard .sh-msg { background: color-mix(in srgb, #080c0c var(--wc-msgA, 72%), transparent) !important; }
+#app.wc-msgFg .stcard .sh-msg, #app.wc-msgFg .fcard .sh-msg, #app.wc-msgFg .bpop .sh-msg, #app.wc-msgFg .mpanel .sh-msg, #app.wc-msgFg .show .sh-msg { color: var(--wc-msgFg) !important; }
+#app.wc-msgLine .stcard .sh-msg, #app.wc-msgLine .fcard .sh-msg, #app.wc-msgLine .bpop .sh-msg, #app.wc-msgLine .mpanel .sh-msg, #app.wc-msgLine .show .sh-msg { box-shadow: inset 0 0 0 2px var(--wc-msgLine) !important; }
+#app.wc-msgMid .stcard .sh-msg, #app.wc-msgMid .fcard .sh-msg, #app.wc-msgMid .bpop .sh-msg, #app.wc-msgMid .mpanel .sh-msg { text-align: center !important; }
+#app.wc-noteBg .stcard .inote, #app.wc-noteBg .fcard .inote, #app.wc-noteBg .bpop .inote, #app.wc-noteBg .mpanel .inote { background: var(--wc-noteBg) !important; }
+#app.wc-noteFg .stcard .inote, #app.wc-noteFg .fcard .inote, #app.wc-noteFg .bpop .inote, #app.wc-noteFg .mpanel .inote, #app.wc-noteFg .fcard .inote b { color: var(--wc-noteFg) !important; }
+
 /* ================= the "one mission at a time" layout (theme option: layout focus) ================= */
 #app.lfocus .rail, #app.lfocus #peek { display: none !important; }
 #app.lfocus #deck { overflow: hidden; }
@@ -4392,7 +4402,8 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     app.classList.toggle('pc-nostats', PCD.stats === false); app.classList.toggle('pc-nobadge', PCD.badge === false); app.classList.toggle('pc-still', PCD.float === false);
     // the exercise window card: colours, sizes, width, corners, glass and place (design page, per theme)
     const WC = t.wcard || {};
-    ['bg', 'fg', 'head', 'kick', 'btn', 'btnFg', 'line'].forEach(k => { const on = isHex(WC[k] || ''); if (on) set('--wc-' + k, WC[k]); else app.style.removeProperty('--wc-' + k); app.classList.toggle('wc-' + k, on); });
+    ['bg', 'fg', 'head', 'kick', 'btn', 'btnFg', 'line', 'msgBg', 'msgFg', 'msgLine', 'noteBg', 'noteFg'].forEach(k => { const on = isHex(WC[k] || ''); if (on) set('--wc-' + k, WC[k]); else app.style.removeProperty('--wc-' + k); app.classList.toggle('wc-' + k, on); });
+    set('--wc-msgA', (WC.msgA == null ? 72 : Number(WC.msgA)) + '%'); set('--wc-msgS', String((Number(WC.msgS) || 100) / 100)); set('--wc-msgR', (WC.msgR == null ? 14 : Number(WC.msgR)) + 'px'); app.classList.toggle('wc-msgMid', WC.msgAlign === 'center'); app.classList.toggle('wc-msgSet', !!(t.wcard && (WC.msgA != null && Number(WC.msgA) !== 72 || Number(WC.msgS) !== 100 && WC.msgS != null || WC.msgR != null && Number(WC.msgR) !== 14)));
     set('--wc-title', String(Math.max(60, Math.min(160, Number(WC.title) || 100)) / 100));
     set('--wc-text', String(Math.max(80, Math.min(140, Number(WC.text) || 100)) / 100));
     set('--wc-w', String(Math.max(60, Math.min(150, Number(WC.width) || 100)) / 100));

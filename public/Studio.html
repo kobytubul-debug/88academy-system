@@ -551,7 +551,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   const SH = (t) => { t.show = Object.assign({ img: '', dim: 35, info: '', tab: '', corners: 'square' }, t.show || {}); return t.show; };
   const LZ = (t) => { t.lens = Object.assign({ show: 'auto', size: 100, shape: 'round', x: 0, y: 0, ring: '' }, t.lens || {}); return t.lens; };
   const PC_DEF = { drone: 100, name: 100, num: 100, corners: 'auto', width: 'normal', side: 'start', align: 'center', stats: true, badge: true, float: true, bg: '', bg2: '', fg: '', badgeBg: '', badgeFg: '', statBg: '', numC: '', lbl: '', line: '' };
-  const WC_DEF = { title: 100, text: 100, width: 100, alpha: 85, y: 0, x: 0, corners: 'auto', glass: true, align: 'start', bg: '', fg: '', head: '', kick: '', btn: '', btnFg: '', line: '' };
+  const WC_DEF = { title: 100, text: 100, width: 100, alpha: 85, y: 0, x: 0, msgBg: '', msgFg: '', msgLine: '', noteBg: '', noteFg: '', msgA: 72, msgS: 100, msgR: 14, msgAlign: 'start', corners: 'auto', glass: true, align: 'start', bg: '', fg: '', head: '', kick: '', btn: '', btnFg: '', line: '' };
   const PCD = (t) => Object.assign({}, PC_DEF, t.pcard || {}), WCD = (t) => Object.assign({}, WC_DEF, t.wcard || {});
   const PC = (t) => (t.pcard = Object.assign({}, PC_DEF, t.pcard || {})), WC = (t) => (t.wcard = Object.assign({}, WC_DEF, t.wcard || {}));
   const SD_DEF = { show: true, size: 100, gap: 6, shape: 'pill', place: 'above', lines: true, ticks: true, stamp: true, bg: '', fg: '', curBg: '', curFg: '', okBg: '', okFg: '', line: '', edge: '', stampBg: '', stampFg: '', names: { intro: '', video: '', up: '', tower: '' } };
@@ -905,6 +905,11 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
           <div class="st-seg" role="group" aria-label="מיקום מהיר">${[['0,0', 'באמצע'], ['0,-200', 'למעלה'], ['0,160', 'למטה'], ['-300,0', 'שמאלה'], ['300,0', 'ימינה']].map(([v, l]) => `<button type="button" data-wcpos="${v}" class="${C.x + ',' + C.y === v ? 'on' : ''}">${l}</button>`).join('')}</div>
           <div class="st-seg" role="group" aria-label="פינות">${seg('corners', 'auto', 'פינות לפי הסגנון')}${seg('corners', '0', 'ישרות')}${seg('corners', '16', 'מעוגלות')}${seg('corners', '40', 'עגולות מאוד')}</div>
           <div class="st-seg" role="group" aria-label="יישור">${seg('align', 'start', 'יישור לימין')}${seg('align', 'center', 'יישור למרכז')}</div>
+          <h3 class="st-h3">תיבת ההודעה בתוך החלון</h3>
+          <p class="st-hint" style="margin:0">התיבה עם "הטיסה אושרה", "המדריך בודק", "התרגיל עוד נעול" וכו', וגם תיבת ההערה של המדריך.</p>
+          <div class="st-colors">${col('msgBg', 'רקע התיבה', '#080c0c')}${col('msgFg', 'טקסט התיבה', '#ffffff')}${col('msgLine', 'מסגרת התיבה', '#5cf0b4')}${col('noteBg', 'הערת המדריך · רקע', '#1f4a3e')}${col('noteFg', 'הערת המדריך · טקסט', '#ffffff')}</div>
+          ${range('msgA', 'אטימות הרקע של התיבה', 0, 100, 5, '%')}${range('msgS', 'גודל הטקסט בתיבה', 80, 160, 5, '%')}${range('msgR', 'עיגול פינות התיבה', 0, 30, 1, 'px')}
+          <div class="st-seg" role="group" aria-label="יישור התיבה">${seg('msgAlign', 'start', 'טקסט לימין')}${seg('msgAlign', 'center', 'טקסט במרכז')}</div>
           <label class="st-check"><input type="checkbox" data-wcb="glass" ${C.glass ? 'checked' : ''}> רקע זכוכית (טשטוש של מה שמאחור)</label>
           <button class="st-link" type="button" data-wcreset>איפוס החלון לברירת המחדל</button>`; })()}
       </div></details>
