@@ -2120,6 +2120,64 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 /* the bottom bar, when the theme brings the lens back: above the bar in the row, above the list at the side */
 #app.lz-on .slide.bb .sgrid > .hero { display: grid; place-items: center; }
 @media (min-width: 900px) { #app.lz-on.bbl .slide.bb .sgrid > .hero { position: absolute; inset: 0 260px 0 0; } }
+
+/* ================= the pilot card in the hangar ("example student"): set per theme on the design page ================= */
+#app .pilotcard { --pcd: var(--pc-drone, 1); }
+#app .pilotcard #bigDrone { width: calc(150px * var(--pcd)) !important; height: calc(150px * var(--pcd)) !important; }
+#app .pilotcard .pname { font-size: calc(28px * var(--pc-name, 1)); line-height: 1.1; }
+#app .pilotcard .stats b { font-size: calc(18px * var(--pc-num, 1)); }
+@media (min-width: 900px) { #app #v-hangar > .pilotcard #bigDrone { width: calc(220px * var(--pcd)) !important; height: calc(220px * var(--pcd)) !important; } }
+/* colours: each one only when the admin chose it; otherwise the style's own */
+#app.pc-bg .pilotcard { background: var(--pc-bg) !important; }
+#app.pc-bg.pc-bg2 .pilotcard, #app.pc-bg2 .pilotcard { background: linear-gradient(160deg, var(--pc-bg, var(--pc-bg2)), var(--pc-bg2)) !important; }
+#app.pc-fg .pilotcard .pname { color: var(--pc-fg) !important; }
+#app.pc-badgeBg .pilotcard .rankbadge { background: var(--pc-badgeBg) !important; box-shadow: 0 3px 0 color-mix(in srgb, var(--pc-badgeBg) 60%, #000) !important; }
+#app.pc-badgeFg .pilotcard .rankbadge { color: var(--pc-badgeFg) !important; }
+#app.pc-statBg .pilotcard .stats div { background: var(--pc-statBg) !important; }
+#app.pc-numC .pilotcard .stats b { color: var(--pc-numC) !important; }
+#app.pc-lbl .pilotcard .stats small { color: var(--pc-lbl) !important; }
+#app.pc-line .pilotcard { border: 3px solid var(--pc-line) !important; }
+/* corners */
+#app.pc-r .pilotcard { border-radius: var(--pc-r) !important; clip-path: none !important; }
+#app.pc-r .pilotcard .stats div { border-radius: calc(var(--pc-r) * .55) !important; }
+/* what it shows */
+#app.pc-nostats .pilotcard .stats { display: none; }
+#app.pc-nobadge .pilotcard .rankbadge { display: none; }
+#app.pc-still .pilotcard #bigDrone { animation: none !important; }
+#app.pc-left .pilotcard { text-align: start; }
+#app.pc-left .pilotcard #bigDrone { margin: 0 !important; }
+/* wide screens: the card's width and its side */
+@media (min-width: 900px) {
+  #app.pc-narrow #v-hangar { grid-template-columns: minmax(0, .62fr) minmax(0, 1.38fr); }
+  #app.pc-wide #v-hangar { grid-template-columns: minmax(0, 1.25fr) minmax(0, .75fr); }
+  #app.pc-end #v-hangar > .pilotcard { grid-column: 2; }
+  #app.pc-end #v-hangar > :not(.pilotcard) { grid-column: 1; }
+  #app.pc-end.pc-narrow #v-hangar { grid-template-columns: minmax(0, 1.38fr) minmax(0, .62fr); }
+  #app.pc-end.pc-wide #v-hangar { grid-template-columns: minmax(0, .75fr) minmax(0, 1.25fr); }
+  #app.pc-end:not(.pc-narrow):not(.pc-wide) #v-hangar { grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); }
+}
+
+/* ================= the exercise window card (story card, one-panel box, bar pop-up): set per theme on the design page ================= */
+#app .stcard, #app .mpanel, #app .bpop { --wcbg: var(--wc-bg, var(--night)); }
+#app.wc-bg .stcard, #app.wc-bg .mpanel, #app.wc-bg .bpop, #app.wc-set .stcard { background: color-mix(in srgb, var(--wcbg) var(--wc-a, 85%), transparent) !important; }
+#app.wc-flat .stcard, #app.wc-flat .mpanel, #app.wc-flat .bpop { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+#app.wc-fg .stcard, #app.wc-fg .mpanel, #app.wc-fg .bpop, #app.wc-fg .stcard .st-task, #app.wc-fg .stcard .desc, #app.wc-fg .mpanel .desc, #app.wc-fg .stcard .st-how ul, #app.wc-fg .stcard .sh-state { color: var(--wc-fg) !important; }
+#app.wc-head .stcard h2, #app.wc-head .mpanel h2, #app.wc-head .bpop h2 { color: var(--wc-head) !important; }
+#app.wc-kick .stcard .st-top, #app.wc-kick .mpanel .world h3 { color: var(--wc-kick) !important; }
+#app.wc-btn .stcard .btn3, #app.wc-btn .stcard .st-go, #app.wc-btn .mpanel .btn3, #app.wc-btn .bpop .btn3 { background: var(--wc-btn) !important; box-shadow: 0 6px 0 color-mix(in srgb, var(--wc-btn) 60%, #000) !important; }
+#app.wc-btnFg .stcard .btn3, #app.wc-btnFg .stcard .st-go, #app.wc-btnFg .mpanel .btn3, #app.wc-btnFg .bpop .btn3 { color: var(--wc-btnFg) !important; }
+#app.wc-line .stcard, #app.wc-line .mpanel, #app.wc-line .bpop { box-shadow: 0 30px 80px rgba(0,0,0,.4), inset 0 0 0 3px var(--wc-line) !important; }
+#app.wc-r .stcard, #app.wc-r .mpanel, #app.wc-r .bpop, #app.wc-r .stcard .st-media { border-radius: var(--wc-r) !important; }
+#app.wc-r .stcard.st-ok::after { border-radius: var(--wc-r) var(--wc-r) 0 0; }
+#app .stcard h2, #app .mpanel h2 { font-size: calc(38px * var(--wc-title, 1)) !important; }
+#app .stcard .st-task, #app .stcard .desc, #app .stcard .st-how, #app .mpanel .desc { font-size: calc(17px * var(--wc-text, 1)); }
+#app.wc-mid .stcard, #app.wc-mid .stcard h2, #app.wc-mid .stcard .st-task, #app.wc-mid .stcard .sh-state { text-align: center; }
+#app.wc-mid .stcard .st-top { justify-content: center; gap: 18px; }
+#app.wc-mid .stcard .st-donelbl { align-self: center; }
+#app .stcard { width: min(calc(600px * var(--wc-w, 1)), 100%); translate: 0 var(--wc-y, 0); }
+#app .stcard.st-video { width: min(calc(880px * var(--wc-w, 1)), 100%); }
+#app .slide.sty .st-dots { translate: 0 var(--wc-y, 0); }
+@media (max-width: 899px) { #app .stcard h2, #app .mpanel h2 { font-size: calc(28px * var(--wc-title, 1)) !important; } #app .stcard, #app .slide.sty .st-dots { translate: 0 calc(var(--wc-y, 0) * .4); } }
 </style>
 </head>
 <body>
@@ -3723,6 +3781,27 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     set('--lz-s', String(Math.max(50, Math.min(200, Number(L.size) || 100)) / 100));
     set('--lz-x', (Number(L.x) || 0) + 'px'); set('--lz-y', (Number(L.y) || 0) + 'px');
     if (isHex(L.ring || '')) { set('--lz-ring', L.ring); app.classList.add('lz-ring'); } else { app.style.removeProperty('--lz-ring'); app.classList.remove('lz-ring'); }
+    // the pilot card in the hangar: colours, sizes, corners, width, side and what it shows (design page, per theme)
+    const PCD = t.pcard || {};
+    ['bg', 'bg2', 'fg', 'badgeBg', 'badgeFg', 'statBg', 'numC', 'lbl', 'line'].forEach(k => { const on = isHex(PCD[k] || ''); if (on) set('--pc-' + k, PCD[k]); else app.style.removeProperty('--pc-' + k); app.classList.toggle('pc-' + k, on); });
+    set('--pc-drone', String(Math.max(50, Math.min(160, Number(PCD.drone) || 100)) / 100));
+    set('--pc-name', String(Math.max(60, Math.min(180, Number(PCD.name) || 100)) / 100));
+    set('--pc-num', String(Math.max(60, Math.min(200, Number(PCD.num) || 100)) / 100));
+    app.classList.toggle('pc-r', ['0', '16', '40'].indexOf(String(PCD.corners)) !== -1); set('--pc-r', (Number(PCD.corners) || 0) + 'px');
+    app.classList.toggle('pc-narrow', PCD.width === 'narrow'); app.classList.toggle('pc-wide', PCD.width === 'wide');
+    app.classList.toggle('pc-end', PCD.side === 'end'); app.classList.toggle('pc-left', PCD.align === 'start');
+    app.classList.toggle('pc-nostats', PCD.stats === false); app.classList.toggle('pc-nobadge', PCD.badge === false); app.classList.toggle('pc-still', PCD.float === false);
+    // the exercise window card: colours, sizes, width, corners, glass and place (design page, per theme)
+    const WC = t.wcard || {};
+    ['bg', 'fg', 'head', 'kick', 'btn', 'btnFg', 'line'].forEach(k => { const on = isHex(WC[k] || ''); if (on) set('--wc-' + k, WC[k]); else app.style.removeProperty('--wc-' + k); app.classList.toggle('wc-' + k, on); });
+    set('--wc-title', String(Math.max(60, Math.min(160, Number(WC.title) || 100)) / 100));
+    set('--wc-text', String(Math.max(80, Math.min(140, Number(WC.text) || 100)) / 100));
+    set('--wc-w', String(Math.max(60, Math.min(150, Number(WC.width) || 100)) / 100));
+    set('--wc-a', String(WC.alpha == null ? 85 : Math.max(30, Math.min(100, Number(WC.alpha)))) + '%');
+    set('--wc-y', (Number(WC.y) || 0) + 'px');
+    app.classList.toggle('wc-r', ['0', '16', '40'].indexOf(String(WC.corners)) !== -1); set('--wc-r', (Number(WC.corners) || 0) + 'px');
+    app.classList.toggle('wc-flat', WC.glass === false); app.classList.toggle('wc-mid', WC.align === 'center');
+    app.classList.toggle('wc-set', !!(t.wcard && (Number(WC.width) !== 100 || Number(WC.y) || WC.alpha != null && Number(WC.alpha) !== 85)));
     if (t.look === 'pixel') loadFont('Press Start 2P', PAGE_FONTS);
     // the theme's own background, behind every screen (a stage with a background of its own shows that one on top)
     const tb = $('#themebg'), bg = t.bg || { kind: 'look' }, key = JSON.stringify(bg);
@@ -3790,6 +3869,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       const d = ev.data || {};
       if (d.type === 'g88-theme' && d.theme) previewTheme(d.theme);
       else if (d.type === 'g88-stagebg' && d.stageBg) { PV.stageBg = d.stageBg; syncStageBg(); renderPath(); if (!$('#v-hangar').hidden) renderHangar(); }
+      else if (d.type === 'g88-view' && d.view) { if (sheet.classList.contains('on')) closeSheet(); switchTab(d.view); }
       else if (d.type === 'g88-go' && d.node) {
         if (!findNode(d.node)) return;
         if (sheet.classList.contains('on')) closeSheet();
