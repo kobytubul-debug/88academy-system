@@ -234,7 +234,7 @@ function cleanTheme(t) {
       return o; })(),
     // the exercise window card (story card, one-panel box, bar pop-up): colours, sizes, width, corners, glass, place
     wcard: (() => { const c = t.wcard && typeof t.wcard === 'object' ? t.wcard : {}; const num = (v, lo, hi, d) => { const n = Math.round(Number(v)); return Number.isFinite(n) && v !== '' && v != null ? Math.max(lo, Math.min(hi, n)) : d; };
-      const o = { title: num(c.title, 60, 160, 100), text: num(c.text, 80, 140, 100), width: num(c.width, 60, 150, 100), alpha: num(c.alpha, 30, 100, 85), y: num(c.y, -250, 250, 0),
+      const o = { title: num(c.title, 60, 160, 100), text: num(c.text, 80, 140, 100), width: num(c.width, 60, 150, 100), alpha: num(c.alpha, 30, 100, 85), y: num(c.y, -400, 400, 0), x: num(c.x, -700, 700, 0),
         corners: ['0', '16', '40'].indexOf(String(c.corners)) !== -1 ? String(c.corners) : 'auto', glass: c.glass !== false, align: c.align === 'center' ? 'center' : 'start' };
       ['bg', 'fg', 'head', 'kick', 'btn', 'btnFg', 'line'].forEach((k) => { o[k] = hexOk(c[k]) ? String(c[k]).toLowerCase() : ''; });
       return o; })(),
