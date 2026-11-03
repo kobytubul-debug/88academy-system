@@ -3334,7 +3334,7 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   };
   const hideTip = () => { const tip = document.getElementById('railtip'); if (tip) tip.className = ''; };
   const goNode = (id, smooth) => { const i = slideIds.indexOf(id); if (i !== -1) goSlide(i, smooth); };
-  let lastArrived = null;
+  let lastArrived = null, arriveSettle = null;
   const syncRail = () => {
     const v = $('#deck'), rail = $('#rail'); if (!rail.firstChild || !$('#rme')) return;
     const n = slideIds.length, pos = Math.max(0, Math.min(n - 1, v.scrollTop / Math.max(1, v.clientHeight)));
@@ -3343,7 +3343,13 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const cur = Math.round(pos); rail.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('cur', i === cur));
     if (jumpTo != null && cur !== jumpTo) { syncStageBg(); return; }
     if (jumpTo != null && cur === jumpTo && Math.abs(pos - cur) < .08) { jumpTo = null; clearTimeout(jumpT); }
-    if (Math.abs(pos - cur) < .08 && slideIds[cur] && lastArrived !== slideIds[cur]) { lastArrived = slideIds[cur]; const an = findNode(lastArrived); setTimeout(() => arrive(an), 60); }
+    // an exercise "arrives" only once the scrolling has settled on it: passing by on the way does not wake it up
+    // (waking it redraws it, and the browser then snaps back to it in the middle of the student's scroll)
+    clearTimeout(arriveSettle);
+    if (Math.abs(pos - cur) < .08 && slideIds[cur] && lastArrived !== slideIds[cur]) {
+      const id = slideIds[cur];
+      arriveSettle = setTimeout(() => { const v2 = $('#deck'), p2 = v2.scrollTop / Math.max(1, v2.clientHeight), c2 = Math.round(p2); if (slideIds[c2] !== id || Math.abs(p2 - c2) > .02 || lastArrived === id) return; lastArrived = id; arrive(findNode(id)); }, 220);
+    }
     if (SHOW() && Math.abs(pos - cur) < .08) { const sl = v.children[cur]; if (sl && !sl.classList.contains('live')) { v.querySelectorAll('.slide.live').forEach(x => x.classList.remove('live')); sl.classList.add('live'); } }
     syncStageBg();
   };
@@ -3656,6 +3662,27 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   };
   addEventListener('resize', syncStageBg);
 
+  // mouse wheel and trackpad: one gesture moves exactly one exercise, and the momentum that follows a flick is not a second move
+  // (left to the browser, the snapping track could stop half way and spring back)
+  {
+    const deck = $('#deck'); let acc = 0, quietT = null, locked = false, lastD = 0;
+    const canScrollInside = (el, dy) => { for (let e = el; e && e !== deck; e = e.parentElement) { const cs = getComputedStyle(e); if (/(auto|scroll)/.test(cs.overflowY) && e.scrollHeight > e.clientHeight + 2) { if (dy > 0 ? e.scrollTop + e.clientHeight < e.scrollHeight - 1 : e.scrollTop > 0) return true; } } return false; };
+    deck.addEventListener('wheel', (e) => {
+      if (e.ctrlKey || Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
+      if (canScrollInside(e.target, e.deltaY)) return;
+      e.preventDefault();
+      const d0 = Math.abs(e.deltaY);
+      clearTimeout(quietT); quietT = setTimeout(() => { locked = false; acc = 0; lastD = 0; }, 180);
+      // while the momentum of the last gesture fades, ignore it; a fresh, stronger push is a new gesture
+      if (locked && !(d0 > 12 && d0 > lastD * 2.2)) { lastD = d0; return; }
+      lastD = d0;
+      acc += e.deltaMode === 1 ? e.deltaY * 40 : e.deltaY;
+      if (Math.abs(acc) < 30) return;
+      const cur = jumpTo != null ? jumpTo : Math.round(deck.scrollTop / Math.max(1, deck.clientHeight)), to = Math.max(0, Math.min(slideIds.length - 1, cur + (acc > 0 ? 1 : -1)));
+      acc = 0; locked = true;
+      if (to !== cur) goSlide(to, true);
+    }, { passive: false });
+  }
   // keyboard: ↑/↓ (and PageUp/PageDown, Space) move between exercises, ←/→ switch between the windows and the full path
   addEventListener('keydown', (e) => {
     if ($('#v-map').hidden || $('#reward').classList.contains('on') || sheet.classList.contains('on') || document.querySelector('.vplayer')) return;
