@@ -2523,6 +2523,8 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   if (!A || !A.on || !A.me || A.me.role !== 'student') { location.replace('/'); return; }
   // the admin's live preview inside the design page: a sample student, nothing is saved or sent
   const PREVIEW = !!A.data.preview;
+  // the preview never takes the keyboard away from the design page: it moves focus only while the admin is working inside it
+  if (PREVIEW) { const f0 = HTMLElement.prototype.focus; HTMLElement.prototype.focus = function (o) { if (document.hasFocus()) return f0.call(this, o); }; }
   const PV = { stageBg: null };
 
   // ---------- the pilot's drone: the 88ACADEMY logo (its four rings), with a spinning propeller in each ring ----------
