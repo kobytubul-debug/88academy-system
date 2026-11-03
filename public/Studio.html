@@ -433,7 +433,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   const TERMS = [['t1', 'לשונית 1 (המסלול)'], ['t2', 'לשונית 2 (המשימות)'], ['t3', 'לשונית 3 (הליגה)'], ['t4', 'לשונית 4 (הפרופיל)'], ['world', 'שם ל"עולם"'], ['chest', 'שם ל"תיבה"'], ['boss', 'שם למבחן המסכם'], ['league', 'שם הליגה'], ['mapTitle', 'כותרת מפת הנתיב'], ['questsTitle', 'כותרת המשימות'], ['go', 'בועה מעל התרגיל הנוכחי'], ['lit', 'הודעה כשתרגיל מאושר']];
   const BUILT = { 't-race': ['race', 'מירוץ FPV'], 't-regular': ['regular', 'משחקי צבעוני'], 't-mil': ['mil', 'צבאי'] };
   const AUTO = ['field', 'city', 'garage', 'loft', 'forest', 'street'];
-  const newTheme = (base, extra) => Object.assign({ id: newId(), name: 'ערכה חדשה', base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default', num: 'default' }, icons: BASES[base].icons, bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', layout: 'classic', barPos: 'bottom', look: '', boxes: [], css: '', pcard: Object.assign({}, PC_DEF), wcard: Object.assign({}, WC_DEF), lens: { show: 'auto', size: 100, shape: 'round', x: 0, y: 0, ring: '' }, flow: { on: false, open: true, next: true, close: 4 }, show: { img: '', dim: 35, info: '', tab: '', corners: 'square' }, builtIn: false }, extra || {});
+  const newTheme = (base, extra) => Object.assign({ id: newId(), name: 'ערכה חדשה', base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default', num: 'default' }, icons: BASES[base].icons, bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', layout: 'classic', barPos: 'bottom', look: '', steps: JSON.parse(JSON.stringify(SD_DEF)), boxes: [], css: '', pcard: Object.assign({}, PC_DEF), wcard: Object.assign({}, WC_DEF), lens: { show: 'auto', size: 100, shape: 'round', x: 0, y: 0, ring: '' }, flow: { on: false, open: true, next: true, close: 4 }, show: { img: '', dim: 35, info: '', tab: '', corners: 'square' }, builtIn: false }, extra || {});
   const defaultsOf = (id) => BUILT[id] ? newTheme(BUILT[id][0], { id, name: BUILT[id][1], builtIn: true }) : null;
   // the colours in use: the theme's own, else the style's (the extra roles follow the brand colours until they are set)
   const effColors = (t) => { const C = Object.assign({}, BASES[t.base].colors, t.colors || {}), M = moreColors(t.base, C); Object.keys(M).forEach(k => { if (!isHex(C[k] || '')) C[k] = M[k]; }); return C; };
@@ -541,6 +541,28 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   const WC_DEF = { title: 100, text: 100, width: 100, alpha: 85, y: 0, corners: 'auto', glass: true, align: 'start', bg: '', fg: '', head: '', kick: '', btn: '', btnFg: '', line: '' };
   const PCD = (t) => Object.assign({}, PC_DEF, t.pcard || {}), WCD = (t) => Object.assign({}, WC_DEF, t.wcard || {});
   const PC = (t) => (t.pcard = Object.assign({}, PC_DEF, t.pcard || {})), WC = (t) => (t.wcard = Object.assign({}, WC_DEF, t.wcard || {}));
+  const SD_DEF = { show: true, size: 100, gap: 6, shape: 'pill', place: 'above', lines: true, ticks: true, stamp: true, bg: '', fg: '', curBg: '', curFg: '', okBg: '', okFg: '', line: '', edge: '', stampBg: '', stampFg: '', names: { intro: '', video: '', up: '', tower: '' } };
+  const SDD = (t) => Object.assign({}, SD_DEF, t.steps || {}, { names: Object.assign({}, SD_DEF.names, (t.steps && t.steps.names) || {}) });
+  const SDM = (t) => (t.steps = SDD(t));
+  const sdHtml = (d) => { const C = SDD(d), seg = (k, v, label) => `<button type="button" data-sd="${k}" data-sdv="${v}" class="${String(C[k]) === v ? 'on' : ''}" aria-pressed="${String(C[k]) === v}">${label}</button>`;
+    const range = (k, label, lo, hi, step, unit) => `<label class="st-field">${label} · <output id="sdo-${k}">${C[k]}${unit}</output><input type="range" min="${lo}" max="${hi}" step="${step}" value="${C[k]}" data-sdr="${k}" data-unit="${unit}" aria-label="${label}"></label>`;
+    const col = (k, label, def) => colorRow('sd-' + k, label, '↺ מחזיר לצבע של הסגנון', C[k] || def, !!C[k]);
+    const chk = (k, label) => `<label class="st-check"><input type="checkbox" data-sdb="${k}" ${C[k] ? 'checked' : ''}> ${label}</label>`;
+    return `<p class="st-hint" style="margin:0">הכפתורים מעל חלון התרגיל בזרימה האוטומטית: המשימה, תדריך, טיסה, המדריך. לחיצה עליהם מחזירה לשלב.</p>
+      ${chk('show', 'להציג את שורת השלבים')}
+      ${C.show ? `<h3 class="st-h3">צבעים</h3>
+      <div class="st-colors">${col('bg', 'שלב שעוד לא הגיעו אליו · רקע', '#14201d')}${col('fg', 'שלב שעוד לא הגיעו אליו · טקסט', '#ffffff')}${col('curBg', 'השלב הנוכחי · רקע', '#5cf0b4')}${col('curFg', 'השלב הנוכחי · טקסט', '#0b1513')}${col('okBg', 'שלב שבוצע · רקע', '#1f4a3e')}${col('okFg', 'שלב שבוצע · טקסט', '#ffffff')}${col('edge', 'מסגרת הכפתורים', '#5cf0b4')}${col('line', 'הקו שבין השלבים', '#5cf0b4')}</div>
+      <h3 class="st-h3">גודל וצורה</h3>
+      ${range('size', 'גודל', 70, 170, 5, '%')}${range('gap', 'רווח בין השלבים', 0, 40, 2, 'px')}
+      <div class="st-seg" role="group" aria-label="צורה">${seg('shape', 'pill', 'כמוסה')}${seg('shape', 'round', 'מעוגל')}${seg('shape', 'square', 'ריבוע')}</div>
+      <div class="st-seg" role="group" aria-label="מיקום">${seg('place', 'above', 'מעל החלון')}${seg('place', 'below', 'מתחת לחלון')}</div>
+      ${chk('lines', 'קו בין השלבים')}${chk('ticks', 'סימן ✓ על שלב שבוצע')}
+      <h3 class="st-h3">שמות השלבים</h3>
+      <div class="st-terms">${[['intro', 'המשימה'], ['video', 'תדריך'], ['up', 'טיסה'], ['tower', 'המדריך']].map(([k, l]) => `<label class="st-field">${l}<input type="text" data-sdn="${k}" value="${esc(C.names[k] || '')}" placeholder="${l}" maxlength="20"></label>`).join('')}</div>` : ''}
+      <h3 class="st-h3">עיגול ה־✓ של משימה שבוצעה</h3>
+      ${chk('stamp', 'להציג את העיגול בראש החלון')}
+      ${C.stamp ? `<div class="st-colors">${col('stampBg', 'העיגול · רקע', '#5cf0b4')}${col('stampFg', 'העיגול · סימן ה־✓', '#0b1513')}</div>` : ''}
+      <button class="st-link" type="button" data-sdreset>איפוס השלבים לברירת המחדל</button>`; };
   const pvView = (v) => post({ type: 'g88-view', view: v });
   const LZD = (t) => Object.assign({ show: "auto", size: 100, shape: "round", x: 0, y: 0, ring: "" }, t.lens || {});
   const tile = (val, label, pv, sel, attr) => `<button class="bgt ${sel ? 'sel' : ''}" type="button" ${attr}="${esc(val)}" aria-pressed="${sel}"><span class="bgpv">${pv}</span><span class="bgl">${esc(label)}</span></button>`;
@@ -716,6 +738,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
           <label class="st-check"><input type="checkbox" data-wcb="glass" ${C.glass ? 'checked' : ''}> רקע זכוכית (טשטוש של מה שמאחור)</label>
           <button class="st-link" type="button" data-wcreset>איפוס החלון לברירת המחדל</button>`; })()}
       </div></details>
+      ${fold('steps', 'שלבי התרגיל (מעל החלון)', SDD(d).show ? (SDD(d).bg || SDD(d).curBg || SDD(d).okBg || SDD(d).size !== 100 || SDD(d).shape !== 'pill' || SDD(d).place !== 'above' ? 'מותאם' : 'לפי הסגנון') : 'מוסתרים', 'data-pv="map"')}${sdHtml(d)}
+      </div></details>
       ${fold('lens', 'עדשת השלב', esc(({ auto: 'לפי הפריסה', on: 'מוצגת', off: 'מוסתרת' })[LZD(d).show]) + (LZD(d).show !== 'off' ? ' · ' + esc(({ round: 'עיגול', square: 'ריבוע', hex: 'משושה', diamond: 'יהלום' })[LZD(d).shape]) : ''), '')}
         ${(() => { const L = LZD(d), seg = (k, v, label) => `<button type="button" data-lz="${k}" data-lzv="${v}" class="${String(L[k]) === v ? 'on' : ''}" aria-pressed="${String(L[k]) === v}">${label}</button>`;
           const range = (k, label, lo, hi, step, unit) => `<label class="st-field">${label} · <output id="lzo-${k}">${L[k]}${unit}</output><input type="range" min="${lo}" max="${hi}" step="${step}" value="${L[k]}" data-lzr="${k}" data-unit="${unit}" aria-label="${label}"></label>`;
@@ -787,6 +811,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     if (k === 'bgcolor') d.bg = { kind: 'color', color: v };
     else if (k === 'lzring') LZ(d).ring = v;
     else if (k.indexOf('bx-') === 0) { const [, i, f] = k.split('-'); const b = BOXES(d)[+i]; if (b) b[f] = v; }
+    else if (k.indexOf('sd-') === 0) SDM(d)[k.slice(3)] = v;
     else if (k.indexOf('pc-') === 0) PC(d)[k.slice(3)] = v;
     else if (k.indexOf('wc-') === 0) WC(d)[k.slice(3)] = v;
     else if (k === 'shinfo' || k === 'shtab') SH(d)[k === 'shinfo' ? 'info' : 'tab'] = v;
@@ -1073,6 +1098,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     if (ds.bxs != null) { const b = BOXES(d)[+ds.bxs]; if (b) { b[ds.bxk] = ds.bxv; redraw(); if (ds.bxk === 'place') pvView(BX_PV[ds.bxv]); } return; }
     if (ds.snip != null) { const sn = CSS_SNIPS[+ds.snip]; d.css = ((d.css || '').trim() + (d.css ? '\n' : '') + '/* ' + sn[0] + ' */\n' + sn[1]).slice(0, 20000); OPEN.css = true; redraw(); return; }
     if (ds.cssclear) { d.css = ''; redraw(); return; }
+    if (ds.reset && ds.reset.indexOf('sd-') === 0) { SDM(d)[ds.reset.slice(3)] = ''; redraw(); return; }
+    if (ds.sd) { SDM(d)[ds.sd] = ds.sdv; redraw(); pvView('map'); return; }
+    if ('sdreset' in ds) { d.steps = JSON.parse(JSON.stringify(SD_DEF)); redraw(); pvView('map'); return; }
     if (ds.reset && ds.reset.indexOf('pc-') === 0) { PC(d)[ds.reset.slice(3)] = ''; redraw(); pvView('hangar'); return; }
     if (ds.reset && ds.reset.indexOf('wc-') === 0) { WC(d)[ds.reset.slice(3)] = ''; redraw(); pvView('map'); return; }
     if (ds.pc) { PC(d)[ds.pc] = ds.pcv; redraw(); pvView('hangar'); return; }
@@ -1105,6 +1133,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     if (t.dataset.bxt != null) { const b = BOXES(d)[+t.dataset.bxt]; if (b) { b[t.dataset.bxk] = t.value; if (t.tagName === 'SELECT') { const u = body.querySelector(`input[data-bxt="${t.dataset.bxt}"][data-bxk="img"]`); if (u) u.value = t.value; } clearTimeout(termTimer); termTimer = setTimeout(sendTheme, 250); touched(); } return; }
     if (t.dataset.bxc != null) { const b = BOXES(d)[+t.dataset.bxc]; if (b) { b[t.dataset.bxk] = t.checked; sendTheme(); touched(); } return; }
     if ('css' in t.dataset) { d.css = t.value.slice(0, 20000); clearTimeout(termTimer); termTimer = setTimeout(sendTheme, 400); touched(); return; }
+    if (t.dataset.sdr) { const O = SDM(d), k = t.dataset.sdr; O[k] = Number(t.value) || 0; const o = $('#sdo-' + k); if (o) o.textContent = O[k] + t.dataset.unit; sendTheme(); touched(); return; }
+    if (t.dataset.sdb) { SDM(d)[t.dataset.sdb] = t.checked; redraw(); pvView('map'); return; }
+    if (t.dataset.sdn) { SDM(d).names[t.dataset.sdn] = t.value.slice(0, 20); clearTimeout(termTimer); termTimer = setTimeout(sendTheme, 300); touched(); return; }
     if (t.dataset.pcr || t.dataset.wcr) { const pc = !!t.dataset.pcr, O = pc ? PC(d) : WC(d), k = t.dataset.pcr || t.dataset.wcr; O[k] = Number(t.value) || 0; const o = $((pc ? '#pco-' : '#wco-') + k); if (o) o.textContent = O[k] + t.dataset.unit; sendTheme(); touched(); return; }
     if (t.dataset.pcb || t.dataset.wcb) { const pc = !!t.dataset.pcb; (pc ? PC(d) : WC(d))[t.dataset.pcb || t.dataset.wcb] = t.checked; sendTheme(); touched(); pvView(pc ? 'hangar' : 'map'); return; }
     if (t.dataset.lzr) { const L = LZ(d), k = t.dataset.lzr; L[k] = Number(t.value) || 0; const o = $('#lzo-' + k); if (o) o.textContent = L[k] + t.dataset.unit; sendTheme(); touched(); return; }
