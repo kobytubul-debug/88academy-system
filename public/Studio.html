@@ -415,7 +415,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   const TERMS = [['t1', 'לשונית 1 (המסלול)'], ['t2', 'לשונית 2 (המשימות)'], ['t3', 'לשונית 3 (הליגה)'], ['t4', 'לשונית 4 (הפרופיל)'], ['world', 'שם ל"עולם"'], ['chest', 'שם ל"תיבה"'], ['boss', 'שם למבחן המסכם'], ['league', 'שם הליגה'], ['mapTitle', 'כותרת מפת הנתיב'], ['questsTitle', 'כותרת המשימות'], ['go', 'בועה מעל התרגיל הנוכחי'], ['lit', 'הודעה כשתרגיל מאושר']];
   const BUILT = { 't-race': ['race', 'מירוץ FPV'], 't-regular': ['regular', 'משחקי צבעוני'], 't-mil': ['mil', 'צבאי'] };
   const AUTO = ['field', 'city', 'garage', 'loft', 'forest', 'street'];
-  const newTheme = (base, extra) => Object.assign({ id: newId(), name: 'ערכה חדשה', base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default', num: 'default' }, icons: BASES[base].icons, bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', layout: 'classic', barPos: 'bottom', look: '', lens: { show: 'auto', size: 100, shape: 'round', x: 0, y: 0, ring: '' }, flow: { on: false, open: true, next: true, close: 4 }, show: { img: '', dim: 35, info: '', tab: '', corners: 'square' }, builtIn: false }, extra || {});
+  const newTheme = (base, extra) => Object.assign({ id: newId(), name: 'ערכה חדשה', base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default', num: 'default' }, icons: BASES[base].icons, bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', layout: 'classic', barPos: 'bottom', look: '', pcard: Object.assign({}, PC_DEF), wcard: Object.assign({}, WC_DEF), lens: { show: 'auto', size: 100, shape: 'round', x: 0, y: 0, ring: '' }, flow: { on: false, open: true, next: true, close: 4 }, show: { img: '', dim: 35, info: '', tab: '', corners: 'square' }, builtIn: false }, extra || {});
   const defaultsOf = (id) => BUILT[id] ? newTheme(BUILT[id][0], { id, name: BUILT[id][1], builtIn: true }) : null;
   // the colours in use: the theme's own, else the style's (the extra roles follow the brand colours until they are set)
   const effColors = (t) => { const C = Object.assign({}, BASES[t.base].colors, t.colors || {}), M = moreColors(t.base, C); Object.keys(M).forEach(k => { if (!isHex(C[k] || '')) C[k] = M[k]; }); return C; };
@@ -519,6 +519,11 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   const bgVal = (bg) => !bg || bg.kind === 'look' ? 'look' : bg.kind === 'color' ? 'color' : bg.kind === 'scene' ? 'scene:' + bg.id : 'img:' + bg.url;
   const SH = (t) => { t.show = Object.assign({ img: '', dim: 35, info: '', tab: '', corners: 'square' }, t.show || {}); return t.show; };
   const LZ = (t) => { t.lens = Object.assign({ show: 'auto', size: 100, shape: 'round', x: 0, y: 0, ring: '' }, t.lens || {}); return t.lens; };
+  const PC_DEF = { drone: 100, name: 100, num: 100, corners: 'auto', width: 'normal', side: 'start', align: 'center', stats: true, badge: true, float: true, bg: '', bg2: '', fg: '', badgeBg: '', badgeFg: '', statBg: '', numC: '', lbl: '', line: '' };
+  const WC_DEF = { title: 100, text: 100, width: 100, alpha: 85, y: 0, corners: 'auto', glass: true, align: 'start', bg: '', fg: '', head: '', kick: '', btn: '', btnFg: '', line: '' };
+  const PCD = (t) => Object.assign({}, PC_DEF, t.pcard || {}), WCD = (t) => Object.assign({}, WC_DEF, t.wcard || {});
+  const PC = (t) => (t.pcard = Object.assign({}, PC_DEF, t.pcard || {})), WC = (t) => (t.wcard = Object.assign({}, WC_DEF, t.wcard || {}));
+  const pvView = (v) => post({ type: 'g88-view', view: v });
   const LZD = (t) => Object.assign({ show: "auto", size: 100, shape: "round", x: 0, y: 0, ring: "" }, t.lens || {});
   const tile = (val, label, pv, sel, attr) => `<button class="bgt ${sel ? 'sel' : ''}" type="button" ${attr}="${esc(val)}" aria-pressed="${sel}"><span class="bgpv">${pv}</span><span class="bgl">${esc(label)}</span></button>`;
   const imgPv = (url) => `<span class="bgimg" style="background-image:url(&quot;${esc(cssUrl(url))}&quot;)"></span>`;
@@ -631,6 +636,34 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
           <div class="st-colors">${colorRow('lzring', 'צבע המסגרת', L.ring ? 'צבע קבוע לכל המצבים' : 'עכשיו: לפי מצב התרגיל (ורוד, תכלת, ירוק...)', L.ring || '#ff5c8a', !!L.ring)}</div>
           <button class="st-link" type="button" data-lzreset>איפוס העדשה לברירת המחדל</button>` : ''}`; })()}
       </section>
+      <section class="st-sec" aria-labelledby="sh-pcard" data-pv="hangar"><h2 id="sh-pcard">כרטיס התלמיד (האנגר)</h2>
+        ${(() => { const C = PCD(d), seg = (k, v, label) => `<button type="button" data-pc="${k}" data-pcv="${v}" class="${String(C[k]) === v ? 'on' : ''}" aria-pressed="${String(C[k]) === v}">${label}</button>`;
+          const range = (k, label, lo, hi, step, unit) => `<label class="st-field">${label} · <output id="pco-${k}">${C[k]}${unit}</output><input type="range" min="${lo}" max="${hi}" step="${step}" value="${C[k]}" data-pcr="${k}" data-unit="${unit}" aria-label="${label}"></label>`;
+          const col = (k, label, def) => colorRow('pc-' + k, label, '↺ מחזיר לצבע של הסגנון', C[k] || def, !!C[k]);
+          return `<p class="st-hint" style="margin:0">הכרטיס הגדול עם הרחפן, השם והדרגה במסך "האנגר". התצוגה המקדימה עוברת לאנגר כשעורכים כאן.</p>
+          <div class="st-colors">${col('bg', 'רקע הכרטיס', '#24584d')}${col('bg2', 'רקע · צבע שני (מעבר)', '#142f29')}${col('line', 'מסגרת', '#ffffff')}${col('fg', 'שם התלמיד', '#ffffff')}${col('badgeBg', 'תג הדרגה · רקע', '#ffd15c')}${col('badgeFg', 'תג הדרגה · טקסט', '#0b1513')}${col('statBg', 'תיבות הנתונים · רקע', '#173a33')}${col('numC', 'המספרים', '#ffffff')}${col('lbl', 'טקסט מתחת למספרים', '#a9c2bb')}</div>
+          ${range('drone', 'גודל הרחפן', 50, 160, 5, '%')}${range('name', 'גודל השם', 60, 180, 5, '%')}${range('num', 'גודל המספרים', 60, 200, 5, '%')}
+          <div class="st-seg" role="group" aria-label="פינות">${seg('corners', 'auto', 'פינות לפי הסגנון')}${seg('corners', '0', 'ישרות')}${seg('corners', '16', 'מעוגלות')}${seg('corners', '40', 'עגולות מאוד')}</div>
+          <div class="st-seg" role="group" aria-label="רוחב במחשב">${seg('width', 'narrow', 'צר')}${seg('width', 'normal', 'רגיל')}${seg('width', 'wide', 'רחב')}</div>
+          <div class="st-seg" role="group" aria-label="צד במחשב">${seg('side', 'start', 'בצד ימין')}${seg('side', 'end', 'בצד שמאל')}</div>
+          <div class="st-seg" role="group" aria-label="יישור">${seg('align', 'center', 'יישור למרכז')}${seg('align', 'start', 'יישור לימין')}</div>
+          <label class="st-check"><input type="checkbox" data-pcb="badge" ${C.badge ? 'checked' : ''}> להציג את תג הדרגה</label>
+          <label class="st-check"><input type="checkbox" data-pcb="stats" ${C.stats ? 'checked' : ''}> להציג את הנתונים (טיסות, תרגילים, דקות)</label>
+          <label class="st-check"><input type="checkbox" data-pcb="float" ${C.float ? 'checked' : ''}> הרחפן מרחף (תנועה)</label>
+          <button class="st-link" type="button" data-pcreset>איפוס הכרטיס לברירת המחדל</button>`; })()}
+      </section>
+      <section class="st-sec" aria-labelledby="sh-wcard" data-pv="map"><h2 id="sh-wcard">חלון התרגיל</h2>
+        ${(() => { const C = WCD(d), seg = (k, v, label) => `<button type="button" data-wc="${k}" data-wcv="${v}" class="${String(C[k]) === v ? 'on' : ''}" aria-pressed="${String(C[k]) === v}">${label}</button>`;
+          const range = (k, label, lo, hi, step, unit) => `<label class="st-field">${label} · <output id="wco-${k}">${C[k]}${unit}</output><input type="range" min="${lo}" max="${hi}" step="${step}" value="${C[k]}" data-wcr="${k}" data-unit="${unit}" aria-label="${label}"></label>`;
+          const col = (k, label, def) => colorRow('wc-' + k, label, '↺ מחזיר לצבע של הסגנון', C[k] || def, !!C[k]);
+          return `<p class="st-hint" style="margin:0">הכרטיס במרכז מסך התרגיל: בזרימה האוטומטית, בחלונית האחת ובחלון שנפתח מהבר התחתון. בפריסה הקלאסית אין חלון: הטקסט מוצג ישר על הרקע.</p>
+          <div class="st-colors">${col('bg', 'רקע החלון', '#14201d')}${col('line', 'מסגרת', '#ffffff')}${col('kick', 'שורת השלב (למעלה)', '#5cf0b4')}${col('head', 'הכותרת', '#ffffff')}${col('fg', 'הטקסט', '#dfe9e6')}${col('btn', 'הכפתור · רקע', '#ffd15c')}${col('btnFg', 'הכפתור · טקסט', '#0b1513')}</div>
+          ${range('alpha', 'אטימות הרקע', 30, 100, 5, '%')}${range('title', 'גודל הכותרת', 60, 160, 5, '%')}${range('text', 'גודל הטקסט', 80, 140, 5, '%')}${range('width', 'רוחב החלון', 60, 150, 5, '%')}${range('y', 'הזזה למעלה ולמטה', -250, 250, 10, 'px')}
+          <div class="st-seg" role="group" aria-label="פינות">${seg('corners', 'auto', 'פינות לפי הסגנון')}${seg('corners', '0', 'ישרות')}${seg('corners', '16', 'מעוגלות')}${seg('corners', '40', 'עגולות מאוד')}</div>
+          <div class="st-seg" role="group" aria-label="יישור">${seg('align', 'start', 'יישור לימין')}${seg('align', 'center', 'יישור למרכז')}</div>
+          <label class="st-check"><input type="checkbox" data-wcb="glass" ${C.glass ? 'checked' : ''}> רקע זכוכית (טשטוש של מה שמאחור)</label>
+          <button class="st-link" type="button" data-wcreset>איפוס החלון לברירת המחדל</button>`; })()}
+      </section>
       <section class="st-sec" aria-labelledby="sh-flow"><h2 id="sh-flow">פלאו אוטומטי</h2>
         ${(() => { const f = Object.assign({ on: false, open: true, next: true, close: 4 }, d.flow || {}); return `
         <label class="st-check"><input type="checkbox" data-flow="on" ${f.on ? 'checked' : ''}> התלמיד מתקדם לבד, בלי ללחוץ "המשך" בכל צעד</label>
@@ -678,6 +711,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     const d = D(), mode = d.mode === 'day' ? 'day' : 'night';
     if (k === 'bgcolor') d.bg = { kind: 'color', color: v };
     else if (k === 'lzring') LZ(d).ring = v;
+    else if (k.indexOf('pc-') === 0) PC(d)[k.slice(3)] = v;
+    else if (k.indexOf('wc-') === 0) WC(d)[k.slice(3)] = v;
     else if (k === 'shinfo' || k === 'shtab') SH(d)[k === 'shinfo' ? 'info' : 'tab'] = v;
     else if (SURF_KEYS.indexOf(k) !== -1) d.surf[mode][k] = v;
     else d.colors[k] = v;
@@ -953,6 +988,12 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     if (ds.mode) { if (d.mode !== ds.mode) { d.mode = ds.mode; redraw(); } return; }
     if (ds.fslot) { if ((d.fonts[ds.fslot] || 'default') !== ds.font) { d.fonts[ds.fslot] = ds.font; redraw(); const again = body.querySelector(`[data-fslot="${ds.fslot}"][data-font="${CSS.escape(ds.font)}"]`); again && again.focus({ preventScroll: true }); } return; }
     if (ds.pal) { const p = PALETTES[+ds.pal]; d.colors = Object.assign({}, d.colors, { accent: p.accent, accent2: p.accent2, gold: p.gold, sky: p.sky }); redraw(); return; }
+    if (ds.reset && ds.reset.indexOf('pc-') === 0) { PC(d)[ds.reset.slice(3)] = ''; redraw(); pvView('hangar'); return; }
+    if (ds.reset && ds.reset.indexOf('wc-') === 0) { WC(d)[ds.reset.slice(3)] = ''; redraw(); pvView('map'); return; }
+    if (ds.pc) { PC(d)[ds.pc] = ds.pcv; redraw(); pvView('hangar'); return; }
+    if (ds.wc) { WC(d)[ds.wc] = ds.wcv; redraw(); pvView('map'); return; }
+    if ('pcreset' in ds) { d.pcard = Object.assign({}, PC_DEF); redraw(); pvView('hangar'); return; }
+    if ('wcreset' in ds) { d.wcard = Object.assign({}, WC_DEF); redraw(); pvView('map'); return; }
     if (ds.reset === 'lzring') { LZ(d).ring = ''; redraw(); return; }
     if (ds.lz) { LZ(d)[ds.lz] = ds.lzv; redraw(); return; }
     if ('lzreset' in ds) { d.lens = { show: 'auto', size: 100, shape: 'round', x: 0, y: 0, ring: '' }; redraw(); return; }
@@ -976,6 +1017,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     if (TAB !== 'themes' || !ED) return;
     const t = e.target, d = D();
     if (t.dataset.c) return void setColor(t.dataset.c, t.value, 'pick');
+    if (t.dataset.pcr || t.dataset.wcr) { const pc = !!t.dataset.pcr, O = pc ? PC(d) : WC(d), k = t.dataset.pcr || t.dataset.wcr; O[k] = Number(t.value) || 0; const o = $((pc ? '#pco-' : '#wco-') + k); if (o) o.textContent = O[k] + t.dataset.unit; sendTheme(); touched(); return; }
+    if (t.dataset.pcb || t.dataset.wcb) { const pc = !!t.dataset.pcb; (pc ? PC(d) : WC(d))[t.dataset.pcb || t.dataset.wcb] = t.checked; sendTheme(); touched(); pvView(pc ? 'hangar' : 'map'); return; }
     if (t.dataset.lzr) { const L = LZ(d), k = t.dataset.lzr; L[k] = Number(t.value) || 0; const o = $('#lzo-' + k); if (o) o.textContent = L[k] + t.dataset.unit; sendTheme(); touched(); return; }
     if ('flowclose' in t.dataset) { const f = d.flow = Object.assign({ on: false, open: true, next: true, close: 4 }, d.flow || {}); f.close = Math.max(0, Math.min(15, Number(t.value) || 0)); const o = $('#flOut'); if (o) o.textContent = f.close ? f.close + ' שניות' : 'לא נסגרות לבד'; sendTheme(); touched(); return; }
     if ('shdim' in t.dataset) { SH(d).dim = Math.max(0, Math.min(80, Number(t.value) || 0)); const o = $('#shDimOut'); if (o) o.textContent = SH(d).dim + '%'; sendTheme(); touched(); return; }
@@ -995,6 +1038,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   });
   // remember which folding sections are open
   body.addEventListener('toggle', (e) => { const k = e.target && e.target.dataset && e.target.dataset.fold; if (k) OPEN[k] = e.target.open; }, true);
+  // editing the pilot card shows the hangar in the preview; the exercise window shows the track
+  let pvLast = '';
+  body.addEventListener('pointerdown', (e) => { const sec = e.target.closest && e.target.closest('[data-pv]'); if (sec && TAB === 'themes' && sec.dataset.pv !== pvLast) { pvLast = sec.dataset.pv; pvView(pvLast); } });
   body.addEventListener('change', (e) => {
     const t = e.target;
     if (t.dataset.flow) { const f = d.flow = Object.assign({ on: false, open: true, next: true, close: 4 }, d.flow || {}); f[t.dataset.flow] = t.checked; redraw(); return; }

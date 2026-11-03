@@ -225,6 +225,19 @@ function cleanTheme(t) {
     lens: (() => { const l = t.lens && typeof t.lens === 'object' ? t.lens : {}; const num = (v, lo, hi, d) => { const n = Math.round(Number(v)); return Number.isFinite(n) && v !== '' && v != null ? Math.max(lo, Math.min(hi, n)) : d; };
       return { show: ['on', 'off'].indexOf(l.show) !== -1 ? l.show : 'auto', size: num(l.size, 50, 200, 100), shape: ['round', 'square', 'hex', 'diamond'].indexOf(l.shape) !== -1 ? l.shape : 'round',
         x: num(l.x, -400, 400, 0), y: num(l.y, -300, 300, 0), ring: hexOk(l.ring) ? String(l.ring).toLowerCase() : '' }; })(),
+    // the pilot card in the hangar ("example student"): colours, sizes, corners, width, side and what it shows
+    pcard: (() => { const c = t.pcard && typeof t.pcard === 'object' ? t.pcard : {}; const num = (v, lo, hi, d) => { const n = Math.round(Number(v)); return Number.isFinite(n) && v !== '' && v != null ? Math.max(lo, Math.min(hi, n)) : d; };
+      const o = { drone: num(c.drone, 50, 160, 100), name: num(c.name, 60, 180, 100), num: num(c.num, 60, 200, 100),
+        corners: ['0', '16', '40'].indexOf(String(c.corners)) !== -1 ? String(c.corners) : 'auto', width: ['narrow', 'wide'].indexOf(c.width) !== -1 ? c.width : 'normal',
+        side: c.side === 'end' ? 'end' : 'start', align: c.align === 'start' ? 'start' : 'center', stats: c.stats !== false, badge: c.badge !== false, float: c.float !== false };
+      ['bg', 'bg2', 'fg', 'badgeBg', 'badgeFg', 'statBg', 'numC', 'lbl', 'line'].forEach((k) => { o[k] = hexOk(c[k]) ? String(c[k]).toLowerCase() : ''; });
+      return o; })(),
+    // the exercise window card (story card, one-panel box, bar pop-up): colours, sizes, width, corners, glass, place
+    wcard: (() => { const c = t.wcard && typeof t.wcard === 'object' ? t.wcard : {}; const num = (v, lo, hi, d) => { const n = Math.round(Number(v)); return Number.isFinite(n) && v !== '' && v != null ? Math.max(lo, Math.min(hi, n)) : d; };
+      const o = { title: num(c.title, 60, 160, 100), text: num(c.text, 80, 140, 100), width: num(c.width, 60, 150, 100), alpha: num(c.alpha, 30, 100, 85), y: num(c.y, -250, 250, 0),
+        corners: ['0', '16', '40'].indexOf(String(c.corners)) !== -1 ? String(c.corners) : 'auto', glass: c.glass !== false, align: c.align === 'center' ? 'center' : 'start' };
+      ['bg', 'fg', 'head', 'kick', 'btn', 'btnFg', 'line'].forEach((k) => { o[k] = hexOk(c[k]) ? String(c[k]).toLowerCase() : ''; });
+      return o; })(),
     // the bottom bar's default place: a row at the bottom, or a list under the side menu (the student can switch)
     barPos: t.barPos === 'side' ? 'side' : 'bottom',
     // the automatic flow: open the waiting step on arrival, move on after sending, close messages after some seconds
