@@ -2265,6 +2265,38 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 #app .helpbtn { min-width: 0; padding: 0 12px; font-weight: 900; }
 @media (min-width: 900px) { #app .helpbtn { display: none; } }
 @media (max-width: 899px) { #app .tab.tab-help { display: none; } }
+
+/* ================= logos (design page): side by side; by default top left, level with the top bar, above the rail ================= */
+#logos { position: fixed; z-index: 30; display: flex; align-items: center; gap: var(--lg-gap, 14px); pointer-events: none; translate: var(--lg-x, 0) var(--lg-y, 0); direction: ltr; }
+#logos.col { flex-direction: column; align-items: flex-start; }
+#logos.lg-tl { top: calc(env(safe-area-inset-top, 0px) + 20px); left: max(24px, env(safe-area-inset-left, 0px)); }
+#logos.lg-tr { top: calc(env(safe-area-inset-top, 0px) + 20px); right: max(24px, env(safe-area-inset-right, 0px)); }
+#logos.lg-tc { top: calc(env(safe-area-inset-top, 0px) + 20px); left: 50%; translate: calc(-50% + var(--lg-x, 0px)) var(--lg-y, 0); }
+#logos.lg-bl { bottom: calc(env(safe-area-inset-bottom, 0px) + 20px); left: max(24px, env(safe-area-inset-left, 0px)); }
+#logos.lg-br { bottom: calc(env(safe-area-inset-bottom, 0px) + 20px); right: max(24px, env(safe-area-inset-right, 0px)); }
+#logos .lg { pointer-events: auto; display: inline-flex; align-items: center; justify-content: center; height: var(--h); padding: var(--pad); box-sizing: content-box; border-radius: var(--r); overflow: hidden; opacity: var(--op, 1); }
+#logos .lg img { height: 100%; width: auto; max-width: 340px; object-fit: contain; display: block; border-radius: var(--r); }
+#logos .lg.plate { background: var(--bg); }
+#logos .lg.edge { box-shadow: inset 0 0 0 2px var(--edge); }
+#logos .lg.sh img { filter: drop-shadow(0 4px 10px rgba(0,0,0,.45)); }
+#logos .lg.t-white img { filter: brightness(0) invert(1); } #logos .lg.t-black img { filter: brightness(0); } #logos .lg.t-gray img { filter: grayscale(1); }
+#logos .lg.sh.t-white img { filter: brightness(0) invert(1) drop-shadow(0 4px 10px rgba(0,0,0,.45)); }
+#logos .lg.sh.t-black img { filter: brightness(0) drop-shadow(0 4px 10px rgba(255,255,255,.35)); }
+#logos .lg.sh.t-gray img { filter: grayscale(1) drop-shadow(0 4px 10px rgba(0,0,0,.45)); }
+#logos.sep .lg + .lg { position: relative; }
+#logos.sep:not(.col) .lg + .lg::before { content: ""; position: absolute; left: calc(var(--lg-gap, 14px) / -2 - 1px); top: 15%; bottom: 15%; width: 2px; background: var(--lg-sep, rgba(255,255,255,.5)); }
+#logos.sep { overflow: visible; } #logos.sep .lg { overflow: visible; }
+a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+/* the top bar's tall buttons: on wide screens the logos stand level with them; only the hangar-less game screens get them */
+@media (min-width: 900px) { #logos.lg-tl, #logos.lg-tr, #logos.lg-tc { top: calc(env(safe-area-inset-top, 0px) + 22px); } }
+/* phones: hidden unless the admin turned them on; then smaller, under the top bar */
+@media (max-width: 899px) {
+  #logos:not(.ph) { display: none; }
+  #logos.ph .lg { height: calc(var(--h) * var(--lg-ph, .7)); }
+  #logos.ph.lg-tl, #logos.ph.lg-tr, #logos.ph.lg-tc { top: calc(env(safe-area-inset-top, 0px) + 74px); }
+  #logos.ph.lg-tl { left: 12px; } #logos.ph.lg-tr { right: 12px; }
+  #logos.ph.lg-bl, #logos.ph.lg-br { bottom: calc(env(safe-area-inset-bottom, 0px) + 96px); }
+}
 </style>
 </head>
 <body>
@@ -3859,6 +3891,21 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       if (w.dataset.html !== html) { w.innerHTML = html; w.dataset.html = html; w.querySelectorAll('[data-box]').forEach(x => x.onclick = () => { if (!PREVIEW) { const s0 = boxShut(); s0[x.dataset.box] = 1; try { localStorage.setItem('g88-boxes', JSON.stringify(s0)); } catch (e) {} } x.closest('.tbox').remove(); if (!w.children.length) w.remove(); }); }
     });
   };
+  // logos (design page): pictures side by side, by default at the top on the left, level with the top bar
+  const renderLogos = (t) => {
+    const L = (t && t.logos) || {}, items = (Array.isArray(L.items) ? L.items : []).filter(x => x && x.on !== false && x.img);
+    let box = document.getElementById('logos');
+    if (L.show === false || !items.length) { if (box) box.remove(); return; }
+    if (!box) { box = document.createElement('div'); box.id = 'logos'; box.setAttribute('aria-label', 'לוגו'); app.appendChild(box); }
+    box.className = 'lg-' + (L.place || 'tl') + (L.dir === 'col' ? ' col' : '') + (L.phone ? ' ph' : '') + (L.sep ? ' sep' : '');
+    box.style.setProperty('--lg-x', (Number(L.x) || 0) + 'px'); box.style.setProperty('--lg-y', (Number(L.y) || 0) + 'px'); box.style.setProperty('--lg-gap', (L.gap == null ? 14 : Number(L.gap)) + 'px');
+    box.style.setProperty('--lg-ph', String((Number(L.phoneSize) || 70) / 100)); if (isHex(L.sepC || '')) box.style.setProperty('--lg-sep', L.sepC); else box.style.removeProperty('--lg-sep');
+    const html = items.map(x => { const st = `--h:${Math.max(16, Math.min(200, Number(x.h) || 44))}px;--op:${Math.max(10, Math.min(100, Number(x.op) || 100)) / 100};--r:${Number(x.round) || 0}%;--pad:${Number(x.pad) || 0}px;${isHex(x.bg || '') ? '--bg:' + x.bg + ';' : ''}${isHex(x.edge || '') ? '--edge:' + x.edge + ';' : ''}`;
+      const img = `<img src="${esc(x.img)}" alt="${esc(x.alt || 'לוגו')}" draggable="false">`;
+      const cls = `lg${x.tint && x.tint !== 'none' ? ' t-' + x.tint : ''}${x.shadow ? ' sh' : ''}${isHex(x.bg || '') ? ' plate' : ''}${isHex(x.edge || '') ? ' edge' : ''}`;
+      return x.link ? `<a class="${cls}" style="${st}" href="${esc(x.link)}" target="_blank" rel="noopener">${img}</a>` : `<span class="${cls}" style="${st}">${img}</span>`; }).join('');
+    if (box.dataset.html !== html) { box.innerHTML = html; box.dataset.html = html; }
+  };
   const themeOf = (t) => {
     const base = t && BASES[t.base] ? t.base : 'race', d = newTheme(base);
     if (!t || typeof t !== 'object') return d;
@@ -3950,6 +3997,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     let tcss = document.getElementById('themecss'); if (!tcss) { tcss = document.createElement('style'); tcss.id = 'themecss'; document.head.appendChild(tcss); }
     const css0 = String(t.css || '').replace(/<\/?\s*style/gi, '').replace(/@import/gi, ''); if (tcss.textContent !== css0) tcss.textContent = css0;
     renderBoxes(t);
+    renderLogos(t);
     // the stage chips above the exercise card (design page, per theme)
     const SD = t.steps || {};
     ['bg', 'fg', 'curBg', 'curFg', 'okBg', 'okFg', 'line', 'edge', 'stampBg', 'stampFg'].forEach(k => { const on = isHex(SD[k] || ''); if (on) set('--sd-' + k, SD[k]); else app.style.removeProperty('--sd-' + k); app.classList.toggle('sd-' + k, on); });

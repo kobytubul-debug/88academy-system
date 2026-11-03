@@ -232,6 +232,13 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .st-cheat summary { cursor: pointer; font-size: 13.5px; color: #2A9171; }
 .st-cheat ul { margin: 8px 0 0; padding: 0 18px; font-size: 13px; line-height: 1.8; }
 .st-cheat code, .st-hint code { background: #EEF2F0; padding: 1px 5px; border-radius: 5px; font-size: 12.5px; }
+.st-lgthumb { flex: none; width: 46px; height: 30px; border-radius: 6px; background: #E9EEEC center / contain no-repeat; display: grid; place-items: center; color: #8A948F; font-weight: 800; box-shadow: inset 0 0 0 1px #DCE3E0; }
+.st-lggal { display: grid; grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: 8px; }
+.st-lgpick { position: relative; aspect-ratio: 4 / 3; border: 0; padding: 0; border-radius: 10px; cursor: pointer; background: #20262A; box-shadow: inset 0 0 0 1px #DCE3E0; overflow: hidden; display: grid; place-items: center; }
+.st-lgpick span { position: absolute; inset: 6px; background: center / contain no-repeat; }
+.st-lgpick.on { box-shadow: 0 0 0 3px #2A9171; }
+.st-lgpick:focus-visible { outline: 2px solid #2A9171; outline-offset: 2px; }
+.st-lgup { background: #F3F6F5; color: #2A9171; font-size: 26px; font-weight: 700; }
 .scn { position: absolute; inset: -30px; overflow: hidden; }
 .scn > i { position: absolute; inset: 0; display: block; }
 .scn-field { background: linear-gradient(180deg, #7FB6DE 0%, #BFDFF0 40%, #DCEBD8 47%, #9CC27A 48%, #6E9E4E 66%, #456F32 100%); }
@@ -433,7 +440,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   const TERMS = [['t1', 'לשונית 1 (המסלול)'], ['t2', 'לשונית 2 (המשימות)'], ['t3', 'לשונית 3 (הליגה)'], ['t4', 'לשונית 4 (הפרופיל)'], ['world', 'שם ל"עולם"'], ['chest', 'שם ל"תיבה"'], ['boss', 'שם למבחן המסכם'], ['league', 'שם הליגה'], ['mapTitle', 'כותרת מפת הנתיב'], ['questsTitle', 'כותרת המשימות'], ['go', 'בועה מעל התרגיל הנוכחי'], ['lit', 'הודעה כשתרגיל מאושר']];
   const BUILT = { 't-race': ['race', 'מירוץ FPV'], 't-regular': ['regular', 'משחקי צבעוני'], 't-mil': ['mil', 'צבאי'] };
   const AUTO = ['field', 'city', 'garage', 'loft', 'forest', 'street'];
-  const newTheme = (base, extra) => Object.assign({ id: newId(), name: 'ערכה חדשה', base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default', num: 'default' }, icons: BASES[base].icons, bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', layout: 'classic', barPos: 'bottom', look: '', steps: JSON.parse(JSON.stringify(SD_DEF)), boxes: [], css: '', pcard: Object.assign({}, PC_DEF), wcard: Object.assign({}, WC_DEF), lens: { show: 'auto', size: 100, shape: 'round', x: 0, y: 0, ring: '' }, flow: { on: false, open: true, next: true, close: 4 }, show: { img: '', dim: 35, info: '', tab: '', corners: 'square' }, builtIn: false }, extra || {});
+  const newTheme = (base, extra) => Object.assign({ id: newId(), name: 'ערכה חדשה', base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default', num: 'default' }, icons: BASES[base].icons, bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', layout: 'classic', barPos: 'bottom', look: '', logos: JSON.parse(JSON.stringify(LG_DEF)), steps: JSON.parse(JSON.stringify(SD_DEF)), boxes: [], css: '', pcard: Object.assign({}, PC_DEF), wcard: Object.assign({}, WC_DEF), lens: { show: 'auto', size: 100, shape: 'round', x: 0, y: 0, ring: '' }, flow: { on: false, open: true, next: true, close: 4 }, show: { img: '', dim: 35, info: '', tab: '', corners: 'square' }, builtIn: false }, extra || {});
   const defaultsOf = (id) => BUILT[id] ? newTheme(BUILT[id][0], { id, name: BUILT[id][1], builtIn: true }) : null;
   // the colours in use: the theme's own, else the style's (the extra roles follow the brand colours until they are set)
   const effColors = (t) => { const C = Object.assign({}, BASES[t.base].colors, t.colors || {}), M = moreColors(t.base, C); Object.keys(M).forEach(k => { if (!isHex(C[k] || '')) C[k] = M[k]; }); return C; };
@@ -563,6 +570,46 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
       ${chk('stamp', 'להציג את העיגול בראש החלון')}
       ${C.stamp ? `<div class="st-colors">${col('stampBg', 'העיגול · רקע', '#5cf0b4')}${col('stampFg', 'העיגול · סימן ה־✓', '#0b1513')}</div>` : ''}
       <button class="st-link" type="button" data-sdreset>איפוס השלבים לברירת המחדל</button>`; };
+  const LG_DEF = { show: true, place: 'tl', x: 0, y: 0, gap: 14, dir: 'row', phone: false, phoneSize: 70, sep: false, sepC: '', items: [] };
+  const LGI_DEF = { on: true, img: '', h: 44, op: 100, round: 0, pad: 0, bg: '', tint: 'none', shadow: false, edge: '', link: '', alt: '' };
+  const LGD = (t) => Object.assign({}, LG_DEF, t.logos || {}, { items: ((t.logos && t.logos.items) || []).map(x => Object.assign({}, LGI_DEF, x)) });
+  const LGM = (t) => (t.logos = LGD(t));
+  const lgHtml = (d) => { const G = LGD(d), libs = lib();
+    const gseg = (k, v, label) => `<button type="button" data-lg="${k}" data-lgv="${v}" class="${String(G[k]) === v ? 'on' : ''}" aria-pressed="${String(G[k]) === v}">${label}</button>`;
+    const grange = (k, label, lo, hi, step, unit) => `<label class="st-field">${label} · <output id="lgo-${k}">${G[k]}${unit}</output><input type="range" min="${lo}" max="${hi}" step="${step}" value="${G[k]}" data-lgr="${k}" data-unit="${unit}" aria-label="${label}"></label>`;
+    const one = (x, i) => {
+      const seg = (k, v, label) => `<button type="button" data-lgi="${i}" data-lgk="${k}" data-lgv="${v}" class="${String(x[k]) === v ? 'on' : ''}" aria-pressed="${String(x[k]) === v}">${label}</button>`;
+      const range = (k, label, lo, hi, step, unit) => `<label class="st-field">${label} · <output id="lgo-${i}-${k}">${x[k]}${unit}</output><input type="range" min="${lo}" max="${hi}" step="${step}" value="${x[k]}" data-lgir="${i}" data-lgk="${k}" data-unit="${unit}" aria-label="${label}"></label>`;
+      return `<div class="st-box${x.on === false ? ' off' : ''}">
+        <div class="st-boxhead"><span class="st-lgthumb" style="${x.img ? `background-image:url('${esc(x.img)}')` : ''}">${x.img ? '' : '?'}</span><b>לוגו ${i + 1}${x.alt ? ' · ' + esc(x.alt) : ''}</b>
+          <button class="st-link" type="button" data-lgmv="${i}" data-dir="-1" ${i ? '' : 'disabled'} aria-label="להזיז ימינה ברשימה">↑</button><button class="st-link" type="button" data-lgmv="${i}" data-dir="1" ${i < G.items.length - 1 ? '' : 'disabled'} aria-label="להזיז הלאה ברשימה">↓</button>
+          <button class="st-link" type="button" data-lgdup="${i}">שכפול</button><button class="st-link danger" type="button" data-lgdel="${i}">מחיקה</button></div>
+        <label class="st-check"><input type="checkbox" data-lgic="${i}" data-lgk="on" ${x.on !== false ? 'checked' : ''}> מוצג</label>
+        <p class="st-hint" style="margin:0">בוחרים תמונה מהגלריה, או מעלים קובץ חדש (PNG שקוף נשמר שקוף):</p>
+        <div class="st-lggal">${libs.map(g => `<button type="button" class="st-lgpick${g.url === x.img ? ' on' : ''}" data-lgpick="${i}" data-url="${esc(g.url)}" aria-pressed="${g.url === x.img}" title="${esc(g.name || '')}"><span style="background-image:url('${esc(g.url)}')"></span></button>`).join('')}
+          <label class="st-lgpick st-lgup" title="העלאת לוגו מהמחשב">+<input type="file" accept="image/*" data-lgup="${i}" hidden></label></div>
+        ${ED.up != null && ED.lgUp === i ? `<p class="st-hint" style="margin:0">מעלה… ${ED.up}%</p>` : ''}${ED.upErr && ED.lgUp === i ? `<p class="st-err" role="alert">${esc(ED.upErr)}</p>` : ''}
+        ${range('h', 'גובה', 16, 200, 2, 'px')}${range('op', 'שקיפות', 10, 100, 5, '%')}${range('round', 'עיגול פינות', 0, 50, 2, '%')}${range('pad', 'ריווח פנימי', 0, 30, 1, 'px')}
+        <div class="st-seg" role="group" aria-label="צבע הלוגו">${seg('tint', 'none', 'צבעים מקוריים')}${seg('tint', 'white', 'לבן')}${seg('tint', 'black', 'שחור')}${seg('tint', 'gray', 'אפור')}</div>
+        <label class="st-check"><input type="checkbox" data-lgic="${i}" data-lgk="shadow" ${x.shadow ? 'checked' : ''}> צל מתחת ללוגו</label>
+        <div class="st-colors">${colorRow('lg-' + i + '-bg', 'רקע מאחורי הלוגו', 'בלי צבע = שקוף · ↺ מוחק', x.bg || '#ffffff', !!x.bg)}${colorRow('lg-' + i + '-edge', 'מסגרת', 'בלי צבע = בלי מסגרת · ↺ מוחק', x.edge || '#ffffff', !!x.edge)}</div>
+        <div class="st-two"><label class="st-field">שם (לקוראי מסך)<input type="text" data-lgit="${i}" data-lgk="alt" value="${esc(x.alt)}" maxlength="60" placeholder="למשל: 88ACADEMY"></label>
+        <label class="st-field">לחיצה מובילה אל (לא חובה)<input type="url" dir="ltr" data-lgit="${i}" data-lgk="link" value="${esc(x.link)}" maxlength="400" placeholder="https://..."></label></div>
+      </div>`;
+    };
+    return `<p class="st-hint" style="margin:0">לוגו אחד או כמה, אחד ליד השני. בהתחלה הם בחלק העליון בצד שמאל, מעל ציר התרגילים ובגובה של התראות / יום / רצף.</p>
+      <label class="st-check"><input type="checkbox" data-lgb="show" ${G.show ? 'checked' : ''}> להציג את הלוגואים</label>
+      ${G.items.map(one).join('')}
+      ${G.items.length < 6 ? `<div class="st-newrow"><button class="st-btn" type="button" data-lgadd="1">+ הוספת לוגו</button></div>` : ''}
+      ${G.items.length ? `<h3 class="st-h3">מיקום וסידור</h3>
+      <div class="st-seg" role="group" aria-label="מיקום">${gseg('place', 'tl', 'למעלה משמאל')}${gseg('place', 'tc', 'למעלה באמצע')}${gseg('place', 'tr', 'למעלה מימין')}${gseg('place', 'bl', 'למטה משמאל')}${gseg('place', 'br', 'למטה מימין')}</div>
+      ${grange('x', 'הזזה לצדדים', -400, 400, 2, 'px')}${grange('y', 'הזזה למעלה ולמטה', -300, 300, 2, 'px')}${grange('gap', 'רווח בין הלוגואים', 0, 80, 2, 'px')}
+      <div class="st-seg" role="group" aria-label="סידור">${gseg('dir', 'row', 'בשורה')}${gseg('dir', 'col', 'אחד מתחת לשני')}</div>
+      <label class="st-check"><input type="checkbox" data-lgb="sep" ${G.sep ? 'checked' : ''}> קו מפריד בין הלוגואים</label>
+      ${G.sep ? `<div class="st-colors">${colorRow('lg-sepC', 'צבע הקו', '↺ מחזיר ללבן שקוף', G.sepC || '#ffffff', !!G.sepC)}</div>` : ''}
+      <label class="st-check"><input type="checkbox" data-lgb="phone" ${G.phone ? 'checked' : ''}> להציג גם בטלפון (מתחת לבר העליון)</label>
+      ${G.phone ? grange('phoneSize', 'גודל בטלפון', 30, 100, 5, '%') : ''}
+      <button class="st-link" type="button" data-lgreset>איפוס המיקום והסידור</button>` : ''}`; };
   const pvView = (v) => post({ type: 'g88-view', view: v });
   const LZD = (t) => Object.assign({ show: "auto", size: 100, shape: "round", x: 0, y: 0, ring: "" }, t.lens || {});
   const tile = (val, label, pv, sel, attr) => `<button class="bgt ${sel ? 'sel' : ''}" type="button" ${attr}="${esc(val)}" aria-pressed="${sel}"><span class="bgpv">${pv}</span><span class="bgl">${esc(label)}</span></button>`;
@@ -692,7 +739,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
         <div class="st-seg" role="group" aria-label="אנימציות"><button type="button" data-motion="full" class="${d.motion !== 'calm' ? 'on' : ''}" aria-pressed="${d.motion !== 'calm'}">אנימציות מלאות</button><button type="button" data-motion="calm" class="${d.motion === 'calm' ? 'on' : ''}" aria-pressed="${d.motion === 'calm'}">מופחתות</button></div>
         <p class="st-hint">מופחתות: בלי פרופלורים מסתובבים, הבהובים וקונפטי. מתאים לתלמידים שתנועה מסיחה אותם.</p>
       </div></details>
-      <h3 class="st-grp">צבעים, גופנים ורקע<small>איך כל המסכים נראים</small></h3>
+      <h3 class="st-grp">מיתוג, צבעים ורקע<small>לוגו, צבעים, גופנים ורקע</small></h3>
+      ${fold('logos', 'לוגו', LGD(d).items.length ? (LGD(d).show ? (LGD(d).items.length === 1 ? 'לוגו אחד' : LGD(d).items.length + ' לוגואים') : 'מוסתר') : 'אין לוגו')}${lgHtml(d)}
+      </div></details>
       ${fold('colors', 'צבעים', `<span class="st-sw">${swatches(d)}</span>`)}
         <p class="st-hint">פלטות מוכנות, או צבע לכל תפקיד. ↺ מחזיר לצבע של הסגנון.</p>
         <div class="st-pals">${PALETTES.map((p, i) => `<button class="st-pal" type="button" data-pal="${i}"><span>${[p.accent, p.accent2, p.gold, p.sky].map(c => `<i style="background:${c}"></i>`).join('')}</span>${esc(p.name)}</button>`).join('')}</div>
@@ -812,6 +861,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     else if (k === 'lzring') LZ(d).ring = v;
     else if (k.indexOf('bx-') === 0) { const [, i, f] = k.split('-'); const b = BOXES(d)[+i]; if (b) b[f] = v; }
     else if (k.indexOf('sd-') === 0) SDM(d)[k.slice(3)] = v;
+    else if (k === 'lg-sepC') LGM(d).sepC = v;
+    else if (k.indexOf('lg-') === 0) { const [, i, f] = k.split('-'); const L = LGM(d), x = L.items[+i]; if (x) x[f] = v; }
     else if (k.indexOf('pc-') === 0) PC(d)[k.slice(3)] = v;
     else if (k.indexOf('wc-') === 0) WC(d)[k.slice(3)] = v;
     else if (k === 'shinfo' || k === 'shtab') SH(d)[k === 'shinfo' ? 'info' : 'tab'] = v;
@@ -986,24 +1037,24 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   const bgTouched = () => { BGD.msg = ''; BGD.err = ''; const keep = scrollPos(); renderBgTab(); scrollPos(keep); renderFoot(); sendBg(); };
 
   // ---------- image uploads: made smaller here, kept on the server, added to the shared library ----------
-  const shrink = (file) => new Promise((ok, no) => {
+  const shrink = (file, alpha) => new Promise((ok, no) => {
     if (!/^image\//.test(file.type || '')) return no('זה לא קובץ תמונה. בחרו JPG או PNG.');
     if (file.size > 30 * 1048576) return no(`התמונה שוקלת ${fmtSize(file.size)}. המקסימום הוא 30MB.`);
     const url = URL.createObjectURL(file), im = new Image();
     im.onerror = () => { URL.revokeObjectURL(url); no('לא הצלחתי לפתוח את התמונה. נסו JPG או PNG.'); };
     im.onload = () => {
-      const k = Math.min(1, 1920 / Math.max(im.naturalWidth, im.naturalHeight)), c = document.createElement('canvas');
+      const k = Math.min(1, (alpha ? 900 : 1920) / Math.max(im.naturalWidth, im.naturalHeight)), c = document.createElement('canvas');
       c.width = Math.max(1, Math.round(im.naturalWidth * k)); c.height = Math.max(1, Math.round(im.naturalHeight * k));
-      const g = c.getContext('2d'); g.fillStyle = '#101214'; g.fillRect(0, 0, c.width, c.height); g.drawImage(im, 0, 0, c.width, c.height);
+      const g = c.getContext('2d'); if (!alpha) { g.fillStyle = '#101214'; g.fillRect(0, 0, c.width, c.height); } g.drawImage(im, 0, 0, c.width, c.height);
       URL.revokeObjectURL(url);
-      c.toBlob((b) => b ? ok(new File([b], (file.name.replace(/\.[^.]+$/, '') || 'image').replace(/[^\w֐-׿-]+/g, '-').slice(0, 50) + '.jpg', { type: 'image/jpeg' })) : no('לא הצלחתי להכין את התמונה. נסו קובץ אחר.'), 'image/jpeg', .82);
+      c.toBlob((b) => b ? ok(new File([b], (file.name.replace(/\.[^.]+$/, '') || 'image').replace(/[^\w֐-׿-]+/g, '-').slice(0, 50) + (alpha ? '.png' : '.jpg'), { type: alpha ? 'image/png' : 'image/jpeg' })) : no('לא הצלחתי להכין את התמונה. נסו קובץ אחר.'), alpha ? 'image/png' : 'image/jpeg', .82);
     };
     im.src = url;
   });
-  const addImage = (file, st, done) => {
+  const addImage = (file, st, done, alpha) => {
     st.upErr = ''; st.up = 0; repaint();
     const name = (file.name.replace(/\.[^.]+$/, '') || 'תמונה').replace(/[<>]/g, '').slice(0, 60);
-    shrink(file)
+    shrink(file, alpha)
       .then(f => A.upload(f, (p) => { st.up = p; const s = body.querySelector('#upZone small'); if (s) s.textContent = `מעלה… ${p}%`; }, '/api/admin/upload-image'))
       .then(r => { if (!r.ok) throw r.error; return A.call('saveStageBg', { assign: savedBg(), lib: lib().concat([{ url: r.url, name }]) }).then(s => { if (!s.ok) throw s.error; return r.url; }); })
       .then(url => { st.up = null; done(url); })
@@ -1101,6 +1152,16 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     if (ds.reset && ds.reset.indexOf('sd-') === 0) { SDM(d)[ds.reset.slice(3)] = ''; redraw(); return; }
     if (ds.sd) { SDM(d)[ds.sd] = ds.sdv; redraw(); pvView('map'); return; }
     if ('sdreset' in ds) { d.steps = JSON.parse(JSON.stringify(SD_DEF)); redraw(); pvView('map'); return; }
+    if (ds.reset === 'lg-sepC') { LGM(d).sepC = ''; redraw(); return; }
+    if (ds.reset && ds.reset.indexOf('lg-') === 0) { const [, i, f] = ds.reset.split('-'); const x = LGM(d).items[+i]; if (x) x[f] = ''; redraw(); return; }
+    if (ds.lgadd) { const L = LGM(d); if (L.items.length < 6) { const g = lib()[0]; L.items.push(Object.assign({}, LGI_DEF, { id: 'l' + Date.now().toString(36).slice(-6), img: '' })); OPEN.logos = true; redraw(); } return; }
+    if (ds.lgdel != null) { LGM(d).items.splice(+ds.lgdel, 1); redraw(); return; }
+    if (ds.lgdup != null) { const L = LGM(d); if (L.items.length < 6) { L.items.splice(+ds.lgdup + 1, 0, Object.assign({}, L.items[+ds.lgdup], { id: 'l' + Date.now().toString(36).slice(-6) })); redraw(); } return; }
+    if (ds.lgmv != null) { const L = LGM(d).items, i = +ds.lgmv, j = i + Number(ds.dir); if (j >= 0 && j < L.length) { [L[i], L[j]] = [L[j], L[i]]; redraw(); } return; }
+    if (ds.lgpick != null) { const x = LGM(d).items[+ds.lgpick]; if (x) { x.img = ds.url; redraw(); } return; }
+    if (ds.lgi != null) { const x = LGM(d).items[+ds.lgi]; if (x) { x[ds.lgk] = ds.lgv; redraw(); } return; }
+    if (ds.lg) { LGM(d)[ds.lg] = ds.lgv; redraw(); return; }
+    if ('lgreset' in ds) { const L = LGM(d); Object.assign(L, { place: 'tl', x: 0, y: 0, gap: 14, dir: 'row', sep: false, sepC: '' }); redraw(); return; }
     if (ds.reset && ds.reset.indexOf('pc-') === 0) { PC(d)[ds.reset.slice(3)] = ''; redraw(); pvView('hangar'); return; }
     if (ds.reset && ds.reset.indexOf('wc-') === 0) { WC(d)[ds.reset.slice(3)] = ''; redraw(); pvView('map'); return; }
     if (ds.pc) { PC(d)[ds.pc] = ds.pcv; redraw(); pvView('hangar'); return; }
@@ -1133,6 +1194,11 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     if (t.dataset.bxt != null) { const b = BOXES(d)[+t.dataset.bxt]; if (b) { b[t.dataset.bxk] = t.value; if (t.tagName === 'SELECT') { const u = body.querySelector(`input[data-bxt="${t.dataset.bxt}"][data-bxk="img"]`); if (u) u.value = t.value; } clearTimeout(termTimer); termTimer = setTimeout(sendTheme, 250); touched(); } return; }
     if (t.dataset.bxc != null) { const b = BOXES(d)[+t.dataset.bxc]; if (b) { b[t.dataset.bxk] = t.checked; sendTheme(); touched(); } return; }
     if ('css' in t.dataset) { d.css = t.value.slice(0, 20000); clearTimeout(termTimer); termTimer = setTimeout(sendTheme, 400); touched(); return; }
+    if (t.dataset.lgr) { const L = LGM(d), k = t.dataset.lgr; L[k] = Number(t.value) || 0; const o = $('#lgo-' + k); if (o) o.textContent = L[k] + t.dataset.unit; sendTheme(); touched(); return; }
+    if (t.dataset.lgir != null) { const x = LGM(d).items[+t.dataset.lgir], k = t.dataset.lgk; if (x) { x[k] = Number(t.value) || 0; const o = $('#lgo-' + t.dataset.lgir + '-' + k); if (o) o.textContent = x[k] + t.dataset.unit; sendTheme(); touched(); } return; }
+    if (t.dataset.lgic != null) { const x = LGM(d).items[+t.dataset.lgic]; if (x) { x[t.dataset.lgk] = t.checked; redraw(); } return; }
+    if (t.dataset.lgb) { LGM(d)[t.dataset.lgb] = t.checked; redraw(); return; }
+    if (t.dataset.lgit != null) { const x = LGM(d).items[+t.dataset.lgit]; if (x) { x[t.dataset.lgk] = t.value; clearTimeout(termTimer); termTimer = setTimeout(sendTheme, 300); touched(); } return; }
     if (t.dataset.sdr) { const O = SDM(d), k = t.dataset.sdr; O[k] = Number(t.value) || 0; const o = $('#sdo-' + k); if (o) o.textContent = O[k] + t.dataset.unit; sendTheme(); touched(); return; }
     if (t.dataset.sdb) { SDM(d)[t.dataset.sdb] = t.checked; redraw(); pvView('map'); return; }
     if (t.dataset.sdn) { SDM(d).names[t.dataset.sdn] = t.value.slice(0, 20); clearTimeout(termTimer); termTimer = setTimeout(sendTheme, 300); touched(); return; }
@@ -1164,6 +1230,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   body.addEventListener('change', (e) => {
     const t = e.target;
     if (t.dataset.flow) { const f = d.flow = Object.assign({ on: false, open: true, next: true, close: 4 }, d.flow || {}); f[t.dataset.flow] = t.checked; redraw(); return; }
+    if (t.dataset.lgup != null) { const f = t.files && t.files[0], i = +t.dataset.lgup; t.value = ''; if (f && ED) { ED.lgUp = i; addImage(f, ED, (url) => { const x = LGM(D()).items[i]; if (x) x.img = url; redraw(); }, true); } return; }
     if (t.id === 'upShow') { const f = t.files && t.files[0]; t.value = ''; if (f && ED) addImage(f, ED, (url) => { SH(D()).img = url; redraw(); }); return; }
     if (t.id === 'upFile') {
       const f = t.files && t.files[0]; t.value = ''; if (!f) return;

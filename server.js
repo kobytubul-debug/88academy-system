@@ -254,6 +254,15 @@ function cleanTheme(t) {
       ['bg', 'fg', 'curBg', 'curFg', 'okBg', 'okFg', 'line', 'edge', 'stampBg', 'stampFg'].forEach((k) => { o[k] = hexOk(c[k]) ? String(c[k]).toLowerCase() : ''; });
       const n = c.names && typeof c.names === 'object' ? c.names : {}; ['intro', 'video', 'up', 'tower'].forEach((k) => { o.names[k] = String(n[k] == null ? '' : n[k]).replace(/[\u0000-\u001F<>]/g, '').slice(0, 20); });
       return o; })(),
+    // logos: one or more pictures from the gallery, side by side; by default at the top on the left, level with the top bar
+    logos: (() => { const c = t.logos && typeof t.logos === 'object' && !Array.isArray(t.logos) ? t.logos : {}; const num = (v, lo, hi, d) => { const n = Math.round(Number(v)); return Number.isFinite(n) && v !== '' && v != null ? Math.max(lo, Math.min(hi, n)) : d; };
+      const url = (v) => { const u = String(v == null ? '' : v).trim().slice(0, 600); return /^https?:\/\//i.test(u) || /^\/[^\/]/.test(u) ? u : ''; };
+      return { show: c.show !== false, place: ['tl', 'tr', 'tc', 'bl', 'br'].indexOf(c.place) !== -1 ? c.place : 'tl', x: num(c.x, -400, 400, 0), y: num(c.y, -300, 300, 0), gap: num(c.gap, 0, 80, 14),
+        dir: c.dir === 'col' ? 'col' : 'row', phone: c.phone === true, phoneSize: num(c.phoneSize, 30, 100, 70), sep: c.sep === true, sepC: hexOk(c.sepC) ? String(c.sepC).toLowerCase() : '',
+        items: (Array.isArray(c.items) ? c.items : []).slice(0, 6).map((x, i) => { x = x && typeof x === 'object' ? x : {}; return { id: /^[a-z0-9]{1,16}$/i.test(String(x.id)) ? String(x.id) : 'l' + i, on: x.on !== false, img: url(x.img),
+          h: num(x.h, 16, 200, 44), op: num(x.op, 10, 100, 100), round: num(x.round, 0, 50, 0), pad: num(x.pad, 0, 30, 0), bg: hexOk(x.bg) ? String(x.bg).toLowerCase() : '',
+          tint: ['white', 'black', 'gray'].indexOf(x.tint) !== -1 ? x.tint : 'none', shadow: x.shadow === true, edge: hexOk(x.edge) ? String(x.edge).toLowerCase() : '',
+          link: /^https?:\/\//i.test(String(x.link || '').trim()) ? String(x.link).trim().slice(0, 400) : '', alt: String(x.alt == null ? '' : x.alt).replace(/[<>]/g, '').slice(0, 60) }; }).filter(x => x.img) }; })(),
     // the bottom bar's default place: a row at the bottom, or a list under the side menu (the student can switch)
     barPos: t.barPos === 'side' ? 'side' : 'bottom',
     // the automatic flow: open the waiting step on arrival, move on after sending, close messages after some seconds
