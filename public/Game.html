@@ -2056,6 +2056,27 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 }
 @media (min-width: 900px) { #app .slide.sty > .sbody { padding-bottom: 90px; } #app .slide.sty .sgrid { display: flex; } }
 @media (min-width: 900px) { #app .st-lens { height: 190px; margin-top: 6px; } }
+
+/* ================= the stage lens in the exercise window, as the design page sets it per theme =================
+   size (--lz-s), place (--lz-x / --lz-y), shape (lz-square / lz-hex / lz-diamond), a fixed ring colour (lz-ring), or hidden (lz-off) */
+#app #deck .slide .hero .node.big, #app #deck .slide .st-lens .node.big { scale: var(--lz-s, 1); translate: var(--lz-x, 0) var(--lz-y, 0); transition: scale .25s, translate .25s; }
+#app.lz-off #deck .slide .hero, #app.lz-off #deck .slide .st-lens { display: none !important; }
+#app.lz-ring #deck .slide .node.wp.big { --wp: var(--lz-ring) !important; --wp-tick: color-mix(in srgb, var(--lz-ring) 65%, transparent) !important; }
+/* shapes other than the circle: the bezel steps aside, the frame takes the shape in the ring colour */
+#app:is(.lz-square, .lz-hex, .lz-diamond) #deck .slide .node.wp.big:not(.chest) .bez { display: none; }
+#app:is(.lz-square, .lz-hex, .lz-diamond) #deck .slide .node.wp.big:not(.chest) .face { background: var(--wp); box-shadow: none; }
+#app:is(.lz-square, .lz-hex, .lz-diamond) #deck .slide .node.wp.big:not(.chest) .face::after,
+#app:is(.lz-square, .lz-hex, .lz-diamond) #deck .slide .node.wp.big:not(.chest) .face::before { display: none; }
+#app.lz-square #deck .slide .node.wp.big:not(.chest) .face { border-radius: 22%; }
+#app.lz-square #deck .slide .node.wp.big:not(.chest) .nart { inset: 7%; border-radius: 17%; }
+#app.lz-hex #deck .slide .node.wp.big:not(.chest) .face { border-radius: 0; clip-path: polygon(25% 3%, 75% 3%, 99% 50%, 75% 97%, 25% 97%, 1% 50%); }
+#app.lz-hex #deck .slide .node.wp.big:not(.chest) .nart { inset: 7%; border-radius: 0; clip-path: polygon(25% 3%, 75% 3%, 99% 50%, 75% 97%, 25% 97%, 1% 50%); }
+#app.lz-diamond #deck .slide .node.wp.big:not(.chest) .face { border-radius: 0; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
+#app.lz-diamond #deck .slide .node.wp.big:not(.chest) .nart { inset: 8%; border-radius: 0; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
+#app:is(.lz-hex, .lz-diamond) #deck .slide .node.wp.big:not(.chest) .ck { z-index: 3; }
+/* the bottom bar, when the theme brings the lens back: above the bar in the row, above the list at the side */
+#app.lz-on .slide.bb .sgrid > .hero { display: grid; place-items: center; }
+@media (min-width: 900px) { #app.lz-on.bbl .slide.bb .sgrid > .hero { position: absolute; inset: 0 260px 0 0; } }
 </style>
 </head>
 <body>
@@ -2827,6 +2848,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   // ---------- the story layout (a theme option): no bar; each exercise plays itself one stage at a time ----------
   // the mission (name and task) -> the demo video, playing by itself with the full explanation -> the upload -> the instructor
   const STORY = () => !!(ACTIVE && ACTIVE.layout === 'story');
+  const LZON = () => !!(ACTIVE && ACTIVE.lens && ACTIVE.lens.show === 'on');
   const STG_NAMES = { intro: 'המשימה', video: 'תדריך', up: 'טיסה', tower: 'המדריך' };
   const stagesOf = (n) => n.t !== 'skill' ? ['intro'] : ['intro'].concat(vidOf(n.k) ? ['video'] : []).concat(['up', 'tower']);
   const afterIntro = (n) => { if (n.t !== 'skill') return 'intro'; const st = n.state, v = vidOf(n.k); if (st === 'wait' || st === 'done') return 'tower'; if (st === 'lock') return 'intro'; return v && !watched(n.k) && !ui(n.id).skipVideo && st !== 'fix' ? 'video' : 'up'; };
@@ -2858,7 +2880,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     let body = '';
     if (cur === 'intro') {
       const auto = afterIntro(n) !== 'intro';
-      body = `${head}<h2>${esc(n.name)}${titleStars(n)}</h2>${st ? `<p class="sh-state s-${n.state}">${esc(st)}</p>` : ''}
+      body = `${LZON() ? `<div class="st-lens">${heroOf(n)}</div>` : ''}${head}<h2>${esc(n.name)}${titleStars(n)}</h2>${st ? `<p class="sh-state s-${n.state}">${esc(st)}</p>` : ''}
         ${n.t === 'skill' ? `${n.k.desc ? `<p class="st-task">${esc(n.k.desc)}</p>` : ''}${n.state === 'lock' ? `<p class="sh-msg">התרגיל עוד נעול. הוא נפתח כשמסיימים את התרגילים ב${esc(prevLevelName(n.k.level))}.</p>` : ''}` : slideBody(n)}
         ${auto ? `<div class="st-timer" aria-hidden="true"><i></i></div><p class="st-next">בעוד רגע: ${esc(STG_NAMES[afterIntro(n)] === 'תדריך' ? 'סרטון ההדגמה' : STG_NAMES[afterIntro(n)] === 'טיסה' ? 'העלאת הטיסה' : 'המדריך')}</p>` : ''}`;
     } else if (cur === 'video') {
@@ -2904,7 +2926,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       pane: () => `<div class="bb-head"><small>${esc(w.name)} · ${esc(worldTag(w))}</small><h2>${esc(n.name)}${titleStars(n)}</h2>${st ? `<p class="sh-state s-${n.state}">${esc(st)}</p>` : ''}</div>${n.t === 'skill' ? (n.k.desc ? `<p class="desc">${esc(n.k.desc)}</p>` : '') + fb : slideBody(n)}` }]
       .concat(tabs.map((t, i) => ({ key: t.key, title: t.title, sub: t.sub, num: i + 1, ok: t.ok, on: t.on, rw: t.rw, pane: () => `<div class="bb-head"><small>שלב ${i + 1} מתוך ${tabs.length}</small><h2>${esc(t.title)}</h2></div>${t.pane()}` })));
     const cur = items.find(x => x.key === open);
-    return `<div class="bbwrap">
+    return `${ACTIVE && ACTIVE.lens && ACTIVE.lens.show === 'on' ? `<div class="hero">${heroOf(n)}</div>` : ''}<div class="bbwrap">
         ${cur ? `<div class="bpop" role="dialog" aria-label="${esc(cur.title)}" data-popfor="${cur.key}"><button class="bpx" type="button" data-pop="" aria-label="סגירה">✕</button>${cur.pane()}</div>` : ''}
         <button class="bbsw" type="button" data-barsw aria-label="${barMode() === 'side' ? 'להעביר את הבר לשורה בתחתית' : 'להעביר את הבר לרשימה בצד'}" title="${barMode() === 'side' ? 'שורה בתחתית' : 'רשימה בצד'}"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">${barMode() === 'side' ? '<rect x="3" y="14" width="18" height="6" rx="1.5"/><path d="M8 10l4-4 4 4"/>' : '<rect x="15" y="3" width="6" height="18" rx="1.5"/><path d="M10 8l-4 4 4 4"/>'}</svg></button>
         <div class="bbar st-${n.t === 'chest' ? (n.state === 'ready' ? 'now' : n.state === 'opened' ? 'done' : 'lock') : n.state}" role="toolbar" aria-label="${esc(n.name)}">${items.map(x => `<button class="bbi ${x.cls || ''}${x.key === open ? ' open' : ''}${x.ok ? ' ok' : ''}${x.on ? ' on' : ''}" type="button" data-pop="${x.key === open ? '' : x.key}" aria-expanded="${x.key === open}">
@@ -3641,6 +3663,13 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     app.classList.toggle('shsoft', so2.corners === 'soft');
     app.classList.toggle('lpanel', t.layout === 'panel');
     app.classList.toggle('pixel', t.look === 'pixel');
+    // the stage lens: shown or hidden, size, shape, place and ring colour (design page, per theme)
+    const L = t.lens || {};
+    app.classList.toggle('lz-off', L.show === 'off'); app.classList.toggle('lz-on', L.show === 'on');
+    ['square', 'hex', 'diamond'].forEach(k => app.classList.toggle('lz-' + k, L.shape === k));
+    set('--lz-s', String(Math.max(50, Math.min(200, Number(L.size) || 100)) / 100));
+    set('--lz-x', (Number(L.x) || 0) + 'px'); set('--lz-y', (Number(L.y) || 0) + 'px');
+    if (isHex(L.ring || '')) { set('--lz-ring', L.ring); app.classList.add('lz-ring'); } else { app.style.removeProperty('--lz-ring'); app.classList.remove('lz-ring'); }
     if (t.look === 'pixel') loadFont('Press Start 2P', PAGE_FONTS);
     // the theme's own background, behind every screen (a stage with a background of its own shows that one on top)
     const tb = $('#themebg'), bg = t.bg || { kind: 'look' }, key = JSON.stringify(bg);
@@ -3673,7 +3702,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   // the design page changes one thing at a time: colors and the like only need the variables, a new base style,
   // icons or words need the whole screen drawn again
   const previewTheme = (raw) => {
-    const t = themeOf(raw), shape = (x) => JSON.stringify([x.base, x.icons, x.terms, x.layout || 'classic', (x.show && x.show.img) || '']);
+    const t = themeOf(raw), shape = (x) => JSON.stringify([x.base, x.icons, x.terms, (x.lens && x.lens.show) || 'auto', x.layout || 'classic', (x.show && x.show.img) || '']);
     if (ACTIVE && shape(ACTIVE) === shape(t)) { ACTIVE = t; applyVars(t); syncStageBg(); } else applyTheme(t);
   };
   // the switch shows where it leads: a sun to day, a moon to night
