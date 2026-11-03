@@ -2178,6 +2178,47 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 #app .stcard.st-video { width: min(calc(880px * var(--wc-w, 1)), 100%); }
 #app .slide.sty .st-dots { translate: 0 var(--wc-y, 0); }
 @media (max-width: 899px) { #app .stcard h2, #app .mpanel h2 { font-size: calc(28px * var(--wc-title, 1)) !important; } #app .stcard, #app .slide.sty .st-dots { translate: 0 calc(var(--wc-y, 0) * .4); } }
+
+/* ================= windows of the admin's own (design page) ================= */
+.tboxes { display: flex; flex-direction: column; gap: 12px; margin: 0 0 18px; }
+.tbox { position: relative; display: flex; gap: 14px; align-items: stretch; padding: 14px; border-radius: 20px; box-sizing: border-box; overflow: hidden;
+  background: var(--tb-bg, color-mix(in srgb, var(--night) 86%, transparent)); color: var(--tb-fg, var(--white)); box-shadow: 0 14px 36px rgba(0,0,0,.32), inset 0 0 0 1px rgba(255,255,255,.12); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+.tbox::before { content: ""; position: absolute; inset-block: 0; inset-inline-start: 0; width: 5px; background: var(--tb-ac, var(--mint)); }
+.tbox.mid { text-align: center; flex-direction: column; align-items: center; }
+.tb-img { flex: none; width: 96px; min-height: 76px; border-radius: 14px; background: center / cover no-repeat rgba(255,255,255,.08); }
+.tbox.mid .tb-img { width: 100%; height: 140px; }
+.tb-body { min-width: 0; display: flex; flex-direction: column; gap: 6px; justify-content: center; }
+.tbox h3 { margin: 0; font-size: 18px; font-weight: 900; line-height: 1.2; color: var(--tb-fg, var(--white)); }
+.tbox p { margin: 0; font-size: 14.5px; line-height: 1.55; opacity: .9; }
+.tb-btn { align-self: flex-start; margin-top: 4px; padding: 8px 16px; border-radius: 12px; font-weight: 900; font-size: 14px; text-decoration: none; background: var(--tb-ac, var(--mint)); color: var(--ink, #0B1513); }
+.tbox.mid .tb-btn { align-self: center; }
+.tb-btn:focus-visible, .tb-x:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+.tb-x { position: absolute; top: 6px; inset-inline-end: 8px; width: 30px; height: 30px; border: 0; border-radius: 50%; cursor: pointer; font-size: 20px; line-height: 1; background: rgba(0,0,0,.25); color: inherit; }
+.tbox.s-s { padding: 10px 12px; } .tbox.s-s h3 { font-size: 15px; } .tbox.s-s p { font-size: 13px; } .tbox.s-s .tb-img { width: 64px; min-height: 54px; }
+.tbox.s-l { padding: 20px; } .tbox.s-l h3 { font-size: 24px; } .tbox.s-l p { font-size: 16px; } .tbox.s-l .tb-img { width: 150px; min-height: 110px; }
+.tbox.s-l.mid .tb-img { height: 200px; }
+/* on the track the windows float at the top, over the background, and leave the exercise free */
+#v-map > .tboxes { position: absolute; z-index: 6; top: 10px; left: 50%; translate: -50% 0; width: min(460px, calc(100% - 120px)); margin: 0; pointer-events: none; }
+#v-map > .tboxes .tbox { pointer-events: auto; }
+#v-map > .tboxes .tbox:not(.mid) .tb-body { padding-inline-end: 28px; }
+#v-map > .tboxes .tbox.s-l { width: min(620px, 100%); align-self: center; }
+@media (min-width: 900px) { #v-map > .tboxes { width: min(520px, calc(100% - 520px)); } }
+#app.day .tbox { background: var(--tb-bg, color-mix(in srgb, var(--d-card, #fff) 92%, transparent)); color: var(--tb-fg, var(--d-fg)); box-shadow: 0 12px 30px rgba(0,0,0,.12), inset 0 0 0 1px rgba(0,0,0,.08); }
+#app.day .tbox h3 { color: var(--tb-fg, var(--d-fg)); }
+.app.race .tbox, .app.race .tb-img, .app.race .tb-btn { border-radius: 0; }
+#app.pixel .tbox { border-radius: 0; border: 3px solid var(--px-ink); box-shadow: 5px 5px 0 var(--px-ink); backdrop-filter: none; }
+@media (min-width: 900px) { #app #v-hangar > .tboxes { grid-column: 2; } #app.pc-end #v-hangar > .tboxes { grid-column: 1; } }
+#v-map > .tboxes { position: fixed; top: calc(env(safe-area-inset-top, 0px) + 76px); }
+@media (min-width: 900px) { #v-map > .tboxes { top: 96px; } }
+#v-map[hidden] > .tboxes { display: none; }
+/* the track: wide screens put the windows in the side column under the menu; phones put them just above the next-exercise button */
+#v-map > .tboxes.side { left: auto; translate: none; }
+#v-map > .tboxes.side .tbox { flex-direction: column; } #v-map > .tboxes.side .tb-img { width: 100%; height: 110px; }
+#v-map > .tboxes.side .tbox.s-l { width: 100%; }
+@media (max-width: 899px) {
+  #v-map > .tboxes { top: auto; bottom: calc(env(safe-area-inset-bottom, 0px) + 150px); width: calc(100% - 64px); left: auto; right: 12px; translate: none; }
+  #v-map > .tboxes .tbox { padding: 10px 12px; } #v-map > .tboxes .tbox p { font-size: 13px; } #v-map > .tboxes .tb-img { width: 64px; min-height: 54px; }
+}
 </style>
 </head>
 <body>
@@ -3715,6 +3756,33 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   // ---------- theme: the group's design (base style, day/night, colors, fonts, icons, background, words, motion) ----------
   const newTheme = (base) => ({ id: 't-' + base, name: BASES[base].name, base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default' }, icons: BASES[base].icons, bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full' });
   // what the server sent, with every part filled in
+  // windows of the admin's own (design page): each sits at the top of the screen it was put in; the one on the track can be closed
+  const boxShut = () => { try { return JSON.parse(localStorage.getItem('g88-boxes') || '{}'); } catch (e) { return {}; } };
+  // on the track (wide screens) the windows sit in the side column, under the menu
+  const placeBoxes = () => {
+    const w = document.querySelector('#v-map > .tboxes'); if (!w) return;
+    const tabs = app.querySelector(':scope > .tabs'), side = innerWidth >= 900 && tabs && !app.classList.contains('shw') && !app.classList.contains('bbl');
+    w.classList.toggle('side', !!side);
+    if (side) { const r = tabs.getBoundingClientRect(), t0 = tabs.querySelector('.tab') || tabs, q = t0.getBoundingClientRect(); w.style.top = Math.round(r.bottom + 10) + 'px'; w.style.width = Math.round(q.width) + 'px'; w.style.right = Math.round(innerWidth - q.right) + 'px'; }
+    else { w.style.removeProperty('top'); w.style.removeProperty('width'); w.style.removeProperty('right'); }
+  };
+  addEventListener('resize', () => placeBoxes());
+  const renderBoxes = (t) => {
+    const all = (t && Array.isArray(t.boxes) ? t.boxes : []).filter(b => b && b.on !== false && (b.title || b.text || b.img)), shut = PREVIEW ? {} : boxShut();
+    const at = { map: '#v-map', quests: '#v-quests', league: '#v-league', hangar: '#v-hangar' };
+    Object.keys(at).forEach(pl => {
+      const view = $(at[pl]); if (!view) return;
+      let w = view.querySelector(':scope > .tboxes'); const mine = all.filter(b => b.place === pl && !(pl === 'map' && b.close !== false && shut[t.id + ':' + b.id]));
+      if (!mine.length) { if (w) w.remove(); return; }
+      if (!w) { w = document.createElement('div'); w.className = 'tboxes'; w.dataset.place = pl; if (pl === 'hangar') { const pc = view.querySelector('.pilotcard'); pc ? pc.after(w) : view.prepend(w); } else view.prepend(w); }
+      const html = mine.map(b => `<article class="tbox s-${b.size || 'm'}${b.align === 'center' ? ' mid' : ''}${b.img ? ' has-img' : ''}" style="${isHex(b.bg || '') ? '--tb-bg:' + b.bg + ';' : ''}${isHex(b.fg || '') ? '--tb-fg:' + b.fg + ';' : ''}${isHex(b.accent || '') ? '--tb-ac:' + b.accent + ';' : ''}">
+        ${b.img ? `<div class="tb-img" style="background-image:url('${esc(String(b.img).replace(/'/g, '%27'))}')" role="img" aria-label="${esc(b.title || 'תמונה')}"></div>` : ''}
+        <div class="tb-body">${b.title ? `<h3>${esc(b.title)}</h3>` : ''}${b.text ? `<p>${esc(b.text).replace(/\n/g, '<br>')}</p>` : ''}${b.btn && b.link ? `<a class="tb-btn" href="${esc(b.link)}" target="_blank" rel="noopener">${esc(b.btn)}</a>` : ''}</div>
+        ${pl === 'map' && b.close !== false ? `<button class="tb-x" type="button" data-box="${esc(t.id + ':' + b.id)}" aria-label="סגירת החלון">×</button>` : ''}</article>`).join('');
+      if (pl === 'map') setTimeout(placeBoxes, 30);
+      if (w.dataset.html !== html) { w.innerHTML = html; w.dataset.html = html; w.querySelectorAll('[data-box]').forEach(x => x.onclick = () => { if (!PREVIEW) { const s0 = boxShut(); s0[x.dataset.box] = 1; try { localStorage.setItem('g88-boxes', JSON.stringify(s0)); } catch (e) {} } x.closest('.tbox').remove(); if (!w.children.length) w.remove(); }); }
+    });
+  };
   const themeOf = (t) => {
     const base = t && BASES[t.base] ? t.base : 'race', d = newTheme(base);
     if (!t || typeof t !== 'object') return d;
@@ -3802,6 +3870,10 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     app.classList.toggle('wc-r', ['0', '16', '40'].indexOf(String(WC.corners)) !== -1); set('--wc-r', (Number(WC.corners) || 0) + 'px');
     app.classList.toggle('wc-flat', WC.glass === false); app.classList.toggle('wc-mid', WC.align === 'center');
     app.classList.toggle('wc-set', !!(t.wcard && (Number(WC.width) !== 100 || Number(WC.y) || WC.alpha != null && Number(WC.alpha) !== 85)));
+    // open editing: the theme's own CSS
+    let tcss = document.getElementById('themecss'); if (!tcss) { tcss = document.createElement('style'); tcss.id = 'themecss'; document.head.appendChild(tcss); }
+    const css0 = String(t.css || '').replace(/<\/?\s*style/gi, '').replace(/@import/gi, ''); if (tcss.textContent !== css0) tcss.textContent = css0;
+    renderBoxes(t);
     if (t.look === 'pixel') loadFont('Press Start 2P', PAGE_FONTS);
     // the theme's own background, behind every screen (a stage with a background of its own shows that one on top)
     const tb = $('#themebg'), bg = t.bg || { kind: 'look' }, key = JSON.stringify(bg);
