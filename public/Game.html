@@ -2056,6 +2056,49 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 }
 @media (min-width: 900px) { #app .slide.sty > .sbody { padding-bottom: 90px; } #app .slide.sty .sgrid { display: flex; } }
 @media (min-width: 900px) { #app .st-lens { height: 190px; margin-top: 6px; } }
+/* stages already behind the student carry a tick */
+.st-dots .st-tick { font-style: normal; font-weight: 900; margin-inline-end: 5px; }
+.st-dots li.ok button { background: color-mix(in srgb, var(--mint) 24%, rgba(11,21,19,.55)); color: var(--white); box-shadow: inset 0 0 0 1.5px var(--mint); }
+.st-dots li.ok.cur button, .st-dots.all li.cur button { background: var(--mint); color: var(--ink, #0B1513); }
+.st-dots li.ok + li::before, .st-dots li.ok + li.ok::before { background: var(--mint); }
+.st-dots .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+/* a finished exercise looks finished: a mint frame, a tick stamp and the way on */
+.stcard.st-ok { box-shadow: 0 30px 80px rgba(0,0,0,.45), inset 0 0 0 3px var(--mint); background: color-mix(in srgb, var(--mint) 12%, color-mix(in srgb, var(--night) 84%, transparent)); }
+.stcard.st-ok::after { content: ""; position: absolute; inset: 0 0 auto; height: 6px; border-radius: 28px 28px 0 0; background: var(--mint); }
+.st-badge { position: absolute; top: -26px; inset-inline-end: 26px; width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: var(--mint); color: var(--ink, #0B1513); box-shadow: 0 10px 26px rgba(0,0,0,.35), 0 0 0 5px color-mix(in srgb, var(--mint) 30%, transparent); z-index: 1; }
+.st-badge svg { width: 30px; height: 30px; fill: none; stroke: currentColor; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+.stcard.enter .st-badge { animation: stPop .6s .25s cubic-bezier(.2,1.6,.4,1) both; }
+@keyframes stPop { from { transform: scale(0) rotate(-30deg); } to { transform: none; } }
+.st-donelbl { margin: 0; align-self: flex-start; padding: 4px 12px; border-radius: 999px; font-size: 13px; font-weight: 900; letter-spacing: .04em; background: var(--mint); color: var(--ink, #0B1513); }
+.stcard.st-ok .st-task { opacity: .7; }
+.st-go { align-self: stretch; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 4px; padding: 15px 20px; border: 0; border-radius: 16px; cursor: pointer; font: 900 18px var(--f); background: var(--mint); color: var(--ink, #0B1513); box-shadow: 0 6px 0 color-mix(in srgb, var(--mint) 55%, #000); transition: transform .15s; }
+.st-go span { font-size: 22px; transition: transform .2s; }
+.st-go:hover span { transform: translateX(-4px); }
+.st-go:active { transform: translateY(3px); box-shadow: 0 3px 0 color-mix(in srgb, var(--mint) 55%, #000); }
+.st-go:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+.app.race .stcard.st-ok::after, .app.race .st-go { border-radius: 0; }
+#app.day .stcard.st-ok { background: color-mix(in srgb, var(--mint) 14%, var(--d-card, #FFFFFF)); }
+#app.day .st-dots li.ok button { background: color-mix(in srgb, var(--mint) 30%, #fff); color: var(--d-fg); }
+#app.pixel .stcard.st-ok { background: #e8ffe0 !important; }
+@media (prefers-reduced-motion: reduce) { .stcard.enter .st-badge { animation: none; } }
+/* the side rail in the story layout: a finished exercise shows a tick */
+#app.lsty .rail .dot.done { width: 18px; height: 18px; display: grid; place-items: center; background: var(--mint); border-color: var(--mint); }
+#app.lsty .rail .dot.done::after { content: ""; width: 8px; height: 4px; margin-top: -2px; border: solid var(--ink, #0B1513); border-width: 0 0 2.5px 2.5px; transform: rotate(-45deg); }
+/* the tick stamp sits at the top centre, clear of the count */
+.st-badge { inset-inline-end: auto; left: 50%; translate: -50% 0; }
+@media (max-width: 899px) {
+  .st-dots { flex-wrap: wrap; justify-content: center; row-gap: 6px; max-width: 100%; }
+  .st-dots li + li::before { width: 6px; }
+  .st-dots button { padding: 5px 8px; }
+  .st-dots .st-tick { margin-inline-end: 3px; }
+  .st-badge { width: 46px; height: 46px; top: -22px; } .st-badge svg { width: 24px; height: 24px; }
+}
+@media (max-width: 899px) {
+  .st-badge { position: static; translate: none; width: 40px; height: 40px; align-self: center; margin: -6px 0 -4px; box-shadow: 0 0 0 4px color-mix(in srgb, var(--mint) 30%, transparent); }
+  .st-badge svg { width: 22px; height: 22px; }
+  .st-dots { flex-wrap: nowrap; gap: 3px; } .st-dots li { gap: 3px; } .st-dots li + li::before { width: 4px; }
+  .st-dots button { padding: 4px 7px; font-size: 10.5px; letter-spacing: 0; }
+}
 
 /* ================= the stage lens in the exercise window, as the design page sets it per theme =================
    size (--lz-s), place (--lz-x / --lz-y), shape (lz-square / lz-hex / lz-diamond), a fixed ring colour (lz-ring), or hidden (lz-off) */
@@ -2851,7 +2894,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   const LZON = () => !!(ACTIVE && ACTIVE.lens && ACTIVE.lens.show === 'on');
   const STG_NAMES = { intro: 'המשימה', video: 'תדריך', up: 'טיסה', tower: 'המדריך' };
   const stagesOf = (n) => n.t !== 'skill' ? ['intro'] : ['intro'].concat(vidOf(n.k) ? ['video'] : []).concat(['up', 'tower']);
-  const afterIntro = (n) => { if (n.t !== 'skill') return 'intro'; const st = n.state, v = vidOf(n.k); if (st === 'wait' || st === 'done') return 'tower'; if (st === 'lock') return 'intro'; return v && !watched(n.k) && !ui(n.id).skipVideo && st !== 'fix' ? 'video' : 'up'; };
+  const afterIntro = (n) => { if (n.t !== 'skill') return 'intro'; const st = n.state, v = vidOf(n.k); if (st === 'done') return 'intro'; if (st === 'wait') return 'tower'; if (st === 'lock') return 'intro'; return v && !watched(n.k) && !ui(n.id).skipVideo && st !== 'fix' ? 'video' : 'up'; };
   let storyT = null;
   const storyGo = (n, stg) => { ui(n.id).stg = stg; paint(n); if (stg === 'video') setTimeout(() => storyPlay(n), 650); };
   const storyStart = (n) => {
@@ -2878,7 +2921,13 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const tab = (key) => tabs.find(t => t.key === key), st = showState(n);
     const head = `<div class="st-top"><span>${esc(w.name)} · ${esc(worldTag(w))}</span>${n.t === 'skill' ? `<b dir="ltr">${k} / ${nSkills}</b>` : ''}</div>`;
     let body = '';
-    if (cur === 'intro') {
+    const okSk = n.t === 'skill' && n.state === 'done';
+    if (cur === 'intro' && okSk) {
+      // a finished exercise: its own look, so it reads at once as done, with the way on
+      const ins = n.inote || (n.k && n.k.note) || '';
+      body = `<div class="st-badge" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>${head}<p class="st-donelbl">המשימה בוצעה</p><h2>${esc(n.name)}${titleStars(n)}</h2>${st ? `<p class="sh-state s-${n.state}">${esc(st)}</p>` : ''}${n.k.desc ? `<p class="st-task">${esc(n.k.desc)}</p>` : ''}
+        <button class="st-go" type="button" data-a="stnext">ממשיכים לתרגיל הבא<span aria-hidden="true">←</span></button>`;
+    } else if (cur === 'intro') {
       const auto = afterIntro(n) !== 'intro';
       body = `${LZON() ? `<div class="st-lens">${heroOf(n)}</div>` : ''}${head}<h2>${esc(n.name)}${titleStars(n)}</h2>${st ? `<p class="sh-state s-${n.state}">${esc(st)}</p>` : ''}
         ${n.t === 'skill' ? `${n.k.desc ? `<p class="st-task">${esc(n.k.desc)}</p>` : ''}${n.state === 'lock' ? `<p class="sh-msg">התרגיל עוד נעול. הוא נפתח כשמסיימים את התרגילים ב${esc(prevLevelName(n.k.level))}.</p>` : ''}` : slideBody(n)}
@@ -2894,10 +2943,12 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       const t = tab('tower');
       body = `${head}<h2>${n.state === 'done' ? 'אושר!' : 'המדריך בודק'}${titleStars(n)}</h2>${st ? `<p class="sh-state s-${n.state}">${esc(st)}</p>` : ''}${t ? t.pane() : ''}`;
     }
-    const dots = stages.length > 1 ? `<ol class="st-dots" aria-label="שלבי התרגיל">${stages.map(x => `<li class="${x === cur ? 'cur' : stages.indexOf(x) < stages.indexOf(cur) || isDone(n) ? 'ok' : ''}"><button type="button" data-stg="${x}" aria-current="${x === cur}">${STG_NAMES[x]}</button></li>`).join('')}</ol>` : '';
+    // a stage that is behind the student carries a tick
+    const stOk = (x) => okSk || (x === 'intro' && cur !== 'intro') || (x === 'video' && n.k && watched(n.k)) || (x === 'up' && (n.state === 'wait' || n.state === 'done'));
+    const dots = stages.length > 1 ? `<ol class="st-dots${okSk ? ' all' : ''}" aria-label="שלבי התרגיל">${stages.map(x => `<li class="${[x === cur ? 'cur' : '', stOk(x) ? 'ok' : ''].join(' ').trim()}"><button type="button" data-stg="${x}" aria-current="${x === cur}">${stOk(x) ? '<i class="st-tick" aria-hidden="true">✓</i>' : ''}${STG_NAMES[x]}${stOk(x) ? '<span class="vh"> (בוצע)</span>' : ''}</button></li>`).join('')}</ol>` : '';
     // the arrival animation plays only when the stage changes, not each time the screen is drawn again
     const u = ui(n.id), fresh = u.shown !== cur; u.shown = cur;
-    return `${dots}<div class="stcard st-${cur}${fresh ? ' enter' : ''}" data-stage="${cur}">${body}</div>`;
+    return `${dots}<div class="stcard st-${cur}${okSk ? ' st-ok' : ''}${fresh ? ' enter' : ''}" data-stage="${cur}">${body}</div>`;
   };
   // the automatic flow (a theme option): the student moves on without clicking to continue
   const FLOW = () => (ACTIVE && ACTIVE.flow && ACTIVE.flow.on ? ACTIVE.flow : STORY() ? { on: true, open: true, next: true, close: 3 } : null);
@@ -3022,6 +3073,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const btn = (a) => box.querySelector(`[data-a="${a}"]`);
     if (btn('open')) btn('open').onclick = () => openChest(n);
     if (btn('skip')) btn('skip').onclick = () => { ui(n.id).skipVideo = true; paint(n); const p = (n.t === 'chal' ? sheet : $('#deck')).querySelector(n.t === 'chal' ? '[data-a="pick"]' : `[data-n="${n.id}"] [data-a="pick"]`); p && p.focus(); };
+    box.querySelectorAll('[data-a="stnext"]').forEach(b => b.onclick = () => { clearTimeout(storyT); const all = visibleNodes(), i = all.findIndex(x => x.id === n.id), nx = all.slice(i + 1).find(x => x.state === 'now' || x.state === 'fix') || all[i + 1]; if (nx) { goNode(nx.id, true); say('ממשיכים: ' + nx.name); } });
     box.querySelectorAll('[data-stg]').forEach(b => b.onclick = () => { clearTimeout(storyT); if (curPlayer) curPlayer.finish(false); storyGo(n, b.dataset.stg); });
     box.querySelectorAll('[data-barsw]').forEach(b => b.onclick = () => { setBarMode(barMode() === 'side' ? 'bottom' : 'side'); renderMap(); const again = $('#deck').querySelector(`[data-n="${n.id}"] [data-barsw]`); again && again.focus({ preventScroll: true }); });
     box.querySelectorAll('[data-pop]').forEach(b => b.onclick = () => { const k2 = b.dataset.pop; ui(n.id).pop = k2; paint(n); const sel = k2 ? `.bpop .bpx` : `.bbi[data-pop]`; const again = $('#deck').querySelector(`[data-n="${n.id}"] ${sel}`); again && again.focus({ preventScroll: true }); });
@@ -3662,6 +3714,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     set('--sh-dim', String(Math.max(0, Math.min(80, Number(so2.dim == null ? 35 : so2.dim))) / 100));
     app.classList.toggle('shsoft', so2.corners === 'soft');
     app.classList.toggle('lpanel', t.layout === 'panel');
+    app.classList.toggle('lsty', t.layout === 'story');
     app.classList.toggle('pixel', t.look === 'pixel');
     // the stage lens: shown or hidden, size, shape, place and ring colour (design page, per theme)
     const L = t.lens || {};
