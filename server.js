@@ -271,6 +271,17 @@ function cleanTheme(t) {
         corners: ['0', '16', '40'].indexOf(String(c.corners)) !== -1 ? String(c.corners) : 'auto', numShape: c.numShape === 'square' ? 'square' : 'round' };
       ['bg', 'bg2', 'head', 'text', 'card', 'numBg', 'numFg', 'btnBg', 'btnFg', 'sub'].forEach((k) => { o[k] = hexOk(c[k]) ? String(c[k]).toLowerCase() : ''; });
       return o; })(),
+    // the welcome page a student sees after signing in, before the game starts
+    welcome: (() => { const c = t.welcome && typeof t.welcome === 'object' ? t.welcome : {}; const num = (v, lo, hi, d) => { const n = Math.round(Number(v)); return Number.isFinite(n) && v !== '' && v != null ? Math.max(lo, Math.min(hi, n)) : d; };
+      const str = (v, n) => String(v == null ? '' : v).replace(/[\u0000-\u0009\u000B-\u001F<>]/g, '').slice(0, n); const font = (v) => /^[A-Za-z0-9 ]{2,40}$/.test(String(v || '')) ? String(v) : 'default';
+      const url = (v) => { const u = String(v == null ? '' : v).trim().slice(0, 600); return /^https?:\/\//i.test(u) || /^\/[^\/]/.test(u) ? u : ''; };
+      const o = { on: c.on === true, when: ['daily', 'once'].indexOf(c.when) !== -1 ? c.when : 'always', style: c.style === 'window' ? 'window' : 'page',
+        kick: str(c.kick, 60), title: str(c.title, 100), text: str(c.text, 1500), btn: str(c.btn, 40), btn2: str(c.btn2, 40), link2: /^https?:\/\//i.test(String(c.link2 || '').trim()) ? String(c.link2).trim().slice(0, 400) : '',
+        img: url(c.img), imgPlace: ['side', 'bg'].indexOf(c.imgPlace) !== -1 ? c.imgPlace : 'top', imgH: num(c.imgH, 80, 500, 220), align: c.align === 'start' ? 'start' : 'center',
+        headF: font(c.headF), bodyF: font(c.bodyF), title_s: num(c.title_s, 60, 200, 100), text_s: num(c.text_s, 80, 160, 100), width: num(c.width, 360, 1200, 640), corners: num(c.corners, 0, 48, 24),
+        dim: num(c.dim, 0, 95, 55), anim: c.anim !== false, auto: num(c.auto, 0, 60, 0) };
+      ['bg', 'bg2', 'card', 'fg', 'head', 'kickC', 'btnBg', 'btnFg', 'line'].forEach((k) => { o[k] = hexOk(c[k]) ? String(c[k]).toLowerCase() : ''; });
+      return o; })(),
     // the bottom bar's default place: a row at the bottom, or a list under the side menu (the student can switch)
     barPos: t.barPos === 'side' ? 'side' : 'bottom',
     // the automatic flow: open the waiting step on arrival, move on after sending, close messages after some seconds
