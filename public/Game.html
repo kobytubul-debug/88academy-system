@@ -2338,6 +2338,22 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 #app.wc-dragging .stcard { box-shadow: 0 0 0 3px var(--gold), 0 30px 80px rgba(0,0,0,.45) !important; }
 .stcard.st-ok .wc-grip { top: 36px; }
 @media (max-width: 899px) { .wc-grip { display: none; } }
+
+/* ================= the side rail: a name on each dot, and a clean jump ================= */
+#railtip { position: absolute; z-index: 60; pointer-events: none; display: flex; flex-direction: column; gap: 1px; max-width: 240px; padding: 8px 12px; border-radius: 12px; translate: 0 -50%;
+  background: color-mix(in srgb, var(--night) 92%, transparent); color: var(--white); box-shadow: 0 10px 26px rgba(0,0,0,.4), inset 0 0 0 1px rgba(255,255,255,.14); backdrop-filter: blur(10px);
+  opacity: 0; transform: translateX(-6px); transition: opacity .15s, transform .15s; text-align: start; direction: rtl; }
+#railtip.on { opacity: 1; transform: none; }
+#railtip b { font-size: 14px; font-weight: 800; line-height: 1.25; }
+#railtip small { font-size: 12px; color: var(--dim); }
+#railtip.s-done small { color: var(--mint); } #railtip.s-now small { color: var(--pink); } #railtip.s-wait small { color: var(--sky); } #railtip.s-fix small { color: var(--fixc); }
+#railtip::before { content: ""; position: absolute; left: -5px; top: 50%; width: 10px; height: 10px; translate: 0 -50%; rotate: 45deg; background: inherit; }
+#app.day #railtip { background: var(--d-card, #fff); color: var(--d-fg); box-shadow: 0 10px 26px rgba(0,0,0,.14), inset 0 0 0 1px rgba(0,0,0,.08); }
+.app.race #railtip { border-radius: 0; }
+.rail .dot:hover { transform: translate(-50%, -50%) scale(1.35); }
+.rail .dot.cur:hover { transform: translate(-50%, -50%) scale(1.6); }
+#deck { transition: opacity .16s; } #deck.jumping { opacity: 0; }
+@media (hover: none) { #railtip { display: none; } }
 </style>
 </head>
 <body>
@@ -3266,13 +3282,34 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     rail.innerHTML = `<div class="line"></div><div class="fill" id="rfill"></div>` + all.map((x, i) => `<button class="dot ${x.t === 'chest' ? 'chest ' + x.state : x.t === 'boss' ? 'boss' : x.state}" type="button" data-i="${i}" style="top:calc(16px + (100% - 32px) * ${at(i)})" aria-label="${esc(x.name)}"></button>`).join('')
       + WORLDS.map(w => { const i = all.indexOf(w.nodes.find(x => all.indexOf(x) !== -1)); return i < 0 ? '' : `<span class="wl${at(i) > .82 ? ' up' : ''}" style="top:calc(16px + (100% - 32px) * ${at(i)})">${esc(w.cls === 'wb' ? T('boss') : T('world') + ' ' + (w.i + 1))}</span>`; }).join('')
       + `<div class="me" id="rme">${pilotDrone()}</div>`;
-    rail.querySelectorAll('.dot').forEach(d => d.onclick = () => goSlide(+d.dataset.i, true));
+    rail.querySelectorAll('.dot').forEach(d => { d.onclick = () => { hideTip(); goSlide(+d.dataset.i, true); }; d.onpointerenter = d.onfocus = () => showTip(d, all[+d.dataset.i]); d.onpointerleave = d.onblur = hideTip; });
     v.querySelectorAll('[data-next]').forEach(b => b.onclick = () => goSlide(+b.dataset.next, true));
     v.querySelectorAll('.slide[data-n]').forEach(sl => { const n = findNode(sl.dataset.n); if (n) wireNode(n, sl); });
     syncRail();
     renderPath();
   };
-  const goSlide = (i, smooth) => { const v = $('#deck'); v.scrollTo({ top: i * v.clientHeight, behavior: smooth ? 'smooth' : 'auto' }); };
+  // a jump along the track goes straight to the chosen exercise: far jumps cut over with a quick fade, and nothing on the way reacts
+  let jumpTo = null, jumpT = null;
+  const goSlide = (i, smooth) => {
+    const v = $('#deck'), from = Math.round(v.scrollTop / Math.max(1, v.clientHeight)), far = Math.abs(i - from) > 1;
+    clearTimeout(jumpT); jumpTo = i; jumpT = setTimeout(() => { jumpTo = null; syncRail(); }, 1400);
+    if (smooth && far && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      v.classList.add('jumping');
+      setTimeout(() => { v.style.scrollSnapType = 'none'; v.scrollTo({ top: i * v.clientHeight, behavior: 'auto' }); v.style.scrollSnapType = ''; v.classList.remove('jumping'); jumpTo = null; syncRail(); }, 160);
+      return;
+    }
+    v.scrollTo({ top: i * v.clientHeight, behavior: smooth && !far ? 'smooth' : 'auto' });
+  };
+  // the rail's dots: hovering or focusing one shows the exercise's name and where it stands
+  const TIP_STATE = { done: 'בוצע', now: 'פעיל עכשיו', wait: 'אצל המדריך', fix: 'לתיקון', lock: 'נעול', ready: 'מוכנה לפתיחה', opened: 'נפתחה' };
+  const showTip = (d, x) => {
+    if (!x) return; let tip = document.getElementById('railtip'); if (!tip) { tip = document.createElement('div'); tip.id = 'railtip'; tip.setAttribute('role', 'tooltip'); app.appendChild(tip); }
+    const st = TIP_STATE[x.state] || '', kind = x.t === 'chest' ? 'תיבה' : x.t === 'boss' ? 'המבחן המסכם' : '';
+    tip.innerHTML = `<b>${esc(x.name)}</b>${kind || st ? `<small>${esc([kind, st].filter(Boolean).join(' · '))}</small>` : ''}`;
+    const r = d.getBoundingClientRect(), a = app.getBoundingClientRect();
+    tip.style.left = (r.right - a.left + 12) + 'px'; tip.style.top = (r.top - a.top + r.height / 2) + 'px'; tip.className = 'on' + (x.state ? ' s-' + x.state : '');
+  };
+  const hideTip = () => { const tip = document.getElementById('railtip'); if (tip) tip.className = ''; };
   const goNode = (id, smooth) => { const i = slideIds.indexOf(id); if (i !== -1) goSlide(i, smooth); };
   let lastArrived = null;
   const syncRail = () => {
@@ -3281,6 +3318,8 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const H = rail.clientHeight - 32, y = 16 + (n > 1 ? H * pos / (n - 1) : 0);
     $('#rme').style.top = y + 'px'; $('#rfill').style.height = (y - 16) + 'px';
     const cur = Math.round(pos); rail.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('cur', i === cur));
+    if (jumpTo != null && cur !== jumpTo) { syncStageBg(); return; }
+    if (jumpTo != null && cur === jumpTo && Math.abs(pos - cur) < .08) { jumpTo = null; clearTimeout(jumpT); }
     if (Math.abs(pos - cur) < .08 && slideIds[cur] && lastArrived !== slideIds[cur]) { lastArrived = slideIds[cur]; const an = findNode(lastArrived); setTimeout(() => arrive(an), 60); }
     if (SHOW() && Math.abs(pos - cur) < .08) { const sl = v.children[cur]; if (sl && !sl.classList.contains('live')) { v.querySelectorAll('.slide.live').forEach(x => x.classList.remove('live')); sl.classList.add('live'); } }
     syncStageBg();
