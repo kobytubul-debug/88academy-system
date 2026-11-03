@@ -2242,6 +2242,29 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 #app.sd-stampFg .st-badge { color: var(--sd-stampFg); }
 #app.sd-nostamp .st-badge { display: none; }
 @media (max-width: 899px) { #app .st-dots button { font-size: calc(10.5px * var(--sd-s, 1)); padding: calc(4px * var(--sd-s, 1)) calc(7px * var(--sd-s, 1)); } #app .st-dots, #app .st-dots li { gap: calc(var(--sd-gap, 6px) * .5); } }
+
+/* ================= the learning stages, explained (side menu: "how we learn") ================= */
+.gd-steps { list-style: none; margin: 14px 0 6px; padding: 0; display: flex; flex-direction: column; gap: 10px; text-align: start; }
+.gd-steps li { display: flex; gap: 12px; align-items: flex-start; padding: 12px; border-radius: 16px; background: rgba(255,255,255,.06); }
+.gd-n { flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font: 900 16px var(--n); background: var(--mint); color: var(--ink, #0B1513); }
+.gd-steps b { display: block; font-size: 15.5px; line-height: 1.35; }
+.gd-steps p { margin: 3px 0 0; font-size: 14px; line-height: 1.55; color: var(--dim); }
+.gd-h { margin: 16px 0 6px; font-size: 15px; font-weight: 900; text-align: start; }
+.gd-keys { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; text-align: start; font-size: 14px; line-height: 1.5; }
+.gd-keys li { display: flex; gap: 10px; align-items: flex-start; }
+.gd-keys b { font-weight: 800; }
+.gd-dot { flex: none; width: 14px; height: 14px; margin-top: 3px; border-radius: 50%; border: 2px solid rgba(255,255,255,.9); background: var(--lock); box-sizing: border-box; }
+.gd-dot.now { background: var(--pink); } .gd-dot.wait { background: var(--sky); } .gd-dot.fix { background: var(--fixc); } .gd-dot.done { background: var(--done); }
+.gd-dot.chest { border-radius: 3px; background: var(--gold); } .gd-dot.boss { width: 18px; height: 18px; margin-top: 1px; background: #000; border-color: var(--pink); }
+#app.day .gd-steps li { background: rgba(0,0,0,.04); } #app.day .gd-dot { border-color: rgba(0,0,0,.3); }
+.app.race .gd-steps li, .app.race .gd-n { border-radius: 0; }
+/* the menu button: a quiet link like "exit", just above it */
+.app .tab.tab-help { color: color-mix(in srgb, var(--white) 82%, transparent); }
+#app.day .tab.tab-help { color: var(--d-fg); }
+/* phones: the menu bar has no room, so "how we learn" is a "?" in the top bar */
+#app .helpbtn { min-width: 0; padding: 0 12px; font-weight: 900; }
+@media (min-width: 900px) { #app .helpbtn { display: none; } }
+@media (max-width: 899px) { #app .tab.tab-help { display: none; } }
 </style>
 </head>
 <body>
@@ -2258,6 +2281,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       <b><span id="meName"></span> · <span id="rankTxt" style="color:var(--gold)"></span></b>
       <div class="xp" id="xpBar"><i id="xpFill"></i><span id="xpTxt" dir="ltr"></span></div>
     </div>
+    <button class="res modebtn helpbtn" id="helpBtnTop" type="button" aria-label="איך לומדים? הסבר על שלבי הלימוד"><span class="rlbl">?</span></button>
     <button class="res modebtn bellbtn" id="bellBtn" type="button" aria-label="התראות"><span class="rlbl">התראות</span><span class="tcount" id="bellN" hidden>0</span></button>
     <button class="res modebtn" id="modeBtn" type="button" aria-label="מעבר למצב יום" hidden>יום</button>
     <span class="res streakres" title="ימים ברצף"><span class="rlbl">רצף</span><span id="streakN">0</span></span>
@@ -2326,6 +2350,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     <button class="tab" data-v="quests" type="button"><span data-t="t2">משימות</span><span class="dot" id="qDot" hidden>0</span></button>
     <button class="tab coin-only" data-v="league" type="button"><span data-t="t3">ליגה</span></button>
     <button class="tab" data-v="hangar" type="button"><span data-t="t4">האנגר</span></button>
+    <button class="tab tab-out tab-help" id="helpBtn" type="button" aria-haspopup="dialog"><span>איך לומדים?</span></button>
     <button class="tab tab-out" id="outBtn" type="button"><span>יציאה</span></button>
   </nav>
 
@@ -3770,6 +3795,33 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     if (v === 'hangar') renderHangar();
   };
   document.querySelectorAll('.tab[data-v]').forEach(t => t.onclick = () => switchTab(t.dataset.v));
+  // the learning stages, explained: opened from the side menu ("how we learn"), above "exit"
+  const openGuide = () => {
+    const earns = EARNS();
+    const st = [['intro', '1', 'קוראים מה צריך לעשות', 'בכל תרגיל מופיעים השם, המטרה והמפה. כך יודעים מה מתרגלים ומתי הטיסה עוברת.'],
+      ['video', '2', 'צופים בסרטון ההדגמה', 'סרטון קצר שמראה איך עושים את זה נכון, עם ההסבר המלא.' + (earns ? ' צפייה עד הסוף מוסיפה מטבעות.' : '')],
+      ['up', '3', 'טסים, מצלמים ומעלים', 'מתרגלים בסימולטור, מקליטים את המסך ומעלים את הסרטון כאן. כל עוד המדריך לא בדק, אפשר להעלות שוב.'],
+      ['tower', '4', 'המדריך בודק', 'המדריך צופה בטיסה. אם היא טובה, התרגיל מאושר עם כוכבים' + (earns ? ' ומטבעות' : '') + '. אם צריך לתקן, הוא מחזיר אותה עם הערה, וטסים שוב.']];
+    openSheet(`<div class="kick">איך לומדים כאן</div><h2>שלבי הלימוד</h2>
+      <p class="desc">המסלול בנוי מרמות שעולים בהן צעד אחרי צעד. כל תחנה היא מיומנות אמיתית שמטיסים, ולכל תרגיל יש ארבעה שלבים:</p>
+      <ol class="gd-steps">${st.map(([k, n, h, p]) => `<li><span class="gd-n" aria-hidden="true">${n}</span><div><b>${esc(stgName(k))}: ${h}</b><p>${p}</p></div></li>`).join('')}</ol>
+      <h3 class="gd-h">במסלול</h3>
+      <ul class="gd-keys">
+        <li><i class="gd-dot now"></i><span><b>התרגיל הפעיל</b> מחכה לך עכשיו.</span></li>
+        <li><i class="gd-dot wait"></i><span><b>אצל המדריך:</b> הטיסה נשלחה ומחכה לבדיקה.</span></li>
+        <li><i class="gd-dot fix"></i><span><b>לתיקון:</b> המדריך החזיר עם הערה. קוראים, טסים שוב ומעלים.</span></li>
+        <li><i class="gd-dot done"></i><span><b>בוצע:</b> התרגיל אושר.</span></li>
+        <li><i class="gd-dot lock"></i><span><b>נעול:</b> נפתח כשמסיימים את התרגילים שלפניו.</span></li>
+        <li><i class="gd-dot chest"></i><span><b>תיבה:</b> בסוף כל רמה. נפתחת כשכל התרגילים ברמה אושרו${earns ? ', ובתוכה בונוס' : ''}.</span></li>
+        <li><i class="gd-dot boss"></i><span><b>המבחן המסכם:</b> בסוף המסלול, אחרי שכל הרמות הושלמו.</span></li>
+      </ul>
+      ${earns ? `<h3 class="gd-h">מטבעות ודרגות</h3><p class="desc">כל תרגיל שמאושר, טיסה שעוברת בניסיון הראשון, סיום רמה וכניסה יומית מוסיפים מטבעות. המטבעות מעלים דרגה, ובמסך "משימות" יש אתגרים עם עוד מטבעות. בליגה רואים איפה עומדים מול הקבוצה.</p>` : ''}
+      <div style="height:14px"></div><button class="btn3 full" type="button" id="gdOk">הבנתי, ממשיכים</button>`, s => {
+      s.querySelector('#gdOk').onclick = () => { closeSheet(); const b = $('#helpBtn'); b && b.focus(); };
+    });
+  };
+  if ($('#helpBtn')) $('#helpBtn').onclick = openGuide;
+  if ($('#helpBtnTop')) $('#helpBtnTop').onclick = openGuide;
   const askLogout = () => openSheet(`<div class="kick">החשבון שלי</div><h2>לצאת מהחשבון?</h2><p class="desc">ההתקדמות שלך שמורה. בכניסה הבאה ממשיכים מאותה נקודה.</p><div style="height:14px"></div><div class="row2"><button class="btn3 pink" type="button" id="outYes">יציאה</button><button class="btn3 ghost" type="button" id="outNo">להישאר</button></div>`, s => {
     s.querySelector('#outYes').onclick = () => { flush(); A.logout(); };
     s.querySelector('#outNo').onclick = () => { closeSheet(); const b = $('#outBtn'); b && b.focus(); };
