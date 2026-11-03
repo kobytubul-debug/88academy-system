@@ -643,7 +643,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
       <div class="st-seg" role="group" aria-label="מספרי השלבים">${seg('numShape', 'round', 'מספרים בעיגול')}${seg('numShape', 'square', 'מספרים בריבוע')}</div>
       <button class="st-link" type="button" data-gdreset>איפוס החלון לברירת המחדל</button>`; };
   const pvGuide = () => post({ type: 'g88-guide' });
-  const FC_DEF = { anim: 'zoomin', dur: 520, bar: true, barNames: true, barSize: 100, barShape: 'pill', ruler: true, rPlace: 'top', rSize: 100, rLine: 3, rShape: 'round', rLabels: true, rNums: true, rAlign: 'stretch', rX: 0, rY: 0, nav: true, navStyle: 'both', navPlace: 'bottom', prev: '', next: '', barBg: '', chipBg: '', chipFg: '', curBg: '', curFg: '', okBg: '', okFg: '', rLineC: '', rDot: '', rOk: '', rCur: '', rText: '', navBg: '', navFg: '' };
+  const FC_DEF = { anim: 'zoomin', dur: 520, barPos: 'side', cardH: 540, bar: true, barNames: true, barSize: 100, barShape: 'pill', ruler: true, rPlace: 'top', rSize: 100, rLine: 3, rShape: 'round', rLabels: true, rNums: true, rAlign: 'stretch', rX: 0, rY: 0, nav: true, navStyle: 'both', navPlace: 'bottom', prev: '', next: '', barBg: '', chipBg: '', chipFg: '', curBg: '', curFg: '', okBg: '', okFg: '', rLineC: '', rDot: '', rOk: '', rCur: '', rText: '', navBg: '', navFg: '' };
   const FCD = (t) => Object.assign({}, FC_DEF, t.focus || {}), FCM = (t) => (t.focus = FCD(t));
   const fcEdHtml = (d) => { const C = FCD(d), seg = (k, v, label) => `<button type="button" data-fc="${k}" data-fcv="${v}" class="${String(C[k]) === v ? 'on' : ''}" aria-pressed="${String(C[k]) === v}">${label}</button>`;
     const range = (k, label, lo, hi, step, unit) => `<label class="st-field">${label} · <output id="fco-${k}">${C[k]}${unit}</output><input type="range" min="${lo}" max="${hi}" step="${step}" value="${C[k]}" data-fcr="${k}" data-unit="${unit}" aria-label="${label}"></label>`;
@@ -654,9 +654,14 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
       <div class="st-seg" role="group" aria-label="כניסה">${seg('anim', 'zoomin', 'זום פנימה')}${seg('anim', 'zoomout', 'זום החוצה')}${seg('anim', 'right', 'מימין')}${seg('anim', 'left', 'משמאל')}${seg('anim', 'up', 'מלמטה')}${seg('anim', 'down', 'מלמעלה')}${seg('anim', 'fade', 'עמעום')}${seg('anim', 'flip', 'היפוך')}${seg('anim', 'none', 'בלי')}</div>
       ${C.anim !== 'none' ? range('dur', 'מהירות הכניסה', 150, 1500, 50, 'ms') : ''}
       <p class="st-hint" style="margin:0">בכניסה מימין, משמאל, מלמטה או מלמעלה, חזרה אחורה נכנסת מהצד ההפוך.</p>
-      <h3 class="st-h3">הבר העליון (כל המשימות)</h3>
-      ${chk('bar', 'להציג את הבר העליון')}
-      ${C.bar ? `${chk('barNames', 'להציג את שמות המשימות (בלי: רק מספרים)')}${range('barSize', 'גודל', 70, 150, 5, '%')}
+      <h3 class="st-h3">גודל החלון</h3>
+      ${range('cardH', 'גובה החלון במחשב (0 = לפי התוכן)', 0, 900, 20, 'px')}
+      <p class="st-hint" style="margin:0">החלון נשאר באותו גודל במעבר בין המשימה, התדריך, הטיסה והמדריך. תוכן ארוך נגלל בתוכו.</p>
+      <h3 class="st-h3">רשימת כל המשימות</h3>
+      ${chk('bar', 'להציג את רשימת המשימות')}
+      ${C.bar ? `<div class="st-seg" role="group" aria-label="מיקום">${seg('barPos', 'side', 'סרגל מתחת ל"יציאה"')}${seg('barPos', 'top', 'בר למעלה')}</div>
+      <p class="st-hint" style="margin:0">בטלפון הרשימה תמיד בשורה למעלה.</p>
+      ${chk('barNames', 'להציג את שמות המשימות (בלי: רק מספרים)')}${range('barSize', 'גודל', 70, 150, 5, '%')}
       <div class="st-seg" role="group" aria-label="צורה">${seg('barShape', 'pill', 'כמוסה')}${seg('barShape', 'round', 'מעוגל')}${seg('barShape', 'square', 'ריבוע')}</div>
       <div class="st-colors">${col('barBg', 'רקע הבר', '#14201d')}${col('chipBg', 'משימה · רקע', '#2a3533')}${col('chipFg', 'משימה · טקסט', '#ffffff')}${col('curBg', 'המשימה הנוכחית · רקע', '#ffffff')}${col('curFg', 'המשימה הנוכחית · טקסט', '#0b1513')}${col('okBg', 'משימה שבוצעה · רקע', '#1f4a3e')}${col('okFg', 'משימה שבוצעה · טקסט', '#ffffff')}</div>` : ''}
       <h3 class="st-h3">הסרגל בתוך המשימה (4 נקודות)</h3>
@@ -669,6 +674,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
       <div class="st-colors">${col('rDot', 'נקודה רגילה', '#2a3533')}${col('rCur', 'הנקודה הנוכחית', '#ffd15c')}${col('rOk', 'נקודה שבוצעה והקו שאחריה', '#5cf0b4')}${col('rLineC', 'הקו בין הנקודות', '#4a5654')}${col('rText', 'טקסט הנקודות', '#ffffff')}</div>
       <p class="st-hint" style="margin:0">את שמות השלבים משנים בחלון "שלבי התרגיל".</p>` : ''}
       <h3 class="st-h3">כפתורי קדימה ואחורה</h3>
+      <p class="st-hint" style="margin:0">הכפתורים עוברים קודם בין השלבים של המשימה (המשימה, תדריך, טיסה, המדריך), ובסוף עוברים למשימה הבאה או הקודמת.</p>
       ${chk('nav', 'להציג את הכפתורים')}
       ${C.nav ? `<div class="st-seg" role="group" aria-label="סגנון">${seg('navStyle', 'both', 'חץ ומילה')}${seg('navStyle', 'text', 'רק מילה')}${seg('navStyle', 'arrows', 'רק חץ')}</div>
       <div class="st-seg" role="group" aria-label="מיקום">${seg('navPlace', 'bottom', 'בתחתית החלון')}${seg('navPlace', 'sides', 'בצדי החלון')}</div>
