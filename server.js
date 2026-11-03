@@ -238,6 +238,15 @@ function cleanTheme(t) {
         corners: ['0', '16', '40'].indexOf(String(c.corners)) !== -1 ? String(c.corners) : 'auto', glass: c.glass !== false, align: c.align === 'center' ? 'center' : 'start' };
       ['bg', 'fg', 'head', 'kick', 'btn', 'btnFg', 'line'].forEach((k) => { o[k] = hexOk(c[k]) ? String(c[k]).toLowerCase() : ''; });
       return o; })(),
+    // windows of the admin's own: a title, text, picture and button, shown in a chosen screen
+    boxes: (Array.isArray(t.boxes) ? t.boxes : []).slice(0, 8).map((x, i) => { x = x && typeof x === 'object' ? x : {}; const str = (v, n) => String(v == null ? '' : v).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, '').slice(0, n);
+      const url = (v) => { const u = str(v, 600).trim(); return /^https?:\/\//i.test(u) || /^\/[^\/]/.test(u) || /^data:image\/(png|jpe?g|webp|gif);base64,/i.test(u) ? u : ''; };
+      return { id: /^[a-z0-9]{1,16}$/i.test(String(x.id)) ? String(x.id) : 'b' + i, on: x.on !== false, place: ['map', 'quests', 'league', 'hangar'].indexOf(x.place) !== -1 ? x.place : 'map',
+        title: str(x.title, 80), text: str(x.text, 600), img: url(x.img), btn: str(x.btn, 30), link: /^https?:\/\//i.test(String(x.link || '').trim()) ? str(x.link, 400).trim() : '',
+        size: ['s', 'l'].indexOf(x.size) !== -1 ? x.size : 'm', align: x.align === 'center' ? 'center' : 'start', close: x.close !== false,
+        bg: hexOk(x.bg) ? String(x.bg).toLowerCase() : '', fg: hexOk(x.fg) ? String(x.fg).toLowerCase() : '', accent: hexOk(x.accent) ? String(x.accent).toLowerCase() : '' }; }),
+    // open editing: the admin's own CSS for this theme (no imports, no closing the style tag)
+    css: String(t.css == null ? '' : t.css).slice(0, 20000).replace(/<\/?\s*style/gi, '').replace(/@import/gi, '').replace(/javascript:/gi, ''),
     // the bottom bar's default place: a row at the bottom, or a list under the side menu (the student can switch)
     barPos: t.barPos === 'side' ? 'side' : 'bottom',
     // the automatic flow: open the waiting step on arrival, move on after sending, close messages after some seconds

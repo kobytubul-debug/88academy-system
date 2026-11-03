@@ -214,6 +214,24 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .st-fsel select { font-size: 15px; }
 .st-sum .st-sw i { height: 18px; }
 .st-flow { display: flex; flex-direction: column; gap: 8px; padding: 10px 12px; border-radius: 12px; background: #F2F4F3; }
+/* grouped, folding design page */
+.st-grp { margin: 22px 4px 2px; display: flex; align-items: baseline; gap: 10px; font-size: 13px; font-weight: 800; letter-spacing: .06em; color: #2A9171; text-transform: uppercase; }
+.st-grp small { font-size: 12.5px; font-weight: 500; letter-spacing: 0; color: #545D58; text-transform: none; }
+.st-foldbar { display: flex; justify-content: flex-end; gap: 14px; margin: 4px 4px -6px; }
+.st-box { display: flex; flex-direction: column; gap: 10px; padding: 14px; border-radius: 14px; border: 1px solid #DCE3E0; background: #FBFCFC; }
+.st-box.off { opacity: .6; }
+.st-boxhead { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.st-boxhead b { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.st-boxhead span { font-size: 12px; padding: 2px 8px; border-radius: 99px; background: #E6F4EF; color: #1F6E55; }
+.st-two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (max-width: 600px) { .st-two { grid-template-columns: 1fr; } }
+.st-field textarea, .st-field select { font: inherit; padding: 10px 12px; border: 1px solid #CED6D2; border-radius: 10px; background: #fff; width: 100%; box-sizing: border-box; }
+.st-code { font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace !important; min-height: 180px; background: #0F1715 !important; color: #D8F5EA !important; }
+.st-snips { display: flex; flex-wrap: wrap; gap: 8px; }
+.st-snips .st-btn { font-size: 13px; padding: 6px 12px; }
+.st-cheat summary { cursor: pointer; font-size: 13.5px; color: #2A9171; }
+.st-cheat ul { margin: 8px 0 0; padding: 0 18px; font-size: 13px; line-height: 1.8; }
+.st-cheat code, .st-hint code { background: #EEF2F0; padding: 1px 5px; border-radius: 5px; font-size: 12.5px; }
 .scn { position: absolute; inset: -30px; overflow: hidden; }
 .scn > i { position: absolute; inset: 0; display: block; }
 .scn-field { background: linear-gradient(180deg, #7FB6DE 0%, #BFDFF0 40%, #DCEBD8 47%, #9CC27A 48%, #6E9E4E 66%, #456F32 100%); }
@@ -415,7 +433,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   const TERMS = [['t1', 'לשונית 1 (המסלול)'], ['t2', 'לשונית 2 (המשימות)'], ['t3', 'לשונית 3 (הליגה)'], ['t4', 'לשונית 4 (הפרופיל)'], ['world', 'שם ל"עולם"'], ['chest', 'שם ל"תיבה"'], ['boss', 'שם למבחן המסכם'], ['league', 'שם הליגה'], ['mapTitle', 'כותרת מפת הנתיב'], ['questsTitle', 'כותרת המשימות'], ['go', 'בועה מעל התרגיל הנוכחי'], ['lit', 'הודעה כשתרגיל מאושר']];
   const BUILT = { 't-race': ['race', 'מירוץ FPV'], 't-regular': ['regular', 'משחקי צבעוני'], 't-mil': ['mil', 'צבאי'] };
   const AUTO = ['field', 'city', 'garage', 'loft', 'forest', 'street'];
-  const newTheme = (base, extra) => Object.assign({ id: newId(), name: 'ערכה חדשה', base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default', num: 'default' }, icons: BASES[base].icons, bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', layout: 'classic', barPos: 'bottom', look: '', pcard: Object.assign({}, PC_DEF), wcard: Object.assign({}, WC_DEF), lens: { show: 'auto', size: 100, shape: 'round', x: 0, y: 0, ring: '' }, flow: { on: false, open: true, next: true, close: 4 }, show: { img: '', dim: 35, info: '', tab: '', corners: 'square' }, builtIn: false }, extra || {});
+  const newTheme = (base, extra) => Object.assign({ id: newId(), name: 'ערכה חדשה', base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default', num: 'default' }, icons: BASES[base].icons, bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', layout: 'classic', barPos: 'bottom', look: '', boxes: [], css: '', pcard: Object.assign({}, PC_DEF), wcard: Object.assign({}, WC_DEF), lens: { show: 'auto', size: 100, shape: 'round', x: 0, y: 0, ring: '' }, flow: { on: false, open: true, next: true, close: 4 }, show: { img: '', dim: 35, info: '', tab: '', corners: 'square' }, builtIn: false }, extra || {});
   const defaultsOf = (id) => BUILT[id] ? newTheme(BUILT[id][0], { id, name: BUILT[id][1], builtIn: true }) : null;
   // the colours in use: the theme's own, else the style's (the extra roles follow the brand colours until they are set)
   const effColors = (t) => { const C = Object.assign({}, BASES[t.base].colors, t.colors || {}), M = moreColors(t.base, C); Object.keys(M).forEach(k => { if (!isHex(C[k] || '')) C[k] = M[k]; }); return C; };
@@ -531,8 +549,54 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   const upRow = (st) => `<div class="st-up" id="upZone"><button class="st-btn" type="button" data-a="up" ${st && st.up ? 'disabled' : ''}>העלאת תמונה מהמחשב</button><input type="file" accept="image/*" id="upFile" hidden><small>${st && st.up ? `מעלה… ${st.up}%` : 'JPG או PNG. אפשר גם לגרור תמונה לכאן.'}</small></div>${st && st.upErr ? `<p class="st-err" role="alert">${esc(st.upErr)}</p>` : ''}`;
 
   // which folding sections are open (colours, fonts, groups); kept across redraws
-  const OPEN = { colors: false, fonts: false, groups: false };
-  const fold = (key, title, sum) => `<details class="st-sec st-fold" data-fold="${key}" ${OPEN[key] ? 'open' : ''}><summary><h2 id="sh-${key}">${title}</h2><span class="st-sum">${sum}</span><span class="st-chev" aria-hidden="true"></span></summary><div class="st-foldin">`;
+  const OPEN = {};
+  const fold = (key, title, sum, attrs) => `<details class="st-sec st-fold" data-fold="${key}" ${attrs || ''} ${OPEN[key] ? 'open' : ''}><summary><h2 id="sh-${key}">${title}</h2><span class="st-sum">${sum}</span><span class="st-chev" aria-hidden="true"></span></summary><div class="st-foldin">`;
+  // ---- windows of the admin's own, and open editing ----
+  const BX_PLACES = [['map', 'המסלול'], ['quests', 'משימות'], ['league', 'ליגה'], ['hangar', 'האנגר']];
+  const BX_PV = { map: 'map', quests: 'quests', league: 'league', hangar: 'hangar' };
+  const newBox = () => ({ id: 'b' + Date.now().toString(36).slice(-6), on: true, place: 'map', title: 'חלון חדש', text: 'כתבו כאן הודעה לתלמידים.', img: '', btn: '', link: '', size: 'm', align: 'start', close: true, bg: '', fg: '', accent: '' });
+  const BOXES = (t) => (t.boxes = Array.isArray(t.boxes) ? t.boxes : []);
+  const boxesSum = (d) => { const b = (d.boxes || []).filter(x => x.on !== false).length; return b ? (b === 1 ? 'חלון אחד פעיל' : b + ' חלונות פעילים') : 'אין חלונות'; };
+  const boxesHtml = (d) => {
+    const L = Array.isArray(d.boxes) ? d.boxes : [], libs = lib();
+    const one = (b, i) => {
+      const seg = (k, v, label) => `<button type="button" data-bxs="${i}" data-bxk="${k}" data-bxv="${v}" class="${String(b[k]) === v ? 'on' : ''}" aria-pressed="${String(b[k]) === v}">${label}</button>`;
+      return `<div class="st-box${b.on === false ? ' off' : ''}">
+        <div class="st-boxhead"><b>${esc(b.title || 'חלון ללא כותרת')}</b><span>${esc((BX_PLACES.find(x => x[0] === b.place) || BX_PLACES[0])[1])}</span>
+          <button class="st-link" type="button" data-bxmv="${i}" data-dir="-1" ${i ? '' : 'disabled'} aria-label="להזיז למעלה">↑</button><button class="st-link" type="button" data-bxmv="${i}" data-dir="1" ${i < L.length - 1 ? '' : 'disabled'} aria-label="להזיז למטה">↓</button>
+          <button class="st-link" type="button" data-bxdup="${i}">שכפול</button><button class="st-link danger" type="button" data-bxdel="${i}">מחיקה</button></div>
+        <label class="st-check"><input type="checkbox" data-bxc="${i}" data-bxk="on" ${b.on !== false ? 'checked' : ''}> מוצג לתלמידים</label>
+        <div class="st-seg" role="group" aria-label="איפה החלון מופיע">${BX_PLACES.map(([k, l]) => seg('place', k, l)).join('')}</div>
+        <label class="st-field">כותרת<input type="text" data-bxt="${i}" data-bxk="title" value="${esc(b.title)}" maxlength="80"></label>
+        <label class="st-field">טקסט<textarea rows="3" data-bxt="${i}" data-bxk="text" maxlength="600">${esc(b.text)}</textarea></label>
+        <label class="st-field">תמונה<select data-bxt="${i}" data-bxk="img"><option value="">בלי תמונה</option>${libs.map(x => `<option value="${esc(x.url)}" ${x.url === b.img ? 'selected' : ''}>${esc(x.name || 'תמונה')}</option>`).join('')}${b.img && !libs.some(x => x.url === b.img) ? `<option value="${esc(b.img)}" selected>קישור אישי</option>` : ''}</select></label>
+        <label class="st-field">או קישור לתמונה<input type="url" dir="ltr" data-bxt="${i}" data-bxk="img" value="${esc(b.img)}" placeholder="https://..." maxlength="600"></label>
+        <div class="st-two"><label class="st-field">טקסט הכפתור<input type="text" data-bxt="${i}" data-bxk="btn" value="${esc(b.btn)}" maxlength="30" placeholder="למשל: לפרטים"></label>
+        <label class="st-field">הכפתור מוביל אל<input type="url" dir="ltr" data-bxt="${i}" data-bxk="link" value="${esc(b.link)}" placeholder="https://..." maxlength="400"></label></div>
+        <div class="st-seg" role="group" aria-label="גודל">${seg('size', 's', 'קטן')}${seg('size', 'm', 'בינוני')}${seg('size', 'l', 'גדול')}</div>
+        <div class="st-seg" role="group" aria-label="סידור">${seg('align', 'start', 'תמונה בצד')}${seg('align', 'center', 'תמונה למעלה, ממורכז')}</div>
+        ${b.place === 'map' ? `<label class="st-check"><input type="checkbox" data-bxc="${i}" data-bxk="close" ${b.close !== false ? 'checked' : ''}> התלמיד יכול לסגור את החלון (×)</label>` : ''}
+        <div class="st-colors">${colorRow('bx-' + i + '-bg', 'רקע', '↺ מחזיר לצבע של הסגנון', b.bg || '#14201d', !!b.bg)}${colorRow('bx-' + i + '-fg', 'טקסט', '↺ מחזיר לצבע של הסגנון', b.fg || '#ffffff', !!b.fg)}${colorRow('bx-' + i + '-accent', 'פס צבע וכפתור', '↺ מחזיר לצבע של הסגנון', b.accent || '#5cf0b4', !!b.accent)}</div>
+      </div>`;
+    };
+    return `<p class="st-hint">חלונות משלכם: הודעה, תזכורת, הזמנה לאירוע או קישור. כל חלון מופיע בראש המסך שבוחרים, ואפשר להוסיף עד 8.</p>
+      ${L.map(one).join('')}
+      ${L.length < 8 ? `<div class="st-newrow"><button class="st-btn" type="button" data-bxadd="1">+ חלון חדש</button></div>` : ''}`;
+  };
+  const CSS_SNIPS = [
+    ['כפתורי תפריט עגולים', '#app .tab { border-radius: 999px !important; }'],
+    ['בלי מונה מטבעות', '#app .coins { display: none !important; }'],
+    ['רקע בשחור־לבן', '#app #themebg { filter: grayscale(1); }'],
+    ['כותרות גדולות יותר', '#app .slide h2 { font-size: 3rem !important; }'],
+    ['צל זוהר לכרטיסים', '#app .stcard, #app .mpanel, #app .pilotcard { box-shadow: 0 0 40px color-mix(in srgb, var(--mint) 45%, transparent) !important; }'],
+    ['פס עליון שקוף', '#app .top { background: transparent !important; box-shadow: none !important; }'],
+  ];
+  const cssHtml = (d) => `<p class="st-hint">לשליטה מלאה: קוד CSS שחל רק על הערכה הזו, ומופיע מיד בתצוגה המקדימה. מתחילים כל כלל ב־<code dir="ltr">#app</code>. אם משהו נשבר, מוחקים את הקוד והכל חוזר.</p>
+    <label class="st-field"><span class="vh">קוד CSS</span><textarea class="st-code" rows="10" dir="ltr" spellcheck="false" data-css maxlength="20000" placeholder="#app .pilotcard { border: 4px solid gold; }">${esc(d.css || '')}</textarea></label>
+    <p class="st-hint" style="margin:0">דוגמאות להוספה בלחיצה:</p>
+    <div class="st-snips">${CSS_SNIPS.map(([l], i) => `<button class="st-btn" type="button" data-snip="${i}">+ ${esc(l)}</button>`).join('')}</div>
+    <details class="st-cheat"><summary>שמות החלקים במסך</summary><ul dir="ltr">${[['#app .top', 'הבר העליון'], ['#app .tabs .tab', 'כפתורי התפריט'], ['#app .rail', 'פס התרגילים בצד'], ['#app .stcard', 'חלון התרגיל (זרימה)'], ['#app .mpanel', 'החלונית האחת'], ['#app .nextbtn', 'כפתור התרגיל הבא'], ['#app .pilotcard', 'כרטיס התלמיד'], ['#app .badge', 'תגי מיומנות'], ['#app .skin', 'סקינים'], ['#app .tbox', 'החלונות שלכם'], ['#app #themebg', 'הרקע']].map(([k, l]) => `<li><code>${k}</code> <span dir="rtl">${l}</span></li>`).join('')}</ul></details>
+    ${d.css ? '<button class="st-link danger" type="button" data-cssclear="1">מחיקת כל הקוד</button>' : ''}`;
   const renderThemes = () => {
     const d = D(), mode = d.mode === 'day' ? 'day' : 'night', C = effColors(d), S = effSurf(d, mode), B = BASES[d.base], saved = savedTheme(ED.id) || {};
     const list = themes().map(t => {
@@ -584,18 +648,29 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
         <div class="st-themes">${list}</div>
         <div class="st-newrow">${ED.newMenu ? `<span class="st-hint" style="margin:0">ערכה חדשה בסגנון:</span>${Object.keys(BASES).map(k => `<button class="st-btn" type="button" data-newbase="${k}">${esc(BASES[k].name)}</button>`).join('')}<button class="st-link" type="button" data-a="newx">ביטול</button>` : `<button class="st-btn" type="button" data-a="new">+ ערכה חדשה</button>${saved.builtIn ? '<button class="st-link" type="button" data-a="resetb">איפוס הערכה לברירת המחדל</button>' : ''}`}</div>
       </section>
-      <section class="st-sec" aria-labelledby="sh-name"><h2 id="sh-name">שם הערכה</h2>
+      <div class="st-foldbar"><button class="st-link" type="button" data-foldall="1">לפתוח הכל</button><button class="st-link" type="button" data-foldall="0">לסגור הכל</button></div>
+      <h3 class="st-grp">הערכה<small>שם, סגנון, יום ולילה ותנועה</small></h3>
+      ${fold('name', 'שם הערכה', esc(d.name), '')}
         <p class="st-now">${using.length ? 'רואים אותה עכשיו: ' + using.map(u => esc(u.name)).join(', ') : 'אף קבוצה לא רואה אותה עדיין. משייכים בסוף הדף.'}</p>
         <label class="st-field"><span class="vh">שם הערכה</span><input type="text" id="stName" value="${esc(d.name)}" maxlength="40"></label>
-      </section>
-      <section class="st-sec" aria-labelledby="sh-base"><h2 id="sh-base">סגנון בסיס</h2>
+      </div></details>
+      ${fold('base', 'סגנון בסיס', esc(B.name), '')}
         <p class="st-hint">קובע צורות, מילים ורקע. הצבעים, הגופנים והמילים שבחרתם נשמרים כשמחליפים סגנון.</p>
         <div class="st-bases">${Object.keys(BASES).map(k => `<button class="st-base ${d.base === k ? 'on' : ''}" type="button" data-base="${k}" aria-pressed="${d.base === k}"><span class="pv">${BASES[k].pv}</span><b>${esc(BASES[k].name)}</b></button>`).join('')}</div>
-      </section>
-      <section class="st-sec" aria-labelledby="sh-mode"><h2 id="sh-mode">מצב יום ולילה</h2>
+      </div></details>
+      ${fold('mode', 'מצב יום ולילה', (mode === 'day' ? '☀️ יום' : '🌙 לילה') + (d.allowToggle !== false ? ' · עם כפתור מעבר' : ''), '')}
         <div class="st-seg" role="group" aria-label="מצב ברירת המחדל"><button type="button" data-mode="night" class="${mode === 'night' ? 'on' : ''}" aria-pressed="${mode === 'night'}">🌙 לילה</button><button type="button" data-mode="day" class="${mode === 'day' ? 'on' : ''}" aria-pressed="${mode === 'day'}">☀️ יום</button></div>
         <label class="st-check"><input type="checkbox" id="stAllow" ${d.allowToggle !== false ? 'checked' : ''}> להציג לתלמידים כפתור מעבר בין יום ללילה בבר העליון</label>
-      </section>
+      </div></details>
+      ${fold('look', 'נראות מיוחדת', d.look === 'pixel' ? 'פיקסל · ארקייד' : 'רגילה', '')}
+        <div class="st-seg" role="group" aria-label="נראות מיוחדת"><button type="button" data-look="" class="${d.look !== 'pixel' ? 'on' : ''}" aria-pressed="${d.look !== 'pixel'}">רגילה</button><button type="button" data-look="pixel" class="${d.look === 'pixel' ? 'on' : ''}" aria-pressed="${d.look === 'pixel'}">פיקסל · ארקייד</button></div>
+        <p class="st-hint">${d.look === 'pixel' ? 'כל המסך של התלמיד הופך למשחק ארקייד של שנות ה־80: שמיים, עננים וגבעות מפיקסלים, רצפת לבנים, כפתורים וכרטיסים בקווים עבים, מספרים בגופן פיקסלים, צלילי 8-bit קטנים למטבעות ולאישור, ו"1-UP!" כשתרגיל מאושר.' : 'הסגנון שנבחר למעלה, בלי תוספות.'}</p>
+      </div></details>
+      ${fold('motion', 'תנועה', d.motion === 'calm' ? 'מופחתות' : 'מלאות', '')}
+        <div class="st-seg" role="group" aria-label="אנימציות"><button type="button" data-motion="full" class="${d.motion !== 'calm' ? 'on' : ''}" aria-pressed="${d.motion !== 'calm'}">אנימציות מלאות</button><button type="button" data-motion="calm" class="${d.motion === 'calm' ? 'on' : ''}" aria-pressed="${d.motion === 'calm'}">מופחתות</button></div>
+        <p class="st-hint">מופחתות: בלי פרופלורים מסתובבים, הבהובים וקונפטי. מתאים לתלמידים שתנועה מסיחה אותם.</p>
+      </div></details>
+      <h3 class="st-grp">צבעים, גופנים ורקע<small>איך כל המסכים נראים</small></h3>
       ${fold('colors', 'צבעים', `<span class="st-sw">${swatches(d)}</span>`)}
         <p class="st-hint">פלטות מוכנות, או צבע לכל תפקיד. ↺ מחזיר לצבע של הסגנון.</p>
         <div class="st-pals">${PALETTES.map((p, i) => `<button class="st-pal" type="button" data-pal="${i}"><span>${[p.accent, p.accent2, p.gold, p.sky].map(c => `<i style="background:${c}"></i>`).join('')}</span>${esc(p.name)}</button>`).join('')}</div>
@@ -614,19 +689,34 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
         <div class="st-sample" id="stSample"><b style="${ff(headF)}">האטה ובלימה</b><span style="${ff(bodyF)}">מאטים בהדרגה ועוצרים בדיוק מעל הנקודה המסומנת.</span><span class="st-num" style="${ff(numF)}">1,250 · LV 3 · 07</span></div>
         <div class="st-fsels">${FONT_SLOTS.map(fontSel).join('')}</div>
       </div></details>
-      <section class="st-sec" aria-labelledby="sh-bg"><h2 id="sh-bg">רקע</h2>
+      ${fold('bg', 'רקע', esc(({ look: 'לפי הסגנון', color: 'צבע אחיד', scene: 'סצנה', img: 'תמונה' })[d.bg.kind] || ''), '')}
         <p class="st-hint">רקע לכל המסכים. בשלבים שיש להם רקע משלהם (בלשונית "רקע לשלב") הוא מוצג מעליו.</p>
         <div class="bgopts">${bgTiles}</div>
         ${sel === 'color' ? colorRow('bgcolor', 'צבע הרקע', 'צבע אחיד מאחורי הכל', isHex(d.bg.color || '') ? d.bg.color : S.bg, false) : ''}
         ${upRow(ED)}
         ${d.bg.kind === 'img' ? `<label class="st-check"><input type="checkbox" id="stBgBlur" ${d.bg.blur !== false ? 'checked' : ''}> טשטוש קל לתמונה, כדי שהטקסט יישאר קריא</label>` : ''}
         <label class="st-check"><input type="checkbox" id="stStageBg" ${d.stageBg !== false ? 'checked' : ''}> להציג רקע לפי שלב (נבחר בלשונית "רקע לשלב")</label>
-      </section>
-      <section class="st-sec" aria-labelledby="sh-terms"><h2 id="sh-terms">מילים ושמות</h2>
-        <p class="st-hint">שדה ריק משתמש במילה של הסגנון. את שמות הדרגות קובעים בעמוד הניקוד.</p>
-        <div class="st-terms">${TERMS.map(([k, l]) => `<label class="st-field">${l}<input type="text" data-term="${k}" value="${esc(d.terms[k] || '')}" placeholder="${esc(WORDS[d.base][k])}" maxlength="40"></label>`).join('')}</div>
-      </section>
-      <section class="st-sec" aria-labelledby="sh-lens"><h2 id="sh-lens">עדשת השלב</h2>
+      </div></details>
+      <h3 class="st-grp">מסך התרגיל<small>הפריסה, החלון, העדשה וההתקדמות</small></h3>
+      ${fold('layout', 'פריסת חלון התרגיל', esc(({ classic: 'רגילה', panel: 'חלון בתחתית', show: 'תצוגת משימה', bar: 'בר תחתון', story: 'זרימה אוטומטית' })[d.layout || 'classic'] || 'רגילה'), '')}
+        <div class="st-seg" role="group" aria-label="פריסת חלון התרגיל"><button type="button" data-layout="classic" class="${d.layout !== 'show' && d.layout !== 'panel' ? 'on' : ''}" aria-pressed="${d.layout !== 'show' && d.layout !== 'panel'}">רגילה</button><button type="button" data-layout="panel" class="${d.layout === 'panel' ? 'on' : ''}" aria-pressed="${d.layout === 'panel'}">חלון בתחתית</button><button type="button" data-layout="show" class="${d.layout === 'show' ? 'on' : ''}" aria-pressed="${d.layout === 'show'}">תצוגת משימה</button><button type="button" data-layout="bar" class="${d.layout === 'bar' ? 'on' : ''}" aria-pressed="${d.layout === 'bar'}">בר תחתון</button><button type="button" data-layout="story" class="${d.layout === 'story' ? 'on' : ''}" aria-pressed="${d.layout === 'story'}">זרימה אוטומטית</button></div>
+        <p class="st-hint">${d.layout === 'story' ? 'בלי בר: כל תרגיל מתנגן לבד, שלב אחרי שלב, בכרטיס אחד באמצע המסך. קודם השם והמשימה, אחר כך סרטון ההדגמה מתחיל לבד עם ההסבר המפורט, ואז העלאת הטיסה והמדריך. אחרי שליחה עוברים לבד לתרגיל הבא. הפלאו האוטומטי תמיד פעיל בפריסה הזו.' : d.layout === 'bar' ? 'עדשת השלב באמצע המסך, ובתחתית בר אחד של כותרות: המשימה ואחריה כל שלב (תדריך, טיסה, המדריך בודק). לחיצה על כותרת פותחת מעל הבר חלון עם התוכן שלה, כמו שנפתח סרטון ההדגמה.' : d.layout === 'show' ? 'ריבוע פרטי המשימה בצבע הראשי, לידו חלון גדול עם תמונת השלב, ומתחתיו לשונית לכל שלב: תדריך, טיסה, המדריך בודק. לחיצה על לשונית מחליפה את מה שבחלון הגדול: הסרטון מתנגן בתוכו, ההעלאה והמשוב מופיעים בו.' : d.layout === 'panel' ? 'כל הטקסט של התרגיל בחלון אחד רחב בתחתית המסך, ועדשת השלב מעליו.' : 'חלון התרגיל כמו שהיה: עדשת השלב בצד אחד, הכותרת, השלבים והכפתור בצד השני.'}</p>
+        ${d.layout === 'show' ? showOpts(d, C) : ''}
+        ${d.layout === 'bar' ? `<h3 class="st-h3">מיקום הבר במחשב</h3><div class="st-seg" role="group" aria-label="מיקום הבר"><button type="button" data-barpos="bottom" class="${d.barPos !== 'side' ? 'on' : ''}" aria-pressed="${d.barPos !== 'side'}">שורה בתחתית</button><button type="button" data-barpos="side" class="${d.barPos === 'side' ? 'on' : ''}" aria-pressed="${d.barPos === 'side'}">רשימה בצד</button></div><p class="st-hint" style="margin:0">זו ברירת המחדל. לתלמיד יש כפתור קטן בפינת הבר שמחליף בין השתיים, והבחירה שלו נשמרת אצלו. בטלפון הבר תמיד בתחתית.</p>` : ''}
+      </div></details>
+      ${fold('wcard', 'חלון התרגיל', (d.wcard && (d.wcard.bg || d.wcard.head || d.wcard.btn || d.wcard.corners !== 'auto' || Number(d.wcard.width) !== 100) ? 'מותאם' : 'לפי הסגנון'), 'data-pv="map"')}
+        ${(() => { const C = WCD(d), seg = (k, v, label) => `<button type="button" data-wc="${k}" data-wcv="${v}" class="${String(C[k]) === v ? 'on' : ''}" aria-pressed="${String(C[k]) === v}">${label}</button>`;
+          const range = (k, label, lo, hi, step, unit) => `<label class="st-field">${label} · <output id="wco-${k}">${C[k]}${unit}</output><input type="range" min="${lo}" max="${hi}" step="${step}" value="${C[k]}" data-wcr="${k}" data-unit="${unit}" aria-label="${label}"></label>`;
+          const col = (k, label, def) => colorRow('wc-' + k, label, '↺ מחזיר לצבע של הסגנון', C[k] || def, !!C[k]);
+          return `<p class="st-hint" style="margin:0">הכרטיס במרכז מסך התרגיל: בזרימה האוטומטית, בחלונית האחת ובחלון שנפתח מהבר התחתון. בפריסה הקלאסית אין חלון: הטקסט מוצג ישר על הרקע.</p>
+          <div class="st-colors">${col('bg', 'רקע החלון', '#14201d')}${col('line', 'מסגרת', '#ffffff')}${col('kick', 'שורת השלב (למעלה)', '#5cf0b4')}${col('head', 'הכותרת', '#ffffff')}${col('fg', 'הטקסט', '#dfe9e6')}${col('btn', 'הכפתור · רקע', '#ffd15c')}${col('btnFg', 'הכפתור · טקסט', '#0b1513')}</div>
+          ${range('alpha', 'אטימות הרקע', 30, 100, 5, '%')}${range('title', 'גודל הכותרת', 60, 160, 5, '%')}${range('text', 'גודל הטקסט', 80, 140, 5, '%')}${range('width', 'רוחב החלון', 60, 150, 5, '%')}${range('y', 'הזזה למעלה ולמטה', -250, 250, 10, 'px')}
+          <div class="st-seg" role="group" aria-label="פינות">${seg('corners', 'auto', 'פינות לפי הסגנון')}${seg('corners', '0', 'ישרות')}${seg('corners', '16', 'מעוגלות')}${seg('corners', '40', 'עגולות מאוד')}</div>
+          <div class="st-seg" role="group" aria-label="יישור">${seg('align', 'start', 'יישור לימין')}${seg('align', 'center', 'יישור למרכז')}</div>
+          <label class="st-check"><input type="checkbox" data-wcb="glass" ${C.glass ? 'checked' : ''}> רקע זכוכית (טשטוש של מה שמאחור)</label>
+          <button class="st-link" type="button" data-wcreset>איפוס החלון לברירת המחדל</button>`; })()}
+      </div></details>
+      ${fold('lens', 'עדשת השלב', esc(({ auto: 'לפי הפריסה', on: 'מוצגת', off: 'מוסתרת' })[LZD(d).show]) + (LZD(d).show !== 'off' ? ' · ' + esc(({ round: 'עיגול', square: 'ריבוע', hex: 'משושה', diamond: 'יהלום' })[LZD(d).shape]) : ''), '')}
         ${(() => { const L = LZD(d), seg = (k, v, label) => `<button type="button" data-lz="${k}" data-lzv="${v}" class="${String(L[k]) === v ? 'on' : ''}" aria-pressed="${String(L[k]) === v}">${label}</button>`;
           const range = (k, label, lo, hi, step, unit) => `<label class="st-field">${label} · <output id="lzo-${k}">${L[k]}${unit}</output><input type="range" min="${lo}" max="${hi}" step="${step}" value="${L[k]}" data-lzr="${k}" data-unit="${unit}" aria-label="${label}"></label>`;
           return `<p class="st-hint" style="margin:0">העדשה העגולה בחלון התרגיל, עם תמונת השלב.</p>
@@ -635,8 +725,19 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
           ${range('size', 'גודל', 50, 200, 5, '%')}${range('x', 'הזזה לצדדים', -400, 400, 10, 'px')}${range('y', 'הזזה למעלה ולמטה', -300, 300, 10, 'px')}
           <div class="st-colors">${colorRow('lzring', 'צבע המסגרת', L.ring ? 'צבע קבוע לכל המצבים' : 'עכשיו: לפי מצב התרגיל (ורוד, תכלת, ירוק...)', L.ring || '#ff5c8a', !!L.ring)}</div>
           <button class="st-link" type="button" data-lzreset>איפוס העדשה לברירת המחדל</button>` : ''}`; })()}
-      </section>
-      <section class="st-sec" aria-labelledby="sh-pcard" data-pv="hangar"><h2 id="sh-pcard">כרטיס התלמיד (האנגר)</h2>
+      </div></details>
+      ${fold('flow', 'פלאו אוטומטי', (d.layout === 'story' || (d.flow && d.flow.on)) ? 'פעיל' : 'כבוי', '')}
+        ${(() => { const f = Object.assign({ on: false, open: true, next: true, close: 4 }, d.flow || {}); return `
+        <label class="st-check"><input type="checkbox" data-flow="on" ${f.on ? 'checked' : ''}> התלמיד מתקדם לבד, בלי ללחוץ "המשך" בכל צעד</label>
+        ${f.on ? `<div class="st-flow">
+          <label class="st-check"><input type="checkbox" data-flow="open" ${f.open ? 'checked' : ''}> כשמגיעים לתרגיל, השלב שמחכה (סרטון או העלאה) נפתח לבד</label>
+          <label class="st-check"><input type="checkbox" data-flow="next" ${f.next ? 'checked' : ''}> אחרי שליחת טיסה, עוברים לבד לתרגיל הבא הפתוח</label>
+          <label class="st-field">הודעות (נשלח, אושר, הוחזר) נסגרות לבד אחרי · <output id="flOut">${f.close ? f.close + ' שניות' : 'לא נסגרות לבד'}</output><input type="range" min="0" max="15" step="1" value="${f.close}" data-flowclose aria-label="שניות עד שהודעה נסגרת"></label>
+          <p class="st-hint" style="margin:0">אחרי סרטון ההדגמה תמיד עוברים לבד להעלאת הטיסה. 0 שניות: ההודעות מחכות ללחיצה.</p>
+        </div>` : '<p class="st-hint" style="margin:0">כבוי: כמו היום, כל הודעה מחכה ללחיצה, והתלמיד בוחר מתי להמשיך.</p>'}`; })()}
+      </div></details>
+      <h3 class="st-grp">מסכים נוספים<small>האנגר ומילים</small></h3>
+      ${fold('pcard', 'כרטיס התלמיד (האנגר)', (d.pcard && (d.pcard.bg || d.pcard.fg || d.pcard.width !== 'normal' || d.pcard.side === 'end' || d.pcard.corners !== 'auto')) ? 'מותאם' : 'לפי הסגנון', 'data-pv="hangar"')}
         ${(() => { const C = PCD(d), seg = (k, v, label) => `<button type="button" data-pc="${k}" data-pcv="${v}" class="${String(C[k]) === v ? 'on' : ''}" aria-pressed="${String(C[k]) === v}">${label}</button>`;
           const range = (k, label, lo, hi, step, unit) => `<label class="st-field">${label} · <output id="pco-${k}">${C[k]}${unit}</output><input type="range" min="${lo}" max="${hi}" step="${step}" value="${C[k]}" data-pcr="${k}" data-unit="${unit}" aria-label="${label}"></label>`;
           const col = (k, label, def) => colorRow('pc-' + k, label, '↺ מחזיר לצבע של הסגנון', C[k] || def, !!C[k]);
@@ -651,43 +752,17 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
           <label class="st-check"><input type="checkbox" data-pcb="stats" ${C.stats ? 'checked' : ''}> להציג את הנתונים (טיסות, תרגילים, דקות)</label>
           <label class="st-check"><input type="checkbox" data-pcb="float" ${C.float ? 'checked' : ''}> הרחפן מרחף (תנועה)</label>
           <button class="st-link" type="button" data-pcreset>איפוס הכרטיס לברירת המחדל</button>`; })()}
-      </section>
-      <section class="st-sec" aria-labelledby="sh-wcard" data-pv="map"><h2 id="sh-wcard">חלון התרגיל</h2>
-        ${(() => { const C = WCD(d), seg = (k, v, label) => `<button type="button" data-wc="${k}" data-wcv="${v}" class="${String(C[k]) === v ? 'on' : ''}" aria-pressed="${String(C[k]) === v}">${label}</button>`;
-          const range = (k, label, lo, hi, step, unit) => `<label class="st-field">${label} · <output id="wco-${k}">${C[k]}${unit}</output><input type="range" min="${lo}" max="${hi}" step="${step}" value="${C[k]}" data-wcr="${k}" data-unit="${unit}" aria-label="${label}"></label>`;
-          const col = (k, label, def) => colorRow('wc-' + k, label, '↺ מחזיר לצבע של הסגנון', C[k] || def, !!C[k]);
-          return `<p class="st-hint" style="margin:0">הכרטיס במרכז מסך התרגיל: בזרימה האוטומטית, בחלונית האחת ובחלון שנפתח מהבר התחתון. בפריסה הקלאסית אין חלון: הטקסט מוצג ישר על הרקע.</p>
-          <div class="st-colors">${col('bg', 'רקע החלון', '#14201d')}${col('line', 'מסגרת', '#ffffff')}${col('kick', 'שורת השלב (למעלה)', '#5cf0b4')}${col('head', 'הכותרת', '#ffffff')}${col('fg', 'הטקסט', '#dfe9e6')}${col('btn', 'הכפתור · רקע', '#ffd15c')}${col('btnFg', 'הכפתור · טקסט', '#0b1513')}</div>
-          ${range('alpha', 'אטימות הרקע', 30, 100, 5, '%')}${range('title', 'גודל הכותרת', 60, 160, 5, '%')}${range('text', 'גודל הטקסט', 80, 140, 5, '%')}${range('width', 'רוחב החלון', 60, 150, 5, '%')}${range('y', 'הזזה למעלה ולמטה', -250, 250, 10, 'px')}
-          <div class="st-seg" role="group" aria-label="פינות">${seg('corners', 'auto', 'פינות לפי הסגנון')}${seg('corners', '0', 'ישרות')}${seg('corners', '16', 'מעוגלות')}${seg('corners', '40', 'עגולות מאוד')}</div>
-          <div class="st-seg" role="group" aria-label="יישור">${seg('align', 'start', 'יישור לימין')}${seg('align', 'center', 'יישור למרכז')}</div>
-          <label class="st-check"><input type="checkbox" data-wcb="glass" ${C.glass ? 'checked' : ''}> רקע זכוכית (טשטוש של מה שמאחור)</label>
-          <button class="st-link" type="button" data-wcreset>איפוס החלון לברירת המחדל</button>`; })()}
-      </section>
-      <section class="st-sec" aria-labelledby="sh-flow"><h2 id="sh-flow">פלאו אוטומטי</h2>
-        ${(() => { const f = Object.assign({ on: false, open: true, next: true, close: 4 }, d.flow || {}); return `
-        <label class="st-check"><input type="checkbox" data-flow="on" ${f.on ? 'checked' : ''}> התלמיד מתקדם לבד, בלי ללחוץ "המשך" בכל צעד</label>
-        ${f.on ? `<div class="st-flow">
-          <label class="st-check"><input type="checkbox" data-flow="open" ${f.open ? 'checked' : ''}> כשמגיעים לתרגיל, השלב שמחכה (סרטון או העלאה) נפתח לבד</label>
-          <label class="st-check"><input type="checkbox" data-flow="next" ${f.next ? 'checked' : ''}> אחרי שליחת טיסה, עוברים לבד לתרגיל הבא הפתוח</label>
-          <label class="st-field">הודעות (נשלח, אושר, הוחזר) נסגרות לבד אחרי · <output id="flOut">${f.close ? f.close + ' שניות' : 'לא נסגרות לבד'}</output><input type="range" min="0" max="15" step="1" value="${f.close}" data-flowclose aria-label="שניות עד שהודעה נסגרת"></label>
-          <p class="st-hint" style="margin:0">אחרי סרטון ההדגמה תמיד עוברים לבד להעלאת הטיסה. 0 שניות: ההודעות מחכות ללחיצה.</p>
-        </div>` : '<p class="st-hint" style="margin:0">כבוי: כמו היום, כל הודעה מחכה ללחיצה, והתלמיד בוחר מתי להמשיך.</p>'}`; })()}
-      </section>
-      <section class="st-sec" aria-labelledby="sh-look"><h2 id="sh-look">נראות מיוחדת</h2>
-        <div class="st-seg" role="group" aria-label="נראות מיוחדת"><button type="button" data-look="" class="${d.look !== 'pixel' ? 'on' : ''}" aria-pressed="${d.look !== 'pixel'}">רגילה</button><button type="button" data-look="pixel" class="${d.look === 'pixel' ? 'on' : ''}" aria-pressed="${d.look === 'pixel'}">פיקסל · ארקייד</button></div>
-        <p class="st-hint">${d.look === 'pixel' ? 'כל המסך של התלמיד הופך למשחק ארקייד של שנות ה־80: שמיים, עננים וגבעות מפיקסלים, רצפת לבנים, כפתורים וכרטיסים בקווים עבים, מספרים בגופן פיקסלים, צלילי 8-bit קטנים למטבעות ולאישור, ו"1-UP!" כשתרגיל מאושר.' : 'הסגנון שנבחר למעלה, בלי תוספות.'}</p>
-      </section>
-      <section class="st-sec" aria-labelledby="sh-layout"><h2 id="sh-layout">פריסת חלון התרגיל</h2>
-        <div class="st-seg" role="group" aria-label="פריסת חלון התרגיל"><button type="button" data-layout="classic" class="${d.layout !== 'show' && d.layout !== 'panel' ? 'on' : ''}" aria-pressed="${d.layout !== 'show' && d.layout !== 'panel'}">רגילה</button><button type="button" data-layout="panel" class="${d.layout === 'panel' ? 'on' : ''}" aria-pressed="${d.layout === 'panel'}">חלון בתחתית</button><button type="button" data-layout="show" class="${d.layout === 'show' ? 'on' : ''}" aria-pressed="${d.layout === 'show'}">תצוגת משימה</button><button type="button" data-layout="bar" class="${d.layout === 'bar' ? 'on' : ''}" aria-pressed="${d.layout === 'bar'}">בר תחתון</button><button type="button" data-layout="story" class="${d.layout === 'story' ? 'on' : ''}" aria-pressed="${d.layout === 'story'}">זרימה אוטומטית</button></div>
-        <p class="st-hint">${d.layout === 'story' ? 'בלי בר: כל תרגיל מתנגן לבד, שלב אחרי שלב, בכרטיס אחד באמצע המסך. קודם השם והמשימה, אחר כך סרטון ההדגמה מתחיל לבד עם ההסבר המפורט, ואז העלאת הטיסה והמדריך. אחרי שליחה עוברים לבד לתרגיל הבא. הפלאו האוטומטי תמיד פעיל בפריסה הזו.' : d.layout === 'bar' ? 'עדשת השלב באמצע המסך, ובתחתית בר אחד של כותרות: המשימה ואחריה כל שלב (תדריך, טיסה, המדריך בודק). לחיצה על כותרת פותחת מעל הבר חלון עם התוכן שלה, כמו שנפתח סרטון ההדגמה.' : d.layout === 'show' ? 'ריבוע פרטי המשימה בצבע הראשי, לידו חלון גדול עם תמונת השלב, ומתחתיו לשונית לכל שלב: תדריך, טיסה, המדריך בודק. לחיצה על לשונית מחליפה את מה שבחלון הגדול: הסרטון מתנגן בתוכו, ההעלאה והמשוב מופיעים בו.' : d.layout === 'panel' ? 'כל הטקסט של התרגיל בחלון אחד רחב בתחתית המסך, ועדשת השלב מעליו.' : 'חלון התרגיל כמו שהיה: עדשת השלב בצד אחד, הכותרת, השלבים והכפתור בצד השני.'}</p>
-        ${d.layout === 'show' ? showOpts(d, C) : ''}
-        ${d.layout === 'bar' ? `<h3 class="st-h3">מיקום הבר במחשב</h3><div class="st-seg" role="group" aria-label="מיקום הבר"><button type="button" data-barpos="bottom" class="${d.barPos !== 'side' ? 'on' : ''}" aria-pressed="${d.barPos !== 'side'}">שורה בתחתית</button><button type="button" data-barpos="side" class="${d.barPos === 'side' ? 'on' : ''}" aria-pressed="${d.barPos === 'side'}">רשימה בצד</button></div><p class="st-hint" style="margin:0">זו ברירת המחדל. לתלמיד יש כפתור קטן בפינת הבר שמחליף בין השתיים, והבחירה שלו נשמרת אצלו. בטלפון הבר תמיד בתחתית.</p>` : ''}
-      </section>
-      <section class="st-sec" aria-labelledby="sh-motion"><h2 id="sh-motion">תנועה</h2>
-        <div class="st-seg" role="group" aria-label="אנימציות"><button type="button" data-motion="full" class="${d.motion !== 'calm' ? 'on' : ''}" aria-pressed="${d.motion !== 'calm'}">אנימציות מלאות</button><button type="button" data-motion="calm" class="${d.motion === 'calm' ? 'on' : ''}" aria-pressed="${d.motion === 'calm'}">מופחתות</button></div>
-        <p class="st-hint">מופחתות: בלי פרופלורים מסתובבים, הבהובים וקונפטי. מתאים לתלמידים שתנועה מסיחה אותם.</p>
-      </section>
+      </div></details>
+      ${fold('terms', 'מילים ושמות', (Object.keys(d.terms || {}).filter(k => d.terms[k]).length ? Object.keys(d.terms).filter(k => d.terms[k]).length + ' מילים שונו' : 'המילים של הסגנון'), '')}
+        <p class="st-hint">שדה ריק משתמש במילה של הסגנון. את שמות הדרגות קובעים בעמוד הניקוד.</p>
+        <div class="st-terms">${TERMS.map(([k, l]) => `<label class="st-field">${l}<input type="text" data-term="${k}" value="${esc(d.terms[k] || '')}" placeholder="${esc(WORDS[d.base][k])}" maxlength="40"></label>`).join('')}</div>
+      </div></details>
+      <h3 class="st-grp">תוספות<small>חלונות משלכם ועריכה פתוחה</small></h3>
+      ${fold('boxes', 'חלונות נוספים', boxesSum(d))}${boxesHtml(d)}
+      </div></details>
+      ${fold('css', 'עריכה פתוחה (CSS)', d.css ? 'יש קוד: ' + String(d.css).length + ' תווים' : 'ריק')}${cssHtml(d)}
+      </div></details>
+      <h3 class="st-grp">מי רואה<small>שיוך הערכה לקבוצות</small></h3>
       ${fold('groups', 'שיוך לקבוצות', groupsSum)}
         <p class="st-hint">מה התלמידים בכל קבוצה רואים אחרי הכניסה. אפשר לחזור למסך הרגיל בכל רגע: ההתקדמות, המטבעות והטיסות נשארים.</p>
         ${groups ? `<div class="st-groups">${groups}</div>` : '<p class="st-now">עוד אין קבוצות. יוצרים קבוצות בעמוד הקורסים.</p>'}
@@ -711,6 +786,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     const d = D(), mode = d.mode === 'day' ? 'day' : 'night';
     if (k === 'bgcolor') d.bg = { kind: 'color', color: v };
     else if (k === 'lzring') LZ(d).ring = v;
+    else if (k.indexOf('bx-') === 0) { const [, i, f] = k.split('-'); const b = BOXES(d)[+i]; if (b) b[f] = v; }
     else if (k.indexOf('pc-') === 0) PC(d)[k.slice(3)] = v;
     else if (k.indexOf('wc-') === 0) WC(d)[k.slice(3)] = v;
     else if (k === 'shinfo' || k === 'shtab') SH(d)[k === 'shinfo' ? 'info' : 'tab'] = v;
@@ -988,6 +1064,15 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     if (ds.mode) { if (d.mode !== ds.mode) { d.mode = ds.mode; redraw(); } return; }
     if (ds.fslot) { if ((d.fonts[ds.fslot] || 'default') !== ds.font) { d.fonts[ds.fslot] = ds.font; redraw(); const again = body.querySelector(`[data-fslot="${ds.fslot}"][data-font="${CSS.escape(ds.font)}"]`); again && again.focus({ preventScroll: true }); } return; }
     if (ds.pal) { const p = PALETTES[+ds.pal]; d.colors = Object.assign({}, d.colors, { accent: p.accent, accent2: p.accent2, gold: p.gold, sky: p.sky }); redraw(); return; }
+    if (ds.reset && ds.reset.indexOf('bx-') === 0) { const [, i, f] = ds.reset.split('-'); const b = BOXES(d)[+i]; if (b) b[f] = ''; redraw(); return; }
+    if ('foldall' in ds) { const on = ds.foldall === '1'; body.querySelectorAll('details.st-fold').forEach(x => { x.open = on; OPEN[x.dataset.fold] = on; }); return; }
+    if (ds.bxadd) { const L = BOXES(d); if (L.length < 8) { L.push(newBox()); OPEN.boxes = true; redraw(); pvView('map'); } return; }
+    if (ds.bxdel != null) { BOXES(d).splice(+ds.bxdel, 1); redraw(); return; }
+    if (ds.bxdup != null) { const L = BOXES(d); if (L.length < 8) { const c = Object.assign({}, L[+ds.bxdup], { id: newBox().id }); c.title = (c.title || '') + ' (עותק)'; L.splice(+ds.bxdup + 1, 0, c); redraw(); } return; }
+    if (ds.bxmv != null) { const L = BOXES(d), i = +ds.bxmv, j = i + Number(ds.dir); if (j >= 0 && j < L.length) { [L[i], L[j]] = [L[j], L[i]]; redraw(); } return; }
+    if (ds.bxs != null) { const b = BOXES(d)[+ds.bxs]; if (b) { b[ds.bxk] = ds.bxv; redraw(); if (ds.bxk === 'place') pvView(BX_PV[ds.bxv]); } return; }
+    if (ds.snip != null) { const sn = CSS_SNIPS[+ds.snip]; d.css = ((d.css || '').trim() + (d.css ? '\n' : '') + '/* ' + sn[0] + ' */\n' + sn[1]).slice(0, 20000); OPEN.css = true; redraw(); return; }
+    if (ds.cssclear) { d.css = ''; redraw(); return; }
     if (ds.reset && ds.reset.indexOf('pc-') === 0) { PC(d)[ds.reset.slice(3)] = ''; redraw(); pvView('hangar'); return; }
     if (ds.reset && ds.reset.indexOf('wc-') === 0) { WC(d)[ds.reset.slice(3)] = ''; redraw(); pvView('map'); return; }
     if (ds.pc) { PC(d)[ds.pc] = ds.pcv; redraw(); pvView('hangar'); return; }
@@ -1017,6 +1102,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     if (TAB !== 'themes' || !ED) return;
     const t = e.target, d = D();
     if (t.dataset.c) return void setColor(t.dataset.c, t.value, 'pick');
+    if (t.dataset.bxt != null) { const b = BOXES(d)[+t.dataset.bxt]; if (b) { b[t.dataset.bxk] = t.value; if (t.tagName === 'SELECT') { const u = body.querySelector(`input[data-bxt="${t.dataset.bxt}"][data-bxk="img"]`); if (u) u.value = t.value; } clearTimeout(termTimer); termTimer = setTimeout(sendTheme, 250); touched(); } return; }
+    if (t.dataset.bxc != null) { const b = BOXES(d)[+t.dataset.bxc]; if (b) { b[t.dataset.bxk] = t.checked; sendTheme(); touched(); } return; }
+    if ('css' in t.dataset) { d.css = t.value.slice(0, 20000); clearTimeout(termTimer); termTimer = setTimeout(sendTheme, 400); touched(); return; }
     if (t.dataset.pcr || t.dataset.wcr) { const pc = !!t.dataset.pcr, O = pc ? PC(d) : WC(d), k = t.dataset.pcr || t.dataset.wcr; O[k] = Number(t.value) || 0; const o = $((pc ? '#pco-' : '#wco-') + k); if (o) o.textContent = O[k] + t.dataset.unit; sendTheme(); touched(); return; }
     if (t.dataset.pcb || t.dataset.wcb) { const pc = !!t.dataset.pcb; (pc ? PC(d) : WC(d))[t.dataset.pcb || t.dataset.wcb] = t.checked; sendTheme(); touched(); pvView(pc ? 'hangar' : 'map'); return; }
     if (t.dataset.lzr) { const L = LZ(d), k = t.dataset.lzr; L[k] = Number(t.value) || 0; const o = $('#lzo-' + k); if (o) o.textContent = L[k] + t.dataset.unit; sendTheme(); touched(); return; }
@@ -1040,6 +1128,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   body.addEventListener('toggle', (e) => { const k = e.target && e.target.dataset && e.target.dataset.fold; if (k) OPEN[k] = e.target.open; }, true);
   // editing the pilot card shows the hangar in the preview; the exercise window shows the track
   let pvLast = '';
+  body.addEventListener('pointerdown', (e) => { const bx = e.target.closest && e.target.closest('.st-box'); if (bx && TAB === 'themes') { const i = [...body.querySelectorAll('.st-box')].indexOf(bx), b = ED && (D().boxes || [])[i]; if (b && BX_PV[b.place] !== pvLast) { pvLast = BX_PV[b.place]; pvView(pvLast); } } });
   body.addEventListener('pointerdown', (e) => { const sec = e.target.closest && e.target.closest('[data-pv]'); if (sec && TAB === 'themes' && sec.dataset.pv !== pvLast) { pvLast = sec.dataset.pv; pvView(pvLast); } });
   body.addEventListener('change', (e) => {
     const t = e.target;
