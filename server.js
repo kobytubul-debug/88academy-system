@@ -292,6 +292,8 @@ function cleanTheme(t) {
         barPos: c.barPos === 'top' ? 'top' : 'side', cardH: num(c.cardH, 0, 900, 540), nav: c.nav !== false, navStyle: pick(c.navStyle, ['both', 'text', 'arrows'], 'both'), navPlace: pick(c.navPlace, ['bottom', 'sides'], 'bottom'), prev: str(c.prev, 24), next: str(c.next, 24) };
       ['barBg', 'chipBg', 'chipFg', 'curBg', 'curFg', 'okBg', 'okFg', 'rLineC', 'rDot', 'rOk', 'rCur', 'rText', 'navBg', 'navFg'].forEach((k) => { o[k] = hexOk(c[k]) ? String(c[k]).toLowerCase() : ''; });
       return o; })(),
+    // which buttons the side menu shows (how-we-learn and exit always stay)
+    menu: (() => { const m = t.menu && typeof t.menu === 'object' ? t.menu : {}; return { map: m.map !== false, quests: m.quests !== false, league: m.league !== false, hangar: m.hangar !== false }; })(),
     // the bottom bar's default place: a row at the bottom, or a list under the side menu (the student can switch)
     barPos: t.barPos === 'side' ? 'side' : 'bottom',
     // the automatic flow: open the waiting step on arrival, move on after sending, close messages after some seconds
@@ -345,7 +347,12 @@ function ensureLooks() {
   // once: a ready theme with one mission at a time
   if (!st.focusSeeded) {
     st.focusSeeded = true;
-    if (!list.some((t) => t.id === 't-focus')) list.push(cleanTheme({ id: 't-focus', name: 'משימה אחת', base: 'regular', mode: 'night', layout: 'focus', focus: { anim: 'zoomin' } }));
+    if (!list.some((t) => t.id === 't-focus')) list.push(cleanTheme({ id: 't-focus', name: 'משימה אחת', base: 'regular', mode: 'night', layout: 'focus', focus: { anim: 'zoomin' }, menu: { map: false, quests: false, league: false, hangar: false } }));
+  }
+  // once: the one-mission theme keeps only "how we learn" and "exit" in its side menu
+  if (!st.focusMenuSeeded) {
+    st.focusMenuSeeded = true;
+    const fo = list.find((t) => t.id === 't-focus'); if (fo) fo.menu = { map: false, quests: false, league: false, hangar: false };
   }
   if (!st.barSideSeeded) {
     st.barSideSeeded = true;

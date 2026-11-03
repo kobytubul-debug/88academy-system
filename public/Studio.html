@@ -440,7 +440,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   const TERMS = [['t1', 'לשונית 1 (המסלול)'], ['t2', 'לשונית 2 (המשימות)'], ['t3', 'לשונית 3 (הליגה)'], ['t4', 'לשונית 4 (הפרופיל)'], ['world', 'שם ל"עולם"'], ['chest', 'שם ל"תיבה"'], ['boss', 'שם למבחן המסכם'], ['league', 'שם הליגה'], ['mapTitle', 'כותרת מפת הנתיב'], ['questsTitle', 'כותרת המשימות'], ['go', 'בועה מעל התרגיל הנוכחי'], ['lit', 'הודעה כשתרגיל מאושר']];
   const BUILT = { 't-race': ['race', 'מירוץ FPV'], 't-regular': ['regular', 'משחקי צבעוני'], 't-mil': ['mil', 'צבאי'] };
   const AUTO = ['field', 'city', 'garage', 'loft', 'forest', 'street'];
-  const newTheme = (base, extra) => Object.assign({ id: newId(), name: 'ערכה חדשה', base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default', num: 'default' }, icons: BASES[base].icons, bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', layout: 'classic', barPos: 'bottom', look: '', focus: Object.assign({}, FC_DEF), welcome: Object.assign({}, WL_DEF), guide: Object.assign({}, GD_DEF), logos: JSON.parse(JSON.stringify(LG_DEF)), steps: JSON.parse(JSON.stringify(SD_DEF)), boxes: [], css: '', pcard: Object.assign({}, PC_DEF), wcard: Object.assign({}, WC_DEF), lens: { show: 'auto', size: 100, shape: 'round', x: 0, y: 0, ring: '' }, flow: { on: false, open: true, next: true, close: 4, readIntro: 4, readVideo: 10, vidFull: true }, show: { img: '', dim: 35, info: '', tab: '', corners: 'square' }, builtIn: false }, extra || {});
+  const newTheme = (base, extra) => Object.assign({ id: newId(), name: 'ערכה חדשה', base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default', num: 'default' }, icons: BASES[base].icons, bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', layout: 'classic', barPos: 'bottom', look: '', menu: { map: true, quests: true, league: true, hangar: true }, focus: Object.assign({}, FC_DEF), welcome: Object.assign({}, WL_DEF), guide: Object.assign({}, GD_DEF), logos: JSON.parse(JSON.stringify(LG_DEF)), steps: JSON.parse(JSON.stringify(SD_DEF)), boxes: [], css: '', pcard: Object.assign({}, PC_DEF), wcard: Object.assign({}, WC_DEF), lens: { show: 'auto', size: 100, shape: 'round', x: 0, y: 0, ring: '' }, flow: { on: false, open: true, next: true, close: 4, readIntro: 4, readVideo: 10, vidFull: true }, show: { img: '', dim: 35, info: '', tab: '', corners: 'square' }, builtIn: false }, extra || {});
   const defaultsOf = (id) => BUILT[id] ? newTheme(BUILT[id][0], { id, name: BUILT[id][1], builtIn: true }) : null;
   // the colours in use: the theme's own, else the style's (the extra roles follow the brand colours until they are set)
   const effColors = (t) => { const C = Object.assign({}, BASES[t.base].colors, t.colors || {}), M = moreColors(t.base, C); Object.keys(M).forEach(k => { if (!isHex(C[k] || '')) C[k] = M[k]; }); return C; };
@@ -820,11 +820,11 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     const changed = units().filter(u => (ED.assign[u.id] || 'classic') !== saved0[u.id]).length;
     const groupsSum = (using.length ? (using.length === 1 ? 'קבוצה אחת רואה את הערכה' : using.length + ' קבוצות רואות את הערכה') : 'אף קבוצה לא רואה את הערכה') + (changed ? ` · <b class="chg">${changed === 1 ? 'שינוי אחד' : changed + ' שינויים'} לשמירה</b>` : '');
     body.innerHTML = `
-      <section class="st-sec" aria-labelledby="sh-themes"><h2 id="sh-themes">ערכות נושא</h2>
+      ${fold('themes', 'ערכות נושא', `בעריכה: <b>${esc(d.name)}</b> · ${themes().length} ערכות`)}
         <p class="st-hint">ערכה היא כל מה שקבוצה רואה במשחק. בוחרים ערכה כדי לערוך אותה.</p>
         <div class="st-themes">${list}</div>
         <div class="st-newrow">${ED.newMenu ? `<span class="st-hint" style="margin:0">ערכה חדשה בסגנון:</span>${Object.keys(BASES).map(k => `<button class="st-btn" type="button" data-newbase="${k}">${esc(BASES[k].name)}</button>`).join('')}<button class="st-link" type="button" data-a="newx">ביטול</button>` : `<button class="st-btn" type="button" data-a="new">+ ערכה חדשה</button>${saved.builtIn ? '<button class="st-link" type="button" data-a="resetb">איפוס הערכה לברירת המחדל</button>' : ''}`}</div>
-      </section>
+      </div></details>
       <div class="st-foldbar"><button class="st-link" type="button" data-foldall="1">לפתוח הכל</button><button class="st-link" type="button" data-foldall="0">לסגור הכל</button></div>
       <h3 class="st-grp">הערכה<small>שם, סגנון, יום ולילה ותנועה</small></h3>
       ${fold('name', 'שם הערכה', esc(d.name), '')}
@@ -842,6 +842,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
       ${fold('look', 'נראות מיוחדת', d.look === 'pixel' ? 'פיקסל · ארקייד' : 'רגילה', '')}
         <div class="st-seg" role="group" aria-label="נראות מיוחדת"><button type="button" data-look="" class="${d.look !== 'pixel' ? 'on' : ''}" aria-pressed="${d.look !== 'pixel'}">רגילה</button><button type="button" data-look="pixel" class="${d.look === 'pixel' ? 'on' : ''}" aria-pressed="${d.look === 'pixel'}">פיקסל · ארקייד</button></div>
         <p class="st-hint">${d.look === 'pixel' ? 'כל המסך של התלמיד הופך למשחק ארקייד של שנות ה־80: שמיים, עננים וגבעות מפיקסלים, רצפת לבנים, כפתורים וכרטיסים בקווים עבים, מספרים בגופן פיקסלים, צלילי 8-bit קטנים למטבעות ולאישור, ו"1-UP!" כשתרגיל מאושר.' : 'הסגנון שנבחר למעלה, בלי תוספות.'}</p>
+      </div></details>
+      ${fold('menu', 'תפריט הצד', (() => { const M = d.menu || {}, off = ['map', 'quests', 'league', 'hangar'].filter(k => M[k] === false).length; return off ? (off === 4 ? 'רק "איך לומדים?" ויציאה' : off + ' כפתורים מוסתרים') : 'כל הכפתורים'; })())}
+        <p class="st-hint" style="margin:0">אילו כפתורים מופיעים בתפריט של התלמיד. "איך לומדים?" ו"יציאה" תמיד נשארים.</p>
+        ${[['map', 'מסלול'], ['quests', 'משימות / אתגרים'], ['league', 'ליגה'], ['hangar', 'האנגר / סדנה']].map(([k, l]) => `<label class="st-check"><input type="checkbox" data-menu="${k}" ${(d.menu || {})[k] !== false ? 'checked' : ''}> ${l}</label>`).join('')}
       </div></details>
       ${fold('motion', 'תנועה', d.motion === 'calm' ? 'מופחתות' : 'מלאות', '')}
         <div class="st-seg" role="group" aria-label="אנימציות"><button type="button" data-motion="full" class="${d.motion !== 'calm' ? 'on' : ''}" aria-pressed="${d.motion !== 'calm'}">אנימציות מלאות</button><button type="button" data-motion="calm" class="${d.motion === 'calm' ? 'on' : ''}" aria-pressed="${d.motion === 'calm'}">מופחתות</button></div>
@@ -1330,6 +1334,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     if (t.dataset.bxt != null) { const b = BOXES(d)[+t.dataset.bxt]; if (b) { b[t.dataset.bxk] = t.value; if (t.tagName === 'SELECT') { const u = body.querySelector(`input[data-bxt="${t.dataset.bxt}"][data-bxk="img"]`); if (u) u.value = t.value; } clearTimeout(termTimer); termTimer = setTimeout(sendTheme, 250); touched(); } return; }
     if (t.dataset.bxc != null) { const b = BOXES(d)[+t.dataset.bxc]; if (b) { b[t.dataset.bxk] = t.checked; sendTheme(); touched(); } return; }
     if ('css' in t.dataset) { d.css = t.value.slice(0, 20000); clearTimeout(termTimer); termTimer = setTimeout(sendTheme, 400); touched(); return; }
+    if (t.dataset.menu) { d.menu = Object.assign({ map: true, quests: true, league: true, hangar: true }, d.menu || {}); d.menu[t.dataset.menu] = t.checked; redraw(); return; }
     if (t.dataset.fcr) { const O = FCM(d), k = t.dataset.fcr; O[k] = Number(t.value) || 0; const o = $('#fco-' + k); if (o) o.textContent = O[k] + t.dataset.unit; sendTheme(); touched(); return; }
     if (t.dataset.fcb) { FCM(d)[t.dataset.fcb] = t.checked; redraw(); return; }
     if (t.dataset.fct) { FCM(d)[t.dataset.fct] = t.value; clearTimeout(termTimer); termTimer = setTimeout(sendTheme, 300); touched(); return; }
