@@ -2546,6 +2546,8 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 #app.fb-sq #fbar.on-side .fb-i { border-radius: 4px; } #app.fb-rd #fbar.on-side .fb-i { border-radius: 10px; }
 @media (min-width: 900px) { #app.fbar-side.lfocus .slide.fc > .sbody { padding-top: 96px; } }
 @media (max-width: 899px) { #fbar { top: calc(env(safe-area-inset-top, 0px) + 128px); } }
+/* side menu buttons hidden by the theme */
+#app .tabs .tab.mn-off { display: none !important; }
 </style>
 </head>
 <body>
@@ -3469,8 +3471,8 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const fb = document.getElementById('fbar'); if (!fb) return;
     const tabs = app.querySelector(':scope > .tabs'), side = fb.classList.contains('side') && innerWidth >= 900 && tabs;
     fb.classList.toggle('on-side', !!side);
-    if (side) { const r = tabs.getBoundingClientRect(), t0 = (tabs.querySelector('.tab') || tabs).getBoundingClientRect(), a = app.getBoundingClientRect();
-      Object.assign(fb.style, { top: Math.round(r.bottom - a.top + 8) + 'px', width: Math.round(t0.width) + 'px', right: Math.round(a.right - t0.right) + 'px', left: 'auto', bottom: '20px' }); }
+    if (side) { const r = tabs.getBoundingClientRect(), t0 = ([...tabs.querySelectorAll('.tab')].find(x => x.offsetWidth > 0 && !x.classList.contains('tab-out')) || tabs).getBoundingClientRect(), a = app.getBoundingClientRect();
+      Object.assign(fb.style, { top: Math.round(r.bottom - a.top + 8) + 'px', width: Math.max(220, Math.round(t0.width)) + 'px', right: Math.max(16, Math.round(a.right - t0.right)) + 'px', left: 'auto', bottom: '20px' }); }
     else ['top', 'width', 'right', 'left', 'bottom'].forEach(k => fb.style.removeProperty(k));
   };
   addEventListener('resize', () => placeFbar());
@@ -4250,7 +4252,7 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const w = document.querySelector('#v-map > .tboxes'); if (!w) return;
     const tabs = app.querySelector(':scope > .tabs'), side = innerWidth >= 900 && tabs && !app.classList.contains('shw') && !app.classList.contains('bbl');
     w.classList.toggle('side', !!side);
-    if (side) { const r = tabs.getBoundingClientRect(), t0 = tabs.querySelector('.tab') || tabs, q = t0.getBoundingClientRect(); w.style.top = Math.round(r.bottom + 10) + 'px'; w.style.width = Math.round(q.width) + 'px'; w.style.right = Math.round(innerWidth - q.right) + 'px'; }
+    if (side) { const r = tabs.getBoundingClientRect(), t0 = [...tabs.querySelectorAll('.tab')].find(x => x.offsetWidth > 0 && !x.classList.contains('tab-out')) || tabs, q = t0.getBoundingClientRect(); w.style.top = Math.round(r.bottom + 10) + 'px'; w.style.width = Math.round(q.width) + 'px'; w.style.right = Math.round(innerWidth - q.right) + 'px'; }
     else { w.style.removeProperty('top'); w.style.removeProperty('width'); w.style.removeProperty('right'); }
   };
   addEventListener('resize', () => placeBoxes());
@@ -4377,6 +4379,8 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const css0 = String(t.css || '').replace(/<\/?\s*style/gi, '').replace(/@import/gi, ''); if (tcss.textContent !== css0) tcss.textContent = css0;
     renderBoxes(t);
     renderLogos(t);
+    // the side menu's buttons (design page): each can be hidden; "how we learn" and "exit" always stay
+    { const M = t.menu || {}; ['map', 'quests', 'league', 'hangar'].forEach(k => { const b = document.querySelector(`.tabs .tab[data-v="${k}"]`); if (b) b.classList.toggle('mn-off', M[k] === false); }); setTimeout(() => { placeFbar(); placeBoxes(); }, 0); }
     // the one-mission layout
     app.classList.toggle('lfocus', t.layout === 'focus');
     { const F = t.focus || {}, sv = (k, v) => v != null && v !== '' ? set(k, v) : app.style.removeProperty(k);
