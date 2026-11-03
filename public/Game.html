@@ -2367,6 +2367,51 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 .rail .dot.cur:hover { transform: translate(-50%, -50%) scale(1.6); }
 #deck { transition: opacity .16s; } #deck.jumping { opacity: 0; }
 @media (hover: none) { #railtip { display: none; } }
+
+/* ================= the welcome page (design page): after signing in, before the game ================= */
+#welcome { position: absolute; inset: 0; z-index: 90; display: grid; place-items: center; padding: max(20px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(20px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  box-sizing: border-box; overflow-y: auto; opacity: 0; transition: opacity .4s; color: var(--wl-fg, var(--white)); font-family: var(--wl-fb, var(--f)); }
+#welcome.on { opacity: 1; }
+#welcome.wl-page { background: linear-gradient(160deg, var(--wl-bg, var(--night2, #142F29)), var(--wl-bg2, var(--wl-bg, #0B1513))); }
+#welcome.wl-window { background: rgba(0,0,0,var(--wl-dim, .55)); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+#welcome > .wl-img { position: absolute; inset: 0; background: center / cover no-repeat; }
+#welcome.wl-img-bg::after { content: ""; position: absolute; inset: 0; background: rgba(0,0,0,var(--wl-dim, .55)); }
+.wl-card { position: relative; z-index: 1; width: min(var(--wl-w, 640px), 100%); box-sizing: border-box; display: flex; flex-direction: column; overflow: hidden; border-radius: var(--wl-r, 24px); text-align: center; }
+#welcome.wl-window .wl-card, #welcome.wl-img-bg .wl-card { background: var(--wl-card, color-mix(in srgb, var(--night) 94%, transparent)); box-shadow: 0 30px 90px rgba(0,0,0,.5), inset 0 0 0 1px rgba(255,255,255,.1); }
+#welcome.wl-page:not(.wl-img-bg) .wl-card { background: var(--wl-card, transparent); }
+.wl-card { box-shadow: inset 0 0 0 0 transparent; }
+#welcome[style*="--wl-line"] .wl-card { box-shadow: 0 30px 90px rgba(0,0,0,.45), inset 0 0 0 3px var(--wl-line); }
+.wl-card > .wl-img { height: var(--wl-imgh, 220px); max-height: 50vh; background: center / cover no-repeat; flex: none; }
+#welcome.wl-img-side .wl-card { flex-direction: row; }
+#welcome.wl-img-side .wl-card > .wl-img { height: auto; min-height: var(--wl-imgh, 220px); width: 42%; }
+.wl-body { display: flex; flex-direction: column; gap: 14px; padding: 34px 32px 30px; min-width: 0; flex: 1; }
+#welcome.wl-start .wl-card { text-align: start; }
+.wl-kick { font-size: 13px; font-weight: 800; letter-spacing: .08em; color: var(--wl-kick, var(--mint)); }
+#welcome h1 { margin: 0; font-family: var(--wl-fh, var(--fh, var(--f))); font-size: calc(44px * var(--wl-ts, 1)); line-height: 1.08; font-weight: 900; color: var(--wl-head, var(--white)); text-wrap: balance; }
+.wl-text { display: flex; flex-direction: column; gap: 10px; font-size: calc(17px * var(--wl-xs, 1)); line-height: 1.65; color: var(--wl-fg, color-mix(in srgb, var(--white) 86%, transparent)); }
+.wl-text p { margin: 0; }
+.wl-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 8px; }
+#welcome.wl-start .wl-btns { justify-content: flex-start; }
+.wl-go { border: 0; cursor: pointer; min-width: 200px; height: 58px; padding: 0 28px; border-radius: 16px; font: 900 19px var(--wl-fb, var(--f)); background: var(--wl-btn, var(--gold)); color: var(--wl-btnfg, var(--ink, #0B1513));
+  box-shadow: 0 6px 0 color-mix(in srgb, var(--wl-btn, var(--gold)) 60%, #000); transition: transform .1s; }
+.wl-go:active { transform: translateY(4px); box-shadow: 0 2px 0 color-mix(in srgb, var(--wl-btn, var(--gold)) 60%, #000); }
+.wl-alt { display: inline-flex; align-items: center; height: 58px; padding: 0 22px; border-radius: 16px; font-weight: 800; text-decoration: none; color: inherit; box-shadow: inset 0 0 0 2px currentColor; opacity: .85; }
+.wl-go:focus-visible, .wl-alt:focus-visible { outline: 3px solid var(--wl-head, var(--white)); outline-offset: 3px; }
+.wl-auto { height: 4px; border-radius: 4px; background: rgba(255,255,255,.14); overflow: hidden; margin-top: 4px; }
+.wl-auto i { display: block; height: 100%; background: var(--wl-btn, var(--gold)); transform-origin: right; animation: stTime 5s linear both; }
+#welcome:not(.wl-still) .wl-card { animation: wlIn .7s cubic-bezier(.16,.84,.24,1) both; }
+#welcome:not(.wl-still) .wl-body > * { animation: stItem .6s cubic-bezier(.16,.84,.24,1) both; }
+#welcome:not(.wl-still) .wl-body > :nth-child(2) { animation-delay: .1s; } #welcome:not(.wl-still) .wl-body > :nth-child(3) { animation-delay: .2s; } #welcome:not(.wl-still) .wl-body > :nth-child(n+4) { animation-delay: .3s; }
+@keyframes wlIn { from { opacity: 0; transform: translateY(26px) scale(.97); } to { opacity: 1; transform: none; } }
+#welcome.wl-still { transition: none; }
+@media (prefers-reduced-motion: reduce) { #welcome .wl-card, #welcome .wl-body > * { animation: none !important; } }
+#app.day #welcome.wl-window .wl-card { background: var(--wl-card, var(--d-card, #fff)); color: var(--wl-fg, var(--d-fg)); }
+#app.day #welcome.wl-window h1 { color: var(--wl-head, var(--d-fg)); } #app.day #welcome.wl-window .wl-text { color: var(--wl-fg, var(--d-dim)); }
+.app.race .wl-go, .app.race .wl-alt { border-radius: 0; }
+@media (max-width: 699px) {
+  #welcome.wl-img-side .wl-card { flex-direction: column; } #welcome.wl-img-side .wl-card > .wl-img { width: 100%; min-height: 0; height: min(var(--wl-imgh, 220px), 34vh); }
+  .wl-body { padding: 24px 20px 22px; } #welcome h1 { font-size: calc(32px * var(--wl-ts, 1)); } .wl-text { font-size: calc(15.5px * var(--wl-xs, 1)); } .wl-go { width: 100%; }
+}
 </style>
 </head>
 <body>
@@ -3161,7 +3206,7 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   const storyGo = (n, stg) => { ui(n.id).stg = stg; ui(n.id).vt0 = stg === 'video' ? Date.now() : 0; if (stg === 'video') { const w = RD().video; stLater(n, () => storyPlay(n), w > 0 ? w * 1000 : 650); } else if (stTm && stTm.id === n.id) stClear(); paint(n); };
   const storyStart = (n) => {
     stClear(); if (!n) return;
-    if ($('#introOk') && $('#sheet').classList.contains('on')) { storyT = setTimeout(() => storyStart(n), 700); return; }
+    if (($('#introOk') && $('#sheet').classList.contains('on')) || ($('#welcome') && !PREVIEW)) { storyT = setTimeout(() => storyStart(n), 700); return; }
     if (curPlayer) curPlayer.finish(false);
     ui(n.id).shown = '';
     storyGo(n, 'intro');
@@ -3996,7 +4041,7 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   if ($('#helpBtn')) $('#helpBtn').onclick = openGuide;
   if ($('#helpBtnTop')) $('#helpBtnTop').onclick = openGuide;
   const askLogout = () => openSheet(`<div class="kick">החשבון שלי</div><h2>לצאת מהחשבון?</h2><p class="desc">ההתקדמות שלך שמורה. בכניסה הבאה ממשיכים מאותה נקודה.</p><div style="height:14px"></div><div class="row2"><button class="btn3 pink" type="button" id="outYes">יציאה</button><button class="btn3 ghost" type="button" id="outNo">להישאר</button></div>`, s => {
-    s.querySelector('#outYes').onclick = () => { flush(); A.logout(); };
+    s.querySelector('#outYes').onclick = () => { flush(); try { sessionStorage.removeItem(WKEY()); } catch (e) {} A.logout(); };
     s.querySelector('#outNo').onclick = () => { closeSheet(); const b = $('#outBtn'); b && b.focus(); };
   });
   $('#outBtn').hidden = PREVIEW;
@@ -4202,6 +4247,47 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 
   const renderAll = () => { buildWorlds(); renderMap(); renderQuests(); if (!$('#v-league').hidden) renderLeague(); if (!$('#v-hangar').hidden) renderHangar(); hud(); checkSkins(); };
 
+  // ---------- the welcome page (design page): after signing in, before the game starts ----------
+  const WKEY = () => 'g88-welcome-' + ((A.me && (A.me.id || A.me.username)) || 'me');
+  const wHash = (w) => { const x = [w.title, w.text, w.kick, w.img, w.btn].join('|'); let h = 0; for (let i = 0; i < x.length; i++) h = (h * 31 + x.charCodeAt(i)) | 0; return String(h); };
+  const welcomeDue = (t) => {
+    const w = t && t.welcome; if (!w || !w.on || !(w.title || w.text || w.img)) return false;
+    if (w.when === 'always') { try { if (sessionStorage.getItem(WKEY())) return false; } catch (e) {} return true; }
+    let seen = {}; try { seen = JSON.parse(localStorage.getItem(WKEY()) || '{}'); } catch (e) {}
+    if (w.when === 'once') return seen.h !== wHash(w);
+    return seen.d !== new Date().toDateString();
+  };
+  const markWelcome = (w) => { try { sessionStorage.setItem(WKEY(), '1'); localStorage.setItem(WKEY(), JSON.stringify({ h: wHash(w), d: new Date().toDateString() })); } catch (e) {} };
+  const fillName = (x) => esc(x).replace(/\{name\}/g, esc(A.me.name || '')).replace(/\{first\}/g, esc(firstName(A.me.name || '')));
+  const showWelcome = (t, then, quiet) => {
+    const w = (t && t.welcome) || {}; let el = document.getElementById('welcome'); if (el) el.remove();
+    el = document.createElement('div'); el.id = 'welcome'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-labelledby', 'wcT');
+    const ff = (f) => f && f !== 'default' ? `'${String(f).replace(/['\\]/g, '')}', 'Rubik', system-ui, sans-serif` : '';
+    ['headF', 'bodyF'].forEach(k => { if (w[k] && w[k] !== 'default') loadFont(w[k], PAGE_FONTS); });
+    const v = { '--wl-bg': w.bg, '--wl-bg2': w.bg2, '--wl-card': w.card, '--wl-fg': w.fg, '--wl-head': w.head, '--wl-kick': w.kickC, '--wl-btn': w.btnBg, '--wl-btnfg': w.btnFg, '--wl-line': w.line };
+    let st = Object.keys(v).filter(k => isHex(v[k] || '')).map(k => `${k}:${v[k]}`).join(';');
+    st += `;--wl-ts:${(Number(w.title_s) || 100) / 100};--wl-xs:${(Number(w.text_s) || 100) / 100};--wl-w:${Number(w.width) || 640}px;--wl-r:${w.corners == null ? 24 : Number(w.corners)}px;--wl-dim:${(w.dim == null ? 55 : Number(w.dim)) / 100};--wl-imgh:${Number(w.imgH) || 220}px`;
+    if (ff(w.headF)) st += `;--wl-fh:${ff(w.headF)}`; if (ff(w.bodyF)) st += `;--wl-fb:${ff(w.bodyF)}`;
+    el.className = `wl-${w.style === 'window' ? 'window' : 'page'} wl-img-${w.img ? w.imgPlace || 'top' : 'none'}${w.align === 'start' ? ' wl-start' : ''}${w.anim === false ? ' wl-still' : ''}`;
+    el.style.cssText = st;
+    const paras = String(w.text || '').split(/\n{2,}/).map(p => `<p>${fillName(p).replace(/\n/g, '<br>')}</p>`).join('');
+    const img = w.img ? `<div class="wl-img" style="background-image:url('${esc(String(w.img).replace(/'/g, '%27'))}')" role="img" aria-label="${esc(w.title || 'תמונה')}"></div>` : '';
+    el.innerHTML = `${w.img && w.imgPlace === 'bg' ? img : ''}<div class="wl-card">${w.img && w.imgPlace !== 'bg' ? img : ''}<div class="wl-body">
+      ${w.kick ? `<div class="wl-kick">${fillName(w.kick)}</div>` : ''}${w.title ? `<h1 id="wcT">${fillName(w.title)}</h1>` : '<h1 id="wcT" class="vh">ברוכים הבאים</h1>'}
+      <div class="wl-text">${paras}</div>
+      <div class="wl-btns"><button class="wl-go" type="button" id="wcGo">${esc(w.btn || 'מתחילים')}</button>${w.btn2 && w.link2 ? `<a class="wl-alt" href="${esc(w.link2)}" target="_blank" rel="noopener">${esc(w.btn2)}</a>` : ''}</div>
+      ${Number(w.auto) > 0 ? `<div class="wl-auto" aria-hidden="true"><i style="animation-duration:${Number(w.auto)}s"></i></div>` : ''}
+    </div></div>`;
+    if (quiet) { el.classList.add('wl-still', 'on'); }
+    app.appendChild(el); requestAnimationFrame(() => el.classList.add('on'));
+    let closed = false, autoT = null;
+    const close = () => { if (closed) return; closed = true; clearTimeout(autoT); if (!PREVIEW) markWelcome(w); el.classList.remove('on'); setTimeout(() => { el.remove(); then && then(); }, w.anim === false ? 0 : 420); };
+    el.querySelector('#wcGo').onclick = close;
+    el.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+    if (Number(w.auto) > 0 && !PREVIEW) autoT = setTimeout(close, Number(w.auto) * 1000);
+    setTimeout(() => { const b = el.querySelector('#wcGo'); b && b.focus({ preventScroll: true }); }, 350);
+  };
+
   // ---------- the first visit ----------
   const showIntro = () => openSheet(`<div class="kick">ברוכים הבאים</div><h2>ככה זה עובד</h2><ol class="intro">
       <li><span><b>המסלול</b>כל חלון הוא תרגיל אמיתי. גוללים למטה לתרגיל הבא, ומחליקים הצידה למפה המלאה.</span></li>
@@ -4235,6 +4321,7 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       if (d.type === 'g88-theme' && d.theme) previewTheme(d.theme);
       else if (d.type === 'g88-stagebg' && d.stageBg) { PV.stageBg = d.stageBg; syncStageBg(); renderPath(); if (!$('#v-hangar').hidden) renderHangar(); }
       else if (d.type === 'g88-guide') { openGuide(); }
+      else if (d.type === 'g88-welcome') { if (d.close) { const w0 = $('#welcome'); if (w0) w0.remove(); } else showWelcome(ACTIVE, null, !!$('#welcome')); }
       else if (d.type === 'g88-view' && d.view) { if (sheet.classList.contains('on')) closeSheet(); switchTab(d.view); }
       else if (d.type === 'g88-go' && d.node) {
         if (!findNode(d.node)) return;
@@ -4251,8 +4338,11 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   applyTheme(themeOf(A.data.theme));
   checkRank();
   setTimeout(() => { const f = frontier(); if (f) goNode(f.id); syncRail(); syncPane(); }, 80);
-  if (!PREVIEW) setTimeout(claimLogin, 900);
-  if (!PREVIEW && A.data.progress && !A.data.progress.introSeen) setTimeout(showIntro, 600);
+  const startGame = () => {
+    if (!PREVIEW) setTimeout(claimLogin, 900);
+    if (!PREVIEW && A.data.progress && !A.data.progress.introSeen) setTimeout(showIntro, 600);
+  };
+  if (!PREVIEW && welcomeDue(ACTIVE)) showWelcome(ACTIVE, startGame); else startGame();
   loadLeague();
   if (PREVIEW && parent !== window) { try { parent.postMessage({ type: 'g88-ready' }, location.origin); } catch (e) {} }
 })();

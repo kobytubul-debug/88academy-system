@@ -440,7 +440,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   const TERMS = [['t1', 'לשונית 1 (המסלול)'], ['t2', 'לשונית 2 (המשימות)'], ['t3', 'לשונית 3 (הליגה)'], ['t4', 'לשונית 4 (הפרופיל)'], ['world', 'שם ל"עולם"'], ['chest', 'שם ל"תיבה"'], ['boss', 'שם למבחן המסכם'], ['league', 'שם הליגה'], ['mapTitle', 'כותרת מפת הנתיב'], ['questsTitle', 'כותרת המשימות'], ['go', 'בועה מעל התרגיל הנוכחי'], ['lit', 'הודעה כשתרגיל מאושר']];
   const BUILT = { 't-race': ['race', 'מירוץ FPV'], 't-regular': ['regular', 'משחקי צבעוני'], 't-mil': ['mil', 'צבאי'] };
   const AUTO = ['field', 'city', 'garage', 'loft', 'forest', 'street'];
-  const newTheme = (base, extra) => Object.assign({ id: newId(), name: 'ערכה חדשה', base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default', num: 'default' }, icons: BASES[base].icons, bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', layout: 'classic', barPos: 'bottom', look: '', guide: Object.assign({}, GD_DEF), logos: JSON.parse(JSON.stringify(LG_DEF)), steps: JSON.parse(JSON.stringify(SD_DEF)), boxes: [], css: '', pcard: Object.assign({}, PC_DEF), wcard: Object.assign({}, WC_DEF), lens: { show: 'auto', size: 100, shape: 'round', x: 0, y: 0, ring: '' }, flow: { on: false, open: true, next: true, close: 4, readIntro: 4, readVideo: 10, vidFull: true }, show: { img: '', dim: 35, info: '', tab: '', corners: 'square' }, builtIn: false }, extra || {});
+  const newTheme = (base, extra) => Object.assign({ id: newId(), name: 'ערכה חדשה', base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default', num: 'default' }, icons: BASES[base].icons, bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', layout: 'classic', barPos: 'bottom', look: '', welcome: Object.assign({}, WL_DEF), guide: Object.assign({}, GD_DEF), logos: JSON.parse(JSON.stringify(LG_DEF)), steps: JSON.parse(JSON.stringify(SD_DEF)), boxes: [], css: '', pcard: Object.assign({}, PC_DEF), wcard: Object.assign({}, WC_DEF), lens: { show: 'auto', size: 100, shape: 'round', x: 0, y: 0, ring: '' }, flow: { on: false, open: true, next: true, close: 4, readIntro: 4, readVideo: 10, vidFull: true }, show: { img: '', dim: 35, info: '', tab: '', corners: 'square' }, builtIn: false }, extra || {});
   const defaultsOf = (id) => BUILT[id] ? newTheme(BUILT[id][0], { id, name: BUILT[id][1], builtIn: true }) : null;
   // the colours in use: the theme's own, else the style's (the extra roles follow the brand colours until they are set)
   const effColors = (t) => { const C = Object.assign({}, BASES[t.base].colors, t.colors || {}), M = moreColors(t.base, C); Object.keys(M).forEach(k => { if (!isHex(C[k] || '')) C[k] = M[k]; }); return C; };
@@ -643,6 +643,42 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
       <div class="st-seg" role="group" aria-label="מספרי השלבים">${seg('numShape', 'round', 'מספרים בעיגול')}${seg('numShape', 'square', 'מספרים בריבוע')}</div>
       <button class="st-link" type="button" data-gdreset>איפוס החלון לברירת המחדל</button>`; };
   const pvGuide = () => post({ type: 'g88-guide' });
+  const WL_DEF = { on: false, when: 'always', style: 'page', kick: '', title: '', text: '', btn: '', btn2: '', link2: '', img: '', imgPlace: 'top', imgH: 220, align: 'center', headF: 'default', bodyF: 'default', title_s: 100, text_s: 100, width: 640, corners: 24, dim: 55, anim: true, auto: 0, bg: '', bg2: '', card: '', fg: '', head: '', kickC: '', btnBg: '', btnFg: '', line: '' };
+  const WLD = (t) => Object.assign({}, WL_DEF, t.welcome || {}), WLM = (t) => (t.welcome = WLD(t));
+  const pvWelcome = () => post({ type: 'g88-welcome' });
+  const wlHtml = (d) => { const C = WLD(d), libs = lib(), seg = (k, v, label) => `<button type="button" data-wl="${k}" data-wlv="${v}" class="${String(C[k]) === v ? 'on' : ''}" aria-pressed="${String(C[k]) === v}">${label}</button>`;
+    const range = (k, label, lo, hi, step, unit) => `<label class="st-field">${label} · <output id="wlo-${k}">${C[k]}${unit}</output><input type="range" min="${lo}" max="${hi}" step="${step}" value="${C[k]}" data-wlr="${k}" data-unit="${unit}" aria-label="${label}"></label>`;
+    const col = (k, label, def) => colorRow('wl-' + k, label, '↺ מחזיר לצבע של הסגנון', C[k] || def, !!C[k]);
+    const txt = (k, label, ph, n, rows) => `<label class="st-field">${label}${rows ? `<textarea rows="${rows}" data-wlt="${k}" maxlength="${n}" placeholder="${esc(ph)}">${esc(C[k])}</textarea>` : `<input type="${k === 'link2' ? 'url' : 'text'}" ${k === 'link2' ? 'dir="ltr"' : ''} data-wlt="${k}" value="${esc(C[k])}" maxlength="${n}" placeholder="${esc(ph)}">`}</label>`;
+    const fsel = (k, slot, label) => `<label class="st-field st-fsel">${label}<select data-wlf="${k}" style="${gff(C[k] === 'default' ? 'Rubik' : C[k])}"><option value="default" ${C[k] === 'default' ? 'selected' : ''}>כמו בשאר המשחק</option>${FONT_GROUPS[slot].map(([g, list]) => `<optgroup label="${esc(g)}">${list.map(f => `<option value="${esc(f)}" ${C[k] === f ? 'selected' : ''} style="${gff(f)}">${esc(f)}</option>`).join('')}</optgroup>`).join('')}</select></label>`;
+    return `<p class="st-hint" style="margin:0">מסך שהתלמיד רואה מיד אחרי הכניסה עם שם המשתמש והסיסמה. המשחק מתחיל רק אחרי לחיצה על הכפתור. אפשר לכתוב {first} לשם הפרטי של התלמיד, ו־{name} לשם המלא.</p>
+      <label class="st-check"><input type="checkbox" data-wlb="on" ${C.on ? 'checked' : ''}> להציג דף קבלת פנים</label>
+      ${C.on ? `<div class="st-newrow"><button class="st-btn" type="button" data-wlpv="1">הצגה בתצוגה המקדימה</button></div>
+      <h3 class="st-h3">מתי ואיך</h3>
+      <div class="st-seg" role="group" aria-label="מתי">${seg('when', 'always', 'בכל כניסה')}${seg('when', 'daily', 'פעם ביום')}${seg('when', 'once', 'פעם אחת')}</div>
+      <p class="st-hint" style="margin:0">${C.when === 'once' ? 'פעם אחת לכל תלמיד. כשמשנים את הכותרת, הטקסט או התמונה, התלמידים יראו אותו שוב.' : C.when === 'daily' ? 'בכניסה הראשונה בכל יום.' : 'בכל פעם שהתלמיד נכנס למערכת.'}</p>
+      <div class="st-seg" role="group" aria-label="צורה">${seg('style', 'page', 'דף מלא')}${seg('style', 'window', 'חלון מעל המשחק')}</div>
+      <h3 class="st-h3">תוכן</h3>
+      ${txt('kick', 'שורה קטנה מעל הכותרת', 'למשל: 88ACADEMY · קורס FPV', 60)}${txt('title', 'כותרת', 'למשל: שלום {first}, ברוכים הבאים!', 100)}
+      ${txt('text', 'טקסט (שורה ריקה מתחילה פסקה חדשה)', 'מה מחכה היום, הודעה חשובה, תזכורת...', 1500, 6)}
+      <div class="st-two">${txt('btn', 'הכפתור שמתחיל את המשחק', 'מתחילים', 40)}${txt('btn2', 'כפתור נוסף (לא חובה)', 'למשל: לפרטים', 40)}</div>
+      ${C.btn2 ? txt('link2', 'הכפתור הנוסף מוביל אל', 'https://...', 400) : ''}
+      <h3 class="st-h3">תמונה</h3>
+      <div class="st-lggal"><button type="button" class="st-lgpick${!C.img ? ' on' : ''}" data-wlpick="" aria-pressed="${!C.img}" title="בלי תמונה">∅</button>${libs.map(g => `<button type="button" class="st-lgpick${g.url === C.img ? ' on' : ''}" data-wlpick="${esc(g.url)}" aria-pressed="${g.url === C.img}" title="${esc(g.name || '')}"><span style="background-image:url('${esc(g.url)}')"></span></button>`).join('')}<label class="st-lgpick st-lgup" title="העלאת תמונה מהמחשב">+<input type="file" accept="image/*" data-wlup="1" hidden></label></div>
+      ${ED.up != null && ED.wlUp ? `<p class="st-hint" style="margin:0">מעלה… ${ED.up}%</p>` : ''}
+      ${C.img ? `<div class="st-seg" role="group" aria-label="מיקום התמונה">${seg('imgPlace', 'top', 'מעל הטקסט')}${seg('imgPlace', 'side', 'בצד')}${seg('imgPlace', 'bg', 'רקע לכל המסך')}</div>${C.imgPlace !== 'bg' ? range('imgH', 'גובה התמונה', 80, 500, 10, 'px') : ''}` : ''}
+      <h3 class="st-h3">צבעים</h3>
+      <div class="st-colors">${col('bg', 'רקע הדף', '#142f29')}${col('bg2', 'רקע · צבע שני (מעבר)', '#0b1513')}${col('card', 'רקע הכרטיס', '#14201d')}${col('line', 'מסגרת הכרטיס', '#ffffff')}${col('kickC', 'השורה הקטנה', '#5cf0b4')}${col('head', 'הכותרת', '#ffffff')}${col('fg', 'הטקסט', '#dfe9e6')}${col('btnBg', 'הכפתור · רקע', '#ffd15c')}${col('btnFg', 'הכפתור · טקסט', '#0b1513')}</div>
+      ${range('dim', C.style === 'window' ? 'החשכת המשחק מאחורי החלון' : 'החשכת תמונת הרקע', 0, 95, 5, '%')}
+      <h3 class="st-h3">גופנים</h3>
+      <div class="st-fsels">${fsel('headF', 'head', 'כותרת')}${fsel('bodyF', 'body', 'טקסט')}</div>
+      <h3 class="st-h3">גודל, צורה ותנועה</h3>
+      ${range('title_s', 'גודל הכותרת', 60, 200, 5, '%')}${range('text_s', 'גודל הטקסט', 80, 160, 5, '%')}${range('width', 'רוחב', 360, 1200, 20, 'px')}${range('corners', 'עיגול פינות', 0, 48, 2, 'px')}
+      <div class="st-seg" role="group" aria-label="יישור">${seg('align', 'center', 'יישור למרכז')}${seg('align', 'start', 'יישור לימין')}</div>
+      <label class="st-check"><input type="checkbox" data-wlb="anim" ${C.anim ? 'checked' : ''}> כניסה עם אנימציה</label>
+      ${range('auto', 'נסגר לבד אחרי (0 = רק בלחיצה)', 0, 60, 1, ' שניות')}
+      <button class="st-link" type="button" data-wlreset>איפוס העיצוב (התוכן נשמר)</button>` : ''}`; };
+
   const pvView = (v) => post({ type: 'g88-view', view: v });
   const LZD = (t) => Object.assign({ show: "auto", size: 100, shape: "round", x: 0, y: 0, ring: "" }, t.lens || {});
   const tile = (val, label, pv, sel, attr) => `<button class="bgt ${sel ? 'sel' : ''}" type="button" ${attr}="${esc(val)}" aria-pressed="${sel}"><span class="bgpv">${pv}</span><span class="bgl">${esc(label)}</span></button>`;
@@ -866,6 +902,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
           <label class="st-check"><input type="checkbox" data-pcb="float" ${C.float ? 'checked' : ''}> הרחפן מרחף (תנועה)</label>
           <button class="st-link" type="button" data-pcreset>איפוס הכרטיס לברירת המחדל</button>`; })()}
       </div></details>
+      ${fold('welcome', 'דף קבלת פנים', WLD(d).on ? ({ always: 'בכל כניסה', daily: 'פעם ביום', once: 'פעם אחת' })[WLD(d).when] : 'כבוי', 'data-pv="welcome"')}${wlHtml(d)}
+      </div></details>
       ${fold('guide', 'חלון "איך לומדים?"', GDD(d).bg || GDD(d).title || GDD(d).headF !== 'default' || GDD(d).btnBg ? 'מותאם' : 'לפי הסגנון', 'data-pv="guide"')}${gdHtml(d)}
       </div></details>
       ${fold('terms', 'מילים ושמות', (Object.keys(d.terms || {}).filter(k => d.terms[k]).length ? Object.keys(d.terms).filter(k => d.terms[k]).length + ' מילים שונו' : 'המילים של הסגנון'), '')}
@@ -906,6 +944,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     else if (k === 'lg-sepC') LGM(d).sepC = v;
     else if (k.indexOf('lg-') === 0) { const [, i, f] = k.split('-'); const L = LGM(d), x = L.items[+i]; if (x) x[f] = v; }
     else if (k.indexOf('gd-') === 0) GDM(d)[k.slice(3)] = v;
+    else if (k.indexOf('wl-') === 0) WLM(d)[k.slice(3)] = v;
     else if (k.indexOf('pc-') === 0) PC(d)[k.slice(3)] = v;
     else if (k.indexOf('wc-') === 0) WC(d)[k.slice(3)] = v;
     else if (k === 'shinfo' || k === 'shtab') SH(d)[k === 'shinfo' ? 'info' : 'tab'] = v;
@@ -1208,6 +1247,11 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     if (ds.reset && ds.reset.indexOf('gd-') === 0) { GDM(d)[ds.reset.slice(3)] = ''; redraw(); pvGuide(); return; }
     if (ds.gd) { GDM(d)[ds.gd] = ds.gdv; redraw(); pvGuide(); return; }
     if ('gdreset' in ds) { d.guide = Object.assign({}, GD_DEF); redraw(); pvGuide(); return; }
+    if (ds.reset && ds.reset.indexOf('wl-') === 0) { WLM(d)[ds.reset.slice(3)] = ''; redraw(); pvWelcome(); return; }
+    if (ds.wl) { WLM(d)[ds.wl] = ds.wlv; redraw(); pvWelcome(); return; }
+    if (ds.wlpick != null) { WLM(d).img = ds.wlpick; redraw(); pvWelcome(); return; }
+    if (ds.wlpv) { sendTheme(); setTimeout(pvWelcome, 80); return; }
+    if ('wlreset' in ds) { const W = WLM(d), keep = { on: W.on, when: W.when, style: W.style, kick: W.kick, title: W.title, text: W.text, btn: W.btn, btn2: W.btn2, link2: W.link2, img: W.img }; d.welcome = Object.assign({}, WL_DEF, keep); redraw(); pvWelcome(); return; }
     if (ds.reset && ds.reset.indexOf('pc-') === 0) { PC(d)[ds.reset.slice(3)] = ''; redraw(); pvView('hangar'); return; }
     if (ds.reset && ds.reset.indexOf('wc-') === 0) { WC(d)[ds.reset.slice(3)] = ''; redraw(); pvView('map'); return; }
     if (ds.pc) { PC(d)[ds.pc] = ds.pcv; redraw(); pvView('hangar'); return; }
@@ -1241,6 +1285,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     if (t.dataset.bxt != null) { const b = BOXES(d)[+t.dataset.bxt]; if (b) { b[t.dataset.bxk] = t.value; if (t.tagName === 'SELECT') { const u = body.querySelector(`input[data-bxt="${t.dataset.bxt}"][data-bxk="img"]`); if (u) u.value = t.value; } clearTimeout(termTimer); termTimer = setTimeout(sendTheme, 250); touched(); } return; }
     if (t.dataset.bxc != null) { const b = BOXES(d)[+t.dataset.bxc]; if (b) { b[t.dataset.bxk] = t.checked; sendTheme(); touched(); } return; }
     if ('css' in t.dataset) { d.css = t.value.slice(0, 20000); clearTimeout(termTimer); termTimer = setTimeout(sendTheme, 400); touched(); return; }
+    if (t.dataset.wlr) { const O = WLM(d), k = t.dataset.wlr; O[k] = Number(t.value) || 0; const o = $('#wlo-' + k); if (o) o.textContent = O[k] + t.dataset.unit; sendTheme(); touched(); clearTimeout(termTimer); termTimer = setTimeout(pvWelcome, 250); return; }
+    if (t.dataset.wlb) { WLM(d)[t.dataset.wlb] = t.checked; redraw(); if (t.checked || t.dataset.wlb !== 'on') setTimeout(pvWelcome, 80); else post({ type: 'g88-welcome', close: true }); return; }
+    if (t.dataset.wlt) { WLM(d)[t.dataset.wlt] = t.value; clearTimeout(termTimer); termTimer = setTimeout(() => { sendTheme(); setTimeout(pvWelcome, 80); }, 350); touched(); if (t.dataset.wlt === 'btn2' && (!!t.value) !== !!body.querySelector('[data-wlt="link2"]')) { const keep = scrollPos(); renderThemes(); scrollPos(keep); const again = body.querySelector('[data-wlt="btn2"]'); if (again) { again.focus(); again.setSelectionRange(again.value.length, again.value.length); } } return; }
+    if (t.dataset.wlf) { WLM(d)[t.dataset.wlf] = t.value; t.style.cssText = gff(t.value === 'default' ? 'Rubik' : t.value); sendTheme(); touched(); setTimeout(pvWelcome, 80); return; }
     if (t.dataset.gdr) { const O = GDM(d), k = t.dataset.gdr; O[k] = Number(t.value) || 0; const o = $('#gdo-' + k); if (o) o.textContent = O[k] + t.dataset.unit; sendTheme(); touched(); return; }
     if (t.dataset.gdb) { GDM(d)[t.dataset.gdb] = t.checked; sendTheme(); touched(); setTimeout(pvGuide, 80); return; }
     if (t.dataset.gdt) { GDM(d)[t.dataset.gdt] = t.value; clearTimeout(termTimer); termTimer = setTimeout(() => { sendTheme(); setTimeout(pvGuide, 80); }, 300); touched(); return; }
@@ -1278,10 +1326,11 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   // editing the pilot card shows the hangar in the preview; the exercise window shows the track
   let pvLast = '';
   body.addEventListener('pointerdown', (e) => { const bx = e.target.closest && e.target.closest('.st-box'); if (bx && TAB === 'themes') { const i = [...body.querySelectorAll('.st-box')].indexOf(bx), b = ED && (D().boxes || [])[i]; if (b && BX_PV[b.place] !== pvLast) { pvLast = BX_PV[b.place]; pvView(pvLast); } } });
-  body.addEventListener('pointerdown', (e) => { const sec = e.target.closest && e.target.closest('[data-pv]'); if (sec && TAB === 'themes' && sec.dataset.pv === 'guide') { pvLast = ''; pvGuide(); } else if (sec && TAB === 'themes' && sec.dataset.pv !== pvLast) { pvLast = sec.dataset.pv; pvView(pvLast); } });
+  body.addEventListener('pointerdown', (e) => { const sec = e.target.closest && e.target.closest('[data-pv]'); if (sec && TAB === 'themes' && sec.dataset.pv === 'guide') { pvLast = ''; pvGuide(); } else if (sec && TAB === 'themes' && sec.dataset.pv === 'welcome') { pvLast = ''; if (WLD(D()).on) pvWelcome(); } else if (sec && TAB === 'themes' && sec.dataset.pv !== pvLast) { pvLast = sec.dataset.pv; pvView(pvLast); } });
   body.addEventListener('change', (e) => {
     const t = e.target;
     if (t.dataset.flow) { if (!ED) return; const d = D(); const f = d.flow = Object.assign({ on: false, open: true, next: true, close: 4, readIntro: 4, readVideo: 10, vidFull: true }, d.flow || {}); f[t.dataset.flow] = t.checked; redraw(); return; }
+    if (t.dataset.wlup) { const f = t.files && t.files[0]; t.value = ''; if (f && ED) { ED.wlUp = true; addImage(f, ED, (url) => { ED.wlUp = false; WLM(D()).img = url; redraw(); pvWelcome(); }); } return; }
     if (t.dataset.lgup != null) { const f = t.files && t.files[0], i = +t.dataset.lgup; t.value = ''; if (f && ED) { ED.lgUp = i; addImage(f, ED, (url) => { const x = LGM(D()).items[i]; if (x) x.img = url; redraw(); }, true); } return; }
     if (t.id === 'upShow') { const f = t.files && t.files[0]; t.value = ''; if (f && ED) addImage(f, ED, (url) => { SH(D()).img = url; redraw(); }); return; }
     if (t.id === 'upFile') {
