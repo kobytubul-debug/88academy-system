@@ -263,6 +263,14 @@ function cleanTheme(t) {
           h: num(x.h, 16, 200, 44), op: num(x.op, 10, 100, 100), round: num(x.round, 0, 50, 0), pad: num(x.pad, 0, 30, 0), bg: hexOk(x.bg) ? String(x.bg).toLowerCase() : '',
           tint: ['white', 'black', 'gray'].indexOf(x.tint) !== -1 ? x.tint : 'none', shadow: x.shadow === true, edge: hexOk(x.edge) ? String(x.edge).toLowerCase() : '',
           link: /^https?:\/\//i.test(String(x.link || '').trim()) ? String(x.link).trim().slice(0, 400) : '', alt: String(x.alt == null ? '' : x.alt).replace(/[<>]/g, '').slice(0, 60) }; }).filter(x => x.img) }; })(),
+    // the "how we learn" window: its words, colours, fonts and sizes
+    guide: (() => { const c = t.guide && typeof t.guide === 'object' ? t.guide : {}; const num = (v, lo, hi, d) => { const n = Math.round(Number(v)); return Number.isFinite(n) && v !== '' && v != null ? Math.max(lo, Math.min(hi, n)) : d; };
+      const str = (v, n) => String(v == null ? '' : v).replace(/[\u0000-\u0009\u000B-\u001F<>]/g, '').slice(0, n); const font = (v) => /^[A-Za-z0-9 ]{2,40}$/.test(String(v || '')) ? String(v) : 'default';
+      const o = { menu: str(c.menu, 24), kick: str(c.kick, 40), title: str(c.title, 60), intro: str(c.intro, 400), btn: str(c.btn, 30), s1: str(c.s1, 300), s2: str(c.s2, 300), s3: str(c.s3, 300), s4: str(c.s4, 300),
+        keys: c.keys !== false, coins: c.coins !== false, headF: font(c.headF), bodyF: font(c.bodyF), title_s: num(c.title_s, 60, 160, 100), text_s: num(c.text_s, 80, 140, 100), width: num(c.width, 50, 100, 100),
+        corners: ['0', '16', '40'].indexOf(String(c.corners)) !== -1 ? String(c.corners) : 'auto', numShape: c.numShape === 'square' ? 'square' : 'round' };
+      ['bg', 'bg2', 'head', 'text', 'card', 'numBg', 'numFg', 'btnBg', 'btnFg', 'sub'].forEach((k) => { o[k] = hexOk(c[k]) ? String(c[k]).toLowerCase() : ''; });
+      return o; })(),
     // the bottom bar's default place: a row at the bottom, or a list under the side menu (the student can switch)
     barPos: t.barPos === 'side' ? 'side' : 'bottom',
     // the automatic flow: open the waiting step on arrival, move on after sending, close messages after some seconds
