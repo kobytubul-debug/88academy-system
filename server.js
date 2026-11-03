@@ -218,7 +218,7 @@ function cleanTheme(t) {
     icons: t.icons === 'line' || t.icons === 'emoji' ? t.icons : BASE_ICONS[base], bg, stageBg: t.stageBg !== false, terms, motion: t.motion === 'calm' ? 'calm' : 'full',
     // how an exercise window is laid out: as it always was (classic), one panel at the bottom, or the showcase
     // (an info square beside a big media window, with a tab per step). Only a theme that picks one gets it.
-    layout: ['show', 'panel', 'bar', 'story'].indexOf(t.layout) !== -1 ? t.layout : 'classic', show: cleanShow(t.show),
+    layout: ['show', 'panel', 'bar', 'story', 'focus'].indexOf(t.layout) !== -1 ? t.layout : 'classic', show: cleanShow(t.show),
     // a special look over the base style: 'pixel' turns the whole student screen into a retro 8-bit arcade
     look: t.look === 'pixel' ? 'pixel' : '',
     // the stage lens in the exercise window: shown or not (auto = as the layout has it), size, shape, place, ring colour
@@ -282,6 +282,16 @@ function cleanTheme(t) {
         dim: num(c.dim, 0, 95, 55), anim: c.anim !== false, auto: num(c.auto, 0, 60, 0) };
       ['bg', 'bg2', 'card', 'fg', 'head', 'kickC', 'btnBg', 'btnFg', 'line'].forEach((k) => { o[k] = hexOk(c[k]) ? String(c[k]).toLowerCase() : ''; });
       return o; })(),
+    // the "one mission at a time" layout: how a mission comes in, the bar of all missions at the top, the four-point ruler, the back/forward buttons
+    focus: (() => { const c = t.focus && typeof t.focus === 'object' ? t.focus : {}; const num = (v, lo, hi, d) => { const n = Math.round(Number(v)); return Number.isFinite(n) && v !== '' && v != null ? Math.max(lo, Math.min(hi, n)) : d; };
+      const pick = (v, list, d) => list.indexOf(v) !== -1 ? v : d; const str = (v, n) => String(v == null ? '' : v).replace(/[\u0000-\u001F<>]/g, '').slice(0, n);
+      const o = { anim: pick(c.anim, ['zoomin', 'zoomout', 'right', 'left', 'up', 'down', 'fade', 'flip', 'none'], 'zoomin'), dur: num(c.dur, 150, 1500, 520),
+        bar: c.bar !== false, barNames: c.barNames !== false, barSize: num(c.barSize, 70, 150, 100), barShape: pick(c.barShape, ['pill', 'round', 'square'], 'pill'),
+        ruler: c.ruler !== false, rPlace: pick(c.rPlace, ['top', 'bottom', 'side'], 'top'), rSize: num(c.rSize, 60, 200, 100), rLine: num(c.rLine, 1, 12, 3), rShape: pick(c.rShape, ['round', 'square', 'diamond'], 'round'),
+        rLabels: c.rLabels !== false, rNums: c.rNums !== false, rAlign: pick(c.rAlign, ['stretch', 'center', 'start'], 'stretch'), rX: num(c.rX, -300, 300, 0), rY: num(c.rY, -200, 200, 0),
+        nav: c.nav !== false, navStyle: pick(c.navStyle, ['both', 'text', 'arrows'], 'both'), navPlace: pick(c.navPlace, ['bottom', 'sides'], 'bottom'), prev: str(c.prev, 24), next: str(c.next, 24) };
+      ['barBg', 'chipBg', 'chipFg', 'curBg', 'curFg', 'okBg', 'okFg', 'rLineC', 'rDot', 'rOk', 'rCur', 'rText', 'navBg', 'navFg'].forEach((k) => { o[k] = hexOk(c[k]) ? String(c[k]).toLowerCase() : ''; });
+      return o; })(),
     // the bottom bar's default place: a row at the bottom, or a list under the side menu (the student can switch)
     barPos: t.barPos === 'side' ? 'side' : 'bottom',
     // the automatic flow: open the waiting step on arrival, move on after sending, close messages after some seconds
@@ -331,6 +341,11 @@ function ensureLooks() {
   if (!st.storySeeded) {
     st.storySeeded = true;
     if (!list.some((t) => t.id === 't-story')) list.push(cleanTheme({ id: 't-story', name: 'זרימה אוטומטית', base: 'regular', mode: 'night', layout: 'story', flow: { on: true, open: true, next: true, close: 3 } }));
+  }
+  // once: a ready theme with one mission at a time
+  if (!st.focusSeeded) {
+    st.focusSeeded = true;
+    if (!list.some((t) => t.id === 't-focus')) list.push(cleanTheme({ id: 't-focus', name: 'משימה אחת', base: 'regular', mode: 'night', layout: 'focus', focus: { anim: 'zoomin' } }));
   }
   if (!st.barSideSeeded) {
     st.barSideSeeded = true;

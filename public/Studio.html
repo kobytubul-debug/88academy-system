@@ -440,7 +440,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   const TERMS = [['t1', 'לשונית 1 (המסלול)'], ['t2', 'לשונית 2 (המשימות)'], ['t3', 'לשונית 3 (הליגה)'], ['t4', 'לשונית 4 (הפרופיל)'], ['world', 'שם ל"עולם"'], ['chest', 'שם ל"תיבה"'], ['boss', 'שם למבחן המסכם'], ['league', 'שם הליגה'], ['mapTitle', 'כותרת מפת הנתיב'], ['questsTitle', 'כותרת המשימות'], ['go', 'בועה מעל התרגיל הנוכחי'], ['lit', 'הודעה כשתרגיל מאושר']];
   const BUILT = { 't-race': ['race', 'מירוץ FPV'], 't-regular': ['regular', 'משחקי צבעוני'], 't-mil': ['mil', 'צבאי'] };
   const AUTO = ['field', 'city', 'garage', 'loft', 'forest', 'street'];
-  const newTheme = (base, extra) => Object.assign({ id: newId(), name: 'ערכה חדשה', base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default', num: 'default' }, icons: BASES[base].icons, bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', layout: 'classic', barPos: 'bottom', look: '', welcome: Object.assign({}, WL_DEF), guide: Object.assign({}, GD_DEF), logos: JSON.parse(JSON.stringify(LG_DEF)), steps: JSON.parse(JSON.stringify(SD_DEF)), boxes: [], css: '', pcard: Object.assign({}, PC_DEF), wcard: Object.assign({}, WC_DEF), lens: { show: 'auto', size: 100, shape: 'round', x: 0, y: 0, ring: '' }, flow: { on: false, open: true, next: true, close: 4, readIntro: 4, readVideo: 10, vidFull: true }, show: { img: '', dim: 35, info: '', tab: '', corners: 'square' }, builtIn: false }, extra || {});
+  const newTheme = (base, extra) => Object.assign({ id: newId(), name: 'ערכה חדשה', base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default', num: 'default' }, icons: BASES[base].icons, bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', layout: 'classic', barPos: 'bottom', look: '', focus: Object.assign({}, FC_DEF), welcome: Object.assign({}, WL_DEF), guide: Object.assign({}, GD_DEF), logos: JSON.parse(JSON.stringify(LG_DEF)), steps: JSON.parse(JSON.stringify(SD_DEF)), boxes: [], css: '', pcard: Object.assign({}, PC_DEF), wcard: Object.assign({}, WC_DEF), lens: { show: 'auto', size: 100, shape: 'round', x: 0, y: 0, ring: '' }, flow: { on: false, open: true, next: true, close: 4, readIntro: 4, readVideo: 10, vidFull: true }, show: { img: '', dim: 35, info: '', tab: '', corners: 'square' }, builtIn: false }, extra || {});
   const defaultsOf = (id) => BUILT[id] ? newTheme(BUILT[id][0], { id, name: BUILT[id][1], builtIn: true }) : null;
   // the colours in use: the theme's own, else the style's (the extra roles follow the brand colours until they are set)
   const effColors = (t) => { const C = Object.assign({}, BASES[t.base].colors, t.colors || {}), M = moreColors(t.base, C); Object.keys(M).forEach(k => { if (!isHex(C[k] || '')) C[k] = M[k]; }); return C; };
@@ -643,6 +643,39 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
       <div class="st-seg" role="group" aria-label="מספרי השלבים">${seg('numShape', 'round', 'מספרים בעיגול')}${seg('numShape', 'square', 'מספרים בריבוע')}</div>
       <button class="st-link" type="button" data-gdreset>איפוס החלון לברירת המחדל</button>`; };
   const pvGuide = () => post({ type: 'g88-guide' });
+  const FC_DEF = { anim: 'zoomin', dur: 520, bar: true, barNames: true, barSize: 100, barShape: 'pill', ruler: true, rPlace: 'top', rSize: 100, rLine: 3, rShape: 'round', rLabels: true, rNums: true, rAlign: 'stretch', rX: 0, rY: 0, nav: true, navStyle: 'both', navPlace: 'bottom', prev: '', next: '', barBg: '', chipBg: '', chipFg: '', curBg: '', curFg: '', okBg: '', okFg: '', rLineC: '', rDot: '', rOk: '', rCur: '', rText: '', navBg: '', navFg: '' };
+  const FCD = (t) => Object.assign({}, FC_DEF, t.focus || {}), FCM = (t) => (t.focus = FCD(t));
+  const fcEdHtml = (d) => { const C = FCD(d), seg = (k, v, label) => `<button type="button" data-fc="${k}" data-fcv="${v}" class="${String(C[k]) === v ? 'on' : ''}" aria-pressed="${String(C[k]) === v}">${label}</button>`;
+    const range = (k, label, lo, hi, step, unit) => `<label class="st-field">${label} · <output id="fco-${k}">${C[k]}${unit}</output><input type="range" min="${lo}" max="${hi}" step="${step}" value="${C[k]}" data-fcr="${k}" data-unit="${unit}" aria-label="${label}"></label>`;
+    const col = (k, label, def) => colorRow('fc-' + k, label, '↺ מחזיר לצבע של הסגנון', C[k] || def, !!C[k]);
+    const chk = (k, label) => `<label class="st-check"><input type="checkbox" data-fcb="${k}" ${C[k] ? 'checked' : ''}> ${label}</label>`;
+    return `<p class="st-hint" style="margin:0">${d.layout === 'focus' ? 'ההגדרות של הפריסה "משימה אחת".' : 'ההגדרות חלות כשהפריסה היא "משימה אחת" (בחלון "פריסת חלון התרגיל" למעלה).'} צבעי הכרטיס, הגודל והמיקום שלו נקבעים בחלון "חלון התרגיל".</p>
+      <h3 class="st-h3">איך משימה נכנסת</h3>
+      <div class="st-seg" role="group" aria-label="כניסה">${seg('anim', 'zoomin', 'זום פנימה')}${seg('anim', 'zoomout', 'זום החוצה')}${seg('anim', 'right', 'מימין')}${seg('anim', 'left', 'משמאל')}${seg('anim', 'up', 'מלמטה')}${seg('anim', 'down', 'מלמעלה')}${seg('anim', 'fade', 'עמעום')}${seg('anim', 'flip', 'היפוך')}${seg('anim', 'none', 'בלי')}</div>
+      ${C.anim !== 'none' ? range('dur', 'מהירות הכניסה', 150, 1500, 50, 'ms') : ''}
+      <p class="st-hint" style="margin:0">בכניסה מימין, משמאל, מלמטה או מלמעלה, חזרה אחורה נכנסת מהצד ההפוך.</p>
+      <h3 class="st-h3">הבר העליון (כל המשימות)</h3>
+      ${chk('bar', 'להציג את הבר העליון')}
+      ${C.bar ? `${chk('barNames', 'להציג את שמות המשימות (בלי: רק מספרים)')}${range('barSize', 'גודל', 70, 150, 5, '%')}
+      <div class="st-seg" role="group" aria-label="צורה">${seg('barShape', 'pill', 'כמוסה')}${seg('barShape', 'round', 'מעוגל')}${seg('barShape', 'square', 'ריבוע')}</div>
+      <div class="st-colors">${col('barBg', 'רקע הבר', '#14201d')}${col('chipBg', 'משימה · רקע', '#2a3533')}${col('chipFg', 'משימה · טקסט', '#ffffff')}${col('curBg', 'המשימה הנוכחית · רקע', '#ffffff')}${col('curFg', 'המשימה הנוכחית · טקסט', '#0b1513')}${col('okBg', 'משימה שבוצעה · רקע', '#1f4a3e')}${col('okFg', 'משימה שבוצעה · טקסט', '#ffffff')}</div>` : ''}
+      <h3 class="st-h3">הסרגל בתוך המשימה (4 נקודות)</h3>
+      ${chk('ruler', 'להציג את הסרגל')}
+      ${C.ruler ? `<div class="st-seg" role="group" aria-label="מיקום בחלון">${seg('rPlace', 'top', 'למעלה')}${seg('rPlace', 'bottom', 'למטה')}${seg('rPlace', 'side', 'בצד')}</div>
+      <div class="st-seg" role="group" aria-label="פריסה">${seg('rAlign', 'stretch', 'לכל הרוחב')}${seg('rAlign', 'center', 'במרכז')}${seg('rAlign', 'start', 'בצד ימין')}</div>
+      ${range('rSize', 'גודל הנקודות', 60, 200, 5, '%')}${range('rLine', 'עובי הקו', 1, 12, 1, 'px')}${range('rX', 'הזזה לצדדים', -300, 300, 5, 'px')}${range('rY', 'הזזה למעלה ולמטה', -200, 200, 5, 'px')}
+      <div class="st-seg" role="group" aria-label="צורת הנקודות">${seg('rShape', 'round', 'עיגול')}${seg('rShape', 'square', 'ריבוע')}${seg('rShape', 'diamond', 'יהלום')}</div>
+      ${chk('rNums', 'מספר בתוך כל נקודה (✓ כשבוצע)')}${chk('rLabels', 'שם השלב מתחת לנקודה')}
+      <div class="st-colors">${col('rDot', 'נקודה רגילה', '#2a3533')}${col('rCur', 'הנקודה הנוכחית', '#ffd15c')}${col('rOk', 'נקודה שבוצעה והקו שאחריה', '#5cf0b4')}${col('rLineC', 'הקו בין הנקודות', '#4a5654')}${col('rText', 'טקסט הנקודות', '#ffffff')}</div>
+      <p class="st-hint" style="margin:0">את שמות השלבים משנים בחלון "שלבי התרגיל".</p>` : ''}
+      <h3 class="st-h3">כפתורי קדימה ואחורה</h3>
+      ${chk('nav', 'להציג את הכפתורים')}
+      ${C.nav ? `<div class="st-seg" role="group" aria-label="סגנון">${seg('navStyle', 'both', 'חץ ומילה')}${seg('navStyle', 'text', 'רק מילה')}${seg('navStyle', 'arrows', 'רק חץ')}</div>
+      <div class="st-seg" role="group" aria-label="מיקום">${seg('navPlace', 'bottom', 'בתחתית החלון')}${seg('navPlace', 'sides', 'בצדי החלון')}</div>
+      <div class="st-two"><label class="st-field">אחורה<input type="text" data-fct="prev" value="${esc(C.prev)}" maxlength="24" placeholder="הקודם"></label><label class="st-field">קדימה<input type="text" data-fct="next" value="${esc(C.next)}" maxlength="24" placeholder="הבא"></label></div>
+      <div class="st-colors">${col('navBg', 'רקע הכפתורים', '#5cf0b4')}${col('navFg', 'טקסט הכפתורים', '#0b1513')}</div>` : ''}
+      <button class="st-link" type="button" data-fcreset>איפוס לברירת המחדל</button>`; };
+
   const WL_DEF = { on: false, when: 'always', style: 'page', kick: '', title: '', text: '', btn: '', btn2: '', link2: '', img: '', imgPlace: 'top', imgH: 220, align: 'center', headF: 'default', bodyF: 'default', title_s: 100, text_s: 100, width: 640, corners: 24, dim: 55, anim: true, auto: 0, bg: '', bg2: '', card: '', fg: '', head: '', kickC: '', btnBg: '', btnFg: '', line: '' };
   const WLD = (t) => Object.assign({}, WL_DEF, t.welcome || {}), WLM = (t) => (t.welcome = WLD(t));
   const pvWelcome = () => post({ type: 'g88-welcome' });
@@ -838,11 +871,13 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
         <label class="st-check"><input type="checkbox" id="stStageBg" ${d.stageBg !== false ? 'checked' : ''}> להציג רקע לפי שלב (נבחר בלשונית "רקע לשלב")</label>
       </div></details>
       <h3 class="st-grp">מסך התרגיל<small>הפריסה, החלון, העדשה וההתקדמות</small></h3>
-      ${fold('layout', 'פריסת חלון התרגיל', esc(({ classic: 'רגילה', panel: 'חלון בתחתית', show: 'תצוגת משימה', bar: 'בר תחתון', story: 'זרימה אוטומטית' })[d.layout || 'classic'] || 'רגילה'), '')}
-        <div class="st-seg" role="group" aria-label="פריסת חלון התרגיל"><button type="button" data-layout="classic" class="${d.layout !== 'show' && d.layout !== 'panel' ? 'on' : ''}" aria-pressed="${d.layout !== 'show' && d.layout !== 'panel'}">רגילה</button><button type="button" data-layout="panel" class="${d.layout === 'panel' ? 'on' : ''}" aria-pressed="${d.layout === 'panel'}">חלון בתחתית</button><button type="button" data-layout="show" class="${d.layout === 'show' ? 'on' : ''}" aria-pressed="${d.layout === 'show'}">תצוגת משימה</button><button type="button" data-layout="bar" class="${d.layout === 'bar' ? 'on' : ''}" aria-pressed="${d.layout === 'bar'}">בר תחתון</button><button type="button" data-layout="story" class="${d.layout === 'story' ? 'on' : ''}" aria-pressed="${d.layout === 'story'}">זרימה אוטומטית</button></div>
-        <p class="st-hint">${d.layout === 'story' ? 'בלי בר: כל תרגיל מתנגן לבד, שלב אחרי שלב, בכרטיס אחד באמצע המסך. קודם השם והמשימה, אחר כך סרטון ההדגמה מתחיל לבד עם ההסבר המפורט, ואז העלאת הטיסה והמדריך. אחרי שליחה עוברים לבד לתרגיל הבא. הפלאו האוטומטי תמיד פעיל בפריסה הזו.' : d.layout === 'bar' ? 'עדשת השלב באמצע המסך, ובתחתית בר אחד של כותרות: המשימה ואחריה כל שלב (תדריך, טיסה, המדריך בודק). לחיצה על כותרת פותחת מעל הבר חלון עם התוכן שלה, כמו שנפתח סרטון ההדגמה.' : d.layout === 'show' ? 'ריבוע פרטי המשימה בצבע הראשי, לידו חלון גדול עם תמונת השלב, ומתחתיו לשונית לכל שלב: תדריך, טיסה, המדריך בודק. לחיצה על לשונית מחליפה את מה שבחלון הגדול: הסרטון מתנגן בתוכו, ההעלאה והמשוב מופיעים בו.' : d.layout === 'panel' ? 'כל הטקסט של התרגיל בחלון אחד רחב בתחתית המסך, ועדשת השלב מעליו.' : 'חלון התרגיל כמו שהיה: עדשת השלב בצד אחד, הכותרת, השלבים והכפתור בצד השני.'}</p>
+      ${fold('layout', 'פריסת חלון התרגיל', esc(({ classic: 'רגילה', panel: 'חלון בתחתית', show: 'תצוגת משימה', bar: 'בר תחתון', story: 'זרימה אוטומטית', focus: 'משימה אחת' })[d.layout || 'classic'] || 'רגילה'), '')}
+        <div class="st-seg" role="group" aria-label="פריסת חלון התרגיל"><button type="button" data-layout="classic" class="${d.layout !== 'show' && d.layout !== 'panel' ? 'on' : ''}" aria-pressed="${d.layout !== 'show' && d.layout !== 'panel'}">רגילה</button><button type="button" data-layout="panel" class="${d.layout === 'panel' ? 'on' : ''}" aria-pressed="${d.layout === 'panel'}">חלון בתחתית</button><button type="button" data-layout="show" class="${d.layout === 'show' ? 'on' : ''}" aria-pressed="${d.layout === 'show'}">תצוגת משימה</button><button type="button" data-layout="bar" class="${d.layout === 'bar' ? 'on' : ''}" aria-pressed="${d.layout === 'bar'}">בר תחתון</button><button type="button" data-layout="story" class="${d.layout === 'story' ? 'on' : ''}" aria-pressed="${d.layout === 'story'}">זרימה אוטומטית</button><button type="button" data-layout="focus" class="${d.layout === 'focus' ? 'on' : ''}" aria-pressed="${d.layout === 'focus'}">משימה אחת</button></div>
+        <p class="st-hint">${d.layout === 'focus' ? 'בר עליון עם כל המשימות, ובמרכז המסך רק משימה אחת בכל פעם. לכל משימה כפתורי קדימה ואחורה, ובתוכה סרגל של ארבע נקודות (המשימה, תדריך, טיסה, המדריך) שמראה איפה התלמיד נמצא. את הכניסה, הבר, הסרגל והכפתורים עורכים בחלון "משימה אחת" למטה, ואת צבעי הכרטיס בחלון "חלון התרגיל".' : d.layout === 'story' ? 'בלי בר: כל תרגיל מתנגן לבד, שלב אחרי שלב, בכרטיס אחד באמצע המסך. קודם השם והמשימה, אחר כך סרטון ההדגמה מתחיל לבד עם ההסבר המפורט, ואז העלאת הטיסה והמדריך. אחרי שליחה עוברים לבד לתרגיל הבא. הפלאו האוטומטי תמיד פעיל בפריסה הזו.' : d.layout === 'bar' ? 'עדשת השלב באמצע המסך, ובתחתית בר אחד של כותרות: המשימה ואחריה כל שלב (תדריך, טיסה, המדריך בודק). לחיצה על כותרת פותחת מעל הבר חלון עם התוכן שלה, כמו שנפתח סרטון ההדגמה.' : d.layout === 'show' ? 'ריבוע פרטי המשימה בצבע הראשי, לידו חלון גדול עם תמונת השלב, ומתחתיו לשונית לכל שלב: תדריך, טיסה, המדריך בודק. לחיצה על לשונית מחליפה את מה שבחלון הגדול: הסרטון מתנגן בתוכו, ההעלאה והמשוב מופיעים בו.' : d.layout === 'panel' ? 'כל הטקסט של התרגיל בחלון אחד רחב בתחתית המסך, ועדשת השלב מעליו.' : 'חלון התרגיל כמו שהיה: עדשת השלב בצד אחד, הכותרת, השלבים והכפתור בצד השני.'}</p>
         ${d.layout === 'show' ? showOpts(d, C) : ''}
         ${d.layout === 'bar' ? `<h3 class="st-h3">מיקום הבר במחשב</h3><div class="st-seg" role="group" aria-label="מיקום הבר"><button type="button" data-barpos="bottom" class="${d.barPos !== 'side' ? 'on' : ''}" aria-pressed="${d.barPos !== 'side'}">שורה בתחתית</button><button type="button" data-barpos="side" class="${d.barPos === 'side' ? 'on' : ''}" aria-pressed="${d.barPos === 'side'}">רשימה בצד</button></div><p class="st-hint" style="margin:0">זו ברירת המחדל. לתלמיד יש כפתור קטן בפינת הבר שמחליף בין השתיים, והבחירה שלו נשמרת אצלו. בטלפון הבר תמיד בתחתית.</p>` : ''}
+      </div></details>
+      ${fold('focus', 'משימה אחת: כניסה, בר, סרגל וכפתורים', d.layout === 'focus' ? 'פעיל בערכה הזו' : 'לפריסה "משימה אחת"', 'data-pv="map"')}${fcEdHtml(d)}
       </div></details>
       ${fold('wcard', 'חלון התרגיל', (d.wcard && (d.wcard.bg || d.wcard.head || d.wcard.btn || d.wcard.corners !== 'auto' || Number(d.wcard.width) !== 100 || Number(d.wcard.x) || Number(d.wcard.y)) ? 'מותאם' : 'לפי הסגנון'), 'data-pv="map"')}
         ${(() => { const C = WCD(d), seg = (k, v, label) => `<button type="button" data-wc="${k}" data-wcv="${v}" class="${String(C[k]) === v ? 'on' : ''}" aria-pressed="${String(C[k]) === v}">${label}</button>`;
@@ -945,6 +980,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     else if (k.indexOf('lg-') === 0) { const [, i, f] = k.split('-'); const L = LGM(d), x = L.items[+i]; if (x) x[f] = v; }
     else if (k.indexOf('gd-') === 0) GDM(d)[k.slice(3)] = v;
     else if (k.indexOf('wl-') === 0) WLM(d)[k.slice(3)] = v;
+    else if (k.indexOf('fc-') === 0) FCM(d)[k.slice(3)] = v;
     else if (k.indexOf('pc-') === 0) PC(d)[k.slice(3)] = v;
     else if (k.indexOf('wc-') === 0) WC(d)[k.slice(3)] = v;
     else if (k === 'shinfo' || k === 'shtab') SH(d)[k === 'shinfo' ? 'info' : 'tab'] = v;
@@ -1252,6 +1288,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     if (ds.wlpick != null) { WLM(d).img = ds.wlpick; redraw(); pvWelcome(); return; }
     if (ds.wlpv) { sendTheme(); setTimeout(pvWelcome, 80); return; }
     if ('wlreset' in ds) { const W = WLM(d), keep = { on: W.on, when: W.when, style: W.style, kick: W.kick, title: W.title, text: W.text, btn: W.btn, btn2: W.btn2, link2: W.link2, img: W.img }; d.welcome = Object.assign({}, WL_DEF, keep); redraw(); pvWelcome(); return; }
+    if (ds.reset && ds.reset.indexOf('fc-') === 0) { FCM(d)[ds.reset.slice(3)] = ''; redraw(); return; }
+    if (ds.fc) { FCM(d)[ds.fc] = ds.fcv; redraw(); pvView('map'); return; }
+    if ('fcreset' in ds) { d.focus = Object.assign({}, FC_DEF); redraw(); return; }
     if (ds.reset && ds.reset.indexOf('pc-') === 0) { PC(d)[ds.reset.slice(3)] = ''; redraw(); pvView('hangar'); return; }
     if (ds.reset && ds.reset.indexOf('wc-') === 0) { WC(d)[ds.reset.slice(3)] = ''; redraw(); pvView('map'); return; }
     if (ds.pc) { PC(d)[ds.pc] = ds.pcv; redraw(); pvView('hangar'); return; }
@@ -1270,7 +1309,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     if (ds.shcorner) { SH(d).corners = ds.shcorner === 'soft' ? 'soft' : 'square'; redraw(); return; }
     if (ds.barpos) { d.barPos = ds.barpos === 'side' ? 'side' : 'bottom'; redraw(); return; }
     if ('look' in ds) { d.look = ds.look === 'pixel' ? 'pixel' : ''; redraw(); return; }
-    if (ds.layout) { d.layout = ['show', 'panel', 'bar', 'story'].indexOf(ds.layout) !== -1 ? ds.layout : 'classic'; redraw(); return; }
+    if (ds.layout) { d.layout = ['show', 'panel', 'bar', 'story', 'focus'].indexOf(ds.layout) !== -1 ? ds.layout : 'classic'; redraw(); return; }
     if (ds.tbg) {
       const v = ds.tbg, S = effSurf(d, d.mode === 'day' ? 'day' : 'night');
       d.bg = v === 'look' ? { kind: 'look' } : v === 'color' ? { kind: 'color', color: d.bg.kind === 'color' && isHex(d.bg.color || '') ? d.bg.color : S.bg } : v.indexOf('scene:') === 0 ? { kind: 'scene', id: v.slice(6) } : { kind: 'img', url: v.slice(4), blur: true };
@@ -1285,6 +1324,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     if (t.dataset.bxt != null) { const b = BOXES(d)[+t.dataset.bxt]; if (b) { b[t.dataset.bxk] = t.value; if (t.tagName === 'SELECT') { const u = body.querySelector(`input[data-bxt="${t.dataset.bxt}"][data-bxk="img"]`); if (u) u.value = t.value; } clearTimeout(termTimer); termTimer = setTimeout(sendTheme, 250); touched(); } return; }
     if (t.dataset.bxc != null) { const b = BOXES(d)[+t.dataset.bxc]; if (b) { b[t.dataset.bxk] = t.checked; sendTheme(); touched(); } return; }
     if ('css' in t.dataset) { d.css = t.value.slice(0, 20000); clearTimeout(termTimer); termTimer = setTimeout(sendTheme, 400); touched(); return; }
+    if (t.dataset.fcr) { const O = FCM(d), k = t.dataset.fcr; O[k] = Number(t.value) || 0; const o = $('#fco-' + k); if (o) o.textContent = O[k] + t.dataset.unit; sendTheme(); touched(); return; }
+    if (t.dataset.fcb) { FCM(d)[t.dataset.fcb] = t.checked; redraw(); return; }
+    if (t.dataset.fct) { FCM(d)[t.dataset.fct] = t.value; clearTimeout(termTimer); termTimer = setTimeout(sendTheme, 300); touched(); return; }
     if (t.dataset.wlr) { const O = WLM(d), k = t.dataset.wlr; O[k] = Number(t.value) || 0; const o = $('#wlo-' + k); if (o) o.textContent = O[k] + t.dataset.unit; sendTheme(); touched(); clearTimeout(termTimer); termTimer = setTimeout(pvWelcome, 250); return; }
     if (t.dataset.wlb) { WLM(d)[t.dataset.wlb] = t.checked; redraw(); if (t.checked || t.dataset.wlb !== 'on') setTimeout(pvWelcome, 80); else post({ type: 'g88-welcome', close: true }); return; }
     if (t.dataset.wlt) { WLM(d)[t.dataset.wlt] = t.value; clearTimeout(termTimer); termTimer = setTimeout(() => { sendTheme(); setTimeout(pvWelcome, 80); }, 350); touched(); if (t.dataset.wlt === 'btn2' && (!!t.value) !== !!body.querySelector('[data-wlt="link2"]')) { const keep = scrollPos(); renderThemes(); scrollPos(keep); const again = body.querySelector('[data-wlt="btn2"]'); if (again) { again.focus(); again.setSelectionRange(again.value.length, again.value.length); } } return; }

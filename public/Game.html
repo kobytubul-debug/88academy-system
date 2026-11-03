@@ -2412,6 +2412,122 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   #welcome.wl-img-side .wl-card { flex-direction: column; } #welcome.wl-img-side .wl-card > .wl-img { width: 100%; min-height: 0; height: min(var(--wl-imgh, 220px), 34vh); }
   .wl-body { padding: 24px 20px 22px; } #welcome h1 { font-size: calc(32px * var(--wl-ts, 1)); } .wl-text { font-size: calc(15.5px * var(--wl-xs, 1)); } .wl-go { width: 100%; }
 }
+
+/* ================= the "one mission at a time" layout (theme option: layout focus) ================= */
+#app.lfocus .rail, #app.lfocus #peek { display: none !important; }
+#app.lfocus #deck { overflow: hidden; }
+#app .slide.fc .sgrid { min-height: 100%; width: 100%; max-width: none; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0; position: relative; }
+#app.lfocus .slide.fc > .sbody { padding-top: 84px; padding-bottom: 40px; }
+/* the card */
+.fcard { position: relative; width: min(calc(680px * var(--wc-w, 1)), 100%); box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; padding: 24px 26px 20px; border-radius: 26px;
+  background: color-mix(in srgb, var(--wc-bg, var(--night)) var(--wc-a, 85%), transparent); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 30px 80px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.12); color: var(--wc-fg, var(--white)); translate: var(--wc-x, 0) var(--wc-y, 0); }
+#app.wc-line .fcard { box-shadow: 0 30px 80px rgba(0,0,0,.4), inset 0 0 0 3px var(--wc-line); }
+#app.wc-r .fcard { border-radius: var(--wc-r); }
+#app.wc-flat .fcard { backdrop-filter: none; -webkit-backdrop-filter: none; }
+.fcard.fc-done { box-shadow: 0 30px 80px rgba(0,0,0,.45), inset 0 0 0 3px var(--mint); }
+.fc-top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-size: 13px; font-weight: 800; letter-spacing: .04em; color: var(--wc-kick, var(--mint)); }
+.fc-top b { font-family: var(--n); color: var(--wc-fg, var(--white)); }
+.slide.fc .fcard h2 { margin: 0; font-size: calc(36px * var(--wc-title, 1)); line-height: 1.08; text-align: start; text-wrap: balance; color: var(--wc-head, var(--white)); }
+.fc-desc, .fc-sub { margin: 0; font-size: calc(16.5px * var(--wc-text, 1)); line-height: 1.6; color: var(--wc-fg, color-mix(in srgb, var(--white) 86%, transparent)); }
+.fc-sub { font-size: calc(14px * var(--wc-text, 1)); opacity: .85; }
+.fc-h { margin: 0; font-size: 19px; font-weight: 900; }
+.fc-pane { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.fc-pane .act, .fc-pane .upl, .fc-pane .inote, .fc-pane .sh-play { margin: 0; width: 100%; box-sizing: border-box; }
+.fc-pane .sh-msg { margin: 0; text-align: start; }
+.fcard .sh-state { margin: 0; text-align: start; }
+.fc-step { align-self: flex-start; border: 0; cursor: pointer; padding: 9px 16px; border-radius: 12px; font: 800 14px var(--f); background: rgba(255,255,255,.1); color: inherit; box-shadow: inset 0 0 0 1px rgba(255,255,255,.2); }
+.fc-step:hover { background: rgba(255,255,255,.18); }
+.fc-split { display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: start; }
+
+/* the four-point ruler */
+.fc-ruler { --d: calc(30px * var(--fc-rs, 1)); list-style: none; margin: 4px 0; padding: 0; display: flex; align-items: flex-start; position: relative; translate: var(--fc-rx, 0) var(--fc-ry, 0); }
+.fc-ruler li { position: relative; flex: 1 1 0; display: flex; justify-content: center; min-width: 0; }
+#app.fr-acenter .fc-ruler { justify-content: center; } #app.fr-acenter .fc-ruler li, #app.fr-astart .fc-ruler li { flex: 0 0 auto; padding-inline-end: calc(var(--d) * 1.4); }
+#app.fr-astart .fc-ruler { justify-content: flex-start; }
+.fc-ruler li + li::before { content: ""; position: absolute; top: calc(var(--d) / 2 - var(--fc-rl, 3px) / 2); inset-inline-end: calc(50% + var(--d) / 2 + 4px); width: calc(100% - var(--d) - 8px); height: var(--fc-rl, 3px); border-radius: 4px; background: var(--fc-rLineC, rgba(255,255,255,.22)); }
+#app.fr-acenter .fc-ruler li + li::before, #app.fr-astart .fc-ruler li + li::before { inset-inline-end: calc(100% - var(--d) * .2); width: calc(var(--d) * 1.2); }
+.fc-ruler li.ok + li::before, .fc-ruler li.ok + li.ok::before { background: var(--fc-rOk, var(--mint)); }
+.fc-ruler button { border: 0; background: none; padding: 0; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--fc-rText, var(--wc-fg, var(--white))); font: 800 calc(12.5px * var(--fc-rs, 1)) var(--f); min-width: 0; }
+.fc-dot { width: var(--d); height: var(--d); border-radius: 50%; display: grid; place-items: center; font: 900 calc(var(--d) * .45) var(--n); box-sizing: border-box;
+  background: var(--fc-rDot, rgba(255,255,255,.12)); color: var(--fc-rText, var(--white)); box-shadow: inset 0 0 0 2px rgba(255,255,255,.3); transition: transform .2s, background .2s; }
+.fc-lbl { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; opacity: .8; }
+.fc-ruler li.ok .fc-dot { background: var(--fc-rOk, var(--mint)); color: var(--ink, #0B1513); box-shadow: none; }
+.fc-ruler li.cur .fc-dot { background: var(--fc-rCur, var(--gold)); color: var(--ink, #0B1513); box-shadow: 0 0 0 4px color-mix(in srgb, var(--fc-rCur, var(--gold)) 35%, transparent); transform: scale(1.12); }
+.fc-ruler li.cur .fc-lbl { opacity: 1; }
+#app.fr-square .fc-dot { border-radius: 6px; } #app.fr-diamond .fc-dot { border-radius: 4px; rotate: 45deg; } #app.fr-diamond .fc-dot { font-size: 0; }
+.fc-ruler button:focus-visible .fc-dot { outline: 3px solid var(--gold); outline-offset: 3px; }
+/* the ruler on the side: points one under another */
+.fc-split .fc-ruler { flex-direction: column; gap: 14px; margin: 0; }
+.fc-split .fc-ruler li { flex: none; justify-content: flex-start; padding: 0 !important; }
+.fc-split .fc-ruler button { flex-direction: row; }
+.fc-split .fc-ruler li + li::before { top: calc(var(--d) * -.5 - 7px); inset-inline-end: auto; inset-inline-start: calc(var(--d) / 2 - var(--fc-rl, 3px) / 2); width: var(--fc-rl, 3px); height: calc(var(--d) * .5 + 4px); }
+
+/* back / forward */
+.fc-navs { display: flex; justify-content: space-between; gap: 12px; margin-top: 4px; }
+.fc-nav { display: inline-flex; align-items: center; gap: 8px; border: 0; cursor: pointer; height: 46px; padding: 0 18px; border-radius: 14px; font: 800 15px var(--f);
+  background: var(--fc-navBg, rgba(255,255,255,.12)); color: var(--fc-navFg, var(--white)); box-shadow: inset 0 0 0 1px rgba(255,255,255,.18); transition: background .2s, transform .1s; }
+.fc-nav:hover:not(:disabled) { background: var(--fc-navBg, rgba(255,255,255,.2)); filter: brightness(1.1); }
+.fc-nav:active:not(:disabled) { transform: translateY(2px); }
+.fc-nav:disabled { opacity: .35; cursor: default; }
+.fc-nav.next { background: var(--fc-navBg, var(--mint)); color: var(--fc-navFg, var(--ink, #0B1513)); box-shadow: none; }
+.fc-arr { font-size: 18px; }
+.fc-nav:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+#app.fc-sides .slide.fc .sgrid > .fc-navs { position: absolute; inset: 50% 0 auto; translate: 0 -50%; margin: 0; padding: 0 max(8px, calc(50% - 340px * var(--wc-w, 1) - 84px)); pointer-events: none; }
+#app.fc-sides .slide.fc .fc-navs .fc-nav { pointer-events: auto; width: 60px; height: 60px; padding: 0; justify-content: center; border-radius: 50%; flex-direction: column; gap: 0; font-size: 11px; }
+
+/* the bar of all missions at the top */
+#fbar { position: absolute; z-index: 7; top: 10px; left: max(12px, env(safe-area-inset-left, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); display: flex; gap: calc(6px * var(--fc-bs, 1)); overflow-x: auto; scrollbar-width: none; padding: 6px;
+  border-radius: 18px; background: var(--fc-barBg, color-mix(in srgb, var(--night) 70%, transparent)); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); }
+#fbar::-webkit-scrollbar { display: none; }
+#v-map[hidden] #fbar { display: none; }
+.fb-i { flex: none; display: inline-flex; align-items: center; gap: 7px; border: 0; cursor: pointer; height: calc(36px * var(--fc-bs, 1)); padding: 0 calc(12px * var(--fc-bs, 1)) 0 calc(6px * var(--fc-bs, 1)); border-radius: 999px;
+  background: var(--fc-chipBg, rgba(255,255,255,.08)); color: var(--fc-chipFg, var(--white)); font: 800 calc(13px * var(--fc-bs, 1)) var(--f); white-space: nowrap; transition: background .2s, color .2s; }
+.fb-n { display: grid; place-items: center; min-width: calc(24px * var(--fc-bs, 1)); height: calc(24px * var(--fc-bs, 1)); border-radius: 999px; background: rgba(255,255,255,.14); font: 900 calc(12px * var(--fc-bs, 1)) var(--n); }
+.fb-i:not(:has(.fb-t)) { padding: 0 calc(6px * var(--fc-bs, 1)); }
+.fb-i.s-done { background: var(--fc-okBg, color-mix(in srgb, var(--mint) 22%, transparent)); color: var(--fc-okFg, var(--white)); }
+.fb-i.s-done .fb-n { background: var(--mint); color: var(--ink, #0B1513); }
+.fb-i.s-lock { opacity: .55; }
+.fb-i.s-wait .fb-n { background: var(--sky); color: var(--ink, #0B1513); } .fb-i.s-fix .fb-n { background: var(--fixc); color: var(--ink, #0B1513); } .fb-i.s-now .fb-n { background: var(--pink); color: #fff; }
+.fb-i.cur { background: var(--fc-curBg, var(--white)); color: var(--fc-curFg, var(--ink, #0B1513)); }
+.fb-i:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+#app.fb-sq .fb-i, #app.fb-sq .fb-n, #app.fb-sq #fbar { border-radius: 4px; } #app.fb-rd .fb-i, #app.fb-rd .fb-n { border-radius: 10px; }
+@media (min-width: 900px) { #fbar { top: 84px; left: 205px; right: 145px; } #app.lfocus .slide.fc > .sbody { padding-top: 150px; } }
+
+/* the entrance of a mission */
+.slide.fc.fc-in .fcard { animation: var(--fa, fcZin) var(--fc-dur, 520ms) cubic-bezier(.16,.84,.24,1) both; }
+#app.fa-zoomin { --fa: fcZin; } #app.fa-zoomout { --fa: fcZout; } #app.fa-right { --fa: fcR; } #app.fa-left { --fa: fcL; } #app.fa-up { --fa: fcU; } #app.fa-down { --fa: fcD; } #app.fa-fade { --fa: fcF; } #app.fa-flip { --fa: fcFlip; }
+#app.fa-right .slide.fc.fc-back .fcard { animation-name: fcL; } #app.fa-left .slide.fc.fc-back .fcard { animation-name: fcR; } #app.fa-up .slide.fc.fc-back .fcard { animation-name: fcD; } #app.fa-down .slide.fc.fc-back .fcard { animation-name: fcU; }
+@keyframes fcZin { from { opacity: 0; transform: scale(.82); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes fcZout { from { opacity: 0; transform: scale(1.18); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes fcR { from { opacity: 0; transform: translateX(60%); } to { opacity: 1; transform: none; } }
+@keyframes fcL { from { opacity: 0; transform: translateX(-60%); } to { opacity: 1; transform: none; } }
+@keyframes fcU { from { opacity: 0; transform: translateY(40%); } to { opacity: 1; transform: none; } }
+@keyframes fcD { from { opacity: 0; transform: translateY(-40%); } to { opacity: 1; transform: none; } }
+@keyframes fcF { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fcFlip { from { opacity: 0; transform: perspective(900px) rotateY(-70deg); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .slide.fc.fc-in .fcard { animation: none; } }
+
+/* looks */
+.app.race .fcard, .app.race .fc-nav, .app.race #fbar, .app.race .fb-i { border-radius: 0; }
+#app.day .fcard { background: color-mix(in srgb, var(--wc-bg, var(--d-card, #fff)) 94%, transparent); color: var(--wc-fg, var(--d-fg)); box-shadow: 0 30px 70px rgba(0,0,0,.16), inset 0 0 0 1px rgba(0,0,0,.08); }
+#app.day .slide.fc .fcard h2 { color: var(--wc-head, var(--d-fg)); } #app.day .fc-desc, #app.day .fc-sub { color: var(--wc-fg, var(--d-dim)); }
+#app.day .fc-nav:not(.next), #app.day .fc-step { background: var(--fc-navBg, rgba(0,0,0,.06)); color: var(--fc-navFg, var(--d-fg)); box-shadow: inset 0 0 0 1px rgba(0,0,0,.1); }
+#app.day .fc-dot { background: var(--fc-rDot, rgba(0,0,0,.06)); color: var(--fc-rText, var(--d-fg)); box-shadow: inset 0 0 0 2px rgba(0,0,0,.15); }
+#app.day .fc-ruler button { color: var(--fc-rText, var(--d-fg)); } #app.day .fc-ruler li + li::before { background: var(--fc-rLineC, rgba(0,0,0,.14)); }
+#app.day #fbar { background: var(--fc-barBg, color-mix(in srgb, var(--d-card, #fff) 85%, transparent)); } #app.day .fb-i { background: var(--fc-chipBg, rgba(0,0,0,.05)); color: var(--fc-chipFg, var(--d-fg)); }
+#app.day .fb-i.cur { background: var(--fc-curBg, var(--d-fg)); color: var(--fc-curFg, #fff); }
+#app.pixel .fcard { background: #fff6e0 !important; color: var(--px-ink); border: 3px solid var(--px-ink); box-shadow: 6px 6px 0 var(--px-ink) !important; border-radius: 0; backdrop-filter: none; }
+/* phones */
+@media (max-width: 899px) {
+  #fbar { top: 52px; } #app.lfocus .slide.fc > .sbody { padding-top: 104px; padding-bottom: 96px; }
+  .fcard { padding: 18px 16px 16px; border-radius: 22px; translate: 0 0; }
+  .slide.fc .fcard h2 { font-size: calc(27px * var(--wc-title, 1)); }
+  .fc-ruler { --d: calc(26px * var(--fc-rs, 1)); translate: 0 0; } .fc-ruler button { font-size: calc(10.5px * var(--fc-rs, 1)); }
+  .fc-split { grid-template-columns: 1fr; } .fc-split .fc-ruler { flex-direction: row; gap: 0; } .fc-split .fc-ruler li { flex: 1 1 0; justify-content: center; } .fc-split .fc-ruler button { flex-direction: column; } .fc-split .fc-ruler li + li::before { display: none; }
+  #app.fc-sides .slide.fc .sgrid > .fc-navs { position: static; translate: none; padding: 0; width: min(calc(680px * var(--wc-w, 1)), 100%); margin-top: 10px; }
+  #app.fc-sides .slide.fc .fc-navs .fc-nav { width: auto; height: 44px; border-radius: 14px; flex-direction: row; padding: 0 16px; }
+}
 </style>
 </head>
 <body>
@@ -3297,6 +3413,38 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
           ${x.cls ? (x.ok ? `<span class="bb-ck" aria-label="הושלם">${CKP}</span>` : '') : `<span class="si">${x.ok ? CKP : x.num}</span>`}<span class="tx"><b>${esc(x.title)}${x.stars || ''}</b><small>${x.sub}</small></span>${x.rw ? `<span class="rw pts">+${x.rw}</span>` : ''}<svg class="bbc" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 15l6-6 6 6"/></svg></button>`).join('')}</div>
       </div>`;
   };
+  // ---------- the "one mission at a time" layout (a theme option): a bar of all missions at the top, one mission in the middle,
+  // a four-point ruler inside it (the mission, briefing, flight, instructor) and back/forward buttons ----------
+  const FOCUS = () => !!(ACTIVE && ACTIVE.layout === 'focus');
+  const FC = () => Object.assign({ anim: 'zoomin', dur: 520, bar: true, barNames: true, ruler: true, rPlace: 'top', rLabels: true, rNums: true, nav: true, navStyle: 'both', navPlace: 'bottom', prev: '', next: '' }, (ACTIVE && ACTIVE.focus) || {});
+  const fcHtml = (n, w, k, nSkills, i, N) => {
+    const F = FC(), tabs = n.t === 'skill' ? showTabs(n) : [], st = showState(n);
+    const KEY = { video: 'video', flight: 'up', tower: 'tower' };
+    const pts = tabs.length ? [{ key: 'info', name: stgName('intro'), ok: isDone(n) || tabs.some(t => t.ok) || n.state === 'wait' }].concat(tabs.map(t => ({ key: t.key, name: stgName(KEY[t.key] || t.key), ok: t.ok, on: t.on }))) : [];
+    const want = ui(n.id).tab, firstOn = tabs.find(t => t.on);
+    const cur = pts.find(p => p.key === want) || (firstOn && pts.some(p => p.key !== 'info' && p.ok) ? pts.find(p => p.key === firstOn.key) : null) || pts.find(p => p.key === 'info') || null;
+    const at = cur ? pts.indexOf(cur) : -1, nxt = at >= 0 ? pts[at + 1] : null;
+    const ruler = pts.length && F.ruler !== false ? `<ol class="fc-ruler" aria-label="איפה אני בתרגיל">${pts.map((p, j) => `<li class="${p === cur ? 'cur' : ''}${p.ok ? ' ok' : ''}${p.on ? ' on' : ''}"><button type="button" data-tab="${p.key}" aria-current="${p === cur}"><span class="fc-dot">${F.rNums !== false ? (p.ok ? '✓' : j + 1) : ''}</span>${F.rLabels !== false ? `<span class="fc-lbl">${esc(p.name)}</span>` : `<span class="vh">${esc(p.name)}</span>`}</button></li>`).join('')}</ol>` : '';
+    let body = '';
+    if (!tabs.length) body = slideBody(n);
+    else if (!cur || cur.key === 'info') body = `${n.k.desc ? `<p class="fc-desc">${esc(n.k.desc)}</p>` : ''}${n.state === 'lock' ? `<p class="sh-msg">התרגיל עוד נעול. הוא נפתח כשמסיימים את התרגילים ב${esc(prevLevelName(n.k.level))}.</p>` : ''}`;
+    else { const t = tabs.find(x => x.key === cur.key); body = `<h3 class="fc-h">${esc(t.title)}</h3><p class="fc-sub">${t.sub}</p>${t.pane()}`; }
+    const stepGo = nxt && n.state !== 'lock' ? `<button class="fc-step" type="button" data-tab="${nxt.key}">לשלב הבא: ${esc(nxt.name)} <span aria-hidden="true">←</span></button>` : '';
+    const lab = (dir) => dir < 0 ? (F.prev || 'הקודם') : (F.next || 'הבא');
+    const nav = (dir, dis) => `<button class="fc-nav ${dir < 0 ? 'prev' : 'next'}" type="button" data-fgo="${dir}" ${dis ? 'disabled' : ''} aria-label="${dir < 0 ? 'לתרגיל הקודם' : 'לתרגיל הבא'}">${F.navStyle !== 'text' ? `<span class="fc-arr" aria-hidden="true">${dir < 0 ? '→' : '←'}</span>` : ''}${F.navStyle !== 'arrows' ? `<span>${esc(lab(dir))}</span>` : ''}</button>`;
+    const navs = F.nav !== false ? `<div class="fc-navs">${nav(-1, i === 0)}${nav(1, i >= N - 1)}</div>` : '';
+    return `<div class="fcard st-${n.state}${isDone(n) ? ' fc-done' : ''}">
+      <div class="fc-top"><span>${esc(w.name)} · ${esc(worldTag(w))}</span><b dir="ltr">${n.t === 'skill' ? `${k} / ${nSkills}` : esc(n.t === 'chest' ? T('chest') : T('boss'))}</b></div>
+      ${F.rPlace === 'top' ? ruler : ''}
+      <h2>${esc(n.name)}${titleStars(n)}</h2>${st ? `<p class="sh-state s-${n.state}">${esc(st)}</p>` : ''}
+      <div class="fc-body">${F.rPlace === 'side' && ruler ? `<div class="fc-split">${ruler}<div class="fc-pane">${body}${stepGo}</div></div>` : `<div class="fc-pane">${body}${stepGo}</div>`}</div>
+      ${F.rPlace === 'bottom' ? ruler : ''}
+      ${F.navPlace === 'bottom' ? navs : ''}
+    </div>${F.navPlace === 'sides' ? navs : ''}`;
+  };
+  // the bar of all missions at the top of the screen
+  const fbarHtml = (all) => { const F = FC(); let k = 0; return all.map((x, i) => { if (x.t === 'skill') k++; const lbl = x.t === 'chest' ? '🎁' : x.t === 'boss' ? '★' : String(k);
+    return `<button class="fb-i s-${x.t === 'chest' ? (x.state === 'ready' ? 'now' : x.state === 'opened' ? 'done' : 'lock') : x.state}" type="button" data-fi="${i}" title="${esc(x.name)}" aria-label="${esc(x.name)}"><span class="fb-n">${isDone(x) ? '✓' : lbl}</span>${F.barNames !== false ? `<span class="fb-t">${esc(x.name)}</span>` : ''}</button>`; }).join(''); };
   // re-drawing keeps the field (and the text cursor) the student was in
   const keepFocus = (root, fn) => {
     const a = document.activeElement; let key = null, sel = null;
@@ -3332,6 +3480,7 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       v.innerHTML = all.map((n, i) => {
         const w = worldOf(n), open = w.nodes.some(x => x.state !== 'lock');
         if (n.t === 'skill') k++;
+        if (FOCUS()) return `<section class="slide fc" data-n="${n.id}" aria-label="${esc(n.name)}"><div class="sbody"><div class="sgrid">${fcHtml(n, w, k, nSkills, i, all.length)}</div></div></section>`;
         if (STORY()) return `<section class="slide sty" data-n="${n.id}" aria-label="${esc(n.name)}"><div class="sbody"><div class="sgrid">${storyHtml(n, w, k, nSkills)}</div></div>${i < all.length - 1 ? nextBtn(all[i + 1], i + 1) : ''}</section>`;
         if (BAR()) return `<section class="slide bb" data-n="${n.id}" aria-label="${esc(n.name)}"><div class="sbody"><div class="sgrid">${barHtml(n, w, k, nSkills)}</div></div>${i < all.length - 1 ? nextBtn(all[i + 1], i + 1) : ''}</section>`;
         if (SHOW()) return `<section class="slide sh" data-n="${n.id}" aria-label="${esc(n.name)}"><div class="sbody"><div class="sgrid">${showHtml(n, w, k, nSkills, i < all.length - 1 ? i + 1 : null)}</div></div>${i < all.length - 1 ? nextBtn(all[i + 1], i + 1) : ''}</section>`;
@@ -3355,6 +3504,7 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     rail.querySelectorAll('.dot').forEach(d => { d.onclick = () => { hideTip(); goSlide(+d.dataset.i, true); }; d.onpointerenter = d.onfocus = () => showTip(d, all[+d.dataset.i]); d.onpointerleave = d.onblur = hideTip; });
     v.querySelectorAll('[data-next]').forEach(b => b.onclick = () => goSlide(+b.dataset.next, true));
     v.querySelectorAll('.slide[data-n]').forEach(sl => { const n = findNode(sl.dataset.n); if (n) wireNode(n, sl); });
+    { let fb = document.getElementById('fbar'); if (FOCUS() && FC().bar !== false) { if (!fb) { fb = document.createElement('nav'); fb.id = 'fbar'; fb.setAttribute('aria-label', 'כל המשימות'); $('#v-map').appendChild(fb); } fb.innerHTML = fbarHtml(all); fb.querySelectorAll('[data-fi]').forEach(b => b.onclick = () => goSlide(+b.dataset.fi, true)); } else if (fb) fb.remove(); }
     syncRail();
     renderPath();
   };
@@ -3362,6 +3512,14 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   let jumpTo = null, jumpT = null;
   const goSlide = (i, smooth) => {
     const v = $('#deck'), from = Math.round(v.scrollTop / Math.max(1, v.clientHeight)), far = Math.abs(i - from) > 1;
+    if (FOCUS()) {
+      // one mission at a time: the new one comes in with the theme's entrance; going back plays it the other way
+      i = Math.max(0, Math.min(slideIds.length - 1, i)); if (i === from && smooth) return;
+      clearTimeout(jumpT); jumpTo = null; v.style.scrollSnapType = 'none'; v.scrollTo({ top: i * v.clientHeight, behavior: 'auto' }); v.style.scrollSnapType = '';
+      const sl = v.children[i], F = FC();
+      if (sl && smooth && F.anim !== 'none' && !matchMedia('(prefers-reduced-motion: reduce)').matches) { sl.classList.remove('fc-in', 'fc-back'); void sl.offsetWidth; sl.classList.add('fc-in'); if (i < from) sl.classList.add('fc-back'); clearTimeout(sl._fcT); sl._fcT = setTimeout(() => sl.classList.remove('fc-in', 'fc-back'), (Number(F.dur) || 520) + 60); }
+      syncRail(); return;
+    }
     clearTimeout(jumpT); jumpTo = i; jumpT = setTimeout(() => { jumpTo = null; syncRail(); }, 1400);
     if (smooth && far && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
       v.classList.add('jumping');
@@ -3388,6 +3546,7 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const H = rail.clientHeight - 32, y = 16 + (n > 1 ? H * pos / (n - 1) : 0);
     $('#rme').style.top = y + 'px'; $('#rfill').style.height = (y - 16) + 'px';
     const cur = Math.round(pos); rail.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('cur', i === cur));
+    { const fb = document.getElementById('fbar'); if (fb) { fb.querySelectorAll('.fb-i').forEach((b, i) => { const on = i === cur; if (b.classList.contains('cur') !== on) { b.classList.toggle('cur', on); b.setAttribute('aria-current', on ? 'true' : 'false'); if (on) { const r = b.getBoundingClientRect(), q = fb.getBoundingClientRect(); if (r.left < q.left || r.right > q.right) fb.scrollBy({ left: r.left - q.left - q.width / 2 + r.width / 2, behavior: 'smooth' }); } } }); } }
     if (jumpTo != null && cur !== jumpTo) { syncStageBg(); return; }
     if (jumpTo != null && cur === jumpTo && Math.abs(pos - cur) < .08) { jumpTo = null; clearTimeout(jumpT); }
     // an exercise "arrives" only once the scrolling has settled on it: passing by on the way does not wake it up
@@ -3422,6 +3581,7 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     box.querySelectorAll('[data-barsw]').forEach(b => b.onclick = () => { setBarMode(barMode() === 'side' ? 'bottom' : 'side'); renderMap(); const again = $('#deck').querySelector(`[data-n="${n.id}"] [data-barsw]`); again && again.focus({ preventScroll: true }); });
     box.querySelectorAll('[data-pop]').forEach(b => b.onclick = () => { const k2 = b.dataset.pop; ui(n.id).pop = k2; paint(n); const sel = k2 ? `.bpop .bpx` : `.bbi[data-pop]`; const again = $('#deck').querySelector(`[data-n="${n.id}"] ${sel}`); again && again.focus({ preventScroll: true }); });
     box.querySelectorAll('[data-run]').forEach(b => b.onclick = () => { const t = box.querySelector(`.sh-pane [data-a="${b.dataset.run}"]`); t && t.click(); });
+    box.querySelectorAll('[data-fgo]').forEach(b => b.onclick = () => { const i = slideIds.indexOf(n.id); goSlide(i + Number(b.dataset.fgo), true); const sl = $('#deck').children[i + Number(b.dataset.fgo)], f = sl && sl.querySelector(`[data-fgo="${b.dataset.fgo}"]:not([disabled])`); f && f.focus({ preventScroll: true }); });
     box.querySelectorAll('[data-tab]').forEach(t => t.onclick = () => { ui(n.id).tab = t.dataset.tab; paint(n); const again = $('#deck').querySelector(`[data-n="${n.id}"] .sh-tab[data-tab="${t.dataset.tab}"]`); again && again.focus({ preventScroll: true }); });
     if (btn('play')) btn('play').onclick = (e) => {
       const src = n.t === 'skill' ? vidOf(n.k) : n.c && n.c.video; if (!src) return;
@@ -3583,7 +3743,7 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     if (curPlayer.tries === 12 && !ytHeard) curPlayer.manual();
   }, 1000);
   // a demo video watched to the end: its coins the first time, and today's video task
-  const videoDone = (k, from) => {
+  const videoDone = (k, from) => { if (FOCUS()) ui('s' + k.id).tab = 'flight';
     const t = today(), items = [];
     if (!P.ledger.some(e => e.kind === 'video' && e.skill === k.id)) items.push({ cat: 'bonus', kind: 'video', skill: k.id, text: 'צפייה בסרטון הדגמה: ' + k.name, amount: Math.max(0, R().video) });
     const had = P.questVideoDay === t;
@@ -4186,6 +4346,16 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const css0 = String(t.css || '').replace(/<\/?\s*style/gi, '').replace(/@import/gi, ''); if (tcss.textContent !== css0) tcss.textContent = css0;
     renderBoxes(t);
     renderLogos(t);
+    // the one-mission layout
+    app.classList.toggle('lfocus', t.layout === 'focus');
+    { const F = t.focus || {}, sv = (k, v) => v != null && v !== '' ? set(k, v) : app.style.removeProperty(k);
+      ['barBg', 'chipBg', 'chipFg', 'curBg', 'curFg', 'okBg', 'okFg', 'rLineC', 'rDot', 'rOk', 'rCur', 'rText', 'navBg', 'navFg'].forEach(k => sv('--fc-' + k, isHex(F[k] || '') ? F[k] : ''));
+      set('--fc-dur', (Number(F.dur) || 520) + 'ms'); set('--fc-bs', String((Number(F.barSize) || 100) / 100)); set('--fc-rs', String((Number(F.rSize) || 100) / 100)); set('--fc-rl', (Number(F.rLine) || 3) + 'px');
+      set('--fc-rx', (Number(F.rX) || 0) + 'px'); set('--fc-ry', (Number(F.rY) || 0) + 'px');
+      ['zoomin', 'zoomout', 'right', 'left', 'up', 'down', 'fade', 'flip'].forEach(a => app.classList.toggle('fa-' + a, (F.anim || 'zoomin') === a));
+      app.classList.toggle('fb-sq', F.barShape === 'square'); app.classList.toggle('fb-rd', F.barShape === 'round');
+      ['square', 'diamond'].forEach(x => app.classList.toggle('fr-' + x, F.rShape === x)); ['center', 'start'].forEach(x => app.classList.toggle('fr-a' + x, F.rAlign === x));
+      app.classList.toggle('fc-sides', F.navPlace === 'sides'); }
     // the "how we learn" window
     const GD = t.guide || {};
     ['bg', 'bg2', 'head', 'text', 'card', 'numBg', 'numFg', 'btnBg', 'btnFg', 'sub'].forEach(k => { const on = isHex(GD[k] || ''); if (on) set('--gd-' + k, GD[k]); else app.style.removeProperty('--gd-' + k); app.classList.toggle('gd-' + k, on); });
@@ -4231,7 +4401,7 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   // the design page changes one thing at a time: colors and the like only need the variables, a new base style,
   // icons or words need the whole screen drawn again
   const previewTheme = (raw) => {
-    const t = themeOf(raw), shape = (x) => JSON.stringify([x.base, x.icons, x.terms, (x.lens && x.lens.show) || 'auto', x.layout || 'classic', (x.show && x.show.img) || '', JSON.stringify((x.steps && x.steps.names) || {})]);
+    const t = themeOf(raw), shape = (x) => JSON.stringify([x.base, x.icons, x.terms, (x.lens && x.lens.show) || 'auto', x.layout || 'classic', (x.show && x.show.img) || '', JSON.stringify((x.steps && x.steps.names) || {}), JSON.stringify(x.focus || {})]);
     if (ACTIVE && shape(ACTIVE) === shape(t)) { ACTIVE = t; applyVars(t); syncStageBg(); } else applyTheme(t);
   };
   // the switch shows where it leads: a sun to day, a moon to night
@@ -4303,7 +4473,7 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   // the design page's preview: the exercise window can be dragged to its place (wide screens); the place goes back to the design page
   if (PREVIEW) {
     let drag = null;
-    const handle = () => { if (innerWidth < 900) return; document.querySelectorAll('#deck .stcard').forEach(c => { if (!c.querySelector(':scope > .wc-grip')) { const g = document.createElement('button'); g.type = 'button'; g.className = 'wc-grip'; g.setAttribute('aria-label', 'גרירת חלון התרגיל'); g.textContent = '✥'; c.prepend(g); } }); };
+    const handle = () => { if (innerWidth < 900) return; document.querySelectorAll('#deck .stcard, #deck .fcard').forEach(c => { if (!c.querySelector(':scope > .wc-grip')) { const g = document.createElement('button'); g.type = 'button'; g.className = 'wc-grip'; g.setAttribute('aria-label', 'גרירת חלון התרגיל'); g.textContent = '✥'; c.prepend(g); } }); };
     new MutationObserver(() => handle()).observe(document.getElementById('deck'), { childList: true, subtree: true });
     document.addEventListener('pointerdown', (e) => {
       const g = e.target.closest && e.target.closest('.wc-grip'); if (!g) return;
