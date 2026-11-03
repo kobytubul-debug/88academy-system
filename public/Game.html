@@ -2100,7 +2100,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   .st-dots button { padding: 4px 7px; font-size: 10.5px; letter-spacing: 0; }
 }
 /* the reading time before the demo starts by itself; the timer line runs for as long as the admin set */
-.stcard.enter .st-timer i, .stcard .st-wait .st-timer i { animation: stTime var(--st-read, 3.8s) linear both; }
+.stcard .st-timer i { animation: stTime var(--st-read, 3.8s) linear both; }
 .st-wait { display: flex; flex-direction: column; gap: 8px; }
 .st-play { position: absolute; inset: 0; margin: auto; width: 76px; height: 76px; border: 0; border-radius: 50%; cursor: pointer; display: grid; place-items: center; font-size: 30px; padding-inline-start: 6px;
   background: color-mix(in srgb, var(--white) 92%, transparent); color: #0B1513; box-shadow: 0 10px 30px rgba(0,0,0,.45); transition: transform .2s; }
@@ -2110,6 +2110,19 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 .vplayer.full { z-index: 70; }
 .vplayer.full.open { border-radius: 18px; box-shadow: 0 0 0 100vmax rgba(0,0,0,.72); }
 @media (max-width: 899px) { .vplayer.full.open { border-radius: 0; } }
+/* stopping the automatic flow: the clock line holds, and the button reads "go on" */
+.st-next { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.st-holdb { flex: none; display: inline-flex; align-items: center; gap: 6px; border: 0; cursor: pointer; padding: 6px 14px; border-radius: 999px; font: 800 13px var(--f);
+  background: rgba(255,255,255,.14); color: var(--white); box-shadow: inset 0 0 0 1px rgba(255,255,255,.22); transition: background .2s; }
+.st-holdb:hover { background: rgba(255,255,255,.24); }
+.st-holdb span { font-size: 11px; letter-spacing: -1px; }
+.st-holdb.on { background: var(--mint); color: var(--ink, #0B1513); box-shadow: none; }
+.st-holdb:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+#app.st-hold .stcard .st-timer i { animation-play-state: paused !important; }
+#app.st-hold .stcard .st-timer { background: rgba(255,255,255,.08); }
+#app.day .st-holdb { background: rgba(0,0,0,.06); color: var(--d-fg); box-shadow: inset 0 0 0 1px rgba(0,0,0,.12); }
+#app.day .st-holdb.on { background: var(--mint); color: var(--ink, #0B1513); }
+.app.race .st-holdb { border-radius: 0; }
 
 /* ================= the stage lens in the exercise window, as the design page sets it per theme =================
    size (--lz-s), place (--lz-x / --lz-y), shape (lz-square / lz-hex / lz-diamond), a fixed ring colour (lz-ring), or hidden (lz-off) */
@@ -3133,17 +3146,27 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   const stagesOf = (n) => n.t !== 'skill' ? ['intro'] : ['intro'].concat(vidOf(n.k) ? ['video'] : []).concat(['up', 'tower']);
   const afterIntro = (n) => { if (n.t !== 'skill') return 'intro'; const st = n.state, v = vidOf(n.k); if (st === 'done') return 'intro'; if (st === 'wait') return 'tower'; if (st === 'lock') return 'intro'; return v && !watched(n.k) && !ui(n.id).skipVideo && st !== 'fix' ? 'video' : 'up'; };
   let storyT = null;
+  // the automatic flow's clock: a stage waits its reading time; the student can stop it ("עצירה") and go on when ready ("המשך")
+  let stTm = null, stHold = false;
+  const stClear = () => { clearTimeout(storyT); stTm = null; };
+  const stLater = (n, fn, ms) => { clearTimeout(storyT); const t = stTm = { id: n.id, fn, total: ms, end: Date.now() + ms, left: null }; if (stHold) { t.left = ms; return; } storyT = setTimeout(() => { if (stTm === t) stTm = null; fn(); }, ms); };
+  const stRefresh = () => { app.classList.toggle('st-hold', stHold); const n = lastArrived && findNode(lastArrived); if (n && STORY()) paint(n); };
+  const stPause = () => { stHold = true; if (stTm && stTm.left == null) { clearTimeout(storyT); stTm.left = Math.max(0, stTm.end - Date.now()); } stRefresh(); say('הזרימה נעצרה. לוחצים "המשך" כשמוכנים.'); };
+  const stResume = () => { stHold = false; const t = stTm; if (t && t.left != null) { t.end = Date.now() + t.left; t.left = null; storyT = setTimeout(() => { if (stTm === t) stTm = null; t.fn(); }, t.end - Date.now()); } stRefresh(); say('ממשיכים.'); };
+  const stClock = (n) => { const t = stTm && stTm.id === n.id ? stTm : null; if (!t) return null; const left = t.left != null ? t.left : Math.max(0, t.end - Date.now()); return { total: t.total / 1000, done: (t.total - left) / 1000 }; };
+  const holdBtn = (n) => (stClock(n) || stHold) ? `<button class="st-holdb${stHold ? ' on' : ''}" type="button" data-a="sthold" aria-pressed="${stHold}">${stHold ? '<span aria-hidden="true">▶</span> המשך' : '<span aria-hidden="true">❚❚</span> עצירה'}</button>` : '';
+  const timerLine = (n, fallback) => { const c = stClock(n); return `<div class="st-timer" aria-hidden="true"><i style="--st-read:${c ? c.total : fallback}s;animation-delay:-${c ? c.done.toFixed(2) : 0}s"></i></div>`; };
   // how long each stage stays on screen before the next comes by itself, and how the demo plays (design page: automatic flow)
   const RD = () => { const f = (ACTIVE && ACTIVE.flow) || {}, n = (v, d, lo, hi) => { const x = Number(v); return Number.isFinite(x) && v !== '' && v != null ? Math.max(lo, Math.min(hi, x)) : d; }; return { intro: n(f.readIntro, 4, 2, 30), video: n(f.readVideo, 10, 0, 30), full: f.vidFull !== false }; };
-  const storyGo = (n, stg) => { ui(n.id).stg = stg; ui(n.id).vt0 = stg === 'video' ? Date.now() : 0; paint(n); if (stg === 'video') { clearTimeout(storyT); const w = RD().video; storyT = setTimeout(() => storyPlay(n), w > 0 ? w * 1000 : 650); } };
+  const storyGo = (n, stg) => { ui(n.id).stg = stg; ui(n.id).vt0 = stg === 'video' ? Date.now() : 0; if (stg === 'video') { const w = RD().video; stLater(n, () => storyPlay(n), w > 0 ? w * 1000 : 650); } else if (stTm && stTm.id === n.id) stClear(); paint(n); };
   const storyStart = (n) => {
-    clearTimeout(storyT); if (!n) return;
+    stClear(); if (!n) return;
     if ($('#introOk') && $('#sheet').classList.contains('on')) { storyT = setTimeout(() => storyStart(n), 700); return; }
     if (curPlayer) curPlayer.finish(false);
     ui(n.id).shown = '';
     storyGo(n, 'intro');
     const to = afterIntro(n);
-    if (to !== 'intro') storyT = setTimeout(() => { if (lastArrived === n.id && ui(n.id).stg === 'intro') storyGo(n, to); }, RD().intro * 1000);
+    if (to !== 'intro') { stLater(n, () => { if (lastArrived === n.id && ui(n.id).stg === 'intro') storyGo(n, to); }, RD().intro * 1000); paint(n); }
   };
   const storyPlay = (n) => {
     if (lastArrived !== n.id || ui(n.id).stg !== 'video') return;
@@ -3172,12 +3195,12 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       const auto = afterIntro(n) !== 'intro';
       body = `${LZON() ? `<div class="st-lens">${heroOf(n)}</div>` : ''}${head}<h2>${esc(n.name)}${titleStars(n)}</h2>${st ? `<p class="sh-state s-${n.state}">${esc(st)}</p>` : ''}
         ${n.t === 'skill' ? `${n.k.desc ? `<p class="st-task">${esc(n.k.desc)}</p>` : ''}${n.state === 'lock' ? `<p class="sh-msg">התרגיל עוד נעול. הוא נפתח כשמסיימים את התרגילים ב${esc(prevLevelName(n.k.level))}.</p>` : ''}` : slideBody(n)}
-        ${auto ? `<div class="st-timer" aria-hidden="true"><i style="--st-read:${RD().intro}s"></i></div><p class="st-next">בעוד רגע: ${esc(STG_NAMES[afterIntro(n)] === 'תדריך' ? 'סרטון ההדגמה' : STG_NAMES[afterIntro(n)] === 'טיסה' ? 'העלאת הטיסה' : 'המדריך')}</p>` : ''}`;
+        ${auto ? `${timerLine(n, RD().intro)}<p class="st-next">${holdBtn(n)}<span>${stHold ? 'עצרת. ממשיכים כשמוכנים.' : 'בעוד רגע: ' + esc(STG_NAMES[afterIntro(n)] === 'תדריך' ? 'סרטון ההדגמה' : STG_NAMES[afterIntro(n)] === 'טיסה' ? 'העלאת הטיסה' : 'המדריך')}</span></p>` : ''}`;
     } else if (cur === 'video') {
       const how = [n.k.pass, n.k.map ? 'מפה: ' + n.k.map : '', n.k.caption].filter(Boolean);
       const wv = RD().video, left = wv > 0 ? Math.max(0, wv - (Date.now() - (ui(n.id).vt0 || Date.now())) / 1000) : 0;
       body = `${head}<h2>תדריך: ${esc(n.name)}</h2><div class="st-media" aria-label="סרטון ההדגמה">${wv > 0 ? `<button class="st-play" type="button" data-a="stplay" aria-label="להפעיל את הסרטון עכשיו"><span aria-hidden="true">▶</span></button>` : '<span class="st-load"></span>'}</div>
-        ${wv > 0 ? `<div class="st-wait"><div class="st-timer" aria-hidden="true"><i style="--st-read:${wv}s;animation-delay:-${(wv - left).toFixed(2)}s"></i></div><p class="st-next">קוראים את ההסבר. הסרטון יתחיל ${RD().full ? 'על כל המסך ' : ''}בעוד כמה שניות. אפשר גם להתחיל עכשיו ב־▶</p></div>` : ''}
+        ${wv > 0 ? `<div class="st-wait">${timerLine(n, wv)}<p class="st-next">${holdBtn(n)}<span>${stHold ? 'עצרת. ממשיכים כשמוכנים, או מתחילים את הסרטון ב־▶' : `קוראים את ההסבר. הסרטון יתחיל ${RD().full ? 'על כל המסך ' : ''}בעוד כמה שניות. אפשר גם להתחיל עכשיו ב־▶`}</span></p></div>` : ''}
         <div class="st-how">${n.k.desc ? `<p>${esc(n.k.desc)}</p>` : ''}${how.length ? `<ul>${how.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}</div>`;
     } else if (cur === 'up') {
       const t = tab('flight');
@@ -3339,9 +3362,10 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const btn = (a) => box.querySelector(`[data-a="${a}"]`);
     if (btn('open')) btn('open').onclick = () => openChest(n);
     if (btn('skip')) btn('skip').onclick = () => { ui(n.id).skipVideo = true; paint(n); const p = (n.t === 'chal' ? sheet : $('#deck')).querySelector(n.t === 'chal' ? '[data-a="pick"]' : `[data-n="${n.id}"] [data-a="pick"]`); p && p.focus(); };
-    box.querySelectorAll('[data-a="stplay"]').forEach(b => b.onclick = () => { clearTimeout(storyT); storyPlay(n); });
-    box.querySelectorAll('[data-a="stnext"]').forEach(b => b.onclick = () => { clearTimeout(storyT); const all = visibleNodes(), i = all.findIndex(x => x.id === n.id), nx = all.slice(i + 1).find(x => x.state === 'now' || x.state === 'fix') || all[i + 1]; if (nx) { goNode(nx.id, true); say('ממשיכים: ' + nx.name); } });
-    box.querySelectorAll('[data-stg]').forEach(b => b.onclick = () => { clearTimeout(storyT); if (curPlayer) curPlayer.finish(false); storyGo(n, b.dataset.stg); });
+    box.querySelectorAll('[data-a="sthold"]').forEach(b => b.onclick = () => { stHold ? stResume() : stPause(); const again = $('#deck').querySelector(`[data-n="${n.id}"] [data-a="sthold"]`); again && again.focus({ preventScroll: true }); });
+    box.querySelectorAll('[data-a="stplay"]').forEach(b => b.onclick = () => { stClear(); storyPlay(n); });
+    box.querySelectorAll('[data-a="stnext"]').forEach(b => b.onclick = () => { stClear(); const all = visibleNodes(), i = all.findIndex(x => x.id === n.id), nx = all.slice(i + 1).find(x => x.state === 'now' || x.state === 'fix') || all[i + 1]; if (nx) { goNode(nx.id, true); say('ממשיכים: ' + nx.name); } });
+    box.querySelectorAll('[data-stg]').forEach(b => b.onclick = () => { stClear(); if (curPlayer) curPlayer.finish(false); storyGo(n, b.dataset.stg); });
     box.querySelectorAll('[data-barsw]').forEach(b => b.onclick = () => { setBarMode(barMode() === 'side' ? 'bottom' : 'side'); renderMap(); const again = $('#deck').querySelector(`[data-n="${n.id}"] [data-barsw]`); again && again.focus({ preventScroll: true }); });
     box.querySelectorAll('[data-pop]').forEach(b => b.onclick = () => { const k2 = b.dataset.pop; ui(n.id).pop = k2; paint(n); const sel = k2 ? `.bpop .bpx` : `.bbi[data-pop]`; const again = $('#deck').querySelector(`[data-n="${n.id}"] ${sel}`); again && again.focus({ preventScroll: true }); });
     box.querySelectorAll('[data-run]').forEach(b => b.onclick = () => { const t = box.querySelector(`.sh-pane [data-a="${b.dataset.run}"]`); t && t.click(); });
