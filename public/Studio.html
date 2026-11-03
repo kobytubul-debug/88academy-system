@@ -440,7 +440,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   const TERMS = [['t1', 'לשונית 1 (המסלול)'], ['t2', 'לשונית 2 (המשימות)'], ['t3', 'לשונית 3 (הליגה)'], ['t4', 'לשונית 4 (הפרופיל)'], ['world', 'שם ל"עולם"'], ['chest', 'שם ל"תיבה"'], ['boss', 'שם למבחן המסכם'], ['league', 'שם הליגה'], ['mapTitle', 'כותרת מפת הנתיב'], ['questsTitle', 'כותרת המשימות'], ['go', 'בועה מעל התרגיל הנוכחי'], ['lit', 'הודעה כשתרגיל מאושר']];
   const BUILT = { 't-race': ['race', 'מירוץ FPV'], 't-regular': ['regular', 'משחקי צבעוני'], 't-mil': ['mil', 'צבאי'] };
   const AUTO = ['field', 'city', 'garage', 'loft', 'forest', 'street'];
-  const newTheme = (base, extra) => Object.assign({ id: newId(), name: 'ערכה חדשה', base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default', num: 'default' }, icons: BASES[base].icons, bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', layout: 'classic', barPos: 'bottom', look: '', logos: JSON.parse(JSON.stringify(LG_DEF)), steps: JSON.parse(JSON.stringify(SD_DEF)), boxes: [], css: '', pcard: Object.assign({}, PC_DEF), wcard: Object.assign({}, WC_DEF), lens: { show: 'auto', size: 100, shape: 'round', x: 0, y: 0, ring: '' }, flow: { on: false, open: true, next: true, close: 4 }, show: { img: '', dim: 35, info: '', tab: '', corners: 'square' }, builtIn: false }, extra || {});
+  const newTheme = (base, extra) => Object.assign({ id: newId(), name: 'ערכה חדשה', base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default', num: 'default' }, icons: BASES[base].icons, bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', layout: 'classic', barPos: 'bottom', look: '', guide: Object.assign({}, GD_DEF), logos: JSON.parse(JSON.stringify(LG_DEF)), steps: JSON.parse(JSON.stringify(SD_DEF)), boxes: [], css: '', pcard: Object.assign({}, PC_DEF), wcard: Object.assign({}, WC_DEF), lens: { show: 'auto', size: 100, shape: 'round', x: 0, y: 0, ring: '' }, flow: { on: false, open: true, next: true, close: 4 }, show: { img: '', dim: 35, info: '', tab: '', corners: 'square' }, builtIn: false }, extra || {});
   const defaultsOf = (id) => BUILT[id] ? newTheme(BUILT[id][0], { id, name: BUILT[id][1], builtIn: true }) : null;
   // the colours in use: the theme's own, else the style's (the extra roles follow the brand colours until they are set)
   const effColors = (t) => { const C = Object.assign({}, BASES[t.base].colors, t.colors || {}), M = moreColors(t.base, C); Object.keys(M).forEach(k => { if (!isHex(C[k] || '')) C[k] = M[k]; }); return C; };
@@ -610,6 +610,33 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
       <label class="st-check"><input type="checkbox" data-lgb="phone" ${G.phone ? 'checked' : ''}> להציג גם בטלפון (מתחת לבר העליון)</label>
       ${G.phone ? grange('phoneSize', 'גודל בטלפון', 30, 100, 5, '%') : ''}
       <button class="st-link" type="button" data-lgreset>איפוס המיקום והסידור</button>` : ''}`; };
+  const GD_DEF = { menu: '', kick: '', title: '', intro: '', btn: '', s1: '', s2: '', s3: '', s4: '', keys: true, coins: true, headF: 'default', bodyF: 'default', title_s: 100, text_s: 100, width: 100, corners: 'auto', numShape: 'round', bg: '', bg2: '', head: '', text: '', card: '', numBg: '', numFg: '', btnBg: '', btnFg: '', sub: '' };
+  const gff = (f) => `font-family:'${esc(f)}', 'Rubik', sans-serif`;
+  const GDD = (t) => Object.assign({}, GD_DEF, t.guide || {}), GDM = (t) => (t.guide = GDD(t));
+  const gdHtml = (d) => { const C = GDD(d), seg = (k, v, label) => `<button type="button" data-gd="${k}" data-gdv="${v}" class="${String(C[k]) === v ? 'on' : ''}" aria-pressed="${String(C[k]) === v}">${label}</button>`;
+    const range = (k, label, lo, hi, step, unit) => `<label class="st-field">${label} · <output id="gdo-${k}">${C[k]}${unit}</output><input type="range" min="${lo}" max="${hi}" step="${step}" value="${C[k]}" data-gdr="${k}" data-unit="${unit}" aria-label="${label}"></label>`;
+    const col = (k, label, def) => colorRow('gd-' + k, label, '↺ מחזיר לצבע של הסגנון', C[k] || def, !!C[k]);
+    const txt = (k, label, ph, n, area) => `<label class="st-field">${label}${area ? `<textarea rows="2" data-gdt="${k}" maxlength="${n}" placeholder="${esc(ph)}">${esc(C[k])}</textarea>` : `<input type="text" data-gdt="${k}" value="${esc(C[k])}" maxlength="${n}" placeholder="${esc(ph)}">`}</label>`;
+    const fsel = (k, slot, label) => `<label class="st-field st-fsel">${label}<select data-gdf="${k}" style="${gff(C[k] === 'default' ? 'Rubik' : C[k])}"><option value="default" ${C[k] === 'default' ? 'selected' : ''}>כמו בשאר המשחק</option>${FONT_GROUPS[slot].map(([g, list]) => `<optgroup label="${esc(g)}">${list.map(f => `<option value="${esc(f)}" ${C[k] === f ? 'selected' : ''} style="${gff(f)}">${esc(f)}</option>`).join('')}</optgroup>`).join('')}</select></label>`;
+    return `<p class="st-hint" style="margin:0">החלון שנפתח מ"איך לומדים?" בתפריט. שדה ריק משאיר את הטקסט הרגיל. התצוגה המקדימה פותחת אותו כשעורכים כאן.</p>
+      <h3 class="st-h3">טקסטים</h3>
+      ${txt('menu', 'שם הכפתור בתפריט', 'איך לומדים?', 24)}${txt('kick', 'שורה קטנה מעל הכותרת', 'איך לומדים כאן', 40)}${txt('title', 'כותרת', 'שלבי הלימוד', 60)}
+      ${txt('intro', 'פתיח', 'המסלול בנוי מרמות שעולים בהן צעד אחרי צעד...', 400, true)}
+      ${txt('s1', 'הסבר לשלב 1 (המשימה)', 'בכל תרגיל מופיעים השם, המטרה והמפה...', 300, true)}${txt('s2', 'הסבר לשלב 2 (תדריך)', 'סרטון קצר שמראה איך עושים את זה נכון...', 300, true)}
+      ${txt('s3', 'הסבר לשלב 3 (טיסה)', 'מתרגלים בסימולטור, מקליטים את המסך...', 300, true)}${txt('s4', 'הסבר לשלב 4 (המדריך)', 'המדריך צופה בטיסה...', 300, true)}
+      ${txt('btn', 'הכפתור בסוף', 'הבנתי, ממשיכים', 30)}
+      <label class="st-check"><input type="checkbox" data-gdb="keys" ${C.keys ? 'checked' : ''}> להציג את ההסבר על הסימנים במסלול</label>
+      <label class="st-check"><input type="checkbox" data-gdb="coins" ${C.coins ? 'checked' : ''}> להציג את ההסבר על מטבעות ודרגות</label>
+      <h3 class="st-h3">צבעים</h3>
+      <div class="st-colors">${col('bg', 'רקע החלון', '#1f4a41')}${col('bg2', 'רקע · צבע שני (מעבר)', '#15332d')}${col('head', 'הכותרת', '#ffffff')}${col('sub', 'שורה קטנה וכותרות משנה', '#5cf0b4')}${col('text', 'הטקסט', '#dfe9e6')}${col('card', 'כרטיסי השלבים', '#2b5a50')}${col('numBg', 'עיגול המספר · רקע', '#5cf0b4')}${col('numFg', 'עיגול המספר · מספר', '#0b1513')}${col('btnBg', 'הכפתור · רקע', '#5cf0b4')}${col('btnFg', 'הכפתור · טקסט', '#0b1513')}</div>
+      <h3 class="st-h3">גופנים</h3>
+      <div class="st-fsels">${fsel('headF', 'head', 'כותרות')}${fsel('bodyF', 'body', 'טקסט')}</div>
+      <h3 class="st-h3">גודל וצורה</h3>
+      ${range('title_s', 'גודל הכותרת', 60, 160, 5, '%')}${range('text_s', 'גודל הטקסט', 80, 140, 5, '%')}${range('width', 'רוחב במחשב (100% = כמו היום)', 50, 100, 5, '%')}
+      <div class="st-seg" role="group" aria-label="פינות">${seg('corners', 'auto', 'פינות לפי הסגנון')}${seg('corners', '0', 'ישרות')}${seg('corners', '16', 'מעוגלות')}${seg('corners', '40', 'עגולות מאוד')}</div>
+      <div class="st-seg" role="group" aria-label="מספרי השלבים">${seg('numShape', 'round', 'מספרים בעיגול')}${seg('numShape', 'square', 'מספרים בריבוע')}</div>
+      <button class="st-link" type="button" data-gdreset>איפוס החלון לברירת המחדל</button>`; };
+  const pvGuide = () => post({ type: 'g88-guide' });
   const pvView = (v) => post({ type: 'g88-view', view: v });
   const LZD = (t) => Object.assign({ show: "auto", size: 100, shape: "round", x: 0, y: 0, ring: "" }, t.lens || {});
   const tile = (val, label, pv, sel, attr) => `<button class="bgt ${sel ? 'sel' : ''}" type="button" ${attr}="${esc(val)}" aria-pressed="${sel}"><span class="bgpv">${pv}</span><span class="bgl">${esc(label)}</span></button>`;
@@ -826,6 +853,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
           <label class="st-check"><input type="checkbox" data-pcb="float" ${C.float ? 'checked' : ''}> הרחפן מרחף (תנועה)</label>
           <button class="st-link" type="button" data-pcreset>איפוס הכרטיס לברירת המחדל</button>`; })()}
       </div></details>
+      ${fold('guide', 'חלון "איך לומדים?"', GDD(d).bg || GDD(d).title || GDD(d).headF !== 'default' || GDD(d).btnBg ? 'מותאם' : 'לפי הסגנון', 'data-pv="guide"')}${gdHtml(d)}
+      </div></details>
       ${fold('terms', 'מילים ושמות', (Object.keys(d.terms || {}).filter(k => d.terms[k]).length ? Object.keys(d.terms).filter(k => d.terms[k]).length + ' מילים שונו' : 'המילים של הסגנון'), '')}
         <p class="st-hint">שדה ריק משתמש במילה של הסגנון. את שמות הדרגות קובעים בעמוד הניקוד.</p>
         <div class="st-terms">${TERMS.map(([k, l]) => `<label class="st-field">${l}<input type="text" data-term="${k}" value="${esc(d.terms[k] || '')}" placeholder="${esc(WORDS[d.base][k])}" maxlength="40"></label>`).join('')}</div>
@@ -863,6 +892,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     else if (k.indexOf('sd-') === 0) SDM(d)[k.slice(3)] = v;
     else if (k === 'lg-sepC') LGM(d).sepC = v;
     else if (k.indexOf('lg-') === 0) { const [, i, f] = k.split('-'); const L = LGM(d), x = L.items[+i]; if (x) x[f] = v; }
+    else if (k.indexOf('gd-') === 0) GDM(d)[k.slice(3)] = v;
     else if (k.indexOf('pc-') === 0) PC(d)[k.slice(3)] = v;
     else if (k.indexOf('wc-') === 0) WC(d)[k.slice(3)] = v;
     else if (k === 'shinfo' || k === 'shtab') SH(d)[k === 'shinfo' ? 'info' : 'tab'] = v;
@@ -1162,6 +1192,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     if (ds.lgi != null) { const x = LGM(d).items[+ds.lgi]; if (x) { x[ds.lgk] = ds.lgv; redraw(); } return; }
     if (ds.lg) { LGM(d)[ds.lg] = ds.lgv; redraw(); return; }
     if ('lgreset' in ds) { const L = LGM(d); Object.assign(L, { place: 'tl', x: 0, y: 0, gap: 14, dir: 'row', sep: false, sepC: '' }); redraw(); return; }
+    if (ds.reset && ds.reset.indexOf('gd-') === 0) { GDM(d)[ds.reset.slice(3)] = ''; redraw(); pvGuide(); return; }
+    if (ds.gd) { GDM(d)[ds.gd] = ds.gdv; redraw(); pvGuide(); return; }
+    if ('gdreset' in ds) { d.guide = Object.assign({}, GD_DEF); redraw(); pvGuide(); return; }
     if (ds.reset && ds.reset.indexOf('pc-') === 0) { PC(d)[ds.reset.slice(3)] = ''; redraw(); pvView('hangar'); return; }
     if (ds.reset && ds.reset.indexOf('wc-') === 0) { WC(d)[ds.reset.slice(3)] = ''; redraw(); pvView('map'); return; }
     if (ds.pc) { PC(d)[ds.pc] = ds.pcv; redraw(); pvView('hangar'); return; }
@@ -1194,6 +1227,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     if (t.dataset.bxt != null) { const b = BOXES(d)[+t.dataset.bxt]; if (b) { b[t.dataset.bxk] = t.value; if (t.tagName === 'SELECT') { const u = body.querySelector(`input[data-bxt="${t.dataset.bxt}"][data-bxk="img"]`); if (u) u.value = t.value; } clearTimeout(termTimer); termTimer = setTimeout(sendTheme, 250); touched(); } return; }
     if (t.dataset.bxc != null) { const b = BOXES(d)[+t.dataset.bxc]; if (b) { b[t.dataset.bxk] = t.checked; sendTheme(); touched(); } return; }
     if ('css' in t.dataset) { d.css = t.value.slice(0, 20000); clearTimeout(termTimer); termTimer = setTimeout(sendTheme, 400); touched(); return; }
+    if (t.dataset.gdr) { const O = GDM(d), k = t.dataset.gdr; O[k] = Number(t.value) || 0; const o = $('#gdo-' + k); if (o) o.textContent = O[k] + t.dataset.unit; sendTheme(); touched(); return; }
+    if (t.dataset.gdb) { GDM(d)[t.dataset.gdb] = t.checked; sendTheme(); touched(); setTimeout(pvGuide, 80); return; }
+    if (t.dataset.gdt) { GDM(d)[t.dataset.gdt] = t.value; clearTimeout(termTimer); termTimer = setTimeout(() => { sendTheme(); setTimeout(pvGuide, 80); }, 300); touched(); return; }
+    if (t.dataset.gdf) { GDM(d)[t.dataset.gdf] = t.value; t.style.cssText = gff(t.value === 'default' ? 'Rubik' : t.value); sendTheme(); touched(); setTimeout(pvGuide, 80); return; }
     if (t.dataset.lgr) { const L = LGM(d), k = t.dataset.lgr; L[k] = Number(t.value) || 0; const o = $('#lgo-' + k); if (o) o.textContent = L[k] + t.dataset.unit; sendTheme(); touched(); return; }
     if (t.dataset.lgir != null) { const x = LGM(d).items[+t.dataset.lgir], k = t.dataset.lgk; if (x) { x[k] = Number(t.value) || 0; const o = $('#lgo-' + t.dataset.lgir + '-' + k); if (o) o.textContent = x[k] + t.dataset.unit; sendTheme(); touched(); } return; }
     if (t.dataset.lgic != null) { const x = LGM(d).items[+t.dataset.lgic]; if (x) { x[t.dataset.lgk] = t.checked; redraw(); } return; }
@@ -1226,7 +1263,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   // editing the pilot card shows the hangar in the preview; the exercise window shows the track
   let pvLast = '';
   body.addEventListener('pointerdown', (e) => { const bx = e.target.closest && e.target.closest('.st-box'); if (bx && TAB === 'themes') { const i = [...body.querySelectorAll('.st-box')].indexOf(bx), b = ED && (D().boxes || [])[i]; if (b && BX_PV[b.place] !== pvLast) { pvLast = BX_PV[b.place]; pvView(pvLast); } } });
-  body.addEventListener('pointerdown', (e) => { const sec = e.target.closest && e.target.closest('[data-pv]'); if (sec && TAB === 'themes' && sec.dataset.pv !== pvLast) { pvLast = sec.dataset.pv; pvView(pvLast); } });
+  body.addEventListener('pointerdown', (e) => { const sec = e.target.closest && e.target.closest('[data-pv]'); if (sec && TAB === 'themes' && sec.dataset.pv === 'guide') { pvLast = ''; pvGuide(); } else if (sec && TAB === 'themes' && sec.dataset.pv !== pvLast) { pvLast = sec.dataset.pv; pvView(pvLast); } });
   body.addEventListener('change', (e) => {
     const t = e.target;
     if (t.dataset.flow) { const f = d.flow = Object.assign({ on: false, open: true, next: true, close: 4 }, d.flow || {}); f[t.dataset.flow] = t.checked; redraw(); return; }

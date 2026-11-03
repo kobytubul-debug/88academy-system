@@ -2297,6 +2297,27 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   #logos.ph.lg-tl { left: 12px; } #logos.ph.lg-tr { right: 12px; }
   #logos.ph.lg-bl, #logos.ph.lg-br { bottom: calc(env(safe-area-inset-bottom, 0px) + 96px); }
 }
+/* the "how we learn" window: set per theme on the design page */
+@media (min-width: 900px) { #app.gd-wset .sheet.gd { width: calc(min(1100px, 94vw) * var(--gd-w, 1)); max-width: 94vw; } }
+#app.gd-bg .sheet.gd { background: var(--gd-bg) !important; }
+#app.gd-bg2 .sheet.gd { background: linear-gradient(180deg, var(--gd-bg, var(--gd-bg2)), var(--gd-bg2)) !important; }
+#app.gd-head .sheet.gd h2 { color: var(--gd-head) !important; }
+#app.gd-sub .sheet.gd .kick, #app.gd-sub .sheet.gd .gd-h { color: var(--gd-sub) !important; }
+#app.gd-text .sheet.gd .desc, #app.gd-text .sheet.gd .gd-steps b, #app.gd-text .sheet.gd .gd-steps p, #app.gd-text .sheet.gd .gd-keys { color: var(--gd-text) !important; }
+#app.gd-card .sheet.gd .gd-steps li { background: var(--gd-card) !important; }
+#app.gd-numBg .sheet.gd .gd-n { background: var(--gd-numBg) !important; }
+#app.gd-numFg .sheet.gd .gd-n { color: var(--gd-numFg) !important; }
+#app.gd-btnBg .sheet.gd #gdOk { background: var(--gd-btnBg) !important; box-shadow: 0 6px 0 color-mix(in srgb, var(--gd-btnBg) 60%, #000) !important; clip-path: none !important; }
+#app.gd-btnFg .sheet.gd #gdOk { color: var(--gd-btnFg) !important; }
+#app.gd-headF .sheet.gd h2, #app.gd-headF .sheet.gd .gd-h, #app.gd-headF .sheet.gd .gd-steps b { font-family: var(--gd-headF) !important; font-style: normal; }
+#app.gd-bodyF .sheet.gd .desc, #app.gd-bodyF .sheet.gd .gd-steps p, #app.gd-bodyF .sheet.gd .gd-keys, #app.gd-bodyF .sheet.gd .kick, #app.gd-bodyF .sheet.gd #gdOk { font-family: var(--gd-bodyF) !important; }
+#app .sheet.gd h2 { font-size: calc(32px * var(--gd-ts, 1)); }
+#app .sheet.gd .desc, #app .sheet.gd .gd-steps p, #app .sheet.gd .gd-keys { font-size: calc(14px * var(--gd-xs, 1)); }
+#app .sheet.gd .gd-steps b { font-size: calc(15.5px * var(--gd-xs, 1)); }
+#app.gd-r .sheet.gd { border-radius: var(--gd-r) var(--gd-r) 0 0 !important; }
+@media (min-width: 900px) { #app.gd-r .sheet.gd { border-radius: var(--gd-r) !important; } }
+#app.gd-r .sheet.gd .gd-steps li { border-radius: calc(var(--gd-r) * .5) !important; }
+#app.gd-sqn .sheet.gd .gd-n { border-radius: 8px; }
 </style>
 </head>
 <body>
@@ -3560,7 +3581,7 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   // ---------- sheets and celebrations ----------
   const sheet = $('#sheet'), scrim = $('#scrim');
   let afterSheet = null, openChalId = null;
-  const openSheet = (html, wire) => { afterSheet = null; sheet.innerHTML = '<div class="grab"></div>' + html; sheet.classList.add('on'); scrim.classList.add('on'); wire && wire(sheet); setTimeout(() => { const f = sheet.querySelector('button, textarea, input'); f && f.focus(); }, 320); };
+  const openSheet = (html, wire) => { afterSheet = null; sheet.classList.remove('gd'); sheet.innerHTML = '<div class="grab"></div>' + html; sheet.classList.add('on'); scrim.classList.add('on'); wire && wire(sheet); setTimeout(() => { const f = sheet.querySelector('button, textarea, input'); f && f.focus(); }, 320); };
   const closeSheet = () => { sheet.classList.remove('on'); scrim.classList.remove('on'); openChalId = null; const f = afterSheet; afterSheet = null; if (f) setTimeout(f, 280); setTimeout(pumpNotes, 400); };
   scrim.onclick = closeSheet;
   addEventListener('keydown', e => { if (e.key !== 'Escape' || curPlayer || sheet.classList.contains('on')) return; const o = Object.keys(UI).find(id => UI[id] && UI[id].pop); if (o) { UI[o].pop = ''; const nn = findNode(o); nn && paint(nn); } });
@@ -3829,15 +3850,16 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   document.querySelectorAll('.tab[data-v]').forEach(t => t.onclick = () => switchTab(t.dataset.v));
   // the learning stages, explained: opened from the side menu ("how we learn"), above "exit"
   const openGuide = () => {
-    const earns = EARNS();
+    const earns = EARNS(), G = (ACTIVE && ACTIVE.guide) || {};
     const st = [['intro', '1', 'קוראים מה צריך לעשות', 'בכל תרגיל מופיעים השם, המטרה והמפה. כך יודעים מה מתרגלים ומתי הטיסה עוברת.'],
       ['video', '2', 'צופים בסרטון ההדגמה', 'סרטון קצר שמראה איך עושים את זה נכון, עם ההסבר המלא.' + (earns ? ' צפייה עד הסוף מוסיפה מטבעות.' : '')],
       ['up', '3', 'טסים, מצלמים ומעלים', 'מתרגלים בסימולטור, מקליטים את המסך ומעלים את הסרטון כאן. כל עוד המדריך לא בדק, אפשר להעלות שוב.'],
       ['tower', '4', 'המדריך בודק', 'המדריך צופה בטיסה. אם היא טובה, התרגיל מאושר עם כוכבים' + (earns ? ' ומטבעות' : '') + '. אם צריך לתקן, הוא מחזיר אותה עם הערה, וטסים שוב.']];
-    openSheet(`<div class="kick">איך לומדים כאן</div><h2>שלבי הלימוד</h2>
-      <p class="desc">המסלול בנוי מרמות שעולים בהן צעד אחרי צעד. כל תחנה היא מיומנות אמיתית שמטיסים, ולכל תרגיל יש ארבעה שלבים:</p>
-      <ol class="gd-steps">${st.map(([k, n, h, p]) => `<li><span class="gd-n" aria-hidden="true">${n}</span><div><b>${esc(stgName(k))}: ${h}</b><p>${p}</p></div></li>`).join('')}</ol>
-      <h3 class="gd-h">במסלול</h3>
+    st.forEach((x, i) => { if (G['s' + (i + 1)]) x[3] = G['s' + (i + 1)]; });
+    openSheet(`<div class="kick">${esc(G.kick || 'איך לומדים כאן')}</div><h2>${esc(G.title || 'שלבי הלימוד')}</h2>
+      <p class="desc">${esc(G.intro || 'המסלול בנוי מרמות שעולים בהן צעד אחרי צעד. כל תחנה היא מיומנות אמיתית שמטיסים, ולכל תרגיל יש ארבעה שלבים:')}</p>
+      <ol class="gd-steps">${st.map(([k, n, h, p]) => `<li><span class="gd-n" aria-hidden="true">${n}</span><div><b>${esc(stgName(k))}: ${h}</b><p>${esc(p)}</p></div></li>`).join('')}</ol>
+      ${G.keys === false ? '' : `<h3 class="gd-h">במסלול</h3>
       <ul class="gd-keys">
         <li><i class="gd-dot now"></i><span><b>התרגיל הפעיל</b> מחכה לך עכשיו.</span></li>
         <li><i class="gd-dot wait"></i><span><b>אצל המדריך:</b> הטיסה נשלחה ומחכה לבדיקה.</span></li>
@@ -3846,9 +3868,10 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
         <li><i class="gd-dot lock"></i><span><b>נעול:</b> נפתח כשמסיימים את התרגילים שלפניו.</span></li>
         <li><i class="gd-dot chest"></i><span><b>תיבה:</b> בסוף כל רמה. נפתחת כשכל התרגילים ברמה אושרו${earns ? ', ובתוכה בונוס' : ''}.</span></li>
         <li><i class="gd-dot boss"></i><span><b>המבחן המסכם:</b> בסוף המסלול, אחרי שכל הרמות הושלמו.</span></li>
-      </ul>
-      ${earns ? `<h3 class="gd-h">מטבעות ודרגות</h3><p class="desc">כל תרגיל שמאושר, טיסה שעוברת בניסיון הראשון, סיום רמה וכניסה יומית מוסיפים מטבעות. המטבעות מעלים דרגה, ובמסך "משימות" יש אתגרים עם עוד מטבעות. בליגה רואים איפה עומדים מול הקבוצה.</p>` : ''}
-      <div style="height:14px"></div><button class="btn3 full" type="button" id="gdOk">הבנתי, ממשיכים</button>`, s => {
+      </ul>`}
+      ${earns && G.coins !== false ? `<h3 class="gd-h">מטבעות ודרגות</h3><p class="desc">כל תרגיל שמאושר, טיסה שעוברת בניסיון הראשון, סיום רמה וכניסה יומית מוסיפים מטבעות. המטבעות מעלים דרגה, ובמסך "משימות" יש אתגרים עם עוד מטבעות. בליגה רואים איפה עומדים מול הקבוצה.</p>` : ''}
+      <div style="height:14px"></div><button class="btn3 full" type="button" id="gdOk">${esc(G.btn || 'הבנתי, ממשיכים')}</button>`, s => {
+      s.classList.add('gd');
       s.querySelector('#gdOk').onclick = () => { closeSheet(); const b = $('#helpBtn'); b && b.focus(); };
     });
   };
@@ -3998,6 +4021,13 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const css0 = String(t.css || '').replace(/<\/?\s*style/gi, '').replace(/@import/gi, ''); if (tcss.textContent !== css0) tcss.textContent = css0;
     renderBoxes(t);
     renderLogos(t);
+    // the "how we learn" window
+    const GD = t.guide || {};
+    ['bg', 'bg2', 'head', 'text', 'card', 'numBg', 'numFg', 'btnBg', 'btnFg', 'sub'].forEach(k => { const on = isHex(GD[k] || ''); if (on) set('--gd-' + k, GD[k]); else app.style.removeProperty('--gd-' + k); app.classList.toggle('gd-' + k, on); });
+    ['headF', 'bodyF'].forEach(k => { const f = GD[k]; if (f && f !== 'default') { set('--gd-' + k, fam(f)); loadFont(f, PAGE_FONTS); app.classList.add('gd-' + k); } else { app.style.removeProperty('--gd-' + k); app.classList.remove('gd-' + k); } });
+    set('--gd-ts', String((Number(GD.title_s) || 100) / 100)); set('--gd-xs', String((Number(GD.text_s) || 100) / 100)); set('--gd-w', String((Number(GD.width) || 100) / 100)); app.classList.toggle('gd-wset', Number(GD.width) > 0 && Number(GD.width) < 100);
+    app.classList.toggle('gd-r', ['0', '16', '40'].indexOf(String(GD.corners)) !== -1); set('--gd-r', (Number(GD.corners) || 0) + 'px'); app.classList.toggle('gd-sqn', GD.numShape === 'square');
+    { const hb = $('#helpBtn'), lbl = GD.menu || 'איך לומדים?'; if (hb && hb.textContent !== lbl) hb.innerHTML = `<span>${esc(lbl)}</span>`; }
     // the stage chips above the exercise card (design page, per theme)
     const SD = t.steps || {};
     ['bg', 'fg', 'curBg', 'curFg', 'okBg', 'okFg', 'line', 'edge', 'stampBg', 'stampFg'].forEach(k => { const on = isHex(SD[k] || ''); if (on) set('--sd-' + k, SD[k]); else app.style.removeProperty('--sd-' + k); app.classList.toggle('sd-' + k, on); });
@@ -4071,6 +4101,7 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       const d = ev.data || {};
       if (d.type === 'g88-theme' && d.theme) previewTheme(d.theme);
       else if (d.type === 'g88-stagebg' && d.stageBg) { PV.stageBg = d.stageBg; syncStageBg(); renderPath(); if (!$('#v-hangar').hidden) renderHangar(); }
+      else if (d.type === 'g88-guide') { openGuide(); }
       else if (d.type === 'g88-view' && d.view) { if (sheet.classList.contains('on')) closeSheet(); switchTab(d.view); }
       else if (d.type === 'g88-go' && d.node) {
         if (!findNode(d.node)) return;
