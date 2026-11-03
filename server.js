@@ -247,6 +247,13 @@ function cleanTheme(t) {
         bg: hexOk(x.bg) ? String(x.bg).toLowerCase() : '', fg: hexOk(x.fg) ? String(x.fg).toLowerCase() : '', accent: hexOk(x.accent) ? String(x.accent).toLowerCase() : '' }; }),
     // open editing: the admin's own CSS for this theme (no imports, no closing the style tag)
     css: String(t.css == null ? '' : t.css).slice(0, 20000).replace(/<\/?\s*style/gi, '').replace(/@import/gi, '').replace(/javascript:/gi, ''),
+    // the stage chips above the exercise card (the mission, briefing, flight, instructor): colours, size, shape, names, place
+    steps: (() => { const c = t.steps && typeof t.steps === 'object' ? t.steps : {}; const num = (v, lo, hi, d) => { const n = Math.round(Number(v)); return Number.isFinite(n) && v !== '' && v != null ? Math.max(lo, Math.min(hi, n)) : d; };
+      const o = { show: c.show !== false, size: num(c.size, 70, 170, 100), gap: num(c.gap, 0, 40, 6), shape: ['round', 'square'].indexOf(c.shape) !== -1 ? c.shape : 'pill', place: c.place === 'below' ? 'below' : 'above',
+        lines: c.lines !== false, ticks: c.ticks !== false, stamp: c.stamp !== false, names: {} };
+      ['bg', 'fg', 'curBg', 'curFg', 'okBg', 'okFg', 'line', 'edge', 'stampBg', 'stampFg'].forEach((k) => { o[k] = hexOk(c[k]) ? String(c[k]).toLowerCase() : ''; });
+      const n = c.names && typeof c.names === 'object' ? c.names : {}; ['intro', 'video', 'up', 'tower'].forEach((k) => { o.names[k] = String(n[k] == null ? '' : n[k]).replace(/[\u0000-\u001F<>]/g, '').slice(0, 20); });
+      return o; })(),
     // the bottom bar's default place: a row at the bottom, or a list under the side menu (the student can switch)
     barPos: t.barPos === 'side' ? 'side' : 'bottom',
     // the automatic flow: open the waiting step on arrival, move on after sending, close messages after some seconds
