@@ -274,7 +274,8 @@ function cleanTheme(t) {
     // the bottom bar's default place: a row at the bottom, or a list under the side menu (the student can switch)
     barPos: t.barPos === 'side' ? 'side' : 'bottom',
     // the automatic flow: open the waiting step on arrival, move on after sending, close messages after some seconds
-    flow: (() => { const f = t.flow && typeof t.flow === 'object' ? t.flow : {}; const c = Math.round(Number(f.close)); return { on: !!f.on, open: f.open !== false, next: f.next !== false, close: Number.isFinite(c) ? Math.max(0, Math.min(15, c)) : 4 }; })(), builtIn: !!BUILTIN_NAMES[id]
+    flow: (() => { const f = t.flow && typeof t.flow === 'object' ? t.flow : {}; const c = Math.round(Number(f.close)); const rd = (v, lo, hi, d) => { const n = Math.round(Number(v)); return Number.isFinite(n) && v !== '' && v != null ? Math.max(lo, Math.min(hi, n)) : d; };
+      return { on: !!f.on, open: f.open !== false, next: f.next !== false, close: Number.isFinite(c) ? Math.max(0, Math.min(15, c)) : 4, readIntro: rd(f.readIntro, 2, 30, 4), readVideo: rd(f.readVideo, 0, 30, 10), vidFull: f.vidFull !== false }; })(), builtIn: !!BUILTIN_NAMES[id]
   };
 }
 // A background for one stage: none, a built-in scene, or an uploaded image (blurred a little unless told not to).

@@ -440,7 +440,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   const TERMS = [['t1', 'לשונית 1 (המסלול)'], ['t2', 'לשונית 2 (המשימות)'], ['t3', 'לשונית 3 (הליגה)'], ['t4', 'לשונית 4 (הפרופיל)'], ['world', 'שם ל"עולם"'], ['chest', 'שם ל"תיבה"'], ['boss', 'שם למבחן המסכם'], ['league', 'שם הליגה'], ['mapTitle', 'כותרת מפת הנתיב'], ['questsTitle', 'כותרת המשימות'], ['go', 'בועה מעל התרגיל הנוכחי'], ['lit', 'הודעה כשתרגיל מאושר']];
   const BUILT = { 't-race': ['race', 'מירוץ FPV'], 't-regular': ['regular', 'משחקי צבעוני'], 't-mil': ['mil', 'צבאי'] };
   const AUTO = ['field', 'city', 'garage', 'loft', 'forest', 'street'];
-  const newTheme = (base, extra) => Object.assign({ id: newId(), name: 'ערכה חדשה', base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default', num: 'default' }, icons: BASES[base].icons, bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', layout: 'classic', barPos: 'bottom', look: '', guide: Object.assign({}, GD_DEF), logos: JSON.parse(JSON.stringify(LG_DEF)), steps: JSON.parse(JSON.stringify(SD_DEF)), boxes: [], css: '', pcard: Object.assign({}, PC_DEF), wcard: Object.assign({}, WC_DEF), lens: { show: 'auto', size: 100, shape: 'round', x: 0, y: 0, ring: '' }, flow: { on: false, open: true, next: true, close: 4 }, show: { img: '', dim: 35, info: '', tab: '', corners: 'square' }, builtIn: false }, extra || {});
+  const newTheme = (base, extra) => Object.assign({ id: newId(), name: 'ערכה חדשה', base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default', num: 'default' }, icons: BASES[base].icons, bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', layout: 'classic', barPos: 'bottom', look: '', guide: Object.assign({}, GD_DEF), logos: JSON.parse(JSON.stringify(LG_DEF)), steps: JSON.parse(JSON.stringify(SD_DEF)), boxes: [], css: '', pcard: Object.assign({}, PC_DEF), wcard: Object.assign({}, WC_DEF), lens: { show: 'auto', size: 100, shape: 'round', x: 0, y: 0, ring: '' }, flow: { on: false, open: true, next: true, close: 4, readIntro: 4, readVideo: 10, vidFull: true }, show: { img: '', dim: 35, info: '', tab: '', corners: 'square' }, builtIn: false }, extra || {});
   const defaultsOf = (id) => BUILT[id] ? newTheme(BUILT[id][0], { id, name: BUILT[id][1], builtIn: true }) : null;
   // the colours in use: the theme's own, else the style's (the extra roles follow the brand colours until they are set)
   const effColors = (t) => { const C = Object.assign({}, BASES[t.base].colors, t.colors || {}), M = moreColors(t.base, C); Object.keys(M).forEach(k => { if (!isHex(C[k] || '')) C[k] = M[k]; }); return C; };
@@ -835,14 +835,19 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
           <button class="st-link" type="button" data-lzreset>איפוס העדשה לברירת המחדל</button>` : ''}`; })()}
       </div></details>
       ${fold('flow', 'פלאו אוטומטי', (d.layout === 'story' || (d.flow && d.flow.on)) ? 'פעיל' : 'כבוי', '')}
-        ${(() => { const f = Object.assign({ on: false, open: true, next: true, close: 4 }, d.flow || {}); return `
+        ${(() => { const f = Object.assign({ on: false, open: true, next: true, close: 4, readIntro: 4, readVideo: 10, vidFull: true }, d.flow || {}); return `
         <label class="st-check"><input type="checkbox" data-flow="on" ${f.on ? 'checked' : ''}> התלמיד מתקדם לבד, בלי ללחוץ "המשך" בכל צעד</label>
         ${f.on ? `<div class="st-flow">
           <label class="st-check"><input type="checkbox" data-flow="open" ${f.open ? 'checked' : ''}> כשמגיעים לתרגיל, השלב שמחכה (סרטון או העלאה) נפתח לבד</label>
           <label class="st-check"><input type="checkbox" data-flow="next" ${f.next ? 'checked' : ''}> אחרי שליחת טיסה, עוברים לבד לתרגיל הבא הפתוח</label>
           <label class="st-field">הודעות (נשלח, אושר, הוחזר) נסגרות לבד אחרי · <output id="flOut">${f.close ? f.close + ' שניות' : 'לא נסגרות לבד'}</output><input type="range" min="0" max="15" step="1" value="${f.close}" data-flowclose aria-label="שניות עד שהודעה נסגרת"></label>
           <p class="st-hint" style="margin:0">אחרי סרטון ההדגמה תמיד עוברים לבד להעלאת הטיסה. 0 שניות: ההודעות מחכות ללחיצה.</p>
-        </div>` : '<p class="st-hint" style="margin:0">כבוי: כמו היום, כל הודעה מחכה ללחיצה, והתלמיד בוחר מתי להמשיך.</p>'}`; })()}
+        </div>` : '<p class="st-hint" style="margin:0">כבוי: כמו היום, כל הודעה מחכה ללחיצה, והתלמיד בוחר מתי להמשיך.</p>'}
+        <h3 class="st-h3">זמני קריאה וסרטון${d.layout === 'story' ? '' : ' (בפריסה "זרימה אוטומטית")'}</h3>
+        <label class="st-field">המשימה מוצגת לפני שעוברים לתדריך · <output id="flRi">${f.readIntro} שניות</output><input type="range" min="2" max="30" step="1" value="${f.readIntro}" data-flowr="readIntro" data-unit=" שניות" aria-label="שניות לקריאת המשימה"></label>
+        <label class="st-field">זמן לקרוא את התדריך לפני שהסרטון מתחיל · <output id="flRv">${f.readVideo ? f.readVideo + ' שניות' : 'מתחיל מיד'}</output><input type="range" min="0" max="30" step="1" value="${f.readVideo}" data-flowr="readVideo" data-unit=" שניות" aria-label="שניות לקריאת התדריך"></label>
+        <label class="st-check"><input type="checkbox" data-flow="vidFull" ${f.vidFull !== false ? 'checked' : ''}> הסרטון מתנגן על כל המסך, ובסופו חוזר לחלון וממשיך לטיסה</label>
+        <p class="st-hint" style="margin:0">${f.vidFull !== false ? 'בזמן הקריאה יש לתלמיד כפתור ▶ להתחיל מיד.' : 'כבוי: הסרטון מתנגן בתוך החלון, כמו קודם.'}</p>`; })()}
       </div></details>
       <h3 class="st-grp">מסכים נוספים<small>האנגר ומילים</small></h3>
       ${fold('pcard', 'כרטיס התלמיד (האנגר)', (d.pcard && (d.pcard.bg || d.pcard.fg || d.pcard.width !== 'normal' || d.pcard.side === 'end' || d.pcard.corners !== 'auto')) ? 'מותאם' : 'לפי הסגנון', 'data-pv="hangar"')}
@@ -1251,7 +1256,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     if (t.dataset.pcr || t.dataset.wcr) { const pc = !!t.dataset.pcr, O = pc ? PC(d) : WC(d), k = t.dataset.pcr || t.dataset.wcr; O[k] = Number(t.value) || 0; const o = $((pc ? '#pco-' : '#wco-') + k); if (o) o.textContent = O[k] + t.dataset.unit; sendTheme(); touched(); return; }
     if (t.dataset.pcb || t.dataset.wcb) { const pc = !!t.dataset.pcb; (pc ? PC(d) : WC(d))[t.dataset.pcb || t.dataset.wcb] = t.checked; sendTheme(); touched(); pvView(pc ? 'hangar' : 'map'); return; }
     if (t.dataset.lzr) { const L = LZ(d), k = t.dataset.lzr; L[k] = Number(t.value) || 0; const o = $('#lzo-' + k); if (o) o.textContent = L[k] + t.dataset.unit; sendTheme(); touched(); return; }
-    if ('flowclose' in t.dataset) { const f = d.flow = Object.assign({ on: false, open: true, next: true, close: 4 }, d.flow || {}); f.close = Math.max(0, Math.min(15, Number(t.value) || 0)); const o = $('#flOut'); if (o) o.textContent = f.close ? f.close + ' שניות' : 'לא נסגרות לבד'; sendTheme(); touched(); return; }
+    if (t.dataset.flowr) { const f = d.flow = Object.assign({ on: false, open: true, next: true, close: 4, readIntro: 4, readVideo: 10, vidFull: true }, d.flow || {}), k = t.dataset.flowr; f[k] = Math.max(k === 'readIntro' ? 2 : 0, Math.min(30, Number(t.value) || 0)); const o = $(k === 'readIntro' ? '#flRi' : '#flRv'); if (o) o.textContent = k === 'readVideo' && !f[k] ? 'מתחיל מיד' : f[k] + ' שניות'; sendTheme(); touched(); return; }
+    if ('flowclose' in t.dataset) { const f = d.flow = Object.assign({ on: false, open: true, next: true, close: 4, readIntro: 4, readVideo: 10, vidFull: true }, d.flow || {}); f.close = Math.max(0, Math.min(15, Number(t.value) || 0)); const o = $('#flOut'); if (o) o.textContent = f.close ? f.close + ' שניות' : 'לא נסגרות לבד'; sendTheme(); touched(); return; }
     if ('shdim' in t.dataset) { SH(d).dim = Math.max(0, Math.min(80, Number(t.value) || 0)); const o = $('#shDimOut'); if (o) o.textContent = SH(d).dim + '%'; sendTheme(); touched(); return; }
     if (t.dataset.hex) { let v = t.value.trim(); if (v && v[0] !== '#') v = '#' + v; if (!setColor(t.dataset.hex, v, 'hex')) t.classList.toggle('bad', v.length >= 7); return; }
     if (t.id === 'stName') {
@@ -1275,7 +1281,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   body.addEventListener('pointerdown', (e) => { const sec = e.target.closest && e.target.closest('[data-pv]'); if (sec && TAB === 'themes' && sec.dataset.pv === 'guide') { pvLast = ''; pvGuide(); } else if (sec && TAB === 'themes' && sec.dataset.pv !== pvLast) { pvLast = sec.dataset.pv; pvView(pvLast); } });
   body.addEventListener('change', (e) => {
     const t = e.target;
-    if (t.dataset.flow) { const f = d.flow = Object.assign({ on: false, open: true, next: true, close: 4 }, d.flow || {}); f[t.dataset.flow] = t.checked; redraw(); return; }
+    if (t.dataset.flow) { if (!ED) return; const d = D(); const f = d.flow = Object.assign({ on: false, open: true, next: true, close: 4, readIntro: 4, readVideo: 10, vidFull: true }, d.flow || {}); f[t.dataset.flow] = t.checked; redraw(); return; }
     if (t.dataset.lgup != null) { const f = t.files && t.files[0], i = +t.dataset.lgup; t.value = ''; if (f && ED) { ED.lgUp = i; addImage(f, ED, (url) => { const x = LGM(D()).items[i]; if (x) x.img = url; redraw(); }, true); } return; }
     if (t.id === 'upShow') { const f = t.files && t.files[0]; t.value = ''; if (f && ED) addImage(f, ED, (url) => { SH(D()).img = url; redraw(); }); return; }
     if (t.id === 'upFile') {
