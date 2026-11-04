@@ -440,7 +440,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   const TERMS = [['t1', 'לשונית 1 (המסלול)'], ['t2', 'לשונית 2 (המשימות)'], ['t3', 'לשונית 3 (הליגה)'], ['t4', 'לשונית 4 (הפרופיל)'], ['world', 'שם ל"עולם"'], ['chest', 'שם ל"תיבה"'], ['boss', 'שם למבחן המסכם'], ['league', 'שם הליגה'], ['mapTitle', 'כותרת מפת הנתיב'], ['questsTitle', 'כותרת המשימות'], ['go', 'בועה מעל התרגיל הנוכחי'], ['lit', 'הודעה כשתרגיל מאושר']];
   const BUILT = { 't-race': ['race', 'מירוץ FPV'], 't-regular': ['regular', 'משחקי צבעוני'], 't-mil': ['mil', 'צבאי'] };
   const AUTO = ['field', 'city', 'garage', 'loft', 'forest', 'street'];
-  const newTheme = (base, extra) => Object.assign({ id: newId(), name: 'ערכה חדשה', base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default', num: 'default' }, icons: BASES[base].icons, bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', layout: 'classic', barPos: 'bottom', look: '', menu: { map: true, quests: true, league: true, hangar: true }, focus: Object.assign({}, FC_DEF), welcome: Object.assign({}, WL_DEF), guide: Object.assign({}, GD_DEF), logos: JSON.parse(JSON.stringify(LG_DEF)), steps: JSON.parse(JSON.stringify(SD_DEF)), boxes: [], css: '', pcard: Object.assign({}, PC_DEF), wcard: Object.assign({}, WC_DEF), lens: { show: 'auto', size: 100, shape: 'round', x: 0, y: 0, ring: '' }, flow: { on: false, open: true, next: true, close: 4, readIntro: 4, readVideo: 10, vidFull: true }, show: { img: '', dim: 35, info: '', tab: '', corners: 'square' }, builtIn: false }, extra || {});
+  const newTheme = (base, extra) => Object.assign({ id: newId(), name: 'ערכה חדשה', base, mode: 'night', allowToggle: true, colors: {}, surf: { night: {}, day: {} }, fonts: { head: 'default', body: 'default', num: 'default' }, icons: BASES[base].icons, bg: { kind: 'look' }, stageBg: true, terms: {}, motion: 'full', layout: 'classic', barPos: 'bottom', look: '', menu: { map: true, quests: true, league: true, hangar: true, pos: 'auto', x: 0, y: 0, dir: 'col', size: 100, bg: '', fg: '' }, focus: Object.assign({}, FC_DEF), welcome: Object.assign({}, WL_DEF), guide: Object.assign({}, GD_DEF), logos: JSON.parse(JSON.stringify(LG_DEF)), steps: JSON.parse(JSON.stringify(SD_DEF)), boxes: [], css: '', pcard: Object.assign({}, PC_DEF), wcard: Object.assign({}, WC_DEF), lens: { show: 'auto', size: 100, shape: 'round', x: 0, y: 0, ring: '' }, flow: { on: false, open: true, next: true, close: 4, readIntro: 4, readVideo: 10, vidFull: true }, show: { img: '', dim: 35, info: '', tab: '', corners: 'square' }, builtIn: false }, extra || {});
   const defaultsOf = (id) => BUILT[id] ? newTheme(BUILT[id][0], { id, name: BUILT[id][1], builtIn: true }) : null;
   // the colours in use: the theme's own, else the style's (the extra roles follow the brand colours until they are set)
   const effColors = (t) => { const C = Object.assign({}, BASES[t.base].colors, t.colors || {}), M = moreColors(t.base, C); Object.keys(M).forEach(k => { if (!isHex(C[k] || '')) C[k] = M[k]; }); return C; };
@@ -493,6 +493,11 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   const sendGo = (node, jump) => { if (node) post({ type: 'g88-go', node, jump: !!jump }); };
   addEventListener('message', (ev) => {
     if (ev.origin !== location.origin || ev.source !== frame.contentWindow) return;
+    if (ev.data && ev.data.type === 'g88-mnpos' && ED && TAB === 'themes') {
+      const O = MN(D()); O.x = Math.max(-1200, Math.min(1200, Math.round(Number(ev.data.x) || 0))); O.y = Math.max(-800, Math.min(800, Math.round(Number(ev.data.y) || 0)));
+      ['x', 'y'].forEach(k => { const r = body.querySelector(`[data-mnr="${k}"]`), o = $('#mno-' + k); if (r) r.value = O[k]; if (o) o.textContent = O[k] + 'px'; });
+      touched(); return;
+    }
     if (ev.data && ev.data.type === 'g88-wcpos' && ED && TAB === 'themes') {
       // the exercise window was dragged in the preview
       const O = WC(D()); O.x = Math.max(-700, Math.min(700, Math.round(Number(ev.data.x) || 0))); O.y = Math.max(-400, Math.min(400, Math.round(Number(ev.data.y) || 0)));
@@ -723,6 +728,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
       ${range('auto', 'נסגר לבד אחרי (0 = רק בלחיצה)', 0, 60, 1, ' שניות')}
       <button class="st-link" type="button" data-wlreset>איפוס העיצוב (התוכן נשמר)</button>` : ''}`; };
 
+  const MN = (t) => (t.menu = Object.assign({ map: true, quests: true, league: true, hangar: true, pos: 'auto', x: 0, y: 0, dir: 'col', size: 100, bg: '', fg: '' }, t.menu || {}));
   const pvView = (v) => post({ type: 'g88-view', view: v });
   const LZD = (t) => Object.assign({ show: "auto", size: 100, shape: "round", x: 0, y: 0, ring: "" }, t.lens || {});
   const tile = (val, label, pv, sel, attr) => `<button class="bgt ${sel ? 'sel' : ''}" type="button" ${attr}="${esc(val)}" aria-pressed="${sel}"><span class="bgpv">${pv}</span><span class="bgl">${esc(label)}</span></button>`;
@@ -851,6 +857,16 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
       ${fold('menu', 'תפריט הצד', (() => { const M = d.menu || {}, off = ['map', 'quests', 'league', 'hangar'].filter(k => M[k] === false).length; return off ? (off === 4 ? 'רק "איך לומדים?" ויציאה' : off + ' כפתורים מוסתרים') : 'כל הכפתורים'; })())}
         <p class="st-hint" style="margin:0">אילו כפתורים מופיעים בתפריט של התלמיד. "איך לומדים?" ו"יציאה" תמיד נשארים.</p>
         ${[['map', 'מסלול'], ['quests', 'משימות / אתגרים'], ['league', 'ליגה'], ['hangar', 'האנגר / סדנה']].map(([k, l]) => `<label class="st-check"><input type="checkbox" data-menu="${k}" ${(d.menu || {})[k] !== false ? 'checked' : ''}> ${l}</label>`).join('')}
+        ${(() => { const M = Object.assign({ pos: 'auto', x: 0, y: 0, dir: 'col', size: 100, bg: '', fg: '' }, d.menu || {}), seg = (k, v, l) => `<button type="button" data-mnp="${k}" data-mnv="${v}" class="${String(M[k]) === v ? 'on' : ''}" aria-pressed="${String(M[k]) === v}">${l}</button>`;
+          const range = (k, l, lo, hi, st, u) => `<label class="st-field">${l} · <output id="mno-${k}">${M[k]}${u}</output><input type="range" min="${lo}" max="${hi}" step="${st}" value="${M[k]}" data-mnr="${k}" data-unit="${u}" aria-label="${l}"></label>`;
+          return `<h3 class="st-h3">מיקום התפריט במחשב</h3>
+          <div class="st-seg" role="group" aria-label="מיקום">${seg('pos', 'auto', 'כרגיל (ימין)')}${seg('pos', 'tl', 'למעלה משמאל')}${seg('pos', 'tc', 'למעלה באמצע')}${seg('pos', 'bl', 'למטה משמאל')}${seg('pos', 'br', 'למטה מימין')}</div>
+          ${range('x', 'הזזה לצדדים', -1200, 1200, 10, 'px')}${range('y', 'הזזה למעלה ולמטה', -800, 800, 10, 'px')}
+          <p class="st-hint" style="margin:0">אפשר גם לגרור: בתצוגה המקדימה (במחשב) יש לתפריט ידית ✥. תופסים וגוררים למקום. בטלפון התפריט נשאר בבר התחתון.</p>
+          <div class="st-seg" role="group" aria-label="סידור">${seg('dir', 'col', 'אחד מתחת לשני')}${seg('dir', 'row', 'אחד ליד השני')}</div>
+          ${range('size', 'גודל', 70, 160, 5, '%')}
+          <div class="st-colors">${colorRow('mn-bg', 'רקע "איך לומדים?" ו"יציאה"', 'בלי צבע = שקוף · ↺ מוחק', M.bg || '#1b2a55', !!M.bg)}${colorRow('mn-fg', 'טקסט "איך לומדים?" ו"יציאה"', '↺ מחזיר לצבע של הסגנון', M.fg || '#ffffff', !!M.fg)}</div>
+          <button class="st-link" type="button" data-mnreset>החזרת התפריט למקומו</button>`; })()}
       </div></details>
       ${fold('motion', 'תנועה', d.motion === 'calm' ? 'מופחתות' : 'מלאות', '')}
         <div class="st-seg" role="group" aria-label="אנימציות"><button type="button" data-motion="full" class="${d.motion !== 'calm' ? 'on' : ''}" aria-pressed="${d.motion !== 'calm'}">אנימציות מלאות</button><button type="button" data-motion="calm" class="${d.motion === 'calm' ? 'on' : ''}" aria-pressed="${d.motion === 'calm'}">מופחתות</button></div>
@@ -1001,6 +1017,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     else if (k.indexOf('gd-') === 0) GDM(d)[k.slice(3)] = v;
     else if (k.indexOf('wl-') === 0) WLM(d)[k.slice(3)] = v;
     else if (k.indexOf('fc-') === 0) FCM(d)[k.slice(3)] = v;
+    else if (k.indexOf('mn-') === 0) MN(d)[k.slice(3)] = v;
     else if (k.indexOf('pc-') === 0) PC(d)[k.slice(3)] = v;
     else if (k.indexOf('wc-') === 0) WC(d)[k.slice(3)] = v;
     else if (k === 'shinfo' || k === 'shtab') SH(d)[k === 'shinfo' ? 'info' : 'tab'] = v;
@@ -1311,6 +1328,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     if (ds.reset && ds.reset.indexOf('fc-') === 0) { FCM(d)[ds.reset.slice(3)] = ''; redraw(); return; }
     if (ds.fc) { FCM(d)[ds.fc] = ds.fcv; redraw(); pvView('map'); return; }
     if ('fcreset' in ds) { d.focus = Object.assign({}, FC_DEF); redraw(); return; }
+    if (ds.reset && ds.reset.indexOf('mn-') === 0) { MN(d)[ds.reset.slice(3)] = ''; redraw(); return; }
+    if (ds.mnp) { MN(d)[ds.mnp] = ds.mnv; if (ds.mnp === 'pos') { d.menu.x = 0; d.menu.y = 0; } redraw(); pvView('map'); return; }
+    if ('mnreset' in ds) { Object.assign(MN(d), { pos: 'auto', x: 0, y: 0, dir: 'col', size: 100, bg: '', fg: '' }); redraw(); return; }
     if (ds.reset && ds.reset.indexOf('pc-') === 0) { PC(d)[ds.reset.slice(3)] = ''; redraw(); pvView('hangar'); return; }
     if (ds.reset && ds.reset.indexOf('wc-') === 0) { WC(d)[ds.reset.slice(3)] = ''; redraw(); pvView('map'); return; }
     if (ds.pc) { PC(d)[ds.pc] = ds.pcv; redraw(); pvView('hangar'); return; }
@@ -1345,6 +1365,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     if (t.dataset.bxc != null) { const b = BOXES(d)[+t.dataset.bxc]; if (b) { b[t.dataset.bxk] = t.checked; sendTheme(); touched(); } return; }
     if ('css' in t.dataset) { d.css = t.value.slice(0, 20000); clearTimeout(termTimer); termTimer = setTimeout(sendTheme, 400); touched(); return; }
     if (t.dataset.menu) { d.menu = Object.assign({ map: true, quests: true, league: true, hangar: true }, d.menu || {}); d.menu[t.dataset.menu] = t.checked; redraw(); return; }
+    if (t.dataset.mnr) { const O = MN(d), k = t.dataset.mnr; O[k] = Number(t.value) || 0; const o = $('#mno-' + k); if (o) o.textContent = O[k] + t.dataset.unit; sendTheme(); touched(); return; }
     if (t.dataset.fcr) { const O = FCM(d), k = t.dataset.fcr; O[k] = Number(t.value) || 0; const o = $('#fco-' + k); if (o) o.textContent = O[k] + t.dataset.unit; sendTheme(); touched(); return; }
     if (t.dataset.fcb) { FCM(d)[t.dataset.fcb] = t.checked; redraw(); return; }
     if (t.dataset.fct) { FCM(d)[t.dataset.fct] = t.value; clearTimeout(termTimer); termTimer = setTimeout(sendTheme, 300); touched(); return; }
