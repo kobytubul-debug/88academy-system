@@ -2566,6 +2566,26 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 #fbar.at-bottom { top: auto; bottom: 20px; }
 @media (min-width: 900px) { #app.fbar-bottom.lfocus .slide.fc > .sbody { padding-top: 96px; padding-bottom: 96px; } }
 @media (min-width: 900px) { #app.fbar-left.lfocus .slide.fc > .sbody { padding-left: max(205px, var(--fl-w, 280px)); } }
+
+/* ================= the side menu: placed anywhere (design page), wide screens ================= */
+.mn-grip { display: none; }
+@media (min-width: 900px) {
+  #app.mn-move > .tabs { translate: var(--mn-x, 0) var(--mn-y, 0); z-index: 31; }
+  #app.mn-free > .tabs { position: absolute; width: auto; padding: 0; }
+  #app.mn-tr > .tabs { top: 96px; right: 24px; left: auto; bottom: auto; }
+  #app.mn-tl > .tabs { top: 96px; left: 24px; right: auto; bottom: auto; }
+  #app.mn-tc > .tabs { top: 96px; left: 50%; right: auto; bottom: auto; translate: calc(-50% + var(--mn-x, 0px)) var(--mn-y, 0); }
+  #app.mn-br > .tabs { bottom: 24px; right: 24px; top: auto; left: auto; }
+  #app.mn-bl > .tabs { bottom: 24px; left: 24px; top: auto; right: auto; }
+  #app.mn-row > .tabs { flex-direction: row; align-items: center; flex-wrap: nowrap; width: max-content; }
+  #app > .tabs .tab { font-size: calc(1em * var(--mn-s, 1)); }
+  #app > .tabs .tab-out, #app > .tabs .tab-help { font-size: calc(15px * var(--mn-s, 1)); }
+  #app.mn-cbg > .tabs .tab-out, #app.mn-cbg > .tabs .tab-help { background: var(--mn-bg) !important; padding: 0 18px; border-radius: 12px; box-shadow: none; }
+  #app.mn-cfg > .tabs .tab-out, #app.mn-cfg > .tabs .tab-help { color: var(--mn-fg) !important; }
+  .mn-grip { display: grid; place-items: center; align-self: center; width: 44px; height: 26px; border: 0; border-radius: 99px; cursor: grab; font-size: 16px; background: color-mix(in srgb, var(--white) 22%, transparent); color: var(--white); touch-action: none; order: -1; }
+  #app.mn-dragging .mn-grip { cursor: grabbing; background: var(--gold); color: var(--ink, #0B1513); }
+  #app.mn-dragging > .tabs { outline: 2px dashed var(--gold); outline-offset: 6px; transition: none; }
+}
 </style>
 </head>
 <body>
@@ -3495,7 +3515,7 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     const a = app.getBoundingClientRect(), X = Number(F.lX) || 0, Y = Number(F.lY) || 0, Hp = Math.max(20, Math.min(100, Number(F.lH) || 100)) / 100;
     if (col) {
       let top = 96, w = Number(F.lW) || 0, edge = 24;
-      if (pos === 'side' && tabs) {
+      if (pos === 'side' && tabs && !app.classList.contains('mn-move')) {
         // under the side menu: below its lowest visible button (the exit included)
         const vis = [...tabs.children].filter(x => x.offsetWidth > 0 && getComputedStyle(x).display !== 'none');
         top = Math.max(...vis.map(x => x.getBoundingClientRect().bottom), tabs.getBoundingClientRect().top) - a.top + 10;
@@ -4418,6 +4438,10 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
     renderBoxes(t);
     renderLogos(t);
     // the side menu's buttons (design page): each can be hidden; "how we learn" and "exit" always stay
+    { const M = t.menu || {}, free = !!(M.pos && M.pos !== 'auto');
+      app.classList.toggle('mn-free', free); ['tr', 'tl', 'tc', 'br', 'bl'].forEach(p => app.classList.toggle('mn-' + p, M.pos === p)); app.classList.toggle('mn-row', M.dir === 'row');
+      app.classList.toggle('mn-move', free || !!Number(M.x) || !!Number(M.y)); set('--mn-x', (Number(M.x) || 0) + 'px'); set('--mn-y', (Number(M.y) || 0) + 'px'); set('--mn-s', String((Number(M.size) || 100) / 100));
+      ['bg', 'fg'].forEach(k => { if (isHex(M[k] || '')) set('--mn-' + k, M[k]); else app.style.removeProperty('--mn-' + k); app.classList.toggle('mn-c' + k, isHex(M[k] || '')); }); }
     { const M = t.menu || {}; ['map', 'quests', 'league', 'hangar'].forEach(k => { const b = document.querySelector(`.tabs .tab[data-v="${k}"]`); if (b) b.classList.toggle('mn-off', M[k] === false); }); setTimeout(() => { placeFbar(); placeBoxes(); }, 0); }
     // the one-mission layout
     app.classList.toggle('lfocus', t.layout === 'focus');
@@ -4543,6 +4567,17 @@ a.lg:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       A.data.progress.introSeen = true; A.request('POST', '/api/intro-seen', {}); closeSheet();
     });
 
+  // the design page's preview: the side menu can be dragged anywhere (wide screens); its offset goes back to the design page
+  if (PREVIEW) {
+    const nav = app.querySelector(':scope > .tabs'); let md = null;
+    if (nav) {
+      const g = document.createElement('button'); g.type = 'button'; g.className = 'mn-grip'; g.textContent = '✥'; g.setAttribute('aria-label', 'גרירת התפריט'); nav.prepend(g);
+      g.addEventListener('pointerdown', (e) => { if (innerWidth < 900) return; e.preventDefault(); e.stopPropagation(); const cs = getComputedStyle(app); md = { sx: e.clientX, sy: e.clientY, x: parseFloat(cs.getPropertyValue('--mn-x')) || 0, y: parseFloat(cs.getPropertyValue('--mn-y')) || 0 }; g.setPointerCapture && g.setPointerCapture(e.pointerId); app.classList.add('mn-move', 'mn-dragging'); });
+      document.addEventListener('pointermove', (e) => { if (!md) return; md.nx = Math.max(-1200, Math.min(1200, Math.round(md.x + e.clientX - md.sx))); md.ny = Math.max(-800, Math.min(800, Math.round(md.y + e.clientY - md.sy))); app.style.setProperty('--mn-x', md.nx + 'px'); app.style.setProperty('--mn-y', md.ny + 'px'); placeFbar(); });
+      const end = () => { if (!md) return; const d0 = md; md = null; app.classList.remove('mn-dragging'); if (d0.nx == null) return; if (ACTIVE) ACTIVE.menu = Object.assign({}, ACTIVE.menu, { x: d0.nx, y: d0.ny }); try { parent.postMessage({ type: 'g88-mnpos', x: d0.nx, y: d0.ny }, location.origin); } catch (er) {} };
+      document.addEventListener('pointerup', end); document.addEventListener('pointercancel', end);
+    }
+  }
   // the design page's preview: the exercise window can be dragged to its place (wide screens); the place goes back to the design page
   if (PREVIEW) {
     let drag = null;

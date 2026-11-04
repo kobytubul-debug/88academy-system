@@ -294,7 +294,10 @@ function cleanTheme(t) {
       ['barBg', 'chipBg', 'chipFg', 'curBg', 'curFg', 'okBg', 'okFg', 'rLineC', 'rDot', 'rOk', 'rCur', 'rText', 'navBg', 'navFg'].forEach((k) => { o[k] = hexOk(c[k]) ? String(c[k]).toLowerCase() : ''; });
       return o; })(),
     // which buttons the side menu shows (how-we-learn and exit always stay)
-    menu: (() => { const m = t.menu && typeof t.menu === 'object' ? t.menu : {}; return { map: m.map !== false, quests: m.quests !== false, league: m.league !== false, hangar: m.hangar !== false }; })(),
+    menu: (() => { const m = t.menu && typeof t.menu === 'object' ? t.menu : {}; const num = (v, lo, hi, d) => { const n = Math.round(Number(v)); return Number.isFinite(n) && v !== '' && v != null ? Math.max(lo, Math.min(hi, n)) : d; };
+      return { map: m.map !== false, quests: m.quests !== false, league: m.league !== false, hangar: m.hangar !== false,
+        pos: ['auto', 'tr', 'tl', 'tc', 'br', 'bl'].indexOf(m.pos) !== -1 ? m.pos : 'auto', x: num(m.x, -1200, 1200, 0), y: num(m.y, -800, 800, 0), dir: m.dir === 'row' ? 'row' : 'col', size: num(m.size, 70, 160, 100),
+        bg: hexOk(m.bg) ? String(m.bg).toLowerCase() : '', fg: hexOk(m.fg) ? String(m.fg).toLowerCase() : '' }; })(),
     // the bottom bar's default place: a row at the bottom, or a list under the side menu (the student can switch)
     barPos: t.barPos === 'side' ? 'side' : 'bottom',
     // the automatic flow: open the waiting step on arrival, move on after sending, close messages after some seconds
