@@ -82,7 +82,8 @@ body.hudoff #menuBtn{opacity:0;pointer-events:none}
 #nxGuide button{background:var(--ac);color:var(--bg);border:0;padding:12px 26px;font:700 18px var(--ui);cursor:pointer;border-radius:6px}
 #nxGuideBtn{display:none;position:fixed;right:190px;bottom:14px;z-index:30;width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.14);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);color:#fff;border:0;font:700 24px var(--ui);cursor:pointer}
 #nxHint{display:none;position:fixed;left:50%;top:70px;transform:translateX(-50%);z-index:40;max-width:min(720px,90vw);background:rgba(8,10,14,.78);color:#fff;border:1px solid var(--ac);border-radius:8px;padding:10px 20px;font:600 22px/1.4 var(--ui);text-align:center;pointer-events:none}
-body.hudoff #nxHint{opacity:0}
+#nxCoach{display:none;position:fixed;left:50%;top:128px;transform:translateX(-50%);z-index:40;max-width:min(760px,92vw);background:rgba(8,10,14,.7);color:var(--ac);border-radius:6px;padding:6px 16px;font:600 17px/1.4 var(--ui);text-align:center;pointer-events:none}
+body.hudoff #nxHint,body.hudoff #nxCoach{opacity:0}
 body.hudoff #nxGuideBtn{opacity:0;pointer-events:none}
 body.ed-on #nxGuideBtn{display:none!important}
 #menuBtn{position:fixed;right:18px;bottom:14px;z-index:30;background:rgba(255,255,255,.14);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);color:#fff;border:0;padding:14px 22px;min-width:150px;font:600 19px var(--ui);letter-spacing:.06em;border-radius:0;cursor:pointer;display:none;align-items:center;justify-content:center;gap:12px}
@@ -896,7 +897,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
   <div id="editBadge">מצב עריכה &mdash; לחץ על שער לבחירה &middot; גרור לסיבוב &middot; גלגלת לזום &middot; Esc ליציאה</div>
 </div>
 
-<div id="nxGuide" dir="rtl"><div class="gbox"><div class="gk" id="nxGuideK"></div><h2 id="nxGuideT"></h2><ol id="nxGuideL"></ol><button id="nxGuideOk">הבנתי, מתחילים</button></div></div><div id="nxHint" dir="rtl"></div><button id="nxGuideBtn" title="הסבר על השלב">?</button>
+<div id="nxGuide" dir="rtl"><div class="gbox"><div class="gk" id="nxGuideK"></div><h2 id="nxGuideT"></h2><ol id="nxGuideL"></ol><button id="nxGuideOk">הבנתי, מתחילים</button></div></div><div id="nxHint" dir="rtl"></div><div id="nxCoach" dir="rtl"></div><button id="nxGuideBtn" title="הסבר על השלב">?</button>
 <button id="menuBtn"><span>תפריט</span><span class="mi">&#9776;</span></button>
 
 <!-- ============ In-game tools / editor panel ============ -->
@@ -1216,7 +1217,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 204</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 205</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -9087,7 +9088,17 @@ function nxGuideOf(id) {
   const lines = (v) => String(v || '').split('\n').map((x) => x.trim()).filter(Boolean);
   const steps = lines(g.text), fly = lines(g.fly);
   if (!steps.length && !fly.length) return null;
-  return { title: String(g.title || '').trim() || (STAGES[id] ? STAGES[id].name : ''), steps, fly, race: !!g.race };
+  return { title: String(g.title || '').trim() || (STAGES[id] ? STAGES[id].name : ''), steps, fly, race: !!g.race, live: !!g.live };
+}
+function nxCoachText() {                                         // live feedback toward the next gate: direction, height, distance
+  const gt = gates[seq % gates.length]; if (!gt || !drone) return '';
+  if (drone.onGround) return 'הרחפן על הקרקע: הגבר מצערת לאט (W) כדי להתרומם';
+  const hx = gt.x - drone.pos.x, hz = gt.z - drone.pos.z, dy = gt.y - drone.pos.y, dist = Math.round(Math.sqrt(hx * hx + hz * hz));
+  const q = drone.quat, f = { x: -2 * (q.x * q.z + q.w * q.y), z: -(1 - 2 * (q.x * q.x + q.y * q.y)) }, fl = Math.sqrt(f.x * f.x + f.z * f.z) || 1, fx = f.x / fl, fz = f.z / fl;   // nose direction on the ground plane
+  const ang = Math.atan2(hx * -fz + hz * fx, hx * fx + hz * fz) * 180 / Math.PI;
+  const dir = ang > 15 ? 'הטבעת מימין: סובב ימינה (D)' : ang < -15 ? 'הטבעת משמאל: סובב שמאלה (A)' : 'הכיוון טוב';
+  const alt = dy > 2.5 ? 'הטבעת גבוהה יותר: הוסף מעט מצערת (W)' : dy < -2.5 ? 'הטבעת נמוכה יותר: הורד מעט (S)' : 'הגובה טוב';
+  return dir + '  \u00b7  ' + alt + '  \u00b7  ' + dist + ' מ\u2019 לטבעת';
 }
 let nxGuideIsOpen = false;
 function nxGuideShow(id) {
@@ -9139,6 +9150,13 @@ function nxGuideSeen(id, set) {
       if (g && g.fly.length) txt = g.fly[Math.min(state === 'racing' ? seq : 0, g.fly.length - 1)];
     }
     if (hb.dataset.t !== txt) { hb.dataset.t = txt; hb.textContent = txt; hb.style.display = txt ? 'block' : 'none'; }
+    const cb = $('nxCoach'); if (!cb) return;
+    let co = '';
+    if (state === 'racing' && currentStage && !inMenu && !editorMode && !nxGuideIsOpen && gates.length) {
+      const g = nxGuideOf(currentStage.id);
+      if (g && g.live) co = nxCoachText();
+    }
+    if (cb.dataset.t !== co) { cb.dataset.t = co; cb.textContent = co; cb.style.display = co ? 'block' : 'none'; }
   }, 250);
   const gm = goMenu;
   goMenu = function (screen) { nxGuideClose(); btn.style.display = 'none'; gm(screen); };
@@ -9152,27 +9170,28 @@ function nxGuidesEditor(ids) {
       nxF('כותרת', '<input type="text" maxlength="60" data-k="guides.' + k + '.title" value="' + nxEsc(g.title || '') + '" placeholder="ברירת מחדל: שם המסלול">') +
       nxF('צעדים (שורה = צעד)', '<textarea rows="6" style="width:100%" data-k="guides.' + k + '.text" placeholder="לדוגמה:&#10;מגבירים גז לאט עד שהרחפן מתרומם">' + nxEsc(g.text || '') + '</textarea>') +
       nxF('הוראות בזמן הטיסה (שורה לכל שער)', '<textarea rows="5" style="width:100%" data-k="guides.' + k + '.fly" placeholder="השורה הראשונה מוצגת עד השער הראשון, השנייה אחרי שעברו שער אחד, וכן הלאה">' + nxEsc(g.fly || '') + '</textarea>') +
+      nxF('משוב חי בזמן הטיסה (כיוון, גובה ומרחק לטבעת)', '<input type="checkbox" data-k="guides.' + k + '.live"' + (g.live ? ' checked' : '') + '>') +
       nxF('התחל מרוץ אוטומטית אחרי הכרטיס', '<input type="checkbox" data-k="guides.' + k + '.race"' + (g.race ? ' checked' : '') + '>') +
       nxF('הסתר את הכרטיס', '<input type="checkbox" data-k="guides.' + k + '.off"' + (g.off ? ' checked' : '') + '>') + '</details>';
   });
   return h;
 }
 const NX_LEARN = [
-  { name: 'שלב 1: המראה וטיסה ישרה', title: 'המראה וטיסה ישרה', fly: 'מגבירים גז לאט (W) עד שהרחפן מתרומם, ומכוונים אל הטבעת הראשונה\nיפה. ממשיכים ישר לטבעת הבאה, תיקונים קטנים בלבד\nטוב מאוד. שומרים על הכיוון ועל הגובה\nהטבעת האחרונה. ישר דרכה וסיימת',
+  { name: 'שלב 1: המראה וטיסה ישרה', title: 'המראה וטיסה ישרה', fly: 'הרם גז לאט (W) עד שהרחפן מתרומם. המצערת היא כוח ההרמה. מכוונים אל הטבעת הראשונה\nעברת שער! עכשיו שומרים את האף ישר מול הטבעת הבאה. תנועות קטנות מייצבות\nתיקון קטן ימינה או שמאלה עדיף על תיקון גדול. נשארים רגועים\nהטבעת האחרונה. ישר דרכה והשלב נגמר',
     text: 'מחזיקים את המצערת (W) לחוצה קצת, עד שהרחפן מתרומם מהקרקע. אל תמהרו, תנועה איטית ועדינה.\nכשהרחפן באוויר, מייצבים אותו בגובה של כמה מטרים.\nמכוונים את האף אל הטבעת הראשונה ומקדימה (חץ למעלה) טסים ישר דרכה.\nאם הרחפן סוטה לצד, מתקנים בעדינות עם החצים ימינה או שמאלה.\nממשיכים דרך כל הטבעות עד הסוף.',
     gates: [[-100, 8, 0, -90], [-40, 8, 0, -90], [20, 8, 0, -90], [80, 8, 0, -90]] },
-  { name: 'שלב 2: פניות', title: 'איך מסתובבים', fly: 'מתחילים בישר אל הטבעת הראשונה\nעוד טבעת ישרה, ומאטים לקראת הפנייה\nפנייה: מאטים, ומסובבים עם A או D אל הטבעת הבאה\nמיישרים את האף וממשיכים ישר\nמתקרבים לפנייה השנייה: מאטים\nמסובבים אל הטבעת האחרונה וממשיכים',
+  { name: 'שלב 2: פניות', title: 'איך מסתובבים', fly: 'מכוונים ישר אל הטבעת הראשונה\nהפנייה מתקרבת. מאטים עכשיו, כי קשה לפנות במהירות גבוהה\nפנייה: מסובבים עם A או D עד שהאף מול הטבעת הבאה, ואז מיישרים\nהאף מול הטבעת? ממשיכים ישר. פנייה טובה נגמרת בקו ישר\nפנייה שנייה מתקרבת: מאטים שוב ופונים בעדינות\nמכוונים אל הטבעת האחרונה וממשיכים עד הסוף',
     text: 'מאטים לפני הפנייה: מקטינים את החץ קדימה.\nמסובבים את האף לכיוון הבא עם A (שמאלה) או D (ימינה).\nבזמן הפנייה ממשיכים קדימה לאט, לא מגבירים מהר.\nכשהאף מכוון לטבעת הבאה, מיישרים וממשיכים ישר.\nעוברים את כל הטבעות, פנייה אחר פנייה.',
     gates: [[-100, 8, 40, 0], [-100, 8, -30, 0], [-75, 8, -85, 315], [-20, 8, -110, 270], [50, 8, -110, 270], [95, 8, -80, 225]] },
-  { name: 'שלב 3: שמירה על גובה', title: 'איך שומרים על גובה', fly: 'עולים לגובה הטבעת הראשונה ומייצבים\nאם הרחפן יורד, מוסיפים מעט מצערת (W)\nאם הוא עולה, מורידים מעט (S)\nהטבעת האחרונה, שומרים על אותו גובה',
+  { name: 'שלב 3: שמירה על גובה', title: 'איך שומרים על גובה', fly: 'עולים לגובה הטבעת הראשונה ומייצבים. המצערת מכוונת את הגובה\nאם הרחפן יורד, מוסיפים מעט מצערת (W) לפני שהוא נופל\nאם הוא עולה, מורידים מעט (S). תיקון קטן מספיק\nהטבעת האחרונה. שומרים על אותו גובה עד הסוף',
     text: 'המצערת (W ו-S) היא מה ששומר על הגובה.\nאם הרחפן יורד, מוסיפים מעט מצערת (W). אם הוא עולה, מורידים מעט (S).\nעושים תיקונים קטנים ולא חדים. תיקון גדול גורם לקפיצות.\nמנסים לעבור בכל הטבעות באותו גובה, בלי לעלות ולרדת.',
     gates: [[-80, 15, 0, -90], [-20, 15, 0, -90], [40, 15, 0, -90], [100, 15, 0, -90]] }
 ];
 function nxMakeLearnCourse() {
   const D = NX.draft; D.courses = D.courses || {}; D.guides = D.guides || {};
   if (D.courses.cLearn1) {                                         // already created: fill in the in-flight hints of its tracks
-    let n = 0; (D.courses.cLearn1.stages || []).forEach((st, i) => { const id = st.tracks && st.tracks[0], L = NX_LEARN[i]; if (id && L) { const g = D.guides[id] = D.guides[id] || { title: L.title, text: L.text }; if (!g.fly) { g.fly = L.fly; n++; } if (g.race === undefined) g.race = true; } });
-    nxTouch(); nxAdmRender(); nxToast(n ? 'נוספו הוראות טיסה ל-' + n + ' שלבים. לחץ "שמור ופרסם"' : 'הקורס כבר קיים ויש בו הוראות טיסה'); return;
+    let n = 0; (D.courses.cLearn1.stages || []).forEach((st, i) => { const id = st.tracks && st.tracks[0], L = NX_LEARN[i]; if (id && L) { const g = D.guides[id] = D.guides[id] || { title: L.title, text: L.text }; if (g.flyV !== 2) { g.fly = L.fly; g.flyV = 2; n++; } if (g.race === undefined) g.race = true; if (g.live === undefined) g.live = true; } });
+    nxTouch(); nxAdmRender(); nxToast(n ? 'עודכנו הוראות הטיסה והמשוב החי ב-' + n + ' שלבים. לחץ "שמור ופרסם"' : 'הקורס כבר מעודכן'); return;
   }
   const stages = [];
   NX_LEARN.forEach((L) => {
@@ -9180,7 +9199,7 @@ function nxMakeLearnCourse() {
     const id = 'custom' + n;
     registerCustom({ id, num: 3 + CUSTOM_ORDER.length + 1, name: L.name, base: 'clean', laps: 1,
       gates: L.gates.map((g) => ({ k: 'ring', sz: 1.8, x: g[0], y: g[1], z: g[2], yaw: g[3], pitch: 0 })) });
-    D.guides[id] = { title: L.title, text: L.text, fly: L.fly, race: true };
+    D.guides[id] = { title: L.title, text: L.text, fly: L.fly, race: true, live: true, flyV: 2 };
     stages.push({ name: L.name, on: true, tracks: [id], exam: '', pass: { t: 0, c: -1, s: 0 } });
   });
   const ids = stages.map((x) => x.tracks[0]), tc = D.tcats = D.tcats || { cats: {}, of: {} };
