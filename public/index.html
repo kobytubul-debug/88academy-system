@@ -48,8 +48,9 @@ body.hudoff #menuBtn{opacity:0;pointer-events:none}
 #tiltPop.on{opacity:1;transition:none}
 #tiltPop .tl{display:block;font-size:15px;letter-spacing:.14em;color:#c4c9cf}
 #tiltPop b{font-size:56px;font-weight:700;color:#fff;line-height:1.1}
-#flash{position:absolute;left:50%;top:22%;transform:translateX(-50%);font-size:24px;color:#fff;opacity:0;transition:opacity .5s;white-space:nowrap;font-family:var(--mono),var(--ui)}
-#flash.on{opacity:1;transition:none}
+#flash{position:absolute;left:50%;top:34%;transform:translateX(-50%);font:900 italic 38px var(--ui);letter-spacing:.06em;color:#fff;opacity:0;transition:opacity .5s;white-space:nowrap;-webkit-text-stroke:2px rgba(4,7,11,.85);paint-order:stroke fill;text-shadow:0 0 18px currentColor,0 3px 0 rgba(0,0,0,.55)}
+#flash.on{opacity:1;transition:none;animation:nxFlash .38s cubic-bezier(.2,1.6,.4,1)}
+@keyframes nxFlash{0%{opacity:0;transform:translateX(-50%) scale(.55)}55%{opacity:1;transform:translateX(-50%) scale(1.22)}100%{transform:translateX(-50%) scale(1)}}
 #countdown{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);opacity:0;font-family:var(--mono),var(--ui);text-align:center;pointer-events:none}
 .cdrow{display:flex;gap:22px;justify-content:center;margin-bottom:14px;padding:12px 22px;background:rgba(10,11,13,.78);border:1px solid #3a3f47;border-radius:40px;width:max-content;margin-left:auto;margin-right:auto}
 .cdl{width:46px;height:46px;border-radius:50%;background:var(--p1);border:2px solid #34383f;box-shadow:inset 0 0 8px #000}
@@ -81,8 +82,17 @@ body.hudoff #menuBtn{opacity:0;pointer-events:none}
 #nxGuide li:before{content:counter(g);flex:0 0 30px;height:30px;border-radius:50%;background:var(--ac);color:var(--bg);font:700 16px/30px var(--ui);text-align:center}
 #nxGuide button{background:var(--ac);color:var(--bg);border:0;padding:12px 26px;font:700 18px var(--ui);cursor:pointer;border-radius:6px}
 #nxGuideBtn{display:none;position:fixed;right:190px;bottom:14px;z-index:30;width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.14);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);color:#fff;border:0;font:700 24px var(--ui);cursor:pointer}
-#nxHint{display:none;position:fixed;left:50%;top:70px;transform:translateX(-50%);z-index:40;max-width:min(720px,90vw);background:rgba(8,10,14,.78);color:#fff;border:1px solid var(--ac);border-radius:8px;padding:10px 20px;font:600 22px/1.4 var(--ui);text-align:center;pointer-events:none}
-#nxCoach{display:none;position:fixed;left:50%;top:128px;transform:translateX(-50%);z-index:40;max-width:min(760px,92vw);background:rgba(8,10,14,.7);color:var(--ac);border-radius:6px;padding:6px 16px;font:600 17px/1.4 var(--ui);text-align:center;pointer-events:none}
+#nxHint{display:none;position:fixed;left:50%;top:66px;transform:translateX(-50%) skewX(-8deg);z-index:40;max-width:min(760px,92vw);background:linear-gradient(180deg,rgba(18,24,32,.9),rgba(6,9,13,.92));color:#fff;border-inline-start:7px solid var(--ac);border-top:2px solid rgba(255,255,255,.18);border-bottom:2px solid var(--ac);padding:11px 30px;text-align:center;pointer-events:none;box-shadow:0 8px 28px rgba(0,0,0,.55),0 0 22px color-mix(in srgb,var(--ac) 45%,transparent)}
+#nxHint span{display:inline-block;transform:skewX(8deg);font:800 italic 23px/1.35 var(--ui);letter-spacing:.02em;text-shadow:0 2px 0 rgba(0,0,0,.6),0 0 14px color-mix(in srgb,var(--ac) 60%,transparent)}
+#nxHint.pop{animation:nxPop .42s cubic-bezier(.2,1.5,.4,1)}
+@keyframes nxPop{0%{opacity:0;transform:translateX(-50%) skewX(-8deg) translateY(-18px) scale(.82)}60%{opacity:1;transform:translateX(-50%) skewX(-8deg) translateY(3px) scale(1.05)}100%{transform:translateX(-50%) skewX(-8deg)}}
+#nxCoach{display:none;position:fixed;left:50%;top:172px;transform:translateX(-50%);z-index:40;gap:8px;align-items:stretch;justify-content:center;flex-wrap:wrap;max-width:min(900px,94vw);pointer-events:none}
+#nxCoach .cc{display:flex;align-items:center;gap:8px;transform:skewX(-8deg);background:rgba(8,11,16,.8);border-inline-start:5px solid var(--ac);padding:5px 14px;font:700 16px var(--ui);color:#fff;font-style:normal;box-shadow:0 4px 14px rgba(0,0,0,.45)}
+#nxCoach .cc>*{transform:skewX(8deg)}
+#nxCoach .cc u{text-decoration:none;display:inline-block;min-width:22px;height:22px;line-height:22px;border-radius:50%;text-align:center;font-size:13px;background:var(--ac);color:#06090d}
+#nxCoach .cc.ok{border-inline-start-color:#5fd08a;color:#bff3d2}#nxCoach .cc.ok u{background:#5fd08a}
+#nxCoach .cc.go{border-inline-start-color:#ffb340;color:#ffe2a8;animation:nxNudge .9s ease-in-out infinite}#nxCoach .cc.go u{background:#ffb340}
+@keyframes nxNudge{0%,100%{box-shadow:0 4px 14px rgba(0,0,0,.45),0 0 0 rgba(255,179,64,0)}50%{box-shadow:0 4px 14px rgba(0,0,0,.45),0 0 16px rgba(255,179,64,.7)}}
 body.hudoff #nxHint,body.hudoff #nxCoach{opacity:0}
 body.hudoff #nxGuideBtn{opacity:0;pointer-events:none}
 body.ed-on #nxGuideBtn{display:none!important}
@@ -1217,7 +1227,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 205</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 206</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -2231,18 +2241,19 @@ const COL = {
   sel: new THREE.Color(0xe6b450)
 };
 
-function makeLabelTexture(n) {
+function makeLabelTexture(n) {                                   // game-style numeral: no frame, chunky italic with a bright gradient, dark outline and a soft glow
   const cv = document.createElement('canvas');
   cv.width = cv.height = 128;
-  const g = cv.getContext('2d');
-  g.fillStyle = 'rgba(14,16,19,0.82)';
-  g.fillRect(14, 14, 100, 100);
-  g.lineWidth = 4; g.strokeStyle = '#c9ced4';
-  g.strokeRect(14, 14, 100, 100);
-  g.fillStyle = '#ffffff';
-  g.font = '700 62px "Share Tech Mono", Consolas, "Courier New", monospace';
-  g.textAlign = 'center'; g.textBaseline = 'middle';
-  g.fillText(String(n), 64, 68);
+  const g = cv.getContext('2d'), t = String(n), fs = t.length > 2 ? 62 : t.length > 1 ? 80 : 96;
+  g.font = 'italic 900 ' + fs + 'px Impact, "Arial Black", "Share Tech Mono", sans-serif';
+  g.textAlign = 'center'; g.textBaseline = 'middle'; g.lineJoin = 'round';
+  g.shadowColor = 'rgba(76,195,230,0.95)'; g.shadowBlur = 18;
+  g.lineWidth = 14; g.strokeStyle = 'rgba(6,10,16,0.92)'; g.strokeText(t, 64, 68);
+  g.shadowBlur = 0;
+  const gr = g.createLinearGradient(0, 68 - fs / 2, 0, 68 + fs / 2);
+  gr.addColorStop(0, '#ffffff'); gr.addColorStop(0.55, '#ffe58a'); gr.addColorStop(1, '#ffb52e');
+  g.fillStyle = gr; g.fillText(t, 64, 68);
+  g.lineWidth = 2; g.strokeStyle = 'rgba(255,255,255,0.65)'; g.strokeText(t, 64, 68);
   return new THREE.CanvasTexture(cv);
 }
 
@@ -2327,7 +2338,7 @@ function buildGateObj(i, d) {
   grp.add(arrow);
   // number label
   const label = new THREE.Sprite(new THREE.SpriteMaterial({ map: makeLabelTexture(i + 1), transparent: true, depthTest: false }));
-  label.scale.set(1.3 * k, 1.3 * k, 1);
+  label.scale.set(1.55 * k, 1.55 * k, 1);
   label.position.set(0, oh + 1.5 * k, 0);
   label.renderOrder = 10;
   grp.add(label);
@@ -4491,6 +4502,7 @@ function showFlash(text, color) {
   const el = $('flash');
   el.textContent = text;
   el.style.color = color || '#5fd08a';
+  el.classList.remove('on'); void el.offsetWidth;                  // restart the pop-in animation
   el.classList.add('on');
   clearTimeout(flashTimer);
   flashTimer = setTimeout(() => el.classList.remove('on'), 700);
@@ -9090,16 +9102,17 @@ function nxGuideOf(id) {
   if (!steps.length && !fly.length) return null;
   return { title: String(g.title || '').trim() || (STAGES[id] ? STAGES[id].name : ''), steps, fly, race: !!g.race, live: !!g.live };
 }
-function nxCoachText() {                                         // live feedback toward the next gate: direction, height, distance
-  const gt = gates[seq % gates.length]; if (!gt || !drone) return '';
-  if (drone.onGround) return 'הרחפן על הקרקע: הגבר מצערת לאט (W) כדי להתרומם';
+function nxCoachParts() {                                        // live feedback toward the next gate: direction, height, distance
+  const gt = gates[seq % gates.length]; if (!gt || !drone) return [];
+  if (drone.onGround) return [{ ic: '\u21e7', t: 'הרחפן על הקרקע: הגבר מצערת לאט (W) כדי להתרומם', ok: false }];
   const hx = gt.x - drone.pos.x, hz = gt.z - drone.pos.z, dy = gt.y - drone.pos.y, dist = Math.round(Math.sqrt(hx * hx + hz * hz));
   const q = drone.quat, f = { x: -2 * (q.x * q.z + q.w * q.y), z: -(1 - 2 * (q.x * q.x + q.y * q.y)) }, fl = Math.sqrt(f.x * f.x + f.z * f.z) || 1, fx = f.x / fl, fz = f.z / fl;   // nose direction on the ground plane
   const ang = Math.atan2(hx * -fz + hz * fx, hx * fx + hz * fz) * 180 / Math.PI;
-  const dir = ang > 15 ? 'הטבעת מימין: סובב ימינה (D)' : ang < -15 ? 'הטבעת משמאל: סובב שמאלה (A)' : 'הכיוון טוב';
-  const alt = dy > 2.5 ? 'הטבעת גבוהה יותר: הוסף מעט מצערת (W)' : dy < -2.5 ? 'הטבעת נמוכה יותר: הורד מעט (S)' : 'הגובה טוב';
-  return dir + '  \u00b7  ' + alt + '  \u00b7  ' + dist + ' מ\u2019 לטבעת';
+  const dir = ang > 15 ? { ic: '\u25b6', t: 'הטבעת מימין: סובב ימינה (D)', ok: false } : ang < -15 ? { ic: '\u25c0', t: 'הטבעת משמאל: סובב שמאלה (A)', ok: false } : { ic: '\u2713', t: 'הכיוון טוב', ok: true };
+  const alt = dy > 2.5 ? { ic: '\u25b2', t: 'הטבעת גבוהה יותר: הוסף מעט מצערת (W)', ok: false } : dy < -2.5 ? { ic: '\u25bc', t: 'הטבעת נמוכה יותר: הורד מעט (S)', ok: false } : { ic: '\u2713', t: 'הגובה טוב', ok: true };
+  return [dir, alt, { ic: '\u25ce', t: dist + ' מ\u2019 לטבעת', ok: null }];
 }
+function nxCoachText() { return nxCoachParts().map((p) => p.t).join('  \u00b7  '); }
 let nxGuideIsOpen = false;
 function nxGuideShow(id) {
   const g = nxGuideOf(id); if (!g || !g.steps.length) return;
@@ -9149,14 +9162,18 @@ function nxGuideSeen(id, set) {
       const g = nxGuideOf(currentStage.id);
       if (g && g.fly.length) txt = g.fly[Math.min(state === 'racing' ? seq : 0, g.fly.length - 1)];
     }
-    if (hb.dataset.t !== txt) { hb.dataset.t = txt; hb.textContent = txt; hb.style.display = txt ? 'block' : 'none'; }
+    if (hb.dataset.t !== txt) { hb.dataset.t = txt; hb.innerHTML = txt ? '<span>' + nxEsc(txt) + '</span>' : ''; hb.style.display = txt ? 'block' : 'none'; hb.classList.remove('pop'); void hb.offsetWidth; hb.classList.add('pop'); }
     const cb = $('nxCoach'); if (!cb) return;
-    let co = '';
+    let parts = [];
     if (state === 'racing' && currentStage && !inMenu && !editorMode && !nxGuideIsOpen && gates.length) {
       const g = nxGuideOf(currentStage.id);
-      if (g && g.live) co = nxCoachText();
+      if (g && g.live) parts = nxCoachParts();
     }
-    if (cb.dataset.t !== co) { cb.dataset.t = co; cb.textContent = co; cb.style.display = co ? 'block' : 'none'; }
+    const key = parts.map((p) => p.t).join('|');
+    if (cb.dataset.t !== key) {
+      cb.dataset.t = key; cb.style.display = parts.length ? 'flex' : 'none';
+      cb.innerHTML = parts.map((p) => '<i class="cc ' + (p.ok === true ? 'ok' : p.ok === false ? 'go' : 'in') + '"><u>' + p.ic + '</u><span>' + nxEsc(p.t) + '</span></i>').join('');
+    }
   }, 250);
   const gm = goMenu;
   goMenu = function (screen) { nxGuideClose(); btn.style.display = 'none'; gm(screen); };
