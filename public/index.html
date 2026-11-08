@@ -71,6 +71,18 @@ body.hudoff #menuBtn{opacity:0;pointer-events:none}
 #navCanvas{position:absolute;inset:0;width:100%;height:100%}
 #navDist{display:none}
 #editBadge{position:absolute;left:50%;top:14px;transform:translateX(-50%);font-size:14px;color:var(--am);display:none;white-space:nowrap}
+#nxGuide{display:none;position:fixed;inset:0;z-index:70;align-items:center;justify-content:center;background:rgba(8,9,11,.62);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+#nxGuide.on{display:flex}
+#nxGuide .gbox{width:min(560px,92vw);max-height:86vh;overflow:auto;background:var(--p1);color:var(--tx);border:1px solid var(--ln);border-top:4px solid var(--ac);border-radius:10px;padding:22px 26px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+#nxGuide .gk{font:600 12px var(--ui);letter-spacing:.12em;color:var(--ac);margin-bottom:4px}
+#nxGuide h2{margin:0 0 12px;font:700 26px var(--ui);color:var(--ti,var(--tx))}
+#nxGuide ol{margin:0 0 18px;padding:0;list-style:none;counter-reset:g}
+#nxGuide li{counter-increment:g;display:flex;gap:12px;align-items:flex-start;margin:0 0 12px;font:500 18px/1.5 var(--ui)}
+#nxGuide li:before{content:counter(g);flex:0 0 30px;height:30px;border-radius:50%;background:var(--ac);color:var(--bg);font:700 16px/30px var(--ui);text-align:center}
+#nxGuide button{background:var(--ac);color:var(--bg);border:0;padding:12px 26px;font:700 18px var(--ui);cursor:pointer;border-radius:6px}
+#nxGuideBtn{display:none;position:fixed;right:190px;bottom:14px;z-index:30;width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.14);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);color:#fff;border:0;font:700 24px var(--ui);cursor:pointer}
+body.hudoff #nxGuideBtn{opacity:0;pointer-events:none}
+body.ed-on #nxGuideBtn{display:none!important}
 #menuBtn{position:fixed;right:18px;bottom:14px;z-index:30;background:rgba(255,255,255,.14);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);color:#fff;border:0;padding:14px 22px;min-width:150px;font:600 19px var(--ui);letter-spacing:.06em;border-radius:0;cursor:pointer;display:none;align-items:center;justify-content:center;gap:12px}
 #menuBtn:hover{background:rgba(255,255,255,.26)}
 #menuBtn .mi{font-size:24px;line-height:1}
@@ -882,6 +894,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
   <div id="editBadge">מצב עריכה &mdash; לחץ על שער לבחירה &middot; גרור לסיבוב &middot; גלגלת לזום &middot; Esc ליציאה</div>
 </div>
 
+<div id="nxGuide" dir="rtl"><div class="gbox"><div class="gk" id="nxGuideK"></div><h2 id="nxGuideT"></h2><ol id="nxGuideL"></ol><button id="nxGuideOk">הבנתי, מתחילים</button></div></div><button id="nxGuideBtn" title="הסבר על השלב">?</button>
 <button id="menuBtn"><span>תפריט</span><span class="mi">&#9776;</span></button>
 
 <!-- ============ In-game tools / editor panel ============ -->
@@ -1201,7 +1214,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 200</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 201</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -7049,7 +7062,7 @@ function nxDefault() {
   return {
     theme: { ac: '#4cc3e6', am: '#e6b450', bg: '#0b0c0e', p1: '#14161a', p2: '#1b1e23', ln: '#2d3139', tx: '#d6d9de', mu: '#8b929c', ti: '', bt: '', bs: '', lg: '', lg2: '', it: '', ib: '', ot: '', tl: '', tl2: '', gr: '', rd: '', qb: '', qt: '', font: 'ui', btn: 'sharp', bw: 1, mbw: 420, balign: 'c', mvert: 'c', overlay: 0.75, bgImg: '', trans: 'slide', dur: 300, fadeMs: 450, gx: Object.assign({}, GX.st) },
     tx: {}, hide: {}, home: [], tnames: {}, torder: [], stages: { off: {}, force: '', del: {} }, tcats: { cats: {}, of: {} }, drones: { off: {}, title: {}, desc: {}, col: {} },
-    courses: {}, courseId: '', courseIds: [], staff: {},
+    courses: {}, guides: {}, courseId: '', courseIds: [], staff: {},
     logo: { on: true, pages: { main: true, drone: false, missions: false, controls: false }, size: 6, x: 96, y: 91, color: '#ffffff', op: 85 }
   };
 }
@@ -7795,12 +7808,14 @@ function nxCourseCard(cid, co) {
 function nxTabCourses() {
   const cs = NX.draft.courses || {}, ids = Object.keys(cs);
   let h = '<p class="nxn">קורס הוא רצף של שלבים. בכל שלב יש מסלולי תרגול ומבחן שלב עם תנאי מעבר משלו, ובסוף מבחן מסכם. את הקורס משייכים לקבוצה בכרטיס הקבוצה (לשונית קבוצות). תלמיד בקבוצה עם קורס רואה רק את מסלולי הקורס, וכל פריט נפתח אחרי שסיים את הקודמים (מבחן נחשב סיום רק אם עבר). צריך "שמור ופרסם" כדי שהקורס יגיע לתלמידים.</p>';
+  h += '<div class="nxbtns"><button class="nxb pri" data-act="crs-learn">+ צור קורס מוכן: הדרך להיות מטיס - השלבים הראשונים</button></div>';
   h += nxF('קורס חדש', '<input type="text" data-ai="cNew" id="admCNew" placeholder="שם הקורס"><button class="nxb pri" data-act="crs-add">+ צור קורס</button>');
   ids.forEach((cid) => { h += nxCourseCard(cid, cs[cid]); });
   if (!ids.length) h += '<p class="nxn">עדיין אין קורסים.</p>';
   return h;
 }
 function nxCrsAct(a, el) {                                    // course editor buttons; returns true when handled
+  if (a === 'crs-learn') { nxMakeLearnCourse(); return true; }
   if (a.indexOf('crs-') !== 0) return false;
   const D = NX.draft, cid = el.dataset.cid, i = Number(el.dataset.i);
   const co = D.courses && D.courses[cid];
@@ -7984,6 +7999,7 @@ function nxTabTracks() {
   });
   const rest = ids.filter((id) => !NXH.catOf(id));
   h += '<details class="catbox" data-cid="_rest"' + (NX.openCats._rest === undefined ? (list.length ? '' : ' open') : (NX.openCats._rest ? ' open' : '')) + '><summary><b>' + (list.length ? 'ללא קטגוריה' : 'כל המסלולים') + '</b><span class="catn">' + rest.length + ' מסלולים</span></summary>' + (rest.length ? rest.map(trow).join('') : '<p class="nxn">כל המסלולים משויכים לקטגוריות.</p>') + '</details>';
+  h += nxGuidesEditor(ids);
   return h;
 }
 /* the AI track builder now lives in the track editor (top bar: "בנה עם AI") */
@@ -9058,6 +9074,94 @@ function nxWireWho() {
   $('whoPw').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('whoGo').click(); });
   $('whoCancel').addEventListener('click', () => $('who').classList.remove('on'));
   $('whoAdm').addEventListener('click', () => nxSetAsPlayer(false));
+}
+
+/* ---------- lesson cards: a short step-by-step explanation shown before a track ---------- */
+const nxGuideKey = (id) => String(id || '').replace(/^pub_/, '');
+function nxGuideOf(id) {
+  const c = NX.role === 'admin' && !NX.preview ? NX.draft : NX.pub, g = c && c.guides && c.guides[nxGuideKey(id)];
+  if (!g || g.off) return null;
+  const steps = String(g.text || '').split('\n').map((x) => x.trim()).filter(Boolean);
+  if (!steps.length) return null;
+  return { title: String(g.title || '').trim() || (STAGES[id] ? STAGES[id].name : ''), steps };
+}
+let nxGuideIsOpen = false;
+function nxGuideShow(id) {
+  const g = nxGuideOf(id); if (!g) return;
+  $('nxGuideK').textContent = 'הסבר לשלב'; $('nxGuideT').textContent = g.title;
+  $('nxGuideL').innerHTML = g.steps.map((x) => '<li><span>' + nxEsc(x) + '</span></li>').join('');
+  $('nxGuide').classList.add('on'); nxGuideIsOpen = true; paused = true;
+}
+function nxGuideClose() {
+  if (!nxGuideIsOpen) return;
+  $('nxGuide').classList.remove('on'); nxGuideIsOpen = false; paused = false;
+  try { canvas.focus(); } catch (e) { /* ignore */ }
+}
+function nxGuideSeen(id, set) {
+  let m = {}; try { m = JSON.parse(localStorage.getItem('fpvNexusGuideSeen') || '{}') || {}; } catch (e) { m = {}; }
+  const k = nxGuideKey(id); if (!set) return !!m[k];
+  m[k] = 1; try { localStorage.setItem('fpvNexusGuideSeen', JSON.stringify(m)); } catch (e) { /* ignore */ }
+  return true;
+}
+(function nxGuideSetup() {
+  const ok = $('nxGuideOk'), btn = $('nxGuideBtn'); if (!ok || !btn || typeof startStage !== 'function') return;
+  ok.addEventListener('click', nxGuideClose);
+  btn.addEventListener('click', () => { if (currentStage) nxGuideShow(currentStage.id); });
+  window.addEventListener('keydown', (e) => { if (nxGuideIsOpen && (e.key === 'Escape' || e.key === 'Enter')) { e.preventDefault(); e.stopImmediatePropagation(); nxGuideClose(); } }, true);
+  const ss = startStage;
+  startStage = function (id, editNow) {
+    ss(id, editNow);
+    btn.style.display = 'none';
+    if (editNow) return;
+    const t0 = Date.now(), tick = () => {
+      if (Date.now() - t0 > 4000) return;
+      if (fadeBusy || inMenu || !currentStage || currentStage.id !== id) { setTimeout(tick, 200); return; }
+      if (nxGuideOf(id)) { btn.style.display = 'block'; if (!nxGuideSeen(id)) { nxGuideSeen(id, true); nxGuideShow(id); } }
+    };
+    setTimeout(tick, 300);
+  };
+  const gm = goMenu;
+  goMenu = function (screen) { nxGuideClose(); btn.style.display = 'none'; gm(screen); };
+})();
+function nxGuidesEditor(ids) {
+  const G = NX.draft.guides || {};
+  let h = '<h4>כרטיסי הסבר לשלבים</h4><p class="nxn">לכל מסלול אפשר להוסיף כרטיס הסבר. הוא נפתח לתלמיד בפעם הראשונה שהוא נכנס למסלול, ואפשר לפתוח אותו שוב בכפתור ? בזמן הטיסה. כל שורה בתיבה היא צעד אחד. מסלול בלי טקסט לא מציג כרטיס.</p>';
+  ids.forEach((id) => {
+    const k = nxGuideKey(id), g = G[k] || {}, has = !!String(g.text || '').trim();
+    h += '<details class="catbox gcard" data-ck="g_' + k + '"' + (NX.openK && NX.openK['g_' + k] ? ' open' : '') + '><summary><b>' + nxEsc(STAGES[id].name) + '</b><span class="catn">' + (has ? (g.off ? 'מוסתר' : 'יש כרטיס') : 'אין כרטיס') + '</span></summary>' +
+      nxF('כותרת', '<input type="text" maxlength="60" data-k="guides.' + k + '.title" value="' + nxEsc(g.title || '') + '" placeholder="ברירת מחדל: שם המסלול">') +
+      nxF('צעדים (שורה = צעד)', '<textarea rows="6" style="width:100%" data-k="guides.' + k + '.text" placeholder="לדוגמה:&#10;מגבירים גז לאט עד שהרחפן מתרומם">' + nxEsc(g.text || '') + '</textarea>') +
+      nxF('הסתר את הכרטיס', '<input type="checkbox" data-k="guides.' + k + '.off"' + (g.off ? ' checked' : '') + '>') + '</details>';
+  });
+  return h;
+}
+const NX_LEARN = [
+  { name: 'שלב 1: המראה וטיסה ישרה', title: 'המראה וטיסה ישרה',
+    text: 'מחזיקים את המצערת (W) לחוצה קצת, עד שהרחפן מתרומם מהקרקע. אל תמהרו, תנועה איטית ועדינה.\nכשהרחפן באוויר, מייצבים אותו בגובה של כמה מטרים.\nמכוונים את האף אל הטבעת הראשונה ומקדימה (חץ למעלה) טסים ישר דרכה.\nאם הרחפן סוטה לצד, מתקנים בעדינות עם החצים ימינה או שמאלה.\nממשיכים דרך כל הטבעות עד הסוף.',
+    gates: [[-100, 8, 0, -90], [-40, 8, 0, -90], [20, 8, 0, -90], [80, 8, 0, -90]] },
+  { name: 'שלב 2: פניות', title: 'איך מסתובבים',
+    text: 'מאטים לפני הפנייה: מקטינים את החץ קדימה.\nמסובבים את האף לכיוון הבא עם A (שמאלה) או D (ימינה).\nבזמן הפנייה ממשיכים קדימה לאט, לא מגבירים מהר.\nכשהאף מכוון לטבעת הבאה, מיישרים וממשיכים ישר.\nעוברים את כל הטבעות, פנייה אחר פנייה.',
+    gates: [[-100, 8, 40, 0], [-100, 8, -30, 0], [-75, 8, -85, 315], [-20, 8, -110, 270], [50, 8, -110, 270], [95, 8, -80, 225]] },
+  { name: 'שלב 3: שמירה על גובה', title: 'איך שומרים על גובה',
+    text: 'המצערת (W ו-S) היא מה ששומר על הגובה.\nאם הרחפן יורד, מוסיפים מעט מצערת (W). אם הוא עולה, מורידים מעט (S).\nעושים תיקונים קטנים ולא חדים. תיקון גדול גורם לקפיצות.\nמנסים לעבור בכל הטבעות באותו גובה, בלי לעלות ולרדת.',
+    gates: [[-80, 15, 0, -90], [-20, 15, 0, -90], [40, 15, 0, -90], [100, 15, 0, -90]] }
+];
+function nxMakeLearnCourse() {
+  const D = NX.draft; D.courses = D.courses || {}; D.guides = D.guides || {};
+  if (D.courses.cLearn1) { nxToast('הקורס "הדרך להיות מטיס" כבר קיים'); return; }
+  const stages = [];
+  NX_LEARN.forEach((L) => {
+    let n = 1; while (STAGES['custom' + n]) n++;
+    const id = 'custom' + n;
+    registerCustom({ id, num: 3 + CUSTOM_ORDER.length + 1, name: L.name, base: 'clean', laps: 1,
+      gates: L.gates.map((g) => ({ k: 'ring', sz: 1.8, x: g[0], y: g[1], z: g[2], yaw: g[3], pitch: 0 })) });
+    D.guides[id] = { title: L.title, text: L.text };
+    stages.push({ name: L.name, on: true, tracks: [id], exam: '', pass: { t: 0, c: -1, s: 0 } });
+  });
+  saveCustomList(); saveEnv(); try { buildCards(); } catch (e) { /* ignore */ }
+  D.courses.cLearn1 = { name: 'הדרך להיות מטיס - השלבים הראשונים', stages, final: { on: false, name: '', exam: '', pass: { t: 0, c: -1, s: 0 } } };
+  NX.openC = 'cLearn1'; nxTouch(); nxAdmRender();
+  nxToast('נוצרו 3 מסלולים, כרטיסי הסבר וקורס. לחץ "שמור ופרסם" כדי שהתלמידים יקבלו אותם');
 }
 (function nxEnvSetup() {
   const a = nxEnvPanel(), slot = $('edEnvSlot');
