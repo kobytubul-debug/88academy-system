@@ -1214,7 +1214,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 201</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 202</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -9158,6 +9158,11 @@ function nxMakeLearnCourse() {
     D.guides[id] = { title: L.title, text: L.text };
     stages.push({ name: L.name, on: true, tracks: [id], exam: '', pass: { t: 0, c: -1, s: 0 } });
   });
+  const ids = stages.map((x) => x.tracks[0]), tc = D.tcats = D.tcats || { cats: {}, of: {} };
+  tc.cats = tc.cats || {}; tc.of = tc.of || {};
+  tc.cats.cLearn = { name: 'הדרך להיות מטיס', o: Object.keys(tc.cats).reduce((m, k) => Math.min(m, Number(tc.cats[k].o) || 0), 0) - 1 };   // first category
+  ids.forEach((id) => { tc.of[id] = 'cLearn'; });
+  D.torder = ids.concat((D.torder || []).filter((x) => ids.indexOf(x) < 0));                                                              // first in the track order
   saveCustomList(); saveEnv(); try { buildCards(); } catch (e) { /* ignore */ }
   D.courses.cLearn1 = { name: 'הדרך להיות מטיס - השלבים הראשונים', stages, final: { on: false, name: '', exam: '', pass: { t: 0, c: -1, s: 0 } } };
   NX.openC = 'cLearn1'; nxTouch(); nxAdmRender();
