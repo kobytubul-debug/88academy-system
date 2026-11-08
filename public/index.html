@@ -1243,7 +1243,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 209</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 210</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -1399,7 +1399,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
     <div id="edBase"><button class="b" data-base="clean">מפה נקיה</button><button class="b" data-base="arena">אולם</button><button class="b" data-base="redwood">יער</button><button class="b" data-base="city">עיר</button><button class="b" data-base="field">שדה פתוח</button><button class="b" data-base="desert">מדבר</button><button class="b" data-base="snow">שלג</button><button class="b" data-base="dusk">שקיעה</button><button class="b" data-base="blue">שדה כחול</button><div class="keys" id="edBaseNote"></div></div></div>
   <button class="b" id="edPrev">&#9654;</button><span id="edNavLbl"></span><button class="b" id="edNext">&#9664;</button>
   <button class="b" id="edFocus">מיקוד</button><button class="b" id="edUndo" title="Ctrl+Z">↶ בטל</button><button class="b" id="edRedo" title="Ctrl+Shift+Z">↷ שחזר</button><button class="b" id="edClone">שכפל</button><button class="b" id="edDelBtn">מחק</button>
-  <button class="b" id="edAiBtn">AI: ערוך / בנה</button><button class="b" id="edNumBtn" title="עריכת מספרי השערים">מספרי שערים</button><button class="b" id="edExit">&#9654; טיסת בדיקה</button>
+  <button class="b" id="edAiBtn">AI: ערוך / בנה</button><button class="b" id="edNumBtn" title="עריכת מספרי השערים">מספרי שערים</button><button class="b" id="edBackBtn" title="חזרה לחלון המסלולים">&#9664; חזרה למסלולים</button><button class="b" id="edExit">&#9654; טיסת בדיקה</button>
 </div>
 <div id="edRight">
   <div id="edCatList" style="display:none"></div>
@@ -10026,6 +10026,7 @@ function edpApply(what, v) {
   $('edAiClose').addEventListener('click', (e) => { $('edAi').classList.remove('open'); e.target.blur(); });
   $('edAiBody').addEventListener('input', (e) => { const el = e.target; if (el.dataset && el.dataset.ai) { NX[el.dataset.ai] = el.type === 'checkbox' ? el.checked : el.value; if (el.dataset.ai === 'aiMode') nxEdAiRender(); } });
   $('edAiBody').addEventListener('click', (e) => { const el = e.target.closest('[data-act]'); if (!el) return; if (el.dataset.act === 'ai-go') nxAiBuild(); else if (el.dataset.act === 'ai-undo') nxAiUndo(); });
+  $('edBackBtn').addEventListener('click', (e) => { e.currentTarget.blur(); edClosePops(); goMenu('missions'); });
   $('edExit').addEventListener('click', (e) => { setEditor(false); e.target.blur(); });
   $('btnBackEdit').addEventListener('click', (e) => { setEditor(true); e.currentTarget.blur(); canvas.focus(); });
   $('edSave').addEventListener('click', (e) => {
