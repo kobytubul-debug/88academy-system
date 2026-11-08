@@ -1201,7 +1201,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 196</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 197</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -1225,7 +1225,9 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
   const rnd = () => Array.from(window.crypto.getRandomValues(new Uint8Array(10))).map((b) => b.toString(16).padStart(2, '0')).join('');
   let UID = ls.get('nxHostUid'); if (!UID || !SEG.test(UID)) { UID = 'u' + rnd(); ls.set('nxHostUid', UID); }
   const SID = 's' + rnd();
-  let token = ls.get('nxHostToken') || '', adminOk = false;
+  const ss = { get(k) { try { return window.sessionStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { window.sessionStorage.setItem(k, v); } catch (e) { /* ignore */ } }, del(k) { try { window.sessionStorage.removeItem(k); } catch (e) { /* ignore */ } } };
+  ls.del('nxHostToken');                       // an older build kept the manager sign-in in the whole browser: a new tab then opened as the manager
+  let token = ss.get('nxHostTok') || ls.get('nxHostTokL') || '', adminOk = false;   // by default the manager is signed in for this tab only
   const clone = (o) => JSON.parse(JSON.stringify(o));
   const hdr = () => { const h = { 'X-Uid': UID, 'Content-Type': 'application/json' }; if (token) h.Authorization = 'Bearer ' + token; return h; };
   async function api(method, url, body) {
@@ -1309,14 +1311,14 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
       window.setTimeout(() => { window.URL.revokeObjectURL(a.href); a.remove(); }, 4000);
     }
   };
-  const ready = token ? api('GET', '/api/admin/me').then((r) => { adminOk = !!r.admin; if (!adminOk) { token = ''; ls.del('nxHostToken'); } }).catch(() => { /* offline: stay a player */ }) : Promise.resolve();
+  const ready = token ? api('GET', '/api/admin/me').then((r) => { adminOk = !!r.admin; if (!adminOk) { token = ''; ss.del('nxHostTok'); ls.del('nxHostTokL'); } }).catch(() => { /* offline: stay a player */ }) : Promise.resolve();
   window.claude = { use: async (name) => { await ready; return name === 'db' ? dbNs : name === 'user' ? userNs : name === 'downloads' ? dlNs : null; } };
 
   /* ----- sign-in helpers used by the game ----- */
   window.NXHOST = {
     async checkCred(un, h) { const r = await api('POST', '/api/db/check', { un, h }); return !!r.ok; },
-    async adminLogin(u, p) { const r = await api('POST', '/api/admin/login', { u, p }); token = r.token; ls.set('nxHostToken', token); },
-    adminLogout() { ls.del('nxHostToken'); ls.del('fpvNexusAsPlayer'); try { window.sessionStorage.removeItem('fpvNexusAsPlayer'); } catch (e) { /* ignore */ } window.location.reload(); }
+    async adminLogin(u, p, remember) { const r = await api('POST', '/api/admin/login', { u, p }); token = r.token; if (remember) ls.set('nxHostTokL', token); else ss.set('nxHostTok', token); },
+    adminLogout() { ss.del('nxHostTok'); ls.del('nxHostTokL'); ls.del('fpvNexusAsPlayer'); try { window.sessionStorage.removeItem('fpvNexusAsPlayer'); } catch (e) { /* ignore */ } window.location.reload(); }
   };
 
   /* a small "manager sign-in" link under the player sign-in form */
@@ -1331,13 +1333,13 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
       if (token) { window.NXHOST.adminLogout(); return; }
       const ov = document.createElement('div');
       ov.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;direction:rtl;font-family:inherit';
-      ov.innerHTML = '<form style="background:#14171c;border:1px solid #4fa3c7;padding:22px;min-width:280px;color:#fff;display:flex;flex-direction:column;gap:10px"><b>כניסת מנהל</b><input id="nxAu" autocomplete="username" placeholder="שם משתמש" style="padding:8px;background:#0b0c0e;color:#fff;border:1px solid #444"><input id="nxAp" type="password" autocomplete="current-password" placeholder="סיסמה" style="padding:8px;background:#0b0c0e;color:#fff;border:1px solid #444"><div id="nxAe" style="color:#ff6b6b;min-height:18px;font-size:13px"></div><div style="display:flex;gap:8px"><button type="submit" style="flex:1;padding:9px;background:#4fa3c7;border:0;color:#06222b;font-weight:700;cursor:pointer">כניסה</button><button type="button" id="nxAc" style="padding:9px;background:#2a2f36;border:0;color:#fff;cursor:pointer">ביטול</button></div></form>';
+      ov.innerHTML = '<form style="background:#14171c;border:1px solid #4fa3c7;padding:22px;min-width:280px;color:#fff;display:flex;flex-direction:column;gap:10px"><b>כניסת מנהל</b><input id="nxAu" autocomplete="username" placeholder="שם משתמש" style="padding:8px;background:#0b0c0e;color:#fff;border:1px solid #444"><input id="nxAp" type="password" autocomplete="current-password" placeholder="סיסמה" style="padding:8px;background:#0b0c0e;color:#fff;border:1px solid #444"><label style="font-size:13px;opacity:.85"><input type="checkbox" id="nxAr"> השאר מחובר במחשב הזה (לא מומלץ במחשב משותף)</label><div id="nxAe" style="color:#ff6b6b;min-height:18px;font-size:13px"></div><div style="display:flex;gap:8px"><button type="submit" style="flex:1;padding:9px;background:#4fa3c7;border:0;color:#06222b;font-weight:700;cursor:pointer">כניסה</button><button type="button" id="nxAc" style="padding:9px;background:#2a2f36;border:0;color:#fff;cursor:pointer">ביטול</button></div></form>';
       document.body.appendChild(ov);
       ov.querySelector('#nxAc').addEventListener('click', () => ov.remove());
       ov.querySelector('#nxAu').focus();
       ov.querySelector('form').addEventListener('submit', async (ev) => {
         ev.preventDefault();
-        try { await window.NXHOST.adminLogin(ov.querySelector('#nxAu').value, ov.querySelector('#nxAp').value); window.location.reload(); }
+        try { await window.NXHOST.adminLogin(ov.querySelector('#nxAu').value, ov.querySelector('#nxAp').value, ov.querySelector('#nxAr').checked); window.location.reload(); }
         catch (er) { ov.querySelector('#nxAe').textContent = er.status === 429 ? 'נסיונות רבים מדי, נסה שוב בעוד כמה דקות' : 'שם משתמש או סיסמה שגויים'; }
       });
     });
@@ -7590,6 +7592,7 @@ function nxTedHead() {
   const t = NX.themes[NX.editTheme]; if (!t) return '';
   return '<div class="nxn" style="background:color-mix(in srgb,var(--ac) 14%,var(--p1));color:var(--tx);padding:8px;border-radius:6px;margin-bottom:10px">' +
     '<div style="font-size:16px;margin-bottom:6px"><b>עורך ערכת נושא: ' + nxEsc(t.name) + '</b> <small>' + (NX.tdirty ? '● יש שינויים שלא נשמרו' : '✓ שמורה') + '</small></div>' +
+    '<div class="nxbtns"><input type="text" data-ai="tedName" id="admTedName" maxlength="30" placeholder="שם לערכה חדשה" value="' + nxEsc(NX.tedName || '') + '" style="flex:1;min-width:120px"><button class="nxb pri" data-act="ted-saveas">שמור כערכה חדשה</button></div><div class="nxn" style="margin:2px 0 6px"><small>שמירה כחדשה משאירה את הערכה "' + nxEsc(t.name) + '" כפי שנשמרה, ואתה ממשיך לערוך את החדשה.</small></div>' +
     '<div class="nxbtns"><button class="nxb pri" data-act="ted-save">שמור</button><button class="nxb pri" data-act="ted-back">שמור וחזור</button><button class="nxb danger" data-act="ted-cancel">בטל וחזור</button></div>' +
     '<div class="nxbtns" style="margin-top:6px"><small>הצג במשחק:</small>' + NX_TED_SCR.map((r) => '<button class="nxb' + (currentScreen === r[0] ? ' pri' : '') + '" data-act="ted-scr" data-id="' + r[0] + '">' + r[1] + '</button>').join('') + '</div></div>';
 }
@@ -7606,6 +7609,15 @@ function nxTedClose(save) {
   const b = NX.tedBack; NX.editTheme0 = NX.editTheme; NX.ted = false; NX.editTheme = null; NX.tdirty = false;
   if (b) { NX.draft = b.draft; NX.dirty = b.dirty; NX.tab = 'groups'; }
   NX.selTheme = NX.editTheme0 || NX.selTheme; NX.tedBack = null; nxApplyView(); nxAdmRender(); nxGoScreen('groups');
+}
+function nxTedSaveAs() {                                          // keep the original as it was saved and store the edited look as a new theme
+  const src = NX.editTheme && NX.themes[NX.editTheme]; if (!src) return false;
+  const nm = String(NX.tedName || '').trim().slice(0, 30) || (String(src.name).slice(0, 22) + ' (עותק)');
+  const tid = 't' + Date.now().toString(36) + Math.random().toString(36).slice(2, 4);
+  const nt = Object.assign({}, nxClone(src), { name: nm, theme: nxClone(NX.draft.theme), tx: nxClone(NX.draft.tx), hide: nxClone(NX.draft.hide) });
+  NX.themes[tid] = nt; NX.editTheme = tid; NX.tdirty = false; NX.tedName = '';
+  nxWrite('themes/' + tid, nt).then(() => nxToast('נשמרה ערכה חדשה: "' + nm + '"'));
+  nxPubBtn(); nxAdmRender(); return tid;
 }
 function nxSaveTheme() {
   const t = NX.editTheme && NX.themes[NX.editTheme]; if (!t) return false;
@@ -8890,6 +8902,7 @@ function nxAdmWire() {
     else if (a === 'th-edit') { nxTedOpen(id); }
     else if (a === 'th-unsel') { NX.selTheme = null; nxApplyView(); nxAdmRender(); }
     else if (a === 'ted-save') { nxSaveTheme(); }
+    else if (a === 'ted-saveas') { nxTedSaveAs(); }
     else if (a === 'ted-back') { nxTedClose(true); }
     else if (a === 'ted-cancel') { nxTedClose(false); }
     else if (a === 'ted-scr') { if (inMenu) { if (currentScreen !== id) showScreen(id); } else goMenu(id); setTimeout(nxAdmRender, 400); }
