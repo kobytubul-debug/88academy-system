@@ -979,6 +979,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
     <div id="edAlInfo" class="keys">לא נבחרו אלמנטים. החזק Shift או Ctrl וגרור מסגרת על כמה אלמנטים, או לחץ עליהם אחד אחד.</div>
     <div class="btns"><button class="b" id="edAlAll">בחר הכול</button><button class="b" id="edAlNone">נקה בחירה</button><button class="b" id="edAlUndo">בטל יישור</button></div>
     <div class="row"><label style="flex:0 0 90px">מרווח (מ')</label><input type="number" id="edAlGap" value="12" min="1" step="1"></div>
+    <label class="keys" style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="edAlUseGap" checked> פיזור וקו ישר לפי המרווח (בלי סימון: פורס על הטווח הקיים)</label>
     <div class="edsh2">שליטה בכולם יחד (מתי שיש 2 ויותר)</div>
     <div class="edal"><button class="b" data-gn="x-">X −</button><button class="b" data-gn="z-">Z −</button><button class="b" data-gn="x+">X +</button>
     <button class="b" data-gn="y+">גובה +</button><button class="b" data-gn="z+">Z +</button><button class="b" data-gn="y-">גובה −</button>
@@ -1243,7 +1244,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 210</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 211</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -9355,10 +9356,12 @@ function edAlign(act) {
     list.forEach((m) => { if (ax === 'y') m.el.y = round2(to); else put(m, ax === 'x' ? to : m.el.x, ax === 'z' ? to : m.el.z); });
   } else if (a[0] === 'dist') {
     const ax = a[1], s = it.slice().sort((p, q) => p.el[ax] - q.el[ax]), lo = s[0].el[ax], hi = s[n - 1].el[ax];
-    s.forEach((m, k) => { const v = lo + (hi - lo) * k / (n - 1); put(m, ax === 'x' ? v : m.el.x, ax === 'z' ? v : m.el.z); });
+    const useGap = $('edAlUseGap') && $('edAlUseGap').checked, mid = (lo + hi) / 2;
+    s.forEach((m, k) => { const v = useGap ? mid + (k - (n - 1) / 2) * gap : lo + (hi - lo) * k / (n - 1); put(m, ax === 'x' ? v : m.el.x, ax === 'z' ? v : m.el.z); });
   } else if (act === 'line') {
     const f = it[0].el, l = it[n - 1].el, fx = f.x, fz = f.z, fy = f.y, lx = l.x, lz = l.z, ly = l.y;
-    it.forEach((m, k) => { const t = k / (n - 1); put(m, fx + (lx - fx) * t, fz + (lz - fz) * t); if (m.kind === 'gate' && isFinite(fy) && isFinite(ly)) m.el.y = round2(fy + (ly - fy) * t); });
+    const useGap = $('edAlUseGap') && $('edAlUseGap').checked, dl = Math.hypot(lx - fx, lz - fz) || 1, ux = dl > 0.01 && (lx !== fx || lz !== fz) ? (lx - fx) / dl : 1, uz = dl > 0.01 && (lx !== fx || lz !== fz) ? (lz - fz) / dl : 0;
+    it.forEach((m, k) => { const t = k / (n - 1); if (useGap) put(m, fx + ux * gap * k, fz + uz * gap * k); else put(m, fx + (lx - fx) * t, fz + (lz - fz) * t); if (m.kind === 'gate' && isFinite(fy) && isFinite(ly)) m.el.y = round2(fy + (ly - fy) * t); });
   } else if (act === 'circle') {
     const R = Math.max(gap, n * gap / (2 * Math.PI));
     it.forEach((m, k) => { const t = k / n * Math.PI * 2; put(m, cx + Math.cos(t) * R, cz + Math.sin(t) * R); });
