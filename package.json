@@ -1,8 +1,8 @@
 {
-  "name": "88academy",
+  "name": "88academy-fpv-nexus",
   "version": "1.0.0",
   "private": true,
-  "description": "88ACADEMY student system",
+  "description": "88ACADEMY FPV NEXUS flight simulator",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
