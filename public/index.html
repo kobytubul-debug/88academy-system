@@ -1201,7 +1201,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 197</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 198</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -7373,7 +7373,20 @@ function nxSyncEnv(env) {
   if (typeof syncEnvUI === 'function') syncEnvUI();
 }
 function nxSyncTracks(list, env) {
-  if (NX.role === 'admin') return;
+  if (NX.role === 'admin') {            // a browser with no tracks of its own (new computer, hosted site) takes the published ones
+    if (NX.admRestored || !Array.isArray(list) || !list.length) return;
+    NX.admRestored = true;
+    if (CUSTOM_ORDER.some((id) => STAGES[id] && !STAGES[id].pub)) return;
+    list.forEach((d, i) => {
+      if (!d || typeof d.id !== 'string' || !/^custom\d+$/.test(d.id)) return;
+      registerCustom({ id: d.id, num: d.num || (4 + i), name: String(d.name || 'מסלול').slice(0, 40), gates: Array.isArray(d.gates) ? d.gates : null, objects: d.objects, base: d.base, laps: d.laps });
+      if (env && env[d.id]) ['wind', 'dir', 'turb'].forEach((k) => { if (typeof env[d.id][k] === 'number' && isFinite(env[d.id][k])) envSettings[d.id][k] = env[d.id][k]; });
+    });
+    try { saveCustomList(); } catch (e) { /* ignore */ }
+    try { nxApplyView(); nxAdmSoftRender(); } catch (e) { /* ignore */ }
+    nxToast('המסלולים שפורסמו נטענו לעורך');
+    return;
+  }
   const want = {};
   (Array.isArray(list) ? list : []).forEach((d, i) => { if (d && typeof d.id === 'string') want['pub_' + d.id] = { d, i }; });
   CUSTOM_ORDER.slice().forEach((id) => {
@@ -7637,6 +7650,10 @@ async function nxPublish() {
     return { id, name: st.name, base: st.base || 'arena', laps: st.laps || 0, objects: cleanProps(st.objects), gates: st.gen().map((g) => Object.assign(gateCopy(g), { x: +g.x.toFixed(2), y: +g.y.toFixed(2), z: +g.z.toFixed(2) })) };
   });
   try {
+    if (!tracks.length) {                 // never wipe published tracks by accident
+      const cur = await NX.db.doc('tracks/main').get();
+      if (cur && cur.exists && cur.data() && Array.isArray(cur.data().list) && cur.data().list.length) { nxToast('לא פורסם: בדפדפן הזה אין מסלולים והשרת מכיל מסלולים. רענן את הדף והמסלולים ייטענו'); return; }
+    }
     await NX.db.doc('cfg/main').set({ cfg, rev: Date.now() });
     const env = {};
     STAGE_ORDER.concat(CUSTOM_ORDER).forEach((id) => { const e = envSettings[id]; if (e && !(STAGES[id] && STAGES[id].pub)) env[id] = { wind: +e.wind || 0, dir: +e.dir || 0, turb: +e.turb || 0 }; });
@@ -7835,6 +7852,7 @@ function nxHomeSection() {
 function nxTabGame() {
   let h = '<div class="nxn" style="background:color-mix(in srgb,var(--am) 16%,var(--p1));color:var(--tx);padding:8px;border-radius:6px;margin-bottom:10px"><b>עריכת משחק כללית.</b> כל שינוי כאן משנה את כל המשחק מיד אצלך, ומגיע לכל השחקנים כשלוחצים <b>שמור ופרסם</b> (או "שמירה" למעלה). ערכת נושא שמשויכת לקבוצה או לשחקן גוברת על המראה הכללי הזה.</div>';
   h += '<div class="nxbtns"><button class="nxb pri" data-act="game-pub">שמור ופרסם לכל השחקנים</button><span class="nxn">' + (NX.dirty ? '● יש שינויים שלא נשמרו' : '✓ הכול שמור') + '</span></div>';
+  h += '<div class="nxn" style="border:1px solid var(--ac);border-radius:8px;padding:8px;margin:8px 0"><b>שמירת המראה הנוכחי כערכת נושא חדשה</b><div class="nxbtns" style="margin-top:6px"><input type="text" id="admTName" data-ai="saveName" placeholder="שם לערכה החדשה" value="' + nxEsc(NX.saveName || '') + '" style="flex:1;min-width:140px"><button class="nxb pri" data-act="th-save">שמור כערכת נושא חדשה</button></div><div class="nxn">הערכה נשמרת ברשימת הערכות, בלי לפרסם ובלי לשנות את המראה הנוכחי לשחקנים.</div></div>';
   h += nxHomeSection();
   h += nxLogoSection();
   h += nxTabLook();
@@ -8884,10 +8902,10 @@ function nxAdmWire() {
       el.dataset.armed = '1'; el.textContent = 'בטוח? לחץ שוב'; setTimeout(() => { el.dataset.armed = ''; el.textContent = 'מחק שחקן'; }, 2500);
     }
     else if (a === 'th-save') {
-      const nm = $('admTName').value.trim(); if (!nm) { nxToast('תן שם לערכת הנושא'); return; }
+      const nm = ($('admTName') ? $('admTName').value : (NX.saveName || '')).trim(); if (!nm) { nxToast('תן שם לערכת הנושא'); return; }
       const tid = 't' + Date.now().toString(36);
       NX.themes[tid] = { name: nm, theme: nxClone(NX.draft.theme), tx: nxClone(NX.draft.tx), hide: nxClone(NX.draft.hide) };
-      nxWrite('themes/' + tid, NX.themes[tid]); nxToast('ערכת הנושא נשמרה'); nxAdmRender();
+      nxWrite('themes/' + tid, NX.themes[tid]); NX.saveName = ''; nxToast('ערכת הנושא נשמרה: ' + nm); nxAdmRender();
     }
     else if (a === 'th-load') { NX.selTheme = id; nxApplyView(); nxAdmRender(); }
     else if (a === 'game-pub') { nxPublish(); }

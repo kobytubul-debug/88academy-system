@@ -126,7 +126,14 @@ async function api(req, res, url) {
     if (!admin) return json(res, 403, { error: 'forbidden' });
     const b = await body(req); const list = Array.isArray(b.docs) ? b.docs : [];
     let n = 0;
-    list.forEach((d) => { if (d && typeof d.path === 'string' && validPath(d.path, true) && d.data && typeof d.data === 'object' && !segs(d.path)[0].startsWith('_')) { docs.set(d.path, d.data); n++; } });
+    const onlyMissing = q.get('mode') === 'missing';                  // keep what already exists (tracks count as missing when their list is empty)
+    list.forEach((d) => {
+      if (d && typeof d.path === 'string' && validPath(d.path, true) && d.data && typeof d.data === 'object' && !segs(d.path)[0].startsWith('_')) {
+        const cur = docs.get(d.path);
+        if (onlyMissing && cur && !(d.path === 'tracks/main' && !(Array.isArray(cur.list) && cur.list.length))) return;
+        docs.set(d.path, d.data); n++;
+      }
+    });
     touch(); flush(); return json(res, 200, { imported: n });
   }
   if (p === '/api/db/check' && req.method === 'POST') {              // password check: the hash never leaves the server
@@ -143,6 +150,10 @@ async function api(req, res, url) {
     if (!canWrite(col, id, admin, uid)) return json(res, 403, { error: 'forbidden' });
     if (req.method === 'PUT') {
       const b = await body(req); if (!b.data || typeof b.data !== 'object' || Array.isArray(b.data)) return json(res, 400, { error: 'bad data' });
+      if (q.get('p') === 'tracks/main') {                              // never replace published tracks with an empty list by mistake
+        const cur = docs.get('tracks/main'), nl = Array.isArray(b.data.list) ? b.data.list.length : 0;
+        if (cur && Array.isArray(cur.list) && cur.list.length && !nl && !b.force) return json(res, 409, { error: 'empty-tracks' });
+      }
       const next = b.merge ? Object.assign({}, docs.get(q.get('p')) || {}, b.data) : b.data;
       docs.set(q.get('p'), next); touch(); broadcast(q.get('p'), next); return json(res, 200, { ok: true });
     }
