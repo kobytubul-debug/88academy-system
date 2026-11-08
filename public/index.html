@@ -96,6 +96,7 @@ body.hudoff #menuBtn{opacity:0;pointer-events:none}
 body.hudoff #nxHint,body.hudoff #nxCoach{opacity:0}
 body.hudoff #nxGuideBtn{opacity:0;pointer-events:none}
 body.ed-on #nxGuideBtn{display:none!important}
+body.ed-on #adm,body.ed-on #nxTab,body.ed-on #nxBar{display:none!important}
 #menuBtn{position:fixed;right:18px;bottom:14px;z-index:30;background:rgba(255,255,255,.14);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);color:#fff;border:0;padding:14px 22px;min-width:150px;font:600 19px var(--ui);letter-spacing:.06em;border-radius:0;cursor:pointer;display:none;align-items:center;justify-content:center;gap:12px}
 #menuBtn:hover{background:rgba(255,255,255,.26)}
 #menuBtn .mi{font-size:24px;line-height:1}
@@ -692,6 +693,8 @@ body.ed-on #edJson.open{display:flex}
 #editorBox select{width:100%;background:var(--ib,rgba(0,0,0,.4));color:var(--it,#fff);border:0;padding:7px;font:600 13px var(--ui)}
 body.ed-on #editBadge{top:64px;font-size:12px;background:rgba(0,0,0,.45);padding:3px 10px}
 #edRepList{max-height:46vh}
+#editorBox .edflash{animation:edFlash 1.2s ease-out}
+@keyframes edFlash{0%{box-shadow:0 0 0 3px var(--ac),0 0 24px var(--ac)}100%{box-shadow:0 0 0 0 transparent}}
 #editorBox .edsec{margin:10px 0;padding:10px 10px 8px;background:rgba(0,0,0,.22);border-inline-start:3px solid color-mix(in srgb,var(--ac) 55%,transparent)}
 #editorBox .edh{font:700 italic 14px var(--ui);color:var(--ti,#fff);margin-bottom:8px}
 .edtiles{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
@@ -951,6 +954,19 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
     <details class="eds" open><summary>מראה</summary>
     <div class="row"><label style="flex:0 0 70px">צבע</label><select id="propType" style="display:none"></select><select id="propColor"></select></div>
     <div class="row"><label style="flex:0 0 70px">צורת שער</label><select id="gateKind"><option value="">ברירת מחדל של המפה</option><option value="ring">טבעת</option><option value="square">ריבוע</option><option value="arch">קשת (ללא בסיס)</option><option value="wide">רחב ושטוח</option><option value="tall">גבוה וצר</option><option value="hex">משושה</option><option value="double">שער כפול</option></select></div>
+    </details>
+    <details class="eds" id="edNum"><summary>מספרי שערים</summary>
+    <div class="keys" id="edNumWho">עורך את המספר של השער הנבחר. כשלא נבחר שער, השינוי חל על כולם.</div>
+    <div class="row"><label style="flex:0 0 70px">הצג</label><input type="checkbox" id="edNumShow" checked><label style="flex:0 0 120px;margin-right:12px">על כל השערים</label><input type="checkbox" id="edNumAll"></div>
+    <div class="row"><label style="flex:0 0 70px">צבע</label><input type="color" id="edNumC" value="#ffd45a" style="flex:1;height:30px;padding:0"><button class="b" data-numauto="c" title="חזרה לברירת המחדל">אוטו</button></div>
+    <div class="row"><label style="flex:0 0 70px">מתאר</label><input type="color" id="edNumO" value="#060a10" style="flex:1;height:30px;padding:0"><button class="b" data-numauto="o" title="חזרה לברירת המחדל">אוטו</button></div>
+    <div class="row"><label style="flex:0 0 70px">זוהר</label><input type="color" id="edNumG" value="#4cc3e6" style="flex:1;height:30px;padding:0"><button class="b" data-numauto="g" title="חזרה לברירת המחדל">אוטו</button></div>
+    <div class="row"><label style="flex:0 0 70px">גופן</label><select id="edNumF"></select></div>
+    <div class="row"><label style="flex:0 0 70px">גודל</label><input type="range" id="edNumS" min="0.4" max="3" step="0.05" value="1" style="flex:1"><span id="edNumSV" style="flex:0 0 46px;text-align:center">×1.0</span></div>
+    <div class="row"><label style="flex:0 0 70px">מיקום</label><select id="edNumP"><option value="t">מעל השער</option><option value="m">במרכז השער</option><option value="b">מתחת לשער</option></select></div>
+    <div class="row"><label style="flex:0 0 70px">הזזה אופקית</label><input type="range" id="edNumX" min="-8" max="8" step="0.1" value="0" style="flex:1"><span id="edNumXV" style="flex:0 0 46px;text-align:center">0</span></div>
+    <div class="row"><label style="flex:0 0 70px">הזזה אנכית</label><input type="range" id="edNumY" min="-8" max="8" step="0.1" value="0" style="flex:1"><span id="edNumYV" style="flex:0 0 46px;text-align:center">0</span></div>
+    <div class="btns"><button class="b" id="edNumCopy">החל את הסגנון של השער הנבחר על כולם</button><button class="b" id="edNumReset">אפס סגנון</button></div>
     </details>
     <details class="eds" id="edPath"><summary>נתיב קונוסים</summary>
     <div class="keys">יוצר דיסקים עגולים שטוחים על הקרקע בין כל שני שערים. יצירה חוזרת מחליפה את הנתיב הקודם.</div>
@@ -1227,7 +1243,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 207</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 208</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -1380,10 +1396,10 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 <button id="btnBackEdit">&#9998; חזרה לעריכה <kbd>G</kbd></button>
 <div id="edTop">
   <div id="edMap"><button class="b edmapbtn" id="edMapBtn"><span id="edMapName">סוג מפה</span><i>&#9662;</i></button>
-    <div id="edBase"><button class="b" data-base="clean">מפה נקיה</button><button class="b" data-base="arena">אולם</button><button class="b" data-base="redwood">יער</button><button class="b" data-base="city">עיר</button><button class="b" data-base="field">שדה פתוח</button><button class="b" data-base="desert">מדבר</button><button class="b" data-base="snow">שלג</button><button class="b" data-base="dusk">שקיעה</button><div class="keys" id="edBaseNote"></div></div></div>
+    <div id="edBase"><button class="b" data-base="clean">מפה נקיה</button><button class="b" data-base="arena">אולם</button><button class="b" data-base="redwood">יער</button><button class="b" data-base="city">עיר</button><button class="b" data-base="field">שדה פתוח</button><button class="b" data-base="desert">מדבר</button><button class="b" data-base="snow">שלג</button><button class="b" data-base="dusk">שקיעה</button><div class="keys" id="edBaseNote"><button class="b" data-base="blue">שדה כחול</button></div></div></div>
   <button class="b" id="edPrev">&#9654;</button><span id="edNavLbl"></span><button class="b" id="edNext">&#9664;</button>
   <button class="b" id="edFocus">מיקוד</button><button class="b" id="edUndo" title="Ctrl+Z">↶ בטל</button><button class="b" id="edRedo" title="Ctrl+Shift+Z">↷ שחזר</button><button class="b" id="edClone">שכפל</button><button class="b" id="edDelBtn">מחק</button>
-  <button class="b" id="edAiBtn">AI: ערוך / בנה</button><button class="b" id="edExit">&#9654; טיסת בדיקה</button>
+  <button class="b" id="edAiBtn">AI: ערוך / בנה</button><button class="b" id="edNumBtn" title="עריכת מספרי השערים">מספרי שערים</button><button class="b" id="edExit">&#9654; טיסת בדיקה</button>
 </div>
 <div id="edRight">
   <div id="edCatList" style="display:none"></div>
@@ -1602,6 +1618,12 @@ function groundTexture(kind) {
       g.strokeStyle = 'rgba(40,50,60,0.55)'; g.lineWidth = 3; g.strokeRect(0, 0, 512, 512);
       g.strokeStyle = 'rgba(40,50,60,0.18)'; g.lineWidth = 1.5;
       for (let i = 1; i < 4; i++) { g.beginPath(); g.moveTo(i * 128, 0); g.lineTo(i * 128, 512); g.stroke(); g.beginPath(); g.moveTo(0, i * 128); g.lineTo(512, i * 128); g.stroke(); }
+    } else if (kind === 'blue') {
+      rep = 200;
+      g.fillStyle = '#1f5fd1'; g.fillRect(0, 0, 512, 512);
+      g.strokeStyle = 'rgba(190,225,255,0.85)'; g.lineWidth = 3; g.setLineDash([22, 16]);
+      for (let i = 0; i < 2; i++) { g.beginPath(); g.moveTo(i * 256 + 1.5, 0); g.lineTo(i * 256 + 1.5, 512); g.stroke(); g.beginPath(); g.moveTo(0, i * 256 + 1.5); g.lineTo(512, i * 256 + 1.5); g.stroke(); }
+      g.setLineDash([]);
     } else if (kind === 'asphalt') {
       rep = 200;
       g.fillStyle = '#25272b'; g.fillRect(0, 0, 512, 512);
@@ -1854,6 +1876,13 @@ function applyAtmosphere(id) {
     hemiLight.color.set(0xeef3f8); hemiLight.groundColor.set(0x66707a); hemiLight.intensity = 0.55;
     sun.color.set(0xffffff); sun.intensity = 0.55;
     ground.material.map = groundTexture('clean');
+  } else if (id === 'blue') {
+    scene.fog = new THREE.Fog(0x1f5fd1, 300, 1700); scene.background = new THREE.Color(0x1f5fd1);
+    sky.visible = false;
+    ambientLight.color.set(0xffffff); ambientLight.intensity = 0.95;
+    hemiLight.color.set(0xdfeaff); hemiLight.groundColor.set(0x1f4fa0); hemiLight.intensity = 0.55;
+    sun.color.set(0xffffff); sun.intensity = 0.5;
+    ground.material.map = groundTexture('blue');
   } else if (id === 'field') {
     scene.fog = new THREE.Fog(0xb7d3e6, 160, 1300); scene.background = null;
     sky.visible = true; sky.material.map = skyTexture('day');
@@ -1906,11 +1935,11 @@ function loadEnvironment(stage, gts) {
 /* ============================================================
    OPEN MAP TYPES (no collision scenery): clean studio, field, desert, snow, dusk
    ============================================================ */
-const MAP_BASES = { clean: 'מפה נקיה', arena: 'אולם', redwood: 'יער', city: 'עיר', field: 'שדה פתוח', desert: 'מדבר', snow: 'שלג', dusk: 'שקיעה' };
+const MAP_BASES = { clean: 'מפה נקיה', arena: 'אולם', redwood: 'יער', city: 'עיר', field: 'שדה פתוח', desert: 'מדבר', snow: 'שלג', dusk: 'שקיעה', blue: 'שדה כחול' };
 const MAP_BASE_LIST = Object.keys(MAP_BASES);
 function buildOpenMap(base, gts) {
   const g = new THREE.Group();
-  if (base === 'clean') return g;                       // an empty floor: nothing but the grid
+  if (base === 'clean' || base === 'blue') return g;                       // an empty floor: nothing but the grid
   const rnd = mulberry(base.length * 977 + 13);
   const n = gts && gts.length ? gts.length : 0;
   const cx = n ? gts.reduce((s, q) => s + q.x, 0) / n : 0, cz = n ? gts.reduce((s, q) => s + q.z, 0) / n : 0;
@@ -2241,19 +2270,43 @@ const COL = {
   sel: new THREE.Color(0xe6b450)
 };
 
-function makeLabelTexture(n) {                                   // game-style numeral: no frame, chunky italic with a bright gradient, dark outline and a soft glow
+/* gate-number style: g.n = { h:1 hidden, c fill, o outline, g glow, f font key, s size, p position t|m|b, x/y offsets (m) } */
+const NUM_FONTS = {
+  imp: ['אימפקט (ברירת מחדל)', 'italic 900 {S}px Impact, "Arial Black", sans-serif'],
+  arial: ['עבה', '900 {S}px "Arial Black", Arial, sans-serif'],
+  mono: ['דיגיטלי', '700 {S}px "Share Tech Mono", Consolas, "Courier New", monospace'],
+  sans: ['נקי', '700 {S}px system-ui, "Segoe UI", Arial, sans-serif'],
+  round: ['עגול', 'italic 800 {S}px "Trebuchet MS", "Segoe UI", sans-serif'],
+  serif: ['קלאסי', '700 {S}px Georgia, "Times New Roman", serif']
+};
+function cleanNum(n) {
+  if (!n || typeof n !== 'object') return null;
+  const o = {}, hex = (v) => typeof v === 'string' && /^#[0-9a-f]{6}$/i.test(v);
+  if (n.h) o.h = 1;
+  if (hex(n.c)) o.c = n.c.toLowerCase();
+  if (hex(n.o)) o.o = n.o.toLowerCase();
+  if (hex(n.g)) o.g = n.g.toLowerCase();
+  if (n.f && NUM_FONTS[n.f] && n.f !== 'imp') o.f = n.f;
+  if (Number(n.s) && Math.abs(Number(n.s) - 1) > 0.001) o.s = Math.round(Math.max(0.4, Math.min(3, Number(n.s))) * 100) / 100;
+  if (n.p === 'm' || n.p === 'b') o.p = n.p;
+  if (Number(n.x)) o.x = Math.round(Math.max(-8, Math.min(8, Number(n.x))) * 100) / 100;
+  if (Number(n.y)) o.y = Math.round(Math.max(-8, Math.min(8, Number(n.y))) * 100) / 100;
+  return Object.keys(o).length ? o : null;
+}
+function makeLabelTexture(n, st) {                               // game-style numeral: no frame, chunky, bright fill, dark outline and a soft glow; st = the gate's own style
+  st = st || {};
   const cv = document.createElement('canvas');
   cv.width = cv.height = 128;
   const g = cv.getContext('2d'), t = String(n), fs = t.length > 2 ? 62 : t.length > 1 ? 80 : 96;
-  g.font = 'italic 900 ' + fs + 'px Impact, "Arial Black", "Share Tech Mono", sans-serif';
+  g.font = (NUM_FONTS[st.f] || NUM_FONTS.imp)[1].replace('{S}', fs);
   g.textAlign = 'center'; g.textBaseline = 'middle'; g.lineJoin = 'round';
-  g.shadowColor = 'rgba(76,195,230,0.95)'; g.shadowBlur = 18;
-  g.lineWidth = 14; g.strokeStyle = 'rgba(6,10,16,0.92)'; g.strokeText(t, 64, 68);
+  g.shadowColor = st.g || 'rgba(76,195,230,0.95)'; g.shadowBlur = 18;
+  g.lineWidth = 14; g.strokeStyle = st.o || 'rgba(6,10,16,0.92)'; g.strokeText(t, 64, 68);
   g.shadowBlur = 0;
-  const gr = g.createLinearGradient(0, 68 - fs / 2, 0, 68 + fs / 2);
-  gr.addColorStop(0, '#ffffff'); gr.addColorStop(0.55, '#ffe58a'); gr.addColorStop(1, '#ffb52e');
-  g.fillStyle = gr; g.fillText(t, 64, 68);
-  g.lineWidth = 2; g.strokeStyle = 'rgba(255,255,255,0.65)'; g.strokeText(t, 64, 68);
+  if (st.c) g.fillStyle = st.c;
+  else { const gr = g.createLinearGradient(0, 68 - fs / 2, 0, 68 + fs / 2); gr.addColorStop(0, '#ffffff'); gr.addColorStop(0.55, '#ffe58a'); gr.addColorStop(1, '#ffb52e'); g.fillStyle = gr; }
+  g.fillText(t, 64, 68);
+  g.lineWidth = 2; g.strokeStyle = 'rgba(255,255,255,0.55)'; g.strokeText(t, 64, 68);
   return new THREE.CanvasTexture(cv);
 }
 
@@ -2298,6 +2351,7 @@ function gateCopy(g) {
   if (g.k && GATE_KINDS[g.k]) o.k = g.k;
   if (g.sz && g.sz !== 1) o.sz = g.sz;
   if (g.c && /^#[0-9a-f]{6}$/i.test(g.c)) o.c = g.c;
+  const nn = cleanNum(g.n); if (nn) o.n = nn;
   return o;
 }
 function buildGateObj(i, d) {
@@ -2336,12 +2390,17 @@ function buildGateObj(i, d) {
   arrow.position.set(0, oh + 0.55 * k, -0.1);
   arrow.userData.gateIndex = i;
   grp.add(arrow);
-  // number label
-  const label = new THREE.Sprite(new THREE.SpriteMaterial({ map: makeLabelTexture(i + 1), transparent: true, depthTest: false }));
-  label.scale.set(1.55 * k, 1.55 * k, 1);
-  label.position.set(0, oh + 1.5 * k, 0);
-  label.renderOrder = 10;
-  grp.add(label);
+  // number label (own style per gate: colour, font, size, position)
+  const ns = d.n || {};
+  let label = null;
+  if (!ns.h) {
+    label = new THREE.Sprite(new THREE.SpriteMaterial({ map: makeLabelTexture(i + 1, ns), transparent: true, depthTest: false }));
+    const sc = 1.55 * k * (ns.s || 1);
+    label.scale.set(sc, sc, 1);
+    label.position.set((ns.x || 0), (ns.p === 'm' ? 0 : ns.p === 'b' ? -oh - 1.5 * k : oh + 1.5 * k) + (ns.y || 0), 0);
+    label.renderOrder = 10;
+    grp.add(label);
+  }
   // support pole for upright gates
   if (!sp.ring && Math.abs(d.pitch || 0) < 5 && d.y - oh > 0.2) {
     const h = d.y - oh;
@@ -2536,7 +2595,7 @@ function genCity() {
 /* ---------- JSON import / export ---------- */
 function round2(v) { return Math.round(v * 100) / 100; }
 function trackToJSON() {
-  const lines = gates.map((g) => '  {"x":' + round2(g.x) + ',"y":' + round2(g.y) + ',"z":' + round2(g.z) + ',"yaw":' + round2(g.yaw || 0) + ',"pitch":' + round2(g.pitch || 0) + (g.k ? ',"k":"' + g.k + '"' : '') + (g.sz && g.sz !== 1 ? ',"sz":' + round2(g.sz) : '') + (g.c ? ',"c":"' + g.c + '"' : '') + '}');
+  const lines = gates.map((g) => '  {"x":' + round2(g.x) + ',"y":' + round2(g.y) + ',"z":' + round2(g.z) + ',"yaw":' + round2(g.yaw || 0) + ',"pitch":' + round2(g.pitch || 0) + (g.k ? ',"k":"' + g.k + '"' : '') + (g.sz && g.sz !== 1 ? ',"sz":' + round2(g.sz) : '') + (g.c ? ',"c":"' + g.c + '"' : '') + (cleanNum(g.n) ? ',"n":' + JSON.stringify(cleanNum(g.n)) : '') + '}');
   const objs = propData.map((p) => '  {"t":"' + p.t + '","x":' + round2(p.x) + ',"z":' + round2(p.z) + ',"yaw":' + round2(p.yaw || 0) + ',"s":' + round2(p.s || 1) + ',"c":"' + p.c + '"}');
   return '{\n "name":' + JSON.stringify(trackName) + ',\n "gates":[\n' + lines.join(',\n') + '\n ]' + (objs.length ? ',\n "objects":[\n' + objs.join(',\n') + '\n ]' : '') + '\n}';
 }
@@ -2559,6 +2618,7 @@ function importJSON(text) {
     if (g.k && GATE_KINDS[g.k]) ng.k = g.k;
     if (Number(g.sz) && Number(g.sz) !== 1) ng.sz = clamp(Number(g.sz), 0.5, 1.8);
     if (typeof g.c === 'string' && /^#[0-9a-f]{6}$/i.test(g.c)) ng.c = g.c;
+    { const nn = cleanNum(g.n); if (nn) ng.n = nn; }
     out.push(ng);
   }
   gates = out;
@@ -2654,6 +2714,7 @@ function addGate() {
   if (b.k) n.k = b.k;
   if (b.sz) n.sz = b.sz;
   if (b.c) n.c = b.c;
+  if (b.n) n.n = Object.assign({}, b.n);
   gates.splice(idx + 1, 0, n);
   selected = idx + 1; selProp = -1;
   markCustom();
@@ -6247,7 +6308,7 @@ window.__afterRebuild = function () {
     saveCustomList();
   }
 };
-const NMP_DESC = { clean: 'רצפה ריקה בלי אלמנטים. מתחילים מאפס', arena: 'אולם סגור מואר', redwood: 'יער סקויה', city: 'רחובות ובניינים', field: 'מדשאה פתוחה וגבעות', desert: 'חולות ודיונות', snow: 'שלג והרים', dusk: 'שמיים בשקיעה' };
+const NMP_DESC = { clean: 'רצפה ריקה בלי אלמנטים. מתחילים מאפס', arena: 'אולם סגור מואר', redwood: 'יער סקויה', city: 'רחובות ובניינים', field: 'מדשאה פתוחה וגבעות', desert: 'חולות ודיונות', snow: 'שלג והרים', dusk: 'שמיים בשקיעה', blue: 'רצפה כחולה עם ריבועים מקווקוים, בלי רקע' };
 function openNewMapPicker() {
   const el = $('nmp'); if (!el) { createCustomTrack(); return; }
   const g = $('nmpGrid');
@@ -6745,7 +6806,7 @@ const GX = {
   cfg: null, lastStage: null, combo: 0, comboT: -99, spdA: 0, spdOn: false, bgClock: 0, bgDraw: 0, ac: [76, 195, 230], acT: -9,
   lastHover: null, lastTick: 0, audioInit: false, streaks: null
 };
-const GX_AUTO = { arena: 'neon', clean: 'cine', redwood: 'cine', city: 'neon', field: 'sunset', desert: 'apoc', snow: 'frost', dusk: 'sunset' };
+const GX_AUTO = { arena: 'neon', clean: 'cine', redwood: 'cine', city: 'neon', field: 'sunset', desert: 'apoc', snow: 'frost', dusk: 'sunset', blue: 'cine' };
 const GX_GRADES = {
   off: { name: 'ללא', f: 'none', t: 'none' },
   cine: { name: 'קולנועי', f: 'contrast(1.1) saturate(1.2) brightness(1.02)', t: 'linear-gradient(180deg,rgba(255,176,96,.16),rgba(40,96,190,.2))' },
@@ -8051,7 +8112,7 @@ function nxSegDist(px, pz, ax, az, bx, bz) {
   const t = clamp(((px - ax) * dx + (pz - az) * dz) / l2, 0, 1);
   return Math.hypot(px - (ax + t * dx), pz - (az + t * dz));
 }
-const NX_AI_BASES = ['clean', 'field', 'desert', 'snow', 'dusk', 'redwood', 'arena'];     // city is left out: its buildings stand in the way of a free route
+const NX_AI_BASES = ['clean', 'field', 'desert', 'snow', 'dusk', 'redwood', 'arena', 'blue'];     // city is left out: its buildings stand in the way of a free route
 const NX_AI_ALIAS = { tree: 'pine', trees: 'pine', fir: 'pine', spruce: 'pine', conifer: 'pine', stone: 'rock', boulder: 'rock', rocks: 'rock', cones: 'cone', tire: 'tires', tyre: 'tires', tyres: 'tires', lamppost: 'lamp', streetlight: 'lamp', hut: 'house', cabin: 'house', shed: 'container', skyscraper: 'tower', fence_: 'fence', bushes: 'bush', shrub: 'bush', pole: 'pylon', post: 'pylon' };
 function nxAiUnwrap(d) {                                    // the reply may be a string, or wrapped in another object
   if (typeof d === 'string') { try { d = JSON.parse(d.slice(d.indexOf('{'), d.lastIndexOf('}') + 1)); } catch (e) { return null; } }
@@ -10045,6 +10106,62 @@ function edPathClear() {
   $('edPcClear').addEventListener('click', (e) => { edPathClear(); e.target.blur(); });
   const sz = $('edPcSize'), lb = $('edPcSizeV');
   sz.addEventListener('input', () => { lb.textContent = '×' + Number(sz.value).toFixed(1); });
+})();
+
+/* ---------- gate numbers: full style editor in the editor's control panel ---------- */
+(function edNumSetup() {
+  const box = $('edNum'); if (!box || typeof cleanNum !== 'function') return;
+  const F = $('edNumF');
+  F.innerHTML = Object.keys(NUM_FONTS).map((k) => '<option value="' + k + '">' + NUM_FONTS[k][0] + '</option>').join('');
+  const targets = () => ($('edNumAll').checked || selected < 0 || !gates[selected] ? gates.slice() : [gates[selected]]);
+  const src = () => (selected >= 0 && gates[selected] ? gates[selected].n : gates[0] && gates[0].n) || {};
+  function sync() {
+    const n = src();
+    $('edNumShow').checked = !n.h;
+    $('edNumC').value = n.c || '#ffd45a'; $('edNumO').value = n.o || '#060a10'; $('edNumG').value = n.g || '#4cc3e6';
+    F.value = n.f || 'imp'; $('edNumP').value = n.p || 't';
+    $('edNumS').value = n.s || 1; $('edNumSV').textContent = '×' + (n.s || 1).toFixed(2).replace(/0$/, '');
+    $('edNumX').value = n.x || 0; $('edNumXV').textContent = String(n.x || 0);
+    $('edNumY').value = n.y || 0; $('edNumYV').textContent = String(n.y || 0);
+    $('edNumWho').textContent = $('edNumAll').checked || selected < 0 || !gates[selected] ? 'השינויים חלים על כל השערים.' : 'עורך את המספר של שער #' + (selected + 1) + '. סמן "על כל השערים" כדי להחיל שינוי על כולם.';
+  }
+  function apply(key, val) {
+    targets().forEach((g) => {
+      const n = Object.assign({}, g.n || {});
+      if (val === '' || val === false || val === null || val === undefined) delete n[key]; else n[key] = val;
+      const c = cleanNum(n); if (c) g.n = c; else delete g.n;
+    });
+    markCustom(); rebuildTrack(); updateJSONBox();
+    if (window.__onTrackChanged) window.__onTrackChanged(true);
+  }
+  const bind = (id, key, conv, ev) => {
+    const el = $(id);
+    el.addEventListener('input', () => { apply(key, conv(el)); sync(); });
+    el.addEventListener('change', () => { edHistPush(); if (el.tagName === 'SELECT') el.blur(); });
+  };
+  bind('edNumShow', 'h', (e) => !e.checked);
+  bind('edNumC', 'c', (e) => e.value); bind('edNumO', 'o', (e) => e.value); bind('edNumG', 'g', (e) => e.value);
+  bind('edNumF', 'f', (e) => (e.value === 'imp' ? '' : e.value));
+  bind('edNumP', 'p', (e) => (e.value === 't' ? '' : e.value));
+  bind('edNumS', 's', (e) => Number(e.value)); bind('edNumX', 'x', (e) => Number(e.value)); bind('edNumY', 'y', (e) => Number(e.value));
+  box.querySelectorAll('[data-numauto]').forEach((b) => b.addEventListener('click', (e) => { apply(b.dataset.numauto, ''); edHistPush(); sync(); e.target.blur(); }));
+  $('edNumAll').addEventListener('change', sync);
+  $('edNumCopy').addEventListener('click', (e) => {
+    const s = cleanNum(src()); gates.forEach((g) => { if (s) g.n = Object.assign({}, s); else delete g.n; });
+    markCustom(); rebuildTrack(); updateJSONBox(); edHistPush(); sync(); e.target.blur();
+  });
+  $('edNumReset').addEventListener('click', (e) => {
+    targets().forEach((g) => { delete g.n; });
+    markCustom(); rebuildTrack(); updateJSONBox(); edHistPush(); sync(); e.target.blur();
+  });
+  $('edNumBtn').addEventListener('click', (e) => {                      // the shortcut next to "test flight"
+    box.open = true; sync(); box.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    box.classList.remove('edflash'); void box.offsetWidth; box.classList.add('edflash'); e.target.blur();
+  });
+  box.addEventListener('toggle', sync);
+  const uel = updateEditorLabel;
+  updateEditorLabel = function () { uel(); sync(); };
+  sync();
 })();
 
 /* ---------- boot ---------- */
