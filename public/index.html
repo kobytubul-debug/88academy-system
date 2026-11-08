@@ -1201,7 +1201,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 199</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 200</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -7906,7 +7906,7 @@ function nxGxWindow(t) {
   h += nxF('סגנון ממשק (צורות, מסגרות ופאנלים)', nxSel('theme.gx.skin', g.skin || '', [['', 'בסיסי'], ['mil', 'צבאי טקטי'], ['glass', 'זכוכית'], ['arcade', 'ארקייד'], ['race', 'מירוץ קרבון'], ['paper', 'נייר בהיר']]));
   h += nxF('רקע התפריט', nxSel('theme.gx.bgmode', g.bgmode || 'grid', [['grid', 'רשת ונצנוצים'], ['radar', 'מכ"ם'], ['bokeh', 'כדורי אור'], ['retro', 'שמש רטרו'], ['streaks', 'קווי מהירות'], ['dots', 'נקודות שקטות'], ['none', 'בלי רקע']]));
   h += nxF('גוון מפות', nxSel('theme.gx.grade', g.grade, [['auto', 'אוטומטי לפי המפה']].concat(Object.keys(GX_GRADES).map((k) => [k, GX_GRADES[k].name]))));
-  h += '<h4>ערכות משחקיות מוכנות</h4><div class="nxbtns">' + NX_GXPRESETS.map((p, i) => '<button class="nxb' + (NX.draft.gxp === p.name ? ' sel' : '') + '" data-act="gx-preset" data-i="' + i + '">' + nxEsc(p.name) + '</button>').join('') + '' + Object.keys(NX.themes).map((id) => '<button class="nxb" data-act="gx-saved" data-id="' + id + '" title="ערכה שנשמרה">★ ' + nxEsc(NX.themes[id].name || id) + '</button>').join('') + '</div>';
+  h += '<h4>ערכות משחקיות מוכנות</h4><div class="nxbtns">' + NX_GXPRESETS.map((p, i) => '<button class="nxb' + (NX.draft.gxp === p.name ? ' sel' : '') + '" data-act="gx-preset" data-i="' + i + '">' + nxEsc(p.name) + '</button>').join('') + '' + Object.keys(NX.themes).map((id) => '<span style="display:inline-flex;align-items:stretch"><button class="nxb" data-act="gx-saved" data-id="' + id + '" title="ערכה שנשמרה">★ ' + nxEsc(NX.themes[id].name || id) + '</button><button class="nxb" data-act="th-del" data-id="' + id + '" title="מחק את הערכה" style="color:#ff453a;padding:0 8px;margin-inline-start:-1px">&#10005;</button></span>').join('') + '</div>';
   const swo = NX_GXSW.filter((r) => r[0] !== 'scan'), allOn = swo.every((r) => g[r[0]]), allOff = swo.every((r) => !g[r[0]]);
   h += '<div class="nxbtns"><button class="nxb' + (allOn ? ' sel' : '') + '" data-act="gx-all-on">הפעל הכול</button><button class="nxb' + (allOff ? ' sel' : '') + '" data-act="gx-all-off">כבה הכול</button></div>';
   return '<details class="nxcol" data-cid="gxAll"' + (NX.openCats.gxAll ? ' open' : '') + '><summary>סגנון משחק</summary><div class="nxcolb">' + h + '</div></details>';
@@ -8929,7 +8929,7 @@ function nxAdmWire() {
     else if (a === 'th-savecur') { nxSaveTheme(); }
     else if (a === 'th-del') {
       if (el.dataset.armed) { if (NX.editTheme === id) NX.editTheme = null; if (NX.selTheme === id) NX.selTheme = null; delete NX.themes[id]; nxWrite('themes/' + id, null, true); nxAdmRender(); return; }
-      el.dataset.armed = '1'; el.textContent = 'בטוח?'; setTimeout(() => { el.dataset.armed = ''; el.textContent = 'מחק'; }, 2500);
+      const lbl = el.textContent; el.dataset.armed = '1'; el.textContent = 'למחוק?'; setTimeout(() => { el.dataset.armed = ''; el.textContent = lbl; }, 2500);
     }
   });
   body.addEventListener('toggle', (e) => { const d = e.target; if (d && d.tagName === 'DETAILS' && d.open) { if (d.dataset.un) NX.openP = d.dataset.un; else NX.openG = d.dataset.gid; } }, true);
