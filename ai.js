@@ -83,11 +83,21 @@ async function listModels() {
   return ok.sort((a, b) => rank(b) - rank(a));
 }
 
-async function ask(model, job, ms) {
-  const j = await gem('/v1beta/models/' + encodeURIComponent(model) + ':generateContent', { method: 'POST',
-    body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: prompt(job) }] }], generationConfig: { temperature: 0.2, responseMimeType: 'application/json' } }) }, ms);
+// A short judgement does not need long "thinking": ask the model to think little (the setting differs between model families).
+function thinkingFor(model) {
+  if (/gemini-2\.5-flash/.test(model)) return { thinkingBudget: 0 };
+  if (/gemini-3/.test(model) && !/pro/.test(model)) return { thinkingLevel: 'low' };
+  return null;
+}
+async function ask(model, job, ms, text) {
+  const body = (think) => JSON.stringify({ contents: [{ role: 'user', parts: [{ text: text || prompt(job) }] }], generationConfig: Object.assign({ temperature: 0.2 }, text ? {} : { responseMimeType: 'application/json' }, think ? { thinkingConfig: think } : {}) });
+  const path = '/v1beta/models/' + encodeURIComponent(model) + ':generateContent', think = thinkingFor(model);
+  let j;
+  try { j = await gem(path, { method: 'POST', body: body(think) }, ms); }
+  catch (e) { if (think && e.status === 400 && /think/i.test(e.message)) j = await gem(path, { method: 'POST', body: body(null) }, ms); else throw e; }
   const parts = j && j.candidates && j.candidates[0] && j.candidates[0].content && j.candidates[0].content.parts;
-  return parse((parts || []).map((p) => p.text || '').join(''));
+  const out = (parts || []).map((p) => p.text || '').join('');
+  return text ? out : parse(out);
 }
 
 const RETRY = (e) => e && (e.code === 'timeout' || [429, 500, 502, 503, 504].indexOf(e.status) >= 0);
@@ -117,7 +127,8 @@ async function check(job, wanted) {
   }
   if (left() > 8000) { await sleep(1200); try { return await tryModel(first, Math.min(15000, left())); } catch (e) { if (!RETRY(e)) throw e; } }
   let list = []; try { list = await modelsCached(); } catch (e) { /* keep the first error */ }
-  for (const n of list.filter((x) => x !== first).slice(0, 3)) {
+  const light = (n) => (/lite|flash-8b/.test(n) ? 0 : 1);
+  for (const n of list.filter((x) => x !== first).sort((a, b) => light(a) - light(b)).slice(0, 3)) {
     if (left() < 6000) break;
     try { return await tryModel(n, Math.min(20000, left())); } catch (e) { if (!RETRY(e) && e.status !== 404 && e.status !== 400) throw e; }
   }
@@ -134,10 +145,15 @@ async function ping(wanted) {
   if (list.length && list.indexOf(m) < 0) { steps.push({ step: 'שם המודל', ok: false, msg: m + ' לא ברשימת המודלים של המפתח. המערכת תעבור למודל ' + list[0] + ' אוטומטית' }); m = list[0]; }
   a = t0();
   try {
-    const j = await gem('/v1beta/models/' + encodeURIComponent(m) + ':generateContent', { method: 'POST', body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: 'ענה במילה אחת: שלום' }] }] }) }, 60000);
-    const parts = j && j.candidates && j.candidates[0] && j.candidates[0].content && j.candidates[0].content.parts;
-    steps.push({ step: 'תשובה מהמודל ' + m, ok: true, ms: t0() - a, msg: String((parts || []).map((p) => p.text || '').join('')).slice(0, 60) || '(ריק)' });
+    const out = await ask(m, {}, 60000, 'ענה במילה אחת: שלום');
+    steps.push({ step: 'תשובה מהמודל ' + m, ok: true, ms: t0() - a, msg: String(out).slice(0, 60) || '(ריק)' });
   } catch (e) { steps.push({ step: 'תשובה מהמודל ' + m, ok: false, ms: t0() - a, msg: String(e.message || e).slice(0, 300) }); }
+  const bad = steps[steps.length - 1];
+  if (!bad.ok || bad.ms > 8000) {                                                    // slow or failing: time the other models side by side, so the manager can pick a fast one
+    const others = list.filter((x) => x !== m).sort((x, y) => (/lite|flash-8b/.test(x) ? 0 : 1) - (/lite|flash-8b/.test(y) ? 0 : 1)).slice(0, 3);
+    const rs = await Promise.all(others.map(async (n) => { const b = t0(); try { await ask(n, {}, 20000, 'ענה במילה אחת: שלום'); return { step: 'מודל חלופי ' + n, ok: true, ms: t0() - b, msg: 'ענה. אפשר לבחור אותו בשדה "מודל ג׳מיני"' }; } catch (e) { return { step: 'מודל חלופי ' + n, ok: false, ms: t0() - b, msg: String(e.message || e).slice(0, 160) }; } }));
+    rs.forEach((r) => steps.push(r));
+  }
   return steps;
 }
 
