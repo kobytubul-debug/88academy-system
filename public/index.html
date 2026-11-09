@@ -1244,7 +1244,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 234</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 235</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -1257,8 +1257,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 <div id="fade"><div id="fadeText">טוען...</div></div>
 </div>
 
-<script>
-/* ---------- hosted mode: the game talks to its own server instead of Claude's artifact capabilities ----------
+<script>/* ---------- hosted mode: the game talks to its own server instead of Claude's artifact capabilities ----------
    Inside a Claude artifact window.claude already exists and this file does nothing. On the 88ACADEMY site it supplies
    claude.use('db' | 'user' | 'downloads') on top of the server's /api endpoints, so the game code stays the same. */
 (function () {
@@ -1389,9 +1388,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
     box.appendChild(a);
   });
 })();
-
 </script>
-<script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
 <script src="https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <div id="nmp"><div class="edjbox"><div class="edh">מפה חדשה: בחר סוג מפה</div><div id="nmpGrid"></div><button class="b" id="nmpCancel">ביטול</button></div></div>
 <button id="btnBackEdit">&#9998; חזרה לעריכה <kbd>G</kbd></button>
@@ -8515,7 +8512,7 @@ function nxAiCurrent() {
 function nxAiEditPrompt(text, cur, feedback) {
   const small = { base: cur.base, closed: cur.closed, gates: cur.gates, objects: cur.objects.map((o) => [o.t, o.x, o.z]) };      // compact view of the current track
   return 'You edit an FPV drone racing track in a simulator. The pilot writes in Hebrew. Reply with ONLY a JSON object that describes the CHANGE, not the whole track, no prose, no markdown.\n' +
-    'Schema (every key is optional, include only what the request needs): {"base":"redwood","addObjects":[{"t":"pine","x":10,"z":5,"s":1.2,"yaw":0,"c":"#2c6a34"}],"removeObjects":{"all":false,"types":["pine"]},"gates":[{"x":0,"y":8,"z":-30,"k":"ring","sz":1}],"closed":true}\n' +
+    'Schema (every key is optional, include only what the request needs): {"base":"redwood","addObjects":[{"t":"pine","x":10,"z":5,"s":1.2,"yaw":0,"c":"#2c6a34"}],"removeObjects":{"all":false,"types":["pine"]},"gates":[{"x":0,"y":8,"z":-30,"k":"ring","sz":1}],"addGates":{"after":5,"count":5,"spacing":16,"y":8},"closed":true}\n' +
     'CURRENT TRACK (objects are [type, x, z]):\n' + JSON.stringify(small) + '\n' +
     'RULES:\n' +
     '- Output only what must change. To add trees or other objects use addObjects only; do NOT repeat existing objects or gates. Use "gates" (the COMPLETE new gate list) only when the pilot asks to change, move, add or remove gates, and then also keep every gate that was not mentioned. Use removeObjects only when asked to remove things. Use base only when the map type must change.\n' +
@@ -8527,22 +8524,43 @@ function nxAiEditPrompt(text, cur, feedback) {
     '"תוסיף עצים משני צדי המסלול" -> {"addObjects":[{"t":"pine","x":-30,"z":-14,"s":1.3},{"t":"pine","x":-10,"z":14,"s":1.1},{"t":"oak","x":15,"z":-15},{"t":"pine","x":40,"z":13}]} (about 20 to 40 objects in a real answer)\n' +
     '"תהפוך את המפה ליער" -> {"base":"redwood","addObjects":[{"t":"pine","x":-25,"z":12},{"t":"pine","x":22,"z":-13}]}\n' +
     '"תמחק את כל העצים" -> {"removeObjects":{"types":["pine","oak","birch","palm","cypress","deadtree","bush"]}}\n' +
+    '"הוסף עוד 5 שערים בקו ישר בגובה של שער מספר 5" -> {"addGates":{"after":5,"count":5,"spacing":16}} (the app computes the positions: straight on, same height as gate 5. "y" only if another height is asked; "after" defaults to the last gate; for a different direction give "dx" and "dz")\n' +
+    '"תוסיף שער בגובה 20 אחרי שער 2" -> {"addGates":{"after":2,"count":1,"y":20}}\n' +
     '"תרחיק את השערים אחד מהשני" -> {"gates":[ ...the same gates with larger spacing... ]}\n' +
     '"שנה למדבר ותוסיף סלעים" -> {"base":"desert","addObjects":[{"t":"rock","x":10,"z":16},{"t":"bigrock","x":-30,"z":-18}]}\n' +
     (feedback ? 'YOUR PREVIOUS ANSWER WAS REJECTED: ' + feedback + '. Fix exactly that and answer again.\n' : '') +
     'Pilot request (Hebrew): ' + text.slice(0, 1200);
 }
+function nxAiAddGates(list, ag) {                             // "add N gates in a straight line at gate K's height": computed here, not by the model
+  const n = Math.max(1, Math.min(20, Math.round(Number(ag.count) || 1)));
+  let after = Math.round(Number(ag.after));
+  if (!isFinite(after) || after < 1 || after > list.length) after = list.length;
+  const a = list[after - 1], sp = Math.max(12, Math.min(60, Number(ag.spacing) || 16));
+  let dx, dz;
+  if (isFinite(Number(ag.dx)) && isFinite(Number(ag.dz)) && (Number(ag.dx) || Number(ag.dz))) { dx = Number(ag.dx); dz = Number(ag.dz); }
+  else if (isFinite(Number(ag.heading))) { const r = Number(ag.heading) * Math.PI / 180; dx = Math.cos(r); dz = Math.sin(r); }
+  else { const p = after > 1 ? list[after - 2] : null, q = after < list.length ? list[after] : null; dx = p ? a.x - p.x : q ? q.x - a.x : 1; dz = p ? a.z - p.z : q ? q.z - a.z : 0; }
+  const L = Math.hypot(dx, dz) || 1; dx /= L; dz /= L;
+  const y = isFinite(Number(ag.y)) && ag.y !== null ? Number(ag.y) : a.y;
+  const add = [];
+  for (let i = 1; i <= n; i++) add.push({ x: Math.round((a.x + dx * sp * i) * 100) / 100, y, z: Math.round((a.z + dz * sp * i) * 100) / 100 });
+  return list.slice(0, after).concat(add, list.slice(after));
+}
 function nxAiMerge(cur, raw) {                                 // the model's change + the current track = a full track for nxBuildFromAi
   let d = raw;
   if (typeof d === 'string') { try { d = JSON.parse(d.slice(d.indexOf('{'), d.lastIndexOf('}') + 1)); } catch (e) { throw new Error('התשובה אינה JSON תקין'); } }
-  for (let i = 0; i < 3 && d && typeof d === 'object' && !d.addObjects && !d.removeObjects && !Array.isArray(d.gates) && !Array.isArray(d.objects) && !d.base; i++) d = d.track || d.result || d.changes || d.change || d.data || null;
+  for (let i = 0; i < 3 && d && typeof d === 'object' && !d.addObjects && !d.addGates && !d.removeObjects && !Array.isArray(d.gates) && !Array.isArray(d.objects) && !d.base; i++) d = d.track || d.result || d.changes || d.change || d.data || null;
   if (!d || typeof d !== 'object') throw new Error('התשובה ריקה');
   let objs = Array.isArray(d.objects) ? d.objects.slice() : cur.objects.slice();
   const rm = d.removeObjects;
   if (rm && rm.all) objs = [];
   else if (rm && Array.isArray(rm.types) && rm.types.length) objs = objs.filter((o) => rm.types.indexOf(o.t) < 0);
   if (Array.isArray(d.addObjects)) objs = objs.concat(d.addObjects);
-  const gts = Array.isArray(d.gates) && d.gates.length ? d.gates : cur.gates;
+  let gts = Array.isArray(d.gates) && d.gates.length ? d.gates.slice() : cur.gates.slice();
+  const ag = d.addGates && typeof d.addGates === 'object' ? (Array.isArray(d.addGates) ? d.addGates[0] : d.addGates) : null;
+  if (ag) gts = nxAiAddGates(gts, ag);
+  const changed = !!(d.base && d.base !== cur.base) || !!ag || (Array.isArray(d.addObjects) && d.addObjects.length) || !!(rm && (rm.all || (rm.types && rm.types.length))) || (Array.isArray(d.gates) && d.gates.length > 0) || (Array.isArray(d.objects)) || (d.closed !== undefined && d.closed !== cur.closed);
+  if (!changed) throw new Error('ה-AI לא החזיר שום שינוי');
   return { base: d.base || cur.base, closed: d.closed !== undefined ? d.closed : cur.closed, gates: gts, objects: objs };
 }
 function nxAiApplyEdit(t) {                                   // replace the track that is open in the editor, in place
@@ -8592,7 +8610,7 @@ async function nxAiEdit(sample, text) {
     nxAiMsg('המסלול עודכן: ' + t.gates.length + ' שערים ו-' + t.objects.length + ' אלמנטים. אפשר לבטל את השינוי.');
     nxToast('המסלול עודכן עם AI');
     const ov = $('edAi'); if (ov) ov.classList.remove('open');
-  } else nxAiMsg(fatal || 'לא הצלחתי לבצע את השינוי. המסלול נשאר כמו שהיה. נסה לנסח אחרת.');
+  } else nxAiMsg(fatal || 'לא הצלחתי לבצע את השינוי. המסלול נשאר כמו שהיה. נסה לנסח אחרת.' + (feedback ? ' (סיבה: ' + feedback + ')' : ''));
 }
 function nxAiFallback(withObjs) {                           // last resort so the pilot always gets a flyable track
   return { name: 'מסלול AI', base: 'field', closed: false, gates: [{ x: -60, y: 8, z: 0 }, { x: 60, y: 8, z: 0 }], objects: [] };
@@ -8639,7 +8657,7 @@ async function nxAiBuild() {
     registerCustom({ id: 'custom' + n, num, name: t.name, gates: t.gates, objects: t.objects, base: t.base });
     saveCustomList(); saveEnv();
     NX.aiPrompt = '';
-    nxAiMsg(t.fallback ? 'לא הצלחתי לפרש את הבקשה, ולכן נוצר מסלול התחלתי בן שני שערים. אפשר להמשיך בעורך.' : 'נוצר המסלול "' + t.name + '": ' + t.gates.length + ' שערים ו-' + t.objects.length + ' אלמנטים.');
+    nxAiMsg(t.fallback ? 'לא הצלחתי לפרש את הבקשה, ולכן נוצר מסלול התחלתי בן שני שערים. אפשר להמשיך בעורך.' + (feedback ? ' (סיבה: ' + feedback + ')' : '') : 'נוצר המסלול "' + t.name + '": ' + t.gates.length + ' שערים ו-' + t.objects.length + ' אלמנטים.');
     buildCards();
     const ed = $('edAi'); if (ed) ed.classList.remove('open');
     selectTrack('custom' + n);

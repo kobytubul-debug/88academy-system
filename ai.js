@@ -96,7 +96,7 @@ function trackSchema(kind, types, kinds) {
   const num = { type: 'NUMBER' }, en = (l) => (l && l.length ? { type: 'STRING', enum: l } : { type: 'STRING' });
   const obj = { type: 'OBJECT', properties: { t: en(types), x: num, z: num, s: num, yaw: num, c: { type: 'STRING' } }, required: ['t', 'x', 'z'] };
   const gate = { type: 'OBJECT', properties: { x: num, y: num, z: num, k: en(kinds), sz: num }, required: ['x', 'y', 'z'] };
-  if (kind === 'edit') return { type: 'OBJECT', properties: { base: { type: 'STRING', enum: BASES }, addObjects: { type: 'ARRAY', items: obj }, removeObjects: { type: 'OBJECT', properties: { all: { type: 'BOOLEAN' }, types: { type: 'ARRAY', items: { type: 'STRING' } } } }, gates: { type: 'ARRAY', items: gate }, closed: { type: 'BOOLEAN' } } };
+  if (kind === 'edit') return { type: 'OBJECT', properties: { base: { type: 'STRING', enum: BASES }, addObjects: { type: 'ARRAY', items: obj }, removeObjects: { type: 'OBJECT', properties: { all: { type: 'BOOLEAN' }, types: { type: 'ARRAY', items: { type: 'STRING' } } } }, gates: { type: 'ARRAY', items: gate }, addGates: { type: 'OBJECT', properties: { after: { type: 'INTEGER' }, count: { type: 'INTEGER' }, spacing: num, y: num, dx: num, dz: num } }, closed: { type: 'BOOLEAN' } } };
   return { type: 'OBJECT', properties: { name: { type: 'STRING' }, base: { type: 'STRING', enum: BASES }, closed: { type: 'BOOLEAN' }, gates: { type: 'ARRAY', items: gate }, objects: { type: 'ARRAY', items: obj } }, required: ['name', 'base', 'closed', 'gates'] };
 }
 async function ask(model, job, ms, text, asJson, schema) {
