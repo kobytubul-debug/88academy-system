@@ -113,26 +113,23 @@ async function modelsCached() {
 async function check(job, wanted) {
   if (!hasKey()) { const e = new Error('no-key'); e.code = 'no-key'; throw e; }
   const t0 = Date.now(), left = () => 55000 - (Date.now() - t0);
-  const first = /^gemini-[A-Za-z0-9._\-]{1,60}$/.test(wanted || '') ? wanted : MODEL();
+  const first = /^gemini-[A-Za-z0-9._\-]{1,60}$/.test(wanted || '') ? wanted : MODEL(), tried = [];
   let last = null;
-  const tryModel = async (m, ms) => { try { return await ask(m, job, ms); } catch (e) { last = e; throw e; } };
-  try { return await tryModel(first, Math.min(20000, left())); }
+  const go = async (m, ms) => { tried.push(m); try { return await ask(m, job, ms); } catch (e) { last = e; throw e; } };
+  const skip = (e) => RETRY(e) || e.status === 404 || e.status === 400;           // a model that is missing, busy or slow: try the next one
+  try { return await go(first, Math.min(20000, left())); }
   catch (e) {
-    if (e.status === 404 || e.status === 400) {
-      const list = await modelsCached(); const pick = list.find((n) => n !== first);
-      if (!pick) throw e;
-      const r = await tryModel(pick, Math.min(25000, left())); found = pick; return r;
-    }
-    if (!RETRY(e)) throw e;
+    if (!skip(e)) throw e;
+    if (RETRY(e) && e.status !== 404 && left() > 8000) { await sleep(1200); try { return await go(first, Math.min(15000, left())); } catch (e2) { if (!skip(e2)) throw e2; } }
   }
-  if (left() > 8000) { await sleep(1200); try { return await tryModel(first, Math.min(15000, left())); } catch (e) { if (!RETRY(e)) throw e; } }
   let list = []; try { list = await modelsCached(); } catch (e) { /* keep the first error */ }
   const light = (n) => (/lite|flash-8b/.test(n) ? 0 : 1);
   for (const n of list.filter((x) => x !== first).sort((a, b) => light(a) - light(b)).slice(0, 3)) {
     if (left() < 6000) break;
-    try { return await tryModel(n, Math.min(20000, left())); } catch (e) { if (!RETRY(e) && e.status !== 404 && e.status !== 400) throw e; }
+    try { const r = await go(n, Math.min(20000, left())); if (last && (last.status === 404 || last.status === 400) && tried[0] === first) found = n; return r; } catch (e) { if (!skip(e)) throw e; }
   }
-  throw last || new Error('failed');
+  const err = new Error(String((last && last.message) || 'failed') + ' | נוסו: ' + tried.join(', ')); err.code = (last && last.code) || 'gemini'; err.status = last && last.status;
+  throw err;
 }
 
 // Step by step connection test with timings: can the server reach Gemini, does the key work, does the model answer.
