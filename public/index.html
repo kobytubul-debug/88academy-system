@@ -1244,7 +1244,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 223</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 224</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -8001,12 +8001,19 @@ function nxGroupCourses(g) {                                  // the group's cou
 }
 function nxGroupCourseUi(gid, g) {
   const cs = NX.draft.courses || {}, sel = nxGroupCourses(g), rest = Object.keys(cs).filter((cid) => sel.indexOf(cid) < 0);
-  const b = (act, cid, t) => '<button class="nxb" data-act="' + act + '" data-gid="' + gid + '" data-v="' + cid + '">' + t + '</button>';
+  const b = (act, cid, t, ttl, dis) => '<button class="nxb" data-act="' + act + '" data-gid="' + gid + '" data-v="' + cid + '" title="' + ttl + '"' + (dis ? ' disabled' : '') + ' style="min-width:34px;padding:6px 8px">' + t + '</button>';
   if (!Object.keys(cs).length) return '<p class="nxn">עדיין אין קורסים. יוצרים אותם בלשונית קורסים.</p>';
-  let h = sel.map((cid, n) => '<div class="nxrow2"><span style="flex:1"><b>' + (n + 1) + '.</b> ' + nxEsc(cs[cid].name) + '</span>' + b('grp-crs-up', cid, '▲') + b('grp-crs-dn', cid, '▼') + b('grp-crs-del', cid, '✕') + '</div>').join('');
-  h += rest.map((cid) => '<div class="nxrow2"><span style="flex:1;opacity:.7">' + nxEsc(cs[cid].name) + '</span>' + b('grp-crs-add', cid, 'הוסף לקבוצה') + '</div>').join('');
-  h += '<p class="nxn">' + (sel.length ? 'התלמידים לומדים לפי הסדר: כל קורס, ובו כל מסלול ומבחן, חובה לפני שנפתח הבא.' : 'בלי קורס: לפי מצב הקבוצה למעלה.') + '</p>';
-  return '<div style="width:100%;display:block">' + h + '</div>';          // the rows stack inside the field (the field itself is a flex row)
+  const row = 'display:flex;align-items:center;gap:6px;margin:6px 0;padding:8px 10px;background:rgba(255,255,255,.04);border-radius:4px';
+  const nm = 'flex:1;min-width:0;font-size:15px;line-height:1.35;color:#fff;overflow-wrap:anywhere';
+  let h = '<h4 style="margin:6px 0">קורסי הקבוצה, לפי סדר הלימוד</h4>';
+  h += sel.length ? sel.map((cid, n) => '<div style="' + row + '"><span style="font-weight:700;color:#7fb0ff;min-width:22px">' + (n + 1) + '.</span><span style="' + nm + '">' + nxEsc(cs[cid].name) + '</span>' + b('grp-crs-up', cid, '&#9650;', 'הזז למעלה', n === 0) + b('grp-crs-dn', cid, '&#9660;', 'הזז למטה', n === sel.length - 1) + b('grp-crs-del', cid, '&#10005;', 'הסר מהקבוצה') + '</div>').join('')
+    : '<p class="nxn">עדיין לא נבחרו קורסים לקבוצה.</p>';
+  if (rest.length) {
+    h += '<h4 style="margin:12px 0 6px">קורסים להוספה</h4>';
+    h += rest.map((cid) => '<div style="' + row + '"><span style="' + nm + '">' + nxEsc(cs[cid].name) + '</span>' + b('grp-crs-add', cid, '+ הוסף', 'הוסף לקבוצה') + '</div>').join('');
+  }
+  h += '<p class="nxn">' + (sel.length ? 'התלמידים לומדים לפי הסדר: כל קורס, ובו כל מסלול ומבחן, חובה לפני שנפתח הבא.' : 'בלי קורס: לפי מצב הקבוצה בהגדרות הכלליות.') + '</p>';
+  return '<div style="width:100%;display:block">' + h + '</div>';
 }
 function nxCrsTracks(co, i) {                                  // one row per track: practice / exam buttons (a track belongs to one place in the course)
   const fin = i === 'f', s = fin ? (co.final || {}) : co.stages[i], where = {};
@@ -8802,7 +8809,7 @@ function nxTabGroups() {
     sa += nxF('מצב הקבוצה', '<div class="nxbtns"><button class="nxb' + (g.mode === 'student' ? ' pri' : '') + '" data-act="grp-mode" data-gid="' + gid + '" data-v="student">מצב תלמיד</button><button class="nxb' + (g.mode === 'student' ? '' : ' pri') + '" data-act="grp-mode" data-gid="' + gid + '" data-v="free">מצב פריסטייל</button></div><p class="nxn">' + (g.mode === 'student' ? 'תלמיד: חייב לסיים כל מסלול כדי לפתוח את הבא, ואי אפשר לדלג בין מסלולים.' : 'פריסטייל: התלמיד מטייל חופשי בין כל המסלולים.') + '</p>');
     sa += '<div class="nxbtns"><button class="nxb' + (g.hold ? ' pri' : '') + '" data-act="grp-hold" data-gid="' + gid + '">' + (g.hold ? 'שחרר את הקבוצה' : 'עצור את הקבוצה') + '</button><button class="nxb" data-act="grp-prev" data-gid="' + gid + '">הצג כקבוצה</button></div>';
     sa += nxF('הודעה לקבוצה', '<input type="text" id="admN_' + gid + '" placeholder="הודעה שתופיע אצל השחקנים"><button class="nxb" data-act="grp-note" data-gid="' + gid + '">שלח</button>');
-    sk += nxF('קורסי הקבוצה (לפי סדר)', nxGroupCourseUi(gid, g));
+    sk += nxGroupCourseUi(gid, g);
     sl += nxF('נעילה על שלב', '<select data-gf="force" data-gid="' + gid + '"><option value="">ללא</option>' + nxStageIds().map((id) => '<option value="' + id + '"' + (g.force === id ? ' selected' : '') + '>' + nxEsc(STAGES[id].name) + '</option>').join('') + '</select>');
     sl += '<label class="nxchk1"><input type="checkbox" data-act="grp-ovs" data-gid="' + gid + '"' + (ov ? ' checked' : '') + '> שלבים מותאמים לקבוצה</label>';
     if (ov) sl += '<div class="nxchk">' + nxStageIds().map((id) => '<label><input type="checkbox" data-act="grp-stg" data-gid="' + gid + '" data-id="' + id + '"' + (g.stageOff[id] ? '' : ' checked') + '> ' + nxEsc(STAGES[id].name) + '</label>').join('') + '</div>';
