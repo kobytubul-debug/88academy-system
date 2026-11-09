@@ -1244,7 +1244,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 213</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 214</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -7297,6 +7297,7 @@ function nxAttempt(r) {                                       // a race was fini
 const NXAI = { busy: false };
 function nxAiFor(k) {                                         // the AI check settings that apply to this exam (null: no check)
   const c = NX.eff || NX.draft, a = c && c.ai; if (!a || !a.on) return null;
+  if (!NX.eff || NX.eff.mode !== 'student') return null;       // only for players of a group that is in student mode
   const e = (a.exams && a.exams[k]) || {};
   if (e.off) return null;
   const crit = String(e.crit || a.crit || '').trim(); if (!crit) return null;
@@ -7353,7 +7354,7 @@ function nxAiStHtml() {
 function nxTabAi() {
   const A = NX.draft.ai || {}, sel = (k, v, opts) => '<select data-k="ai.' + k + '"' + (typeof v === 'number' ? ' data-num="1"' : '') + '>' + opts.map((o) => '<option value="' + o[0] + '"' + (String(v) === String(o[0]) ? ' selected' : '') + '>' + o[1] + '</option>').join('') + '</select>';
   if (!NX.aiSt) nxAiStatus();
-  let h = '<p class="nxn">בדיקת AI: אחרי שתלמיד מסיים מבחן בקורס, ג׳מיני מקבל את נתוני הטיסה ואת הקריטריונים שלך, ומחליט אם להעביר אותו לשלב הבא. הבדיקה חלה על שחקנים בלבד.</p>';
+  let h = '<p class="nxn">בדיקת AI: אחרי שתלמיד מסיים מבחן בקורס, ג׳מיני מקבל את נתוני הטיסה ואת הקריטריונים שלך, ומחליט אם להעביר אותו לשלב הבא. הבדיקה חלה רק על שחקנים בקבוצה שמצב תלמיד דלוק בה (בלשונית "קבוצות"). טיסה כמנהל, או בקבוצה שלא במצב תלמיד, לא נבדקת.</p>';
   h += '<div class="nxcard"><div class="nxn" id="nxAiSt">' + nxAiStHtml() + '</div>' +
     nxF('בדיקת AI', '<label class="nxchk1"><input type="checkbox" data-k="ai.on"' + (A.on ? ' checked' : '') + '> <b>' + (A.on ? 'פעילה' : 'כבויה') + '</b> (מתג ראשי לכל המבחנים)</label>') + '</div>';
   if (!A.on) return h + '<p class="nxn">כשהבדיקה כבויה, המבחנים נבדקים רק לפי התנאים הרגילים (זמן, התרסקויות, כוכבים). לא נשלח שום דבר לג׳מיני.</p>';
