@@ -188,12 +188,6 @@ button.b.hot{background:#1d3a44;border-color:var(--ac);color:var(--bt,#fff)}
 .nmpb{display:flex!important;flex-direction:column;align-items:flex-start;gap:2px;padding:10px 12px!important;text-align:right}
 .nmpb b{font-size:15px}.nmpb span{font:500 12px var(--ui);color:var(--tx);font-style:normal}
 .nmpb.pick{box-shadow:inset 3px 0 0 var(--ac)}
-#edAi{display:none;position:fixed;inset:0;z-index:70;background:rgba(5,6,8,.7);align-items:center;justify-content:center;direction:rtl}
-body.ed-on #edAi.open{display:flex}
-#edAi .edjbox{max-height:90vh;overflow-y:auto}
-#edAi .aimode{display:flex;flex-direction:column;gap:6px;margin-bottom:8px;font:600 14px var(--ui);color:var(--ti,#fff)}
-#edAi textarea{width:100%;height:110px;background:var(--ib,rgba(0,0,0,.4));color:var(--it,#fff);border:0;padding:8px;font:14px var(--ui);resize:vertical}
-#edAi select{background:var(--ib,rgba(0,0,0,.4));color:var(--it,#fff);border:0;padding:7px}
 #edEnvSlot .trkside{display:block;padding:0;border:0;background:transparent}
 #edEnvSlot .trkside h3{display:none}
 #edEnvSlot .trkside .btns{margin-top:6px}
@@ -266,6 +260,7 @@ kbd{display:inline-block;min-width:26px;text-align:center;padding:1px 7px;margin
 /* results */
 #results{position:fixed;inset:0;z-index:55;display:none;align-items:center;justify-content:center;background:rgba(8,9,11,.82);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);text-align:center}
 #results.on{display:flex;animation:fadeIn .4s ease both}
+#results{overflow-y:auto;-webkit-overflow-scrolling:touch}#results>*{margin:auto;flex:none}
 .rbox{width:min(660px,94vw);padding:10px}
 .rtitle{font-weight:500;font-size:clamp(28px,5vw,48px);color:var(--ti,#fff);letter-spacing:.06em;border-bottom:1px solid var(--ln);padding-bottom:10px}
 #resStars{font-size:44px;letter-spacing:10px;margin:12px 0 6px;color:#2f343c;direction:ltr}
@@ -882,6 +877,8 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 
 #adm button.sel,#adm button.sel:hover{box-shadow:inset 3px 0 0 var(--ac)!important;border-color:var(--ac)!important;color:var(--bt,#fff)!important;background:color-mix(in srgb,var(--ac) 22%,var(--tile2))!important}
 .rolebd{font-size:11px;padding:1px 7px;border:1px solid #6b7480;color:#9aa4b0}.rolebd.r-manager{border-color:#e0a030;color:#e0a030}.rolebd.r-instructor{border-color:#4fa3c7;color:#4fa3c7}
+.stkcal{width:100%;font-size:12px;border-collapse:collapse;margin-top:6px}.stkcal td{padding:2px 6px;border-bottom:1px solid #ffffff14}.stkcal td:last-child{text-align:left}
+.fpt{margin:12px 0 4px}.fpbox{margin:6px 0 10px;padding:8px;background:rgba(255,255,255,.04);border-radius:4px}.stkstars{color:#e0b255;letter-spacing:1px}.stkstars .off{color:#4a4f57}.spk{width:160px;height:34px;background:rgba(0,0,0,.25);display:block}.fpgr{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:4px}.fptr{margin-top:6px}
 </style>
 </head>
 <body>
@@ -1248,7 +1245,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 238</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 259</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -1402,7 +1399,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
     <div id="edBase"><button class="b" data-base="clean">מפה נקיה</button><button class="b" data-base="arena">אולם</button><button class="b" data-base="redwood">יער</button><button class="b" data-base="city">עיר</button><button class="b" data-base="field">שדה פתוח</button><button class="b" data-base="desert">מדבר</button><button class="b" data-base="snow">שלג</button><button class="b" data-base="dusk">שקיעה</button><button class="b" data-base="blue">שדה כחול</button><div class="keys" id="edBaseNote"></div></div></div>
   <button class="b" id="edPrev">&#9654;</button><span id="edNavLbl"></span><button class="b" id="edNext">&#9664;</button>
   <button class="b" id="edFocus">מיקוד</button><button class="b" id="edUndo" title="Ctrl+Z">↶ בטל</button><button class="b" id="edRedo" title="Ctrl+Shift+Z">↷ שחזר</button><button class="b" id="edClone">שכפל</button><button class="b" id="edDelBtn">מחק</button>
-  <button class="b" id="edAiBtn">AI: ערוך / בנה</button><button class="b" id="edNumBtn" title="עריכת מספרי השערים">מספרי שערים</button><button class="b" id="edBackBtn" title="חזרה לחלון המסלולים">&#9664; חזרה למסלולים</button><button class="b" id="edExit">&#9654; טיסת בדיקה</button>
+  <button class="b" id="edNumBtn" title="עריכת מספרי השערים">מספרי שערים</button><button class="b" id="edBackBtn" title="חזרה לחלון המסלולים">&#9664; חזרה למסלולים</button><button class="b" id="edExit">&#9654; טיסת בדיקה</button>
 </div>
 <div id="edRight">
   <div id="edCatList" style="display:none"></div>
@@ -1410,7 +1407,6 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
   <div id="edPlaceMsg" style="display:none"><span></span><div class="btns"><button class="b" id="edAddCenter">הוסף במרכז המסך</button><button class="b" id="edPlaceStop">סיום הצבה</button></div></div>
   <div class="edbar"><button class="b" id="edSave">שמור</button><button class="b" id="edLoad">טען / ייצוא</button><button class="b" id="edClear">נקה</button></div>
 </div>
-<div id="edAi"><div class="edjbox"><div class="edh">מסלול עם AI</div><div id="edAiBody"></div><button class="b" id="edAiClose">סגור</button></div></div>
 <div id="edJson"><div class="edjbox"><div class="edh">JSON של המסלול (ייצוא / ייבוא)</div><div id="edJsonSlot"></div><button class="b" id="edJsonClose">סגור</button></div></div>
 <script>
 'use strict';
@@ -6608,6 +6604,8 @@ window.__gpReset = restart;
 function showResults(r) {
   const st = currentStage;
   $('resStage').textContent = customized ? 'מסלול מותאם אישית (תרגול)' : 'שלב ' + st.num + '  //  ' + st.name;
+  const mj = typeof nxMeasured === 'function' ? nxMeasured() : null;     // a track with measurement limits: the stars come from the measurements, not from the lap time
+  if (mj) r = Object.assign({}, r, { stars: mj.stars });
   let stars = '';
   for (let i = 0; i < 3; i++) stars += '<i class="' + (i < r.stars ? 'on' : '') + '" style="--d:' + (0.5 + i * 0.4).toFixed(2) + 's">★</i>';
   $('resStars').innerHTML = stars;
@@ -6623,6 +6621,7 @@ function showResults(r) {
   $('rNext').textContent = nextId && STAGES[nextId] && STAGES[nextId].name ? 'המסלול הבא: ' + STAGES[nextId].name + ' \u25B6' : 'המסלול הבא \u25B6';
   if (nextId) $('rAgain').classList.add('dim'); else $('rAgain').classList.remove('dim');
   gxResults(r);
+  if (mj) { const g = $('resGrade'); if (g) g.style.display = 'none'; $('resPar').style.display = 'none'; } else $('resPar').style.display = '';
   if (typeof nxStickShow === 'function') nxStickShow();
   resultsVisible = true;
   $('results').classList.add('on');
@@ -7160,7 +7159,7 @@ function nxDefault() {
   return {
     theme: { ac: '#4cc3e6', am: '#e6b450', bg: '#0b0c0e', p1: '#14161a', p2: '#1b1e23', ln: '#2d3139', tx: '#d6d9de', mu: '#8b929c', ti: '', bt: '', bs: '', lg: '', lg2: '', it: '', ib: '', ot: '', tl: '', tl2: '', gr: '', rd: '', qb: '', qt: '', font: 'ui', btn: 'sharp', bw: 1, mbw: 420, balign: 'c', mvert: 'c', overlay: 0.75, bgImg: '', trans: 'slide', dur: 300, fadeMs: 450, gx: Object.assign({}, GX.st) },
     tx: {}, hide: {}, home: [], tnames: {}, torder: [], stages: { off: {}, force: '', del: {} }, tcats: { cats: {}, of: {} }, drones: { off: {}, title: {}, desc: {}, col: {} },
-    courses: {}, guides: {}, tdesc: {}, stick: {}, ai: { on: false, mode: 'auto', min: 80, crit: '', hist: 8, noLaps: false, hideFb: false, fallback: 'pass', exams: {} }, courseId: '', courseIds: [], staff: {},
+    courses: {}, guides: {}, stick: {}, courseId: '', courseIds: [], staff: {},
     logo: { on: true, pages: { main: true, drone: false, missions: false, controls: false }, size: 6, x: 96, y: 91, color: '#ffffff', op: 85 }
   };
 }
@@ -7292,119 +7291,224 @@ function nxHistPush(a) {                                      // every finished 
   try { localStorage.setItem(nxHistKey(), JSON.stringify(NX.hist)); } catch (e) { /* ignore */ }
   if (NX.db && NX.uid) NX.db.doc('hist/' + NX.uid).set({ un: NX.un, name: NX.name, gid: nxMyGid(), list: NX.hist, ts: Date.now() }).catch(() => { /* viewer cannot write: stay silent */ });
 }
-/* ---------- stick analysis: what the pilot did with throttle / roll / pitch / yaw, judged by the instructor's limits (no AI) ---------- */
-const NXS = { armed: false, T: 0, h: null, sum: null, max: null, jerk: 0, ring: null, lastJ: null, g: null, gAcc: 0, last: null, pending: null };
-const NXS_CH = [['t', 'גז'], ['r', 'רול'], ['p', 'פיץ׳'], ['y', 'יאו']];
-function nxStickReset() {
-  NXS.T = 0; NXS.jerk = 0; NXS.gAcc = 0;
-  NXS.h = {}; NXS.sum = {}; NXS.max = {}; NXS.ring = {}; NXS.lastJ = {};
-  NXS_CH.forEach((c) => { NXS.h[c[0]] = new Float32Array(101); NXS.sum[c[0]] = 0; NXS.max[c[0]] = 0; NXS.ring[c[0]] = []; NXS.lastJ[c[0]] = -9; });
-  NXS.g = { t: [], r: [], p: [], y: [] };
+/* ---------- flight measurement engine: everything the pilot does, judged by the instructor's limits per track (no AI) ---------- */
+const NXS = { armed: false, T: 0, f: null, last: null, pending: null };
+const NXE_M = {                                                  // every measured value: key -> [label, unit, group]
+  thrAvg: ['גז ממוצע', '%', 'מצערת'], thrMax: ['גז שיא', '%', 'מצערת'], thrOsc: ['תנודתיות הגז', '%/ש׳', 'מצערת'],
+  spdAvg: ['מהירות ממוצעת', 'מ׳/ש׳', 'מהירות'], spdMax: ['מהירות שיא', 'מ׳/ש׳', 'מהירות'], spdSd: ['שונות המהירות', 'מ׳/ש׳', 'מהירות'],
+  time: ['זמן הטיסה', 'שנ׳', 'זמן'],
+  altDev: ['סטייה מהגובה היעד', 'מ׳', 'גובה'], altSd: ['שונות הגובה', 'מ׳', 'גובה'],
+  rollMax: ['זווית גלגול שיא', '°', 'גלגול'], rollSd: ['שונות הגלגול', '°', 'גלגול'],
+  pitchMax: ['זווית פיץ׳ שיא', '°', 'פיץ׳ ואופק'], pitchSd: ['שונות הפיץ׳', '°', 'פיץ׳ ואופק'],
+  rollIn: ['סטיק רול שיא', '%', 'סטיקים'], pitchIn: ['סטיק פיץ׳ שיא', '%', 'סטיקים'], yawIn: ['סטיק יאו שיא', '%', 'סטיקים'],
+  rollAv: ['סטיק רול ממוצע (בערך מוחלט)', '%', 'סטיקים'], pitchAv: ['סטיק פיץ׳ ממוצע (בערך מוחלט)', '%', 'סטיקים'], yawAv: ['סטיק יאו ממוצע (בערך מוחלט)', '%', 'סטיקים'], samples: ['דגימות שנמדדו', '', 'זמן'],
+  rate: ['קצב תנועת הסטיקים', '%/ש׳', 'חלקות'], sharp: ['תנועות סטיק חדות', '', 'חלקות'],
+  lineMax: ['סטייה מהקו', 'מ׳', 'קו טיסה'], lineAvg: ['סטייה ממוצעת מהקו', 'מ׳', 'קו טיסה'], fixes: ['תיקוני כיוון', '', 'קו טיסה'],
+  stops: ['עצירות באמצע הטיסה', '', 'רציפות'],
+  recMax: ['זמן התאוששות מקסימלי', 'שנ׳', 'התאוששות'], recN: ['סטיות גדולות מהקו', '', 'התאוששות'],
+  crashes: ['התרסקויות', '', 'התרסקויות']
+};
+const NXE_CH = ['thr', 'spd', 'alt', 'roll', 'pitch', 'line', 'rS', 'pS', 'yS'];
+function nxEReset() {
+  NXS.last = null; NXS.T = 0; NXS.f = {}; NXE_CH.forEach((c) => { NXS.f[c] = []; });
+  Object.assign(NXS, { prev: null, lat: 0, latV: 0, dir: 0, fixes: 0, sharp: 0, stopT: 0, stops: 0, inStop: false, rate: 0, rateN: 0, thrOsc: 0, rec: null, recMax: 0, recN: 0, ring: { t: [], r: [], p: [], y: [] }, lastJ: { t: -9, r: -9, p: -9, y: -9 }, alt0: null });
+}
+function nxEPath() {                                            // the ideal line: straight through the gates in order
+  const g = gates || []; let best = { d: 1e9, s: 0 };
+  return { n: g.length, g };
 }
 function nxStickTick(dt) {                                      // called every frame after the controls are read
   const racing = typeof state !== 'undefined' && state === 'racing' && lapRunning && !editorMode;
   if (!racing) { if (!lapRunning && state !== 'finished') NXS.armed = false; return; }
-  if (!NXS.armed) { nxStickReset(); NXS.armed = true; }
+  if (!NXS.armed) { nxEReset(); NXS.armed = true; }
   dt = Math.min(Math.max(dt, 0), 0.1); if (!(dt > 0)) return;
-  const v = { t: clamp(input.throttle, 0, 1), r: input.roll || 0, p: input.pitch || 0, y: input.yaw || 0 };
   NXS.T += dt;
-  for (let i = 0; i < 4; i++) {
-    const c = NXS_CH[i][0], a = Math.abs(v[c]);
-    NXS.h[c][Math.min(100, Math.round(a * 100))] += dt;
-    NXS.sum[c] += a * dt;
-    if (a > NXS.max[c]) NXS.max[c] = a;
-    const rg = NXS.ring[c]; rg.push([NXS.T, v[c]]);                 // a sharp move: the stick travels more than 60% within 0.2 s
-    while (rg.length && NXS.T - rg[0][0] > 0.2) rg.shift();
-    let d = 0; for (let j = 0; j < rg.length; j++) d = Math.max(d, Math.abs(v[c] - rg[j][1]));
-    if (d > 0.6 && NXS.T - NXS.lastJ[c] > 0.3) { NXS.jerk++; NXS.lastJ[c] = NXS.T; }
+  const F = NXS.f, thr = clamp(input.throttle, 0, 1), rl = input.roll || 0, pt = input.pitch || 0, yw = input.yaw || 0;
+  const sp = drone.vel.length(), fwd = nxFwd.set(0, 0, -1).applyQuaternion(drone.quat), right = nxRight.set(1, 0, 0).applyQuaternion(drone.quat);
+  const roll = Math.asin(clamp(right.y, -1, 1)) * 57.2958, pitch = Math.asin(clamp(fwd.y, -1, 1)) * 57.2958;
+  F.thr.push(thr); F.spd.push(sp); F.alt.push(drone.pos.y); F.roll.push(roll); F.pitch.push(pitch); F.rS.push(rl); F.pS.push(pt); F.yS.push(yw);
+  let lat = 0, ld = 0;                                          // signed distance from the ideal line (nearest leg)
+  const g = gates;
+  if (g && g.length >= 2) {
+    let bd = 1e9;
+    for (let i = 0; i < g.length - 1; i++) {
+      const d = nxSegDist(drone.pos.x, drone.pos.z, g[i].x, g[i].z, g[i + 1].x, g[i + 1].z, i === 0, i === g.length - 2);   // the first leg extends back past gate 1, the last one forward past the end
+      if (d < bd) { bd = d; const dx = g[i + 1].x - g[i].x, dz = g[i + 1].z - g[i].z; lat = ((drone.pos.x - g[i].x) * dz - (drone.pos.z - g[i].z) * dx) / (Math.hypot(dx, dz) || 1); }
+    }
+    ld = bd;
   }
-  NXS.gAcc += dt;
-  if (NXS.gAcc >= 0.25 && NXS.g.t.length < 2400) { NXS.gAcc = 0; NXS.g.t.push(Math.round(v.t * 100)); NXS.g.r.push(Math.round(Math.abs(v.r) * 100)); NXS.g.p.push(Math.round(Math.abs(v.p) * 100)); NXS.g.y.push(Math.round(Math.abs(v.y) * 100)); }
+  F.line.push(ld);
+  const P = NXS.prev;
+  if (P) {
+    NXS.rate += (Math.abs(rl - P.rl) + Math.abs(pt - P.pt) + Math.abs(yw - P.yw) + Math.abs(thr - P.thr)) / 4 / dt; NXS.rateN++;
+    NXS.thrOsc += Math.abs(thr - P.thr) / dt;
+    NXS.latV = NXS.latV * 0.7 + (lat - P.lat) / dt * 0.3;
+    const d = Math.abs(NXS.latV) > 0.25 ? Math.sign(NXS.latV) : 0;
+    if (d && NXS.dir && d !== NXS.dir && ld > 0.3) NXS.fixes++;
+    if (d) NXS.dir = d;
+  }
+  NXS.prev = { rl, pt, yw, thr, lat };
+  const ch = { t: thr, r: rl, p: pt, y: yw };                   // a sharp move: a stick travels more than 60% within 0.2 s
+  Object.keys(ch).forEach((c) => {
+    const rg = NXS.ring[c]; rg.push([NXS.T, ch[c]]);
+    while (rg.length && NXS.T - rg[0][0] > 0.2) rg.shift();
+    let d = 0; for (let j = 0; j < rg.length; j++) d = Math.max(d, Math.abs(ch[c] - rg[j][1]));
+    if (d > 0.6 && NXS.T - NXS.lastJ[c] > 0.3) { NXS.sharp++; NXS.lastJ[c] = NXS.T; }
+  });
+  if (sp < 0.3) { NXS.stopT += dt; if (NXS.stopT > 1 && !NXS.inStop && NXS.T > 1.5) { NXS.stops++; NXS.inStop = true; } } else if (sp > 0.5) { NXS.stopT = 0; NXS.inStop = false; }
+  const bad = ld > 2 || Math.abs(roll) > 25;                    // recovery: a big deviation, and how long until the pilot is back
+  if (bad && !NXS.rec) { NXS.rec = NXS.T; NXS.recN++; }
+  else if (NXS.rec && ld < 1 && Math.abs(roll) < 15) { NXS.recMax = Math.max(NXS.recMax, NXS.T - NXS.rec); NXS.rec = null; }
 }
-function nxStickOver(c, lim) {                                  // share of the flight (0..1) with the stick above lim percent
-  if (!NXS.T) return 0;
-  let s = 0; const h = NXS.h[c]; for (let i = Math.floor(lim) + 1; i <= 100; i++) s += h[i];
-  return s / NXS.T;
+const nxRight = new THREE.Vector3();
+function nxPerc(a, q) { if (!a.length) return 0; const b = a.slice().sort((x, y) => x - y); return b[q >= 1 ? b.length - 1 : Math.min(b.length - 1, Math.floor(q * b.length))]; }
+function nxMean(a) { return a.length ? a.reduce((s, v) => s + v, 0) / a.length : 0; }
+function nxSd(a) { const m = nxMean(a); return a.length ? Math.sqrt(nxMean(a.map((v) => (v - m) * (v - m)))) : 0; }
+function nxRuleNum(v) { return v === undefined || v === null || v === '' || !isFinite(Number(v)) ? null : Number(v); }
+function nxEMetrics(R, crashes) {                               // all measured values for the flight that just ended
+  const F = NXS.f, pk = R && R.hard ? 1 : 0.98, ab = (a) => a.map(Math.abs);
+  const alt0 = nxRuleNum(R && R.alt) !== null ? Number(R.alt) : (gates && gates[0] ? gates[0].y : F.alt[0] || 0);
+  NXS.alt0 = alt0;
+  const M = {
+    thrAvg: nxMean(F.thr) * 100, thrMax: nxPerc(F.thr, pk) * 100, thrOsc: NXS.thrOsc / Math.max(NXS.rateN, 1) * 100,
+    spdAvg: nxMean(F.spd), spdMax: nxPerc(F.spd, pk), spdSd: nxSd(F.spd), time: NXS.T,
+    altDev: nxPerc(F.alt.map((v) => Math.abs(v - alt0)), pk), altSd: nxSd(F.alt),
+    rollMax: nxPerc(ab(F.roll), pk), rollSd: nxSd(F.roll), pitchMax: nxPerc(ab(F.pitch), pk), pitchSd: nxSd(F.pitch),
+    rollIn: nxPerc(ab(F.rS), 1) * 100, pitchIn: nxPerc(ab(F.pS), 1) * 100, yawIn: nxPerc(ab(F.yS), 1) * 100,
+    rollAv: nxMean(ab(F.rS)) * 100, pitchAv: nxMean(ab(F.pS)) * 100, yawAv: nxMean(ab(F.yS)) * 100, samples: F.thr.length,
+    rate: NXS.rate / Math.max(NXS.rateN, 1) * 100, sharp: NXS.sharp,
+    lineMax: nxPerc(F.line, pk), lineAvg: nxMean(F.line), fixes: NXS.fixes, stops: NXS.stops,
+    recMax: Math.max(NXS.recMax, NXS.rec ? NXS.T - NXS.rec : 0), recN: NXS.recN, crashes: crashes || 0
+  };
+  Object.keys(M).forEach((k) => { M[k] = Math.round(M[k] * 100) / 100; });
+  return M;
 }
-function nxStickPct(c, q) {                                     // percentile of the stick position
-  const h = NXS.h[c]; let acc = 0; const goal = NXS.T * q;
-  for (let i = 0; i <= 100; i++) { acc += h[i]; if (acc >= goal) return i; }
-  return 100;
-}
+function nxRuleKeys(R) { return Object.keys((R && R.lim) || {}).filter((k) => NXE_M[k] && (nxRuleNum(R.lim[k].min) !== null || nxRuleNum(R.lim[k].max) !== null)); }
 function nxStickRule(k) {                                       // the instructor's limits for this track (null: none)
   const c = NX.eff || NX.draft, r = c && c.stick && c.stick[k]; if (!r) return null;
-  return ['thrMax', 'thrAvg', 'thrPct', 'rollMax', 'pitchMax', 'yawMax', 'jerkMax'].some((f) => Number(r[f]) > 0) ? r : null;
+  return nxRuleKeys(r).length ? r : null;
 }
-function nxStickJudge(R) {                                      // limits + measured flight -> pass / fail and the reasons, in Hebrew
-  const viol = [], hard = !!R.hard, tol = hard ? 0 : (R.tol !== undefined && R.tol !== '' ? Math.max(0, Number(R.tol) || 0) : 5) / 100;
-  const stat = { avg: Math.round(NXS.sum.t / Math.max(NXS.T, 0.01) * 100), max: {}, over: {}, jerk: NXS.jerk, T: +NXS.T.toFixed(1) };
-  NXS_CH.forEach((c) => { stat.max[c[0]] = Math.round(NXS.max[c[0]] * 100); });
-  const lims = [['t', 'גז', R.thrMax], ['r', 'רול', R.rollMax], ['p', 'פיץ׳', R.pitchMax], ['y', 'יאו', R.yawMax]];
-  lims.forEach((l) => {
-    const c = l[0], lim = Number(l[2]); if (!(lim > 0)) return;
-    const mx = stat.max[c], ov = nxStickOver(c, lim); stat.over[c] = Math.round(ov * 100);
-    if (mx <= lim) return;
-    if (hard) viol.push({ c, text: l[1] + ' הגיע ל-' + mx + '% (המותר עד ' + lim + '%)' });
-    else if (ov > tol) viol.push({ c, text: l[1] + ' היה מעל ' + lim + '% במשך ' + Math.round(ov * 100) + '% מהזמן (מותר עד ' + Math.round(tol * 100) + '%), שיא ' + mx + '%' });
+function nxMargin(v, mn, mx) {                                  // 0 right at the limit, 1 when comfortably inside (half way to the ideal or better); negative: outside
+  let m = 9;
+  if (mx !== null) m = Math.min(m, mx === 0 ? (v === 0 ? 1 : -1) : (mx - v) / (Math.abs(mx) * 0.5));
+  if (mn !== null) m = Math.min(m, mn === 0 ? 1 : (v - mn) / (Math.abs(mn) * 0.5));
+  if (mn !== null && mx !== null && mx > mn) m = Math.min(m, Math.min(v - mn, mx - v) / ((mx - mn) * 0.25));
+  return m;
+}
+const NXE_Z = {}; 'altDev altSd rollMax rollSd pitchMax pitchSd rollIn pitchIn yawIn rate sharp lineMax lineAvg fixes stops recMax recN crashes thrOsc spdSd'.split(' ').forEach((k) => { NXE_Z[k] = 1; });
+const NXE_STAR3 = 90, NXE_STAR2 = 80;                                // score needed for 3 and 2 stars (a passing flight always gets at least 1)
+function nxStickJudge(R, M) {                                   // limits + measured values -> pass / fail, reasons in Hebrew, and 0-3 stars
+  const viol = [], keys = nxRuleKeys(R); let sw = 0, ss = 0;
+  const fmt = (v) => String(Math.round(v * 10) / 10);
+  keys.forEach((k) => {
+    const L = R.lim[k], mn = nxRuleNum(L.min), mx = nxRuleNum(L.max), v = M[k], lab = NXE_M[k], u = lab[1] ? ' ' + lab[1] : '';
+    const over = mx !== null && v > mx, under = mn !== null && v < mn;
+    if (over) viol.push({ k, text: lab[0] + ' ' + fmt(v) + u + ' (המותר עד ' + mx + u + ')' });
+    else if (under) viol.push({ k, text: lab[0] + ' ' + fmt(v) + u + ' (נדרש לפחות ' + mn + u + ')' });
+    const w = nxRuleNum(R.w && R.w[k]) !== null ? Number(R.w[k]) : 1;
+    if (w > 0 && NXE_Z[k] && mx !== null) { sw += w; ss += w * (50 + 50 * clamp(nxMargin(v, mn, mx), 0, 1)); }     // only 'lower is better' metrics shape the stars; ranges (throttle, speed, time) are pass/fail
   });
-  if (Number(R.thrAvg) > 0 && stat.avg > Number(R.thrAvg)) viol.push({ c: 't', text: 'ממוצע הגז ' + stat.avg + '% (המותר עד ' + R.thrAvg + '%)' });
-  if (Number(R.thrPct) > 0 && Number(R.thrAt) > 0) {
-    const ov = Math.round(nxStickOver('t', Number(R.thrAt)) * 100);
-    if (ov > Number(R.thrPct)) viol.push({ c: 't', text: 'הגז היה מעל ' + R.thrAt + '% במשך ' + ov + '% מהזמן (המותר עד ' + R.thrPct + '%)' });
-  }
-  if (Number(R.jerkMax) > 0 && NXS.jerk > Number(R.jerkMax)) viol.push({ c: 'j', text: 'תנועות סטיק חדות: ' + NXS.jerk + ' (המותר עד ' + R.jerkMax + ')' });
-  const out = { ok: !viol.length, viol, stat, rule: Object.assign({}, R) };
-  out.msg = viol.length ? viol.map((v) => v.text).join('. ') + '.' : 'הטיסה עומדת במגבלות הסטיקים.';
-  return out;
+  const ok = !viol.length, score = sw ? ss / sw : 100;
+  const stars = !ok ? 0 : score >= NXE_STAR3 ? 3 : score >= NXE_STAR2 ? 2 : 1;
+  return { ok, viol, stars, score: Math.round(score), M, rule: R, msg: viol.length ? viol.map((v) => v.text).join('. ') + '.' : 'הטיסה עומדת במגבלות.' };
 }
-function nxStickRun(R) {                                        // judge the race that just ended; too short a flight (under 3 s) is not judged
-  if (!NXS.h || NXS.T < 3) return null;
-  const j = nxStickJudge(R), step = NXS.g.t.length > 240 ? Math.ceil(NXS.g.t.length / 240) : 1, pick = (a) => a.filter((x, i) => i % step === 0);
-  j.g = { s: 0.25 * step, t: pick(NXS.g.t), r: pick(NXS.g.r), p: pick(NXS.g.p), y: pick(NXS.g.y) };
+function nxStickRun(R, crashes) {                               // judge the race that just ended (only an empty recording is skipped)
+  if (!NXS.f || NXS.T < 0.2 || !NXS.f.thr.length) return null;
+  const M = nxEMetrics(R, crashes), j = nxStickJudge(R, M), n = NXS.f.thr.length, step = Math.max(1, Math.ceil(n / 240));
+  const pick = (a, m) => a.filter((x, i) => i % step === 0).map((v) => Math.round(v * (m || 1) * 10) / 10);
+  j.alt0 = NXS.alt0;
+  j.g = { s: Math.round(NXS.T / Math.ceil(n / step) * 100) / 100, thr: pick(NXS.f.thr, 100), spd: pick(NXS.f.spd), alt: pick(NXS.f.alt), roll: pick(NXS.f.roll.map(Math.abs)), pitch: pick(NXS.f.pitch.map(Math.abs)), line: pick(NXS.f.line) };
   return j;
 }
-function nxStickGraph(j) {                                      // one small chart per limited channel: the stick, the limit in red, the parts over the limit marked
-  if (!j || !j.g || !j.g.t.length) return '';
-  const R = j.rule, W = 300, H = 56, n = j.g.t.length;
-  const chans = [['t', 'גז', R.thrMax || R.thrAt], ['r', 'רול', R.rollMax], ['p', 'פיץ׳', R.pitchMax], ['y', 'יאו', R.yawMax]].filter((c) => Number(c[2]) > 0 || (c[0] === 't' && (R.thrAvg || R.thrPct)));
+const NXE_GR = { thrMax: 'thr', thrAvg: 'thr', spdAvg: 'spd', spdMax: 'spd', altDev: 'alt', rollMax: 'roll', pitchMax: 'pitch', lineMax: 'line' };
+function nxStickGraph(j) {                                      // a small chart per limited channel: the flight, the limit in red, the parts over the limit marked
+  if (!j || !j.g || !j.g.thr.length) return '';
+  const R = j.rule, W = 300, H = 52, n = j.g.thr.length; let rows = []; const seen = {};
+  const T = { thr: ['גז', 100, '%'], spd: ['מהירות', null, ' מ׳/ש׳'], alt: ['גובה', null, ' מ׳'], roll: ['גלגול', 90, '°'], pitch: ['פיץ׳', 90, '°'], line: ['סטייה מהקו', null, ' מ׳'] };
+  nxRuleKeys(R).forEach((k) => { const c = NXE_GR[k]; if (!c || seen[c]) return; seen[c] = 1; rows.push(c); });
+  if (!rows.length) rows = Object.keys(T);                      // no limits (calibration): show every channel
   let h = '';
-  chans.forEach((c) => {
-    const a = j.g[c[0]], lim = Number(c[2]) || 0, X = (i) => (n > 1 ? i / (n - 1) * W : 0), Y = (v) => H - v / 100 * H;
+  rows.forEach((c) => {
+    const a = j.g[c], lim = (k) => (R.lim[k] && nxRuleNum(R.lim[k].max) !== null ? Number(R.lim[k].max) : null);
+    let lo = null, hi = null;                                   // the allowed band for this channel (outside it = a violation)
+    if (c === 'alt') { const d = lim('altDev'); if (d !== null && j.alt0 !== undefined) { lo = j.alt0 - d; hi = j.alt0 + d; } }
+    else { const k = { thr: 'thrMax', spd: 'spdMax', roll: 'rollMax', pitch: 'pitchMax', line: 'lineMax' }[c]; hi = k ? lim(k) : null; }
+    const lines = [lo, hi].filter((v) => v !== null);
+    const amin = Math.min.apply(null, a), amax = Math.max.apply(null, a);
+    const ymin = c === 'alt' ? Math.min(amin, lo === null ? amin : lo) - 0.5 : 0;
+    const ymax = Math.max(T[c][1] || 0, amax * 1.05, hi === null ? 0 : hi * 1.1, 0.01, ymin + 0.5);
+    const X = (i) => (n > 1 ? i / (n - 1) * W : 0), Y = (v) => H - (Math.min(Math.max(v, ymin), ymax) - ymin) / (ymax - ymin) * H;
     let pts = '', bars = '';
-    a.forEach((v, i) => { pts += (i ? ' ' : '') + X(i).toFixed(1) + ',' + Y(v).toFixed(1); if (lim && v > lim) bars += '<rect x="' + (X(i) - 1).toFixed(1) + '" y="0" width="' + Math.max(2, W / n).toFixed(1) + '" height="' + H + '" fill="#e5483a" opacity=".28"/>'; });
-    h += '<div class="stkrow"><span class="stkn">' + c[1] + '</span><svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" class="stksvg">' + bars +
-      (lim ? '<line x1="0" x2="' + W + '" y1="' + Y(lim).toFixed(1) + '" y2="' + Y(lim).toFixed(1) + '" stroke="#e5483a" stroke-dasharray="4 3" stroke-width="1.2"/>' : '') +
-      '<polyline points="' + pts + '" fill="none" stroke="#7fd4f2" stroke-width="1.6"/></svg><span class="stkl">' + (lim ? 'מגבלה ' + lim + '%' : '') + '</span></div>';
+    a.forEach((v, i) => { pts += (i ? ' ' : '') + X(i).toFixed(1) + ',' + Y(v).toFixed(1); if ((hi !== null && v > hi) || (lo !== null && v < lo)) bars += '<rect x="' + (X(i) - 1).toFixed(1) + '" y="0" width="' + Math.max(2, W / n).toFixed(1) + '" height="' + H + '" fill="#e5483a" opacity=".28"/>'; });
+    const lab = hi === null ? '' : c === 'alt' ? ' · מותר ' + Math.round(lo * 10) / 10 + '-' + Math.round(hi * 10) / 10 + T[c][2] : ' · מגבלה ' + hi + T[c][2];
+    h += '<div class="stkrow"><span class="stkn">' + T[c][0] + '</span><svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" class="stksvg">' + bars +
+      lines.map((l) => '<line x1="0" x2="' + W + '" y1="' + Y(l).toFixed(1) + '" y2="' + Y(l).toFixed(1) + '" stroke="#e5483a" stroke-dasharray="4 3" stroke-width="1.2"/>').join('') +
+      '<polyline points="' + pts + '" fill="none" stroke="#7fd4f2" stroke-width="1.6"/></svg><span class="stkl">' + 'טווח ' + Math.round(amin * 10) / 10 + ' עד ' + Math.round(amax * 10) / 10 + T[c][2] + lab + '</span></div>';
   });
-  const t = j.stat;
-  return '<div class="stktitle">ניתוח סטיקים · ' + (j.ok ? '<b class="stkok">עומד במגבלות</b>' : '<b class="stkbad">חריגה</b>') + '</div>' + h +
-    '<div class="stknote">זמן נמדד ' + t.T + ' שנ׳ · ממוצע גז ' + t.avg + '% · שיא גז ' + t.max.t + '% · תנועות חדות ' + t.jerk + '</div>' +
+  return '<div class="stktitle">ניתוח הטיסה · ' + (j.ok ? '<b class="stkok">עומד במגבלות</b>' : '<b class="stkbad">לא עבר</b>') + '</div>' + h +
     (j.viol.length ? '<ul class="stkv">' + j.viol.map((v) => '<li>' + nxEsc(v.text) + '</li>').join('') + '</ul>' : '');
+}
+function nxMeasured() {                                         // the judged flight of a track that has measurement limits (else null)
+  const j = NXS.last; return j && j.rule && nxRuleKeys(j.rule).length ? j : null;
 }
 function nxStickShow() {                                        // fills the results screen
   let el = typeof document !== 'undefined' ? $('resStick') : null;
   if (!el) { const a = $('resNew'); if (!a || !a.parentNode || !document.createElement) return; el = document.createElement('div'); el.id = 'resStick'; a.parentNode.insertBefore(el, a.nextSibling); }
-  el.innerHTML = NXS.last ? nxStickGraph(NXS.last) : '';
+  el.innerHTML = NXS.last ? nxStickGraph(NXS.last) + nxCalTable(NXS.last) : '';
+}
+function nxCalTable(j) {                                        // admin only: every measured value of the flight, to set the limits from real flights
+  if (NX.role !== 'admin' || !j || !j.M) return '';
+  const grp = {}; Object.keys(NXE_M).forEach((m) => { (grp[NXE_M[m][2]] = grp[NXE_M[m][2]] || []).push(m); });
+  let h = '<div class="stktitle">ערכי כיול (למדריך בלבד)</div><table class="stkcal">';
+  Object.keys(grp).forEach((gn) => { h += '<tr><td colspan="2"><b>' + gn + '</b></td></tr>' + grp[gn].map((m) => '<tr><td>' + NXE_M[m][0] + '</td><td dir="ltr">' + j.M[m] + (NXE_M[m][1] ? ' ' + NXE_M[m][1] : '') + '</td></tr>').join(''); });
+  return h + '</table>';
 }
 function nxStickCompact(j) {                                    // what goes into the player's history
-  return { ok: j.ok ? 1 : 0, T: j.stat.T, avg: j.stat.avg, mx: j.stat.max, j: j.stat.jerk, v: j.viol.map((x) => x.text), g: j.g };
+  const m = {}; nxRuleKeys(j.rule).forEach((k) => { m[k] = j.M[k]; });
+  const lim = {}; ['thrMax', 'spdMax', 'rollMax', 'pitchMax', 'lineMax', 'altDev'].forEach((k) => { const L = j.rule.lim && j.rule.lim[k], v = L ? nxRuleNum(L.max) : null; if (v !== null) lim[k] = v; });
+  return { ok: j.ok ? 1 : 0, st: j.stars, sc: j.score, T: j.M.time, m, v: j.viol.map((x) => x.text), g: j.g, lim, a0: j.alt0 };
+}
+/* ---------- stage packages: a stage as data (map + guide card + measurement limits), imported in the admin ---------- */
+function nxPkgCheck(pk) {                                       // returns an error text, or '' when the package is usable
+  if (!pk || typeof pk !== 'object') return 'החבילה אינה אובייקט תקין';
+  if (!pk.name || typeof pk.name !== 'string') return 'חסר שם לשלב';
+  const m = pk.map; if (!m || !Array.isArray(m.gates) || m.gates.length < 2) return 'במפה חייבים להיות לפחות 2 שערים';
+  if (m.gates.some((g) => !g || !isFinite(g.x) || !isFinite(g.y) || !isFinite(g.z))) return 'לשער חסרות קואורדינטות';
+  const lim = pk.limits && pk.limits.lim;
+  if (lim) {
+    for (const k of Object.keys(lim)) {
+      if (!NXE_M[k]) return 'מדד לא מוכר: ' + k;
+      const a = nxRuleNum(lim[k].min), b = nxRuleNum(lim[k].max);
+      if (a !== null && b !== null && a > b) return 'מינימום גדול ממקסימום במדד ' + NXE_M[k][0];
+    }
+  }
+  return '';
+}
+function nxImportPackage(pk) {                                  // creates a custom track (in the admin's editor) with its card and limits
+  const err = nxPkgCheck(pk); if (err) return { ok: false, err };
+  let n = 1; while (STAGES['custom' + n]) n++;
+  const id = 'custom' + n, m = pk.map;
+  registerCustom({ id, num: 3 + CUSTOM_ORDER.length + 1, name: String(pk.name).slice(0, 40), gates: m.gates.map(gateCopy), objects: m.objects || [], base: m.base || 'field', laps: m.laps || 1 });
+  if (pk.env && envSettings[id]) ['wind', 'dir', 'turb'].forEach((k) => { if (typeof pk.env[k] === 'number') envSettings[id][k] = pk.env[k]; });
+  try { saveCustomList(); saveEnv(); buildCards(); } catch (e) { /* ignore */ }
+  if (pk.desc) STAGES[id].desc = String(pk.desc);
+  if (pk.guide) nxSetPath(NX.draft, 'guides.' + id, nxClone(pk.guide));
+  if (pk.limits) NX.draft.stick = Object.assign(NX.draft.stick || {}, { [id]: nxClone(pk.limits) });
+  nxTouch();
+  return { ok: true, id };
 }
 function nxAttempt(r) {                                       // a race was finished: record it, and judge it when it is a course exam
   const st = currentStage, out = { ok: true, msg: '' };
   NXH.examMsg = '';
-  if (!st || customized) return out;
+  if (!st || customized) {                                      // practice: nothing is counted, but the admin sees the measurements judged by this track's limits (if it has any)
+    const pr = NX.role === 'admin' && st ? (nxStickRule(String(st.id).replace(/^pub_/, '')) || { lim: {} }) : null;
+    NXS.last = pr ? nxStickRun(pr, r.crashes) : null; NXS.pending = null; return out;
+  }     // practice flights are not judged, but the admin still sees the measurements
   const k = String(st.id).replace(/^pub_/, '');
-  const sr = nxStickRule(k), sj = sr ? nxStickRun(sr) : null;     // the instructor's stick limits: decided here, no AI
+  const sr = nxStickRule(k) || (NX.role === 'admin' ? { lim: {} } : null), sj = sr ? nxStickRun(sr, r.crashes) : null;   // the admin always gets the measured values (calibration)     // the instructor's limits: decided here, no AI
   NXS.last = sj; NXS.pending = sj ? nxStickCompact(sj) : null;
   const stickFail = sj && !sj.ok ? sj : null;
   const it = NX.cseq ? NX.cseq.find((s) => s.id === k && (s.kind === 'x' || s.kind === 'f')) : null;
-  const ai = nxAiFor(k);                                      // Gemini can judge any track a student flies, not only exams
-  if (!it && ai && NX.role === 'player' && NX.un && !stickFail) {
-    out.ok = ai.mode === 'note'; out.ai = ai;
-    out.msg = 'ג׳מיני בודק את הטיסה שלך...'; NXH.examMsg = out.msg;
-    nxAiJudge(r, { cid: ((NX.cseq && NX.cseq.find((q) => q.id === k)) || {}).cid || '' }, st, ai, k);
-    return out;
-  }
   if (it) {
     const p = it.pass || {}, why = [];
     if (p.t > 0 && r.total > p.t) why.push('זמן ' + fmtTime(r.total) + ' (נדרש עד ' + fmtTime(p.t) + ')');
@@ -7412,205 +7516,12 @@ function nxAttempt(r) {                                       // a race was fini
     if (p.s > 0 && r.stars < p.s) why.push('כוכבים ' + r.stars + ' (נדרשו ' + p.s + ')');
     if (stickFail) why.push('סטיקים: ' + stickFail.msg.replace(/\.$/, ''));
     out.ok = !why.length;
-    if (ai && out.ok && NX.role === 'player') {                  // numbers are fine: Gemini judges the flight against the instructor's criteria
-      out.ok = ai.mode === 'note'; out.ai = ai;
-      out.msg = 'ג׳מיני בודק את הטיסה שלך...'; NXH.examMsg = out.msg;
-      nxAiJudge(r, it, st, ai, k);
-      return out;
-    }
     out.msg = out.ok ? 'עברת את ' + (it.kind === 'f' ? 'המבחן המסכם' : 'מבחן השלב') + '!' : 'לא עברת את המבחן: ' + why.join(', ') + '. אפשר לנסות שוב';
     NXH.examMsg = out.msg; nxToast(out.msg);
   }
   if (stickFail && !it) { out.ok = false; out.msg = 'לא עברת את המסלול: ' + stickFail.msg; NXH.examMsg = out.msg; nxToast(out.msg); }
   if (NX.role === 'player' && NX.un) nxHistPush({ ts: Date.now(), id: k, n: st.name, t: +r.total.toFixed(2), b: +r.bestLap.toFixed(2), c: r.crashes || 0, s: r.stars, d: settings.preset, cid: (NX.cseq && (NX.cseq.find((s) => s.id === k) || {}).cid) || '', x: it ? (out.ok ? 1 : 0) : undefined });
   return out;
-}
-const NXAI = { busy: false };
-function nxAiFor(k) {                                         // the AI check settings that apply to this exam (null: no check)
-  const c = NX.eff || NX.draft, a = c && c.ai; if (!a || !a.on) return null;
-  if (!NX.eff || NX.eff.mode !== 'student') return null;       // only for players of a group that is in student mode
-  const e = (a.exams && a.exams[k]) || {};
-  if (e.off) return null;
-  const crit = String(e.crit || a.crit || '').trim(), td = nxTrackDesc(k); if (!crit && !td) return null;
-  return { on: true, crit, track: td, mode: e.mode || a.mode || 'auto', min: Number(a.min) || 80, hist: a.hist === undefined ? 8 : Number(a.hist), noLaps: !!a.noLaps, hideFb: !!a.hideFb, fallback: a.fallback === 'hold' ? 'hold' : 'pass' };
-}
-function nxAiHistory(k, n) { return n <= 0 ? [] : (NX.hist || []).filter((a) => a.id === k).slice(-n).map((a) => ({ t: a.t, c: a.c, s: a.s })); }
-async function nxAiJudge(r, it, st, ai, k) {
-  const entry = { ts: Date.now(), id: k, n: st.name, t: +r.total.toFixed(2), b: +r.bestLap.toFixed(2), c: r.crashes || 0, s: r.stars, d: settings.preset, cid: it.cid || '', x: ai.mode === 'note' ? 1 : 0 };
-  const say = (m) => { NXH.examMsg = m; nxToast(m); const el = $('resNew'); if (el && resultsVisible) el.textContent = m; };
-  let ans = null;
-  try {
-    const uid = (function () { try { return localStorage.getItem('nxHostUid') || ''; } catch (e) { return ''; } })();
-    const res = await (NXAI.fetch || fetch)('/api/ai/check', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Uid': uid }, body: JSON.stringify({
-      track: Object.assign({ map: MAP_BASES[st.base || st.id] || '', laps: (st && st.laps >= 1 && st.laps <= 20 ? Math.floor(st.laps) : LAPS) || 1 }, ai.track || {}), stage: st.name, course: (NX.eff && NX.eff.courses && NX.eff.courses[it.cid] && NX.eff.courses[it.cid].name) || '', crit: ai.crit,
-      flight: { total: r.total, bestLap: r.bestLap, laps: r.laps.length, lapTimes: ai.noLaps ? undefined : r.laps, crashes: r.crashes || 0, stars: r.stars, par3: r.par && r.par.par3, gates: gates.length, drone: settings.preset },
-      history: nxAiHistory(k, ai.hist) }) });
-    if (!res.ok) throw new Error('http ' + res.status);
-    ans = await res.json();
-  } catch (e) { ans = null; }
-  if (!ans || !ans.verdict) {                                  // no answer (no key, no connection, the Claude window): the instructor decides
-    if (ai.fallback === 'hold' && ai.mode !== 'note') { entry.x = 0; entry.ai = { v: 'none' }; say('בדיקת ה-AI לא זמינה כרגע. נסה שוב בעוד מספר דקות'); }
-    else { entry.x = 1; entry.ai = { v: 'none' };               // never block a student because the check is down: the normal conditions already passed
-      say('בדיקת ה-AI לא זמינה כרגע, והמבחן נבדק לפי התנאים הרגילים. עברת!');
-      if (ai.mode !== 'note' && NX.un) nxMarkDone(k); }
-  } else {
-    const min = Number(ai.min) || 80, pass = ans.verdict === 'pass' && ans.confidence >= min;
-    entry.ai = { v: ans.verdict, c: ans.confidence, f: String(ans.feedback || '').slice(0, 300), n: String(ans.notes || '').slice(0, 300) };
-    if (ai.mode !== 'note') entry.x = pass ? 1 : 0;
-    const head = ai.mode === 'note' ? 'משוב ג׳מיני: ' : pass ? 'עברת את המבחן! ' : ans.verdict === 'fail' ? 'לא עברת הפעם. ' : 'ג׳מיני לא היה בטוח מספיק, והמדריך יבדוק. ';
-    say(head + (ai.hideFb ? '' : (ans.feedback || '')));
-    if (ai.mode !== 'note' && pass && NX.un) nxMarkDone(k);
-  }
-  try { if (NX.role === 'player' && NX.un) nxHistPush(entry); } catch (e) { /* history is best effort */ }
-}
-function nxAiTracks() {                                       // every track a student can fly, exams first
-  const ex = {}; nxAiExams().forEach((x) => { ex[x.id] = x.where; });
-  const out = [], seen = {};
-  nxStageIds().forEach((id) => { const st = STAGES[id]; if (!st) return; const k = nxGuideKey(id); if (seen[k]) return; seen[k] = 1; out.push({ id: k, where: ex[k] || '' }); });
-  Object.keys(ex).forEach((k) => { if (!seen[k]) { seen[k] = 1; out.push({ id: k, where: ex[k] }); } });
-  return out.sort((a, b) => (b.where ? 1 : 0) - (a.where ? 1 : 0));
-}
-function nxAiExams() {                                       // every course exam (stage exams and finals) with the course it belongs to
-  const out = [], seen = {}, cs = NX.draft.courses || {};
-  Object.keys(cs).forEach((cid) => {
-    const co = cs[cid];
-    (co.stages || []).forEach((s, n) => { const k = String(s.exam || '').replace(/^pub_/, ''); if (k && !seen[k]) { seen[k] = 1; out.push({ id: k, where: (co.name || 'קורס') + ' · ' + (s.name || 'שלב ' + (n + 1)) }); } });
-    const fk = co.final && String(co.final.exam || '').replace(/^pub_/, ''); if (fk && !seen[fk]) { seen[fk] = 1; out.push({ id: fk, where: (co.name || 'קורס') + ' · מבחן מסכם' }); }
-  });
-  return out;
-}
-async function nxAiStatus() {
-  try { const r = await fetch('/api/ai/status'); if (!r.ok) throw new Error('x'); NX.aiSt = await r.json(); } catch (e) { NX.aiSt = { off: true }; }
-  const el = $('nxAiSt'); if (el) el.innerHTML = nxAiStHtml();
-}
-function nxAiHdr() {                                          // the manager's sign-in, so the server shows the real error and lists models
-  const h = { 'Content-Type': 'application/json' };
-  try { h['X-Uid'] = localStorage.getItem('nxHostUid') || ''; const t = sessionStorage.getItem('nxHostTok') || localStorage.getItem('nxHostTokL') || ''; if (t) h.Authorization = 'Bearer ' + t; } catch (e) { /* ignore */ }
-  return h;
-}
-async function nxAiModels() {
-  const out = $('nxAiOut'); if (!out) return;
-  out.textContent = 'מביא רשימת מודלים...';
-  try {
-    const res = await (NXAI.fetch || fetch)('/api/ai/models', { headers: nxAiHdr() }), a = await res.json();
-    if (!res.ok) { out.textContent = a && a.error === 'no-key' ? 'חסר מפתח GEMINI_API_KEY בשרת.' : 'שגיאה: ' + ((a && (a.detail || a.error)) || res.status); return; }
-    const cur = (NX.draft.ai && NX.draft.ai.model) || (a.model || ''), ms = (a.models || []).filter((m) => /(flash|pro)/i.test(m) && !/(tts|image|transcribe|embed|audio|live|imagen|veo|argon|robotics|computer)/i.test(m));
-    out.innerHTML = ms.length ? '<p class="nxn">מודל הוא ה"מוח" של ג׳מיני שמנתח את הטיסה. "flash" מהיר וזול, "pro" חכם ואיטי יותר. בדרך כלל אין צורך לשנות: לחץ על מודל רק אם הבדיקה איטית או נכשלת. ' + (cur ? 'כרגע: <b>' + nxEsc(cur) + '</b>.' : '') + '</p>' + ms.slice(0, 8).map((m) => '<button class="nxb' + (m === cur ? ' sel' : '') + '" data-act="ai-pick" data-v="' + nxEsc(m) + '">' + nxEsc(m) + '</button>').join(' ') : 'לא נמצאו מודלים מתאימים למפתח הזה.';
-  } catch (e) { out.textContent = nxAiNoServer(e); }
-}
-function nxAiNoServer(e) {                                    // say which of the likely reasons it is
-  const here = location.protocol + '//' + location.host, onSite = /onrender\.com$|88academy/i.test(location.host);
-  if (!onSite) return 'אתה לא באתר ב-Render (הכתובת: ' + here + '). בדיקת ה-AI עובדת רק באתר ב-Render, לא בחלון של Claude. פתח את https://eight8academy-system.onrender.com והיכנס כמנהל.';
-  return 'השרת לא החזיר תשובה תקינה (' + String((e && e.message) || e).slice(0, 80) + '). אם הרגע פרסמנו גרסה, חכה כמה דקות עד ש-Deploys ב-Render מראה Live, ורענן את הדף (Ctrl+Shift+R).';
-}
-async function nxAiPing() {                                   // connection test: reach Gemini, the key, the model, with timings
-  const out = $('nxAiOut0'); if (!out) return;
-  out.textContent = 'בודק חיבור לג׳מיני (עד דקה)...';
-  try {
-    const res = await (NXAI.fetch || fetch)('/api/ai/ping', { headers: nxAiHdr() }), a = await res.json();
-    if (!res.ok) { out.textContent = 'שגיאה: ' + ((a && (a.detail || a.error)) || res.status); return; }
-    out.innerHTML = (a.steps || []).map((x) => (x.ok ? '<b style="color:#5fd08a">&#10003;</b> ' : '<b style="color:#e66">&#10005;</b> ') + nxEsc(x.step) + (x.ms !== undefined ? ' <small>(' + (x.ms / 1000).toFixed(1) + ' ש׳)</small>' : '') + ': ' + nxEsc(x.msg)).join('<br>');
-  } catch (e) { out.textContent = nxAiNoServer(e); }
-}
-function nxAiStHtml() {
-  const st = NX.aiSt;
-  if (!st) return 'בודק חיבור...';
-  if (st.off) return '<b style="color:#e6b450">לא זמין כאן.</b> הבדיקה עובדת רק באתר ב-Render, לא בחלון של Claude.';
-  return st.key ? '<b style="color:#5fd08a">מחובר.</b> מפתח ג׳מיני קיים בשרת. מודל: ' + nxEsc(st.model) : '<b style="color:#e66">חסר מפתח.</b> הוסף GEMINI_API_KEY ב-Render (Environment).';
-}
-function nxTabAi() {
-  const A = NX.draft.ai || {}, sel = (k, v, opts) => '<select data-k="ai.' + k + '"' + (typeof v === 'number' ? ' data-num="1"' : '') + '>' + opts.map((o) => '<option value="' + o[0] + '"' + (String(v) === String(o[0]) ? ' selected' : '') + '>' + o[1] + '</option>').join('') + '</select>';
-  if (!NX.aiSt) nxAiStatus();
-  let h = '<p class="nxn">בדיקת AI: אחרי שתלמיד מסיים מבחן בקורס, ג׳מיני מקבל את נתוני הטיסה ואת הקריטריונים שלך, ומחליט אם להעביר אותו לשלב הבא. הבדיקה חלה רק על שחקנים בקבוצה שמצב תלמיד דלוק בה (בלשונית "קבוצות"). טיסה כמנהל, או בקבוצה שלא במצב תלמיד, לא נבדקת.</p>';
-  h += '<div class="nxcard"><div class="nxn" id="nxAiSt">' + nxAiStHtml() + '</div><div class="nxbtns"><button class="nxb" data-act="ai-ping">בדיקת חיבור לג׳מיני</button></div><div class="nxn" id="nxAiOut0"></div>' +
-    nxF('בדיקת AI', '<label class="nxchk1"><input type="checkbox" data-k="ai.on"' + (A.on ? ' checked' : '') + '> <b>' + (A.on ? 'פעילה' : 'כבויה') + '</b> (מתג ראשי לכל המבחנים)</label>') + '</div>';
-  if (!A.on) return h + nxAiDiag() + '<p class="nxn">כשהבדיקה כבויה, המבחנים נבדקים רק לפי התנאים הרגילים (זמן, התרסקויות, כוכבים). לא נשלח שום דבר לג׳מיני.</p>';
-  h += '<div class="nxcard"><h3>הגדרות כלליות</h3>' +
-    nxF('מה ג׳מיני עושה', sel('mode', A.mode || 'auto', [['auto', 'מחליט ומעביר את התלמיד'], ['note', 'נותן משוב בלבד (המעבר לפי התנאים הרגילים)']])) +
-    nxF('מודל ג׳מיני', '<input type="text" maxlength="60" data-k="ai.model" value="' + nxEsc(A.model || '') + '" placeholder="ריק = אוטומטי"><button class="nxb" data-act="ai-models">הצג מודלים זמינים</button>') +
-    nxF('ביטחון מינימלי להעברה', sel('min', Number(A.min) || 80, [[60, '60%'], [70, '70%'], [80, '80%'], [90, '90%']])) +
-    nxF('הקריטריונים (ברירת מחדל לכל המבחנים)', '<textarea rows="5" style="width:100%" maxlength="1500" data-k="ai.crit" placeholder="לדוגמה: עובר רק בלי התרסקויות, ובזמן שמראה שיפור לעומת הניסיון הקודם. הקפה שנייה לא צריכה להיות איטית מהראשונה.">' + nxEsc(A.crit || '') + '</textarea>') +
-    nxF('ניסיונות קודמים שנשלחים', sel('hist', A.hist === undefined ? 8 : Number(A.hist), [[0, 'בלי (רק הטיסה הנוכחית)'], [3, '3 אחרונים'], [8, '8 אחרונים']])) +
-    nxF('זמני הקפות', '<label class="nxchk1"><input type="checkbox" data-k="ai.noLaps"' + (A.noLaps ? ' checked' : '') + '> אל תשלח זמני הקפות בנפרד (רק זמן כולל)</label>') +
-    nxF('משוב לתלמיד', '<label class="nxchk1"><input type="checkbox" data-k="ai.hideFb"' + (A.hideFb ? ' checked' : '') + '> אל תציג את המשוב של ג׳מיני לתלמיד (רק למדריך במעקב)</label>') +
-    nxF('אם ג׳מיני לא זמין', sel('fallback', A.fallback === 'hold' ? 'hold' : 'pass', [['pass', 'לבדוק לפי התנאים הרגילים (התלמיד לא נתקע)'], ['hold', 'לא להעביר, שינסה שוב']])) +
-    '<div class="nxn">התנאים הרגילים של המבחן (זמן, התרסקויות, כוכבים) נשארים חובה. ג׳מיני נשאל רק כשהם מתקיימים. כשהוא לא בטוח, התלמיד לא מועבר והמדריך רואה את זה במעקב.</div></div>';
-  h += '<p class="nxn">הבדיקה חלה על כל מסלול שתלמיד טס בו. כיבוי או קריטריונים למסלול מסוים: לחץ על המסלול ברשימת המסלולים ופתח "בדיקת AI" בפאנל שבצד.</p>';
-  h += '<div class="nxcard"><h3>בדיקת איכות AI</h3><p class="nxn">מריצה כ-10 בקשות אמיתיות לג׳מיני (בניית מסלול, עריכת מסלול ובדיקת טיסה) ובודקת אם התוצאה נכונה: מספר שערים, סוג מפה, עצים, ופסק דין על טיסות לדוגמה. אפשר להריץ אחרי כל שינוי כדי לראות שהכול עובד. לוקחת כדקה.</p><div class="nxbtns"><button class="nxb pri" data-act="ai-quality"' + (NX.aiQBusy ? ' disabled' : '') + '>' + (NX.aiQBusy ? 'בודק...' : 'הרץ בדיקת איכות') + '</button></div><div class="nxn" id="nxAiQ">' + (NX.aiQHtml || '') + '</div></div>';
-  h += nxAiDiag();
-  h += '<div class="nxcard"><h3>בדיקה על נתונים לדוגמה</h3><p class="nxn">שולח את הקריטריונים הכלליים לג׳מיני עם הנתונים כאן, ומראה מה הוא עונה. כך בודקים שהמפתח עובד ושההחלטה סבירה.</p>' +
-    nxF('זמן כולל (שניות)', '<input type="number" step="0.1" data-ai="aiT_t" value="' + nxEsc(NX.aiT_t || 45) + '">') +
-    nxF('התרסקויות', '<input type="number" min="0" data-ai="aiT_c" value="' + nxEsc(NX.aiT_c || 0) + '">') +
-    nxF('כוכבים (0-3)', '<input type="number" min="0" max="3" data-ai="aiT_s" value="' + nxEsc(NX.aiT_s || 2) + '">') +
-    '<div class="nxbtns"><button class="nxb pri" data-act="ai-test">שלח לבדיקה</button></div><div class="nxn" id="nxAiOut"></div></div>';
-  return h;
-}
-function nxAiDiag() {                                          // why a check did or did not run: one line per group
-  const gs = Object.keys(NX.groups || {});
-  let h = '<div class="nxcard"><h3>האם הבדיקה תפעל? מצב כל קבוצה</h3><p class="nxn">ג׳מיני בודק כל מסלול שתלמיד בקבוצה במצב תלמיד טס בו, מבחן או תרגול. טיסה של מנהל, או במסלול של מטיס (שלא פורסם), לא נבדקת.</p>';
-  if (NX.dirty) h += '<p class="nxn"><b style="color:#e6b450">יש שינויים שלא פורסמו.</b> השחקנים רואים את ההגדרות רק אחרי לחיצה על פרסום.</p>';
-  if (!gs.length) return h + '<p class="nxn">אין עדיין קבוצות.</p></div>';
-  gs.forEach((gid) => {
-    const g = NX.groups[gid], cs = nxGroupCourses(g), n = cs.reduce((t, cid) => { const co = NX.draft.courses[cid]; return t + (co.stages || []).filter((s) => s.on && s.exam).length + (co.final && co.final.on && co.final.exam ? 1 : 0); }, 0);
-    const why = [];
-    if (g.mode !== 'student') why.push('מצב תלמיד לא דלוק');
-    h += '<div class="nxrow2"><span><b>' + nxEsc(g.name || gid) + '</b> <small>' + (cs.length ? cs.map((cid) => nxEsc(NX.draft.courses[cid].name || cid)).join(', ') + ' · ' + n + ' מבחנים' : 'ללא קורס') + '</small></span><span>' + (why.length ? '<b style="color:#e66">לא תפעל: ' + why.join(', ') + '</b>' : '<b style="color:#5fd08a">תפעל</b>') + '</span></div>';
-  });
-  return h + '</div>';
-}
-function nxAiQScenarios() {
-  const line = (n, gap) => Array.from({ length: n }, (_, i) => ({ x: -gap * (n - 1) / 2 + i * gap, y: 8, z: 0 }));
-  const cur = { base: 'field', closed: false, gates: line(5, 30), objects: [{ t: 'cone', x: -20, z: 8 }, { t: 'cone', x: 20, z: -8 }] };
-  const TREES = ['pine', 'oak', 'birch', 'palm', 'cypress', 'bush', 'spruce', 'acacia', 'willow', 'olive'];
-  const dev = (g) => { const a = g[0], b = g[g.length - 1], dx = b.x - a.x, dz = b.z - a.z, L = Math.hypot(dx, dz) || 1; return Math.max.apply(null, g.map((p) => Math.abs((p.x - a.x) * dz - (p.z - a.z) * dx) / L)); };
-  const build = (text, test) => async (sample) => { const raw = await sample.json(nxAiPrompt(text, 'medium', true, ''), { kind: 'build' }); const t = nxBuildFromAi(raw, true); return test(t); };
-  const edit = (text, test) => async (sample) => { const m = nxAiMerge(cur, await sample.json(nxAiEditPrompt(text, cur, ''), { kind: 'edit' })); const t = nxBuildFromAi(m, true, true); return test(t, m); };
-  const judge = (crit, flight, track, expect, extra) => async () => {
-    const res = await (NXAI.fetch || fetch)('/api/ai/check', { method: 'POST', headers: nxAiHdr(), body: JSON.stringify({ stage: 'בדיקה', crit, track: track || {}, flight: Object.assign({ total: 45, bestLap: 45, laps: 1, crashes: 0, stars: 2, gates: 6 }, flight), history: [] }) });
-    const a = await res.json(); if (!res.ok) throw new Error((a && (a.detail || a.error)) || res.status);
-    return a.verdict === expect && (!extra || extra(a)) ? [true, a.verdict + ' ' + a.confidence + '%'] : [false, 'התקבל ' + a.verdict + ' (' + a.confidence + '%), ציפיתי ל-' + expect];
-  };
-  return [
-    ['בנייה: קו ישר של 6 שערים עם עצים', build('מסלול ישר של 6 שערים עם עצים משני הצדדים', (t) => [t.gates.length === 6 && dev(t.gates) < 8 && t.objects.some((o) => TREES.indexOf(o.t) >= 0), t.gates.length + ' שערים, ' + t.objects.length + ' אלמנטים, סטייה ' + Math.round(dev(t.gates)) + ' מ׳'])],
-    ['בנייה: זיגזג בשלג, 8 שערים', build('מסלול זיגזג של 8 שערים על שלג', (t) => [t.gates.length === 8 && t.base === 'snow' && dev(t.gates) > 15, t.gates.length + ' שערים, מפה ' + t.base])],
-    ['בנייה: סלאלום בין קונוסים', build('סלאלום בין קונוסים', (t) => [t.objects.filter((o) => /cone/.test(o.t)).length >= 4, t.objects.filter((o) => /cone/.test(o.t)).length + ' קונוסים'])],
-    ['עריכה: הוספת עצים', edit('תוסיף עצים משני צדי המסלול', (t, m) => [t.gates.length === 5 && t.base === 'field' && t.objects.filter((o) => TREES.indexOf(o.t) >= 0).length >= 6, t.gates.length + ' שערים נשארו, ' + t.objects.length + ' אלמנטים'])],
-    ['עריכה: שינוי למדבר', edit('תהפוך את המפה למדבר', (t) => [t.base === 'desert' && t.gates.length === 5, 'מפה ' + t.base + ', ' + t.gates.length + ' שערים'])],
-    ['עריכה: מחיקת הקונוסים', edit('תמחק את הקונוסים', (t) => [!t.objects.some((o) => /cone/.test(o.t)) && t.gates.length === 5, t.objects.length + ' אלמנטים נשארו'])],
-    ['בדיקת טיסה: עובר (45 שנ׳, בלי התרסקות)', judge('עוברים רק אם הזמן הכולל נמוך מ-60 שניות ובלי התרסקויות.', {}, null, 'pass')],
-    ['בדיקת טיסה: נכשל (3 התרסקויות)', judge('עוברים רק אם הזמן הכולל נמוך מ-60 שניות ובלי התרסקויות.', { crashes: 3 }, null, 'fail')],
-    ['בדיקת טיסה: מסלול של הקפה אחת', judge('', {}, { laps: 1, pass: 'המסלול הוא הקפה אחת. עוברים כשמסיימים אותה בלי התרסקויות.' }, 'pass', (a) => !/3 הקפות|שלוש הקפות/.test(a.feedback + ' ' + a.notes))]
-  ];
-}
-async function nxAiQuality() {
-  if (NX.aiQBusy) return;
-  NX.aiQBusy = true; const rows = []; const out = () => { NX.aiQHtml = rows.join(''); const e = $('nxAiQ'); if (e) e.innerHTML = NX.aiQHtml; };
-  rows.push('<p class="nxn">מתחיל...</p>'); out();
-  const sample = await nxAiSample();
-  rows.length = 0;
-  if (!sample) { NX.aiQBusy = false; NX.aiQHtml = '<p class="nxn">' + NX_AI_OFF + '</p>'; nxAdmRender(); return; }
-  let okN = 0; const sc = nxAiQScenarios();
-  for (let i = 0; i < sc.length; i++) {
-    const t0 = Date.now(); let ok = false, note = '';
-    try { const r = await sc[i][1](sample); ok = !!r[0]; note = r[1] || ''; } catch (e) { note = 'שגיאה: ' + String((e && e.message) || e).slice(0, 120); }
-    if (ok) okN++;
-    rows.push('<div class="nxrow2"><span>' + (ok ? '<b style="color:#6fcf7f">✓</b> ' : '<b style="color:#ff6b6b">✗</b> ') + nxEsc(sc[i][0]) + '<br><small>' + nxEsc(note) + ' · ' + ((Date.now() - t0) / 1000).toFixed(1) + ' שנ׳</small></span></div>'); out();
-  }
-  rows.push('<p class="nxn"><b>' + okN + ' מתוך ' + sc.length + ' עברו.</b>' + (okN < sc.length ? ' שלח לי את הרשימה ואכוון את מה שנכשל.' : ' הכול תקין.') + '</p>');
-  NX.aiQBusy = false; out(); nxAdmRender();
-}
-async function nxAiTest() {
-  const out = $('nxAiOut'), A = NX.draft.ai || {}; if (!out) return;
-  if (!String(A.crit || '').trim()) { out.textContent = 'כתוב קודם קריטריונים כלליים.'; return; }
-  out.textContent = 'ג׳מיני בודק...';
-  try {
-    const uid = (function () { try { return localStorage.getItem('nxHostUid') || ''; } catch (e) { return ''; } })();
-    const t = Number(NX.aiT_t || 45), c = Number(NX.aiT_c || 0), s = Number(NX.aiT_s || 2);
-    const res = await (NXAI.fetch || fetch)('/api/ai/check', { method: 'POST', headers: nxAiHdr(), body: JSON.stringify({ stage: 'בדיקה לדוגמה', crit: A.crit, flight: { total: t, bestLap: t, laps: 1, crashes: c, stars: s, gates: 10 }, history: [] }) });
-    const a = await res.json();
-    if (!res.ok) { out.textContent = a && a.error === 'no-key' ? 'חסר מפתח GEMINI_API_KEY בשרת.' : 'שגיאה: ' + ((a && (a.detail || a.error)) || res.status); return; }
-    out.innerHTML = '<b>' + ({ pass: 'עבר', fail: 'נכשל', unclear: 'לא ברור' }[a.verdict] || nxEsc(a.verdict)) + '</b> (' + a.confidence + '%)<br>' + nxEsc(a.feedback) + (a.notes ? '<br><small>' + nxEsc(a.notes) + '</small>' : '');
-  } catch (e) { out.textContent = nxAiNoServer(e); }
 }
 function nxMarkDone(id) {                                    // the student finished this track: it counts for good (saved per username, and sent with the live data)
   if (!NX.un || !id || nxIsDone(id)) return;
@@ -8253,12 +8164,6 @@ function nxTabCourses() {
   return h;
 }
 function nxCrsAct(a, el) {                                    // course editor buttons; returns true when handled
-  if (a === 'ai-test') { nxAiTest(); return true; }
-  if (a === 'ai-quality') { nxAiQuality(); return true; }
-  if (a === 'ai-models') { nxAiModels(); return true; }
-  if (a === 'ai-ping') { nxAiPing(); return true; }
-  if (a === 'ai-pick') { NX.draft.ai = NX.draft.ai || {}; NX.draft.ai.model = el.dataset.v; nxTouch(); nxAdmRender(); nxToast('המודל נבחר: ' + el.dataset.v + '. לחץ פרסום כדי לשמור'); return true; }
-  if (a === 'ai-ex') { const D = NX.draft; D.ai = D.ai || {}; D.ai.exams = D.ai.exams || {}; const e = D.ai.exams[el.dataset.id] = D.ai.exams[el.dataset.id] || {}; if (el.checked) delete e.off; else e.off = true; nxTouch(); nxAdmRender(); return true; }
   if (a === 'crs-learn') { nxMakeLearnCourse(); return true; }
   if (a.indexOf('crs-') !== 0) return false;
   const D = NX.draft, cid = el.dataset.cid, i = Number(el.dataset.i);
@@ -8463,24 +8368,14 @@ function nxTrackPanel(id) {
   h += nxTrkSec(tag('env'), 'תנאי סביבה (רוח)', (Number(E.wind) || 0) > 0 ? (Number(E.wind) || 0) + " מ'/ש" : 'ללא', e);
   const gd = (D.guides || {})[k] || {}, hasG = !!(String(gd.text || '').trim() || String(gd.fly || '').trim());
   h += nxTrkSec(tag('guide'), 'כרטיס הסבר לתלמיד', hasG ? (gd.off ? 'מוסתר' : 'יש כרטיס') : 'אין כרטיס', nxGuideFields(k, gd));
-  const td = (D.tdesc || {})[k] || {}, hasD = !!(String(td.desc || '').trim() || String(td.pass || '').trim() || String(td.focus || '').trim());
-  h += nxTrkSec(tag('desc'), 'תיאור המסלול (לבדיקת AI)', hasD ? 'יש תיאור' : 'ריק', nxDescFields(k, td));
-  const sk = (D.stick || {})[k] || {}, nsk = ['thrMax', 'thrAvg', 'thrPct', 'rollMax', 'pitchMax', 'yawMax', 'jerkMax'].filter((f) => Number(sk[f]) > 0).length;
-  const sn = (f, ph) => '<input type="number" min="0" max="' + (f === 'jerkMax' ? 200 : 100) + '" step="1" data-num="1" data-k="stick.' + k + '.' + f + '" value="' + (Number(sk[f]) || 0) + '" title="' + ph + '" style="width:90px">';
-  let sg = '<p class="nxn">מגבלות על הסטיקים בטיסה במסלול הזה. 0 = ללא מגבלה. האפליקציה בודקת לבד, בלי AI. מי שחרג לא עובר את השלב. הבדיקה מתחילה בחציית שער ההתחלה.</p>' +
-    nxF('גז: מקסימום (%)', sn('thrMax', 'מקסימום מיקום הגז')) + nxF('גז: ממוצע מקסימלי (%)', sn('thrAvg', 'ממוצע הגז')) +
-    nxF('גז: מותר מעל (%) ...', sn('thrAt', 'סף הגז')) + nxF('... במשך עד (% מהזמן)', sn('thrPct', 'אחוז זמן מותר מעל הסף')) +
-    nxF('רול: מקסימום (%)', sn('rollMax', 'רול')) + nxF('פיץ׳: מקסימום (%)', sn('pitchMax', 'פיץ׳')) + nxF('יאו: מקסימום (%)', sn('yawMax', 'יאו')) +
-    nxF('תנועות סטיק חדות: מקסימום', sn('jerkMax', 'מספר תנועות חדות')) +
-    nxF('מצב בדיקה', '<label class="nxchk1"><input type="checkbox" data-k="stick.' + k + '.hard"' + (sk.hard ? ' checked' : '') + '> קשיח: חריגה אחת נכשלת</label>') +
-    (sk.hard ? '' : nxF('סובלנות (% מהזמן מעל המגבלה)', '<input type="number" min="0" max="50" step="1" data-num="1" data-k="stick.' + k + '.tol" value="' + (sk.tol !== undefined ? Number(sk.tol) : 5) + '" style="width:90px">'));
-  h += nxTrkSec(tag('stick'), 'מגבלות סטיקים', nsk ? nsk + ' מגבלות' : 'ללא', sg);
-  const A = D.ai || {}, ex = (A.exams || {})[k] || {}, on = !ex.off;
-  const selm = (cur, opts) => '<select data-k="ai.exams.' + k + '.mode">' + opts.map((o) => '<option value="' + o[0] + '"' + (cur === o[0] ? ' selected' : '') + '>' + o[1] + '</option>').join('') + '</select>';
-  let ai = nxF('בדיקת AI במסלול הזה', '<label class="nxchk1"><input type="checkbox" data-act="ai-ex" data-id="' + k + '"' + (on ? ' checked' : '') + '> פעילה</label>');
-  if (on) ai += nxF('קריטריונים משלו (ריק = ברירת המחדל)', '<textarea rows="3" style="width:100%" maxlength="1500" data-k="ai.exams.' + k + '.crit">' + nxEsc(ex.crit || '') + '</textarea>') + nxF('פעולה', selm(ex.mode || '', [['', 'כמו ההגדרה הכללית'], ['auto', 'מחליט ומעביר'], ['note', 'משוב בלבד']]));
-  ai += '<p class="nxn">ההגדרות הכלליות של הבדיקה נמצאות בלשונית "בדיקת AI".</p>';
-  h += nxTrkSec(tag('ai'), 'בדיקת AI', on ? 'פעילה' : 'כבויה', ai);
+  const sk = (D.stick || {})[k] || {}, lm = sk.lim || {}, nsk = nxRuleKeys(sk).length;
+  const sn = (m, side) => { const v = lm[m] && nxRuleNum(lm[m][side]) !== null ? lm[m][side] : ''; return '<input type="number" step="any" data-num="1" data-k="stick.' + k + '.lim.' + m + '.' + side + '" value="' + v + '" placeholder="' + (side === 'min' ? 'מינ׳' : 'מקס׳') + '" style="width:78px">'; };
+  let sg = '<p class="nxn">מגבלות מדידה לטיסה במסלול הזה. משאירים ריק = ללא מגבלה. האפליקציה בודקת לבד, בלי AI: חריגה מכל מגבלה = השלב לא עובר. השחקן מקבל 1-3 כוכבים לפי כמה בנוחות הוא בתוך המגבלות. הבדיקה מתחילה בחציית שער ההתחלה.</p>';
+  const grp = {}; Object.keys(NXE_M).forEach((m) => { (grp[NXE_M[m][2]] = grp[NXE_M[m][2]] || []).push(m); });
+  Object.keys(grp).forEach((gn) => { sg += '<div class="nxn" style="margin-top:8px"><b>' + gn + '</b></div>' + grp[gn].map((m) => nxF(NXE_M[m][0] + (NXE_M[m][1] ? ' (' + NXE_M[m][1] + ')' : ''), sn(m, 'min') + ' ' + sn(m, 'max'))).join(''); });
+  sg += nxF('גובה יעד (מ׳, ריק = גובה שער ההתחלה)', '<input type="number" step="any" data-num="1" data-k="stick.' + k + '.alt" value="' + (nxRuleNum(sk.alt) !== null ? sk.alt : '') + '" style="width:90px">') +
+    nxF('מצב בדיקה', '<label class="nxchk1"><input type="checkbox" data-k="stick.' + k + '.hard"' + (sk.hard ? ' checked' : '') + '> קשיח: שיאים נמדדים בלי סובלנות (אחרת מתעלמים מ-2% הקיצוניים)</label>');
+  h += nxTrkSec(tag('stick'), 'מגבלות מדידה', nsk ? nsk + ' מגבלות' : 'ללא', sg);
   const cs = D.courses || {}, inC = [];
   Object.keys(cs).forEach((cid) => {
     const co = cs[cid];
@@ -8506,8 +8401,9 @@ function nxTabTracks() {
   if (sel && STAGES[sel] && nxStageIds().indexOf(sel) >= 0) return nxTrackPanel(sel);
   NX.selTrk = '';
   const list = NXH.catList(), ids = nxStageIds();
-  let h = '<p class="nxn">לחץ על מסלול ברשימה שמימין (או כאן) כדי לערוך אותו: שם, קטגוריה, תצוגה, רוח, כרטיס הסבר, תיאור ובדיקת AI.</p>';
-  h += '<div class="nxbtns"><button class="nxb pri" data-act="trk-new">+ מסלול חדש</button></div>';
+  let h = '<p class="nxn">לחץ על מסלול ברשימה שמימין (או כאן) כדי לערוך אותו: שם, קטגוריה, תצוגה, רוח, כרטיס הסבר ותיאור.</p>';
+  h += '<div class="nxbtns"><button class="nxb pri" data-act="trk-new">+ מסלול חדש</button><button class="nxb" data-act="trk-hide-builtin">הסתר מסלולים מובנים</button><button class="nxb" data-act="trk-show-builtin">החזר מסלולים מובנים</button></div>';
+  h += '<details class="pkgbox"><summary><b>ייבוא חבילת שלב</b></summary><p class="nxn">הדבק כאן קובץ חבילת שלב (JSON). נוצר מסלול חדש עם המפה, כרטיס ההסבר ומגבלות המדידה.</p><textarea id="admPkg" rows="6" style="width:100%;direction:ltr" placeholder="{ &quot;pkg&quot;: 1, ... }"></textarea><div class="nxbtns"><button class="nxb pri" data-act="pkg-import">ייבא</button></div></details>';
   h += '<h4>קטגוריות</h4><div class="nxbtns"><input type="text" id="admCatName" maxlength="30" placeholder="שם קטגוריה חדשה, למשל: מתחילים"><button class="nxb pri" data-act="cat-add">+ הוסף קטגוריה</button></div>';
   const trow = (id) => '<div class="nxrow2"><button class="nxb" data-act="trk-sel" data-id="' + id + '">' + nxEsc(STAGES[id].name) + '</button><i class="nxsm">' + st_len(id) + ' שערים</i></div>';
   NX.openCats = NX.openCats || {};
@@ -8524,291 +8420,10 @@ function nxTabTracks() {
 }
 const st_len = (id) => { try { return STAGES[id].gen().length; } catch (e) { return 0; } };
 /* the AI track builder now lives in the track editor (top bar: "בנה עם AI") */
-function nxAiCanEdit() { return !!(editorMode && currentStage && currentStage.custom && !currentStage.pub); }
-function nxAiMode() { return nxAiCanEdit() && NX.aiMode !== 'new' ? 'edit' : 'new'; }
-function nxAiFormHtml() {
-  let h = '';
-  const mode = nxAiMode(), can = nxAiCanEdit();
-  if (NX.aiOk === false) h += '<p class="nxn">' + NX_AI_OFF + '</p>';
-  if (can) {
-    h += '<div class="aimode"><label><input type="radio" name="aiMode" data-ai="aiMode" value="edit"' + (mode === 'edit' ? ' checked' : '') + '> ערוך את המסלול הנוכחי: ' + nxEsc(currentStage.name) + '</label>' +
-      '<label><input type="radio" name="aiMode" data-ai="aiMode" value="new"' + (mode === 'new' ? ' checked' : '') + '> בנה מסלול חדש</label></div>';
-  } else if (editorMode) h += '<p class="nxn">המסלול הנוכחי הוא מסלול מובנה או מפורסם. כדי לערוך אותו עם AI, שכפל אותו קודם ("שכפל ועריך" ברשימת המסלולים). כאן אפשר לבנות מסלול חדש.</p>';
-  h += '<textarea rows="4" data-ai="aiPrompt" placeholder="' + (mode === 'edit' ? 'תאר מה לשנות במסלול. למשל: הוסף עצים משני צדי המסלול, הפוך אותו לזיגזג, הרחק את השערים, הסר את הסלעים, העבר למפת מדבר' : 'תאר את המסלול. למשל: מסלול מהיר עם סלאלום בין קונוסים, שתי פניות סיכה וצלילה אחת') + '">' + nxEsc(NX.aiPrompt || '') + '</textarea>';
-  if (mode === 'new') {
-    h += nxF('רמת קושי', '<select data-ai="aiLevel">' + [['easy', 'קל'], ['medium', 'בינוני'], ['hard', 'קשה']].map((o) => '<option value="' + o[0] + '"' + ((NX.aiLevel || 'medium') === o[0] ? ' selected' : '') + '>' + o[1] + '</option>').join('') + '</select>');
-    h += '<label class="nxchk1"><input type="checkbox" data-ai="aiObjs"' + (NX.aiObjs === false ? '' : ' checked') + '> כלול אובייקטים (קונוסים, דגלים ועוד)</label>';
-  }
-  h += '<div class="nxbtns"><button class="nxb pri" data-act="ai-go"' + (NX.aiBusy ? ' disabled' : '') + '>' + (NX.aiBusy ? 'עובד...' : mode === 'edit' ? 'שנה את המסלול' : 'בנה מסלול') + '</button>' +
-    (mode === 'edit' && NX.aiUndo && NX.aiUndo.id === currentStage.id ? '<button class="nxb" data-act="ai-undo">בטל את השינוי האחרון</button>' : '') + '</div>' +
-    '<div id="admAiMsg" class="nxn">' + nxEsc(NX.aiMsg || '') + '</div>';
-  return h;
-}
-function nxEdAiRender() {
-  const el = $('edAiBody'); if (!el) return;
-  const act = document.activeElement;
-  if (act && el.contains(act) && act.tagName === 'TEXTAREA') return;       // do not wipe what the admin is typing
-  el.innerHTML = nxAiFormHtml();
-}
-function nxAiMsg(t) { NX.aiMsg = t; const e = $('admAiMsg'); if (e) e.textContent = t; }
-function nxSegDist(px, pz, ax, az, bx, bz) {
+function nxSegDist(px, pz, ax, az, bx, bz, extBack, extFwd) {
   const dx = bx - ax, dz = bz - az, l2 = dx * dx + dz * dz || 1e-6;
-  const t = clamp(((px - ax) * dx + (pz - az) * dz) / l2, 0, 1);
+  const t = clamp(((px - ax) * dx + (pz - az) * dz) / l2, extBack ? -1e9 : 0, extFwd ? 1e9 : 1);
   return Math.hypot(px - (ax + t * dx), pz - (az + t * dz));
-}
-const NX_AI_BASES = ['clean', 'field', 'desert', 'snow', 'dusk', 'redwood', 'arena', 'blue'];     // city is left out: its buildings stand in the way of a free route
-const NX_AI_ALIAS = { tree: 'pine', trees: 'pine', fir: 'pine', spruce: 'pine', conifer: 'pine', stone: 'rock', boulder: 'rock', rocks: 'rock', cones: 'cone', tire: 'tires', tyre: 'tires', tyres: 'tires', lamppost: 'lamp', streetlight: 'lamp', hut: 'house', cabin: 'house', shed: 'container', skyscraper: 'tower', fence_: 'fence', bushes: 'bush', shrub: 'bush', pole: 'pylon', post: 'pylon' };
-function nxAiUnwrap(d) {                                    // the reply may be a string, or wrapped in another object
-  if (typeof d === 'string') { try { d = JSON.parse(d.slice(d.indexOf('{'), d.lastIndexOf('}') + 1)); } catch (e) { return null; } }
-  for (let i = 0; i < 3 && d && !Array.isArray(d.gates); i++) d = d.track || d.result || d.course || d.data || null;
-  return d && typeof d === 'object' ? d : null;
-}
-function nxBuildFromAi(raw, withObjs, keepObjs) {
-  const data = nxAiUnwrap(raw);
-  const arr = data && Array.isArray(data.gates) ? data.gates : null;
-  if (!arr) throw new Error('התקבלה תשובה בלי רשימת שערים');
-  const base = NX_AI_BASES.indexOf(data.base) >= 0 ? data.base : 'field';
-  const lim = base === 'arena' ? 82 : 140;
-  const g = [];
-  for (const q of arr.slice(0, 30)) {
-    const x = Number(q && q.x), y = Number(q && q.y), z = Number(q && q.z);
-    if (!isFinite(x) || !isFinite(z)) continue;               // skip a broken gate instead of failing the whole track
-    const ng = { x: round2(clamp(x, -lim, lim)), y: round2(clamp(isFinite(y) ? y : 8, 5.4, 30)), z: round2(clamp(z, -lim, lim)), yaw: 0, pitch: 0 };
-    const last = g[g.length - 1];
-    if (last && Math.hypot(ng.x - last.x, ng.z - last.z) < 9) continue;      // too close to the previous gate: drop it
-    if (q.k && GATE_KINDS[q.k]) ng.k = q.k;
-    if (Number(q.sz) && Number(q.sz) !== 1) ng.sz = round2(clamp(Number(q.sz), 0.7, 1.4));
-    g.push(ng);
-  }
-  if (g.length < 2) throw new Error('צריך לפחות שני שערים (שער התחלה ושער סיום) גם כשלא מבקשים שערים');
-  const closed = g.length >= 3 && !(data && data.closed === false);        // open route (e.g. a straight line): the last gate does not turn back to the first
-  const nxtOf = (i) => (closed ? g[(i + 1) % g.length] : (i + 1 < g.length ? g[i + 1] : null));
-  for (let i = 0; i < g.length; i++) {
-    const n = nxtOf(i);
-    if (!n) { g[i].yaw = g[i - 1].yaw; continue; }          // last gate of an open route keeps the heading of the leg before it
-    g[i].yaw = round2(yawFromDir(n.x - g[i].x, n.z - g[i].z));
-  }
-  const rawObjs = withObjs && Array.isArray(data.objects) ? data.objects.slice(0, 160).map((o) => {
-    if (!o) return o;
-    const t = NX_AI_ALIAS[o.t] || o.t, T = PROP_TYPES[t];
-    return Object.assign({}, o, { t, c: /^#[0-9a-f]{6}$/i.test(o.c) ? o.c : (T && T.defc) || PROP_COLORS.orange });
-  }) : [];
-  let objs = cleanProps(rawObjs).slice(0, 100);
-  objs = objs.filter((p) => {
-    p.x = clamp(p.x, -lim - 8, lim + 8); p.z = clamp(p.z, -lim - 8, lim + 8);
-    if (keepObjs) return true;                              // editing an existing track: the pilot's own elements stay where they are
-    for (let i = 0; i < g.length; i++) {
-      const n = nxtOf(i);
-      if (Math.hypot(p.x - g[i].x, p.z - g[i].z) < 8) return false;
-      if (n && nxSegDist(p.x, p.z, g[i].x, g[i].z, n.x, n.z) < 6) return false;
-    }
-    return true;
-  });
-  return { name: String((data && data.name) || 'מסלול AI').slice(0, 30), gates: g, objects: objs, base };
-}
-function nxAiPrompt(text, level, withObjs, feedback) {
-  const props = 'cone, bigcone, flag, pylon, barrier, tires, wall, fence (markers); pine, oak, bush (trees); rock, bigrock, boulders, cliff, dune, crystal (terrain); building, house, tower, container, lamp, hangar, tent, watchtower, silo, shed, billboard, antenna, windmill (structures); car, van, truck, bus, tractor, trailer, boat, plane, heli, crane (vehicles); hurdle, jersey, sandbags, crate, barrel, hay, netfence, tirewall (obstacles); palm, birch, deadtree, cypress, sapling, cactus, log, stump (plants); minicone, chkflag, windsock, balloon, marker (markers); more: stake, conerow, arrowmark, startline, ringmark, pennant, beacon, signpost, slalompole, pallets, pipe, ramp, rail, boom, cratestack, drumrow, brickwall, scaffold, haystack, willow, olive, spruce, acacia, bamboo, flowers, hedge, reeds, tallgrass, cornrow, mushroom, villa, skyscraper, warehouse, barn, lighthouse, watertank, gazebo, grandstand, kiosk, chimney, bunker, solarpanel, bench, hill, mound, pond, crater, stoneline, rockwall, mesa, spire, iceblock, snowpile, sportscar, pickup, jeep, motorbike, bicycle, ambulance, firetruck, tank, forklift, caravan, sailboat, hotair, ufo, trainwagon';
-  return 'You design FPV drone racing tracks for a simulator. Reply with ONLY one JSON object, no prose, no markdown.\n' +
-    'Schema: {"name":"<short Hebrew track name, max 30 chars>","base":"field","closed":false,"gates":[{"x":-60,"y":8,"z":0,"k":"ring","sz":1},{"x":60,"y":8,"z":0}],"objects":[{"t":"pine","x":-40,"z":14,"s":1.2}]}\n' +
-    'RULES:\n' +
-    '1. Units are meters, y is up. A track ALWAYS has at least 2 gates (a start gate and a finish gate), EVEN WHEN THE PILOT ASKS FOR NO GATES: in that case output exactly 2 gates, one at each end of the route, and build the rest of the request out of objects.\n' +
-    '2. base is the map type: clean (empty floor), field (open meadow, DEFAULT), desert, snow, dusk (sunset), redwood (forest), arena (indoor hangar). Choose what fits the request. x and z must stay between -80 and 80 for arena, and between -140 and 140 for every other map. Gate y (centre of a 9x9 m gate) is between 5.5 and 30.\n' +
-    '3. FOLLOW THE PILOT REQUEST LITERALLY. Straight line / sprint / one direction: all gates on one straight line, equal spacing 15 to 25 m, same y unless asked to climb or dive, no turns, "closed":false. A named shape (zigzag, S-curve, circle, oval, figure eight, square, slalom, climb, dive): build exactly that. With no shape given, design a flowing closed loop ("closed":true, 6 to 14 gates, consecutive gates 20 to 60 m apart). Never put two gates closer than 12 m. Do NOT output yaw.\n' +
-    '4. Optional per gate: k = ring | square | arch | wide | tall | hex | double | triple | archwide | archtall | slit | ledge and sz = size multiplier 0.7 to 1.4.\n' +
-    '5. Objects stand on the ground. t is one of: ' + props + '. Optional: s = scale 0.6 to 2.5, yaw in degrees, c = #rrggbb. "Trees on both sides of the route" means two rows of pine or oak, 9 to 14 m to each side of the route line, one every 8 to 14 m along it. Keep every object at least 8 m from every gate and 6 m from the line between consecutive gates. ' + (withObjs ? 'Use up to 100 objects.' : 'Output an empty objects array.') + '\n' +
-    '6. Difficulty: ' + level + '.\n' +
-    'EXAMPLE: "מסלול ישר של 5 שערים עם עצים משני הצדדים" -> {"name":"קו ישר עם עצים","base":"field","closed":false,"gates":[{"x":-80,"y":8,"z":0},{"x":-40,"y":8,"z":0},{"x":0,"y":8,"z":0},{"x":40,"y":8,"z":0},{"x":80,"y":8,"z":0}],"objects":[{"t":"pine","x":-70,"z":-12},{"t":"pine","x":-70,"z":12},{"t":"pine","x":-50,"z":-12},{"t":"pine","x":-50,"z":12}]} (a real answer has the trees along the whole route). Count what the pilot asks for exactly (5 gates means 5 gates).\n' +
-    (feedback ? 'YOUR PREVIOUS ANSWER WAS REJECTED: ' + feedback + '. Fix exactly that and answer again.\n' : '') +
-    'Pilot request (Hebrew): ' + text.slice(0, 1200);
-}
-function nxAiCurrent() {
-  const r2 = (v) => Math.round(v * 100) / 100;
-  return {
-    base: currentStage.base || 'arena',
-    closed: (function () { if (gates.length < 3) return false; const l = gates[gates.length - 1], f0 = gates[0]; let d = Math.abs(((l.yaw || 0) - yawFromDir(f0.x - l.x, f0.z - l.z) + 540) % 360 - 180); return d < 45; })(),
-    gates: gates.map((g) => { const o = { x: r2(g.x), y: r2(g.y), z: r2(g.z) }; if (g.k) o.k = g.k; if (g.sz) o.sz = g.sz; return o; }),
-    objects: propData.map((p) => ({ t: p.t, x: r2(p.x), z: r2(p.z), s: r2(p.s || 1), yaw: r2(p.yaw || 0), c: p.c }))
-  };
-}
-function nxAiEditPrompt(text, cur, feedback) {
-  const small = { base: cur.base, closed: cur.closed, gates: cur.gates, objects: cur.objects.map((o) => [o.t, o.x, o.z]) };      // compact view of the current track
-  return 'You edit an FPV drone racing track in a simulator. The pilot writes in Hebrew. Reply with ONLY a JSON object that describes the CHANGE, not the whole track, no prose, no markdown.\n' +
-    'Schema (every key is optional, include only what the request needs): {"base":"redwood","addObjects":[{"t":"pine","x":10,"z":5,"s":1.2,"yaw":0,"c":"#2c6a34"}],"removeObjects":{"all":false,"types":["pine"]},"gates":[{"x":0,"y":8,"z":-30,"k":"ring","sz":1}],"addGates":{"after":5,"count":5,"spacing":16,"y":8},"closed":true}\n' +
-    'CURRENT TRACK (objects are [type, x, z]):\n' + JSON.stringify(small) + '\n' +
-    'RULES:\n' +
-    '- Output only what must change. To add trees or other objects use addObjects only; do NOT repeat existing objects or gates. Use "gates" (the COMPLETE new gate list) only when the pilot asks to change, move, add or remove gates, and then also keep every gate that was not mentioned. Use removeObjects only when asked to remove things. Use base only when the map type must change.\n' +
-    '- Hebrew hints: עצים = pine / oak / birch / palm; יער = base "redwood" and many pine trees; מדבר = base "desert" with rock / dune / cactus-like rock; שלג = base "snow"; קונוסים = cone; בניינים = building / house; סלעים = rock / bigrock; "אל תשנה כלום" means keep the rest as it is.\n' +
-    '- If the pilot gives no exact place, spread new objects along both sides of the route, 10 to 20 m away from the line between gates, and at least 8 m from every gate. Use 10 to 60 objects.\n' +
-    '- Units are meters, y is up. Gate y between 5.5 and 30, consecutive gates at least 12 m apart, do NOT output yaw for gates. x and z stay within -80..80 for arena and -140..140 otherwise.\n' +
-    '- base is one of: clean, field, desert, snow, dusk, redwood, arena. Object t is one of: cone, bigcone, flag, pylon, barrier, tires, wall, fence, pine, oak, bush, rock, bigrock, boulders, cliff, dune, crystal, building, house, tower, container, lamp, hangar, tent, watchtower, silo, shed, billboard, antenna, windmill, car, van, truck, bus, tractor, trailer, boat, plane, heli, crane, hurdle, jersey, sandbags, crate, barrel, hay, netfence, tirewall, palm, birch, deadtree, cypress. Optional per object: s = scale 0.6 to 2.5, yaw degrees, c = #rrggbb.\n' +
-    'EXAMPLES (request -> answer):\n' +
-    '"תוסיף עצים משני צדי המסלול" -> {"addObjects":[{"t":"pine","x":-30,"z":-14,"s":1.3},{"t":"pine","x":-10,"z":14,"s":1.1},{"t":"oak","x":15,"z":-15},{"t":"pine","x":40,"z":13}]} (about 20 to 40 objects in a real answer)\n' +
-    '"תהפוך את המפה ליער" -> {"base":"redwood","addObjects":[{"t":"pine","x":-25,"z":12},{"t":"pine","x":22,"z":-13}]}\n' +
-    '"תמחק את כל העצים" -> {"removeObjects":{"types":["pine","oak","birch","palm","cypress","deadtree","bush"]}}\n' +
-    '"הוסף עוד 5 שערים בקו ישר בגובה של שער מספר 5" -> {"addGates":{"after":5,"count":5,"spacing":16}} (the app computes the positions: straight on, same height as gate 5. "y" only if another height is asked; "after" defaults to the last gate; for a different direction give "dx" and "dz")\n' +
-    '"תוסיף שער בגובה 20 אחרי שער 2" -> {"addGates":{"after":2,"count":1,"y":20}}\n' +
-    '"תרחיק את השערים אחד מהשני" -> {"gates":[ ...the same gates with larger spacing... ]}\n' +
-    '"שנה למדבר ותוסיף סלעים" -> {"base":"desert","addObjects":[{"t":"rock","x":10,"z":16},{"t":"bigrock","x":-30,"z":-18}]}\n' +
-    (feedback ? 'YOUR PREVIOUS ANSWER WAS REJECTED: ' + feedback + '. Fix exactly that and answer again.\n' : '') +
-    'Pilot request (Hebrew): ' + text.slice(0, 1200);
-}
-function nxAiAddGates(list, ag) {                             // "add N gates in a straight line at gate K's height": computed here, not by the model
-  const n = Math.max(1, Math.min(20, Math.round(Number(ag.count) || 1)));
-  let after = Math.round(Number(ag.after));
-  if (!isFinite(after) || after < 1 || after > list.length) after = list.length;
-  const a = list[after - 1], sp = Math.max(12, Math.min(60, Number(ag.spacing) || 16));
-  let dx, dz;
-  if (isFinite(Number(ag.dx)) && isFinite(Number(ag.dz)) && (Number(ag.dx) || Number(ag.dz))) { dx = Number(ag.dx); dz = Number(ag.dz); }
-  else if (isFinite(Number(ag.heading))) { const r = Number(ag.heading) * Math.PI / 180; dx = Math.cos(r); dz = Math.sin(r); }
-  else { const p = after > 1 ? list[after - 2] : null, q = after < list.length ? list[after] : null; dx = p ? a.x - p.x : q ? q.x - a.x : 1; dz = p ? a.z - p.z : q ? q.z - a.z : 0; }
-  const L = Math.hypot(dx, dz) || 1; dx /= L; dz /= L;
-  const y = isFinite(Number(ag.y)) && ag.y !== null ? Number(ag.y) : a.y;
-  const add = [];
-  for (let i = 1; i <= n; i++) add.push({ x: Math.round((a.x + dx * sp * i) * 100) / 100, y, z: Math.round((a.z + dz * sp * i) * 100) / 100 });
-  return list.slice(0, after).concat(add, list.slice(after));
-}
-function nxAiMerge(cur, raw) {                                 // the model's change + the current track = a full track for nxBuildFromAi
-  let d = raw;
-  if (typeof d === 'string') { try { d = JSON.parse(d.slice(d.indexOf('{'), d.lastIndexOf('}') + 1)); } catch (e) { throw new Error('התשובה אינה JSON תקין'); } }
-  for (let i = 0; i < 3 && d && typeof d === 'object' && !d.addObjects && !d.addGates && !d.removeObjects && !Array.isArray(d.gates) && !Array.isArray(d.objects) && !d.base; i++) d = d.track || d.result || d.changes || d.change || d.data || null;
-  if (!d || typeof d !== 'object') throw new Error('התשובה ריקה');
-  let objs = Array.isArray(d.objects) ? d.objects.slice() : cur.objects.slice();
-  const rm = d.removeObjects;
-  if (rm && rm.all) objs = [];
-  else if (rm && Array.isArray(rm.types) && rm.types.length) objs = objs.filter((o) => rm.types.indexOf(o.t) < 0);
-  if (Array.isArray(d.addObjects)) objs = objs.concat(d.addObjects);
-  let gts = Array.isArray(d.gates) && d.gates.length ? d.gates.slice() : cur.gates.slice();
-  const ag = d.addGates && typeof d.addGates === 'object' ? (Array.isArray(d.addGates) ? d.addGates[0] : d.addGates) : null;
-  if (ag) gts = nxAiAddGates(gts, ag);
-  const changed = !!(d.base && d.base !== cur.base) || !!ag || (Array.isArray(d.addObjects) && d.addObjects.length) || !!(rm && (rm.all || (rm.types && rm.types.length))) || (Array.isArray(d.gates) && d.gates.length > 0) || (Array.isArray(d.objects)) || (d.closed !== undefined && d.closed !== cur.closed);
-  const same = !ag && gts.length === cur.gates.length && gts.every((g, i) => Math.abs(Number(g.x) - cur.gates[i].x) < 0.6 && Math.abs(Number(g.z) - cur.gates[i].z) < 0.6 && Math.abs(Number(g.y) - cur.gates[i].y) < 0.6);
-  const objsSame = objs.length === cur.objects.length && !(d.base && d.base !== cur.base);
-  if (!changed || (same && objsSame && !(d.closed !== undefined && d.closed !== cur.closed))) throw new Error('ה-AI החזיר את המסלול בלי שום שינוי');
-  return { base: d.base || cur.base, closed: d.closed !== undefined ? d.closed : cur.closed, gates: gts, objects: objs };
-}
-function nxAiApplyEdit(t) {                                   // replace the track that is open in the editor, in place
-  const st = currentStage, old = gates.map(gateCopy);
-  NX.aiUndo = { id: st.id, gates: old, objects: propData.map((p) => Object.assign({}, p)), base: st.base };
-  const keep = t.gates.map((g) => {                           // an unchanged gate keeps its hand-tuned heading and tilt
-    const o = old.find((q) => Math.abs(q.x - g.x) < 0.6 && Math.abs(q.z - g.z) < 0.6 && Math.abs(q.y - g.y) < 0.6);
-    return o ? Object.assign({}, g, { yaw: o.yaw, pitch: o.pitch }) : g;
-  });
-  nxAiSet(st, keep, t.objects, t.base);
-}
-function nxAiSet(st, gts, objs, base) {
-  const baseChanged = base && base !== (st.base || 'arena');
-  if (baseChanged) st.base = base;
-  gates = gts.map(gateCopy);
-  propData = cleanProps(objs); selected = -1; selProp = -1;
-  if (baseChanged) { loadEnvironment(st, gates); placeStartPad(); }
-  rebuildTrack(); buildProps();
-  placeDroneAtStart(); placeStartPad();
-  trackEdited();
-  if (typeof edSyncBase === 'function') edSyncBase();
-}
-function nxAiUndo() {
-  const u = NX.aiUndo; if (!u || !currentStage || currentStage.id !== u.id) return;
-  NX.aiUndo = null;
-  nxAiSet(currentStage, u.gates, u.objects, u.base);
-  nxAiMsg('השינוי האחרון בוטל.'); nxEdAiRender();
-}
-function nxAiGateIntent(text, cur) {                           // "תוסיף 3 שערים בגובה של שער 5": understood here, no model needed (instant, exact, no quota)
-  const t = String(text || '').replace(/\s+/g, ' ');
-  const W = { 'אחד': 1, 'שער': 1, 'שני': 2, 'שתי': 2, 'שלושה': 3, 'שלוש': 3, 'ארבעה': 4, 'ארבע': 4, 'חמישה': 5, 'חמש': 5, 'שישה': 6, 'שש': 6, 'שבעה': 7, 'שבע': 7, 'שמונה': 8, 'תשעה': 9, 'תשע': 9, 'עשרה': 10, 'עשר': 10 };
-  const m = t.match(/(?:הוסף|תוסיף|תוסיפו|להוסיף|הוספת|תוסף|עוד|ועוד)\s*(?:עוד\s*)?(\d{1,2}|[א-ת]+)\s+שערים?(?:\s+חדשים)?/);
-  if (!m) return null;
-  const n = /^\d+$/.test(m[1]) ? Number(m[1]) : W[m[1]];
-  if (!n || n < 1 || n > 20) return null;
-  const rest = t.replace(m[0], ' ');
-  if (/(עצים|עץ|קונוס|סלע|מדבר|שלג|יער|מחק|הסר|מבנ|דגל)/.test(rest)) return null;      // a mixed request goes to the model
-  const out = { count: n }, g = cur.gates;
-  const h = rest.match(/גובה([^\d]*?)(\d+(?:\.\d+)?)/);
-  if (h) {
-    const v = Number(h[2]);
-    if (/(שער|שמר|מספר|זהה|כמו|של)/.test(h[1]) && v >= 1 && v <= g.length) out.y = g[v - 1].y;
-    else if (v >= 5.4 && v <= 30) out.y = v;
-  }
-  const a = rest.match(/אחרי\s*שער\s*(?:מספר\s*)?(\d+)/);
-  if (a && Number(a[1]) >= 1 && Number(a[1]) <= g.length) out.after = Number(a[1]);
-  return out;
-}
-async function nxAiEdit(sample, text) {
-  const cur = nxAiCurrent();
-  let t = null, feedback = '', fatal = '';
-  const gi = nxAiGateIntent(text, cur);
-  if (gi) { try { t = nxBuildFromAi(nxAiMerge(cur, { addGates: gi }), true, true); } catch (e) { t = null; } }
-  for (let attempt = 1; attempt <= 3 && !t && !fatal; attempt++) {
-    nxAiMsg(attempt === 1 ? 'ה-AI מעדכן את המסלול...' : 'מתקן ומנסה שוב (' + attempt + ' מתוך 3)...');
-    try {
-      t = nxBuildFromAi(nxAiMerge(cur, await sample.json(nxAiEditPrompt(text, cur, feedback), { modelTier: 'default', cache: false, kind: 'edit' })), true, true);
-    } catch (e) {
-      const code = e && e.code;
-      if (code === 'not_granted') fatal = 'לא אושר שימוש ב-Claude.';
-      else if (code === 'no_key') fatal = 'חסר מפתח ג׳מיני בשרת.';
-      else if (code === 'rate_limited') fatal = 'מכסת ג׳מיני נגמרה (חריגה ממכסת הבקשות של המפתח). המתן דקה ונסה שוב, או הפעל חיוב ב-Google AI Studio.';
-      else feedback = String((e && e.message) || code || 'invalid JSON').slice(0, 200);
-    }
-  }
-  if (t && currentStage && editorMode) {
-    nxAiApplyEdit(t);
-    NX.aiPrompt = '';
-    nxAiMsg('המסלול עודכן: ' + t.gates.length + ' שערים ו-' + t.objects.length + ' אלמנטים. אפשר לבטל את השינוי.');
-    nxToast('המסלול עודכן עם AI');
-    const ov = $('edAi'); if (ov) ov.classList.remove('open');
-  } else nxAiMsg(fatal || 'לא הצלחתי לבצע את השינוי. המסלול נשאר כמו שהיה. נסה לנסח אחרת.' + (feedback ? ' (סיבה: ' + feedback + ')' : ''));
-}
-function nxAiFallback(withObjs) {                           // last resort so the pilot always gets a flyable track
-  return { name: 'מסלול AI', base: 'field', closed: false, gates: [{ x: -60, y: 8, z: 0 }, { x: 60, y: 8, z: 0 }], objects: [] };
-}
-const NX_AI_OFF = 'בניית מסלולים עם AI עובדת באתר ב-Render כשנכנסים כמנהל (עם ג׳מיני), או בחלון של Claude אחרי אישור שימוש.';
-async function nxAiSample() {                                  // something with json(prompt): Claude's sample inside the Claude window, otherwise Gemini through the server
-  try { if (window.claude && window.claude.use) { const sm = await window.claude.use('sample'); if (sm) return sm; } } catch (e) { /* try the server */ }
-  if (!nxAiHdr().Authorization) return null;
-  return { json: async (prompt, opts) => {
-    const res = await (NXAI.fetch || fetch)('/api/ai/gen', { method: 'POST', headers: nxAiHdr(), body: JSON.stringify({ prompt: String(prompt), kind: opts && opts.kind, types: Object.keys(PROP_TYPES), kinds: Object.keys(GATE_KINDS) }) });
-    let a = null; try { a = await res.json(); } catch (e) { /* below */ }
-    if (!res.ok) { const er = new Error((a && (a.detail || a.error)) || 'http ' + res.status); er.code = res.status === 429 ? 'rate_limited' : res.status === 503 ? 'no_key' : 'gemini'; throw er; }
-    return a.text;
-  } };
-}
-async function nxAiBuild() {
-  if (NX.aiBusy) return;
-  const text = (NX.aiPrompt || '').trim();
-  if (!text) { nxAiMsg('כתוב קודם תיאור של המסלול'); return; }
-  const sample = await nxAiSample();
-  if (!sample) { NX.aiOk = false; nxAiMsg(NX_AI_OFF); nxEdAiRender(); return; }
-  NX.aiOk = true; NX.aiBusy = true; nxEdAiRender();
-  if (nxAiMode() === 'edit') { await nxAiEdit(sample, text); NX.aiBusy = false; nxEdAiRender(); return; }
-  const level = { easy: 'easy (wide gentle turns)', medium: 'medium', hard: 'hard (tight turns, altitude changes)' }[NX.aiLevel || 'medium'];
-  const withObjs = NX.aiObjs !== false;
-  let t = null, feedback = '', fatal = '';
-  for (let attempt = 1; attempt <= 3 && !t && !fatal; attempt++) {
-    nxAiMsg(attempt === 1 ? 'ה-AI מתכנן את המסלול...' : 'מתקן ומנסה שוב (' + attempt + ' מתוך 3)...');
-    try {
-      const data = await sample.json(nxAiPrompt(text, level, withObjs, feedback), { modelTier: 'default', cache: false, kind: 'build' });
-      t = nxBuildFromAi(data, withObjs);
-    } catch (e) {
-      const code = e && e.code;
-      if (code === 'not_granted') fatal = 'לא אושר שימוש ב-Claude.';
-      else if (code === 'no_key') fatal = 'חסר מפתח ג׳מיני בשרת.';
-      else if (code === 'rate_limited') fatal = 'מכסת ג׳מיני נגמרה (חריגה ממכסת הבקשות של המפתח). המתן דקה ונסה שוב, או הפעל חיוב ב-Google AI Studio.';
-      else feedback = String((e && e.message) || code || 'invalid JSON').slice(0, 200);
-    }
-  }
-  if (!t && !fatal) { t = nxBuildFromAi(nxAiFallback(withObjs), false); t.fallback = true; }
-  if (t) {
-    let n = 1; while (STAGES['custom' + n]) n++;
-    const num = 3 + CUSTOM_ORDER.length + 1;
-    registerCustom({ id: 'custom' + n, num, name: t.name, gates: t.gates, objects: t.objects, base: t.base });
-    saveCustomList(); saveEnv();
-    NX.aiPrompt = '';
-    nxAiMsg(t.fallback ? 'לא הצלחתי לפרש את הבקשה, ולכן נוצר מסלול התחלתי בן שני שערים. אפשר להמשיך בעורך.' + (feedback ? ' (סיבה: ' + feedback + ')' : '') : 'נוצר המסלול "' + t.name + '": ' + t.gates.length + ' שערים ו-' + t.objects.length + ' אלמנטים.');
-    buildCards();
-    const ed = $('edAi'); if (ed) ed.classList.remove('open');
-    selectTrack('custom' + n);
-    startStage('custom' + n, true);                          // straight into the editor with the new track
-  } else nxAiMsg(fatal);
-  NX.aiBusy = false; nxEdAiRender(); nxAdmRender();
 }
 function nxTabDrones() {
   let h = '<p class="nxn">שליטה בסוגי הרחפנים שהשחקן יכול לבחור, ובכותרות ובתיאורים שלהם.</p>';
@@ -8868,10 +8483,55 @@ function nxProgOf(un, from, to) {                            // one student: the
   };
   const items = seq ? seq.map((s) => row(s.id, s.kind, nxStName(s.id))) : Object.keys(by).map((id) => row(id, 't', nxStName(id)));
   const doneN = items.filter((i) => i.done).length, days = {}; list.forEach((r) => { days[new Date(r.ts).toDateString()] = 1; });
-  return { un, name: a.name || un, gid: a.gid || '', items, total: items.length, doneN, attempts: list.length, days: Object.keys(days).length, last: list.length ? list[list.length - 1].ts : 0, sum: items.filter((i) => i.done).reduce((t, i) => t + i.best, 0), course: !!seq, aiLog: all.filter((r) => r.ai && r.ai.v && r.ai.v !== 'none').slice(-5).reverse() };
+  return { un, name: a.name || un, gid: a.gid || '', items, total: items.length, doneN, attempts: list.length, days: Object.keys(days).length, last: list.length ? list[list.length - 1].ts : 0, sum: items.filter((i) => i.done).reduce((t, i) => t + i.best, 0), course: !!seq };
 }
 function nxProgRank(rows) {                                  // more finished items first, then the lower total of best times
   return rows.slice().sort((a, b) => b.doneN - a.doneN || a.sum - b.sum || a.name.localeCompare(b.name, 'he'));
+}
+/* ---------- instructor view: the measured flights of one student (stars, score, what failed, the chart of each recent flight) ---------- */
+function nxSpark(a, w, h, col, lines, zero) {                    // a small chart; "lines" are the limits drawn in red (dashed), "zero" starts the axis at 0
+  if (!a || a.length < 2) return '';
+  const all = a.concat(lines || []), mn = zero ? Math.min(0, Math.min.apply(null, all)) : Math.min.apply(null, all), mx = Math.max.apply(null, all), rg = mx - mn || 1;
+  const Y = (v) => (h - 2 - (v - mn) / rg * (h - 4)).toFixed(1);
+  return '<svg viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none" class="spk">' +
+    (lines || []).map((l) => '<line x1="0" x2="' + w + '" y1="' + Y(l) + '" y2="' + Y(l) + '" stroke="#e5483a" stroke-dasharray="4 3" stroke-width="1.1"/>').join('') +
+    '<polyline fill="none" stroke="' + (col || '#7fd4f2') + '" stroke-width="1.4" points="' + a.map((v, i) => (i / (a.length - 1) * w).toFixed(1) + ',' + Y(v)).join(' ') + '"/></svg>';
+}
+function nxSparkLim(k, id) {                                    // the limits of an attempt (saved with it; older attempts use the track's current limits)
+  const c = (NX.eff || NX.draft || NX.pub), r = c && c.stick && c.stick[String(id).replace(/^pub_/, '')], cur = {};
+  ['thrMax', 'spdMax', 'rollMax', 'pitchMax', 'lineMax', 'altDev'].forEach((x) => { const L = r && r.lim && r.lim[x], v = L ? nxRuleNum(L.max) : null; if (v !== null) cur[x] = v; });
+  return k.lim || cur;
+}
+function nxFlightsOf(un) {                                      // the student's attempts that were measured, grouped by track
+  const d = Object.keys(NX.hists || {}).map((k) => NX.hists[k]).filter((x) => x && x.un === un).sort((a, b) => (b.ts || 0) - (a.ts || 0))[0];
+  const list = (d && Array.isArray(d.list) ? d.list : []).filter((e) => e && e.sk), by = {};
+  list.forEach((e) => { (by[e.id] = by[e.id] || []).push(e); });
+  return Object.keys(by).map((id) => {
+    const at = by[id], ok = at.filter((e) => e.sk.ok), sc = at.map((e) => e.sk.sc).filter((v) => typeof v === 'number');
+    return { id, name: nxStName(id), at, n: at.length, passed: ok.length, best: Math.max.apply(null, [0].concat(at.map((e) => e.sk.st || 0))), avg: sc.length ? Math.round(sc.reduce((t, v) => t + v, 0) / sc.length) : 0, last: at[at.length - 1] };
+  });
+}
+function nxFlightPanel(un) {
+  const F = nxFlightsOf(un); if (!F.length) return '';
+  const c0 = null;
+  const star = (n) => '<span class="stkstars">' + '★'.repeat(n) + '<span class="off">' + '★'.repeat(3 - n) + '</span></span>';
+  const date = (t) => (t ? new Date(t).toLocaleDateString('he-IL') + ' ' + new Date(t).toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' }) : '--');
+  let h = '<h4 class="fpt">ניתוח טיסות מדודות</h4>';
+  F.forEach((f) => {
+    h += '<div class="fpbox"><b>' + nxEsc(f.name) + '</b> <span class="cnt">' + f.n + ' ניסיונות · עברו ' + f.passed + ' · כוכבים הכי טובים ' + star(f.best) + ' · ציון ממוצע ' + f.avg + '</span>';
+    h += '<table class="pgt"><tr><th>תאריך</th><th>תוצאה</th><th>כוכבים</th><th>ציון</th><th>מה נכשל</th><th>גרף</th></tr>' +
+      f.at.slice(-10).reverse().map((e) => {
+        const k = e.sk, g = k.g;
+        const L = nxSparkLim(k, e.id), a0 = typeof k.a0 === 'number' ? k.a0 : (c0 && c0.alt !== undefined ? Number(c0.alt) : undefined);
+        const alt = L.altDev !== undefined && a0 !== undefined ? [a0 - L.altDev, a0 + L.altDev] : [];
+        const gr = g ? '<details class="fpg"><summary>גרף</summary><div class="fpgr">' + [['גז', g.thr, L.thrMax !== undefined ? [L.thrMax] : [], 1], ['מהירות', g.spd, L.spdMax !== undefined ? [L.spdMax] : [], 1], ['גובה', g.alt, alt, 0], ['גלגול', g.roll, L.rollMax !== undefined ? [L.rollMax] : [], 1], ['פיץ׳', g.pitch, L.pitchMax !== undefined ? [L.pitchMax] : [], 1], ['סטייה מהקו', g.line, L.lineMax !== undefined ? [L.lineMax] : [], 1]].map((x) => '<div><small>' + x[0] + '</small>' + nxSpark(x[1], 160, 34, null, x[2], x[3]) + '</div>').join('') + '</div></details>' : '--';
+        return '<tr><td>' + date(e.ts) + '</td><td>' + (k.ok ? '<b class="stkok">עבר</b>' : '<b class="stkbad">לא עבר</b>') + '</td><td>' + star(k.st || 0) + '</td><td>' + (typeof k.sc === 'number' ? k.sc : '--') + '</td><td>' + ((k.v || []).length ? nxEsc(k.v.join(' · ')) : '--') + '</td><td>' + gr + '</td></tr>';
+      }).join('') + '</table>';
+    const st = f.at.map((e) => e.sk.st || 0);
+    if (st.length > 1) h += '<div class="fptr"><small>מגמת כוכבים</small>' + nxSpark(st, 160, 28, '#e0b255') + '</div>';
+    h += '</div>';
+  });
+  return h;
 }
 function nxTabProgress() {
   if (NX.staff && !nxStaffPerm('track')) return '<p class="nxn">אין לך הרשאה לצפות במעקב. פנה למנהל הראשי.</p>';
@@ -8890,7 +8550,7 @@ function nxTabProgress() {
     if (r.course) h += '<div class="pgbar"><i style="width:' + pct + '%"></i></div>';
     if (!r.items.length) h += '<p class="nxn">עדיין אין ניסיונות.</p>';
     else h += '<table class="pgt"><tr><th>פריט</th><th>מצב</th><th>ניסיונות</th><th>זמן טוב</th><th>שיפור</th><th>כוכבים</th></tr>' + r.items.map((i) => '<tr><td>' + nxEsc(i.name) + (i.kind === 'x' ? ' <small>(מבחן שלב)</small>' : i.kind === 'f' ? ' <small>(מבחן מסכם)</small>' : '') + '</td><td>' + (i.done ? '&#10003; עבר' : i.failed ? '&#10007; לא עבר' : i.n ? 'בתהליך' : '--') + '</td><td>' + i.n + '</td><td>' + (i.best ? nxTime(i.best) : '--') + '</td><td>' + (i.imp ? i.imp + '%' : '--') + '</td><td>' + (i.stars || '--') + '</td></tr>').join('') + '</table>';
-    if (r.aiLog && r.aiLog.length) h += '<div class="nxn"><b>בדיקות ג׳מיני אחרונות:</b><br>' + r.aiLog.map((a) => nxEsc(nxStName(a.id)) + ' · ' + date(a.ts) + ' · ' + ({ pass: 'עבר', fail: 'נכשל', unclear: 'לא ברור' }[a.ai.v] || a.ai.v) + ' (' + (a.ai.c || 0) + '%)' + (a.ai.n ? ' · ' + nxEsc(a.ai.n) : '')).join('<br>') + '</div>';
+    h += nxFlightPanel(r.un);
     h += '</details>';
   });
   return h;
@@ -9288,13 +8948,12 @@ function nxAdmRender() {
   }
   if (NX.role !== 'admin') return;
   nxEnvPark();
-  const tabs = [['game', 'עריכת משחק'], ['stages', 'שלבים'], ['tracks', 'מסלולים'], ['courses', 'קורסים'], ['ai', 'בדיקת AI'], ['drones', 'רחפנים'], ['groups', 'קבוצות'], ['players', 'שחקנים'], ['progress', 'מעקב']];
+  const tabs = [['game', 'עריכת משחק'], ['stages', 'שלבים'], ['tracks', 'מסלולים'], ['courses', 'קורסים'], ['drones', 'רחפנים'], ['groups', 'קבוצות'], ['players', 'שחקנים'], ['progress', 'מעקב']];
   $('admTabs').style.display = NX.ted ? 'none' : '';
   $('admTabs').innerHTML = tabs.map((t) => '<button data-tab="' + t[0] + '"' + (NX.tab === t[0] ? ' class="on"' : '') + '>' + t[1] + '</button>').join('');
-  const fn = { game: nxTabGame, look: nxTabLook, stages: nxTabStages, tracks: nxTabTracks, courses: nxTabCourses, ai: nxTabAi, drones: nxTabDrones, progress: nxTabProgress, groups: () => nxTabGroups() + (Object.keys(NX.themes).length ? '<h3 style="margin-top:16px">ערכות נושא שמורות</h3>' + nxTabThemes() : ''), players: nxTabPlayers }[NX.tab];
+  const fn = { game: nxTabGame, look: nxTabLook, stages: nxTabStages, tracks: nxTabTracks, courses: nxTabCourses, drones: nxTabDrones, progress: nxTabProgress, groups: () => nxTabGroups() + (Object.keys(NX.themes).length ? '<h3 style="margin-top:16px">ערכות נושא שמורות</h3>' + nxTabThemes() : ''), players: nxTabPlayers }[NX.tab];
   const body = $('admBody'), st = body.scrollTop;
   body.innerHTML = NX.ted ? nxTedHead() + nxTabLook() : nxThemeBanner() + (fn ? fn() : '');
-  nxEdAiRender();
   body.scrollTop = st;
   if (NX.tab === 'drones') nxDroneMark();
   $('admPrev').classList.toggle('on', NX.preview);
@@ -9347,7 +9006,6 @@ function nxField(el) {
   const k = el.dataset.k; if (!k) return;
   const v = el.type === 'checkbox' ? el.checked : (el.dataset.num ? Number(el.value) : el.value);
   nxSetPath(NX.draft, k, v);
-  if (k === 'ai.on') { NX.draft = nxMerge(nxDefault(), NX.draft); nxTouch(); nxAdmRender(); return; }
   if (el.tagName === 'INPUT' && el.type === 'range') { const o = el.parentNode.querySelector('output'); if (o) o.textContent = el.value; }
   NX.draft = nxMerge(nxDefault(), NX.draft);
   nxTouch();
@@ -9436,6 +9094,13 @@ function nxAdmWire() {
     const el = e.target.closest('[data-act]'); if (!el || el.tagName === 'INPUT' || el.tagName === 'SELECT') return;
     const a = el.dataset.act, id = el.dataset.id, gid = el.dataset.gid;
     if (nxCrsAct(a, el)) return;
+    if (a === 'pkg-import') {
+      const t = $('admPkg'); let pk = null;
+      try { pk = JSON.parse(String(t && t.value || '')); } catch (e) { nxToast('ה-JSON אינו תקין: ' + e.message); return; }
+      const r = nxImportPackage(pk); nxToast(r.ok ? 'השלב נוצר: ' + pk.name : 'לא יובא: ' + r.err);
+      if (r.ok) { NX.selTrk = r.id; nxAdmRender(); }
+      return;
+    }
     if (a === 'trk-sel') { NX.selTrk = id; try { selectTrack(id); } catch (e) { /* ignore */ } nxAdmRender(); return; }
     if (a === 'trk-back') { NX.selTrk = ''; nxAdmRender(); return; }
     if (a === 'trk-crs') { NX.tab = 'courses'; nxAdmRender(); return; }
@@ -9460,8 +9125,9 @@ function nxAdmWire() {
       if (NX.draft.stages.force === id) NX.draft.stages.force = '';
       nxTouch(); nxAdmRender(); if (currentScreen === 'missions') buildCards(); nxToast('המסלול נמחק. לחץ שמירה כדי שהשחקנים יראו');
     }
+    else if (a === 'trk-hide-builtin') { NX.draft.stages.del = NX.draft.stages.del || {}; STAGE_ORDER.forEach((k) => { NX.draft.stages.del[k] = true; delete NX.draft.tcats.of[k]; }); nxTouch(); nxAdmRender(); if (currentScreen === 'missions') buildCards(); nxToast('המסלולים המובנים הוסתרו. לחץ שמירה כדי לעדכן שחקנים'); }
+    else if (a === 'trk-show-builtin') { NX.draft.stages.del = {}; nxTouch(); nxAdmRender(); if (currentScreen === 'missions') buildCards(); nxToast('המסלולים המובנים הוחזרו'); }
     else if (a === 'trk-restore') { delete NX.draft.stages.del[id]; nxTouch(); nxAdmRender(); if (currentScreen === 'missions') buildCards(); }
-    else if (a === 'ai-go') nxAiBuild();
     else if (a === 'rp-prev') { NX.openP = '_rp'; nxRpLogo().then((lg) => { NX.rpPrev = nxRpPages(lg).map((p) => p.toDataURL('image/jpeg', 0.7)); nxAdmRender(); }); }
     else if (a === 'rp-close') { NX.rpPrev = []; NX.openP = '_rp'; nxAdmRender(); }
     else if (a === 'rp-pdf') { NX.openP = '_rp'; nxRpSave(); }
@@ -9601,6 +9267,7 @@ function nxSubscribe() {
   db.doc('cfg/main').onSnapshot((s) => {
     const d = s.exists ? s.data() : null;
     NX.pub = nxMerge(nxDefault(), d && d.cfg ? nxClone(d.cfg) : {});
+    if (!d || !d.cfg) STAGE_ORDER.forEach((k) => { NX.pub.stages.del[k] = true; });          // a fresh install starts without the built-in maps
     if (NX.role === 'admin' && (!NX.dirty || !NX.draft)) NX.draft = nxClone(NX.pub);
     nxApplyView(); nxHoldCheck(); if (NX.role === 'admin') nxAdmSoftRender();
   }, () => { NX.pub = NX.pub || nxDefault(); nxApplyView(); });
@@ -9801,23 +9468,6 @@ function nxGuideSeen(id, set) {
   const gm = goMenu;
   goMenu = function (screen) { nxGuideClose(); btn.style.display = 'none'; gm(screen); };
 })();
-function nxTrackDesc(id) {                                      // what the instructor wrote about a track, for Gemini
-  const c = NX.eff || NX.draft, d = c && c.tdesc && c.tdesc[nxGuideKey(id)];
-  if (!d) return null;
-  const o = { desc: String(d.desc || '').trim(), pass: String(d.pass || '').trim(), focus: String(d.focus || '').trim() };
-  return o.desc || o.pass || o.focus ? o : null;
-}
-function nxDescFields(k, d) {
-  return '<p class="nxn">ג׳מיני קורא את זה יחד עם ההגדרות שבלשונית "בדיקת AI" כשתלמיד טס במסלול הזה. הוא מקבל אוטומטית גם את שם המסלול, המפה, מספר השערים וההקפות.</p>' +
-    nxF('מה המסלול', '<textarea rows="3" style="width:100%" maxlength="800" data-k="tdesc.' + k + '.desc" placeholder="לדוגמה: מסלול של 6 שערים עם שני סיבובים חדים. מטרתו לתרגל פניות בגובה קבוע.">' + nxEsc(d.desc || '') + '</textarea>') +
-    nxF('איך עוברים את השלב', '<textarea rows="3" style="width:100%" maxlength="800" data-k="tdesc.' + k + '.pass" placeholder="לדוגמה: עוברים כשמסיימים את כל השערים בלי התרסקות, ובזמן סביר לעומת ניסיונות קודמים.">' + nxEsc(d.pass || '') + '</textarea>') +
-    nxF('מה לבחון במיוחד', '<textarea rows="3" style="width:100%" maxlength="800" data-k="tdesc.' + k + '.focus" placeholder="לדוגמה: לשים לב אם ההקפה השנייה מהירה יותר, ואם הזמן לא מתפרק בשערים האחרונים.">' + nxEsc(d.focus || '') + '</textarea>');
-}
-function nxDescBox(id) {                                        // the track's own description window, right under its row in the tracks list
-  const T = NX.draft.tdesc || {}, k = nxGuideKey(id), d = T[k] || {}, has = !!(String(d.desc || '').trim() || String(d.pass || '').trim() || String(d.focus || '').trim());
-  return '<details class="catbox gcard nxdesc" data-ck="d_' + k + '"' + (NX.openK && NX.openK['d_' + k] ? ' open' : '') + '><summary>תיאור המסלול (לבדיקת AI)<span class="catn">' + (has ? 'יש תיאור' : 'ריק') + '</span></summary>' +
-    nxDescFields(k, d) + '</details>';
-}
 function nxGuideFields(k, g) {
   return nxF('כותרת', '<input type="text" maxlength="60" data-k="guides.' + k + '.title" value="' + nxEsc(g.title || '') + '" placeholder="ברירת מחדל: שם המסלול">') +
       nxF('צעדים (שורה = צעד)', '<textarea rows="6" style="width:100%" data-k="guides.' + k + '.text" placeholder="לדוגמה:&#10;מגבירים גז לאט עד שהרחפן מתרומם">' + nxEsc(g.text || '') + '</textarea>') +
@@ -10475,7 +10125,7 @@ function edSyncBase() {
 }
 
 function edClosePops() {
-  ['edCatList', 'edBase', 'edJson', 'edAi'].forEach((id) => { const el = $(id); if (el) el.classList.remove('open'); });
+  ['edCatList', 'edBase', 'edJson'].forEach((id) => { const el = $(id); if (el) el.classList.remove('open'); });
 }
 /* ---------- docked layout ---------- */
 let edFlyOn = false;
@@ -10630,10 +10280,6 @@ function edpApply(what, v) {
   $('edRedo').addEventListener('click', (e) => { edRedoStep(); e.target.blur(); });
   $('edClone').addEventListener('click', (e) => { edCloneSel(); e.target.blur(); });
   $('edDelBtn').addEventListener('click', (e) => { deleteGate(); e.target.blur(); });
-  $('edAiBtn').addEventListener('click', (e) => { nxEdAiRender(); $('edAi').classList.add('open'); e.currentTarget.blur(); });
-  $('edAiClose').addEventListener('click', (e) => { $('edAi').classList.remove('open'); e.target.blur(); });
-  $('edAiBody').addEventListener('input', (e) => { const el = e.target; if (el.dataset && el.dataset.ai) { NX[el.dataset.ai] = el.type === 'checkbox' ? el.checked : el.value; if (el.dataset.ai === 'aiMode') nxEdAiRender(); } });
-  $('edAiBody').addEventListener('click', (e) => { const el = e.target.closest('[data-act]'); if (!el) return; if (el.dataset.act === 'ai-go') nxAiBuild(); else if (el.dataset.act === 'ai-undo') nxAiUndo(); });
   $('edBackBtn').addEventListener('click', (e) => { e.currentTarget.blur(); edClosePops(); goMenu('missions'); });
   $('edExit').addEventListener('click', (e) => { setEditor(false); e.target.blur(); });
   $('btnBackEdit').addEventListener('click', (e) => { setEditor(true); e.currentTarget.blur(); canvas.focus(); });

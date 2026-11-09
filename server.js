@@ -8,8 +8,6 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const zlib = require('zlib');
-const AI = require('./ai');
-const aiUse = new Map();                       // uid -> times of its Gemini checks (30 an hour)
 
 const PORT = Number(process.env.PORT) || 3000;
 const PROD = process.env.NODE_ENV === 'production';
@@ -122,36 +120,6 @@ async function api(req, res, url) {
     const b = await body(req);
     if (eq(b.u || '', ADMIN_USER) && eq(b.p || '', ADMIN_PASS)) return json(res, 200, { token: makeToken() });
     failed(ip); return json(res, 401, { error: 'שם משתמש או סיסמה שגויים' });
-  }
-  const aiCfg = () => { const c = docs.get('cfg/main'); return (c && c.cfg && c.cfg.ai) || {}; };
-  if (p === '/api/ai/status') return json(res, 200, { key: AI.hasKey(), model: aiCfg().model || AI.model(), admin });
-  if (p === '/api/ai/ping') {                                            // connection test with timings (admin only)
-    if (!admin) return json(res, 403, { error: 'forbidden' });
-    return json(res, 200, { steps: await AI.ping(aiCfg().model) });
-  }
-  if (p === '/api/ai/models') {                                          // the models this key can use (admin only)
-    if (!admin) return json(res, 403, { error: 'forbidden' });
-    try { return json(res, 200, { models: await AI.listModels() }); } catch (e) { return json(res, 502, { error: e.code || 'failed', detail: String(e.message || '').slice(0, 300) }); }
-  }
-  if (p === '/api/ai/check' && req.method === 'POST') {                // Gemini judges the numbers of a finished flight
-    if (!uid) return json(res, 400, { error: 'no-uid' });
-    const now = Date.now(), L = (aiUse.get(uid) || []).filter((t) => now - t < 3600000);
-    if (L.length >= 30 || limited(ipOf(req) + ':ai', 120)) return json(res, 429, { error: 'rate' });
-    L.push(now); aiUse.set(uid, L); failed(ipOf(req) + ':ai');
-    const b = await body(req);
-    const tk = b && b.track && typeof b.track === 'object' ? b.track : {};
-    if (!b || typeof b !== 'object' || !(String(b.crit || '').trim() || String(tk.pass || '').trim() || String(tk.focus || '').trim() || String(tk.desc || '').trim())) return json(res, 400, { error: 'no-criteria' });
-    try { return json(res, 200, await AI.check(b, aiCfg().model)); }
-    catch (e) { console.error('ai check:', e.message); return json(res, e.code === 'no-key' ? 503 : 502, admin ? { error: e.code || 'failed', detail: String(e.message || '').slice(0, 300) } : { error: e.code || 'failed' }); }
-  }
-  if (p === '/api/ai/gen' && req.method === 'POST') {                  // the AI track builder (admin only): free-form JSON from Gemini
-    if (!admin) return json(res, 403, { error: 'forbidden' });
-    const b = await body(req), pr = b && typeof b.prompt === 'string' ? b.prompt : '';
-    if (!pr.trim() || pr.length > 20000) return json(res, 400, { error: 'bad-prompt' });
-    const lst = (a) => (Array.isArray(a) ? a.filter((x) => typeof x === 'string' && /^[a-z0-9_]{1,24}$/i.test(x)).slice(0, 300) : []);
-    const schema = b.kind === 'edit' || b.kind === 'build' ? AI.trackSchema(b.kind, lst(b.types), lst(b.kinds)) : undefined;
-    try { return json(res, 200, { text: await AI.generate(pr, aiCfg().model, schema) }); }
-    catch (e) { console.error('ai gen:', e.message); return json(res, e.code === 'no-key' ? 503 : (e.status === 429 || /gemini-429/.test(String(e.code || e.message))) ? 429 : 502, { error: e.code || 'failed', detail: String(e.message || '').slice(0, 300) }); }
   }
   if (p === '/api/admin/me') return json(res, 200, { admin });
   if (p === '/api/admin/import' && req.method === 'POST') {            // load an export of the old data (admin only)
