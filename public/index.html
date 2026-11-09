@@ -1244,7 +1244,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 212</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 213</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -7139,7 +7139,7 @@ function nxDefault() {
   return {
     theme: { ac: '#4cc3e6', am: '#e6b450', bg: '#0b0c0e', p1: '#14161a', p2: '#1b1e23', ln: '#2d3139', tx: '#d6d9de', mu: '#8b929c', ti: '', bt: '', bs: '', lg: '', lg2: '', it: '', ib: '', ot: '', tl: '', tl2: '', gr: '', rd: '', qb: '', qt: '', font: 'ui', btn: 'sharp', bw: 1, mbw: 420, balign: 'c', mvert: 'c', overlay: 0.75, bgImg: '', trans: 'slide', dur: 300, fadeMs: 450, gx: Object.assign({}, GX.st) },
     tx: {}, hide: {}, home: [], tnames: {}, torder: [], stages: { off: {}, force: '', del: {} }, tcats: { cats: {}, of: {} }, drones: { off: {}, title: {}, desc: {}, col: {} },
-    courses: {}, guides: {}, courseId: '', courseIds: [], staff: {},
+    courses: {}, guides: {}, ai: { on: false, mode: 'auto', min: 80, crit: '', hist: 8, noLaps: false, hideFb: false, fallback: 'pass', exams: {} }, courseId: '', courseIds: [], staff: {},
     logo: { on: true, pages: { main: true, drone: false, missions: false, controls: false }, size: 6, x: 96, y: 91, color: '#ffffff', op: 85 }
   };
 }
@@ -7281,7 +7281,7 @@ function nxAttempt(r) {                                       // a race was fini
     if (typeof p.c === 'number' && p.c >= 0 && (r.crashes || 0) > p.c) why.push('התרסקויות ' + (r.crashes || 0) + ' (מותר עד ' + p.c + ')');
     if (p.s > 0 && r.stars < p.s) why.push('כוכבים ' + r.stars + ' (נדרשו ' + p.s + ')');
     out.ok = !why.length;
-    const ai = p.ai && p.ai.on && String(p.ai.crit || '').trim() ? p.ai : null;
+    const ai = nxAiFor(k);
     if (ai && out.ok && NX.role === 'player') {                  // numbers are fine: Gemini judges the flight against the instructor's criteria
       out.ok = ai.mode === 'note'; out.ai = ai;
       out.msg = 'ג׳מיני בודק את הטיסה שלך...'; NXH.examMsg = out.msg;
@@ -7295,7 +7295,14 @@ function nxAttempt(r) {                                       // a race was fini
   return out;
 }
 const NXAI = { busy: false };
-function nxAiHistory(k) { return (NX.hist || []).filter((a) => a.id === k).slice(-8).map((a) => ({ t: a.t, c: a.c, s: a.s })); }
+function nxAiFor(k) {                                         // the AI check settings that apply to this exam (null: no check)
+  const c = NX.eff || NX.draft, a = c && c.ai; if (!a || !a.on) return null;
+  const e = (a.exams && a.exams[k]) || {};
+  if (e.off) return null;
+  const crit = String(e.crit || a.crit || '').trim(); if (!crit) return null;
+  return { on: true, crit, mode: e.mode || a.mode || 'auto', min: Number(a.min) || 80, hist: a.hist === undefined ? 8 : Number(a.hist), noLaps: !!a.noLaps, hideFb: !!a.hideFb, fallback: a.fallback === 'hold' ? 'hold' : 'pass' };
+}
+function nxAiHistory(k, n) { return n <= 0 ? [] : (NX.hist || []).filter((a) => a.id === k).slice(-n).map((a) => ({ t: a.t, c: a.c, s: a.s })); }
 async function nxAiJudge(r, it, st, ai, k) {
   const entry = { ts: Date.now(), id: k, n: st.name, t: +r.total.toFixed(2), b: +r.bestLap.toFixed(2), c: r.crashes || 0, s: r.stars, d: settings.preset, cid: it.cid || '', x: ai.mode === 'note' ? 1 : 0 };
   const say = (m) => { NXH.examMsg = m; nxToast(m); const el = $('resNew'); if (el && resultsVisible) el.textContent = m; };
@@ -7304,24 +7311,91 @@ async function nxAiJudge(r, it, st, ai, k) {
     const uid = (function () { try { return localStorage.getItem('nxHostUid') || ''; } catch (e) { return ''; } })();
     const res = await (NXAI.fetch || fetch)('/api/ai/check', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Uid': uid }, body: JSON.stringify({
       stage: st.name, course: (NX.eff && NX.eff.courses && NX.eff.courses[it.cid] && NX.eff.courses[it.cid].name) || '', crit: ai.crit,
-      flight: { total: r.total, bestLap: r.bestLap, laps: r.laps.length, lapTimes: r.laps, crashes: r.crashes || 0, stars: r.stars, par3: r.par && r.par.par3, gates: gates.length, drone: settings.preset },
-      history: nxAiHistory(k) }) });
+      flight: { total: r.total, bestLap: r.bestLap, laps: r.laps.length, lapTimes: ai.noLaps ? undefined : r.laps, crashes: r.crashes || 0, stars: r.stars, par3: r.par && r.par.par3, gates: gates.length, drone: settings.preset },
+      history: nxAiHistory(k, ai.hist) }) });
     if (!res.ok) throw new Error('http ' + res.status);
     ans = await res.json();
   } catch (e) { ans = null; }
   if (!ans || !ans.verdict) {                                  // no answer (no key, no connection, the Claude window): the instructor decides
-    entry.x = 1; entry.ai = { v: 'none' };                       // never block a student because the check is down: the normal conditions already passed
-    say('ג׳מיני לא זמין כרגע, והמבחן נבדק לפי התנאים הרגילים. עברת!');
-    if (ai.mode !== 'note' && NX.un) nxMarkDone(k);
+    if (ai.fallback === 'hold' && ai.mode !== 'note') { entry.x = 0; entry.ai = { v: 'none' }; say('בדיקת ה-AI לא זמינה כרגע. נסה שוב בעוד מספר דקות'); }
+    else { entry.x = 1; entry.ai = { v: 'none' };               // never block a student because the check is down: the normal conditions already passed
+      say('בדיקת ה-AI לא זמינה כרגע, והמבחן נבדק לפי התנאים הרגילים. עברת!');
+      if (ai.mode !== 'note' && NX.un) nxMarkDone(k); }
   } else {
     const min = Number(ai.min) || 80, pass = ans.verdict === 'pass' && ans.confidence >= min;
     entry.ai = { v: ans.verdict, c: ans.confidence, f: String(ans.feedback || '').slice(0, 300), n: String(ans.notes || '').slice(0, 300) };
     if (ai.mode !== 'note') entry.x = pass ? 1 : 0;
     const head = ai.mode === 'note' ? 'משוב ג׳מיני: ' : pass ? 'עברת את המבחן! ' : ans.verdict === 'fail' ? 'לא עברת הפעם. ' : 'ג׳מיני לא היה בטוח מספיק, והמדריך יבדוק. ';
-    say(head + (ans.feedback || ''));
+    say(head + (ai.hideFb ? '' : (ans.feedback || '')));
     if (ai.mode !== 'note' && pass && NX.un) nxMarkDone(k);
   }
   try { if (NX.role === 'player' && NX.un) nxHistPush(entry); } catch (e) { /* history is best effort */ }
+}
+function nxAiExams() {                                       // every course exam (stage exams and finals) with the course it belongs to
+  const out = [], seen = {}, cs = NX.draft.courses || {};
+  Object.keys(cs).forEach((cid) => {
+    const co = cs[cid];
+    (co.stages || []).forEach((s, n) => { const k = String(s.exam || '').replace(/^pub_/, ''); if (k && !seen[k]) { seen[k] = 1; out.push({ id: k, where: (co.name || 'קורס') + ' · ' + (s.name || 'שלב ' + (n + 1)) }); } });
+    const fk = co.final && String(co.final.exam || '').replace(/^pub_/, ''); if (fk && !seen[fk]) { seen[fk] = 1; out.push({ id: fk, where: (co.name || 'קורס') + ' · מבחן מסכם' }); }
+  });
+  return out;
+}
+async function nxAiStatus() {
+  try { const r = await fetch('/api/ai/status'); if (!r.ok) throw new Error('x'); NX.aiSt = await r.json(); } catch (e) { NX.aiSt = { off: true }; }
+  const el = $('nxAiSt'); if (el) el.innerHTML = nxAiStHtml();
+}
+function nxAiStHtml() {
+  const st = NX.aiSt;
+  if (!st) return 'בודק חיבור...';
+  if (st.off) return '<b style="color:#e6b450">לא זמין כאן.</b> הבדיקה עובדת רק באתר ב-Render, לא בחלון של Claude.';
+  return st.key ? '<b style="color:#5fd08a">מחובר.</b> מפתח ג׳מיני קיים בשרת. מודל: ' + nxEsc(st.model) : '<b style="color:#e66">חסר מפתח.</b> הוסף GEMINI_API_KEY ב-Render (Environment).';
+}
+function nxTabAi() {
+  const A = NX.draft.ai || {}, sel = (k, v, opts) => '<select data-k="ai.' + k + '"' + (typeof v === 'number' ? ' data-num="1"' : '') + '>' + opts.map((o) => '<option value="' + o[0] + '"' + (String(v) === String(o[0]) ? ' selected' : '') + '>' + o[1] + '</option>').join('') + '</select>';
+  if (!NX.aiSt) nxAiStatus();
+  let h = '<p class="nxn">בדיקת AI: אחרי שתלמיד מסיים מבחן בקורס, ג׳מיני מקבל את נתוני הטיסה ואת הקריטריונים שלך, ומחליט אם להעביר אותו לשלב הבא. הבדיקה חלה על שחקנים בלבד.</p>';
+  h += '<div class="nxcard"><div class="nxn" id="nxAiSt">' + nxAiStHtml() + '</div>' +
+    nxF('בדיקת AI', '<label class="nxchk1"><input type="checkbox" data-k="ai.on"' + (A.on ? ' checked' : '') + '> <b>' + (A.on ? 'פעילה' : 'כבויה') + '</b> (מתג ראשי לכל המבחנים)</label>') + '</div>';
+  if (!A.on) return h + '<p class="nxn">כשהבדיקה כבויה, המבחנים נבדקים רק לפי התנאים הרגילים (זמן, התרסקויות, כוכבים). לא נשלח שום דבר לג׳מיני.</p>';
+  h += '<div class="nxcard"><h3>הגדרות כלליות</h3>' +
+    nxF('מה ג׳מיני עושה', sel('mode', A.mode || 'auto', [['auto', 'מחליט ומעביר את התלמיד'], ['note', 'נותן משוב בלבד (המעבר לפי התנאים הרגילים)']])) +
+    nxF('ביטחון מינימלי להעברה', sel('min', Number(A.min) || 80, [[60, '60%'], [70, '70%'], [80, '80%'], [90, '90%']])) +
+    nxF('הקריטריונים (ברירת מחדל לכל המבחנים)', '<textarea rows="5" style="width:100%" maxlength="1500" data-k="ai.crit" placeholder="לדוגמה: עובר רק בלי התרסקויות, ובזמן שמראה שיפור לעומת הניסיון הקודם. הקפה שנייה לא צריכה להיות איטית מהראשונה.">' + nxEsc(A.crit || '') + '</textarea>') +
+    nxF('ניסיונות קודמים שנשלחים', sel('hist', A.hist === undefined ? 8 : Number(A.hist), [[0, 'בלי (רק הטיסה הנוכחית)'], [3, '3 אחרונים'], [8, '8 אחרונים']])) +
+    nxF('זמני הקפות', '<label class="nxchk1"><input type="checkbox" data-k="ai.noLaps"' + (A.noLaps ? ' checked' : '') + '> אל תשלח זמני הקפות בנפרד (רק זמן כולל)</label>') +
+    nxF('משוב לתלמיד', '<label class="nxchk1"><input type="checkbox" data-k="ai.hideFb"' + (A.hideFb ? ' checked' : '') + '> אל תציג את המשוב של ג׳מיני לתלמיד (רק למדריך במעקב)</label>') +
+    nxF('אם ג׳מיני לא זמין', sel('fallback', A.fallback === 'hold' ? 'hold' : 'pass', [['pass', 'לבדוק לפי התנאים הרגילים (התלמיד לא נתקע)'], ['hold', 'לא להעביר, שינסה שוב']])) +
+    '<div class="nxn">התנאים הרגילים של המבחן (זמן, התרסקויות, כוכבים) נשארים חובה. ג׳מיני נשאל רק כשהם מתקיימים. כשהוא לא בטוח, התלמיד לא מועבר והמדריך רואה את זה במעקב.</div></div>';
+  const ex = nxAiExams(), E = A.exams || {};
+  h += '<div class="nxcard"><h3>המבחנים</h3>';
+  if (!ex.length) h += '<p class="nxn">אין עדיין מבחנים בקורסים. בלשונית "קורסים" בוחרים מסלול כמבחן שלב או כמבחן מסכם.</p>';
+  ex.forEach((x) => {
+    const e = E[x.id] || {}, on = !e.off;
+    h += '<details class="catbox gcard"' + (NX.openK && NX.openK['aiex' + x.id] ? ' open' : '') + ' data-ck="aiex' + x.id + '"><summary>' + (on ? '&#10003; ' : '&#10005; ') + nxEsc(nxStName(x.id)) + ' <small>' + nxEsc(x.where) + '</small></summary>' +
+      nxF('בדיקת AI במבחן הזה', '<label class="nxchk1"><input type="checkbox" data-act="ai-ex" data-id="' + x.id + '"' + (on ? ' checked' : '') + '> פעילה</label>') +
+      (on ? nxF('קריטריונים משלו (ריק = ברירת המחדל)', '<textarea rows="3" style="width:100%" maxlength="1500" data-k="ai.exams.' + x.id + '.crit">' + nxEsc(e.crit || '') + '</textarea>') +
+        nxF('פעולה', sel('exams.' + x.id + '.mode', e.mode || '', [['', 'כמו ההגדרה הכללית'], ['auto', 'מחליט ומעביר'], ['note', 'משוב בלבד']])) : '') + '</details>';
+  });
+  h += '</div>';
+  h += '<div class="nxcard"><h3>בדיקה על נתונים לדוגמה</h3><p class="nxn">שולח את הקריטריונים הכלליים לג׳מיני עם הנתונים כאן, ומראה מה הוא עונה. כך בודקים שהמפתח עובד ושההחלטה סבירה.</p>' +
+    nxF('זמן כולל (שניות)', '<input type="number" step="0.1" data-ai="aiT_t" value="' + nxEsc(NX.aiT_t || 45) + '">') +
+    nxF('התרסקויות', '<input type="number" min="0" data-ai="aiT_c" value="' + nxEsc(NX.aiT_c || 0) + '">') +
+    nxF('כוכבים (0-3)', '<input type="number" min="0" max="3" data-ai="aiT_s" value="' + nxEsc(NX.aiT_s || 2) + '">') +
+    '<div class="nxbtns"><button class="nxb pri" data-act="ai-test">שלח לבדיקה</button></div><div class="nxn" id="nxAiOut"></div></div>';
+  return h;
+}
+async function nxAiTest() {
+  const out = $('nxAiOut'), A = NX.draft.ai || {}; if (!out) return;
+  if (!String(A.crit || '').trim()) { out.textContent = 'כתוב קודם קריטריונים כלליים.'; return; }
+  out.textContent = 'ג׳מיני בודק...';
+  try {
+    const uid = (function () { try { return localStorage.getItem('nxHostUid') || ''; } catch (e) { return ''; } })();
+    const t = Number(NX.aiT_t || 45), c = Number(NX.aiT_c || 0), s = Number(NX.aiT_s || 2);
+    const res = await (NXAI.fetch || fetch)('/api/ai/check', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Uid': uid }, body: JSON.stringify({ stage: 'בדיקה לדוגמה', crit: A.crit, flight: { total: t, bestLap: t, laps: 1, crashes: c, stars: s, gates: 10 }, history: [] }) });
+    const a = await res.json();
+    if (!res.ok) { out.textContent = a && a.error === 'no-key' ? 'חסר מפתח GEMINI_API_KEY בשרת.' : 'שגיאה: ' + ((a && a.error) || res.status); return; }
+    out.innerHTML = '<b>' + ({ pass: 'עבר', fail: 'נכשל', unclear: 'לא ברור' }[a.verdict] || nxEsc(a.verdict)) + '</b> (' + a.confidence + '%)<br>' + nxEsc(a.feedback) + (a.notes ? '<br><small>' + nxEsc(a.notes) + '</small>' : '');
+  } catch (e) { out.textContent = 'אין חיבור לשרת. הבדיקה עובדת רק באתר ב-Render.'; }
 }
 function nxMarkDone(id) {                                    // the student finished this track: it counts for good (saved per username, and sent with the live data)
   if (!NX.un || !id || nxIsDone(id)) return;
@@ -7862,16 +7936,7 @@ function nxCrsPass(base, p) {
   const cr = typeof p.c === 'number' ? p.c : -1;
   return nxF('תנאי מעבר: זמן מרבי (שניות, 0 = ללא)', '<input type="number" min="0" step="1" data-num="1" data-k="' + base + '.pass.t" value="' + (Number(p.t) || 0) + '">') +
     nxF('תנאי מעבר: התרסקויות מותרות', '<select data-num="1" data-k="' + base + '.pass.c">' + opt(-1, 'ללא הגבלה', cr) + [0, 1, 2, 3, 5].map((n) => opt(n, n === 0 ? 'בלי התרסקות' : 'עד ' + n, cr)).join('') + '</select>') +
-    nxF('תנאי מעבר: כוכבים לפחות', '<select data-num="1" data-k="' + base + '.pass.s">' + opt(0, 'ללא', p.s) + opt(1, '1', p.s) + opt(2, '2', p.s) + opt(3, '3', p.s) + '</select>') +
-    nxAiPassFields(base, p.ai);
-}
-function nxAiPassFields(base, a) {                              // Gemini reads the numbers of the flight and judges them by the instructor's own criteria
-  a = a || {};
-  return '<div class="nxai">' + nxF('בדיקת ג׳מיני', '<label class="nxchk1"><input type="checkbox" data-k="' + base + '.pass.ai.on"' + (a.on ? ' checked' : '') + '> ג׳מיני בודק את הטיסה אחרי המבחן</label>') +
-    (a.on ? nxF('הקריטריונים שלי (בעברית חופשית)', '<textarea rows="4" maxlength="1500" data-k="' + base + '.pass.ai.crit" placeholder="לדוגמה: עובר רק בלי התרסקויות, ובזמן שמראה שיפור לעומת הניסיון הקודם. הקפה שנייה לא צריכה להיות איטית מהראשונה.">' + nxEsc(a.crit || '') + '</textarea>') +
-      nxF('מה ג׳מיני עושה', '<select data-k="' + base + '.pass.ai.mode"><option value="auto"' + (a.mode !== 'note' ? ' selected' : '') + '>מחליט ומעביר את התלמיד לשלב הבא</option><option value="note"' + (a.mode === 'note' ? ' selected' : '') + '>נותן משוב בלבד (המעבר לפי התנאים למעלה)</option></select>') +
-      nxF('ביטחון מינימלי להעברה', '<select data-num="1" data-k="' + base + '.pass.ai.min">' + [60, 70, 80, 90].map((n) => '<option value="' + n + '"' + (Number(a.min || 80) === n ? ' selected' : '') + '>' + n + '%</option>').join('') + '</select>') +
-      '<div class="nxn">התנאים למעלה (זמן, התרסקויות, כוכבים) נשארים חובה. ג׳מיני מחליט רק כשהם מתקיימים. כשהוא לא בטוח, התלמיד לא מועבר והמדריך רואה את זה במעקב. עובד רק באתר ב-Render ועם GEMINI_API_KEY.</div>' : '') + '</div>';
+    nxF('תנאי מעבר: כוכבים לפחות', '<select data-num="1" data-k="' + base + '.pass.s">' + opt(0, 'ללא', p.s) + opt(1, '1', p.s) + opt(2, '2', p.s) + opt(3, '3', p.s) + '</select>');
 }
 function nxGroupCourses(g) {                                  // the group's courses in their order (older groups kept a single courseId)
   const cs = NX.draft.courses || {};
@@ -7938,6 +8003,8 @@ function nxTabCourses() {
   return h;
 }
 function nxCrsAct(a, el) {                                    // course editor buttons; returns true when handled
+  if (a === 'ai-test') { nxAiTest(); return true; }
+  if (a === 'ai-ex') { const D = NX.draft; D.ai = D.ai || {}; D.ai.exams = D.ai.exams || {}; const e = D.ai.exams[el.dataset.id] = D.ai.exams[el.dataset.id] || {}; if (el.checked) delete e.off; else e.off = true; nxTouch(); nxAdmRender(); return true; }
   if (a === 'crs-learn') { nxMakeLearnCourse(); return true; }
   if (a.indexOf('crs-') !== 0) return false;
   const D = NX.draft, cid = el.dataset.cid, i = Number(el.dataset.i);
@@ -8802,10 +8869,10 @@ function nxAdmRender() {
   }
   if (NX.role !== 'admin') return;
   nxEnvPark();
-  const tabs = [['game', 'עריכת משחק'], ['stages', 'שלבים'], ['tracks', 'מסלולים'], ['courses', 'קורסים'], ['drones', 'רחפנים'], ['groups', 'קבוצות'], ['players', 'שחקנים'], ['progress', 'מעקב']];
+  const tabs = [['game', 'עריכת משחק'], ['stages', 'שלבים'], ['tracks', 'מסלולים'], ['courses', 'קורסים'], ['ai', 'בדיקת AI'], ['drones', 'רחפנים'], ['groups', 'קבוצות'], ['players', 'שחקנים'], ['progress', 'מעקב']];
   $('admTabs').style.display = NX.ted ? 'none' : '';
   $('admTabs').innerHTML = tabs.map((t) => '<button data-tab="' + t[0] + '"' + (NX.tab === t[0] ? ' class="on"' : '') + '>' + t[1] + '</button>').join('');
-  const fn = { game: nxTabGame, look: nxTabLook, stages: nxTabStages, tracks: nxTabTracks, courses: nxTabCourses, drones: nxTabDrones, progress: nxTabProgress, groups: () => nxTabGroups() + (Object.keys(NX.themes).length ? '<h3 style="margin-top:16px">ערכות נושא שמורות</h3>' + nxTabThemes() : ''), players: nxTabPlayers }[NX.tab];
+  const fn = { game: nxTabGame, look: nxTabLook, stages: nxTabStages, tracks: nxTabTracks, courses: nxTabCourses, ai: nxTabAi, drones: nxTabDrones, progress: nxTabProgress, groups: () => nxTabGroups() + (Object.keys(NX.themes).length ? '<h3 style="margin-top:16px">ערכות נושא שמורות</h3>' + nxTabThemes() : ''), players: nxTabPlayers }[NX.tab];
   const body = $('admBody'), st = body.scrollTop;
   body.innerHTML = NX.ted ? nxTedHead() + nxTabLook() : nxThemeBanner() + (fn ? fn() : '');
   nxEdAiRender();
@@ -8861,7 +8928,7 @@ function nxField(el) {
   const k = el.dataset.k; if (!k) return;
   const v = el.type === 'checkbox' ? el.checked : (el.dataset.num ? Number(el.value) : el.value);
   nxSetPath(NX.draft, k, v);
-  if (/\.pass\.ai\.on$/.test(k)) { NX.draft = nxMerge(nxDefault(), NX.draft); nxTouch(); nxAdmRender(); return; }
+  if (k === 'ai.on') { NX.draft = nxMerge(nxDefault(), NX.draft); nxTouch(); nxAdmRender(); return; }
   if (el.tagName === 'INPUT' && el.type === 'range') { const o = el.parentNode.querySelector('output'); if (o) o.textContent = el.value; }
   NX.draft = nxMerge(nxDefault(), NX.draft);
   nxTouch();
