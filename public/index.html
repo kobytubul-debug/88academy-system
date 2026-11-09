@@ -1244,7 +1244,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 219</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 220</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -7370,7 +7370,12 @@ async function nxAiModels() {
     const res = await (NXAI.fetch || fetch)('/api/ai/models', { headers: nxAiHdr() }), a = await res.json();
     if (!res.ok) { out.textContent = a && a.error === 'no-key' ? 'חסר מפתח GEMINI_API_KEY בשרת.' : 'שגיאה: ' + ((a && (a.detail || a.error)) || res.status); return; }
     out.innerHTML = a.models.length ? 'מודלים שהמפתח שלך יכול להשתמש בהם (לחץ לבחירה):<br>' + a.models.slice(0, 12).map((m) => '<button class="nxb" data-act="ai-pick" data-v="' + nxEsc(m) + '">' + nxEsc(m) + '</button>').join(' ') : 'לא נמצאו מודלים למפתח הזה.';
-  } catch (e) { out.textContent = 'אין חיבור לשרת. זה עובד רק באתר ב-Render.'; }
+  } catch (e) { out.textContent = nxAiNoServer(e); }
+}
+function nxAiNoServer(e) {                                    // say which of the likely reasons it is
+  const here = location.protocol + '//' + location.host, onSite = /onrender\.com$|88academy/i.test(location.host);
+  if (!onSite) return 'אתה לא באתר ב-Render (הכתובת: ' + here + '). בדיקת ה-AI עובדת רק באתר ב-Render, לא בחלון של Claude. פתח את https://eight8academy-system.onrender.com והיכנס כמנהל.';
+  return 'השרת לא החזיר תשובה תקינה (' + String((e && e.message) || e).slice(0, 80) + '). אם הרגע פרסמנו גרסה, חכה כמה דקות עד ש-Deploys ב-Render מראה Live, ורענן את הדף (Ctrl+Shift+R).';
 }
 async function nxAiPing() {                                   // connection test: reach Gemini, the key, the model, with timings
   const out = $('nxAiOut0'); if (!out) return;
@@ -7379,7 +7384,7 @@ async function nxAiPing() {                                   // connection test
     const res = await (NXAI.fetch || fetch)('/api/ai/ping', { headers: nxAiHdr() }), a = await res.json();
     if (!res.ok) { out.textContent = 'שגיאה: ' + ((a && (a.detail || a.error)) || res.status); return; }
     out.innerHTML = (a.steps || []).map((x) => (x.ok ? '<b style="color:#5fd08a">&#10003;</b> ' : '<b style="color:#e66">&#10005;</b> ') + nxEsc(x.step) + (x.ms !== undefined ? ' <small>(' + (x.ms / 1000).toFixed(1) + ' ש׳)</small>' : '') + ': ' + nxEsc(x.msg)).join('<br>');
-  } catch (e) { out.textContent = 'אין חיבור לשרת. זה עובד רק באתר ב-Render.'; }
+  } catch (e) { out.textContent = nxAiNoServer(e); }
 }
 function nxAiStHtml() {
   const st = NX.aiSt;
@@ -7447,7 +7452,7 @@ async function nxAiTest() {
     const a = await res.json();
     if (!res.ok) { out.textContent = a && a.error === 'no-key' ? 'חסר מפתח GEMINI_API_KEY בשרת.' : 'שגיאה: ' + ((a && (a.detail || a.error)) || res.status); return; }
     out.innerHTML = '<b>' + ({ pass: 'עבר', fail: 'נכשל', unclear: 'לא ברור' }[a.verdict] || nxEsc(a.verdict)) + '</b> (' + a.confidence + '%)<br>' + nxEsc(a.feedback) + (a.notes ? '<br><small>' + nxEsc(a.notes) + '</small>' : '');
-  } catch (e) { out.textContent = 'אין חיבור לשרת. הבדיקה עובדת רק באתר ב-Render.'; }
+  } catch (e) { out.textContent = nxAiNoServer(e); }
 }
 function nxMarkDone(id) {                                    // the student finished this track: it counts for good (saved per username, and sent with the live data)
   if (!NX.un || !id || nxIsDone(id)) return;
