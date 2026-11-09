@@ -83,23 +83,45 @@ async function listModels() {
   return ok.sort((a, b) => rank(b) - rank(a));
 }
 
-async function ask(model, job) {
+async function ask(model, job, ms) {
   const j = await gem('/v1beta/models/' + encodeURIComponent(model) + ':generateContent', { method: 'POST',
-    body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: prompt(job) }] }], generationConfig: { temperature: 0.2, responseMimeType: 'application/json' } }) });
+    body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: prompt(job) }] }], generationConfig: { temperature: 0.2, responseMimeType: 'application/json' } }) }, ms);
   const parts = j && j.candidates && j.candidates[0] && j.candidates[0].content && j.candidates[0].content.parts;
   return parse((parts || []).map((p) => p.text || '').join(''));
 }
 
+const RETRY = (e) => e && (e.code === 'timeout' || [429, 500, 502, 503, 504].indexOf(e.status) >= 0);
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+let listCache = { at: 0, list: [] };
+async function modelsCached() {
+  if (Date.now() - listCache.at < 10 * 60000 && listCache.list.length) return listCache.list;
+  const list = await listModels(); listCache = { at: Date.now(), list }; return list;
+}
+
+// Asks the wanted model. A model that does not exist is replaced by the newest one the key can use.
+// A busy model (503, 429, timeout) is tried again once, and then other models are tried, all inside about a minute.
 async function check(job, wanted) {
   if (!hasKey()) { const e = new Error('no-key'); e.code = 'no-key'; throw e; }
-  const m = /^gemini-[A-Za-z0-9._\-]{1,60}$/.test(wanted || '') ? wanted : MODEL();
-  try { return await ask(m, job); }
+  const t0 = Date.now(), left = () => 55000 - (Date.now() - t0);
+  const first = /^gemini-[A-Za-z0-9._\-]{1,60}$/.test(wanted || '') ? wanted : MODEL();
+  let last = null;
+  const tryModel = async (m, ms) => { try { return await ask(m, job, ms); } catch (e) { last = e; throw e; } };
+  try { return await tryModel(first, Math.min(20000, left())); }
   catch (e) {
-    if (e.status !== 404 && e.status !== 400) throw e;                        // the model name is not valid for this key: pick the newest one it can use
-    const list = await listModels(); const pick = list.find((n) => n !== m);
-    if (!pick) throw e;
-    const r = await ask(pick, job); found = pick; return r;
+    if (e.status === 404 || e.status === 400) {
+      const list = await modelsCached(); const pick = list.find((n) => n !== first);
+      if (!pick) throw e;
+      const r = await tryModel(pick, Math.min(25000, left())); found = pick; return r;
+    }
+    if (!RETRY(e)) throw e;
   }
+  if (left() > 8000) { await sleep(1200); try { return await tryModel(first, Math.min(15000, left())); } catch (e) { if (!RETRY(e)) throw e; } }
+  let list = []; try { list = await modelsCached(); } catch (e) { /* keep the first error */ }
+  for (const n of list.filter((x) => x !== first).slice(0, 3)) {
+    if (left() < 6000) break;
+    try { return await tryModel(n, Math.min(20000, left())); } catch (e) { if (!RETRY(e) && e.status !== 404 && e.status !== 400) throw e; }
+  }
+  throw last || new Error('failed');
 }
 
 // Step by step connection test with timings: can the server reach Gemini, does the key work, does the model answer.
