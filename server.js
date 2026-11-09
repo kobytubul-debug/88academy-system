@@ -151,7 +151,7 @@ async function api(req, res, url) {
     const lst = (a) => (Array.isArray(a) ? a.filter((x) => typeof x === 'string' && /^[a-z0-9_]{1,24}$/i.test(x)).slice(0, 300) : []);
     const schema = b.kind === 'edit' || b.kind === 'build' ? AI.trackSchema(b.kind, lst(b.types), lst(b.kinds)) : undefined;
     try { return json(res, 200, { text: await AI.generate(pr, aiCfg().model, schema) }); }
-    catch (e) { console.error('ai gen:', e.message); return json(res, e.code === 'no-key' ? 503 : 502, { error: e.code || 'failed', detail: String(e.message || '').slice(0, 300) }); }
+    catch (e) { console.error('ai gen:', e.message); return json(res, e.code === 'no-key' ? 503 : (e.status === 429 || /gemini-429/.test(String(e.code || e.message))) ? 429 : 502, { error: e.code || 'failed', detail: String(e.message || '').slice(0, 300) }); }
   }
   if (p === '/api/admin/me') return json(res, 200, { admin });
   if (p === '/api/admin/import' && req.method === 'POST') {            // load an export of the old data (admin only)
