@@ -61,20 +61,23 @@ function parse(text) {
   };
 }
 
-async function gem(path, opts) {
-  const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 45000);
+async function gem(path, opts, ms) {
+  const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), ms || 60000);
   try {
     const res = await fetch(BASE + path, Object.assign({ signal: ctl.signal }, opts, { headers: Object.assign({ 'x-goog-api-key': KEY(), 'Content-Type': 'application/json' }, (opts && opts.headers) || {}) }));
     const raw = await res.text(); let j = null; try { j = JSON.parse(raw); } catch (e) { /* below */ }
     if (!res.ok) { const e = new Error('gemini-' + res.status + ': ' + ((j && j.error && j.error.message) || raw.slice(0, 300))); e.code = 'gemini'; e.status = res.status; throw e; }
     return j;
+  } catch (e) {
+    if (e && e.name === 'AbortError') { const t = new Error('timeout: ג׳מיני לא ענה תוך ' + Math.round((ms || 60000) / 1000) + ' שניות'); t.code = 'timeout'; throw t; }
+    throw e;
   } finally { clearTimeout(timer); }
 }
 
 // The models this key can use for text answers, newest flash first.
 async function listModels() {
   if (!hasKey()) { const e = new Error('no-key'); e.code = 'no-key'; throw e; }
-  const j = await gem('/v1beta/models?pageSize=200', { method: 'GET' });
+  const j = await gem('/v1beta/models?pageSize=200', { method: 'GET' }, 15000);
   const ok = (j.models || []).filter((m) => /generateContent/.test((m.supportedGenerationMethods || []).join(',')) && /^models\/gemini-/.test(m.name)).map((m) => m.name.replace(/^models\//, ''));
   const rank = (n) => { const v = /gemini-(\d+(?:\.\d+)?)/.exec(n); return (v ? parseFloat(v[1]) : 0) * 10 + (/flash/.test(n) && !/lite|image|live|tts|preview|exp|thinking/.test(n) ? 5 : /flash/.test(n) ? 2 : 0); };
   return ok.sort((a, b) => rank(b) - rank(a));
@@ -99,4 +102,21 @@ async function check(job, wanted) {
   }
 }
 
-module.exports = { check, listModels, hasKey, model: MODEL };
+// Step by step connection test with timings: can the server reach Gemini, does the key work, does the model answer.
+async function ping(wanted) {
+  const steps = [], t0 = () => Date.now();
+  if (!hasKey()) return [{ step: 'מפתח', ok: false, msg: 'חסר GEMINI_API_KEY בשרת' }];
+  let m = /^gemini-[A-Za-z0-9._\-]{1,60}$/.test(wanted || '') ? wanted : MODEL(), a = t0(), list = [];
+  try { list = await listModels(); steps.push({ step: 'חיבור ומפתח', ok: true, ms: t0() - a, msg: list.length + ' מודלים זמינים' + (list.length ? ', הראשונים: ' + list.slice(0, 4).join(', ') : '') }); }
+  catch (e) { steps.push({ step: 'חיבור ומפתח', ok: false, ms: t0() - a, msg: String(e.message || e).slice(0, 300) }); return steps; }
+  if (list.length && list.indexOf(m) < 0) { steps.push({ step: 'שם המודל', ok: false, msg: m + ' לא ברשימת המודלים של המפתח. המערכת תעבור למודל ' + list[0] + ' אוטומטית' }); m = list[0]; }
+  a = t0();
+  try {
+    const j = await gem('/v1beta/models/' + encodeURIComponent(m) + ':generateContent', { method: 'POST', body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: 'ענה במילה אחת: שלום' }] }] }) }, 60000);
+    const parts = j && j.candidates && j.candidates[0] && j.candidates[0].content && j.candidates[0].content.parts;
+    steps.push({ step: 'תשובה מהמודל ' + m, ok: true, ms: t0() - a, msg: String((parts || []).map((p) => p.text || '').join('')).slice(0, 60) || '(ריק)' });
+  } catch (e) { steps.push({ step: 'תשובה מהמודל ' + m, ok: false, ms: t0() - a, msg: String(e.message || e).slice(0, 300) }); }
+  return steps;
+}
+
+module.exports = { check, listModels, ping, hasKey, model: MODEL };

@@ -125,6 +125,10 @@ async function api(req, res, url) {
   }
   const aiCfg = () => { const c = docs.get('cfg/main'); return (c && c.cfg && c.cfg.ai) || {}; };
   if (p === '/api/ai/status') return json(res, 200, { key: AI.hasKey(), model: aiCfg().model || AI.model(), admin });
+  if (p === '/api/ai/ping') {                                            // connection test with timings (admin only)
+    if (!admin) return json(res, 403, { error: 'forbidden' });
+    return json(res, 200, { steps: await AI.ping(aiCfg().model) });
+  }
   if (p === '/api/ai/models') {                                          // the models this key can use (admin only)
     if (!admin) return json(res, 403, { error: 'forbidden' });
     try { return json(res, 200, { models: await AI.listModels() }); } catch (e) { return json(res, 502, { error: e.code || 'failed', detail: String(e.message || '').slice(0, 300) }); }
