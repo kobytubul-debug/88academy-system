@@ -5,7 +5,7 @@
 const BASE = (process.env.GEMINI_API_BASE || 'https://generativelanguage.googleapis.com').replace(/\/+$/, '');
 const KEY = () => process.env.GEMINI_API_KEY || '';
 let found = '';                                               // a model found automatically when the configured one does not exist
-const MODEL = () => found || process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+const MODEL = () => found || process.env.GEMINI_MODEL || 'gemini-3.8-flash';
 const hasKey = () => !!KEY();
 
 const num = (v, d) => (Number.isFinite(Number(v)) ? Number(v) : d);
@@ -78,7 +78,7 @@ async function gem(path, opts, ms) {
 async function listModels() {
   if (!hasKey()) { const e = new Error('no-key'); e.code = 'no-key'; throw e; }
   const j = await gem('/v1beta/models?pageSize=200', { method: 'GET' }, 15000);
-  const ok = (j.models || []).filter((m) => /generateContent/.test((m.supportedGenerationMethods || []).join(',')) && /^models\/gemini-/.test(m.name)).map((m) => m.name.replace(/^models\//, ''));
+  const ok = (j.models || []).filter((m) => /generateContent/.test((m.supportedGenerationMethods || []).join(',')) && /^models\/gemini-/.test(m.name) && !/tts|image|transcribe|embed|audio|live|imagen|veo|argon|robotics|computer/i.test(m.name)).map((m) => m.name.replace(/^models\//, ''));
   const rank = (n) => { const v = /gemini-(\d+(?:\.\d+)?)/.exec(n); return (v ? parseFloat(v[1]) : 0) * 10 + (/flash/.test(n) && !/lite|image|live|tts|preview|exp|thinking/.test(n) ? 5 : /flash/.test(n) ? 2 : 0); };
   return ok.sort((a, b) => rank(b) - rank(a));
 }
