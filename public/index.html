@@ -1244,7 +1244,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 221</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 222</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -8030,24 +8030,52 @@ function nxCrsTracks(co, i) {                                  // one row per tr
   if (rest.length) h += box('_rest', 'ללא קטגוריה', rest);
   return h;
 }
+function nxPassText(p) {                                      // the pass conditions in one short line
+  p = p || {}; const o = [];
+  if (Number(p.t) > 0) o.push('עד ' + Number(p.t) + ' שנ׳');
+  if (typeof p.c === 'number' && p.c >= 0) o.push(p.c === 0 ? 'בלי התרסקות' : 'עד ' + p.c + ' התרסקויות');
+  if (Number(p.s) > 0) o.push(Number(p.s) + ' כוכבים לפחות');
+  return o.length ? o.join(' · ') : 'ללא תנאים';
+}
+function nxCrsSec(key, title, badge, inner, defOpen) {
+  NX.openK = NX.openK || {};
+  const o = NX.openK[key] !== undefined ? NX.openK[key] : !!defOpen;
+  return '<details class="catbox gcard" data-ck="' + key + '"' + (o ? ' open' : '') + '><summary><b>' + title + '</b>' + (badge ? '<span class="catn">' + badge + '</span>' : '') + '</summary>' + inner + '</details>';
+}
+function nxCrsBody(cid, co, i, s, base) {                    // what is inside one stage (i = index) or the final exam (i = 'f')
+  const fin = i === 'f', nm = (id) => nxEsc((STAGES[id] || STAGES['pub_' + id] || { name: id }).name);
+  const x = (act, k) => '<button class="nxb danger" data-act="' + act + '" data-cid="' + cid + '" data-i="' + (fin ? 0 : i) + '" data-id="' + k + '" title="הסר">&#10005;</button>';
+  let h = '';
+  const tr = fin ? [] : (s.tracks || []), ex = s.exam || '';
+  let ch = tr.map((k) => '<div class="nxrow2"><span style="flex:1"><i class="nxsm">תרגול</i> ' + nm(k) + '</span>' + x('crs-tp', k) + '</div>').join('');
+  if (ex) ch += '<div class="nxrow2"><span style="flex:1"><i class="nxsm">מבחן</i> <b>' + nm(ex) + '</b></span>' + x(fin ? 'crs-fx' : 'crs-tx', ex) + '</div>';
+  h += '<h4>' + (fin ? 'מסלול המבחן' : 'המסלולים בשלב') + '</h4>' + (ch || '<p class="nxn">עדיין לא נבחרו מסלולים. פתח את "' + (fin ? 'בחירת מסלול' : 'הוספת מסלולים') + '" ובחר.</p>');
+  h += nxCrsSec('cp|' + cid + '|' + i, fin ? 'בחירת מסלול למבחן' : 'הוספת מסלולים (תרגול או מבחן)', '', '<div class="nxn">' + (fin ? 'לחץ "מבחן" ליד המסלול.' : 'ליד כל מסלול: "תרגול" או "מבחן השלב".') + '</div>' + nxCrsTracks(co, i), !ch);
+  h += nxCrsSec('cc|' + cid + '|' + i, 'תנאי מעבר', nxPassText(s.pass), nxCrsPass(base, s.pass));
+  return h;
+}
 function nxCourseCard(cid, co) {
   const b = (act, i, j, t) => '<button class="nxb" data-act="' + act + '" data-cid="' + cid + '" data-i="' + i + '"' + (j === undefined ? '' : ' data-j="' + j + '"') + '>' + t + '</button>';
-  let h = '<details class="nxcard" data-crid="' + cid + '"' + (NX.openC === cid ? ' open' : '') + '><summary><b>' + nxEsc(co.name) + '</b> <span class="cnt">' + (co.stages || []).length + ' שלבים · ' + Object.keys(NX.groups).filter((g) => nxGroupCourses(NX.groups[g]).indexOf(cid) >= 0).length + ' קבוצות</span></summary>';
+  const ngr = Object.keys(NX.groups).filter((g) => nxGroupCourses(NX.groups[g]).indexOf(cid) >= 0).length;
+  let h = '<details class="nxcard" data-crid="' + cid + '"' + (NX.openC === cid ? ' open' : '') + '><summary><b>' + nxEsc(co.name) + '</b> <span class="cnt">' + (co.stages || []).length + ' שלבים · ' + ngr + ' קבוצות</span></summary>';
   h += nxF('שם הקורס', '<input type="text" data-k="courses.' + cid + '.name" value="' + nxEsc(co.name) + '">');
-  (co.stages || []).forEach((s, i) => {
-    const base = 'courses.' + cid + '.stages.' + i;
-    h += '<div class="nxcard" style="margin:8px 0"><label class="nxchk1"><input type="checkbox" data-k="' + base + '.on"' + (s.on ? ' checked' : '') + '> שלב ' + (i + 1) + ' פעיל</label>';
-    h += nxF('שם השלב', '<input type="text" data-k="' + base + '.name" value="' + nxEsc(s.name) + '">');
-    h += '<div class="nxn">לכל מסלול בחר: תרגול או מבחן השלב. הסדר הוא לפי סדר המסלולים בלשונית "מסלולים".</div>' + nxCrsTracks(co, i);
-    h += nxCrsPass(base, s.pass);
-    h += '<div class="nxbtns">' + b('crs-sup', i, undefined, 'שלב למעלה') + b('crs-sdn', i, undefined, 'שלב למטה') + b('crs-sdel', i, undefined, 'מחק שלב') + '</div></div>';
+  const stg = co.stages || [];
+  h += '<p class="nxn">הקורס: ' + (stg.length ? stg.map((s, i) => (i + 1) + '. ' + nxEsc(s.name || 'שלב')).join(' ← ') : 'עוד אין שלבים') + (co.final && co.final.on ? ' ← מבחן מסכם' : '') + '</p>';
+  stg.forEach((s, i) => {
+    const base = 'courses.' + cid + '.stages.' + i, n = (s.tracks || []).length;
+    const sum = '<b>' + (i + 1) + '. ' + nxEsc(s.name || 'שלב') + '</b><span class="catn">' + (s.on ? '' : 'כבוי · ') + n + ' תרגול' + (s.exam ? ' · יש מבחן' : ' · אין מבחן') + '</span>';
+    const key = 'cs|' + cid + '|' + i, o = NX.openK && NX.openK[key];
+    h += '<details class="catbox gcard" data-ck="' + key + '"' + (o ? ' open' : '') + '><summary>' + sum + '</summary>' +
+      '<div class="nxbtns">' + b('crs-sup', i, undefined, '&#9650; למעלה') + b('crs-sdn', i, undefined, '&#9660; למטה') + b('crs-sdel', i, undefined, 'מחק שלב') + '</div>' +
+      '<label class="nxchk1"><input type="checkbox" data-k="' + base + '.on"' + (s.on ? ' checked' : '') + '> השלב פעיל</label>' +
+      nxF('שם השלב', '<input type="text" data-k="' + base + '.name" value="' + nxEsc(s.name) + '">') + nxCrsBody(cid, co, i, s, base) + '</details>';
   });
   h += '<div class="nxbtns"><button class="nxb pri" data-act="crs-sadd" data-cid="' + cid + '">+ הוסף שלב</button></div>';
-  const f = co.final || {}, fb = 'courses.' + cid + '.final';
-  h += '<div class="nxcard" style="margin:8px 0"><label class="nxchk1"><input type="checkbox" data-k="' + fb + '.on"' + (f.on ? ' checked' : '') + '> מבחן מסכם בסוף הקורס</label>';
-  h += nxF('שם', '<input type="text" data-k="' + fb + '.name" placeholder="מבחן מסכם" value="' + nxEsc(f.name || '') + '">');
-  h += '<div class="nxn">בחר את מסלול המבחן המסכם:</div>' + nxCrsTracks(co, 'f') + nxCrsPass(fb, f.pass) + '</div>';
-  h += '<div class="nxbtns"><button class="nxb" data-act="crs-del" data-cid="' + cid + '">מחק את הקורס</button></div></details>';
+  const f = co.final || {}, fb = 'courses.' + cid + '.final', fk = 'cs|' + cid + '|f';
+  h += '<details class="catbox gcard" data-ck="' + fk + '"' + (NX.openK && NX.openK[fk] ? ' open' : '') + '><summary><b>מבחן מסכם</b><span class="catn">' + (f.on ? (f.exam ? 'פעיל' : 'פעיל, בלי מסלול') : 'כבוי') + '</span></summary>' +
+    '<label class="nxchk1"><input type="checkbox" data-k="' + fb + '.on"' + (f.on ? ' checked' : '') + '> מבחן מסכם בסוף הקורס</label>' +
+    nxF('שם', '<input type="text" data-k="' + fb + '.name" placeholder="מבחן מסכם" value="' + nxEsc(f.name || '') + '">') + nxCrsBody(cid, co, 'f', f, fb) + '</details>';
+  h += '<div class="nxbtns"><button class="nxb danger" data-act="crs-del" data-cid="' + cid + '">מחק את הקורס</button></div></details>';
   return h;
 }
 function nxTabCourses() {
