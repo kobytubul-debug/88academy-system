@@ -1244,7 +1244,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 228</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 229</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -8143,13 +8143,20 @@ function nxHomeSection() {
 function nxTabGame() {
   let h = '<div class="nxn" style="background:color-mix(in srgb,var(--am) 16%,var(--p1));color:var(--tx);padding:8px;border-radius:6px;margin-bottom:10px"><b>עריכת משחק כללית.</b> כל שינוי כאן משנה את כל המשחק מיד אצלך, ומגיע לכל השחקנים כשלוחצים <b>שמור ופרסם</b> (או "שמירה" למעלה). ערכת נושא שמשויכת לקבוצה או לשחקן גוברת על המראה הכללי הזה.</div>';
   h += '<div class="nxbtns"><button class="nxb pri" data-act="game-pub">שמור ופרסם לכל השחקנים</button><span class="nxn">' + (NX.dirty ? '● יש שינויים שלא נשמרו' : '✓ הכול שמור') + '</span></div>';
-  h += '<div class="nxn" style="border:1px solid var(--ac);border-radius:8px;padding:8px;margin:8px 0"><b>שמירת המראה הנוכחי כערכת נושא חדשה</b><div class="nxbtns" style="margin-top:6px"><input type="text" id="admTName" data-ai="saveName" placeholder="שם לערכה החדשה" value="' + nxEsc(NX.saveName || '') + '" style="flex:1;min-width:140px"><button class="nxb pri" data-act="th-save">שמור כערכת נושא חדשה</button></div><div class="nxn">הערכה נשמרת ברשימת הערכות, בלי לפרסם ובלי לשנות את המראה הנוכחי לשחקנים.</div></div>';
-  h += nxHomeSection();
-  h += nxLogoSection();
-  h += nxTabLook();
-  h += '<h4>ייצוא וייבוא של המראה</h4><p class="nxn">העתק את הטקסט כדי לגבות או להעביר מראה, או הדבק מראה ולחץ ייבוא.</p>';
-  h += '<textarea id="admGJson" rows="6" style="width:100%;direction:ltr;font:12px monospace" data-ai="gJson">' + nxEsc(JSON.stringify({ theme: NX.draft.theme, tx: NX.draft.tx, hide: NX.draft.hide })) + '</textarea>';
-  h += '<div class="nxbtns"><button class="nxb" data-act="game-imp">ייבא מהטקסט</button></div>';
+  const kitHtml = '<div class="nxn" style="border:1px solid var(--ac);border-radius:8px;padding:8px;margin:8px 0"><b>שמירת המראה הנוכחי כערכת נושא חדשה</b><div class="nxbtns" style="margin-top:6px"><input type="text" id="admTName" data-ai="saveName" placeholder="שם לערכה החדשה" value="' + nxEsc(NX.saveName || '') + '" style="flex:1;min-width:140px"><button class="nxb pri" data-act="th-save">שמור כערכת נושא חדשה</button></div><div class="nxn">הערכה נשמרת ברשימת הערכות, בלי לפרסם ובלי לשנות את המראה הנוכחי לשחקנים.</div></div>';
+  const P = nxLookParts(NX.draft.theme), noH = (x) => String(x).replace(/^<h4>[^<]*<\/h4>/, '');
+  const sec = (k, t, inner, open) => nxCrsSec('gm|' + k, t, '', inner, open);
+  h += P.btns;
+  h += sec('kit', 'שמירת המראה כערכת נושא', kitHtml, true);
+  h += sec('home', 'מסך הבית', noH(nxHomeSection()));
+  h += sec('logo', 'לוגו', noH(nxLogoSection()));
+  h += P.gx + P.col;
+  h += sec('typo', 'טיפוגרפיה וכפתורים', P.typo);
+  h += sec('bg', 'רקע ותמונות', P.bg);
+  h += sec('trans', 'מעברים בין חלונות', P.trans);
+  h += sec('hide', 'מה מוצג לשחקן', P.hide);
+  h += sec('tx', 'כותרות וטקסטים', P.tx);
+  h += sec('io', 'ייצוא וייבוא של המראה', '<p class="nxn">העתק את הטקסט כדי לגבות או להעביר מראה, או הדבק מראה ולחץ ייבוא.</p><textarea id="admGJson" rows="6" style="width:100%;direction:ltr;font:12px monospace" data-ai="gJson">' + nxEsc(JSON.stringify({ theme: NX.draft.theme, tx: NX.draft.tx, hide: NX.draft.hide })) + '</textarea><div class="nxbtns"><button class="nxb" data-act="game-imp">ייבא מהטקסט</button></div>');
   return h;
 }
 const NX_COLGROUPS = [
@@ -8202,34 +8209,40 @@ function nxGxWindow(t) {
   h += '<div class="nxbtns"><button class="nxb' + (allOn ? ' sel' : '') + '" data-act="gx-all-on">הפעל הכול</button><button class="nxb' + (allOff ? ' sel' : '') + '" data-act="gx-all-off">כבה הכול</button></div>';
   return '<details class="nxcol" data-cid="gxAll"' + (NX.openCats.gxAll ? ' open' : '') + '><summary>סגנון משחק</summary><div class="nxcolb">' + h + '</div></details>';
 }
-function nxTabLook() {
-  const t = NX.draft.theme;
-  let h = '<div class="nxbtns"><button class="nxb" data-act="look-font">אפס פונט</button><button class="nxb danger" data-act="look-reset">אפס מראה לברירת מחדל</button></div>';
-  h += nxGxWindow(t);
-  h += nxColorsWindow(t);
-  h += '<h4>טיפוגרפיה וכפתורים</h4>';
+function nxLookParts(t) {
+  const P = {};
+  P.btns = '<div class="nxbtns"><button class="nxb" data-act="look-font">אפס פונט</button><button class="nxb danger" data-act="look-reset">אפס מראה לברירת מחדל</button></div>';
+  P.gx = nxGxWindow(t);
+  P.col = nxColorsWindow(t);
+  let h = '';
   h += nxF('פונט', nxSel('theme.font', t.font, Object.keys(NX_FONTS).map((k) => [k, NX_FONTS[k][0]])));
   h += nxF('סגנון כפתורים', nxSel('theme.btn', t.btn, [['sharp', 'חד'], ['round', 'מעוגל'], ['pill', 'קפסולה']]));
   h += nxF('עובי מסגרת', nxRange('theme.bw', t.bw, 0, 4, 1));
   h += nxF('רוחב כפתורי תפריט', nxRange('theme.mbw', t.mbw, 240, 640, 10));
   h += nxF('יישור כפתורים', nxSel('theme.balign', t.balign, [['c', 'מרכז'], ['r', 'ימין'], ['l', 'שמאל']]));
   h += nxF('מיקום התפריט', nxSel('theme.mvert', t.mvert, [['t', 'למעלה'], ['c', 'מרכז'], ['b', 'למטה']]));
-  h += '<h4>רקע ותמונות</h4>';
+  P.typo = h; h = '';
   h += nxF('כהות שכבת הרקע', nxRange('theme.overlay', t.overlay, 0, 1, 0.05));
   h += nxF('תמונת רקע (קישור)', '<input type="text" dir="ltr" data-k="theme.bgImg" placeholder="https://..." value="' + (String(t.bgImg).indexOf('data:') === 0 ? '' : nxEsc(t.bgImg)) + '">');
   h += nxF('העלאת תמונה', '<input type="file" accept="image/*" id="admBgFile"><button class="nxb" data-act="bg-clear">נקה</button>');
-  h += '<h4>מעברים בין חלונות</h4>';
+  P.bg = h; h = '';
   h += nxF('סוג מעבר', nxSel('theme.trans', t.trans, [['slide', 'החלקה'], ['fade', 'עמעום'], ['zoom', 'זום'], ['none', 'ללא']]));
   h += nxF('משך (מ"ש)', nxRange('theme.dur', t.dur, 0, 1000, 25));
   h += nxF('מסך שחור בין שלבים (מ"ש)', nxRange('theme.fadeMs', t.fadeMs, 150, 1500, 50));
-  h += '<h4>מה מוצג לשחקן</h4><div class="nxchk">';
+  P.trans = h;
+  h = '<div class="nxchk">';
   NX_HIDE.forEach((r) => { h += '<label><input type="checkbox" data-k="hide.' + r[0] + '"' + (NX.draft.hide[r[0]] ? ' checked' : '') + '> הסתר: ' + r[1] + '</label>'; });
-  h += '</div><h4>כותרות וטקסטים</h4>';
+  P.hide = h + '</div>'; h = '';
   NX_TX.forEach((r) => {
     const el = document.querySelector(r[2]);
     h += nxF(r[1], '<input type="text" data-k="tx.' + r[0] + '" placeholder="' + nxEsc(el && el.dataset.d0 !== undefined ? el.dataset.d0 : '') + '" value="' + nxEsc(NX.draft.tx[r[0]] || '') + '">');
   });
-  return h;
+  P.tx = h;
+  return P;
+}
+function nxTabLook() {
+  const P = nxLookParts(NX.draft.theme);
+  return P.btns + P.gx + P.col + '<h4>טיפוגרפיה וכפתורים</h4>' + P.typo + '<h4>רקע ותמונות</h4>' + P.bg + '<h4>מעברים בין חלונות</h4>' + P.trans + '<h4>מה מוצג לשחקן</h4>' + P.hide + '<h4>כותרות וטקסטים</h4>' + P.tx;
 }
 function nxTabStages() {
   const off = NX.draft.stages.off, force = NX.draft.stages.force || '';
