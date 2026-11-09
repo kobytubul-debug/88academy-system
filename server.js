@@ -130,7 +130,8 @@ async function api(req, res, url) {
     if (L.length >= 30 || limited(ipOf(req) + ':ai', 120)) return json(res, 429, { error: 'rate' });
     L.push(now); aiUse.set(uid, L); failed(ipOf(req) + ':ai');
     const b = await body(req);
-    if (!b || typeof b !== 'object' || !String(b.crit || '').trim()) return json(res, 400, { error: 'no-criteria' });
+    const tk = b && b.track && typeof b.track === 'object' ? b.track : {};
+    if (!b || typeof b !== 'object' || !(String(b.crit || '').trim() || String(tk.pass || '').trim() || String(tk.focus || '').trim() || String(tk.desc || '').trim())) return json(res, 400, { error: 'no-criteria' });
     try { return json(res, 200, await AI.check(b)); }
     catch (e) { console.error('ai check:', e.message); return json(res, e.code === 'no-key' ? 503 : 502, { error: e.code || 'failed' }); }
   }

@@ -11,14 +11,18 @@ const num = (v, d) => (Number.isFinite(Number(v)) ? Number(v) : d);
 const str = (v, n) => String(v == null ? '' : v).replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g, '').slice(0, n);
 
 function prompt(j) {
-  const f = j.flight || {}, hist = Array.isArray(j.history) ? j.history.slice(-8) : [];
+  const tr = (j.track && typeof j.track === 'object') ? j.track : {}, f = j.flight || {}, hist = Array.isArray(j.history) ? j.history.slice(-8) : [];
   const L = [
     'אתה מדריך טיסת רחפני FPV באקדמיה 88ACADEMY. תלמיד סיים טיסה בסימולטור, ואתה מקבל את נתוני הטיסה ואת הקריטריונים של המדריך.',
     'הנתונים נמדדו על ידי הסימולטור, אז הם אמינים. אין לך סרטון, ואל תנחש דברים שאינם בנתונים.',
     '',
     'השלב: ' + str(j.stage, 80),
     j.course ? 'הקורס: ' + str(j.course, 80) : '',
-    'הקריטריונים של המדריך (זה מה שקובע אם עוברים): ' + str(j.crit, 1500),
+    tr.map ? 'המפה: ' + str(tr.map, 60) : '',
+    tr.desc ? 'תיאור המסלול (מהמדריך): ' + str(tr.desc, 800) : '',
+    tr.pass ? 'איך עוברים את השלב (מהמדריך): ' + str(tr.pass, 800) : '',
+    tr.focus ? 'מה לבחון במיוחד (מהמדריך): ' + str(tr.focus, 800) : '',
+    j.crit ? 'קריטריונים נוספים של המדריך (זה מה שקובע אם עוברים): ' + str(j.crit, 1500) : '',
     '',
     'הטיסה הנוכחית:',
     '- זמן כולל: ' + num(f.total, 0).toFixed(2) + ' שניות',
@@ -26,7 +30,7 @@ function prompt(j) {
     '- מספר הקפות: ' + num(f.laps, 1) + (Array.isArray(f.lapTimes) ? ' (זמנים: ' + f.lapTimes.slice(0, 20).map((t) => num(t, 0).toFixed(1)).join(', ') + ')' : ''),
     '- התרסקויות: ' + num(f.crashes, 0),
     '- כוכבים: ' + num(f.stars, 0) + ' מתוך 3' + (f.par3 ? ' (זמן ל־3 כוכבים: ' + num(f.par3, 0).toFixed(1) + ' שניות)' : ''),
-    '- מספר שערים במסלול: ' + num(f.gates, 0),
+    '- מספר שערים במסלול: ' + num(f.gates, 0) + (tr.laps ? ', הקפות במבחן: ' + num(tr.laps, 1) : ''),
     f.drone ? '- רחפן: ' + str(f.drone, 40) : '',
     '',
     hist.length ? 'ניסיונות קודמים של התלמיד באותו שלב (מהישן לחדש):' : 'זה הניסיון הראשון של התלמיד בשלב הזה.',

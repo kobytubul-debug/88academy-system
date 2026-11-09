@@ -1244,7 +1244,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 214</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 215</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -7139,7 +7139,7 @@ function nxDefault() {
   return {
     theme: { ac: '#4cc3e6', am: '#e6b450', bg: '#0b0c0e', p1: '#14161a', p2: '#1b1e23', ln: '#2d3139', tx: '#d6d9de', mu: '#8b929c', ti: '', bt: '', bs: '', lg: '', lg2: '', it: '', ib: '', ot: '', tl: '', tl2: '', gr: '', rd: '', qb: '', qt: '', font: 'ui', btn: 'sharp', bw: 1, mbw: 420, balign: 'c', mvert: 'c', overlay: 0.75, bgImg: '', trans: 'slide', dur: 300, fadeMs: 450, gx: Object.assign({}, GX.st) },
     tx: {}, hide: {}, home: [], tnames: {}, torder: [], stages: { off: {}, force: '', del: {} }, tcats: { cats: {}, of: {} }, drones: { off: {}, title: {}, desc: {}, col: {} },
-    courses: {}, guides: {}, ai: { on: false, mode: 'auto', min: 80, crit: '', hist: 8, noLaps: false, hideFb: false, fallback: 'pass', exams: {} }, courseId: '', courseIds: [], staff: {},
+    courses: {}, guides: {}, tdesc: {}, ai: { on: false, mode: 'auto', min: 80, crit: '', hist: 8, noLaps: false, hideFb: false, fallback: 'pass', exams: {} }, courseId: '', courseIds: [], staff: {},
     logo: { on: true, pages: { main: true, drone: false, missions: false, controls: false }, size: 6, x: 96, y: 91, color: '#ffffff', op: 85 }
   };
 }
@@ -7300,8 +7300,8 @@ function nxAiFor(k) {                                         // the AI check se
   if (!NX.eff || NX.eff.mode !== 'student') return null;       // only for players of a group that is in student mode
   const e = (a.exams && a.exams[k]) || {};
   if (e.off) return null;
-  const crit = String(e.crit || a.crit || '').trim(); if (!crit) return null;
-  return { on: true, crit, mode: e.mode || a.mode || 'auto', min: Number(a.min) || 80, hist: a.hist === undefined ? 8 : Number(a.hist), noLaps: !!a.noLaps, hideFb: !!a.hideFb, fallback: a.fallback === 'hold' ? 'hold' : 'pass' };
+  const crit = String(e.crit || a.crit || '').trim(), td = nxTrackDesc(k); if (!crit && !td) return null;
+  return { on: true, crit, track: td, mode: e.mode || a.mode || 'auto', min: Number(a.min) || 80, hist: a.hist === undefined ? 8 : Number(a.hist), noLaps: !!a.noLaps, hideFb: !!a.hideFb, fallback: a.fallback === 'hold' ? 'hold' : 'pass' };
 }
 function nxAiHistory(k, n) { return n <= 0 ? [] : (NX.hist || []).filter((a) => a.id === k).slice(-n).map((a) => ({ t: a.t, c: a.c, s: a.s })); }
 async function nxAiJudge(r, it, st, ai, k) {
@@ -7311,7 +7311,7 @@ async function nxAiJudge(r, it, st, ai, k) {
   try {
     const uid = (function () { try { return localStorage.getItem('nxHostUid') || ''; } catch (e) { return ''; } })();
     const res = await (NXAI.fetch || fetch)('/api/ai/check', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Uid': uid }, body: JSON.stringify({
-      stage: st.name, course: (NX.eff && NX.eff.courses && NX.eff.courses[it.cid] && NX.eff.courses[it.cid].name) || '', crit: ai.crit,
+      track: Object.assign({ map: MAP_BASES[st.base || st.id] || '', laps: LAPS || 1 }, ai.track || {}), stage: st.name, course: (NX.eff && NX.eff.courses && NX.eff.courses[it.cid] && NX.eff.courses[it.cid].name) || '', crit: ai.crit,
       flight: { total: r.total, bestLap: r.bestLap, laps: r.laps.length, lapTimes: ai.noLaps ? undefined : r.laps, crashes: r.crashes || 0, stars: r.stars, par3: r.par && r.par.par3, gates: gates.length, drone: settings.preset },
       history: nxAiHistory(k, ai.hist) }) });
     if (!res.ok) throw new Error('http ' + res.status);
@@ -7357,7 +7357,7 @@ function nxTabAi() {
   let h = '<p class="nxn">בדיקת AI: אחרי שתלמיד מסיים מבחן בקורס, ג׳מיני מקבל את נתוני הטיסה ואת הקריטריונים שלך, ומחליט אם להעביר אותו לשלב הבא. הבדיקה חלה רק על שחקנים בקבוצה שמצב תלמיד דלוק בה (בלשונית "קבוצות"). טיסה כמנהל, או בקבוצה שלא במצב תלמיד, לא נבדקת.</p>';
   h += '<div class="nxcard"><div class="nxn" id="nxAiSt">' + nxAiStHtml() + '</div>' +
     nxF('בדיקת AI', '<label class="nxchk1"><input type="checkbox" data-k="ai.on"' + (A.on ? ' checked' : '') + '> <b>' + (A.on ? 'פעילה' : 'כבויה') + '</b> (מתג ראשי לכל המבחנים)</label>') + '</div>';
-  if (!A.on) return h + '<p class="nxn">כשהבדיקה כבויה, המבחנים נבדקים רק לפי התנאים הרגילים (זמן, התרסקויות, כוכבים). לא נשלח שום דבר לג׳מיני.</p>';
+  if (!A.on) return h + nxAiDiag() + '<p class="nxn">כשהבדיקה כבויה, המבחנים נבדקים רק לפי התנאים הרגילים (זמן, התרסקויות, כוכבים). לא נשלח שום דבר לג׳מיני.</p>';
   h += '<div class="nxcard"><h3>הגדרות כלליות</h3>' +
     nxF('מה ג׳מיני עושה', sel('mode', A.mode || 'auto', [['auto', 'מחליט ומעביר את התלמיד'], ['note', 'נותן משוב בלבד (המעבר לפי התנאים הרגילים)']])) +
     nxF('ביטחון מינימלי להעברה', sel('min', Number(A.min) || 80, [[60, '60%'], [70, '70%'], [80, '80%'], [90, '90%']])) +
@@ -7378,12 +7378,28 @@ function nxTabAi() {
         nxF('פעולה', sel('exams.' + x.id + '.mode', e.mode || '', [['', 'כמו ההגדרה הכללית'], ['auto', 'מחליט ומעביר'], ['note', 'משוב בלבד']])) : '') + '</details>';
   });
   h += '</div>';
+  h += nxAiDiag();
   h += '<div class="nxcard"><h3>בדיקה על נתונים לדוגמה</h3><p class="nxn">שולח את הקריטריונים הכלליים לג׳מיני עם הנתונים כאן, ומראה מה הוא עונה. כך בודקים שהמפתח עובד ושההחלטה סבירה.</p>' +
     nxF('זמן כולל (שניות)', '<input type="number" step="0.1" data-ai="aiT_t" value="' + nxEsc(NX.aiT_t || 45) + '">') +
     nxF('התרסקויות', '<input type="number" min="0" data-ai="aiT_c" value="' + nxEsc(NX.aiT_c || 0) + '">') +
     nxF('כוכבים (0-3)', '<input type="number" min="0" max="3" data-ai="aiT_s" value="' + nxEsc(NX.aiT_s || 2) + '">') +
     '<div class="nxbtns"><button class="nxb pri" data-act="ai-test">שלח לבדיקה</button></div><div class="nxn" id="nxAiOut"></div></div>';
   return h;
+}
+function nxAiDiag() {                                          // why a check did or did not run: one line per group
+  const gs = Object.keys(NX.groups || {});
+  let h = '<div class="nxcard"><h3>האם הבדיקה תפעל? מצב כל קבוצה</h3><p class="nxn">ג׳מיני בודק רק מבחן (מבחן שלב או מסכם) שמופיע בקורס של הקבוצה. טיסה במסלול תרגול רגיל לא נבדקת.</p>';
+  if (NX.dirty) h += '<p class="nxn"><b style="color:#e6b450">יש שינויים שלא פורסמו.</b> השחקנים רואים את ההגדרות רק אחרי לחיצה על פרסום.</p>';
+  if (!gs.length) return h + '<p class="nxn">אין עדיין קבוצות.</p></div>';
+  gs.forEach((gid) => {
+    const g = NX.groups[gid], cs = nxGroupCourses(g), n = cs.reduce((t, cid) => { const co = NX.draft.courses[cid]; return t + (co.stages || []).filter((s) => s.on && s.exam).length + (co.final && co.final.on && co.final.exam ? 1 : 0); }, 0);
+    const why = [];
+    if (g.mode !== 'student') why.push('מצב תלמיד לא דלוק');
+    if (!cs.length) why.push('לא משויך קורס');
+    else if (!n) why.push('בקורס אין מבחן (בחר מסלול כמבחן שלב)');
+    h += '<div class="nxrow2"><span><b>' + nxEsc(g.name || gid) + '</b> <small>' + (cs.length ? cs.map((cid) => nxEsc(NX.draft.courses[cid].name || cid)).join(', ') + ' · ' + n + ' מבחנים' : 'ללא קורס') + '</small></span><span>' + (why.length ? '<b style="color:#e66">לא תפעל: ' + why.join(', ') + '</b>' : '<b style="color:#5fd08a">תפעל</b>') + '</span></div>';
+  });
+  return h + '</div>';
 }
 async function nxAiTest() {
   const out = $('nxAiOut'), A = NX.draft.ai || {}; if (!out) return;
@@ -8190,6 +8206,7 @@ function nxTabTracks() {
   });
   const rest = ids.filter((id) => !NXH.catOf(id));
   h += '<details class="catbox" data-cid="_rest"' + (NX.openCats._rest === undefined ? (list.length ? '' : ' open') : (NX.openCats._rest ? ' open' : '')) + '><summary><b>' + (list.length ? 'ללא קטגוריה' : 'כל המסלולים') + '</b><span class="catn">' + rest.length + ' מסלולים</span></summary>' + (rest.length ? rest.map(trow).join('') : '<p class="nxn">כל המסלולים משויכים לקטגוריות.</p>') + '</details>';
+  h += nxDescEditor(ids);
   h += nxGuidesEditor(ids);
   return h;
 }
@@ -9355,6 +9372,24 @@ function nxGuideSeen(id, set) {
   const gm = goMenu;
   goMenu = function (screen) { nxGuideClose(); btn.style.display = 'none'; gm(screen); };
 })();
+function nxTrackDesc(id) {                                      // what the instructor wrote about a track, for Gemini
+  const c = NX.eff || NX.draft, d = c && c.tdesc && c.tdesc[nxGuideKey(id)];
+  if (!d) return null;
+  const o = { desc: String(d.desc || '').trim(), pass: String(d.pass || '').trim(), focus: String(d.focus || '').trim() };
+  return o.desc || o.pass || o.focus ? o : null;
+}
+function nxDescEditor(ids) {
+  const T = NX.draft.tdesc || {};
+  let h = '<h4>תיאור המסלול (לבדיקת AI)</h4><p class="nxn">לכל מסלול אפשר לכתוב מה הוא, איך עוברים אותו ומה לבחון בו. כשהמסלול הוא מבחן בקורס, ג׳מיני קורא את התיאור הזה יחד עם הקריטריונים שבלשונית "בדיקת AI". הוא מקבל אוטומטית גם את שם המסלול, מספר השערים ומספר ההקפות.</p>';
+  ids.forEach((id) => {
+    const k = nxGuideKey(id), d = T[k] || {}, has = !!(String(d.desc || '').trim() || String(d.pass || '').trim() || String(d.focus || '').trim());
+    h += '<details class="catbox gcard" data-ck="d_' + k + '"' + (NX.openK && NX.openK['d_' + k] ? ' open' : '') + '><summary><b>' + nxEsc(STAGES[id].name) + '</b><span class="catn">' + (has ? 'יש תיאור' : 'ללא תיאור') + '</span></summary>' +
+      nxF('מה המסלול', '<textarea rows="3" style="width:100%" maxlength="800" data-k="tdesc.' + k + '.desc" placeholder="לדוגמה: מסלול של 6 שערים עם שני סיבובים חדים. מטרתו לתרגל פניות בגובה קבוע.">' + nxEsc(d.desc || '') + '</textarea>') +
+      nxF('איך עוברים את השלב', '<textarea rows="3" style="width:100%" maxlength="800" data-k="tdesc.' + k + '.pass" placeholder="לדוגמה: עוברים כשמסיימים את כל השערים בלי התרסקות, ובזמן סביר לעומת ניסיונות קודמים.">' + nxEsc(d.pass || '') + '</textarea>') +
+      nxF('מה לבחון במיוחד', '<textarea rows="3" style="width:100%" maxlength="800" data-k="tdesc.' + k + '.focus" placeholder="לדוגמה: לשים לב אם ההקפה השנייה מהירה יותר, ואם הזמן לא מתפרק בשערים האחרונים.">' + nxEsc(d.focus || '') + '</textarea>') + '</details>';
+  });
+  return h;
+}
 function nxGuidesEditor(ids) {
   const G = NX.draft.guides || {};
   let h = '<h4>כרטיסי הסבר לשלבים</h4><p class="nxn">לכל מסלול אפשר להוסיף כרטיס הסבר. הוא נפתח לתלמיד בפעם הראשונה שהוא נכנס למסלול, ואפשר לפתוח אותו שוב בכפתור ? בזמן הטיסה. כל שורה בתיבה היא צעד אחד. מסלול בלי טקסט לא מציג כרטיס.</p>';
