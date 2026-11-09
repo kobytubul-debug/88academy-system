@@ -89,12 +89,27 @@ function thinkingFor(model) {
   if (/gemini-3/.test(model) && !/pro/.test(model)) return { thinkingLevel: 'low' };
   return null;
 }
-async function ask(model, job, ms, text, asJson) {
-  const body = (think) => JSON.stringify({ contents: [{ role: 'user', parts: [{ text: text || prompt(job) }] }], generationConfig: Object.assign({ temperature: asJson ? 0.5 : 0.2 }, asJson ? { maxOutputTokens: 8192 } : {}, text && !asJson ? {} : { responseMimeType: 'application/json' }, think ? { thinkingConfig: think } : {}) });
+const BASES = ['clean', 'field', 'desert', 'snow', 'dusk', 'redwood', 'arena'];
+const JUDGE_SCHEMA = { type: 'OBJECT', properties: { verdict: { type: 'STRING', enum: ['pass', 'fail', 'unclear'] }, confidence: { type: 'INTEGER' }, feedback: { type: 'STRING' }, notes: { type: 'STRING' } }, required: ['verdict', 'confidence', 'feedback', 'notes'] };
+// The shape the model MUST answer in (Gemini enforces it), so a track answer is always well-formed JSON with real element types.
+function trackSchema(kind, types, kinds) {
+  const num = { type: 'NUMBER' }, en = (l) => (l && l.length ? { type: 'STRING', enum: l } : { type: 'STRING' });
+  const obj = { type: 'OBJECT', properties: { t: en(types), x: num, z: num, s: num, yaw: num, c: { type: 'STRING' } }, required: ['t', 'x', 'z'] };
+  const gate = { type: 'OBJECT', properties: { x: num, y: num, z: num, k: en(kinds), sz: num }, required: ['x', 'y', 'z'] };
+  if (kind === 'edit') return { type: 'OBJECT', properties: { base: { type: 'STRING', enum: BASES }, addObjects: { type: 'ARRAY', items: obj }, removeObjects: { type: 'OBJECT', properties: { all: { type: 'BOOLEAN' }, types: { type: 'ARRAY', items: { type: 'STRING' } } } }, gates: { type: 'ARRAY', items: gate }, closed: { type: 'BOOLEAN' } } };
+  return { type: 'OBJECT', properties: { name: { type: 'STRING' }, base: { type: 'STRING', enum: BASES }, closed: { type: 'BOOLEAN' }, gates: { type: 'ARRAY', items: gate }, objects: { type: 'ARRAY', items: obj } }, required: ['name', 'base', 'closed', 'gates'] };
+}
+async function ask(model, job, ms, text, asJson, schema) {
+  const body = (think, noSchema) => JSON.stringify({ contents: [{ role: 'user', parts: [{ text: text || prompt(job) }] }], generationConfig: Object.assign({ temperature: asJson ? 0.5 : 0.2 }, asJson ? { maxOutputTokens: 8192 } : {}, text && !asJson ? {} : { responseMimeType: 'application/json' }, (!noSchema && (schema || !text)) ? { responseSchema: schema || JUDGE_SCHEMA } : {}, think ? { thinkingConfig: think } : {}) });
   const path = '/v1beta/models/' + encodeURIComponent(model) + ':generateContent', think = thinkingFor(model);
   let j;
   try { j = await gem(path, { method: 'POST', body: body(think) }, ms); }
-  catch (e) { if (think && e.status === 400 && /think/i.test(e.message)) j = await gem(path, { method: 'POST', body: body(null) }, ms); else throw e; }
+  catch (e) {
+    if (e.status !== 400) throw e;
+    if (/schema|enum|response_?schema/i.test(e.message)) j = await gem(path, { method: 'POST', body: body(think, true) }, ms);     // a model that rejects the answer shape: ask without it (the app still validates)
+    else if (think && /think/i.test(e.message)) j = await gem(path, { method: 'POST', body: body(null) }, ms);
+    else throw e;
+  }
   const parts = j && j.candidates && j.candidates[0] && j.candidates[0].content && j.candidates[0].content.parts;
   const out = (parts || []).map((p) => p.text || '').join('');
   return text && !asJson ? out : (asJson ? out : parse(out));
@@ -133,7 +148,7 @@ async function check(job, wanted) {
 }
 
 // Free-form JSON generation for the track builder: the same model fallback as check(), the raw JSON text is returned.
-async function generate(promptText, wanted) {
+async function generate(promptText, wanted, schema) {
   if (!hasKey()) { const e = new Error('no-key'); e.code = 'no-key'; throw e; }
   const t0 = Date.now(), left = () => 58000 - (Date.now() - t0);
   const first = /^gemini-[A-Za-z0-9._\-]{1,60}$/.test(wanted || '') ? wanted : MODEL(), tried = [];
@@ -141,7 +156,7 @@ async function generate(promptText, wanted) {
   for (let i = 0; i < order.length; i++) {
     const m = order[i]; if (left() < 6000) break;
     tried.push(m);
-    try { return await ask(m, {}, Math.min(45000, left()), promptText, true); }
+    try { return await ask(m, {}, Math.min(45000, left()), promptText, true, schema); }
     catch (e) {
       last = e; if (!(RETRY(e) || e.status === 404 || e.status === 400)) throw e;
       if (i === 0) { let list = []; try { list = await modelsCached(); } catch (e2) { /* keep the error */ } order = order.concat(list.filter((x) => x !== first).sort((a, b) => (/lite|flash-8b/.test(a) ? 1 : 0) - (/lite|flash-8b/.test(b) ? 1 : 0)).slice(0, 2)); }
@@ -173,4 +188,4 @@ async function ping(wanted) {
   return steps;
 }
 
-module.exports = { generate, check, listModels, ping, hasKey, model: MODEL };
+module.exports = { trackSchema, generate, check, listModels, ping, hasKey, model: MODEL };

@@ -1244,7 +1244,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 230</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 231</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -7411,6 +7411,7 @@ function nxTabAi() {
     nxF('אם ג׳מיני לא זמין', sel('fallback', A.fallback === 'hold' ? 'hold' : 'pass', [['pass', 'לבדוק לפי התנאים הרגילים (התלמיד לא נתקע)'], ['hold', 'לא להעביר, שינסה שוב']])) +
     '<div class="nxn">התנאים הרגילים של המבחן (זמן, התרסקויות, כוכבים) נשארים חובה. ג׳מיני נשאל רק כשהם מתקיימים. כשהוא לא בטוח, התלמיד לא מועבר והמדריך רואה את זה במעקב.</div></div>';
   h += '<p class="nxn">הבדיקה חלה על כל מסלול שתלמיד טס בו. כיבוי או קריטריונים למסלול מסוים: לחץ על המסלול ברשימת המסלולים ופתח "בדיקת AI" בפאנל שבצד.</p>';
+  h += '<div class="nxcard"><h3>בדיקת איכות AI</h3><p class="nxn">מריצה כ-10 בקשות אמיתיות לג׳מיני (בניית מסלול, עריכת מסלול ובדיקת טיסה) ובודקת אם התוצאה נכונה: מספר שערים, סוג מפה, עצים, ופסק דין על טיסות לדוגמה. אפשר להריץ אחרי כל שינוי כדי לראות שהכול עובד. לוקחת כדקה.</p><div class="nxbtns"><button class="nxb pri" data-act="ai-quality"' + (NX.aiQBusy ? ' disabled' : '') + '>' + (NX.aiQBusy ? 'בודק...' : 'הרץ בדיקת איכות') + '</button></div><div class="nxn" id="nxAiQ">' + (NX.aiQHtml || '') + '</div></div>';
   h += nxAiDiag();
   h += '<div class="nxcard"><h3>בדיקה על נתונים לדוגמה</h3><p class="nxn">שולח את הקריטריונים הכלליים לג׳מיני עם הנתונים כאן, ומראה מה הוא עונה. כך בודקים שהמפתח עובד ושההחלטה סבירה.</p>' +
     nxF('זמן כולל (שניות)', '<input type="number" step="0.1" data-ai="aiT_t" value="' + nxEsc(NX.aiT_t || 45) + '">') +
@@ -7431,6 +7432,47 @@ function nxAiDiag() {                                          // why a check di
     h += '<div class="nxrow2"><span><b>' + nxEsc(g.name || gid) + '</b> <small>' + (cs.length ? cs.map((cid) => nxEsc(NX.draft.courses[cid].name || cid)).join(', ') + ' · ' + n + ' מבחנים' : 'ללא קורס') + '</small></span><span>' + (why.length ? '<b style="color:#e66">לא תפעל: ' + why.join(', ') + '</b>' : '<b style="color:#5fd08a">תפעל</b>') + '</span></div>';
   });
   return h + '</div>';
+}
+function nxAiQScenarios() {
+  const line = (n, gap) => Array.from({ length: n }, (_, i) => ({ x: -gap * (n - 1) / 2 + i * gap, y: 8, z: 0 }));
+  const cur = { base: 'field', closed: false, gates: line(5, 30), objects: [{ t: 'cone', x: -20, z: 8 }, { t: 'cone', x: 20, z: -8 }] };
+  const TREES = ['pine', 'oak', 'birch', 'palm', 'cypress', 'bush', 'spruce', 'acacia', 'willow', 'olive'];
+  const dev = (g) => { const a = g[0], b = g[g.length - 1], dx = b.x - a.x, dz = b.z - a.z, L = Math.hypot(dx, dz) || 1; return Math.max.apply(null, g.map((p) => Math.abs((p.x - a.x) * dz - (p.z - a.z) * dx) / L)); };
+  const build = (text, test) => async (sample) => { const raw = await sample.json(nxAiPrompt(text, 'medium', true, ''), { kind: 'build' }); const t = nxBuildFromAi(raw, true); return test(t); };
+  const edit = (text, test) => async (sample) => { const m = nxAiMerge(cur, await sample.json(nxAiEditPrompt(text, cur, ''), { kind: 'edit' })); const t = nxBuildFromAi(m, true, true); return test(t, m); };
+  const judge = (crit, flight, track, expect, extra) => async () => {
+    const res = await (NXAI.fetch || fetch)('/api/ai/check', { method: 'POST', headers: nxAiHdr(), body: JSON.stringify({ stage: 'בדיקה', crit, track: track || {}, flight: Object.assign({ total: 45, bestLap: 45, laps: 1, crashes: 0, stars: 2, gates: 6 }, flight), history: [] }) });
+    const a = await res.json(); if (!res.ok) throw new Error((a && (a.detail || a.error)) || res.status);
+    return a.verdict === expect && (!extra || extra(a)) ? [true, a.verdict + ' ' + a.confidence + '%'] : [false, 'התקבל ' + a.verdict + ' (' + a.confidence + '%), ציפיתי ל-' + expect];
+  };
+  return [
+    ['בנייה: קו ישר של 6 שערים עם עצים', build('מסלול ישר של 6 שערים עם עצים משני הצדדים', (t) => [t.gates.length === 6 && dev(t.gates) < 8 && t.objects.some((o) => TREES.indexOf(o.t) >= 0), t.gates.length + ' שערים, ' + t.objects.length + ' אלמנטים, סטייה ' + Math.round(dev(t.gates)) + ' מ׳'])],
+    ['בנייה: זיגזג בשלג, 8 שערים', build('מסלול זיגזג של 8 שערים על שלג', (t) => [t.gates.length === 8 && t.base === 'snow' && dev(t.gates) > 15, t.gates.length + ' שערים, מפה ' + t.base])],
+    ['בנייה: סלאלום בין קונוסים', build('סלאלום בין קונוסים', (t) => [t.objects.filter((o) => /cone/.test(o.t)).length >= 4, t.objects.filter((o) => /cone/.test(o.t)).length + ' קונוסים'])],
+    ['עריכה: הוספת עצים', edit('תוסיף עצים משני צדי המסלול', (t, m) => [t.gates.length === 5 && t.base === 'field' && t.objects.filter((o) => TREES.indexOf(o.t) >= 0).length >= 6, t.gates.length + ' שערים נשארו, ' + t.objects.length + ' אלמנטים'])],
+    ['עריכה: שינוי למדבר', edit('תהפוך את המפה למדבר', (t) => [t.base === 'desert' && t.gates.length === 5, 'מפה ' + t.base + ', ' + t.gates.length + ' שערים'])],
+    ['עריכה: מחיקת הקונוסים', edit('תמחק את הקונוסים', (t) => [!t.objects.some((o) => /cone/.test(o.t)) && t.gates.length === 5, t.objects.length + ' אלמנטים נשארו'])],
+    ['בדיקת טיסה: עובר (45 שנ׳, בלי התרסקות)', judge('עוברים רק אם הזמן הכולל נמוך מ-60 שניות ובלי התרסקויות.', {}, null, 'pass')],
+    ['בדיקת טיסה: נכשל (3 התרסקויות)', judge('עוברים רק אם הזמן הכולל נמוך מ-60 שניות ובלי התרסקויות.', { crashes: 3 }, null, 'fail')],
+    ['בדיקת טיסה: מסלול של הקפה אחת', judge('', {}, { laps: 1, pass: 'המסלול הוא הקפה אחת. עוברים כשמסיימים אותה בלי התרסקויות.' }, 'pass', (a) => !/3 הקפות|שלוש הקפות/.test(a.feedback + ' ' + a.notes))]
+  ];
+}
+async function nxAiQuality() {
+  if (NX.aiQBusy) return;
+  NX.aiQBusy = true; const rows = []; const out = () => { NX.aiQHtml = rows.join(''); const e = $('nxAiQ'); if (e) e.innerHTML = NX.aiQHtml; };
+  rows.push('<p class="nxn">מתחיל...</p>'); out();
+  const sample = await nxAiSample();
+  rows.length = 0;
+  if (!sample) { NX.aiQBusy = false; NX.aiQHtml = '<p class="nxn">' + NX_AI_OFF + '</p>'; nxAdmRender(); return; }
+  let okN = 0; const sc = nxAiQScenarios();
+  for (let i = 0; i < sc.length; i++) {
+    const t0 = Date.now(); let ok = false, note = '';
+    try { const r = await sc[i][1](sample); ok = !!r[0]; note = r[1] || ''; } catch (e) { note = 'שגיאה: ' + String((e && e.message) || e).slice(0, 120); }
+    if (ok) okN++;
+    rows.push('<div class="nxrow2"><span>' + (ok ? '<b style="color:#6fcf7f">✓</b> ' : '<b style="color:#ff6b6b">✗</b> ') + nxEsc(sc[i][0]) + '<br><small>' + nxEsc(note) + ' · ' + ((Date.now() - t0) / 1000).toFixed(1) + ' שנ׳</small></span></div>'); out();
+  }
+  rows.push('<p class="nxn"><b>' + okN + ' מתוך ' + sc.length + ' עברו.</b>' + (okN < sc.length ? ' שלח לי את הרשימה ואכוון את מה שנכשל.' : ' הכול תקין.') + '</p>');
+  NX.aiQBusy = false; out(); nxAdmRender();
 }
 async function nxAiTest() {
   const out = $('nxAiOut'), A = NX.draft.ai || {}; if (!out) return;
@@ -8087,6 +8129,7 @@ function nxTabCourses() {
 }
 function nxCrsAct(a, el) {                                    // course editor buttons; returns true when handled
   if (a === 'ai-test') { nxAiTest(); return true; }
+  if (a === 'ai-quality') { nxAiQuality(); return true; }
   if (a === 'ai-models') { nxAiModels(); return true; }
   if (a === 'ai-ping') { nxAiPing(); return true; }
   if (a === 'ai-pick') { NX.draft.ai = NX.draft.ai || {}; NX.draft.ai.model = el.dataset.v; nxTouch(); nxAdmRender(); nxToast('המודל נבחר: ' + el.dataset.v + '. לחץ פרסום כדי לשמור'); return true; }
@@ -8439,6 +8482,7 @@ function nxAiPrompt(text, level, withObjs, feedback) {
     '4. Optional per gate: k = ring | square | arch | wide | tall | hex | double | triple | archwide | archtall | slit | ledge and sz = size multiplier 0.7 to 1.4.\n' +
     '5. Objects stand on the ground. t is one of: ' + props + '. Optional: s = scale 0.6 to 2.5, yaw in degrees, c = #rrggbb. "Trees on both sides of the route" means two rows of pine or oak, 9 to 14 m to each side of the route line, one every 8 to 14 m along it. Keep every object at least 8 m from every gate and 6 m from the line between consecutive gates. ' + (withObjs ? 'Use up to 100 objects.' : 'Output an empty objects array.') + '\n' +
     '6. Difficulty: ' + level + '.\n' +
+    'EXAMPLE: "מסלול ישר של 5 שערים עם עצים משני הצדדים" -> {"name":"קו ישר עם עצים","base":"field","closed":false,"gates":[{"x":-80,"y":8,"z":0},{"x":-40,"y":8,"z":0},{"x":0,"y":8,"z":0},{"x":40,"y":8,"z":0},{"x":80,"y":8,"z":0}],"objects":[{"t":"pine","x":-70,"z":-12},{"t":"pine","x":-70,"z":12},{"t":"pine","x":-50,"z":-12},{"t":"pine","x":-50,"z":12}]} (a real answer has the trees along the whole route). Count what the pilot asks for exactly (5 gates means 5 gates).\n' +
     (feedback ? 'YOUR PREVIOUS ANSWER WAS REJECTED: ' + feedback + '. Fix exactly that and answer again.\n' : '') +
     'Pilot request (Hebrew): ' + text.slice(0, 1200);
 }
@@ -8462,6 +8506,12 @@ function nxAiEditPrompt(text, cur, feedback) {
     '- If the pilot gives no exact place, spread new objects along both sides of the route, 10 to 20 m away from the line between gates, and at least 8 m from every gate. Use 10 to 60 objects.\n' +
     '- Units are meters, y is up. Gate y between 5.5 and 30, consecutive gates at least 12 m apart, do NOT output yaw for gates. x and z stay within -80..80 for arena and -140..140 otherwise.\n' +
     '- base is one of: clean, field, desert, snow, dusk, redwood, arena. Object t is one of: cone, bigcone, flag, pylon, barrier, tires, wall, fence, pine, oak, bush, rock, bigrock, boulders, cliff, dune, crystal, building, house, tower, container, lamp, hangar, tent, watchtower, silo, shed, billboard, antenna, windmill, car, van, truck, bus, tractor, trailer, boat, plane, heli, crane, hurdle, jersey, sandbags, crate, barrel, hay, netfence, tirewall, palm, birch, deadtree, cypress. Optional per object: s = scale 0.6 to 2.5, yaw degrees, c = #rrggbb.\n' +
+    'EXAMPLES (request -> answer):\n' +
+    '"תוסיף עצים משני צדי המסלול" -> {"addObjects":[{"t":"pine","x":-30,"z":-14,"s":1.3},{"t":"pine","x":-10,"z":14,"s":1.1},{"t":"oak","x":15,"z":-15},{"t":"pine","x":40,"z":13}]} (about 20 to 40 objects in a real answer)\n' +
+    '"תהפוך את המפה ליער" -> {"base":"redwood","addObjects":[{"t":"pine","x":-25,"z":12},{"t":"pine","x":22,"z":-13}]}\n' +
+    '"תמחק את כל העצים" -> {"removeObjects":{"types":["pine","oak","birch","palm","cypress","deadtree","bush"]}}\n' +
+    '"תרחיק את השערים אחד מהשני" -> {"gates":[ ...the same gates with larger spacing... ]}\n' +
+    '"שנה למדבר ותוסיף סלעים" -> {"base":"desert","addObjects":[{"t":"rock","x":10,"z":16},{"t":"bigrock","x":-30,"z":-18}]}\n' +
     (feedback ? 'YOUR PREVIOUS ANSWER WAS REJECTED: ' + feedback + '. Fix exactly that and answer again.\n' : '') +
     'Pilot request (Hebrew): ' + text.slice(0, 1200);
 }
@@ -8510,7 +8560,7 @@ async function nxAiEdit(sample, text) {
   for (let attempt = 1; attempt <= 3 && !t && !fatal; attempt++) {
     nxAiMsg(attempt === 1 ? 'ה-AI מעדכן את המסלול...' : 'מתקן ומנסה שוב (' + attempt + ' מתוך 3)...');
     try {
-      t = nxBuildFromAi(nxAiMerge(cur, await sample.json(nxAiEditPrompt(text, cur, feedback), { modelTier: 'default', cache: false })), true, true);
+      t = nxBuildFromAi(nxAiMerge(cur, await sample.json(nxAiEditPrompt(text, cur, feedback), { modelTier: 'default', cache: false, kind: 'edit' })), true, true);
     } catch (e) {
       const code = e && e.code;
       if (code === 'not_granted') fatal = 'לא אושר שימוש ב-Claude.';
@@ -8534,8 +8584,8 @@ const NX_AI_OFF = 'בניית מסלולים עם AI עובדת באתר ב-Rend
 async function nxAiSample() {                                  // something with json(prompt): Claude's sample inside the Claude window, otherwise Gemini through the server
   try { if (window.claude && window.claude.use) { const sm = await window.claude.use('sample'); if (sm) return sm; } } catch (e) { /* try the server */ }
   if (!nxAiHdr().Authorization) return null;
-  return { json: async (prompt) => {
-    const res = await (NXAI.fetch || fetch)('/api/ai/gen', { method: 'POST', headers: nxAiHdr(), body: JSON.stringify({ prompt: String(prompt) }) });
+  return { json: async (prompt, opts) => {
+    const res = await (NXAI.fetch || fetch)('/api/ai/gen', { method: 'POST', headers: nxAiHdr(), body: JSON.stringify({ prompt: String(prompt), kind: opts && opts.kind, types: Object.keys(PROP_TYPES), kinds: Object.keys(GATE_KINDS) }) });
     let a = null; try { a = await res.json(); } catch (e) { /* below */ }
     if (!res.ok) { const er = new Error((a && (a.detail || a.error)) || 'http ' + res.status); er.code = res.status === 429 ? 'rate_limited' : res.status === 503 ? 'no_key' : 'gemini'; throw er; }
     return a.text;
@@ -8555,7 +8605,7 @@ async function nxAiBuild() {
   for (let attempt = 1; attempt <= 3 && !t && !fatal; attempt++) {
     nxAiMsg(attempt === 1 ? 'ה-AI מתכנן את המסלול...' : 'מתקן ומנסה שוב (' + attempt + ' מתוך 3)...');
     try {
-      const data = await sample.json(nxAiPrompt(text, level, withObjs, feedback), { modelTier: 'default', cache: false });
+      const data = await sample.json(nxAiPrompt(text, level, withObjs, feedback), { modelTier: 'default', cache: false, kind: 'build' });
       t = nxBuildFromAi(data, withObjs);
     } catch (e) {
       const code = e && e.code;

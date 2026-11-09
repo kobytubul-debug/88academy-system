@@ -148,7 +148,9 @@ async function api(req, res, url) {
     if (!admin) return json(res, 403, { error: 'forbidden' });
     const b = await body(req), pr = b && typeof b.prompt === 'string' ? b.prompt : '';
     if (!pr.trim() || pr.length > 20000) return json(res, 400, { error: 'bad-prompt' });
-    try { return json(res, 200, { text: await AI.generate(pr, aiCfg().model) }); }
+    const lst = (a) => (Array.isArray(a) ? a.filter((x) => typeof x === 'string' && /^[a-z0-9_]{1,24}$/i.test(x)).slice(0, 300) : []);
+    const schema = b.kind === 'edit' || b.kind === 'build' ? AI.trackSchema(b.kind, lst(b.types), lst(b.kinds)) : undefined;
+    try { return json(res, 200, { text: await AI.generate(pr, aiCfg().model, schema) }); }
     catch (e) { console.error('ai gen:', e.message); return json(res, e.code === 'no-key' ? 503 : 502, { error: e.code || 'failed', detail: String(e.message || '').slice(0, 300) }); }
   }
   if (p === '/api/admin/me') return json(res, 200, { admin });
