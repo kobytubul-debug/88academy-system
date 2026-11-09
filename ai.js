@@ -89,15 +89,15 @@ function thinkingFor(model) {
   if (/gemini-3/.test(model) && !/pro/.test(model)) return { thinkingLevel: 'low' };
   return null;
 }
-async function ask(model, job, ms, text) {
-  const body = (think) => JSON.stringify({ contents: [{ role: 'user', parts: [{ text: text || prompt(job) }] }], generationConfig: Object.assign({ temperature: 0.2 }, text ? {} : { responseMimeType: 'application/json' }, think ? { thinkingConfig: think } : {}) });
+async function ask(model, job, ms, text, asJson) {
+  const body = (think) => JSON.stringify({ contents: [{ role: 'user', parts: [{ text: text || prompt(job) }] }], generationConfig: Object.assign({ temperature: asJson ? 0.6 : 0.2 }, text && !asJson ? {} : { responseMimeType: 'application/json' }, think ? { thinkingConfig: think } : {}) });
   const path = '/v1beta/models/' + encodeURIComponent(model) + ':generateContent', think = thinkingFor(model);
   let j;
   try { j = await gem(path, { method: 'POST', body: body(think) }, ms); }
   catch (e) { if (think && e.status === 400 && /think/i.test(e.message)) j = await gem(path, { method: 'POST', body: body(null) }, ms); else throw e; }
   const parts = j && j.candidates && j.candidates[0] && j.candidates[0].content && j.candidates[0].content.parts;
   const out = (parts || []).map((p) => p.text || '').join('');
-  return text ? out : parse(out);
+  return text && !asJson ? out : (asJson ? out : parse(out));
 }
 
 const RETRY = (e) => e && (e.code === 'timeout' || [429, 500, 502, 503, 504].indexOf(e.status) >= 0);
@@ -132,6 +132,25 @@ async function check(job, wanted) {
   throw err;
 }
 
+// Free-form JSON generation for the track builder: the same model fallback as check(), the raw JSON text is returned.
+async function generate(promptText, wanted) {
+  if (!hasKey()) { const e = new Error('no-key'); e.code = 'no-key'; throw e; }
+  const t0 = Date.now(), left = () => 58000 - (Date.now() - t0);
+  const first = /^gemini-[A-Za-z0-9._\-]{1,60}$/.test(wanted || '') ? wanted : MODEL(), tried = [];
+  let last = null, order = [first];
+  for (let i = 0; i < order.length; i++) {
+    const m = order[i]; if (left() < 6000) break;
+    tried.push(m);
+    try { return await ask(m, {}, Math.min(45000, left()), promptText, true); }
+    catch (e) {
+      last = e; if (!(RETRY(e) || e.status === 404 || e.status === 400)) throw e;
+      if (i === 0) { let list = []; try { list = await modelsCached(); } catch (e2) { /* keep the error */ } order = order.concat(list.filter((x) => x !== first).sort((a, b) => (/lite|flash-8b/.test(a) ? 1 : 0) - (/lite|flash-8b/.test(b) ? 1 : 0)).slice(0, 2)); }
+    }
+  }
+  const err = new Error(String((last && last.message) || 'failed') + ' | נוסו: ' + tried.join(', ')); err.code = (last && last.code) || 'gemini'; err.status = last && last.status;
+  throw err;
+}
+
 // Step by step connection test with timings: can the server reach Gemini, does the key work, does the model answer.
 async function ping(wanted) {
   const steps = [], t0 = () => Date.now();
@@ -154,4 +173,4 @@ async function ping(wanted) {
   return steps;
 }
 
-module.exports = { check, listModels, ping, hasKey, model: MODEL };
+module.exports = { generate, check, listModels, ping, hasKey, model: MODEL };

@@ -144,6 +144,13 @@ async function api(req, res, url) {
     try { return json(res, 200, await AI.check(b, aiCfg().model)); }
     catch (e) { console.error('ai check:', e.message); return json(res, e.code === 'no-key' ? 503 : 502, admin ? { error: e.code || 'failed', detail: String(e.message || '').slice(0, 300) } : { error: e.code || 'failed' }); }
   }
+  if (p === '/api/ai/gen' && req.method === 'POST') {                  // the AI track builder (admin only): free-form JSON from Gemini
+    if (!admin) return json(res, 403, { error: 'forbidden' });
+    const b = await body(req), pr = b && typeof b.prompt === 'string' ? b.prompt : '';
+    if (!pr.trim() || pr.length > 20000) return json(res, 400, { error: 'bad-prompt' });
+    try { return json(res, 200, { text: await AI.generate(pr, aiCfg().model) }); }
+    catch (e) { console.error('ai gen:', e.message); return json(res, e.code === 'no-key' ? 503 : 502, { error: e.code || 'failed', detail: String(e.message || '').slice(0, 300) }); }
+  }
   if (p === '/api/admin/me') return json(res, 200, { admin });
   if (p === '/api/admin/import' && req.method === 'POST') {            // load an export of the old data (admin only)
     if (!admin) return json(res, 403, { error: 'forbidden' });
