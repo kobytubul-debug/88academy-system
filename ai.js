@@ -94,22 +94,23 @@ const JUDGE_SCHEMA = { type: 'OBJECT', properties: { verdict: { type: 'STRING', 
 // The shape the model MUST answer in (Gemini enforces it), so a track answer is always well-formed JSON with real element types.
 function trackSchema(kind, types, kinds) {
   const num = { type: 'NUMBER' }, en = (l) => (l && l.length ? { type: 'STRING', enum: l } : { type: 'STRING' });
-  const obj = { type: 'OBJECT', properties: { t: en(types), x: num, z: num, s: num, yaw: num, c: { type: 'STRING' } }, required: ['t', 'x', 'z'] };
-  const gate = { type: 'OBJECT', properties: { x: num, y: num, z: num, k: en(kinds), sz: num }, required: ['x', 'y', 'z'] };
+  const obj = { type: 'OBJECT', properties: { t: { type: 'STRING' }, x: num, z: num, s: num, yaw: num, c: { type: 'STRING' } }, required: ['t', 'x', 'z'] };
+  const gate = { type: 'OBJECT', properties: { x: num, y: num, z: num, k: { type: 'STRING' }, sz: num }, required: ['x', 'y', 'z'] };
   if (kind === 'edit') return { type: 'OBJECT', properties: { base: { type: 'STRING', enum: BASES }, addObjects: { type: 'ARRAY', items: obj }, removeObjects: { type: 'OBJECT', properties: { all: { type: 'BOOLEAN' }, types: { type: 'ARRAY', items: { type: 'STRING' } } } }, gates: { type: 'ARRAY', items: gate }, addGates: { type: 'OBJECT', properties: { after: { type: 'INTEGER' }, count: { type: 'INTEGER' }, spacing: num, y: num, dx: num, dz: num } }, closed: { type: 'BOOLEAN' } } };
   return { type: 'OBJECT', properties: { name: { type: 'STRING' }, base: { type: 'STRING', enum: BASES }, closed: { type: 'BOOLEAN' }, gates: { type: 'ARRAY', items: gate }, objects: { type: 'ARRAY', items: obj } }, required: ['name', 'base', 'closed', 'gates'] };
 }
 async function ask(model, job, ms, text, asJson, schema) {
   const body = (think, noSchema) => JSON.stringify({ contents: [{ role: 'user', parts: [{ text: text || prompt(job) }] }], generationConfig: Object.assign({ temperature: asJson ? 0.5 : 0.2 }, asJson ? { maxOutputTokens: 8192 } : {}, text && !asJson ? {} : { responseMimeType: 'application/json' }, (!noSchema && (schema || !text)) ? { responseSchema: schema || JUDGE_SCHEMA } : {}, think ? { thinkingConfig: think } : {}) });
   const path = '/v1beta/models/' + encodeURIComponent(model) + ':generateContent', think = thinkingFor(model);
-  let j;
-  try { j = await gem(path, { method: 'POST', body: body(think) }, ms); }
-  catch (e) {
-    if (e.status !== 400) throw e;
-    if (/schema|enum|response_?schema/i.test(e.message)) j = await gem(path, { method: 'POST', body: body(think, true) }, ms);     // a model that rejects the answer shape: ask without it (the app still validates)
-    else if (think && /think/i.test(e.message)) j = await gem(path, { method: 'POST', body: body(null) }, ms);
-    else throw e;
+  let j, err = null;
+  const tries = [[think, false], [think, true], [null, true]];           // a 400 means this model dislikes something in the request: drop the answer shape, then the thinking setting
+  for (let i = 0; i < tries.length; i++) {
+    if (i > 0 && !err) break;
+    if (i === 2 && !think) break;
+    try { j = await gem(path, { method: 'POST', body: body(tries[i][0], tries[i][1]) }, ms); err = null; }
+    catch (e) { if (e.status !== 400) throw e; err = e; }
   }
+  if (err) throw err;
   const parts = j && j.candidates && j.candidates[0] && j.candidates[0].content && j.candidates[0].content.parts;
   const out = (parts || []).map((p) => p.text || '').join('');
   return text && !asJson ? out : (asJson ? out : parse(out));
