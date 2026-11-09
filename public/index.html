@@ -1244,7 +1244,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 222</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 223</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -8797,21 +8797,28 @@ function nxTabGroups() {
     const g = NX.groups[gid], mem = nxPlayersOf(gid);
     const ov = !!g.stageOff, ovd = !!g.droneOff;
     h += '<details class="nxcard" data-gid="' + gid + '"' + (NX.openG === gid ? ' open' : '') + '><summary><b>' + nxEsc(g.name) + '</b> <span class="code">קוד ' + nxEsc(g.code) + '</span> <span class="cnt">' + mem.length + ' שחקנים</span>' + (g.hold ? ' <span class="hold">עצורה</span>' : '') + '</summary>';
-    h += nxF('מצב הקבוצה', '<div class="nxbtns"><button class="nxb' + (g.mode === 'student' ? ' pri' : '') + '" data-act="grp-mode" data-gid="' + gid + '" data-v="student">מצב תלמיד</button><button class="nxb' + (g.mode === 'student' ? '' : ' pri') + '" data-act="grp-mode" data-gid="' + gid + '" data-v="free">מצב פריסטייל</button></div><p class="nxn">' + (g.mode === 'student' ? 'תלמיד: חייב לסיים כל מסלול כדי לפתוח את הבא, ואי אפשר לדלג בין מסלולים.' : 'פריסטייל: התלמיד מטייל חופשי בין כל המסלולים.') + '</p>');
-    h += nxF('קורסי הקבוצה (לפי סדר)', nxGroupCourseUi(gid, g));
-    h += nxF('שם', '<input type="text" data-gf="name" data-gid="' + gid + '" value="' + nxEsc(g.name) + '">');
-    h += '<div class="nxbtns"><button class="nxb' + (g.hold ? ' pri' : '') + '" data-act="grp-hold" data-gid="' + gid + '">' + (g.hold ? 'שחרר את הקבוצה' : 'עצור את הקבוצה') + '</button><button class="nxb" data-act="grp-prev" data-gid="' + gid + '">הצג כקבוצה</button></div>';
-    h += nxF('הודעה לקבוצה', '<input type="text" id="admN_' + gid + '" placeholder="הודעה שתופיע אצל השחקנים"><button class="nxb" data-act="grp-note" data-gid="' + gid + '">שלח</button>');
-    h += nxF('ערכת נושא לקבוצה', '<div class="nxbtns"><button class="nxb' + (!g.kit && !g.themeId ? ' sel' : '') + '" data-act="grp-kit" data-gid="' + gid + '" data-v="">כללית</button>' + NX_GXPRESETS.map((p) => '<button class="nxb' + (g.kit === p.id ? ' sel' : '') + '" data-act="grp-kit" data-gid="' + gid + '" data-v="' + p.id + '">' + nxEsc(p.name) + '</button>').join('') + '</div>' + (Object.keys(NX.themes).length ? '<select data-gf="themeId" data-gid="' + gid + '"><option value="">ערכה שמורה שלי: ללא</option>' + Object.keys(NX.themes).map((t) => '<option value="' + t + '"' + (g.themeId === t && !g.kit ? ' selected' : '') + '>' + nxEsc(NX.themes[t].name) + '</option>').join('') + '</select>' : ''));
-    h += nxF('נעילה על שלב', '<select data-gf="force" data-gid="' + gid + '"><option value="">ללא</option>' + nxStageIds().map((id) => '<option value="' + id + '"' + (g.force === id ? ' selected' : '') + '>' + nxEsc(STAGES[id].name) + '</option>').join('') + '</select>');
-    h += '<label class="nxchk1"><input type="checkbox" data-act="grp-ovs" data-gid="' + gid + '"' + (ov ? ' checked' : '') + '> שלבים מותאמים לקבוצה</label>';
-    if (ov) h += '<div class="nxchk">' + nxStageIds().map((id) => '<label><input type="checkbox" data-act="grp-stg" data-gid="' + gid + '" data-id="' + id + '"' + (g.stageOff[id] ? '' : ' checked') + '> ' + nxEsc(STAGES[id].name) + '</label>').join('') + '</div>';
-    h += '<label class="nxchk1"><input type="checkbox" data-act="grp-ovd" data-gid="' + gid + '"' + (ovd ? ' checked' : '') + '> רחפנים מותאמים לקבוצה</label>';
-    if (ovd) h += '<div class="nxchk">' + DRONE_IDS.map((id) => '<label><input type="checkbox" data-act="grp-drn" data-gid="' + gid + '" data-id="' + id + '"' + (g.droneOff[id] ? '' : ' checked') + '> ' + nxEsc(PRESETS[id].label) + '</label>').join('') + '</div>';
-    h += '<h5>חברים</h5>';
-    mem.forEach((u) => { h += '<div class="nxrow2"><span>' + nxEsc((NX.accts[u] || {}).name || u) + '</span><button class="nxb" data-act="pl-set" data-u="' + u + '" data-gid="">הסר</button></div>'; });
+    let sa = '', sk = '', sm = '', sv = '', sl = '';
+    sa += nxF('שם', '<input type="text" data-gf="name" data-gid="' + gid + '" value="' + nxEsc(g.name) + '">');
+    sa += nxF('מצב הקבוצה', '<div class="nxbtns"><button class="nxb' + (g.mode === 'student' ? ' pri' : '') + '" data-act="grp-mode" data-gid="' + gid + '" data-v="student">מצב תלמיד</button><button class="nxb' + (g.mode === 'student' ? '' : ' pri') + '" data-act="grp-mode" data-gid="' + gid + '" data-v="free">מצב פריסטייל</button></div><p class="nxn">' + (g.mode === 'student' ? 'תלמיד: חייב לסיים כל מסלול כדי לפתוח את הבא, ואי אפשר לדלג בין מסלולים.' : 'פריסטייל: התלמיד מטייל חופשי בין כל המסלולים.') + '</p>');
+    sa += '<div class="nxbtns"><button class="nxb' + (g.hold ? ' pri' : '') + '" data-act="grp-hold" data-gid="' + gid + '">' + (g.hold ? 'שחרר את הקבוצה' : 'עצור את הקבוצה') + '</button><button class="nxb" data-act="grp-prev" data-gid="' + gid + '">הצג כקבוצה</button></div>';
+    sa += nxF('הודעה לקבוצה', '<input type="text" id="admN_' + gid + '" placeholder="הודעה שתופיע אצל השחקנים"><button class="nxb" data-act="grp-note" data-gid="' + gid + '">שלח</button>');
+    sk += nxF('קורסי הקבוצה (לפי סדר)', nxGroupCourseUi(gid, g));
+    sl += nxF('נעילה על שלב', '<select data-gf="force" data-gid="' + gid + '"><option value="">ללא</option>' + nxStageIds().map((id) => '<option value="' + id + '"' + (g.force === id ? ' selected' : '') + '>' + nxEsc(STAGES[id].name) + '</option>').join('') + '</select>');
+    sl += '<label class="nxchk1"><input type="checkbox" data-act="grp-ovs" data-gid="' + gid + '"' + (ov ? ' checked' : '') + '> שלבים מותאמים לקבוצה</label>';
+    if (ov) sl += '<div class="nxchk">' + nxStageIds().map((id) => '<label><input type="checkbox" data-act="grp-stg" data-gid="' + gid + '" data-id="' + id + '"' + (g.stageOff[id] ? '' : ' checked') + '> ' + nxEsc(STAGES[id].name) + '</label>').join('') + '</div>';
+    sl += '<label class="nxchk1"><input type="checkbox" data-act="grp-ovd" data-gid="' + gid + '"' + (ovd ? ' checked' : '') + '> רחפנים מותאמים לקבוצה</label>';
+    if (ovd) sl += '<div class="nxchk">' + DRONE_IDS.map((id) => '<label><input type="checkbox" data-act="grp-drn" data-gid="' + gid + '" data-id="' + id + '"' + (g.droneOff[id] ? '' : ' checked') + '> ' + nxEsc(PRESETS[id].label) + '</label>').join('') + '</div>';
+    sv += nxF('ערכת נושא לקבוצה', '<div class="nxbtns"><button class="nxb' + (!g.kit && !g.themeId ? ' sel' : '') + '" data-act="grp-kit" data-gid="' + gid + '" data-v="">כללית</button>' + NX_GXPRESETS.map((p) => '<button class="nxb' + (g.kit === p.id ? ' sel' : '') + '" data-act="grp-kit" data-gid="' + gid + '" data-v="' + p.id + '">' + nxEsc(p.name) + '</button>').join('') + '</div>' + (Object.keys(NX.themes).length ? '<select data-gf="themeId" data-gid="' + gid + '"><option value="">ערכה שמורה שלי: ללא</option>' + Object.keys(NX.themes).map((t) => '<option value="' + t + '"' + (g.themeId === t && !g.kit ? ' selected' : '') + '>' + nxEsc(NX.themes[t].name) + '</option>').join('') + '</select>' : ''));
+    mem.forEach((u) => { sm += '<div class="nxrow2"><span>' + nxEsc((NX.accts[u] || {}).name || u) + '</span><button class="nxb" data-act="pl-set" data-u="' + u + '" data-gid="">הסר</button></div>'; });
     const free = Object.keys(NX.accts).filter((u) => nxPlayerGid(u) !== gid);
-    if (free.length) h += '<div class="nxbtns"><select id="admAdd_' + gid + '">' + free.map((u) => '<option value="' + u + '">' + nxEsc(NX.accts[u].name || u) + '</option>').join('') + '</select><button class="nxb" data-act="grp-add" data-gid="' + gid + '">הוסף לקבוצה</button></div>';
+    if (free.length) sm += '<div class="nxbtns"><select id="admAdd_' + gid + '">' + free.map((u) => '<option value="' + u + '">' + nxEsc(NX.accts[u].name || u) + '</option>').join('') + '</select><button class="nxb" data-act="grp-add" data-gid="' + gid + '">הוסף לקבוצה</button></div>';
+
+    const gk = (n) => 'gs|' + gid + '|' + n;
+    h += nxCrsSec(gk('a'), 'הגדרות כלליות', g.mode === 'student' ? 'מצב תלמיד' : 'פריסטייל', sa, true);
+    h += nxCrsSec(gk('k'), 'קורסים', nxGroupCourses(g).length ? nxGroupCourses(g).length + ' קורסים' : 'ללא', sk);
+    h += nxCrsSec(gk('l'), 'מסלולים ורחפנים', (g.force ? 'נעולה על שלב' : '') + (ov ? ' שלבים מותאמים' : '') + (ovd ? ' רחפנים מותאמים' : '') || 'ברירת מחדל', sl);
+    h += nxCrsSec(gk('v'), 'ערכת נושא', g.kit ? 'ערכה' : g.themeId ? 'שמורה' : 'כללית', sv);
+    h += nxCrsSec(gk('m'), 'חברים', mem.length + ' שחקנים', sm);
     h += '<div class="nxbtns"><button class="nxb danger" data-act="grp-del" data-gid="' + gid + '">מחק קבוצה</button></div></details>';
   });
   return h;
