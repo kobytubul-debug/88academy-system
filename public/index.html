@@ -1244,7 +1244,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 220</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 221</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -6476,7 +6476,7 @@ function buildCards() {
       (lk ? '' : '<button class="edt" data-id="' + id + '">' + (st.custom && !st.pub ? 'ערוך' : 'שכפל ועריך') + '</button>') +
       (st.custom && !st.pub ? '<button class="del" data-id="' + id + '">מחק</button>' : '') + '</td>';
     drawMiniMap(tr.querySelector('canvas'), gts, st.color);
-    tr.addEventListener('click', () => selectTrack(id));
+    tr.addEventListener('click', () => { selectTrack(id); if (typeof nxTrackPick === 'function') nxTrackPick(id); });
     tr.addEventListener('mouseenter', () => setTrkBg(id));
     const dl = tr.querySelector('.del');
     if (dl) dl.addEventListener('click', (ev) => {
@@ -8228,30 +8228,84 @@ function nxTabStages() {
   h += '<p class="nxn">"נעל עליו" מציג לשחקנים מסלול אחד בלבד ומסתיר את כל השאר, עד שמבטלים את הנעילה.</p>';
   return h;
 }
+function nxTrkSec(key, title, badge, inner, defOpen) {         // one collapsible section of the single-track panel
+  const o = NX.openK && NX.openK[key] !== undefined ? NX.openK[key] : !!defOpen;
+  return '<details class="catbox gcard tpsec" data-ck="' + key + '"' + (o ? ' open' : '') + '><summary><b>' + title + '</b>' + (badge ? '<span class="catn">' + badge + '</span>' : '') + '</summary>' + inner + '</details>';
+}
+function nxTrackPanel(id) {
+  const st = STAGES[id], list = NXH.catList(), mine = !!st.custom, k = nxGuideKey(id), D = NX.draft;
+  const off = D.stages.off || {}, hid = !!off[id], locked = D.stages.force === id;
+  const tag = (t) => 'tp_' + t;
+  let h = '<div class="nxbtns"><button class="nxb" data-act="trk-back">&#8592; כלים כלליים</button></div>';
+  h += '<h4 class="tptitle">' + nxEsc(st.name) + '</h4>';
+  let g = nxF('שם', '<input type="text" class="trkname" maxlength="40" data-act="trk-name" data-id="' + id + '" value="' + nxEsc(st.name) + '">');
+  g += nxF('קטגוריה', '<select class="catsel" data-act="trk-cat" data-id="' + id + '"><option value="">ללא קטגוריה</option>' + list.map((c) => '<option value="' + c.id + '"' + (NXH.catOf(id) === c.id ? ' selected' : '') + '>' + nxEsc(c.name) + '</option>').join('') + '</select>');
+  g += nxF('מיקום ברשימה', '<button class="nxb" data-act="trk-up" data-id="' + id + '" title="הזז למעלה">&#9650;</button><button class="nxb" data-act="trk-down" data-id="' + id + '" title="הזז למטה">&#9660;</button>');
+  g += '<p class="nxn">' + (MAP_BASES[st.base || id] || '') + ' &middot; ' + st.gen().length + ' שערים' + (mine ? ' &middot; ' + (st.objects ? st.objects.length : 0) + ' אלמנטים' : ' &middot; מובנה') + '</p>';
+  g += '<div class="nxbtns">' + (mine ? '<button class="nxb pri" data-act="trk-open" data-id="' + id + '">ערוך במפה</button><button class="nxb danger" data-act="trk-del" data-id="' + id + '">מחק</button>'
+    : '<button class="nxb pri" data-act="trk-copy" data-id="' + id + '">שכפל ועריך</button><button class="nxb danger" data-act="trk-delb" data-id="' + id + '">מחק</button>') + '</div>';
+  h += nxTrkSec(tag('gen'), 'כללי', '', g, true);
+  let v = nxF('מוצג לשחקנים', '<label class="stgsw"><input type="checkbox" data-act="stg-vis" data-id="' + id + '"' + (hid ? '' : ' checked') + '><i></i></label>');
+  v += '<div class="nxbtns"><button class="nxb stglock' + (locked ? ' on' : '') + '" data-act="stg-lock" data-id="' + id + '" title="השחקנים יראו רק את המסלול הזה">' + (locked ? '&#128274; נעול, לחץ לביטול' : 'נעל עליו (רק הוא יוצג)') + '</button></div>';
+  h += nxTrkSec(tag('vis'), 'תצוגה לשחקנים', locked ? 'נעול' : hid ? 'מוסתר' : 'מוצג', v);
+  const E = (typeof envSettings !== 'undefined' && envSettings[id]) || { wind: 0, dir: 0, turb: 0 };
+  const rg = (key, min, max, step, val, unit) => '<input type="range" min="' + min + '" max="' + max + '" step="' + step + '" value="' + val + '" data-act="trk-env" data-id="' + id + '" data-key="' + key + '"> <span class="nxsm">' + val + unit + '</span>';
+  let e = nxF('עוצמת רוח', rg('wind', 0, 20, 0.5, Number(E.wind) || 0, " מ'/ש"));
+  e += nxF('כיוון הרוח', rg('dir', 0, 359, 1, Math.round(Number(E.dir) || 0), '°'));
+  e += nxF('turbulence / סערה', rg('turb', 0, 100, 1, Math.round((Number(E.turb) || 0) * 100), '%'));
+  h += nxTrkSec(tag('env'), 'תנאי סביבה (רוח)', (Number(E.wind) || 0) > 0 ? (Number(E.wind) || 0) + " מ'/ש" : 'ללא', e);
+  const gd = (D.guides || {})[k] || {}, hasG = !!(String(gd.text || '').trim() || String(gd.fly || '').trim());
+  h += nxTrkSec(tag('guide'), 'כרטיס הסבר לתלמיד', hasG ? (gd.off ? 'מוסתר' : 'יש כרטיס') : 'אין כרטיס', nxGuideFields(k, gd));
+  const td = (D.tdesc || {})[k] || {}, hasD = !!(String(td.desc || '').trim() || String(td.pass || '').trim() || String(td.focus || '').trim());
+  h += nxTrkSec(tag('desc'), 'תיאור המסלול (לבדיקת AI)', hasD ? 'יש תיאור' : 'ריק', nxDescFields(k, td));
+  const A = D.ai || {}, ex = (A.exams || {})[k] || {}, on = !ex.off;
+  const selm = (cur, opts) => '<select data-k="ai.exams.' + k + '.mode">' + opts.map((o) => '<option value="' + o[0] + '"' + (cur === o[0] ? ' selected' : '') + '>' + o[1] + '</option>').join('') + '</select>';
+  let ai = nxF('בדיקת AI במסלול הזה', '<label class="nxchk1"><input type="checkbox" data-act="ai-ex" data-id="' + k + '"' + (on ? ' checked' : '') + '> פעילה</label>');
+  if (on) ai += nxF('קריטריונים משלו (ריק = ברירת המחדל)', '<textarea rows="3" style="width:100%" maxlength="1500" data-k="ai.exams.' + k + '.crit">' + nxEsc(ex.crit || '') + '</textarea>') + nxF('פעולה', selm(ex.mode || '', [['', 'כמו ההגדרה הכללית'], ['auto', 'מחליט ומעביר'], ['note', 'משוב בלבד']]));
+  ai += '<p class="nxn">ההגדרות הכלליות של הבדיקה נמצאות בלשונית "בדיקת AI".</p>';
+  h += nxTrkSec(tag('ai'), 'בדיקת AI', on ? 'פעילה' : 'כבויה', ai);
+  const cs = D.courses || {}, inC = [];
+  Object.keys(cs).forEach((cid) => {
+    const co = cs[cid];
+    (co.stages || []).forEach((sg, n) => {
+      const ts = (sg.tracks || []).map((x) => nxGuideKey(x));
+      const isT = ts.indexOf(k) >= 0, isE = nxGuideKey(sg.exam || '') === k;
+      if (isT || isE) inC.push((co.name || 'קורס') + ' · ' + (sg.name || 'שלב ' + (n + 1)) + (isE ? ' (מבחן)' : ''));
+    });
+    if (co.final && nxGuideKey(co.final.exam || '') === k) inC.push((co.name || 'קורס') + ' · מבחן מסכם');
+  });
+  let c = inC.length ? '<ul class="nxn">' + inC.map((x) => '<li>' + nxEsc(x) + '</li>').join('') + '</ul>' : '<p class="nxn">המסלול לא שייך לאף קורס.</p>';
+  c += '<div class="nxbtns"><button class="nxb" data-act="trk-crs">פתח את לשונית הקורסים</button></div>';
+  h += nxTrkSec(tag('crs'), 'קורסים', inC.length ? inC.length + '' : 'אין', c);
+  return h;
+}
+function nxTrackPick(id) {                                      // a track was clicked in the player-side list: show its editor in the admin panel
+  if (!nxAdminEditing() || !STAGES[id]) return;
+  NX.selTrk = id; NX.tab = 'tracks';
+  if (!NX.open) nxOpen(true); else nxAdmRender();
+}
 function nxTabTracks() {
+  const sel = NX.selTrk;
+  if (sel && STAGES[sel] && nxStageIds().indexOf(sel) >= 0) return nxTrackPanel(sel);
+  NX.selTrk = '';
   const list = NXH.catList(), ids = nxStageIds();
-  let h = '<p class="nxn">רשימת כל המסלולים. השחקנים רואים אותם מקובצים לפי קטגוריות (למשל "מתחילים", "מתקדמים"). עריכה, תנאי סביבה (רוח) ובנייה עם AI נמצאים בחלון העריכה.</p>';
+  let h = '<p class="nxn">לחץ על מסלול ברשימה שמימין (או כאן) כדי לערוך אותו: שם, קטגוריה, תצוגה, רוח, כרטיס הסבר, תיאור ובדיקת AI.</p>';
   h += '<div class="nxbtns"><button class="nxb pri" data-act="trk-new">+ מסלול חדש</button></div>';
   h += '<h4>קטגוריות</h4><div class="nxbtns"><input type="text" id="admCatName" maxlength="30" placeholder="שם קטגוריה חדשה, למשל: מתחילים"><button class="nxb pri" data-act="cat-add">+ הוסף קטגוריה</button></div>';
-  const optsFor = (id) => '<select class="catsel" data-act="trk-cat" data-id="' + id + '"><option value="">ללא קטגוריה</option>' + list.map((c) => '<option value="' + c.id + '"' + (NXH.catOf(id) === c.id ? ' selected' : '') + '>' + nxEsc(c.name) + '</option>').join('') + '</select>';
-  const trow = (id) => {
-    const st = STAGES[id], mine = !!st.custom;
-    return '<div class="nxrow2"><span><input type="text" class="trkname" maxlength="40" data-act="trk-name" data-id="' + id + '" value="' + nxEsc(st.name) + '" title="שם המסלול"> <i class="nxsm">' + (MAP_BASES[st.base || id] || '') + ' &middot; ' + st.gen().length + ' שערים' + (mine ? ' &middot; ' + (st.objects ? st.objects.length : 0) + ' אלמנטים' : ' &middot; מובנה') + '</i></span><span class="trkact"><button class="nxb" data-act="trk-up" data-id="' + id + '" title="הזז למעלה">&#9650;</button><button class="nxb" data-act="trk-down" data-id="' + id + '" title="הזז למטה">&#9660;</button>' + optsFor(id) +
-      (mine ? '<button class="nxb" data-act="trk-open" data-id="' + id + '">ערוך</button><button class="nxb danger" data-act="trk-del" data-id="' + id + '">מחק</button>' : '<button class="nxb" data-act="trk-copy" data-id="' + id + '">שכפל ועריך</button><button class="nxb danger" data-act="trk-delb" data-id="' + id + '">מחק</button>') + '</span></div>' + nxDescBox(id);
-  };
+  const trow = (id) => '<div class="nxrow2"><button class="nxb" data-act="trk-sel" data-id="' + id + '">' + nxEsc(STAGES[id].name) + '</button><i class="nxsm">' + st_len(id) + ' שערים</i></div>';
   NX.openCats = NX.openCats || {};
   list.forEach((c, i) => {
     const m = ids.filter((id) => NXH.catOf(id) === c.id);
     h += '<details class="catbox" data-cid="' + c.id + '"' + (NX.openCats[c.id] ? ' open' : '') + '><summary><b>' + nxEsc(c.name) + '</b><span class="catn">' + m.length + ' מסלולים</span></summary>' +
       '<div class="cathead"><input type="text" maxlength="30" data-k="tcats.cats.' + c.id + '.name" value="' + nxEsc(c.name) + '" title="שם הקטגוריה">' +
       '<button class="nxb" data-act="cat-up" data-id="' + c.id + '"' + (i ? '' : ' disabled') + ' title="הזז קטגוריה למעלה">&#9650;</button><button class="nxb" data-act="cat-down" data-id="' + c.id + '"' + (i < list.length - 1 ? '' : ' disabled') + ' title="הזז קטגוריה למטה">&#9660;</button><button class="nxb danger" data-act="cat-del" data-id="' + c.id + '">מחק</button></div>' +
-      (m.length ? m.map(trow).join('') : '<p class="nxn">אין עדיין מסלולים בקטגוריה. בחר קטגוריה ליד מסלול.</p>') + '</details>';
+      (m.length ? m.map(trow).join('') : '<p class="nxn">אין עדיין מסלולים בקטגוריה.</p>') + '</details>';
   });
   const rest = ids.filter((id) => !NXH.catOf(id));
   h += '<details class="catbox" data-cid="_rest"' + (NX.openCats._rest === undefined ? (list.length ? '' : ' open') : (NX.openCats._rest ? ' open' : '')) + '><summary><b>' + (list.length ? 'ללא קטגוריה' : 'כל המסלולים') + '</b><span class="catn">' + rest.length + ' מסלולים</span></summary>' + (rest.length ? rest.map(trow).join('') : '<p class="nxn">כל המסלולים משויכים לקטגוריות.</p>') + '</details>';
-  h += nxGuidesEditor(ids);
   return h;
 }
+const st_len = (id) => { try { return STAGES[id].gen().length; } catch (e) { return 0; } };
 /* the AI track builder now lives in the track editor (top bar: "בנה עם AI") */
 function nxAiCanEdit() { return !!(editorMode && currentStage && currentStage.custom && !currentStage.pub); }
 function nxAiMode() { return nxAiCanEdit() && NX.aiMode !== 'new' ? 'edit' : 'new'; }
@@ -9022,6 +9076,11 @@ function nxAdmWire() {
     }
     if (el.dataset.k && !el.dataset.ai && !el.dataset.act) { nxField(el); return; }   // some browsers fire only "change" for colour pickers and menus
     const a = el.dataset.act, id = el.dataset.id, gid = el.dataset.gid;
+    if (a === 'trk-env') {
+      const E = envSettings[id]; if (!E) return;
+      const key = el.dataset.key, v = parseFloat(el.value); if (!isFinite(v)) return;
+      E[key] = key === 'turb' ? v / 100 : v; saveEnv(); nxTouch(); if (trkSel === id) { try { syncEnvUI(); } catch (e2) { /* ignore */ } } nxAdmRender(); return;
+    }
     if (a === 'trk-name') {
       const st = STAGES[id]; if (!st) return;
       const nm = el.value.trim().slice(0, 40);
@@ -9052,6 +9111,9 @@ function nxAdmWire() {
     const el = e.target.closest('[data-act]'); if (!el || el.tagName === 'INPUT' || el.tagName === 'SELECT') return;
     const a = el.dataset.act, id = el.dataset.id, gid = el.dataset.gid;
     if (nxCrsAct(a, el)) return;
+    if (a === 'trk-sel') { NX.selTrk = id; try { selectTrack(id); } catch (e) { /* ignore */ } nxAdmRender(); return; }
+    if (a === 'trk-back') { NX.selTrk = ''; nxAdmRender(); return; }
+    if (a === 'trk-crs') { NX.tab = 'courses'; nxAdmRender(); return; }
     if (a === 'trk-new') { nxOpen(false); createCustomTrack(); }
     else if (a === 'trk-copy') { const nid = duplicateToCustom(id); if (nid) { nxOpen(false); selectTrack(nid); startStage(nid, true); } }
     else if (a === 'trk-open') { nxOpen(false); selectTrack(id); startStage(id, true); }
@@ -9420,13 +9482,24 @@ function nxTrackDesc(id) {                                      // what the inst
   const o = { desc: String(d.desc || '').trim(), pass: String(d.pass || '').trim(), focus: String(d.focus || '').trim() };
   return o.desc || o.pass || o.focus ? o : null;
 }
+function nxDescFields(k, d) {
+  return '<p class="nxn">ג׳מיני קורא את זה יחד עם ההגדרות שבלשונית "בדיקת AI" כשתלמיד טס במסלול הזה. הוא מקבל אוטומטית גם את שם המסלול, המפה, מספר השערים וההקפות.</p>' +
+    nxF('מה המסלול', '<textarea rows="3" style="width:100%" maxlength="800" data-k="tdesc.' + k + '.desc" placeholder="לדוגמה: מסלול של 6 שערים עם שני סיבובים חדים. מטרתו לתרגל פניות בגובה קבוע.">' + nxEsc(d.desc || '') + '</textarea>') +
+    nxF('איך עוברים את השלב', '<textarea rows="3" style="width:100%" maxlength="800" data-k="tdesc.' + k + '.pass" placeholder="לדוגמה: עוברים כשמסיימים את כל השערים בלי התרסקות, ובזמן סביר לעומת ניסיונות קודמים.">' + nxEsc(d.pass || '') + '</textarea>') +
+    nxF('מה לבחון במיוחד', '<textarea rows="3" style="width:100%" maxlength="800" data-k="tdesc.' + k + '.focus" placeholder="לדוגמה: לשים לב אם ההקפה השנייה מהירה יותר, ואם הזמן לא מתפרק בשערים האחרונים.">' + nxEsc(d.focus || '') + '</textarea>');
+}
 function nxDescBox(id) {                                        // the track's own description window, right under its row in the tracks list
   const T = NX.draft.tdesc || {}, k = nxGuideKey(id), d = T[k] || {}, has = !!(String(d.desc || '').trim() || String(d.pass || '').trim() || String(d.focus || '').trim());
   return '<details class="catbox gcard nxdesc" data-ck="d_' + k + '"' + (NX.openK && NX.openK['d_' + k] ? ' open' : '') + '><summary>תיאור המסלול (לבדיקת AI)<span class="catn">' + (has ? 'יש תיאור' : 'ריק') + '</span></summary>' +
-    '<p class="nxn">ג׳מיני קורא את זה יחד עם ההגדרות שבלשונית "בדיקת AI" כשתלמיד טס במסלול הזה. הוא מקבל אוטומטית גם את שם המסלול, המפה, מספר השערים וההקפות.</p>' +
-    nxF('מה המסלול', '<textarea rows="3" style="width:100%" maxlength="800" data-k="tdesc.' + k + '.desc" placeholder="לדוגמה: מסלול של 6 שערים עם שני סיבובים חדים. מטרתו לתרגל פניות בגובה קבוע.">' + nxEsc(d.desc || '') + '</textarea>') +
-    nxF('איך עוברים את השלב', '<textarea rows="3" style="width:100%" maxlength="800" data-k="tdesc.' + k + '.pass" placeholder="לדוגמה: עוברים כשמסיימים את כל השערים בלי התרסקות, ובזמן סביר לעומת ניסיונות קודמים.">' + nxEsc(d.pass || '') + '</textarea>') +
-    nxF('מה לבחון במיוחד', '<textarea rows="3" style="width:100%" maxlength="800" data-k="tdesc.' + k + '.focus" placeholder="לדוגמה: לשים לב אם ההקפה השנייה מהירה יותר, ואם הזמן לא מתפרק בשערים האחרונים.">' + nxEsc(d.focus || '') + '</textarea>') + '</details>';
+    nxDescFields(k, d) + '</details>';
+}
+function nxGuideFields(k, g) {
+  return nxF('כותרת', '<input type="text" maxlength="60" data-k="guides.' + k + '.title" value="' + nxEsc(g.title || '') + '" placeholder="ברירת מחדל: שם המסלול">') +
+      nxF('צעדים (שורה = צעד)', '<textarea rows="6" style="width:100%" data-k="guides.' + k + '.text" placeholder="לדוגמה:&#10;מגבירים גז לאט עד שהרחפן מתרומם">' + nxEsc(g.text || '') + '</textarea>') +
+      nxF('הוראות בזמן הטיסה (שורה לכל שער)', '<textarea rows="5" style="width:100%" data-k="guides.' + k + '.fly" placeholder="השורה הראשונה מוצגת עד השער הראשון, השנייה אחרי שעברו שער אחד, וכן הלאה">' + nxEsc(g.fly || '') + '</textarea>') +
+      nxF('משוב חי בזמן הטיסה (כיוון, גובה ומרחק לטבעת)', '<input type="checkbox" data-k="guides.' + k + '.live"' + (g.live ? ' checked' : '') + '>') +
+      nxF('התחל מרוץ אוטומטית אחרי הכרטיס', '<input type="checkbox" data-k="guides.' + k + '.race"' + (g.race ? ' checked' : '') + '>') +
+      nxF('הסתר את הכרטיס', '<input type="checkbox" data-k="guides.' + k + '.off"' + (g.off ? ' checked' : '') + '>');
 }
 function nxGuidesEditor(ids) {
   const G = NX.draft.guides || {};
@@ -9434,12 +9507,7 @@ function nxGuidesEditor(ids) {
   ids.forEach((id) => {
     const k = nxGuideKey(id), g = G[k] || {}, has = !!(String(g.text || '').trim() || String(g.fly || '').trim());
     h += '<details class="catbox gcard" data-ck="g_' + k + '"' + (NX.openK && NX.openK['g_' + k] ? ' open' : '') + '><summary><b>' + nxEsc(STAGES[id].name) + '</b><span class="catn">' + (has ? (g.off ? 'מוסתר' : 'יש כרטיס') : 'אין כרטיס') + '</span></summary>' +
-      nxF('כותרת', '<input type="text" maxlength="60" data-k="guides.' + k + '.title" value="' + nxEsc(g.title || '') + '" placeholder="ברירת מחדל: שם המסלול">') +
-      nxF('צעדים (שורה = צעד)', '<textarea rows="6" style="width:100%" data-k="guides.' + k + '.text" placeholder="לדוגמה:&#10;מגבירים גז לאט עד שהרחפן מתרומם">' + nxEsc(g.text || '') + '</textarea>') +
-      nxF('הוראות בזמן הטיסה (שורה לכל שער)', '<textarea rows="5" style="width:100%" data-k="guides.' + k + '.fly" placeholder="השורה הראשונה מוצגת עד השער הראשון, השנייה אחרי שעברו שער אחד, וכן הלאה">' + nxEsc(g.fly || '') + '</textarea>') +
-      nxF('משוב חי בזמן הטיסה (כיוון, גובה ומרחק לטבעת)', '<input type="checkbox" data-k="guides.' + k + '.live"' + (g.live ? ' checked' : '') + '>') +
-      nxF('התחל מרוץ אוטומטית אחרי הכרטיס', '<input type="checkbox" data-k="guides.' + k + '.race"' + (g.race ? ' checked' : '') + '>') +
-      nxF('הסתר את הכרטיס', '<input type="checkbox" data-k="guides.' + k + '.off"' + (g.off ? ' checked' : '') + '>') + '</details>';
+      nxGuideFields(k, g) + '</details>';
   });
   return h;
 }
