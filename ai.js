@@ -4,7 +4,8 @@
 
 const BASE = (process.env.GEMINI_API_BASE || 'https://generativelanguage.googleapis.com').replace(/\/+$/, '');
 const KEY = () => process.env.GEMINI_API_KEY || '';
-const MODEL = () => process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+let found = '';                                               // a model found automatically when the configured one does not exist
+const MODEL = () => found || process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 const hasKey = () => !!KEY();
 
 const num = (v, d) => (Number.isFinite(Number(v)) ? Number(v) : d);
@@ -60,20 +61,42 @@ function parse(text) {
   };
 }
 
-async function check(job) {
-  if (!hasKey()) { const e = new Error('no-key'); e.code = 'no-key'; throw e; }
+async function gem(path, opts) {
   const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 45000);
   try {
-    const res = await fetch(BASE + '/v1beta/models/' + encodeURIComponent(MODEL()) + ':generateContent', {
-      method: 'POST', signal: ctl.signal,
-      headers: { 'x-goog-api-key': KEY(), 'Content-Type': 'application/json' },
-      body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: prompt(job) }] }], generationConfig: { temperature: 0.2, responseMimeType: 'application/json' } })
-    });
+    const res = await fetch(BASE + path, Object.assign({ signal: ctl.signal }, opts, { headers: Object.assign({ 'x-goog-api-key': KEY(), 'Content-Type': 'application/json' }, (opts && opts.headers) || {}) }));
     const raw = await res.text(); let j = null; try { j = JSON.parse(raw); } catch (e) { /* below */ }
-    if (!res.ok) { const e = new Error('gemini-' + res.status + ': ' + ((j && j.error && j.error.message) || raw.slice(0, 200))); e.code = 'gemini'; throw e; }
-    const parts = j && j.candidates && j.candidates[0] && j.candidates[0].content && j.candidates[0].content.parts;
-    return parse((parts || []).map((p) => p.text || '').join(''));
+    if (!res.ok) { const e = new Error('gemini-' + res.status + ': ' + ((j && j.error && j.error.message) || raw.slice(0, 300))); e.code = 'gemini'; e.status = res.status; throw e; }
+    return j;
   } finally { clearTimeout(timer); }
 }
 
-module.exports = { check, hasKey, model: MODEL };
+// The models this key can use for text answers, newest flash first.
+async function listModels() {
+  if (!hasKey()) { const e = new Error('no-key'); e.code = 'no-key'; throw e; }
+  const j = await gem('/v1beta/models?pageSize=200', { method: 'GET' });
+  const ok = (j.models || []).filter((m) => /generateContent/.test((m.supportedGenerationMethods || []).join(',')) && /^models\/gemini-/.test(m.name)).map((m) => m.name.replace(/^models\//, ''));
+  const rank = (n) => { const v = /gemini-(\d+(?:\.\d+)?)/.exec(n); return (v ? parseFloat(v[1]) : 0) * 10 + (/flash/.test(n) && !/lite|image|live|tts|preview|exp|thinking/.test(n) ? 5 : /flash/.test(n) ? 2 : 0); };
+  return ok.sort((a, b) => rank(b) - rank(a));
+}
+
+async function ask(model, job) {
+  const j = await gem('/v1beta/models/' + encodeURIComponent(model) + ':generateContent', { method: 'POST',
+    body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: prompt(job) }] }], generationConfig: { temperature: 0.2, responseMimeType: 'application/json' } }) });
+  const parts = j && j.candidates && j.candidates[0] && j.candidates[0].content && j.candidates[0].content.parts;
+  return parse((parts || []).map((p) => p.text || '').join(''));
+}
+
+async function check(job, wanted) {
+  if (!hasKey()) { const e = new Error('no-key'); e.code = 'no-key'; throw e; }
+  const m = /^gemini-[A-Za-z0-9._\-]{1,60}$/.test(wanted || '') ? wanted : MODEL();
+  try { return await ask(m, job); }
+  catch (e) {
+    if (e.status !== 404 && e.status !== 400) throw e;                        // the model name is not valid for this key: pick the newest one it can use
+    const list = await listModels(); const pick = list.find((n) => n !== m);
+    if (!pick) throw e;
+    const r = await ask(pick, job); found = pick; return r;
+  }
+}
+
+module.exports = { check, listModels, hasKey, model: MODEL };

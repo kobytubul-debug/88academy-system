@@ -1244,7 +1244,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 217</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 218</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -7358,6 +7358,20 @@ async function nxAiStatus() {
   try { const r = await fetch('/api/ai/status'); if (!r.ok) throw new Error('x'); NX.aiSt = await r.json(); } catch (e) { NX.aiSt = { off: true }; }
   const el = $('nxAiSt'); if (el) el.innerHTML = nxAiStHtml();
 }
+function nxAiHdr() {                                          // the manager's sign-in, so the server shows the real error and lists models
+  const h = { 'Content-Type': 'application/json' };
+  try { h['X-Uid'] = localStorage.getItem('nxHostUid') || ''; const t = sessionStorage.getItem('nxHostTok') || localStorage.getItem('nxHostTokL') || ''; if (t) h.Authorization = 'Bearer ' + t; } catch (e) { /* ignore */ }
+  return h;
+}
+async function nxAiModels() {
+  const out = $('nxAiOut'); if (!out) return;
+  out.textContent = 'מביא רשימת מודלים...';
+  try {
+    const res = await (NXAI.fetch || fetch)('/api/ai/models', { headers: nxAiHdr() }), a = await res.json();
+    if (!res.ok) { out.textContent = a && a.error === 'no-key' ? 'חסר מפתח GEMINI_API_KEY בשרת.' : 'שגיאה: ' + ((a && (a.detail || a.error)) || res.status); return; }
+    out.innerHTML = a.models.length ? 'מודלים שהמפתח שלך יכול להשתמש בהם (לחץ לבחירה):<br>' + a.models.slice(0, 12).map((m) => '<button class="nxb" data-act="ai-pick" data-v="' + nxEsc(m) + '">' + nxEsc(m) + '</button>').join(' ') : 'לא נמצאו מודלים למפתח הזה.';
+  } catch (e) { out.textContent = 'אין חיבור לשרת. זה עובד רק באתר ב-Render.'; }
+}
 function nxAiStHtml() {
   const st = NX.aiSt;
   if (!st) return 'בודק חיבור...';
@@ -7373,6 +7387,7 @@ function nxTabAi() {
   if (!A.on) return h + nxAiDiag() + '<p class="nxn">כשהבדיקה כבויה, המבחנים נבדקים רק לפי התנאים הרגילים (זמן, התרסקויות, כוכבים). לא נשלח שום דבר לג׳מיני.</p>';
   h += '<div class="nxcard"><h3>הגדרות כלליות</h3>' +
     nxF('מה ג׳מיני עושה', sel('mode', A.mode || 'auto', [['auto', 'מחליט ומעביר את התלמיד'], ['note', 'נותן משוב בלבד (המעבר לפי התנאים הרגילים)']])) +
+    nxF('מודל ג׳מיני', '<input type="text" maxlength="60" data-k="ai.model" value="' + nxEsc(A.model || '') + '" placeholder="ריק = אוטומטי"><button class="nxb" data-act="ai-models">הצג מודלים זמינים</button>') +
     nxF('ביטחון מינימלי להעברה', sel('min', Number(A.min) || 80, [[60, '60%'], [70, '70%'], [80, '80%'], [90, '90%']])) +
     nxF('הקריטריונים (ברירת מחדל לכל המבחנים)', '<textarea rows="5" style="width:100%" maxlength="1500" data-k="ai.crit" placeholder="לדוגמה: עובר רק בלי התרסקויות, ובזמן שמראה שיפור לעומת הניסיון הקודם. הקפה שנייה לא צריכה להיות איטית מהראשונה.">' + nxEsc(A.crit || '') + '</textarea>') +
     nxF('ניסיונות קודמים שנשלחים', sel('hist', A.hist === undefined ? 8 : Number(A.hist), [[0, 'בלי (רק הטיסה הנוכחית)'], [3, '3 אחרונים'], [8, '8 אחרונים']])) +
@@ -7419,9 +7434,9 @@ async function nxAiTest() {
   try {
     const uid = (function () { try { return localStorage.getItem('nxHostUid') || ''; } catch (e) { return ''; } })();
     const t = Number(NX.aiT_t || 45), c = Number(NX.aiT_c || 0), s = Number(NX.aiT_s || 2);
-    const res = await (NXAI.fetch || fetch)('/api/ai/check', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Uid': uid }, body: JSON.stringify({ stage: 'בדיקה לדוגמה', crit: A.crit, flight: { total: t, bestLap: t, laps: 1, crashes: c, stars: s, gates: 10 }, history: [] }) });
+    const res = await (NXAI.fetch || fetch)('/api/ai/check', { method: 'POST', headers: nxAiHdr(), body: JSON.stringify({ stage: 'בדיקה לדוגמה', crit: A.crit, flight: { total: t, bestLap: t, laps: 1, crashes: c, stars: s, gates: 10 }, history: [] }) });
     const a = await res.json();
-    if (!res.ok) { out.textContent = a && a.error === 'no-key' ? 'חסר מפתח GEMINI_API_KEY בשרת.' : 'שגיאה: ' + ((a && a.error) || res.status); return; }
+    if (!res.ok) { out.textContent = a && a.error === 'no-key' ? 'חסר מפתח GEMINI_API_KEY בשרת.' : 'שגיאה: ' + ((a && (a.detail || a.error)) || res.status); return; }
     out.innerHTML = '<b>' + ({ pass: 'עבר', fail: 'נכשל', unclear: 'לא ברור' }[a.verdict] || nxEsc(a.verdict)) + '</b> (' + a.confidence + '%)<br>' + nxEsc(a.feedback) + (a.notes ? '<br><small>' + nxEsc(a.notes) + '</small>' : '');
   } catch (e) { out.textContent = 'אין חיבור לשרת. הבדיקה עובדת רק באתר ב-Render.'; }
 }
@@ -8032,6 +8047,8 @@ function nxTabCourses() {
 }
 function nxCrsAct(a, el) {                                    // course editor buttons; returns true when handled
   if (a === 'ai-test') { nxAiTest(); return true; }
+  if (a === 'ai-models') { nxAiModels(); return true; }
+  if (a === 'ai-pick') { NX.draft.ai = NX.draft.ai || {}; NX.draft.ai.model = el.dataset.v; nxTouch(); nxAdmRender(); nxToast('המודל נבחר: ' + el.dataset.v + '. לחץ פרסום כדי לשמור'); return true; }
   if (a === 'ai-ex') { const D = NX.draft; D.ai = D.ai || {}; D.ai.exams = D.ai.exams || {}; const e = D.ai.exams[el.dataset.id] = D.ai.exams[el.dataset.id] || {}; if (el.checked) delete e.off; else e.off = true; nxTouch(); nxAdmRender(); return true; }
   if (a === 'crs-learn') { nxMakeLearnCourse(); return true; }
   if (a.indexOf('crs-') !== 0) return false;

@@ -123,7 +123,12 @@ async function api(req, res, url) {
     if (eq(b.u || '', ADMIN_USER) && eq(b.p || '', ADMIN_PASS)) return json(res, 200, { token: makeToken() });
     failed(ip); return json(res, 401, { error: 'שם משתמש או סיסמה שגויים' });
   }
-  if (p === '/api/ai/status') return json(res, 200, { key: AI.hasKey(), model: AI.model(), admin });
+  const aiCfg = () => { const c = docs.get('cfg/main'); return (c && c.cfg && c.cfg.ai) || {}; };
+  if (p === '/api/ai/status') return json(res, 200, { key: AI.hasKey(), model: aiCfg().model || AI.model(), admin });
+  if (p === '/api/ai/models') {                                          // the models this key can use (admin only)
+    if (!admin) return json(res, 403, { error: 'forbidden' });
+    try { return json(res, 200, { models: await AI.listModels() }); } catch (e) { return json(res, 502, { error: e.code || 'failed', detail: String(e.message || '').slice(0, 300) }); }
+  }
   if (p === '/api/ai/check' && req.method === 'POST') {                // Gemini judges the numbers of a finished flight
     if (!uid) return json(res, 400, { error: 'no-uid' });
     const now = Date.now(), L = (aiUse.get(uid) || []).filter((t) => now - t < 3600000);
@@ -132,8 +137,8 @@ async function api(req, res, url) {
     const b = await body(req);
     const tk = b && b.track && typeof b.track === 'object' ? b.track : {};
     if (!b || typeof b !== 'object' || !(String(b.crit || '').trim() || String(tk.pass || '').trim() || String(tk.focus || '').trim() || String(tk.desc || '').trim())) return json(res, 400, { error: 'no-criteria' });
-    try { return json(res, 200, await AI.check(b)); }
-    catch (e) { console.error('ai check:', e.message); return json(res, e.code === 'no-key' ? 503 : 502, { error: e.code || 'failed' }); }
+    try { return json(res, 200, await AI.check(b, aiCfg().model)); }
+    catch (e) { console.error('ai check:', e.message); return json(res, e.code === 'no-key' ? 503 : 502, admin ? { error: e.code || 'failed', detail: String(e.message || '').slice(0, 300) } : { error: e.code || 'failed' }); }
   }
   if (p === '/api/admin/me') return json(res, 200, { admin });
   if (p === '/api/admin/import' && req.method === 'POST') {            // load an export of the old data (admin only)
