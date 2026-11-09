@@ -1244,7 +1244,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 235</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 236</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -8601,7 +8601,7 @@ async function nxAiEdit(sample, text) {
       const code = e && e.code;
       if (code === 'not_granted') fatal = 'לא אושר שימוש ב-Claude.';
       else if (code === 'no_key') fatal = 'חסר מפתח ג׳מיני בשרת.';
-      else if (code === 'rate_limited') fatal = 'יותר מדי בקשות, נסה שוב בעוד רגע.';
+      else if (code === 'rate_limited') fatal = 'מכסת ג׳מיני נגמרה (חריגה ממכסת הבקשות של המפתח). המתן דקה ונסה שוב, או הפעל חיוב ב-Google AI Studio.';
       else feedback = String((e && e.message) || code || 'invalid JSON').slice(0, 200);
     }
   }
@@ -8647,7 +8647,7 @@ async function nxAiBuild() {
       const code = e && e.code;
       if (code === 'not_granted') fatal = 'לא אושר שימוש ב-Claude.';
       else if (code === 'no_key') fatal = 'חסר מפתח ג׳מיני בשרת.';
-      else if (code === 'rate_limited') fatal = 'יותר מדי בקשות, נסה שוב בעוד רגע.';
+      else if (code === 'rate_limited') fatal = 'מכסת ג׳מיני נגמרה (חריגה ממכסת הבקשות של המפתח). המתן דקה ונסה שוב, או הפעל חיוב ב-Google AI Studio.';
       else feedback = String((e && e.message) || code || 'invalid JSON').slice(0, 200);
     }
   }
