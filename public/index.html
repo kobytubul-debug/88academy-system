@@ -1244,7 +1244,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 215</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 216</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -7275,13 +7275,19 @@ function nxAttempt(r) {                                       // a race was fini
   if (!st || customized) return out;
   const k = String(st.id).replace(/^pub_/, '');
   const it = NX.cseq ? NX.cseq.find((s) => s.id === k && (s.kind === 'x' || s.kind === 'f')) : null;
+  const ai = nxAiFor(k);                                      // Gemini can judge any track a student flies, not only exams
+  if (!it && ai && NX.role === 'player' && NX.un) {
+    out.ok = ai.mode === 'note'; out.ai = ai;
+    out.msg = 'ג׳מיני בודק את הטיסה שלך...'; NXH.examMsg = out.msg;
+    nxAiJudge(r, { cid: ((NX.cseq && NX.cseq.find((q) => q.id === k)) || {}).cid || '' }, st, ai, k);
+    return out;
+  }
   if (it) {
     const p = it.pass || {}, why = [];
     if (p.t > 0 && r.total > p.t) why.push('זמן ' + fmtTime(r.total) + ' (נדרש עד ' + fmtTime(p.t) + ')');
     if (typeof p.c === 'number' && p.c >= 0 && (r.crashes || 0) > p.c) why.push('התרסקויות ' + (r.crashes || 0) + ' (מותר עד ' + p.c + ')');
     if (p.s > 0 && r.stars < p.s) why.push('כוכבים ' + r.stars + ' (נדרשו ' + p.s + ')');
     out.ok = !why.length;
-    const ai = nxAiFor(k);
     if (ai && out.ok && NX.role === 'player') {                  // numbers are fine: Gemini judges the flight against the instructor's criteria
       out.ok = ai.mode === 'note'; out.ai = ai;
       out.msg = 'ג׳מיני בודק את הטיסה שלך...'; NXH.examMsg = out.msg;
@@ -7332,6 +7338,13 @@ async function nxAiJudge(r, it, st, ai, k) {
   }
   try { if (NX.role === 'player' && NX.un) nxHistPush(entry); } catch (e) { /* history is best effort */ }
 }
+function nxAiTracks() {                                       // every track a student can fly, exams first
+  const ex = {}; nxAiExams().forEach((x) => { ex[x.id] = x.where; });
+  const out = [], seen = {};
+  nxStageIds().forEach((id) => { const st = STAGES[id]; if (!st) return; const k = nxGuideKey(id); if (seen[k]) return; seen[k] = 1; out.push({ id: k, where: ex[k] || '' }); });
+  Object.keys(ex).forEach((k) => { if (!seen[k]) { seen[k] = 1; out.push({ id: k, where: ex[k] }); } });
+  return out.sort((a, b) => (b.where ? 1 : 0) - (a.where ? 1 : 0));
+}
 function nxAiExams() {                                       // every course exam (stage exams and finals) with the course it belongs to
   const out = [], seen = {}, cs = NX.draft.courses || {};
   Object.keys(cs).forEach((cid) => {
@@ -7367,13 +7380,13 @@ function nxTabAi() {
     nxF('משוב לתלמיד', '<label class="nxchk1"><input type="checkbox" data-k="ai.hideFb"' + (A.hideFb ? ' checked' : '') + '> אל תציג את המשוב של ג׳מיני לתלמיד (רק למדריך במעקב)</label>') +
     nxF('אם ג׳מיני לא זמין', sel('fallback', A.fallback === 'hold' ? 'hold' : 'pass', [['pass', 'לבדוק לפי התנאים הרגילים (התלמיד לא נתקע)'], ['hold', 'לא להעביר, שינסה שוב']])) +
     '<div class="nxn">התנאים הרגילים של המבחן (זמן, התרסקויות, כוכבים) נשארים חובה. ג׳מיני נשאל רק כשהם מתקיימים. כשהוא לא בטוח, התלמיד לא מועבר והמדריך רואה את זה במעקב.</div></div>';
-  const ex = nxAiExams(), E = A.exams || {};
-  h += '<div class="nxcard"><h3>המבחנים</h3>';
-  if (!ex.length) h += '<p class="nxn">אין עדיין מבחנים בקורסים. בלשונית "קורסים" בוחרים מסלול כמבחן שלב או כמבחן מסכם.</p>';
+  const ex = nxAiTracks(), E = A.exams || {};
+  h += '<div class="nxcard"><h3>המסלולים</h3><p class="nxn">הבדיקה חלה על כל מסלול שתלמיד טס בו, לא רק על מבחנים. כאן אפשר לכבות אותה למסלול מסוים או לתת לו קריטריונים משלו.</p>';
+  if (!ex.length) h += '<p class="nxn">אין עדיין מסלולים.</p>';
   ex.forEach((x) => {
     const e = E[x.id] || {}, on = !e.off;
-    h += '<details class="catbox gcard"' + (NX.openK && NX.openK['aiex' + x.id] ? ' open' : '') + ' data-ck="aiex' + x.id + '"><summary>' + (on ? '&#10003; ' : '&#10005; ') + nxEsc(nxStName(x.id)) + ' <small>' + nxEsc(x.where) + '</small></summary>' +
-      nxF('בדיקת AI במבחן הזה', '<label class="nxchk1"><input type="checkbox" data-act="ai-ex" data-id="' + x.id + '"' + (on ? ' checked' : '') + '> פעילה</label>') +
+    h += '<details class="catbox gcard"' + (NX.openK && NX.openK['aiex' + x.id] ? ' open' : '') + ' data-ck="aiex' + x.id + '"><summary>' + (on ? '&#10003; ' : '&#10005; ') + nxEsc(nxStName(x.id)) + (x.where ? ' <small>מבחן: ' + nxEsc(x.where) + '</small>' : '') + '</summary>' +
+      nxF('בדיקת AI במסלול הזה', '<label class="nxchk1"><input type="checkbox" data-act="ai-ex" data-id="' + x.id + '"' + (on ? ' checked' : '') + '> פעילה</label>') +
       (on ? nxF('קריטריונים משלו (ריק = ברירת המחדל)', '<textarea rows="3" style="width:100%" maxlength="1500" data-k="ai.exams.' + x.id + '.crit">' + nxEsc(e.crit || '') + '</textarea>') +
         nxF('פעולה', sel('exams.' + x.id + '.mode', e.mode || '', [['', 'כמו ההגדרה הכללית'], ['auto', 'מחליט ומעביר'], ['note', 'משוב בלבד']])) : '') + '</details>';
   });
@@ -7388,15 +7401,13 @@ function nxTabAi() {
 }
 function nxAiDiag() {                                          // why a check did or did not run: one line per group
   const gs = Object.keys(NX.groups || {});
-  let h = '<div class="nxcard"><h3>האם הבדיקה תפעל? מצב כל קבוצה</h3><p class="nxn">ג׳מיני בודק רק מבחן (מבחן שלב או מסכם) שמופיע בקורס של הקבוצה. טיסה במסלול תרגול רגיל לא נבדקת.</p>';
+  let h = '<div class="nxcard"><h3>האם הבדיקה תפעל? מצב כל קבוצה</h3><p class="nxn">ג׳מיני בודק כל מסלול שתלמיד בקבוצה במצב תלמיד טס בו, מבחן או תרגול. טיסה של מנהל, או במסלול של מטיס (שלא פורסם), לא נבדקת.</p>';
   if (NX.dirty) h += '<p class="nxn"><b style="color:#e6b450">יש שינויים שלא פורסמו.</b> השחקנים רואים את ההגדרות רק אחרי לחיצה על פרסום.</p>';
   if (!gs.length) return h + '<p class="nxn">אין עדיין קבוצות.</p></div>';
   gs.forEach((gid) => {
     const g = NX.groups[gid], cs = nxGroupCourses(g), n = cs.reduce((t, cid) => { const co = NX.draft.courses[cid]; return t + (co.stages || []).filter((s) => s.on && s.exam).length + (co.final && co.final.on && co.final.exam ? 1 : 0); }, 0);
     const why = [];
     if (g.mode !== 'student') why.push('מצב תלמיד לא דלוק');
-    if (!cs.length) why.push('לא משויך קורס');
-    else if (!n) why.push('בקורס אין מבחן (בחר מסלול כמבחן שלב)');
     h += '<div class="nxrow2"><span><b>' + nxEsc(g.name || gid) + '</b> <small>' + (cs.length ? cs.map((cid) => nxEsc(NX.draft.courses[cid].name || cid)).join(', ') + ' · ' + n + ' מבחנים' : 'ללא קורס') + '</small></span><span>' + (why.length ? '<b style="color:#e66">לא תפעל: ' + why.join(', ') + '</b>' : '<b style="color:#5fd08a">תפעל</b>') + '</span></div>';
   });
   return h + '</div>';
