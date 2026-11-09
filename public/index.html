@@ -952,7 +952,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
     <div class="row"><label style="flex:0 0 70px">הקפות</label><select id="edLaps"><option value="1">1 · מסלול חד פעמי: השער האחרון הוא הסיום</option><option value="2">2</option><option value="3">3 (ברירת מחדל)</option><option value="4">4</option><option value="5">5</option><option value="8">8</option><option value="10">10</option></select></div>
     </details>
     <details class="eds" open><summary>מראה</summary>
-    <div class="row"><label style="flex:0 0 70px">צבע</label><select id="propType" style="display:none"></select><select id="propColor"></select></div>
+    <div class="row"><label style="flex:0 0 70px">צבע</label><select id="propType" style="display:none"></select><select id="propColor"></select><input type="color" id="propColorFree" value="#ff6a1a" title="צבע חופשי: בחר כל צבע" style="flex:0 0 44px;height:34px;padding:0;border:0;background:none;cursor:pointer"><button class="b" id="propColorAll" title="צבע את כל האלמנטים מאותו סוג במסלול בצבע שנבחר" style="flex:0 0 auto">כל הסוג</button></div>
     <div class="row"><label style="flex:0 0 70px">צורת שער</label><select id="gateKind"><option value="">ברירת מחדל של המפה</option><option value="ring">טבעת</option><option value="square">ריבוע</option><option value="arch">קשת (ללא בסיס)</option><option value="wide">רחב ושטוח</option><option value="tall">גבוה וצר</option><option value="hex">משושה</option><option value="double">שער כפול</option></select></div>
     </details>
     <details class="eds" id="edNum"><summary>מספרי שערים</summary>
@@ -1244,7 +1244,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 231</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 232</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -2666,7 +2666,7 @@ function updateEditorLabel() {
   if (selected >= 0 && gates[selected]) {
     const g = gates[selected];
     const gk = $('gateKind'); if (gk) gk.value = g.k || '';
-    const gcs = $('propColor'); if (gcs) gcs.value = gateColKey(g);
+    const gcs = $('propColor'); if (gcs) gcs.value = gateColKey(g); const gfr = $('propColorFree'); if (gfr && g && /^#[0-9a-f]{6}$/i.test(g.c || '')) gfr.value = g.c;
     el.textContent = 'שער #' + (selected + 1) + ' ' + GATE_KINDS[gateSpec(g).kind] + (g.sz ? ' ×' + round2(g.sz) : '') + '  x:' + round2(g.x) + ' y:' + round2(g.y) + ' z:' + round2(g.z) + ' yaw:' + round2(g.yaw || 0);
   } else el.textContent = 'לא נבחר שער - לחץ על שער בתצוגה התלת-ממדית';
 }
@@ -2973,6 +2973,7 @@ function propSelect(i) {
   if (i >= 0 && propData[i]) {
     const col = Object.keys(PROP_COLORS).find((k) => PROP_COLORS[k].toLowerCase() === propData[i].c.toLowerCase());
     if (col) $('propColor').value = col;
+    const fr = $('propColorFree'); if (fr && /^#[0-9a-f]{6}$/i.test(propData[i].c || '')) fr.value = propData[i].c;
   }
 }
 function addProp() {
@@ -3042,6 +3043,22 @@ function propFromRay(ray) {
     setGateShape($('gateKind').value, g ? g.sz : 1);
     $('gateKind').blur();
   });
+  const free = $('propColorFree');                                  // any colour, for the selected element (or the whole multi-selection)
+  const applyHex = (hex, commit) => {
+    if (!/^#[0-9a-f]{6}$/i.test(hex)) return;
+    if (edMultiN() > 1) { edMultiItems().forEach((m) => { m.el.c = hex; }); }
+    else if (propData[selProp]) propData[selProp].c = hex;
+    else if (selProp < 0 && gates[selected]) gates[selected].c = hex;
+    else return;
+    buildProps(); updateGateColors(); if (commit) trackEdited();
+  };
+  const all = $('propColorAll');
+  if (all) all.addEventListener('click', () => {                    // every element of the selected one's type gets the colour in the picker
+    const p = propData[selProp]; if (!p || !/^#[0-9a-f]{6}$/i.test(free.value)) { nxToast('בחר קודם אלמנט'); return; }
+    let n = 0; propData.forEach((q2) => { if (q2.t === p.t) { q2.c = free.value; n++; } });
+    buildProps(); trackEdited(); nxToast('נצבעו ' + n + ' אלמנטים מסוג ' + ((PROP_TYPES[p.t] || {}).name || p.t)); all.blur();
+  });
+  if (free) { free.addEventListener('input', () => applyHex(free.value, false)); free.addEventListener('change', () => { applyHex(free.value, true); free.blur(); }); }
   cs.addEventListener('change', () => {
     if (edMultiN() > 1) { edGroupColor(cs.value); cs.blur(); return; }
     const p = propData[selProp], g = selProp < 0 ? gates[selected] : null;
