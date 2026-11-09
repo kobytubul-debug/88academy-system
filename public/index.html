@@ -1244,7 +1244,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 226</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 227</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -7369,7 +7369,8 @@ async function nxAiModels() {
   try {
     const res = await (NXAI.fetch || fetch)('/api/ai/models', { headers: nxAiHdr() }), a = await res.json();
     if (!res.ok) { out.textContent = a && a.error === 'no-key' ? 'חסר מפתח GEMINI_API_KEY בשרת.' : 'שגיאה: ' + ((a && (a.detail || a.error)) || res.status); return; }
-    out.innerHTML = a.models.length ? 'מודלים שהמפתח שלך יכול להשתמש בהם (לחץ לבחירה):<br>' + a.models.slice(0, 12).map((m) => '<button class="nxb" data-act="ai-pick" data-v="' + nxEsc(m) + '">' + nxEsc(m) + '</button>').join(' ') : 'לא נמצאו מודלים למפתח הזה.';
+    const cur = (NX.draft.ai && NX.draft.ai.model) || (a.model || ''), ms = (a.models || []).filter((m) => /(flash|pro)/i.test(m) && !/(tts|image|transcribe|embed|audio|live|imagen|veo|argon|robotics|computer)/i.test(m));
+    out.innerHTML = ms.length ? '<p class="nxn">מודל הוא ה"מוח" של ג׳מיני שמנתח את הטיסה. "flash" מהיר וזול, "pro" חכם ואיטי יותר. בדרך כלל אין צורך לשנות: לחץ על מודל רק אם הבדיקה איטית או נכשלת. ' + (cur ? 'כרגע: <b>' + nxEsc(cur) + '</b>.' : '') + '</p>' + ms.slice(0, 8).map((m) => '<button class="nxb' + (m === cur ? ' sel' : '') + '" data-act="ai-pick" data-v="' + nxEsc(m) + '">' + nxEsc(m) + '</button>').join(' ') : 'לא נמצאו מודלים מתאימים למפתח הזה.';
   } catch (e) { out.textContent = nxAiNoServer(e); }
 }
 function nxAiNoServer(e) {                                    // say which of the likely reasons it is
@@ -7409,17 +7410,7 @@ function nxTabAi() {
     nxF('משוב לתלמיד', '<label class="nxchk1"><input type="checkbox" data-k="ai.hideFb"' + (A.hideFb ? ' checked' : '') + '> אל תציג את המשוב של ג׳מיני לתלמיד (רק למדריך במעקב)</label>') +
     nxF('אם ג׳מיני לא זמין', sel('fallback', A.fallback === 'hold' ? 'hold' : 'pass', [['pass', 'לבדוק לפי התנאים הרגילים (התלמיד לא נתקע)'], ['hold', 'לא להעביר, שינסה שוב']])) +
     '<div class="nxn">התנאים הרגילים של המבחן (זמן, התרסקויות, כוכבים) נשארים חובה. ג׳מיני נשאל רק כשהם מתקיימים. כשהוא לא בטוח, התלמיד לא מועבר והמדריך רואה את זה במעקב.</div></div>';
-  const ex = nxAiTracks(), E = A.exams || {};
-  h += '<div class="nxcard"><h3>המסלולים</h3><p class="nxn">הבדיקה חלה על כל מסלול שתלמיד טס בו, לא רק על מבחנים. כאן אפשר לכבות אותה למסלול מסוים או לתת לו קריטריונים משלו.</p>';
-  if (!ex.length) h += '<p class="nxn">אין עדיין מסלולים.</p>';
-  ex.forEach((x) => {
-    const e = E[x.id] || {}, on = !e.off;
-    h += '<details class="catbox gcard"' + (NX.openK && NX.openK['aiex' + x.id] ? ' open' : '') + ' data-ck="aiex' + x.id + '"><summary>' + (on ? '&#10003; ' : '&#10005; ') + nxEsc(nxStName(x.id)) + (x.where ? ' <small>מבחן: ' + nxEsc(x.where) + '</small>' : '') + '</summary>' +
-      nxF('בדיקת AI במסלול הזה', '<label class="nxchk1"><input type="checkbox" data-act="ai-ex" data-id="' + x.id + '"' + (on ? ' checked' : '') + '> פעילה</label>') +
-      (on ? nxF('קריטריונים משלו (ריק = ברירת המחדל)', '<textarea rows="3" style="width:100%" maxlength="1500" data-k="ai.exams.' + x.id + '.crit">' + nxEsc(e.crit || '') + '</textarea>') +
-        nxF('פעולה', sel('exams.' + x.id + '.mode', e.mode || '', [['', 'כמו ההגדרה הכללית'], ['auto', 'מחליט ומעביר'], ['note', 'משוב בלבד']])) : '') + '</details>';
-  });
-  h += '</div>';
+  h += '<p class="nxn">הבדיקה חלה על כל מסלול שתלמיד טס בו. כיבוי או קריטריונים למסלול מסוים: לחץ על המסלול ברשימת המסלולים ופתח "בדיקת AI" בפאנל שבצד.</p>';
   h += nxAiDiag();
   h += '<div class="nxcard"><h3>בדיקה על נתונים לדוגמה</h3><p class="nxn">שולח את הקריטריונים הכלליים לג׳מיני עם הנתונים כאן, ומראה מה הוא עונה. כך בודקים שהמפתח עובד ושההחלטה סבירה.</p>' +
     nxF('זמן כולל (שניות)', '<input type="number" step="0.1" data-ai="aiT_t" value="' + nxEsc(NX.aiT_t || 45) + '">') +
