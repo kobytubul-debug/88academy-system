@@ -1244,7 +1244,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 236</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 237</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -8561,7 +8561,9 @@ function nxAiMerge(cur, raw) {                                 // the model's ch
   const ag = d.addGates && typeof d.addGates === 'object' ? (Array.isArray(d.addGates) ? d.addGates[0] : d.addGates) : null;
   if (ag) gts = nxAiAddGates(gts, ag);
   const changed = !!(d.base && d.base !== cur.base) || !!ag || (Array.isArray(d.addObjects) && d.addObjects.length) || !!(rm && (rm.all || (rm.types && rm.types.length))) || (Array.isArray(d.gates) && d.gates.length > 0) || (Array.isArray(d.objects)) || (d.closed !== undefined && d.closed !== cur.closed);
-  if (!changed) throw new Error('ה-AI לא החזיר שום שינוי');
+  const same = !ag && gts.length === cur.gates.length && gts.every((g, i) => Math.abs(Number(g.x) - cur.gates[i].x) < 0.6 && Math.abs(Number(g.z) - cur.gates[i].z) < 0.6 && Math.abs(Number(g.y) - cur.gates[i].y) < 0.6);
+  const objsSame = objs.length === cur.objects.length && !(d.base && d.base !== cur.base);
+  if (!changed || (same && objsSame && !(d.closed !== undefined && d.closed !== cur.closed))) throw new Error('ה-AI החזיר את המסלול בלי שום שינוי');
   return { base: d.base || cur.base, closed: d.closed !== undefined ? d.closed : cur.closed, gates: gts, objects: objs };
 }
 function nxAiApplyEdit(t) {                                   // replace the track that is open in the editor, in place
@@ -8590,9 +8592,31 @@ function nxAiUndo() {
   nxAiSet(currentStage, u.gates, u.objects, u.base);
   nxAiMsg('השינוי האחרון בוטל.'); nxEdAiRender();
 }
+function nxAiGateIntent(text, cur) {                           // "תוסיף 3 שערים בגובה של שער 5": understood here, no model needed (instant, exact, no quota)
+  const t = String(text || '').replace(/\s+/g, ' ');
+  const W = { 'אחד': 1, 'שער': 1, 'שני': 2, 'שתי': 2, 'שלושה': 3, 'שלוש': 3, 'ארבעה': 4, 'ארבע': 4, 'חמישה': 5, 'חמש': 5, 'שישה': 6, 'שש': 6, 'שבעה': 7, 'שבע': 7, 'שמונה': 8, 'תשעה': 9, 'תשע': 9, 'עשרה': 10, 'עשר': 10 };
+  const m = t.match(/(?:הוסף|תוסיף|תוסיפו|להוסיף|הוספת|תוסף|עוד|ועוד)\s*(?:עוד\s*)?(\d{1,2}|[א-ת]+)\s+שערים?(?:\s+חדשים)?/);
+  if (!m) return null;
+  const n = /^\d+$/.test(m[1]) ? Number(m[1]) : W[m[1]];
+  if (!n || n < 1 || n > 20) return null;
+  const rest = t.replace(m[0], ' ');
+  if (/(עצים|עץ|קונוס|סלע|מדבר|שלג|יער|מחק|הסר|מבנ|דגל)/.test(rest)) return null;      // a mixed request goes to the model
+  const out = { count: n }, g = cur.gates;
+  const h = rest.match(/גובה([^\d]*?)(\d+(?:\.\d+)?)/);
+  if (h) {
+    const v = Number(h[2]);
+    if (/(שער|שמר|מספר|זהה|כמו|של)/.test(h[1]) && v >= 1 && v <= g.length) out.y = g[v - 1].y;
+    else if (v >= 5.4 && v <= 30) out.y = v;
+  }
+  const a = rest.match(/אחרי\s*שער\s*(?:מספר\s*)?(\d+)/);
+  if (a && Number(a[1]) >= 1 && Number(a[1]) <= g.length) out.after = Number(a[1]);
+  return out;
+}
 async function nxAiEdit(sample, text) {
   const cur = nxAiCurrent();
   let t = null, feedback = '', fatal = '';
+  const gi = nxAiGateIntent(text, cur);
+  if (gi) { try { t = nxBuildFromAi(nxAiMerge(cur, { addGates: gi }), true, true); } catch (e) { t = null; } }
   for (let attempt = 1; attempt <= 3 && !t && !fatal; attempt++) {
     nxAiMsg(attempt === 1 ? 'ה-AI מעדכן את המסלול...' : 'מתקן ומנסה שוב (' + attempt + ' מתוך 3)...');
     try {
