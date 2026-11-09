@@ -90,7 +90,7 @@ function thinkingFor(model) {
   return null;
 }
 async function ask(model, job, ms, text, asJson) {
-  const body = (think) => JSON.stringify({ contents: [{ role: 'user', parts: [{ text: text || prompt(job) }] }], generationConfig: Object.assign({ temperature: asJson ? 0.6 : 0.2 }, text && !asJson ? {} : { responseMimeType: 'application/json' }, think ? { thinkingConfig: think } : {}) });
+  const body = (think) => JSON.stringify({ contents: [{ role: 'user', parts: [{ text: text || prompt(job) }] }], generationConfig: Object.assign({ temperature: asJson ? 0.5 : 0.2 }, asJson ? { maxOutputTokens: 8192 } : {}, text && !asJson ? {} : { responseMimeType: 'application/json' }, think ? { thinkingConfig: think } : {}) });
   const path = '/v1beta/models/' + encodeURIComponent(model) + ':generateContent', think = thinkingFor(model);
   let j;
   try { j = await gem(path, { method: 'POST', body: body(think) }, ms); }

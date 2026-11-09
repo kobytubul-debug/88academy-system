@@ -1244,7 +1244,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 229</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 230</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -8446,20 +8446,37 @@ function nxAiCurrent() {
   const r2 = (v) => Math.round(v * 100) / 100;
   return {
     base: currentStage.base || 'arena',
+    closed: (function () { if (gates.length < 3) return false; const l = gates[gates.length - 1], f0 = gates[0]; let d = Math.abs(((l.yaw || 0) - yawFromDir(f0.x - l.x, f0.z - l.z) + 540) % 360 - 180); return d < 45; })(),
     gates: gates.map((g) => { const o = { x: r2(g.x), y: r2(g.y), z: r2(g.z) }; if (g.k) o.k = g.k; if (g.sz) o.sz = g.sz; return o; }),
     objects: propData.map((p) => ({ t: p.t, x: r2(p.x), z: r2(p.z), s: r2(p.s || 1), yaw: r2(p.yaw || 0), c: p.c }))
   };
 }
 function nxAiEditPrompt(text, cur, feedback) {
-  return 'You edit an FPV drone racing track in a simulator. Reply with ONLY the complete UPDATED track as one JSON object, no prose, no markdown.\n' +
-    'Schema: {"base":"field","closed":true,"gates":[{"x":0,"y":8,"z":-30,"k":"ring","sz":1}],"objects":[{"t":"pine","x":10,"z":5,"s":1,"yaw":0,"c":"#2c6a34"}]}\n' +
-    'CURRENT TRACK:\n' + JSON.stringify(cur) + '\n' +
-    'RULES:\n- Apply ONLY the change the pilot asks for and keep everything else exactly as it is (same gates, same objects, same positions, same base). Always return the full track, not just the change.\n' +
-    '- Units are meters, y is up. At least 2 gates. Gate y between 5.5 and 30. Never put two consecutive gates closer than 12 m. Do NOT output yaw for gates. Gates are flown in array order; set "closed":false for a straight or open route, true for a loop.\n' +
-    '- base is one of: clean, field, desert, snow, dusk, redwood, arena. Change it only when the pilot asks for another map. x and z stay within -80..80 for arena and -140..140 otherwise.\n' +
-    '- Object t is one of: cone, bigcone, flag, pylon, barrier, tires, wall, fence, pine, oak, bush, rock, bigrock, boulders, cliff, dune, crystal, building, house, tower, container, lamp, hangar, tent, watchtower, silo, shed, billboard, antenna, windmill, car, van, truck, bus, tractor, trailer, boat, plane, heli, crane, hurdle, jersey, sandbags, crate, barrel, hay, netfence, tirewall, palm, birch, deadtree, cypress, sapling, cactus, log, stump, minicone, chkflag, windsock, balloon, marker, stake, conerow, arrowmark, startline, ringmark, pennant, beacon, signpost, slalompole, pallets, pipe, ramp, rail, boom, cratestack, drumrow, brickwall, scaffold, haystack, willow, olive, spruce, acacia, bamboo, flowers, hedge, reeds, tallgrass, cornrow, mushroom, villa, skyscraper, warehouse, barn, lighthouse, watertank, gazebo, grandstand, kiosk, chimney, bunker, solarpanel, bench, hill, mound, pond, crater, stoneline, rockwall, mesa, spire, iceblock, snowpile, sportscar, pickup, jeep, motorbike, bicycle, ambulance, firetruck, tank, forklift, caravan, sailboat, hotair, ufo, trainwagon. Keep new objects at least 8 m from every gate and 6 m from the line between consecutive gates. "Trees on both sides" means two rows of pine or oak 9 to 14 m from the route line, one every 8 to 14 m. Use at most 100 objects.\n' +
+  const small = { base: cur.base, closed: cur.closed, gates: cur.gates, objects: cur.objects.map((o) => [o.t, o.x, o.z]) };      // compact view of the current track
+  return 'You edit an FPV drone racing track in a simulator. The pilot writes in Hebrew. Reply with ONLY a JSON object that describes the CHANGE, not the whole track, no prose, no markdown.\n' +
+    'Schema (every key is optional, include only what the request needs): {"base":"redwood","addObjects":[{"t":"pine","x":10,"z":5,"s":1.2,"yaw":0,"c":"#2c6a34"}],"removeObjects":{"all":false,"types":["pine"]},"gates":[{"x":0,"y":8,"z":-30,"k":"ring","sz":1}],"closed":true}\n' +
+    'CURRENT TRACK (objects are [type, x, z]):\n' + JSON.stringify(small) + '\n' +
+    'RULES:\n' +
+    '- Output only what must change. To add trees or other objects use addObjects only; do NOT repeat existing objects or gates. Use "gates" (the COMPLETE new gate list) only when the pilot asks to change, move, add or remove gates, and then also keep every gate that was not mentioned. Use removeObjects only when asked to remove things. Use base only when the map type must change.\n' +
+    '- Hebrew hints: עצים = pine / oak / birch / palm; יער = base "redwood" and many pine trees; מדבר = base "desert" with rock / dune / cactus-like rock; שלג = base "snow"; קונוסים = cone; בניינים = building / house; סלעים = rock / bigrock; "אל תשנה כלום" means keep the rest as it is.\n' +
+    '- If the pilot gives no exact place, spread new objects along both sides of the route, 10 to 20 m away from the line between gates, and at least 8 m from every gate. Use 10 to 60 objects.\n' +
+    '- Units are meters, y is up. Gate y between 5.5 and 30, consecutive gates at least 12 m apart, do NOT output yaw for gates. x and z stay within -80..80 for arena and -140..140 otherwise.\n' +
+    '- base is one of: clean, field, desert, snow, dusk, redwood, arena. Object t is one of: cone, bigcone, flag, pylon, barrier, tires, wall, fence, pine, oak, bush, rock, bigrock, boulders, cliff, dune, crystal, building, house, tower, container, lamp, hangar, tent, watchtower, silo, shed, billboard, antenna, windmill, car, van, truck, bus, tractor, trailer, boat, plane, heli, crane, hurdle, jersey, sandbags, crate, barrel, hay, netfence, tirewall, palm, birch, deadtree, cypress. Optional per object: s = scale 0.6 to 2.5, yaw degrees, c = #rrggbb.\n' +
     (feedback ? 'YOUR PREVIOUS ANSWER WAS REJECTED: ' + feedback + '. Fix exactly that and answer again.\n' : '') +
     'Pilot request (Hebrew): ' + text.slice(0, 1200);
+}
+function nxAiMerge(cur, raw) {                                 // the model's change + the current track = a full track for nxBuildFromAi
+  let d = raw;
+  if (typeof d === 'string') { try { d = JSON.parse(d.slice(d.indexOf('{'), d.lastIndexOf('}') + 1)); } catch (e) { throw new Error('התשובה אינה JSON תקין'); } }
+  for (let i = 0; i < 3 && d && typeof d === 'object' && !d.addObjects && !d.removeObjects && !Array.isArray(d.gates) && !Array.isArray(d.objects) && !d.base; i++) d = d.track || d.result || d.changes || d.change || d.data || null;
+  if (!d || typeof d !== 'object') throw new Error('התשובה ריקה');
+  let objs = Array.isArray(d.objects) ? d.objects.slice() : cur.objects.slice();
+  const rm = d.removeObjects;
+  if (rm && rm.all) objs = [];
+  else if (rm && Array.isArray(rm.types) && rm.types.length) objs = objs.filter((o) => rm.types.indexOf(o.t) < 0);
+  if (Array.isArray(d.addObjects)) objs = objs.concat(d.addObjects);
+  const gts = Array.isArray(d.gates) && d.gates.length ? d.gates : cur.gates;
+  return { base: d.base || cur.base, closed: d.closed !== undefined ? d.closed : cur.closed, gates: gts, objects: objs };
 }
 function nxAiApplyEdit(t) {                                   // replace the track that is open in the editor, in place
   const st = currentStage, old = gates.map(gateCopy);
@@ -8493,7 +8510,7 @@ async function nxAiEdit(sample, text) {
   for (let attempt = 1; attempt <= 3 && !t && !fatal; attempt++) {
     nxAiMsg(attempt === 1 ? 'ה-AI מעדכן את המסלול...' : 'מתקן ומנסה שוב (' + attempt + ' מתוך 3)...');
     try {
-      t = nxBuildFromAi(await sample.json(nxAiEditPrompt(text, cur, feedback), { modelTier: 'default', cache: false }), true, true);
+      t = nxBuildFromAi(nxAiMerge(cur, await sample.json(nxAiEditPrompt(text, cur, feedback), { modelTier: 'default', cache: false })), true, true);
     } catch (e) {
       const code = e && e.code;
       if (code === 'not_granted') fatal = 'לא אושר שימוש ב-Claude.';
