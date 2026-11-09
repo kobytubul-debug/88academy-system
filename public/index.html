@@ -1244,7 +1244,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 224</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 225</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -9886,6 +9886,30 @@ function edChoose(id) {
   edMarkTile();
   edSyncMsg();
 }
+/* clicking an element in the list while exactly one element is selected: offer to replace it */
+function edSelectedOne() {                                                   // the single selected element, or null
+  if (edMulti.length > 1) return null;
+  if (selProp >= 0 && propData[selProp]) { const p = propData[selProp]; return { kind: 'prop', t: p.t, name: (PROP_TYPES[p.t] || {}).name || 'אלמנט' }; }
+  if (selected >= 0 && gates[selected]) return { kind: 'gate', t: '', name: 'שער' };
+  return null;
+}
+function edAskReplace(msg, yes, no) {
+  const old = document.getElementById('edAskBox'); if (old) old.remove();
+  const ov = document.createElement('div'); ov.id = 'edAskBox';
+  ov.style.cssText = 'position:fixed;inset:0;z-index:95;display:flex;align-items:center;justify-content:center;background:rgba(6,7,9,.6)';
+  ov.innerHTML = '<div style="background:#14171c;border:1px solid rgba(255,255,255,.18);padding:18px 20px;max-width:min(380px,90vw);text-align:center;direction:rtl;font:600 16px var(--ui,sans-serif);color:#fff"><div style="margin-bottom:14px;line-height:1.5"></div>' +
+    '<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><button class="b" data-r="y" style="min-width:90px">החלף</button><button class="b" data-r="n" style="min-width:90px">הצב חדש</button><button class="b" data-r="c" style="min-width:90px">ביטול</button></div></div>';
+  ov.firstElementChild.firstElementChild.textContent = msg;
+  const close = (fn) => { ov.remove(); if (fn) fn(); };
+  ov.addEventListener('click', (e) => { const r = e.target.dataset && e.target.dataset.r; if (r === 'y') close(yes); else if (r === 'n') close(no); else if (r === 'c' || e.target === ov) close(null); });
+  document.body.appendChild(ov);
+}
+function edPickDock(id, ask) {
+  const it = ED_ITEM[id]; if (!it) return;
+  const cur = edSelectedOne();
+  if (!cur || (cur.kind === it.kind && cur.t === it.t && it.kind === 'prop')) { edChoose(id); return; }       // nothing selected (or the same element): just pick it for placing
+  (ask || edAskReplace)('להחליף את "' + cur.name + '" שנבחר ב"' + it.name + '"?', () => { edReplaceWith(id); }, () => { edChoose(id); });
+}
 function edCancelPlace() { edPlace = null; edMarkTile(); edSyncMsg(); }
 function edSyncMsg() {
   const m = $('edPlaceMsg'); if (!m) return;
@@ -9906,7 +9930,7 @@ function edFillCat(box) {
     h += '<button class="edit" data-id="' + it.id + '" title="' + it.name + '"><span class="edimg">' + (u ? '<img alt="" src="' + u + '">' : '') + '</span><span class="nm">' + it.name + '</span></button>';
   });
   g.innerHTML = h;
-  g.querySelectorAll('.edit').forEach((b) => b.addEventListener('click', () => { edChoose(b.dataset.id); b.blur(); }));
+  g.querySelectorAll('.edit').forEach((b) => b.addEventListener('click', () => { edPickDock(b.dataset.id); b.blur(); }));
   edMarkTile();
 }
 function edRenderGrid() {
