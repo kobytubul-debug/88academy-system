@@ -1244,7 +1244,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 232</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 233</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -9189,6 +9189,26 @@ function nxField(el) {
   NX.draft = nxMerge(nxDefault(), NX.draft);
   nxTouch();
 }
+/* double-click on any slider: back to its default value */
+function nxSliderDefault(el) {
+  if (!el) return null;
+  if (el.dataset && el.dataset.def !== undefined) return el.dataset.def;
+  if (el.dataset && el.dataset.k && /^(theme|logo|hide|tx|ai|home|gx)\./.test(el.dataset.k)) {            // the manager's own sliders: the default configuration
+    let v = nxDefault(); el.dataset.k.split('.').forEach((p) => { v = v && typeof v === 'object' ? v[p] : undefined; });
+    return v === undefined || v === null || typeof v === 'object' ? null : String(v);
+  }
+  if (el.dataset && el.dataset.act === 'trk-env') return '0';
+  if (el.id === 'edpYaw') return '0';
+  if (el.id === 'edpSz') return '1';
+  return el.defaultValue !== undefined && el.defaultValue !== '' ? el.defaultValue : null;
+}
+if (typeof document !== 'undefined' && document.addEventListener) document.addEventListener('dblclick', (e) => {
+  const el = e.target; if (!el || el.tagName !== 'INPUT' || el.type !== 'range') return;
+  const d = nxSliderDefault(el); if (d === null || d === undefined) return;
+  el.value = d;
+  el.dispatchEvent(new Event('input', { bubbles: true }));
+  el.dispatchEvent(new Event('change', { bubbles: true }));
+}, true);
 function nxAdmWire() {
   const body = $('admBody');
   const nxShowDrone = (e) => {                                    // touching a drone's card in the drones tab shows that drone on the stage
