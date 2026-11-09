@@ -1245,7 +1245,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 259</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 261</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -7158,7 +7158,7 @@ const NX_HIDE = [
 function nxDefault() {
   return {
     theme: { ac: '#4cc3e6', am: '#e6b450', bg: '#0b0c0e', p1: '#14161a', p2: '#1b1e23', ln: '#2d3139', tx: '#d6d9de', mu: '#8b929c', ti: '', bt: '', bs: '', lg: '', lg2: '', it: '', ib: '', ot: '', tl: '', tl2: '', gr: '', rd: '', qb: '', qt: '', font: 'ui', btn: 'sharp', bw: 1, mbw: 420, balign: 'c', mvert: 'c', overlay: 0.75, bgImg: '', trans: 'slide', dur: 300, fadeMs: 450, gx: Object.assign({}, GX.st) },
-    tx: {}, hide: {}, home: [], tnames: {}, torder: [], stages: { off: {}, force: '', del: {} }, tcats: { cats: {}, of: {} }, drones: { off: {}, title: {}, desc: {}, col: {} },
+    tx: {}, hide: {}, home: [], tnames: {}, torder: [], stages: { off: {}, force: '', del: {}, bsel: false }, tcats: { cats: {}, of: {} }, drones: { off: {}, title: {}, desc: {}, col: {} },
     courses: {}, guides: {}, stick: {}, courseId: '', courseIds: [], staff: {},
     logo: { on: true, pages: { main: true, drone: false, missions: false, controls: false }, size: 6, x: 96, y: 91, color: '#ffffff', op: 85 }
   };
@@ -9126,8 +9126,8 @@ function nxAdmWire() {
       nxTouch(); nxAdmRender(); if (currentScreen === 'missions') buildCards(); nxToast('המסלול נמחק. לחץ שמירה כדי שהשחקנים יראו');
     }
     else if (a === 'trk-hide-builtin') { NX.draft.stages.del = NX.draft.stages.del || {}; STAGE_ORDER.forEach((k) => { NX.draft.stages.del[k] = true; delete NX.draft.tcats.of[k]; }); nxTouch(); nxAdmRender(); if (currentScreen === 'missions') buildCards(); nxToast('המסלולים המובנים הוסתרו. לחץ שמירה כדי לעדכן שחקנים'); }
-    else if (a === 'trk-show-builtin') { NX.draft.stages.del = {}; nxTouch(); nxAdmRender(); if (currentScreen === 'missions') buildCards(); nxToast('המסלולים המובנים הוחזרו'); }
-    else if (a === 'trk-restore') { delete NX.draft.stages.del[id]; nxTouch(); nxAdmRender(); if (currentScreen === 'missions') buildCards(); }
+    else if (a === 'trk-show-builtin') { NX.draft.stages.del = {}; NX.draft.stages.bsel = true; nxTouch(); nxAdmRender(); if (currentScreen === 'missions') buildCards(); nxToast('המסלולים המובנים הוחזרו'); }
+    else if (a === 'trk-restore') { NX.draft.stages.bsel = true; delete NX.draft.stages.del[id]; nxTouch(); nxAdmRender(); if (currentScreen === 'missions') buildCards(); }
     else if (a === 'rp-prev') { NX.openP = '_rp'; nxRpLogo().then((lg) => { NX.rpPrev = nxRpPages(lg).map((p) => p.toDataURL('image/jpeg', 0.7)); nxAdmRender(); }); }
     else if (a === 'rp-close') { NX.rpPrev = []; NX.openP = '_rp'; nxAdmRender(); }
     else if (a === 'rp-pdf') { NX.openP = '_rp'; nxRpSave(); }
@@ -9267,7 +9267,7 @@ function nxSubscribe() {
   db.doc('cfg/main').onSnapshot((s) => {
     const d = s.exists ? s.data() : null;
     NX.pub = nxMerge(nxDefault(), d && d.cfg ? nxClone(d.cfg) : {});
-    if (!d || !d.cfg) STAGE_ORDER.forEach((k) => { NX.pub.stages.del[k] = true; });          // a fresh install starts without the built-in maps
+    if (!NX.pub.stages.bsel) STAGE_ORDER.forEach((k) => { NX.pub.stages.del[k] = true; });          // the built-in maps stay hidden until the manager brings them back (bsel)
     if (NX.role === 'admin' && (!NX.dirty || !NX.draft)) NX.draft = nxClone(NX.pub);
     nxApplyView(); nxHoldCheck(); if (NX.role === 'admin') nxAdmSoftRender();
   }, () => { NX.pub = NX.pub || nxDefault(); nxApplyView(); });
