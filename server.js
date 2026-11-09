@@ -8,6 +8,8 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const zlib = require('zlib');
+const AI = require('./ai');
+const aiUse = new Map();                       // uid -> times of its Gemini checks (30 an hour)
 
 const PORT = Number(process.env.PORT) || 3000;
 const PROD = process.env.NODE_ENV === 'production';
@@ -120,6 +122,17 @@ async function api(req, res, url) {
     const b = await body(req);
     if (eq(b.u || '', ADMIN_USER) && eq(b.p || '', ADMIN_PASS)) return json(res, 200, { token: makeToken() });
     failed(ip); return json(res, 401, { error: 'שם משתמש או סיסמה שגויים' });
+  }
+  if (p === '/api/ai/status') return json(res, 200, { key: AI.hasKey(), model: AI.model(), admin });
+  if (p === '/api/ai/check' && req.method === 'POST') {                // Gemini judges the numbers of a finished flight
+    if (!uid) return json(res, 400, { error: 'no-uid' });
+    const now = Date.now(), L = (aiUse.get(uid) || []).filter((t) => now - t < 3600000);
+    if (L.length >= 30 || limited(ipOf(req) + ':ai', 120)) return json(res, 429, { error: 'rate' });
+    L.push(now); aiUse.set(uid, L); failed(ipOf(req) + ':ai');
+    const b = await body(req);
+    if (!b || typeof b !== 'object' || !String(b.crit || '').trim()) return json(res, 400, { error: 'no-criteria' });
+    try { return json(res, 200, await AI.check(b)); }
+    catch (e) { console.error('ai check:', e.message); return json(res, e.code === 'no-key' ? 503 : 502, { error: e.code || 'failed' }); }
   }
   if (p === '/api/admin/me') return json(res, 200, { admin });
   if (p === '/api/admin/import' && req.method === 'POST') {            // load an export of the old data (admin only)

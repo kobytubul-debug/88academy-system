@@ -1244,7 +1244,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 211</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 212</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -7281,11 +7281,47 @@ function nxAttempt(r) {                                       // a race was fini
     if (typeof p.c === 'number' && p.c >= 0 && (r.crashes || 0) > p.c) why.push('התרסקויות ' + (r.crashes || 0) + ' (מותר עד ' + p.c + ')');
     if (p.s > 0 && r.stars < p.s) why.push('כוכבים ' + r.stars + ' (נדרשו ' + p.s + ')');
     out.ok = !why.length;
+    const ai = p.ai && p.ai.on && String(p.ai.crit || '').trim() ? p.ai : null;
+    if (ai && out.ok && NX.role === 'player') {                  // numbers are fine: Gemini judges the flight against the instructor's criteria
+      out.ok = ai.mode === 'note'; out.ai = ai;
+      out.msg = 'ג׳מיני בודק את הטיסה שלך...'; NXH.examMsg = out.msg;
+      nxAiJudge(r, it, st, ai, k);
+      return out;
+    }
     out.msg = out.ok ? 'עברת את ' + (it.kind === 'f' ? 'המבחן המסכם' : 'מבחן השלב') + '!' : 'לא עברת את המבחן: ' + why.join(', ') + '. אפשר לנסות שוב';
     NXH.examMsg = out.msg; nxToast(out.msg);
   }
   if (NX.role === 'player' && NX.un) nxHistPush({ ts: Date.now(), id: k, n: st.name, t: +r.total.toFixed(2), b: +r.bestLap.toFixed(2), c: r.crashes || 0, s: r.stars, d: settings.preset, cid: (NX.cseq && (NX.cseq.find((s) => s.id === k) || {}).cid) || '', x: it ? (out.ok ? 1 : 0) : undefined });
   return out;
+}
+const NXAI = { busy: false };
+function nxAiHistory(k) { return (NX.hist || []).filter((a) => a.id === k).slice(-8).map((a) => ({ t: a.t, c: a.c, s: a.s })); }
+async function nxAiJudge(r, it, st, ai, k) {
+  const entry = { ts: Date.now(), id: k, n: st.name, t: +r.total.toFixed(2), b: +r.bestLap.toFixed(2), c: r.crashes || 0, s: r.stars, d: settings.preset, cid: it.cid || '', x: ai.mode === 'note' ? 1 : 0 };
+  const say = (m) => { NXH.examMsg = m; nxToast(m); const el = $('resNew'); if (el && resultsVisible) el.textContent = m; };
+  let ans = null;
+  try {
+    const uid = (function () { try { return localStorage.getItem('nxHostUid') || ''; } catch (e) { return ''; } })();
+    const res = await (NXAI.fetch || fetch)('/api/ai/check', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Uid': uid }, body: JSON.stringify({
+      stage: st.name, course: (NX.eff && NX.eff.courses && NX.eff.courses[it.cid] && NX.eff.courses[it.cid].name) || '', crit: ai.crit,
+      flight: { total: r.total, bestLap: r.bestLap, laps: r.laps.length, lapTimes: r.laps, crashes: r.crashes || 0, stars: r.stars, par3: r.par && r.par.par3, gates: gates.length, drone: settings.preset },
+      history: nxAiHistory(k) }) });
+    if (!res.ok) throw new Error('http ' + res.status);
+    ans = await res.json();
+  } catch (e) { ans = null; }
+  if (!ans || !ans.verdict) {                                  // no answer (no key, no connection, the Claude window): the instructor decides
+    entry.x = 1; entry.ai = { v: 'none' };                       // never block a student because the check is down: the normal conditions already passed
+    say('ג׳מיני לא זמין כרגע, והמבחן נבדק לפי התנאים הרגילים. עברת!');
+    if (ai.mode !== 'note' && NX.un) nxMarkDone(k);
+  } else {
+    const min = Number(ai.min) || 80, pass = ans.verdict === 'pass' && ans.confidence >= min;
+    entry.ai = { v: ans.verdict, c: ans.confidence, f: String(ans.feedback || '').slice(0, 300), n: String(ans.notes || '').slice(0, 300) };
+    if (ai.mode !== 'note') entry.x = pass ? 1 : 0;
+    const head = ai.mode === 'note' ? 'משוב ג׳מיני: ' : pass ? 'עברת את המבחן! ' : ans.verdict === 'fail' ? 'לא עברת הפעם. ' : 'ג׳מיני לא היה בטוח מספיק, והמדריך יבדוק. ';
+    say(head + (ans.feedback || ''));
+    if (ai.mode !== 'note' && pass && NX.un) nxMarkDone(k);
+  }
+  try { if (NX.role === 'player' && NX.un) nxHistPush(entry); } catch (e) { /* history is best effort */ }
 }
 function nxMarkDone(id) {                                    // the student finished this track: it counts for good (saved per username, and sent with the live data)
   if (!NX.un || !id || nxIsDone(id)) return;
@@ -7826,7 +7862,16 @@ function nxCrsPass(base, p) {
   const cr = typeof p.c === 'number' ? p.c : -1;
   return nxF('תנאי מעבר: זמן מרבי (שניות, 0 = ללא)', '<input type="number" min="0" step="1" data-num="1" data-k="' + base + '.pass.t" value="' + (Number(p.t) || 0) + '">') +
     nxF('תנאי מעבר: התרסקויות מותרות', '<select data-num="1" data-k="' + base + '.pass.c">' + opt(-1, 'ללא הגבלה', cr) + [0, 1, 2, 3, 5].map((n) => opt(n, n === 0 ? 'בלי התרסקות' : 'עד ' + n, cr)).join('') + '</select>') +
-    nxF('תנאי מעבר: כוכבים לפחות', '<select data-num="1" data-k="' + base + '.pass.s">' + opt(0, 'ללא', p.s) + opt(1, '1', p.s) + opt(2, '2', p.s) + opt(3, '3', p.s) + '</select>');
+    nxF('תנאי מעבר: כוכבים לפחות', '<select data-num="1" data-k="' + base + '.pass.s">' + opt(0, 'ללא', p.s) + opt(1, '1', p.s) + opt(2, '2', p.s) + opt(3, '3', p.s) + '</select>') +
+    nxAiPassFields(base, p.ai);
+}
+function nxAiPassFields(base, a) {                              // Gemini reads the numbers of the flight and judges them by the instructor's own criteria
+  a = a || {};
+  return '<div class="nxai">' + nxF('בדיקת ג׳מיני', '<label class="nxchk1"><input type="checkbox" data-k="' + base + '.pass.ai.on"' + (a.on ? ' checked' : '') + '> ג׳מיני בודק את הטיסה אחרי המבחן</label>') +
+    (a.on ? nxF('הקריטריונים שלי (בעברית חופשית)', '<textarea rows="4" maxlength="1500" data-k="' + base + '.pass.ai.crit" placeholder="לדוגמה: עובר רק בלי התרסקויות, ובזמן שמראה שיפור לעומת הניסיון הקודם. הקפה שנייה לא צריכה להיות איטית מהראשונה.">' + nxEsc(a.crit || '') + '</textarea>') +
+      nxF('מה ג׳מיני עושה', '<select data-k="' + base + '.pass.ai.mode"><option value="auto"' + (a.mode !== 'note' ? ' selected' : '') + '>מחליט ומעביר את התלמיד לשלב הבא</option><option value="note"' + (a.mode === 'note' ? ' selected' : '') + '>נותן משוב בלבד (המעבר לפי התנאים למעלה)</option></select>') +
+      nxF('ביטחון מינימלי להעברה', '<select data-num="1" data-k="' + base + '.pass.ai.min">' + [60, 70, 80, 90].map((n) => '<option value="' + n + '"' + (Number(a.min || 80) === n ? ' selected' : '') + '>' + n + '%</option>').join('') + '</select>') +
+      '<div class="nxn">התנאים למעלה (זמן, התרסקויות, כוכבים) נשארים חובה. ג׳מיני מחליט רק כשהם מתקיימים. כשהוא לא בטוח, התלמיד לא מועבר והמדריך רואה את זה במעקב. עובד רק באתר ב-Render ועם GEMINI_API_KEY.</div>' : '') + '</div>';
 }
 function nxGroupCourses(g) {                                  // the group's courses in their order (older groups kept a single courseId)
   const cs = NX.draft.courses || {};
@@ -8344,7 +8389,7 @@ function nxProgOf(un, from, to) {                            // one student: the
   };
   const items = seq ? seq.map((s) => row(s.id, s.kind, nxStName(s.id))) : Object.keys(by).map((id) => row(id, 't', nxStName(id)));
   const doneN = items.filter((i) => i.done).length, days = {}; list.forEach((r) => { days[new Date(r.ts).toDateString()] = 1; });
-  return { un, name: a.name || un, gid: a.gid || '', items, total: items.length, doneN, attempts: list.length, days: Object.keys(days).length, last: list.length ? list[list.length - 1].ts : 0, sum: items.filter((i) => i.done).reduce((t, i) => t + i.best, 0), course: !!seq };
+  return { un, name: a.name || un, gid: a.gid || '', items, total: items.length, doneN, attempts: list.length, days: Object.keys(days).length, last: list.length ? list[list.length - 1].ts : 0, sum: items.filter((i) => i.done).reduce((t, i) => t + i.best, 0), course: !!seq, aiLog: all.filter((r) => r.ai && r.ai.v && r.ai.v !== 'none').slice(-5).reverse() };
 }
 function nxProgRank(rows) {                                  // more finished items first, then the lower total of best times
   return rows.slice().sort((a, b) => b.doneN - a.doneN || a.sum - b.sum || a.name.localeCompare(b.name, 'he'));
@@ -8366,6 +8411,7 @@ function nxTabProgress() {
     if (r.course) h += '<div class="pgbar"><i style="width:' + pct + '%"></i></div>';
     if (!r.items.length) h += '<p class="nxn">עדיין אין ניסיונות.</p>';
     else h += '<table class="pgt"><tr><th>פריט</th><th>מצב</th><th>ניסיונות</th><th>זמן טוב</th><th>שיפור</th><th>כוכבים</th></tr>' + r.items.map((i) => '<tr><td>' + nxEsc(i.name) + (i.kind === 'x' ? ' <small>(מבחן שלב)</small>' : i.kind === 'f' ? ' <small>(מבחן מסכם)</small>' : '') + '</td><td>' + (i.done ? '&#10003; עבר' : i.failed ? '&#10007; לא עבר' : i.n ? 'בתהליך' : '--') + '</td><td>' + i.n + '</td><td>' + (i.best ? nxTime(i.best) : '--') + '</td><td>' + (i.imp ? i.imp + '%' : '--') + '</td><td>' + (i.stars || '--') + '</td></tr>').join('') + '</table>';
+    if (r.aiLog && r.aiLog.length) h += '<div class="nxn"><b>בדיקות ג׳מיני אחרונות:</b><br>' + r.aiLog.map((a) => nxEsc(nxStName(a.id)) + ' · ' + date(a.ts) + ' · ' + ({ pass: 'עבר', fail: 'נכשל', unclear: 'לא ברור' }[a.ai.v] || a.ai.v) + ' (' + (a.ai.c || 0) + '%)' + (a.ai.n ? ' · ' + nxEsc(a.ai.n) : '')).join('<br>') + '</div>';
     h += '</details>';
   });
   return h;
@@ -8815,6 +8861,7 @@ function nxField(el) {
   const k = el.dataset.k; if (!k) return;
   const v = el.type === 'checkbox' ? el.checked : (el.dataset.num ? Number(el.value) : el.value);
   nxSetPath(NX.draft, k, v);
+  if (/\.pass\.ai\.on$/.test(k)) { NX.draft = nxMerge(nxDefault(), NX.draft); nxTouch(); nxAdmRender(); return; }
   if (el.tagName === 'INPUT' && el.type === 'range') { const o = el.parentNode.querySelector('output'); if (o) o.textContent = el.value; }
   NX.draft = nxMerge(nxDefault(), NX.draft);
   nxTouch();

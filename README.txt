@@ -13,6 +13,8 @@
     NODE_VERSION    = 22.13.0
     NODE_ENV        = production
     DATA_DIR        = /data
+    GEMINI_API_KEY  = (לא חובה) מפתח Google AI Studio, לבדיקת טיסות על ידי ג׳מיני
+    GEMINI_MODEL    = (לא חובה) שם המודל. ברירת מחדל gemini-2.5-flash
     ADMIN_USERNAME  = שם המשתמש של המנהל
     ADMIN_PASSWORD  = סיסמה חזקה למנהל
 - Disk: Mount Path = /data. הנתונים נשמרים ב-/data/nexus.json. בלי Disk הם נמחקים בכל עדכון.
