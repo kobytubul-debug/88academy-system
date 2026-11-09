@@ -1244,7 +1244,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 225</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 226</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -7317,7 +7317,7 @@ async function nxAiJudge(r, it, st, ai, k) {
   try {
     const uid = (function () { try { return localStorage.getItem('nxHostUid') || ''; } catch (e) { return ''; } })();
     const res = await (NXAI.fetch || fetch)('/api/ai/check', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Uid': uid }, body: JSON.stringify({
-      track: Object.assign({ map: MAP_BASES[st.base || st.id] || '', laps: LAPS || 1 }, ai.track || {}), stage: st.name, course: (NX.eff && NX.eff.courses && NX.eff.courses[it.cid] && NX.eff.courses[it.cid].name) || '', crit: ai.crit,
+      track: Object.assign({ map: MAP_BASES[st.base || st.id] || '', laps: (st && st.laps >= 1 && st.laps <= 20 ? Math.floor(st.laps) : LAPS) || 1 }, ai.track || {}), stage: st.name, course: (NX.eff && NX.eff.courses && NX.eff.courses[it.cid] && NX.eff.courses[it.cid].name) || '', crit: ai.crit,
       flight: { total: r.total, bestLap: r.bestLap, laps: r.laps.length, lapTimes: ai.noLaps ? undefined : r.laps, crashes: r.crashes || 0, stars: r.stars, par3: r.par && r.par.par3, gates: gates.length, drone: settings.preset },
       history: nxAiHistory(k, ai.hist) }) });
     if (!res.ok) throw new Error('http ' + res.status);
