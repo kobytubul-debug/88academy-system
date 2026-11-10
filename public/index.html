@@ -1306,7 +1306,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 312</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 313</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -6795,8 +6795,8 @@ function buildDroneModel(id) {
       am(new THREE.CylinderGeometry(0.017, 0.019, yb - 0.04, 12), black, 0.06 + (yb - 0.04 - 0.02) / 2);           // black mast
     }                                                                                                          // racer: no mast, the head sits straight on the body
     am(new THREE.CylinderGeometry(headR, 0.02, headL * 0.28, 16), headMat, yb + headL * 0.15);                  // tapered shoulder
-    am(new THREE.CylinderGeometry(headR, headR, headL * 0.5, 16), headMat, yb + headL * 0.53);                  // head body
-    am(new THREE.SphereGeometry(headR, 16, 10), headMat, yb + headL * 0.78).scale.y = 1.0;                        // rounded top
+    am(new THREE.CylinderGeometry(headR, headR, headL * 0.64, 16), headMat, yb + headL * 0.28 + headL * 0.32);   // head body
+    am(new THREE.CylinderGeometry(headR * 0.86, headR, headL * 0.08, 16), headMat, yb + headL * 0.96);          // small bevel, then a flat top
     A.position.set(0, race ? 0.07 : 0.19, race ? 0.24 : 0.5); A.rotation.x = 0.6;
     (race ? grp : tgt).add(A);
     /* flight-controller details: signal LEDs, wiring and a status light, so the electronics read as real parts */
