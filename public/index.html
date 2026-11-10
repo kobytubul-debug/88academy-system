@@ -988,6 +988,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
   <div id="editorBox">
     <div class="eddh">בקרה</div>
     <div id="edSel">לא נבחר שער</div>
+    <div class="row" style="gap:6px"><button class="b" id="edGatePrev" style="flex:1" title="עבור לשער הקודם">&#9654; שער קודם</button><button class="b" id="edGateNext" style="flex:1" title="עבור לשער הבא">שער הבא &#9664;</button></div>
     <div id="edProps" style="display:none">
       <details class="eds" open><summary>מיקום</summary>
       <div class="edprow2"><label>X</label><input type="number" id="edpX" step="0.5"><label>Z</label><input type="number" id="edpZ" step="0.5"><label id="edpYl">גובה</label><input type="number" id="edpY" step="0.5"></div>
@@ -1297,7 +1298,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 284</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 285</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -10599,6 +10600,13 @@ function edSelectEntry(e) {
   editCam.position.x += dx; editCam.position.y += dy; editCam.position.z += dz;
   orbit.target.set(e.x, e.y, e.z); orbit.update();
 }
+function edGateStep(dir) {                                  // next / previous GATE (props skipped): select it and bring it to the centre of the view
+  if (!gates.length) return false;
+  const n = gates.length, from = selected >= 0 ? selected : (dir > 0 ? -1 : 0);
+  const i = ((from + dir) % n + n) % n, g = gates[i];
+  edSelectEntry({ kind: 'gate', i, x: g.x, y: g.y, z: g.z });
+  return true;
+}
 function edStep(dir) {
   const list = edList(); if (!list.length) return;
   let k = edCurIndex(list);
@@ -10971,6 +10979,8 @@ function edpApply(what, v) {
   $('edGmSz').addEventListener('change', (e) => { edSetGm('size', e.target.value); e.target.blur(); });
   $('edGmCol').addEventListener('change', (e) => { edSetGm('col', e.target.value); e.target.blur(); });
   $('edGmReset').addEventListener('click', (e) => { edSetGm('reset'); e.target.blur(); });
+  $('edGateNext').addEventListener('click', (e) => { edGateStep(1); e.currentTarget.blur(); });
+  $('edGatePrev').addEventListener('click', (e) => { edGateStep(-1); e.currentTarget.blur(); });
   $('edUndo').addEventListener('click', (e) => { edUndoStep(); e.target.blur(); });
   $('edRedo').addEventListener('click', (e) => { edRedoStep(); e.target.blur(); });
   $('edClone').addEventListener('click', (e) => { edCloneSel(); e.target.blur(); });
