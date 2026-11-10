@@ -88,7 +88,8 @@ function broadcast(p, data) {
 setInterval(() => clients.forEach((c) => c.res.write(': ping\n\n')), 25000).unref();
 
 // ---------- http ----------
-const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.ico': 'image/x-icon', '.json': 'application/json; charset=utf-8' };
+const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.ico': 'image/x-icon', '.json': 'application/json; charset=utf-8', '.mp3': 'audio/mpeg', '.ogg': 'audio/ogg', '.m4a': 'audio/mp4', '.wav': 'audio/wav' };
+const AUDIO = new Set(['.mp3', '.ogg', '.m4a', '.wav']);
 const HEAD = { 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'same-origin' };
 function json(res, code, o) { const b = JSON.stringify(o); res.writeHead(code, Object.assign({ 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' }, HEAD)); res.end(b); }
 function body(req) {
@@ -102,6 +103,15 @@ function body(req) {
 const cache = new Map();                      // file -> { mtime, raw, gz }
 function sendFile(req, res, file) {
   let st; try { st = fs.statSync(file); if (!st.isFile()) throw new Error('x'); } catch (e) { res.writeHead(404, HEAD); return res.end('Not found'); }
+  if (AUDIO.has(path.extname(file))) {                                 // music: not compressed, with byte ranges so browsers can start playing and seek
+    const size = st.size, type = TYPES[path.extname(file)], m = /^bytes=(\d*)-(\d*)$/.exec(String(req.headers.range || ''));
+    const h = Object.assign({ 'Content-Type': type, 'Accept-Ranges': 'bytes', 'Cache-Control': 'public, max-age=86400' }, HEAD);
+    let a = 0, b = size - 1, code = 200;
+    if (m && (m[1] || m[2])) { if (m[1]) { a = Number(m[1]); if (m[2]) b = Math.min(Number(m[2]), size - 1); } else { a = Math.max(0, size - Number(m[2])); } if (a > b || a >= size) { res.writeHead(416, Object.assign({ 'Content-Range': 'bytes */' + size }, HEAD)); return res.end(); } code = 206; h['Content-Range'] = 'bytes ' + a + '-' + b + '/' + size; }
+    h['Content-Length'] = b - a + 1; res.writeHead(code, h);
+    if (req.method === 'HEAD') return res.end();
+    return fs.createReadStream(file, { start: a, end: b }).on('error', () => res.destroy()).pipe(res);
+  }
   let c = cache.get(file);
   if (!c || c.mtime !== st.mtimeMs) { const raw = fs.readFileSync(file); c = { mtime: st.mtimeMs, raw, gz: zlib.gzipSync(raw, { level: 6 }) }; cache.set(file, c); }
   const gz = /\bgzip\b/.test(String(req.headers['accept-encoding'] || ''));
@@ -192,6 +202,8 @@ const server = http.createServer((req, res) => {
   }
   if (req.method !== 'GET' && req.method !== 'HEAD') { res.writeHead(405, HEAD); return res.end(); }
   const map = { '/': 'index.html', '/index.html': 'index.html', '/admin': 'index.html', '/admin/': 'index.html', '/import': 'import.html' };   // /admin is the same page: the game shows the manager sign-in there
+  const mm = /^\/music\/([A-Za-z0-9_\-.]{1,80})$/.exec(url.pathname);            // the music files (public/music), nothing else is served from disk
+  if (mm && !/^\.+$/.test(mm[1]) && AUDIO.has(path.extname(mm[1]))) return sendFile(req, res, path.join(PUBLIC, 'music', mm[1]));
   const f = map[url.pathname];
   if (!f) { res.writeHead(404, HEAD); return res.end('Not found'); }
   sendFile(req, res, path.join(PUBLIC, f));
