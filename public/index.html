@@ -931,7 +931,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 .stkcal{width:100%;font-size:12px;border-collapse:collapse;margin-top:6px}.stkcal td{padding:2px 6px;border-bottom:1px solid #ffffff14}.stkcal td:last-child{text-align:left}
 .fpt{margin:12px 0 4px}.fpbox{margin:6px 0 10px;padding:8px;background:rgba(255,255,255,.04);border-radius:4px}.stkstars{color:#e0b255;letter-spacing:1px}.stkstars .off{color:#4a4f57}.spk{width:160px;height:34px;background:rgba(0,0,0,.25);display:block}.fpgr{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:4px}.fptr{margin-top:6px}
 
-#mzDock{position:fixed;right:10px;top:10px;z-index:61;display:none;flex-direction:row-reverse;gap:6px;align-items:center}
+#mzDock{position:fixed;right:10px;top:10px;z-index:145;display:none;flex-direction:row-reverse;gap:6px;align-items:center}
 body.mz-on #nxBar{right:104px}
 #mzDock button.mzb{width:36px;height:36px;border-radius:0;border:0;background:var(--tile,rgba(16,18,22,.88));box-shadow:inset 0 2px 0 var(--ac);color:var(--tx);display:flex;align-items:center;justify-content:center;cursor:pointer}
 #mzDock button.mzb:hover{color:var(--ac)}
@@ -940,7 +940,7 @@ body.mz-on #nxBar{right:104px}
 #mzVolBox{position:absolute;right:0;top:40px;display:none;background:var(--tile,rgba(16,18,22,.95));box-shadow:inset 0 2px 0 var(--ac);padding:10px 14px}
 #mzSpkWrap:hover #mzVolBox,#mzSpkWrap:focus-within #mzVolBox{display:block}
 #mzVolBox input,#mzVolRow input{width:120px;accent-color:var(--ac)}
-#mzList{position:fixed;right:10px;top:52px;z-index:62;display:none;flex-direction:column;width:min(300px,80vw);max-height:70vh;background:var(--tile,rgba(16,18,22,.96));box-shadow:inset 0 2px 0 var(--ac);padding:10px;gap:8px;direction:rtl}
+#mzList{position:fixed;right:10px;top:52px;z-index:146;display:none;flex-direction:column;width:min(300px,80vw);max-height:70vh;background:var(--tile,rgba(16,18,22,.96));box-shadow:inset 0 2px 0 var(--ac);padding:10px;gap:8px;direction:rtl}
 .mzh{display:flex;align-items:center;justify-content:space-between;color:var(--ac);font-weight:700}
 #mzListBody{overflow:auto;display:flex;flex-direction:column;gap:4px}
 .mzrow{display:flex;gap:8px;align-items:center;text-align:right;background:transparent;border:1px solid transparent;border-radius:8px;color:var(--tx);padding:7px 8px;cursor:pointer;font:inherit}
@@ -1326,7 +1326,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="10" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="10" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 329</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 330</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
