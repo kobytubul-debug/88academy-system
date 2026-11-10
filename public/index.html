@@ -277,6 +277,7 @@ kbd{display:inline-block;min-width:26px;text-align:center;padding:1px 7px;margin
 .stktitle{font-size:13px;margin-bottom:6px}.stkok{color:#5fd08a}.stkbad{color:#e5483a}
 .stkrow{display:flex;align-items:center;gap:8px;margin:3px 0;direction:ltr}.stkn{width:42px;font-size:12px;text-align:right;direction:rtl}.stksvg{flex:1;height:44px;background:rgba(0,0,0,.25)}.stkl{width:74px;font-size:11px;color:#e5483a;direction:rtl}
 .stknote{font-size:12px;opacity:.75;margin-top:4px}
+.stkch{margin-top:6px;direction:rtl}.stkch .r{display:grid;grid-template-columns:150px 1fr 110px;gap:10px;align-items:center;padding:6px 4px;border-bottom:1px solid var(--ln);font-size:13px}.stkch .nm{font-weight:600}.stkch .tr{position:relative;height:16px;background:rgba(255,255,255,.06);direction:ltr}.stkch .b{position:absolute;top:0;bottom:0;left:0;background:var(--ac,#4cc3e6)}.stkch .dv{position:absolute;top:0;bottom:0}.stkch .dv.neg{background:#e5483a}.stkch .dv.pos{background:#5fd08a}.stkch .tk{position:absolute;top:-3px;bottom:-3px;width:2px;background:#fff;opacity:.8}.stkch .vl{direction:ltr;text-align:left;font-size:12px}.stkch .vl b{font-size:13px}.stkch .gp{direction:ltr;text-align:left;font-weight:700}.stkch .gp.neg{color:#ff8a7e}.stkch .gp.pos{color:#5fd08a}.stkch .gp.zero{color:var(--mu)}
 .stktab{width:100%;border-collapse:collapse;font-size:14px;margin-top:6px;direction:rtl}.stktab th{font-weight:600;font-size:12px;color:var(--mu);text-align:right;padding:4px 8px;border-bottom:1px solid var(--ln)}.stktab td{padding:7px 8px;border-bottom:1px solid #ffffff14;text-align:right}.stktab td.n{font-weight:600}.stktab td[dir=ltr]{text-align:right;direction:ltr;unicode-bidi:plaintext}
 .stktab tr.ok .g{color:#5fd08a}.stktab tr.bad td{color:#ff8a7e}.stktab tr.bad .g{font-weight:700}.stktab tr.soft .g,.stktab tr.soft td b{color:#e6b450}.stktab tr.bad{background:rgba(229,72,58,.08)}.stkv{margin:6px 18px 0 0;padding:0;font-size:13px;color:#ffb3a8}
 
@@ -1291,7 +1292,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 278</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 279</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -4986,31 +4987,32 @@ function gateArrowSync(go) {
   go.arrow.visible = !!editorMode && sp.kind !== 'none';
   go.arrow.position.y = -(sp.oh + 0.55 * k);
 }
-const GMK = { grp: null, gate: -1, arrows: [], t: 0 };
+const GMK = { grp: null, gate: -1, arrows: [], t: 0, key: '' };
+function gmDesign() { const g = NXH.gm || {}; return { on: g.on !== false, size: g.size || 1, col: g.col || '#ffffff' }; }
 function gmkClear() {
   if (GMK.grp && GMK.grp.parent) GMK.grp.parent.remove(GMK.grp);
   for (const a of GMK.arrows) { a.geometry.dispose(); a.material.dispose(); }
-  GMK.grp = null; GMK.gate = -1; GMK.arrows = [];
+  GMK.grp = null; GMK.gate = -1; GMK.arrows = []; GMK.key = '';
 }
 function gmkBuild(i) {
   gmkClear();
   const go = gateObjs[i]; if (!go) return;
-  const sp = go.spec, k = Math.max(sp.ow, sp.oh) / 1.55;
-  const g = new THREE.Group();
+  const sp = go.spec, D = gmDesign(), k = Math.max(sp.ow, sp.oh) / 1.55 * D.size;
+  const g = new THREE.Group(); GMK.key = D.size + D.col;
   for (let n = 0; n < 4; n++) {
     const m = new THREE.Mesh(new THREE.ConeGeometry(0.16 * k, 0.45 * k, 10),
-      new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 1, depthTest: false, depthWrite: false }));
+      new THREE.MeshBasicMaterial({ color: new THREE.Color(D.col), transparent: true, opacity: 1, depthTest: false, depthWrite: false }));
     m.renderOrder = 20;
     m.userData.ang = n * Math.PI / 2;          // 0 = right, 90 = up, 180 = left, 270 = down
     g.add(m); GMK.arrows.push(m);
   }
-  g.userData.R = Math.max(0.4, Math.min(sp.iw, sp.ih) * 0.5 * 0.85);
+  g.userData.R = Math.max(0.4, Math.min(sp.iw, sp.ih) * 0.5 * 0.85 * Math.min(1, D.size > 1 ? 1 : 1));
   go.group.add(g);
   GMK.grp = g; GMK.gate = i;
 }
 function gmkFrame(dt) {
-  const want = (!editorMode && !inMenu && (state === 'racing' || state === 'countdown') && gateObjs[nextGate] && gateObjs[nextGate].spec.kind !== 'none') ? nextGate : -1;
-  if (want !== GMK.gate || (want >= 0 && GMK.grp && GMK.grp.parent !== gateObjs[want].group)) { if (want < 0) gmkClear(); else gmkBuild(want); }
+  const D = gmDesign(), want = (D.on && !editorMode && !inMenu && (state === 'racing' || state === 'countdown') && gateObjs[nextGate] && gateObjs[nextGate].spec.kind !== 'none') ? nextGate : -1;
+  if (want !== GMK.gate || (want >= 0 && GMK.key !== D.size + D.col) || (want >= 0 && GMK.grp && GMK.grp.parent !== gateObjs[want].group)) { if (want < 0) gmkClear(); else gmkBuild(want); }
   if (!GMK.grp) return;
   GMK.t = (GMK.t + dt / 1.1) % 1;               // 1.1 s cycle: converge, vanish, restart
   const t = GMK.t, e = t * t * (3 - 2 * t), R = GMK.grp.userData.R;
@@ -5018,7 +5020,7 @@ function gmkFrame(dt) {
   for (const m of GMK.arrows) {
     const a = m.userData.ang;
     m.position.set(Math.cos(a) * r, Math.sin(a) * r, 0);
-    m.rotation.set(0, 0, a - Math.PI / 2);      // cone tip (+Y) points back toward the centre
+    m.rotation.set(0, 0, a + Math.PI / 2);      // cone tip (+Y) points inward, toward the centre
     m.material.opacity = op;
   }
 }
@@ -7970,13 +7972,39 @@ function nxStickTable(j) {                                      // the flight as
     '<table class="stktab"><thead><tr><th>מדד</th><th>יעד</th><th>הישג</th><th>לשיפור</th></tr></thead><tbody>' + rows + '</tbody></table>' +
     '<div class="stknote">לשיפור: ההפרש מהיעד. פלוס = מעל היעד, מינוס = מתחתיו. ירוק = בתוך היעד, אדום = מחוץ ליעד.</div>';
 }
+function nxStickChart(j) {                                      // the flight as a bar chart: bar = the achievement, tick = the target edge, the deviating part is red under the target / green over it
+  if (!j || !j.rule || !j.M) return '';
+  const R = j.rule, keys = nxRuleKeys(R); if (!keys.length) return '';
+  const r1 = (v) => Math.round(Number(v) * 10) / 10, sg = (d) => (d > 0 ? '+' : d < 0 ? '\u2212' : '') + Math.abs(r1(d)).toString();
+  let rows = '';
+  keys.forEach((k) => {
+    const L = R.lim[k], mn = nxRuleNum(L.min), mx = nxRuleNum(L.max), v = Number(j.M[k]), u = NXE_M[k][1] ? ' ' + NXE_M[k][1] : '';
+    let ref, gap;
+    if (mx !== null && v > mx) { ref = mx; gap = v - mx; }
+    else if (mn !== null && v < mn) { ref = mn; gap = v - mn; }
+    else if (mx !== null && (mn === null || mx - v <= v - mn)) { ref = mx; gap = v - mx; }
+    else { ref = mn; gap = v - mn; }
+    const top = Math.max(Math.abs(v), Math.abs(ref), mx !== null ? Math.abs(mx) : 0) * 1.12 || 1;
+    const pc = (x) => Math.max(0, Math.min(100, Math.abs(x) / top * 100)).toFixed(1);
+    const lo = Math.min(Math.abs(v), Math.abs(ref)), hi = Math.max(Math.abs(v), Math.abs(ref));
+    const cls = gap < 0 ? 'neg' : gap > 0 ? 'pos' : 'zero';
+    const tgt = mn !== null && mx !== null ? r1(mn) + '\u2013' + r1(mx) : mx !== null ? '\u2264 ' + r1(mx) : '\u2265 ' + r1(mn);
+    rows += '<div class="r"><div class="nm">' + nxEsc(NXE_M[k][0]) + '</div><div class="tr"><div class="b" style="width:' + pc(lo) + '%"></div>' +
+      (cls === 'zero' ? '' : '<div class="dv ' + cls + '" style="left:' + pc(lo) + '%;width:' + (pc(hi) - pc(lo)).toFixed(1) + '%"></div>') +
+      '<div class="tk" style="left:' + pc(ref) + '%"></div></div>' +
+      '<div><div class="vl">יעד ' + tgt + u + '</div><div class="gp ' + cls + '">' + sg(gap) + u + ' <span class="vl"><b>(' + r1(v) + ')</b></span></div></div></div>';
+  });
+  return '<div class="stktitle">ניתוח הטיסה · ' + (j.ok ? '<b class="stkok">עומד ביעדים</b>' : '<b class="stkbad">לא עבר</b>') + '</div>' +
+    '<div class="stkch">' + rows + '</div>' +
+    '<div class="stknote">העמודה = ההישג. הקו הלבן = קצה היעד. החלק החורג מהיעד: אדום = מינוס (מתחת ליעד), ירוק = פלוס (מעליו).</div>';
+}
 function nxMeasured() {                                         // the judged flight of a track that has measurement limits (else null)
   const j = NXS.last; return j && j.rule && nxRuleKeys(j.rule).length ? j : null;
 }
 function nxStickShow() {                                        // fills the results screen
   let el = typeof document !== 'undefined' ? $('resStick') : null;
   if (!el) { const a = $('resNew'); if (!a || !a.parentNode || !document.createElement) return; el = document.createElement('div'); el.id = 'resStick'; a.parentNode.insertBefore(el, a.nextSibling); }
-  el.innerHTML = NXS.last ? nxStickTable(NXS.last) + nxCalTable(NXS.last) : '';
+  el.innerHTML = NXS.last ? nxStickChart(NXS.last) + nxCalTable(NXS.last) : '';
 }
 function nxCalTable(j) {                                        // admin only: every measured value of the flight, to set the limits from real flights
   if (NX.role !== 'admin' || !j || !j.M) return '';
@@ -8212,6 +8240,7 @@ function nxApplyTheme(t) {
   ['tr-slide', 'tr-fade', 'tr-zoom', 'tr-none', 'ba-l', 'ba-c', 'ba-r'].forEach((c) => b.classList.remove(c));
   b.classList.add('tr-' + t.trans, 'ba-' + t.balign);
   NXH.fadeIn = t.fadeMs + 70; NXH.fadeOut = t.fadeMs + 10; NXH.introMs = typeof t.introMs === 'number' ? clamp(t.introMs, 0, 6000) : 2600;
+  NXH.gm = { on: t.gmOn !== false, size: clamp(Number(t.gmSize) || 1, 0.3, 3), col: /^#[0-9a-f]{6}$/i.test(t.gmColor || '') ? t.gmColor : '#ffffff' };   // next-gate marker design
   const rgb = nxRgb(t.bg), a = clamp(t.overlay, 0, 1);
   $('menu').style.background = 'linear-gradient(180deg,rgba(' + rgb + ',' + (a * 0.85).toFixed(2) + '),rgba(' + rgb + ',' + Math.min(1, a * 1.2).toFixed(2) + '))' +
     (t.bgImg ? ',url("' + String(t.bgImg).replace(/"/g, '%22') + '") center/cover no-repeat' : '');
@@ -8874,6 +8903,9 @@ function nxLookParts(t) {
   h += nxF('משך (מ"ש)', nxRange('theme.dur', t.dur, 0, 1000, 25));
   h += nxF('מסך שחור בין שלבים (מ"ש)', nxRange('theme.fadeMs', t.fadeMs, 150, 1500, 50));
   h += nxF('מסך פתיחת שלב: זמן תצוגה (מ"ש, 0 = כבוי)', nxRange('theme.introMs', typeof t.introMs === 'number' ? t.introMs : 2600, 0, 6000, 100));
+  h += '<div class="nxchk"><label><input type="checkbox" data-k="theme.gmOn"' + (t.gmOn !== false ? ' checked' : '') + '> הצג חצים מתכנסים בשער הבא</label></div>';
+  h += nxF('חצי השער: גודל', nxRange('theme.gmSize', typeof t.gmSize === 'number' ? t.gmSize : 1, 0.3, 3, 0.1));
+  h += nxF('חצי השער: צבע', nxColor('theme.gmColor', /^#[0-9a-f]{6}$/i.test(t.gmColor || '') ? t.gmColor : '#ffffff'));
   P.trans = h;
   h = '<div class="nxchk">';
   NX_HIDE.forEach((r) => { h += '<label><input type="checkbox" data-k="hide.' + r[0] + '"' + (NX.draft.hide[r[0]] ? ' checked' : '') + '> הסתר: ' + r[1] + '</label>'; });
