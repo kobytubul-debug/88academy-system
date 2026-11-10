@@ -277,6 +277,7 @@ kbd{display:inline-block;min-width:26px;text-align:center;padding:1px 7px;margin
 .stktitle{font-size:13px;margin-bottom:6px}.stkok{color:#5fd08a}.stkbad{color:#e5483a}
 .stkrow{display:flex;align-items:center;gap:8px;margin:3px 0;direction:ltr}.stkn{width:42px;font-size:12px;text-align:right;direction:rtl}.stksvg{flex:1;height:44px;background:rgba(0,0,0,.25)}.stkl{width:74px;font-size:11px;color:#e5483a;direction:rtl}
 .stknote{font-size:12px;opacity:.75;margin-top:4px}
+#trkPeek{position:fixed;z-index:99999;display:none;width:min(580px,94vw);background:var(--p1,#14161a);border:1px solid var(--ac,#4cc3e6);padding:10px 12px;box-shadow:0 12px 40px rgba(0,0,0,.65);pointer-events:none;direction:rtl}#trkPeek.on{display:block}#trkPeek .pt{font-size:15px;font-weight:700;margin-bottom:6px;display:flex;justify-content:space-between;gap:10px}#trkPeek .pt small{font-weight:400;color:var(--mu,#8b929c);font-size:12px}
 .stkhead{margin:6px 0 10px;padding:10px 14px;direction:rtl;text-align:right;border-right:4px solid var(--ln);background:rgba(255,255,255,.04)}.stkhead.ok{border-right-color:#5fd08a}.stkhead.bad{border-right-color:#e5483a}.stkhead .vd{font-size:20px;font-weight:700}.stkhead.ok .vd{color:#5fd08a}.stkhead.bad .vd{color:#ff6a5c}.stkhead ul{margin:6px 0 0;padding:0 18px 0 0;font-size:15px;line-height:1.5}.stkhead ul.note{color:#e6b450;font-size:13px}
 .stkv2{display:flex;direction:rtl;gap:10px;align-items:flex-end;padding:4px 0 2px}.stkv2 .c{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center}.stkv2 .vl{font-size:18px;font-weight:700;margin-bottom:4px}.stkv2 .pl{position:relative;width:62%;height:170px;background:rgba(255,255,255,.06);border-bottom:2px solid var(--ln)}.stkv2 .b{position:absolute;left:0;right:0;bottom:0}.stkv2 .dv{position:absolute;left:0;right:0}.stkv2 .tk{position:absolute;left:-14%;right:-14%;height:0;border-top:3px solid #fff}.stkv2 .tk span{position:absolute;right:50%;transform:translateX(50%);top:4px;font-size:12px;font-weight:700;white-space:nowrap;background:rgba(0,0,0,.72);color:#fff;padding:1px 6px}.stkv2 .tk span.up{top:auto;bottom:4px}.stkv2 .nm{text-align:center;margin-top:5px;line-height:1.25}.stkv2 .nm b{display:block;font-size:14px}.stkv2 .nm small{display:block;font-size:11px;color:var(--mu)}.stkv2 .mk{font-size:20px;font-weight:700}.stkv2 .c.ok .mk{color:#5fd08a}.stkv2 .c.bad .mk{color:#e5483a}.stkv2 .c.soft .mk{color:#e6b450}.stkleg{font-size:11px;color:var(--mu);text-align:center;margin-top:6px}
 .stktab{width:100%;border-collapse:collapse;font-size:14px;margin-top:6px;direction:rtl}.stktab th{font-weight:600;font-size:12px;color:var(--mu);text-align:right;padding:4px 8px;border-bottom:1px solid var(--ln)}.stktab td{padding:7px 8px;border-bottom:1px solid #ffffff14;text-align:right}.stktab td.n{font-weight:600}.stktab td[dir=ltr]{text-align:right;direction:ltr;unicode-bidi:plaintext}
@@ -1298,7 +1299,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 288</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 289</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -1314,6 +1315,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 <div id="nxSpec"><span id="nxSpecInfo"></span><button id="nxSpecCam">מצלמה: מעקב</button><button id="nxSpecX">סיום צפייה (Esc)</button></div>
 <div id="nxHold"><div></div></div>
 <div id="nxToast"></div>
+<div id="trkPeek"></div>
 <div id="fade"><div id="fadeText">טוען...</div>
   <div id="introBox"><canvas id="introBg" width="480" height="270"></canvas>
     <div class="introCard"><div class="introTxt"><div class="introNum" id="introNum"></div><div class="introName" id="introName"></div><div class="introDesc" id="introDesc"></div><div class="introChips" id="introChips"></div><div class="introDr" id="introDr"></div></div>
@@ -6972,6 +6974,29 @@ function selectTrack(id) {
   syncEnvUI();
   setTrkBg(id);
 }
+/* hover (or tap) on a track's name or map thumbnail: a floating preview of the track on the map; it closes when the mouse leaves */
+function trkPeekShow(id, x, y) {
+  const st = STAGES[id], el = $('trkPeek'); if (!st || !el || typeof nxMapPreview !== 'function') return false;
+  const gts = st.gen(), len = Math.round(pathLen(gts));
+  el.innerHTML = '<div class="pt"><span>' + String(st.name).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])) + '</span><small>' + gts.length + ' שערים · ' + len + ' מ׳</small></div>' + nxMapPreview(st);
+  el.classList.add('on'); trkPeekMove(x, y); return true;
+}
+function trkPeekMove(x, y) {
+  const el = $('trkPeek'); if (!el) return;
+  const w = el.offsetWidth || 580, hgt = el.offsetHeight || 260, vw = window.innerWidth || 1200, vh = window.innerHeight || 800;
+  let l = x + 18, t = y + 18; if (l + w > vw - 8) l = x - w - 18; if (l < 8) l = 8; if (t + hgt > vh - 8) t = vh - hgt - 8; if (t < 8) t = 8;
+  el.style.left = l + 'px'; el.style.top = t + 'px';
+}
+function trkPeekHide() { const el = $('trkPeek'); if (el) el.classList.remove('on'); }
+(function trkPeekWire() {
+  if (typeof document === 'undefined' || !document.addEventListener) return;
+  const cell = (e) => { const t = e.target && e.target.closest ? e.target.closest('#trkBody td.thumb, #trkBody td.nm') : null; return t && t.parentNode && t.parentNode.dataset ? t : null; };
+  document.addEventListener('mouseover', (e) => { const c = cell(e); if (c) trkPeekShow(c.parentNode.dataset.id, e.clientX, e.clientY); });
+  document.addEventListener('mousemove', (e) => { const c = cell(e); if (c) trkPeekMove(e.clientX, e.clientY); else trkPeekHide(); });
+  document.addEventListener('mouseout', (e) => { if (cell(e) && !(e.relatedTarget && e.relatedTarget.closest && cell({ target: e.relatedTarget }) === cell(e))) trkPeekHide(); });
+  document.addEventListener('click', (e) => { const c = cell(e); if (c) trkPeekShow(c.parentNode.dataset.id, e.clientX, e.clientY); else trkPeekHide(); });     // touch: a tap opens it, a tap anywhere else closes it
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') trkPeekHide(); });
+})();
 function buildCards() {
   const body = $('trkBody');
   body.innerHTML = '';
