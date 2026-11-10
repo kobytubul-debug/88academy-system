@@ -1298,7 +1298,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 286</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 287</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -7988,7 +7988,7 @@ function nxStickTable(j) {                                      // the flight as
 }
 const NXE_BUCKET = { 'מצערת': 'מהירות', 'מהירות': 'מהירות', 'זמן': 'מהירות', 'גובה': 'גובה', 'גלגול': 'זוויות', 'פיץ׳ ואופק': 'זוויות', 'קו טיסה': 'קו טיסה', 'התאוששות': 'קו טיסה', 'רציפות': 'קו טיסה', 'סטיקים': 'שליטה', 'חלקות': 'שליטה', 'התרסקויות': 'שליטה' };
 const NXE_BORDER = ['מהירות', 'גובה', 'זוויות', 'קו טיסה', 'שליטה'];
-function nxStickChart(j) {                                      // at most 5 columns (one per area); each shows the area's weakest measure: the column = you, the white line = the target
+function nxStickChart(j, headOnly) {                                      // at most 5 columns (one per area); each shows the area's weakest measure: the column = you, the white line = the target
   if (!j || !j.rule || !j.M) return '';
   const R = j.rule, keys = nxRuleKeys(R); if (!keys.length) return '';
   const r1 = (v) => Math.round(Number(v) * 10) / 10, by = {};
@@ -8027,7 +8027,9 @@ function nxStickChart(j) {                                      // at most 5 col
       '<div class="nm"><b>' + g + '</b><small>' + nxEsc(NXE_M[m.k][0]) + (m.out > 1 ? ' (+' + (m.out - 1) + ')' : '') + '</small></div><div class="mk">' + (st === 'ok' ? '\u2713' : st === 'soft' ? '!' : '\u2717') + '</div></div>';
   });
   const why = (j.viol || []).map((x) => x.text).slice(0, 3).join(' · ');
-  return '<div class="stkhead ' + (j.ok ? 'ok' : 'bad') + '"><b>' + (j.ok ? '✓ עברת' : '✗ לא עברת') + '</b>' + (!j.ok && why ? ' <span>' + nxEsc(why) + '</span>' : '') + '</div>' +
+  const head = '<div class="stkhead ' + (j.ok ? 'ok' : 'bad') + '"><b>' + (j.ok ? '✓ עברת' : '✗ לא עברת') + '</b>' + (!j.ok && why ? ' <span>' + nxEsc(why) + '</span>' : '') + '</div>';
+  if (headOnly) return head;      // the player sees only the verdict and the reason; the chart is for the instructor
+  return head +
     '<div class="stkv2">' + cols + '</div><div class="stkleg">העמודה = התוצאה שלך · הקו הלבן = היעד · אדום = חריגה · ירוק בהיר = מרווח עד היעד</div>';
 }
 function nxMeasured() {                                         // the judged flight of a track that has measurement limits (else null)
@@ -8036,7 +8038,7 @@ function nxMeasured() {                                         // the judged fl
 function nxStickShow() {                                        // fills the results screen
   let el = typeof document !== 'undefined' ? $('resStick') : null;
   if (!el) { const a = $('resNew'); if (!a || !a.parentNode || !document.createElement) return; el = document.createElement('div'); el.id = 'resStick'; a.parentNode.insertBefore(el, a.nextSibling); }
-  el.innerHTML = NXS.last ? nxStickChart(NXS.last) + nxCalTable(NXS.last) : '';
+  el.innerHTML = NXS.last ? nxStickChart(NXS.last, NX.role !== 'admin') + nxCalTable(NXS.last) : '';
 }
 function nxCalTable(j) {                                        // admin only: every measured value of the flight, to set the limits from real flights
   if (NX.role !== 'admin' || !j || !j.M) return '';
