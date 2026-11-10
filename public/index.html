@@ -1245,7 +1245,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 261</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 270</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -1258,7 +1258,8 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 <div id="fade"><div id="fadeText">טוען...</div></div>
 </div>
 
-<script>/* ---------- hosted mode: the game talks to its own server instead of Claude's artifact capabilities ----------
+<script>
+/* ---------- hosted mode: the game talks to its own server instead of Claude's artifact capabilities ----------
    Inside a Claude artifact window.claude already exists and this file does nothing. On the 88ACADEMY site it supplies
    claude.use('db' | 'user' | 'downloads') on top of the server's /api endpoints, so the game code stays the same. */
 (function () {
@@ -1389,6 +1390,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
     box.appendChild(a);
   });
 })();
+
 </script>
 <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
 <script src="https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
@@ -2312,7 +2314,7 @@ function makeLabelTexture(n, st) {                               // game-style n
 /* Gate frame: the FRONT (entrance, +Z side) and BACK (exit, -Z side) halves of the rim are separate
    meshes so they can glow in different colours. The drone must fly through in local -Z direction. */
 /* per-gate shape and size: d.k = ring | square | arch | wide | tall (default: the map's type), d.sz = size multiplier */
-const GATE_KINDS = { ring: 'טבעת', square: 'ריבוע', arch: 'קשת (ללא בסיס)', wide: 'רחב ושטוח', tall: 'גבוה וצר', hex: 'משושה', double: 'שער כפול', triple: 'שער משולש', archwide: 'קשת רחבה', archtall: 'קשת גבוהה', slit: 'חריץ צר וגבוה', ledge: 'פס רחב נמוך' };
+const GATE_KINDS = { ring: 'טבעת', square: 'ריבוע', arch: 'קשת (ללא בסיס)', wide: 'רחב ושטוח', tall: 'גבוה וצר', hex: 'משושה', double: 'שער כפול', triple: 'שער משולש', archwide: 'קשת רחבה', archtall: 'קשת גבוהה', slit: 'חריץ צר וגבוה', ledge: 'פס רחב נמוך', none: 'נסתר (קו מדידה בלבד)' };
 function gateSpec(d) {
   let kind = d && d.k && GATE_KINDS[d.k] ? d.k : GATE_TYPE;
   if (!GATE_KINDS[kind]) kind = 'square';
@@ -2320,6 +2322,7 @@ function gateSpec(d) {
   const s = d && d.sz ? clamp(Number(d.sz) || 1, 0.5, 1.8) : 1;
   const t = (GATE_OUTER - GATE_INNER) * s;
   let iw = GATE_INNER * s, ih = iw;
+  if (kind === 'none') { iw = GATE_INNER * 1.8; ih = iw; }                       // a hidden measuring line: wide, nothing drawn
   if (kind === 'wide') { iw *= 1.5; ih *= 0.7; } else if (kind === 'tall') { iw *= 0.7; ih *= 1.5; }
   else if (kind === 'double') { iw *= 1.6; ih *= 0.85; } else if (kind === 'hex') { ih = iw * 0.866; }
   else if (kind === 'triple') { iw *= 2.3; ih *= 0.85; } else if (kind === 'archwide') { iw *= 1.6; ih *= 0.9; } else if (kind === 'archtall') { iw *= 0.8; ih *= 1.6; }
@@ -2333,7 +2336,7 @@ function gateSpec(d) {
       const mx = (Math.cos(a0) + Math.cos(a1)) / 2 * iw + Math.cos(am) * t / 2, my = (Math.sin(a0) + Math.sin(a1)) / 2 * iw + Math.sin(am) * t / 2;
       bars.push({ cx: mx, cy: my, a: a0 + 2 * Math.PI / 3, hl: iw / 2 + t * 0.6, ht: t / 2 });
     }
-  } else if (kind !== 'ring') {
+  } else if (kind !== 'ring' && kind !== 'none') {
     bars.push({ cx: 0, cy: oh - t / 2, a: 0, hl: ow, ht: t / 2 });
     const isArch = kind === 'arch' || kind === 'archwide' || kind === 'archtall';
     if (!isArch) bars.push({ cx: 0, cy: -oh + t / 2, a: 0, hl: ow, ht: t / 2 });
@@ -2388,11 +2391,11 @@ function buildGateObj(i, d) {
   arrow.rotation.x = -Math.PI / 2;
   arrow.position.set(0, oh + 0.55 * k, -0.1);
   arrow.userData.gateIndex = i;
-  grp.add(arrow);
+  arrow.visible = sp.kind !== 'none'; grp.add(arrow);
   // number label (own style per gate: colour, font, size, position)
   const ns = d.n || {};
   let label = null;
-  if (!ns.h) {
+  if (!ns.h && sp.kind !== 'none') {
     label = new THREE.Sprite(new THREE.SpriteMaterial({ map: makeLabelTexture(i + 1, ns), transparent: true, depthTest: false }));
     const sc = 1.55 * k * (ns.s || 1);
     label.scale.set(sc, sc, 1);
@@ -2401,7 +2404,7 @@ function buildGateObj(i, d) {
     grp.add(label);
   }
   // support pole for upright gates
-  if (!sp.ring && Math.abs(d.pitch || 0) < 5 && d.y - oh > 0.2) {
+  if (!sp.ring && sp.kind !== 'none' && Math.abs(d.pitch || 0) < 5 && d.y - oh > 0.2) {
     const h = d.y - oh;
     const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.06 * k, 0.06 * k, h, 8), new THREE.MeshLambertMaterial({ color: 0x555b66 }));
     pole.position.set(0, -oh - h / 2, 0);
@@ -2492,7 +2495,7 @@ function buildRoute() {
   const al = new THREE.Line(new THREE.BufferGeometry().setFromPoints(samples),
     new THREE.LineBasicMaterial({ color: 0x4cc3e6, transparent: true, opacity: 0.16 }));
   const drops = [];
-  gates.forEach((g) => { drops.push(new THREE.Vector3(g.x, 0.12, g.z), new THREE.Vector3(g.x, g.y - gateSpec(g).oh, g.z)); });
+  gates.forEach((g) => { if (g.k === 'none') return; drops.push(new THREE.Vector3(g.x, 0.12, g.z), new THREE.Vector3(g.x, g.y - gateSpec(g).oh, g.z)); });
   const dl = new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(drops),
     new THREE.LineBasicMaterial({ color: 0xd5dbe2, transparent: true, opacity: 0.12 }));
   routeGroup.add(gl, al, dl);
@@ -4399,6 +4402,36 @@ function collideGates() {
   }
 }
 
+const _bq = new THREE.Euler();
+function ballStep(dt, B) {                         // kinematic ball: no drone physics. ctl 'turn': roll stick steers; 'climb': pitch stick (forward = down, back = up) changes height; 'speed': pitch stick changes speed
+  _bq.setFromQuaternion(drone.quat, 'YXZ');
+  const pit = clamp(input.pitch || 0, -1, 1), rol = clamp(input.roll || 0, -1, 1);
+  let yaw = _bq.y, sp = B.speed, y0 = _prev.y;
+  if (B.ctl === 'turn') yaw -= rol * B.turn * DEG * dt;
+  else if (B.ctl === 'speed') sp = Math.max(0.3, B.speed * (1 + 0.6 * pit));
+  const fx = -Math.sin(yaw), fz = -Math.cos(yaw);
+  let y;
+  if (B.ctl === 'climb') y = clamp(y0 - pit * B.climb * dt, 0.4, 40);
+  else y = B.alt !== null ? B.alt : (gates && gates[0] ? gates[0].y : 3);
+  drone.pos.set(_prev.x + fx * sp * dt, y, _prev.z + fz * sp * dt);
+  drone.vel.set(fx * sp, (y - y0) / dt, fz * sp);
+  drone.quat.setFromEuler(_bq.set(0, yaw, 0, 'YXZ'));
+  drone.w.set(0, 0, 0); drone.wd.set(0, 0, 0); drone.thrAct = 0;
+}
+function lockCmd(pr) {                              // pitch-only track: the throttle is fixed (default 40%); 'comp' adds the lift lost to tilting, 'hold' replaces it with a full height hold
+  const L = currentStage.lock;
+  if (L.hold) return lockThr(pr);
+  const upY = L.comp ? clamp(1 - 2 * (drone.quat.x * drone.quat.x + drone.quat.z * drone.quat.z), 0.5, 1) : 1;
+  return clamp(throttleCurve(L.thr) / Math.sqrt(upY), 0, 1);
+}
+function lockOn() { return !!(currentStage && currentStage.lock && !editorMode); }
+function lockThr(pr) {                              // throttle command (0..1 motor) that holds the drone at the track's height whatever its tilt
+  const L = currentStage.lock, y = drone.pos.y, vy = drone.vel.y, q = drone.quat;
+  const upY = clamp(1 - 2 * (q.x * q.x + q.z * q.z), 0.5, 1);
+  const apd = clamp(2.0 * (L.alt - y) - 2.8 * vy, -0.6 * G, 0.6 * G);
+  const need = (1 + apd / G) / (pr.twr * upY * Math.max(0.5, batterySag()) * Math.max(0.3, PE.cap));
+  return clamp(Math.sqrt(Math.max(need, 0)), 0, 1);
+}
 function stepPhysics(dt) {
   const p = PRESETS[settings.preset];
   updateWind(dt);
@@ -4418,7 +4451,14 @@ function stepPhysics(dt) {
     }
   }
   const thrStick = input.throttle;
-  const thrCmd = armed ? throttleCurve(thrStick) : 0;    // Betaflight throttle mid / expo
+  const LK = lockOn();
+  if (LK) {                                         // one free stick only: pitch (forward/back) or roll (sideways, the drone flies forward by itself at a fixed pitch); throttle fixed
+    const L = currentStage.lock;
+    input.yaw = 0; input.throttle = L.thr;
+    if (L.axis === 'roll') { input.roll = clamp(input.roll || 0, -1, 1) * L.gain; input.pitch = L.fwd; }
+    else { input.roll = 0; input.pitch = clamp(input.pitch || 0, -1, 1) * L.gain; }
+  }   // only the pitch stick works
+  const thrCmd = LK && armed ? lockCmd(p) : armed ? throttleCurve(thrStick) : 0;    // Betaflight throttle mid / expo; a pitch-only track holds its height by itself
   drone.thrAct += (thrCmd - drone.thrAct) * (1 - Math.exp(-dt / p.motorTau));
 
   // ----- attitude controller -> target body rates (Betaflight rates; angle/horizon outer loop) -----
@@ -4427,11 +4467,11 @@ function stepPhysics(dt) {
     ty = -bfRate(input.yaw, A.rates.yaw) * DEG;
     const acroX = -bfRate(input.pitch, A.rates.pitch) * DEG;    // stick forward = nose down
     const acroZ = -bfRate(input.roll, A.rates.roll) * DEG;      // stick right = roll right
-    if (settings.mode === 'acro') {
+    if (!LK && settings.mode === 'acro') {
       tx = acroX; tz = acroZ;
     } else {
       _eu.setFromQuaternion(drone.quat, 'YXZ');
-      const horizon = settings.mode === 'horizon';
+      const horizon = !LK && settings.mode === 'horizon';
       const kp = 9 * A.angle.strength / 50, maxA = (horizon ? 80 : A.angle.limit) * DEG;
       const limX = Math.min(400, advMV.pitch) * DEG, limZ = Math.min(400, advMV.roll) * DEG;
       const lx = clamp(kp * (-input.pitch * maxA - _eu.x), -limX, limX);
@@ -4495,6 +4535,7 @@ function stepPhysics(dt) {
   _acc.y -= G;
   drone.vel.addScaledVector(_acc, dt);
   drone.pos.addScaledVector(drone.vel, dt);
+  if (currentStage && currentStage.ball && (state === 'racing' || state === 'free')) ballStep(dt, currentStage.ball);   // no drone: a ball rolls forward by itself
 
   // ----- ground contact -----
   drone.onGround = false;
@@ -4674,6 +4715,10 @@ function placeDroneAtStart() {
   drone.w.set(0, 0, 0); drone.wd.set(0, 0, 0); drone.tp.set(0, 0, 0); drone.prevThr = 0;
   drone.quat.setFromEuler(new THREE.Euler(0, s.yaw * DEG, 0, 'YXZ'));
   drone.thrAct = 0;
+  if (lockOn()) {
+    const L = currentStage.lock; drone.pos.y = L.alt; drone.thrAct = lockCmd(PRESETS[settings.preset]);
+    if (L.v0 > 0) drone.vel.set(-Math.sin(s.yaw * DEG) * L.v0, 0, -Math.cos(s.yaw * DEG) * L.v0);          // already moving when the stage begins
+  }          // starts airborne at the track's height, in flight at its fixed throttle
 }
 
 function resetRace() {
@@ -5086,6 +5131,7 @@ applyOsdLayout();
 const _tiltQ = new THREE.Quaternion(), _xAxis = new THREE.Vector3(1, 0, 0);
 const _off = new THREE.Vector3(), _pv = new THREE.Vector3(), _pn = new THREE.Vector3();
 
+let ballMesh = null;
 function updateCameras() {
   const p = PRESETS[settings.preset];
   droneMesh.visible = (editorMode || NXH.spec) && !inMenu;
@@ -5100,6 +5146,15 @@ function updateCameras() {
   _off.set(0, 0.025, -0.06 * p.meshScale).applyQuaternion(drone.quat);
   fpvCam.position.copy(drone.pos).add(_off);
   fpvCam.quaternion.copy(drone.quat).multiply(_tiltQ);
+  const bl = currentStage && currentStage.ball;
+  if (!ballMesh && bl) { ballMesh = new THREE.Mesh(new THREE.SphereGeometry(0.5, 20, 14), new THREE.MeshLambertMaterial({ color: 0xff7a1a })); scene.add(ballMesh); }
+  if (ballMesh) ballMesh.visible = !!bl && !inMenu && !editorMode && bl.view === 'chase';
+  if (bl && bl.view === 'chase' && !editorMode && !inMenu) {          // the ball stays in the middle of the screen: the camera follows behind and slightly above it
+    ballMesh.position.copy(drone.pos);
+    _off.set(0, 1.8, 7).applyQuaternion(drone.quat);
+    fpvCam.position.copy(drone.pos).add(_off);
+    fpvCam.lookAt(drone.pos);
+  }
   fpvCam.updateMatrixWorld(true);
   fpvCam.matrixWorldInverse.copy(fpvCam.matrixWorld).invert();
   sky.position.copy(activeCam.position);
@@ -6284,13 +6339,24 @@ function backToFree() {
 const CUSTOM_KEY = 'fpvNexusCustom.v1';
 const CUSTOM_ORDER = [];
 function defaultCustomGates() { return [{ x: 0, y: 6, z: -20, yaw: 0, pitch: 0 }, { x: 0, y: 6, z: -50, yaw: 0, pitch: 0 }]; }
+function normBall(b) {                                   // a track without a drone: a ball that moves forward by itself, the roll stick only steers it sideways
+  if (!b || typeof b !== 'object') return null;
+  const n = (v, lo, hi, d) => { v = Number(v); return isFinite(v) ? Math.min(hi, Math.max(lo, v)) : d; };
+  const alt = Number(b.alt);
+  return { ctl: b.ctl === 'climb' || b.ctl === 'speed' ? b.ctl : 'turn', view: b.view === 'chase' ? 'chase' : 'fpv', speed: n(b.speed, 1, 20, 6), turn: n(b.turn, 20, 180, 80), climb: n(b.climb, 0.5, 10, 3), alt: isFinite(alt) && b.alt !== null && b.alt !== '' ? Math.min(40, Math.max(0.3, alt)) : null };
+}
+function normLock(l) {                                   // a pitch-only track: the drone starts airborne in angle mode, holds its height by itself, only the pitch stick (forward/back) works
+  if (!l || typeof l !== 'object') return null;
+  const n = (v, lo, hi, d) => { v = Number(v); return isFinite(v) ? Math.min(hi, Math.max(lo, v)) : d; };
+  return { alt: n(l.alt, 0.5, 40, 5), thr: n(l.thr, 0.1, 0.9, 0.4), gain: n(l.gain, 0.2, 1, 0.5), axis: l.axis === 'roll' ? 'roll' : 'pitch', v0: n(l.v0, 0, 20, 0), fwd: n(l.fwd, 0.05, 0.8, 0.25), hold: l.hold === true, comp: l.comp !== false };
+}
 function registerCustom(def) {
   const st = {
     id: def.id, num: def.num, name: def.name, diff: 'מותאם', color: '#b48cf0', custom: true, pub: !!def.pub, base: MAP_BASE_LIST.indexOf(def.base) >= 0 ? def.base : 'arena',
     art: 'linear-gradient(180deg,#232a33,#0f1317)',
     desc: 'מפה שנבנתה על ידי הטייס: התחל משני שערים והוסף, הזז וסובב שערים במצב עריכה.',
     gen: () => (st.saved && st.saved.length >= 2 ? st.saved : defaultCustomGates()).map(gateCopy),
-    gate: { type: 'ring', outer: 4.5, inner: 4.1 }, parV: 14, menuCam: { r: 62, h: 26 }, saved: def.gates || null, objects: cleanProps(def.objects), laps: Number(def.laps) >= 1 && Number(def.laps) <= 20 ? Math.floor(Number(def.laps)) : 0
+    gate: { type: 'ring', outer: 4.5, inner: 4.1 }, parV: 14, menuCam: { r: 62, h: 26 }, saved: def.gates || null, objects: cleanProps(def.objects), ball: normBall(def.ball), lock: normLock(def.lock), laps: Number(def.laps) >= 1 && Number(def.laps) <= 20 ? Math.floor(Number(def.laps)) : 0
   };
   STAGES[def.id] = st;
   if (!envSettings[def.id]) envSettings[def.id] = { wind: 0, dir: 0, turb: 0 };
@@ -6300,7 +6366,7 @@ function registerCustom(def) {
 function saveCustomList() {
   try {
     localStorage.setItem(CUSTOM_KEY, JSON.stringify(CUSTOM_ORDER.filter((id) => !STAGES[id].pub).map((id) => {
-      const st = STAGES[id]; return { id, num: st.num, name: st.name, base: st.base, laps: st.laps || 0, gates: st.saved || null, objects: st.objects || [] };
+      const st = STAGES[id]; return { id, num: st.num, name: st.name, base: st.base, laps: st.laps || 0, gates: st.saved || null, objects: st.objects || [], ball: st.ball || null, lock: st.lock || null };
     })));
   } catch (e) { /* ignore */ }
 }
@@ -6310,7 +6376,7 @@ function saveCustomList() {
     const env = JSON.parse(localStorage.getItem(ENV_KEY) || 'null');
     if (Array.isArray(arr)) arr.forEach((d) => {
       if (!d || typeof d.id !== 'string' || !/^custom\d+$/.test(d.id)) return;
-      registerCustom({ id: d.id, num: d.num || 4, name: String(d.name || 'מסלול מותאם אישית').slice(0, 40), gates: Array.isArray(d.gates) ? d.gates : null, objects: d.objects, base: d.base, laps: d.laps });
+      registerCustom({ id: d.id, num: d.num || 4, name: String(d.name || 'מסלול מותאם אישית').slice(0, 40), gates: Array.isArray(d.gates) ? d.gates : null, objects: d.objects, base: d.base, laps: d.laps, ball: d.ball, lock: d.lock });
       if (env && env[d.id]) ['wind', 'dir', 'turb'].forEach((k) => { if (typeof env[d.id][k] === 'number' && isFinite(env[d.id][k])) envSettings[d.id][k] = env[d.id][k]; });
     });
   } catch (e) { /* ignore */ }
@@ -7398,19 +7464,22 @@ function nxMargin(v, mn, mx) {                                  // 0 right at th
 const NXE_Z = {}; 'altDev altSd rollMax rollSd pitchMax pitchSd rollIn pitchIn yawIn rate sharp lineMax lineAvg fixes stops recMax recN crashes thrOsc spdSd'.split(' ').forEach((k) => { NXE_Z[k] = 1; });
 const NXE_STAR3 = 90, NXE_STAR2 = 80;                                // score needed for 3 and 2 stars (a passing flight always gets at least 1)
 function nxStickJudge(R, M) {                                   // limits + measured values -> pass / fail, reasons in Hebrew, and 0-3 stars
-  const viol = [], keys = nxRuleKeys(R); let sw = 0, ss = 0;
+  const viol = [], softv = [], keys = nxRuleKeys(R); let sw = 0, ss = 0;
   const fmt = (v) => String(Math.round(v * 10) / 10);
   keys.forEach((k) => {
     const L = R.lim[k], mn = nxRuleNum(L.min), mx = nxRuleNum(L.max), v = M[k], lab = NXE_M[k], u = lab[1] ? ' ' + lab[1] : '';
     const over = mx !== null && v > mx, under = mn !== null && v < mn;
-    if (over) viol.push({ k, text: lab[0] + ' ' + fmt(v) + u + ' (המותר עד ' + mx + u + ')' });
-    else if (under) viol.push({ k, text: lab[0] + ' ' + fmt(v) + u + ' (נדרש לפחות ' + mn + u + ')' });
+    const soft = !!(R.soft && R.soft[k]), bin = soft ? softv : viol;       // soft limit: going over does not fail the flight, it only lowers the stars
+    if (over) bin.push({ k, text: lab[0] + ' ' + fmt(v) + u + ' (היעד עד ' + mx + u + ')' });
+    else if (under) bin.push({ k, text: lab[0] + ' ' + fmt(v) + u + ' (היעד לפחות ' + mn + u + ')' });
+    if (!soft) { bin[bin.length - 1] && (bin[bin.length - 1].text = bin[bin.length - 1].text.replace('(היעד', over ? '(המותר' : '(נדרש')); }
     const w = nxRuleNum(R.w && R.w[k]) !== null ? Number(R.w[k]) : 1;
-    if (w > 0 && NXE_Z[k] && mx !== null) { sw += w; ss += w * (50 + 50 * clamp(nxMargin(v, mn, mx), 0, 1)); }     // only 'lower is better' metrics shape the stars; ranges (throttle, speed, time) are pass/fail
+    if (soft && w > 0) { sw += w; ss += (over || under) ? 0 : w * (50 + 50 * clamp(nxMargin(v, mn, mx), 0, 1)); }
+    else if (w > 0 && NXE_Z[k] && mx !== null) { sw += w; ss += w * (50 + 50 * clamp(nxMargin(v, mn, mx), 0, 1)); }     // only 'lower is better' metrics shape the stars; ranges (throttle, speed, time) are pass/fail
   });
   const ok = !viol.length, score = sw ? ss / sw : 100;
   const stars = !ok ? 0 : score >= NXE_STAR3 ? 3 : score >= NXE_STAR2 ? 2 : 1;
-  return { ok, viol, stars, score: Math.round(score), M, rule: R, msg: viol.length ? viol.map((v) => v.text).join('. ') + '.' : 'הטיסה עומדת במגבלות.' };
+  return { ok, viol, softv, stars, score: Math.round(score), M, rule: R, msg: viol.length ? viol.map((v) => v.text).join('. ') + '.' : softv.length ? 'הטיסה עברה. כדאי לשפר: ' + softv.map((v) => v.text).join('. ') + '.' : 'הטיסה עומדת במגבלות.' };
 }
 function nxStickRun(R, crashes) {                               // judge the race that just ended (only an empty recording is skipped)
   if (!NXS.f || NXS.T < 0.2 || !NXS.f.thr.length) return null;
@@ -7446,7 +7515,8 @@ function nxStickGraph(j) {                                      // a small chart
       '<polyline points="' + pts + '" fill="none" stroke="#7fd4f2" stroke-width="1.6"/></svg><span class="stkl">' + 'טווח ' + Math.round(amin * 10) / 10 + ' עד ' + Math.round(amax * 10) / 10 + T[c][2] + lab + '</span></div>';
   });
   return '<div class="stktitle">ניתוח הטיסה · ' + (j.ok ? '<b class="stkok">עומד במגבלות</b>' : '<b class="stkbad">לא עבר</b>') + '</div>' + h +
-    (j.viol.length ? '<ul class="stkv">' + j.viol.map((v) => '<li>' + nxEsc(v.text) + '</li>').join('') + '</ul>' : '');
+    (j.viol.length ? '<ul class="stkv">' + j.viol.map((v) => '<li>' + nxEsc(v.text) + '</li>').join('') + '</ul>' : '') +
+    (j.softv && j.softv.length ? '<div class="stktitle" style="margin-top:6px">כדאי לשפר</div><ul class="stkv">' + j.softv.map((v) => '<li>' + nxEsc(v.text) + '</li>').join('') + '</ul>' : '');
 }
 function nxMeasured() {                                         // the judged flight of a track that has measurement limits (else null)
   const j = NXS.last; return j && j.rule && nxRuleKeys(j.rule).length ? j : null;
@@ -7466,7 +7536,7 @@ function nxCalTable(j) {                                        // admin only: e
 function nxStickCompact(j) {                                    // what goes into the player's history
   const m = {}; nxRuleKeys(j.rule).forEach((k) => { m[k] = j.M[k]; });
   const lim = {}; ['thrMax', 'spdMax', 'rollMax', 'pitchMax', 'lineMax', 'altDev'].forEach((k) => { const L = j.rule.lim && j.rule.lim[k], v = L ? nxRuleNum(L.max) : null; if (v !== null) lim[k] = v; });
-  return { ok: j.ok ? 1 : 0, st: j.stars, sc: j.score, T: j.M.time, m, v: j.viol.map((x) => x.text), g: j.g, lim, a0: j.alt0 };
+  return { ok: j.ok ? 1 : 0, st: j.stars, sc: j.score, T: j.M.time, m, v: j.viol.map((x) => x.text), sv: (j.softv || []).map((x) => x.text), g: j.g, lim, a0: j.alt0 };
 }
 /* ---------- stage packages: a stage as data (map + guide card + measurement limits), imported in the admin ---------- */
 function nxPkgCheck(pk) {                                       // returns an error text, or '' when the package is usable
@@ -7474,6 +7544,9 @@ function nxPkgCheck(pk) {                                       // returns an er
   if (!pk.name || typeof pk.name !== 'string') return 'חסר שם לשלב';
   const m = pk.map; if (!m || !Array.isArray(m.gates) || m.gates.length < 2) return 'במפה חייבים להיות לפחות 2 שערים';
   if (m.gates.some((g) => !g || !isFinite(g.x) || !isFinite(g.y) || !isFinite(g.z))) return 'לשער חסרות קואורדינטות';
+  if (pk.ball !== undefined && pk.ball !== null) {
+    const b = pk.ball; if (typeof b !== 'object' || ['speed', 'turn'].some((q) => b[q] !== undefined && !isFinite(Number(b[q])))) return 'הגדרות הכדור (מהירות/פנייה) אינן תקינות';
+  }
   const lim = pk.limits && pk.limits.lim;
   if (lim) {
     for (const k of Object.keys(lim)) {
@@ -7484,18 +7557,57 @@ function nxPkgCheck(pk) {                                       // returns an er
   }
   return '';
 }
-function nxImportPackage(pk) {                                  // creates a custom track (in the admin's editor) with its card and limits
+function nxImportPackage(pk, to) {                              // creates a custom track (in the admin's editor) with its card and limits; the same name (or a chosen track) is UPDATED in place instead of duplicated
   const err = nxPkgCheck(pk); if (err) return { ok: false, err };
-  let n = 1; while (STAGES['custom' + n]) n++;
-  const id = 'custom' + n, m = pk.map;
-  registerCustom({ id, num: 3 + CUSTOM_ORDER.length + 1, name: String(pk.name).slice(0, 40), gates: m.gates.map(gateCopy), objects: m.objects || [], base: m.base || 'field', laps: m.laps || 1 });
+  const m = pk.map, nm = String(pk.name).slice(0, 40);
+  let id = '';
+  if (to && to !== 'auto' && to !== 'new' && STAGES[to] && STAGES[to].custom && !STAGES[to].pub) id = to;
+  else if (to !== 'new') id = CUSTOM_ORDER.find((x) => STAGES[x] && STAGES[x].custom && !STAGES[x].pub && STAGES[x].name === nm) || '';
+  const updated = !!id;
+  if (updated) {
+    const st = STAGES[id];
+    st.name = nm; st.base = MAP_BASE_LIST.indexOf(m.base) >= 0 ? m.base : 'field'; st.saved = m.gates.map(gateCopy); st.objects = cleanProps(m.objects);
+    st.laps = Number(m.laps) >= 1 && Number(m.laps) <= 20 ? Math.floor(Number(m.laps)) : 1; st.ball = normBall(pk.ball || m.ball); st.lock = normLock(pk.lock || m.lock);
+  } else {
+    let n = 1; while (STAGES['custom' + n]) n++;
+    id = 'custom' + n;
+    registerCustom({ id, num: 3 + CUSTOM_ORDER.length + 1, name: nm, gates: m.gates.map(gateCopy), objects: m.objects || [], base: m.base || 'field', laps: m.laps || 1, ball: pk.ball || m.ball, lock: pk.lock || m.lock });
+  }
   if (pk.env && envSettings[id]) ['wind', 'dir', 'turb'].forEach((k) => { if (typeof pk.env[k] === 'number') envSettings[id][k] = pk.env[k]; });
   try { saveCustomList(); saveEnv(); buildCards(); } catch (e) { /* ignore */ }
   if (pk.desc) STAGES[id].desc = String(pk.desc);
-  if (pk.guide) nxSetPath(NX.draft, 'guides.' + id, nxClone(pk.guide));
-  if (pk.limits) NX.draft.stick = Object.assign(NX.draft.stick || {}, { [id]: nxClone(pk.limits) });
+  if (pk.guide) nxSetPath(NX.draft, 'guides.' + id, nxClone(pk.guide)); else if (updated && NX.draft.guides) delete NX.draft.guides[id];
+  if (pk.limits) NX.draft.stick = Object.assign(NX.draft.stick || {}, { [id]: nxClone(pk.limits) }); else if (updated && NX.draft.stick) delete NX.draft.stick[id];
   nxTouch();
-  return { ok: true, id };
+  return { ok: true, id, updated };
+}
+function nxSetLock(id, f, v, checked) {                         // the "flight mode" controls of a custom track: which stick is free, fixed throttle, start height, start speed
+  const st = STAGES[id]; if (!st || !st.custom) return false;
+  let L = st.lock ? Object.assign({}, st.lock) : null;
+  if (f === 'on') L = checked ? (L || normLock({ alt: st.gen()[0] ? st.gen()[0].y : 5 })) : null;
+  else if (L) {
+    if (f === 'axis') L.axis = v === 'roll' ? 'roll' : 'pitch';
+    else if (f === 'hold' || f === 'comp') L[f] = !!checked;
+    else { let x = parseFloat(v); if (!isFinite(x)) return false; if (f === 'thr') x /= 100; L[f] = x; }
+  } else return false;
+  st.lock = L ? normLock(L) : null; saveCustomList(); nxTouch();
+  return true;
+}
+function nxMapPreview(st) {                                     // top view (distance across, sideways up) and side view (height) of a track, before flying it
+  const G = st.gen(), O = st.objects || []; if (!G.length) return '';
+  let z0 = 1e9, z1 = -1e9, x0 = 1e9, x1 = -1e9, y1 = 8;
+  G.forEach((g) => { z0 = Math.min(z0, g.z); z1 = Math.max(z1, g.z); x0 = Math.min(x0, g.x - 6); x1 = Math.max(x1, g.x + 6); y1 = Math.max(y1, g.y + 6); });
+  O.forEach((o) => { if (isFinite(o.x) && isFinite(o.z)) { z0 = Math.min(z0, o.z); z1 = Math.max(z1, o.z); x0 = Math.min(x0, o.x); x1 = Math.max(x1, o.x); } });
+  z0 -= 15; z1 += 15; x0 = Math.min(x0, -10); x1 = Math.max(x1, 10);
+  const W = 620, sc = (W - 20) / Math.max(1, z1 - z0), HT = Math.min(170, (x1 - x0) * sc + 20), HS = Math.min(80, y1 * sc + 20);
+  const X = (z) => 10 + (z1 - z) * sc, Y = (x) => 10 + (x1 - x) * sc, f1 = (n) => Math.round(n * 10) / 10;
+  let s = '<svg viewBox="0 0 ' + W + ' ' + (HT + HS + 30) + '" width="100%" style="background:rgba(255,255,255,.04);border-radius:6px"><text x="10" y="8" font-size="10" fill="#8b929c">מבט מלמעלה (מרחק לרוחב, ימינה = צד ימין)</text>';
+  O.forEach((o) => { if (!isFinite(o.x) || !isFinite(o.z)) return; const r = Math.max(1.2, Math.min(4, (o.s || 1) * 1.6)); s += '<circle cx="' + f1(X(o.z)) + '" cy="' + f1(Y(o.x)) + '" r="' + r + '" fill="' + (/^#[0-9a-f]{6}$/i.test(o.c) ? o.c : '#ff6a1a') + '" opacity=".85"/>'; });
+  G.forEach((g, i) => { s += '<line x1="' + f1(X(g.z)) + '" y1="' + f1(Y(g.x + 4.5)) + '" x2="' + f1(X(g.z)) + '" y2="' + f1(Y(g.x - 4.5)) + '" stroke="#4cc3e6" stroke-width="3"/><text x="' + f1(X(g.z)) + '" y="' + f1(Y(g.x + 4.5) - 3) + '" font-size="10" fill="#4cc3e6" text-anchor="middle">' + (i + 1) + '</text>'; });
+  const oy = HT + 24, sy = (y) => oy + HS - 10 - y * sc;
+  s += '<text x="10" y="' + (HT + 16) + '" font-size="10" fill="#8b929c">מבט מהצד (גובה)</text><line x1="10" y1="' + f1(sy(0)) + '" x2="' + (W - 10) + '" y2="' + f1(sy(0)) + '" stroke="#8b929c"/>';
+  G.forEach((g) => { s += '<rect x="' + f1(X(g.z) - 2) + '" y="' + f1(sy(g.y + 4.5)) + '" width="4" height="' + f1(9 * sc) + '" fill="#4cc3e6"/>'; });
+  return s + '</svg>';
 }
 function nxAttempt(r) {                                       // a race was finished: record it, and judge it when it is a course exam
   const st = currentStage, out = { ok: true, msg: '' };
@@ -7706,7 +7818,7 @@ function nxSyncTracks(list, env) {
     if (CUSTOM_ORDER.some((id) => STAGES[id] && !STAGES[id].pub)) return;
     list.forEach((d, i) => {
       if (!d || typeof d.id !== 'string' || !/^custom\d+$/.test(d.id)) return;
-      registerCustom({ id: d.id, num: d.num || (4 + i), name: String(d.name || 'מסלול').slice(0, 40), gates: Array.isArray(d.gates) ? d.gates : null, objects: d.objects, base: d.base, laps: d.laps });
+      registerCustom({ id: d.id, num: d.num || (4 + i), name: String(d.name || 'מסלול').slice(0, 40), gates: Array.isArray(d.gates) ? d.gates : null, objects: d.objects, base: d.base, laps: d.laps, ball: d.ball, lock: d.lock });
       if (env && env[d.id]) ['wind', 'dir', 'turb'].forEach((k) => { if (typeof env[d.id][k] === 'number' && isFinite(env[d.id][k])) envSettings[d.id][k] = env[d.id][k]; });
     });
     try { saveCustomList(); } catch (e) { /* ignore */ }
@@ -7721,7 +7833,7 @@ function nxSyncTracks(list, env) {
   });
   Object.keys(want).forEach((id) => {
     const d = want[id].d;
-    const st = registerCustom({ id, num: 100 + want[id].i, name: String(d.name || 'מסלול').slice(0, 40), gates: Array.isArray(d.gates) ? d.gates : null, objects: d.objects, base: d.base, laps: d.laps, pub: true });
+    const st = registerCustom({ id, num: 100 + want[id].i, name: String(d.name || 'מסלול').slice(0, 40), gates: Array.isArray(d.gates) ? d.gates : null, objects: d.objects, base: d.base, laps: d.laps, ball: d.ball, lock: d.lock, pub: true });
     st.saved = Array.isArray(d.gates) ? d.gates : null;
     st.desc = 'מסלול שהוכן על ידי המדריך.';
   });
@@ -7974,7 +8086,7 @@ async function nxPublish() {
   const cfg = nxClone(NX.draft);
   const tracks = CUSTOM_ORDER.filter((id) => STAGES[id] && !STAGES[id].pub && !cfg.stages.off[id]).map((id) => {
     const st = STAGES[id];
-    return { id, name: st.name, base: st.base || 'arena', laps: st.laps || 0, objects: cleanProps(st.objects), gates: st.gen().map((g) => Object.assign(gateCopy(g), { x: +g.x.toFixed(2), y: +g.y.toFixed(2), z: +g.z.toFixed(2) })) };
+    return { id, name: st.name, base: st.base || 'arena', laps: st.laps || 0, ball: st.ball || null, lock: st.lock || null, objects: cleanProps(st.objects), gates: st.gen().map((g) => Object.assign(gateCopy(g), { x: +g.x.toFixed(2), y: +g.y.toFixed(2), z: +g.z.toFixed(2) })) };
   });
   try {
     if (!tracks.length) {                 // never wipe published tracks by accident
@@ -8366,13 +8478,26 @@ function nxTrackPanel(id) {
   e += nxF('כיוון הרוח', rg('dir', 0, 359, 1, Math.round(Number(E.dir) || 0), '°'));
   e += nxF('turbulence / סערה', rg('turb', 0, 100, 1, Math.round((Number(E.turb) || 0) * 100), '%'));
   h += nxTrkSec(tag('env'), 'תנאי סביבה (רוח)', (Number(E.wind) || 0) > 0 ? (Number(E.wind) || 0) + " מ'/ש" : 'ללא', e);
+  if (mine && !st.pub) {
+    const Lk = st.lock, lf = (key, label, val, unit, step) => nxF(label, '<input type="number" step="' + (step || 'any') + '" data-act="trk-lock" data-f="' + key + '" data-id="' + id + '" value="' + val + '" style="width:90px"' + (Lk ? '' : ' disabled') + '> ' + (unit || ''));
+    let fm = '<p class="nxn">נעילת צירים: הרחפן מתחיל באוויר במוד אנגל, במצערת קבועה, ורק סטיק אחד חופשי. שאר הצירים נעולים.</p>';
+    fm += nxF('נעילת צירים', '<label class="stgsw"><input type="checkbox" data-act="trk-lock" data-f="on" data-id="' + id + '"' + (Lk ? ' checked' : '') + '><i></i></label>');
+    fm += nxF('הציר החופשי', '<select data-act="trk-lock" data-f="axis" data-id="' + id + '"' + (Lk ? '' : ' disabled') + '><option value="pitch"' + (Lk && Lk.axis === 'pitch' ? ' selected' : '') + '>פיץ׳ (קדימה/אחורה)</option><option value="roll"' + (Lk && Lk.axis === 'roll' ? ' selected' : '') + '>רול (ימינה/שמאלה), הרחפן מתקדם לבד</option></select>');
+    fm += lf('alt', 'גובה התחלה', Lk ? Lk.alt : '', 'מ׳') + lf('thr', 'מצערת קבועה', Lk ? Math.round(Lk.thr * 100) : '', '%') + lf('v0', 'מהירות כניסה (0 = מרחף)', Lk ? Lk.v0 : '', 'מ׳/ש׳') + lf('gain', 'עוצמת הסטיק החופשי (0.2-1)', Lk ? Lk.gain : '', '');
+    fm += lf('fwd', 'התקדמות אוטומטית (ציר רול בלבד, 0.05-0.8)', Lk ? Lk.fwd : '', '');
+    fm += nxF('פיצוי על ירידה בגובה בנטייה', '<label class="nxchk1"><input type="checkbox" data-act="trk-lock" data-f="comp" data-id="' + id + '"' + (Lk && Lk.comp ? ' checked' : '') + (Lk ? '' : ' disabled') + '> פעיל</label>');
+    fm += nxF('שמירת גובה מלאה', '<label class="nxchk1"><input type="checkbox" data-act="trk-lock" data-f="hold" data-id="' + id + '"' + (Lk && Lk.hold ? ' checked' : '') + (Lk ? '' : ' disabled') + '> הרחפן מחזיק גובה לבד (המצערת רק מוצגת)</label>');
+    h += nxTrkSec(tag('lock'), 'מצב טיסה (נעילת צירים)', Lk ? (Lk.axis === 'roll' ? 'רול בלבד' : 'פיץ׳ בלבד') : 'רגיל', fm);
+  }
+  h += nxTrkSec(tag('prev'), 'תצוגה מקדימה של המפה', '', nxMapPreview(st), false);
   const gd = (D.guides || {})[k] || {}, hasG = !!(String(gd.text || '').trim() || String(gd.fly || '').trim());
   h += nxTrkSec(tag('guide'), 'כרטיס הסבר לתלמיד', hasG ? (gd.off ? 'מוסתר' : 'יש כרטיס') : 'אין כרטיס', nxGuideFields(k, gd));
   const sk = (D.stick || {})[k] || {}, lm = sk.lim || {}, nsk = nxRuleKeys(sk).length;
+  const sf = (m) => '<label class="nxchk1" title="רך: חריגה לא פוסלת את הטיסה, רק מורידה כוכבים"><input type="checkbox" data-k="stick.' + k + '.soft.' + m + '"' + (sk.soft && sk.soft[m] ? ' checked' : '') + '> רך</label>';
   const sn = (m, side) => { const v = lm[m] && nxRuleNum(lm[m][side]) !== null ? lm[m][side] : ''; return '<input type="number" step="any" data-num="1" data-k="stick.' + k + '.lim.' + m + '.' + side + '" value="' + v + '" placeholder="' + (side === 'min' ? 'מינ׳' : 'מקס׳') + '" style="width:78px">'; };
-  let sg = '<p class="nxn">מגבלות מדידה לטיסה במסלול הזה. משאירים ריק = ללא מגבלה. האפליקציה בודקת לבד, בלי AI: חריגה מכל מגבלה = השלב לא עובר. השחקן מקבל 1-3 כוכבים לפי כמה בנוחות הוא בתוך המגבלות. הבדיקה מתחילה בחציית שער ההתחלה.</p>';
+  let sg = '<p class="nxn">מגבלות מדידה לטיסה במסלול הזה. משאירים ריק = ללא מגבלה. האפליקציה בודקת לבד, בלי AI: חריגה ממגבלה רגילה = השלב לא עובר; מגבלה שסומנה "רך" לא פוסלת, רק מורידה כוכבים. השחקן מקבל 1-3 כוכבים לפי כמה בנוחות הוא בתוך המגבלות. הבדיקה מתחילה בחציית שער ההתחלה.</p>';
   const grp = {}; Object.keys(NXE_M).forEach((m) => { (grp[NXE_M[m][2]] = grp[NXE_M[m][2]] || []).push(m); });
-  Object.keys(grp).forEach((gn) => { sg += '<div class="nxn" style="margin-top:8px"><b>' + gn + '</b></div>' + grp[gn].map((m) => nxF(NXE_M[m][0] + (NXE_M[m][1] ? ' (' + NXE_M[m][1] + ')' : ''), sn(m, 'min') + ' ' + sn(m, 'max'))).join(''); });
+  Object.keys(grp).forEach((gn) => { sg += '<div class="nxn" style="margin-top:8px"><b>' + gn + '</b></div>' + grp[gn].map((m) => nxF(NXE_M[m][0] + (NXE_M[m][1] ? ' (' + NXE_M[m][1] + ')' : ''), sn(m, 'min') + ' ' + sn(m, 'max') + ' ' + sf(m))).join(''); });
   sg += nxF('גובה יעד (מ׳, ריק = גובה שער ההתחלה)', '<input type="number" step="any" data-num="1" data-k="stick.' + k + '.alt" value="' + (nxRuleNum(sk.alt) !== null ? sk.alt : '') + '" style="width:90px">') +
     nxF('מצב בדיקה', '<label class="nxchk1"><input type="checkbox" data-k="stick.' + k + '.hard"' + (sk.hard ? ' checked' : '') + '> קשיח: שיאים נמדדים בלי סובלנות (אחרת מתעלמים מ-2% הקיצוניים)</label>');
   h += nxTrkSec(tag('stick'), 'מגבלות מדידה', nsk ? nsk + ' מגבלות' : 'ללא', sg);
@@ -8403,7 +8528,7 @@ function nxTabTracks() {
   const list = NXH.catList(), ids = nxStageIds();
   let h = '<p class="nxn">לחץ על מסלול ברשימה שמימין (או כאן) כדי לערוך אותו: שם, קטגוריה, תצוגה, רוח, כרטיס הסבר ותיאור.</p>';
   h += '<div class="nxbtns"><button class="nxb pri" data-act="trk-new">+ מסלול חדש</button><button class="nxb" data-act="trk-hide-builtin">הסתר מסלולים מובנים</button><button class="nxb" data-act="trk-show-builtin">החזר מסלולים מובנים</button></div>';
-  h += '<details class="pkgbox"><summary><b>ייבוא חבילת שלב</b></summary><p class="nxn">הדבק כאן קובץ חבילת שלב (JSON). נוצר מסלול חדש עם המפה, כרטיס ההסבר ומגבלות המדידה.</p><textarea id="admPkg" rows="6" style="width:100%;direction:ltr" placeholder="{ &quot;pkg&quot;: 1, ... }"></textarea><div class="nxbtns"><button class="nxb pri" data-act="pkg-import">ייבא</button></div></details>';
+  h += '<details class="pkgbox"><summary><b>ייבוא חבילת שלב</b></summary><p class="nxn">הדבק כאן קובץ חבילת שלב (JSON). נוצר מסלול חדש עם המפה, כרטיס ההסבר ומגבלות המדידה. בשם זהה: המסלול הקיים מתעדכן במקום להיווצר שוב.</p><div class="nxn">יעד הייבוא: <select id="admPkgTo"><option value="auto">אוטומטי: אותו שם = עדכון המסלול הקיים</option><option value="new">תמיד מסלול חדש</option>' + CUSTOM_ORDER.filter((x) => STAGES[x] && !STAGES[x].pub).map((x) => '<option value="' + x + '">עדכן: ' + nxEsc(STAGES[x].name) + '</option>').join('') + '</select></div><textarea id="admPkg" rows="6" style="width:100%;direction:ltr" placeholder="{ &quot;pkg&quot;: 1, ... }"></textarea><div class="nxbtns"><button class="nxb pri" data-act="pkg-import">ייבא</button></div></details>';
   h += '<h4>קטגוריות</h4><div class="nxbtns"><input type="text" id="admCatName" maxlength="30" placeholder="שם קטגוריה חדשה, למשל: מתחילים"><button class="nxb pri" data-act="cat-add">+ הוסף קטגוריה</button></div>';
   const trow = (id) => '<div class="nxrow2"><button class="nxb" data-act="trk-sel" data-id="' + id + '">' + nxEsc(STAGES[id].name) + '</button><i class="nxsm">' + st_len(id) + ' שערים</i></div>';
   NX.openCats = NX.openCats || {};
@@ -9064,6 +9189,7 @@ function nxAdmWire() {
       const key = el.dataset.key, v = parseFloat(el.value); if (!isFinite(v)) return;
       E[key] = key === 'turb' ? v / 100 : v; saveEnv(); nxTouch(); if (trkSel === id) { try { syncEnvUI(); } catch (e2) { /* ignore */ } } nxAdmRender(); return;
     }
+    if (a === 'trk-lock') { if (nxSetLock(id, el.dataset.f, el.value, el.checked)) nxAdmRender(); return; }
     if (a === 'trk-name') {
       const st = STAGES[id]; if (!st) return;
       const nm = el.value.trim().slice(0, 40);
@@ -9097,7 +9223,7 @@ function nxAdmWire() {
     if (a === 'pkg-import') {
       const t = $('admPkg'); let pk = null;
       try { pk = JSON.parse(String(t && t.value || '')); } catch (e) { nxToast('ה-JSON אינו תקין: ' + e.message); return; }
-      const r = nxImportPackage(pk); nxToast(r.ok ? 'השלב נוצר: ' + pk.name : 'לא יובא: ' + r.err);
+      const to = $('admPkgTo') ? $('admPkgTo').value : 'auto', r = nxImportPackage(pk, to); nxToast(r.ok ? (r.updated ? 'השלב עודכן: ' : 'השלב נוצר: ') + pk.name : 'לא יובא: ' + r.err);
       if (r.ok) { NX.selTrk = r.id; nxAdmRender(); }
       return;
     }
