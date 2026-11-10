@@ -1248,6 +1248,8 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
         <label class="chk"><input type="checkbox" id="chkDots"><span>הצג שביל נקודות לשער הבא: <b id="stDots">כן</b></span></label>
         <label class="chk"><input type="checkbox" id="chkLine"><span>הצג נתיב טיסה מקווקו (Racing Line): <b id="stLine">כן</b></span></label>
         <label class="chk"><input type="checkbox" id="chkArrow"><span>הצג חץ הכוונה צף: <b id="stArrow">כן</b></span></label>
+        <label class="chk"><input type="checkbox" id="chkFx"><span>מראה FPV (עיוות עדשה, רעש אנלוגי, זוהר) – ניסיוני: <b id="stFx">לא</b></span></label>
+        <label class="chk"><span>עוצמת המראה:&nbsp;</span><select id="selFx"><option value="1">קלה</option><option value="2" selected>בינונית</option><option value="3">חזקה</option></select></label>
         <div class="note">שביל הנקודות והחץ הצף ונתיב הטיסה המקווקו פעילים כברירת מחדל רק במצב &quot;טיסה במסלול&quot; (בטיסה חופשית הנתיב מוצג רק אם הפעלת אותו בהגדרות). הכוונת פעילה בכל מצב.</div></div>
       <div class="advsec c6"><h3>CAMERA &amp; AUDIO <span>מצלמה ושמע</span></h3>
         <div class="row"><label>זווית מצלמה</label><input type="range" id="rngTilt" min="25" max="45" step="1" value="30"><span class="val" id="valTilt">30&deg;</span></div>
@@ -1301,7 +1303,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 296</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 297</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -7435,7 +7437,7 @@ function frame(now) {
     } else gs.textContent = 'לא זוהה שלט. חבר שלט USB והזז סטיק.';
     if (inMenu) updateInput(0); // keep gamepad polling live while configuring
   }
-  if (!whoActive()) renderer.render(scene, activeCam);       // the sign-in page covers the whole screen: no need to draw the simulator behind it
+  if (!whoActive() && !fxRender(scene, activeCam)) renderer.render(scene, activeCam);       // the sign-in page covers the whole screen: no need to draw the simulator behind it
 }
 
 /* ============================================================
@@ -11313,6 +11315,75 @@ function edPathClear() {
   const uel = updateEditorLabel;
   updateEditorLabel = function () { uel(); sync(); };
   sync();
+})();
+
+/* ---------- FPV look: post-processing pass (lens distortion, chromatic aberration, analog noise, vignette, glow) ---------- */
+const FX = { on: false, level: 2, broken: false, rt: null, quad: null, cam: null, mat: null, w: 0, h: 0 };
+const FX_LEVELS = { 1: { dist: 0.06, ca: 0.0016, noise: 0.025, vig: 0.28, glow: 0.18 }, 2: { dist: 0.12, ca: 0.0030, noise: 0.045, vig: 0.42, glow: 0.30 }, 3: { dist: 0.20, ca: 0.0050, noise: 0.075, vig: 0.58, glow: 0.45 } };
+function fxSave() { try { localStorage.setItem('fpvNexusFx', JSON.stringify({ on: FX.on, level: FX.level })); } catch (e) {} }
+function fxLoad() {
+  try { const o = JSON.parse(localStorage.getItem('fpvNexusFx') || 'null'); if (o) { FX.on = o.on === true; if (o.level >= 1 && o.level <= 3) FX.level = o.level | 0; } } catch (e) {}
+}
+function fxSet(on, level) { FX.on = !!on; if (level >= 1 && level <= 3) FX.level = level | 0; FX.broken = false; fxSync(); fxSave(); }
+function fxSync() {
+  if (typeof document === 'undefined') return;
+  const c = $('chkFx'), s = $('selFx'), t = $('stFx');
+  if (c) c.checked = FX.on; if (s) { s.value = String(FX.level); s.disabled = !FX.on; } if (t) t.textContent = FX.broken ? 'לא נתמך במכשיר' : FX.on ? 'כן' : 'לא';
+}
+function fxActive() { return FX.on && !FX.broken && typeof editorMode !== 'undefined' && !editorMode && activeCam === fpvCam; }
+function fxDispose() { try { if (FX.rt) FX.rt.dispose(); } catch (e) {} FX.rt = null; FX.w = FX.h = 0; }
+function fxBuild(w, h) {
+  fxDispose();
+  const gl2 = renderer.capabilities && renderer.capabilities.isWebGL2, opt = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBAFormat };
+  FX.rt = gl2 && THREE.WebGLMultisampleRenderTarget ? new THREE.WebGLMultisampleRenderTarget(w, h, opt) : new THREE.WebGLRenderTarget(w, h, opt);
+  if (FX.rt.samples !== undefined && gl2) FX.rt.samples = 4;
+  if (!FX.mat) {
+    FX.mat = new THREE.ShaderMaterial({
+      uniforms: { tex: { value: null }, res: { value: new THREE.Vector2(w, h) }, time: { value: 0 }, dist: { value: 0 }, ca: { value: 0 }, noise: { value: 0 }, vig: { value: 0 }, glow: { value: 0 } },
+      vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }',
+      fragmentShader: [
+        'precision highp float; varying vec2 vUv; uniform sampler2D tex; uniform vec2 res; uniform float time, dist, ca, noise, vig, glow;',
+        'float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233)) + time) * 43758.5453); }',
+        'vec3 smp(vec2 uv){ return texture2D(tex, clamp(uv, 0.001, 0.999)).rgb; }',
+        'void main(){',
+        '  vec2 c = vUv - 0.5; float r2 = dot(c, c);',
+        '  vec2 uv = 0.5 + c * (1.0 + dist * r2 * 2.0) / (1.0 + dist * 0.25 * 2.0);',                    // barrel (wide-angle FPV lens), scaled so the edges stay inside the picture
+        '  vec2 off = c * ca * (1.0 + r2 * 6.0);',                                                      // chromatic aberration grows toward the edge
+        '  vec3 col = vec3(smp(uv + off).r, smp(uv).g, smp(uv - off).b);',
+        '  vec3 g = vec3(0.0); float px = 2.5 / res.y;',
+        '  for (int i = 0; i < 8; i++) { float a = float(i) * 0.7854; vec2 d = vec2(cos(a), sin(a)) * px * (3.0 + float(i - (i / 2) * 2) * 4.0); g += max(smp(uv + d) - 0.62, 0.0); }',
+        '  col += g * (glow / 8.0) * 2.2;',                                                             // cheap glow on the bright parts (sky, lights)
+        '  col *= 1.0 - vig * smoothstep(0.12, 0.62, r2 * 1.6);',
+        '  float n = hash(vUv * res) - 0.5; col += n * noise;',                                         // analog video grain
+        '  col *= 1.0 - 0.035 * (0.5 + 0.5 * sin(vUv.y * res.y * 1.2));',                               // faint scan lines
+        '  gl_FragColor = vec4(col, 1.0);',
+        '}'].join('\n'), depthTest: false, depthWrite: false });
+    FX.quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), FX.mat); FX.quad.frustumCulled = false;
+    FX.cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1); FX.scene = new THREE.Scene(); FX.scene.add(FX.quad);
+  }
+  FX.w = w; FX.h = h; FX.mat.uniforms.res.value.set(w, h);
+}
+function fxRender(sc, cam) {                                      // true when the frame was drawn through the pass; false = caller draws normally
+  if (!fxActive()) return false;
+  try {
+    const pr = renderer.getPixelRatio(), sz = renderer.getSize(new THREE.Vector2()), w = Math.max(2, Math.floor(sz.x * pr)), h = Math.max(2, Math.floor(sz.y * pr));
+    if (!FX.rt || FX.w !== w || FX.h !== h) fxBuild(w, h);
+    const L = FX_LEVELS[FX.level] || FX_LEVELS[2], u = FX.mat.uniforms;
+    u.tex.value = FX.rt.texture; u.time.value = (performance.now() % 1000) / 1000; u.dist.value = L.dist; u.ca.value = L.ca; u.noise.value = L.noise; u.vig.value = L.vig; u.glow.value = L.glow;
+    renderer.setRenderTarget(FX.rt); renderer.render(sc, cam);
+    renderer.setRenderTarget(null); renderer.render(FX.scene, FX.cam);
+    return true;
+  } catch (e) {
+    try { renderer.setRenderTarget(null); } catch (e2) {}
+    FX.broken = true; fxDispose(); fxSync(); return false;      // anything goes wrong -> back to the normal picture, never a black screen
+  }
+}
+(function fxWire() {
+  fxLoad();
+  if (typeof document === 'undefined' || !$('chkFx')) return;
+  $('chkFx').addEventListener('change', (e) => { fxSet(e.target.checked); e.target.blur(); });
+  $('selFx').addEventListener('change', (e) => { fxSet(FX.on, parseInt(e.target.value, 10)); e.target.blur(); });
+  fxSync();
 })();
 
 /* ---------- boot ---------- */
