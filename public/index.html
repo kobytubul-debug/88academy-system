@@ -1324,7 +1324,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 336</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 337</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -6881,9 +6881,24 @@ function buildDroneModel(id) {
       for (let k = 0; k < nb; k++) { const bl = new THREE.Mesh(bg, mat); bl.rotation.y = k * Math.PI * 2 / nb; pg.add(bl); }
       const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.065, 0.04, 20), std(0x1b1c1f, 0.5, 0.2)); pg.add(hub);
       const nut = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.05, 6), metal); nut.position.y = 0.03; pg.add(nut);
-      const blur = new THREE.Mesh(new THREE.CylinderGeometry(R, R, 0.004, 40), new THREE.MeshBasicMaterial({ color: pc, transparent: true, opacity: 0.13, depthWrite: false }));
-      pg.add(blur);
-      const blur2 = new THREE.Mesh(new THREE.RingGeometry(R * 0.78, R * 1.0, 48), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.08, depthWrite: false, side: THREE.DoubleSide })); blur2.rotation.x = -Math.PI / 2; blur2.position.y = 0.006; pg.add(blur2);
+      /* spin effect: no disc around the prop. Instead, each blade drags a soft sweep and a bright leading glint behind it, and both fade in only as the prop speeds up */
+      const dirP = (i === 0 || i === 3) ? 1 : -1, RR = race ? R * 1.12 : R, sweepM = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending });
+      const glintM = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending });
+      const wg = new THREE.Group(); wg.visible = false; wg.position.y = 0.012; pg.add(wg);
+      const sLen = 0.75, ts = dirP > 0 ? -sLen : 0, tg = dirP > 0 ? -0.16 : 0;                   // trailing side of the blade, whichever way this prop turns
+      for (let k = 0; k < nb; k++) {
+        const bw = new THREE.Group(); bw.rotation.y = k * Math.PI * 2 / nb; wg.add(bw);
+        const sw = new THREE.Mesh(new THREE.RingGeometry(RR * 0.38, RR * 0.99, 14, 1, ts, sLen), sweepM); sw.rotation.x = -Math.PI / 2; bw.add(sw);
+        const gl = new THREE.Mesh(new THREE.RingGeometry(RR * 0.8, RR * 0.99, 10, 1, tg, 0.16), glintM); gl.rotation.x = -Math.PI / 2; gl.position.y = 0.004; bw.add(gl);
+      }
+      pg.userData.spinFx = { wg, sweepM, glintM, rot: 0, t: 0, k: 0 };
+      hub.onBeforeRender = function () {                         // measures how fast this prop is turning, whichever code drives it
+        const f = pg.userData.spinFx, now = typeof performance !== 'undefined' ? performance.now() : 0;
+        if (now - f.t < 5) return;
+        const sp = f.t ? Math.abs(pg.rotation.y - f.rot) / ((now - f.t) / 1000) : 0; f.rot = pg.rotation.y; f.t = now;
+        f.k += (Math.min(1, Math.max(0, (sp - 20) / 70)) - f.k) * 0.5;
+        f.wg.visible = f.k > 0.02; f.sweepM.opacity = 0.2 * f.k; f.glintM.opacity = 0.5 * f.k;
+      };
       pg.userData.dir = (i === 0 || i === 3) ? 1 : -1;
       grp.add(pg); props.push(pg);
     });
