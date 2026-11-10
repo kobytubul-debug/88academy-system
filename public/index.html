@@ -1248,8 +1248,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
         <label class="chk"><input type="checkbox" id="chkDots"><span>הצג שביל נקודות לשער הבא: <b id="stDots">כן</b></span></label>
         <label class="chk"><input type="checkbox" id="chkLine"><span>הצג נתיב טיסה מקווקו (Racing Line): <b id="stLine">כן</b></span></label>
         <label class="chk"><input type="checkbox" id="chkArrow"><span>הצג חץ הכוונה צף: <b id="stArrow">כן</b></span></label>
-        <label class="chk"><input type="checkbox" id="chkFx"><span>מראה FPV (עיוות עדשה, רעש אנלוגי, זוהר) – ניסיוני: <b id="stFx">לא</b></span></label>
-        <label class="chk"><span>עוצמת המראה:&nbsp;</span><select id="selFx"><option value="1">קלה</option><option value="2" selected>בינונית</option><option value="3">חזקה</option></select></label>
+        <label class="chk"><input type="checkbox" id="chkShadow"><span>צללים מהשמש (דורש מחשב חזק): <b id="stShadow">כן</b></span></label>
         <div class="note">שביל הנקודות והחץ הצף ונתיב הטיסה המקווקו פעילים כברירת מחדל רק במצב &quot;טיסה במסלול&quot; (בטיסה חופשית הנתיב מוצג רק אם הפעלת אותו בהגדרות). הכוונת פעילה בכל מצב.</div></div>
       <div class="advsec c6"><h3>CAMERA &amp; AUDIO <span>מצלמה ושמע</span></h3>
         <div class="row"><label>זווית מצלמה</label><input type="range" id="rngTilt" min="25" max="45" step="1" value="30"><span class="val" id="valTilt">30&deg;</span></div>
@@ -1303,7 +1302,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 297</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 298</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -1611,14 +1610,14 @@ function mulberry(seed) {
 function skyTexture(kind) {
   return cachedTex('sky_' + kind, () => {
     const cv = document.createElement('canvas');
-    cv.width = 1024; cv.height = 512;
+    const SW = kind === 'dusk' ? 1024 : 2048, SH = SW / 2; cv.width = SW; cv.height = SH;
     const g = cv.getContext('2d');
-    const grad = g.createLinearGradient(0, 0, 0, 512);
+    const grad = g.createLinearGradient(0, 0, 0, SH);
     const stops = kind === 'dusk'
       ? [[0, '#07021a'], [0.3, '#2a0f55'], [0.47, '#b02f86'], [0.5, '#ff7a86'], [0.501, '#2a1040'], [1, '#2a1040']]
-      : [[0, '#0b1d46'], [0.35, '#2b6cc4'], [0.5, '#9fc4e8'], [0.501, '#cfe3f5'], [1, '#cfe3f5']];
+      : [[0, '#0f3a86'], [0.3, '#2f78d0'], [0.47, '#8dbbe8'], [0.5, '#c9e0f4'], [0.501, '#cfe3f5'], [1, '#cfe3f5']];
     stops.forEach((s) => grad.addColorStop(s[0], s[1]));
-    g.fillStyle = grad; g.fillRect(0, 0, 1024, 512);
+    g.fillStyle = grad; g.fillRect(0, 0, SW, SH);
     const rnd = mulberry(kind === 'dusk' ? 11 : 5);
     if (kind === 'dusk') {
       for (let i = 0; i < 260; i++) { g.fillStyle = 'rgba(255,255,255,' + (0.3 + rnd() * 0.6) + ')'; g.fillRect(rnd() * 1024, rnd() * 200, 1.6, 1.6); }
@@ -1626,15 +1625,63 @@ function skyTexture(kind) {
       mg.addColorStop(0, 'rgba(255,240,255,.95)'); mg.addColorStop(0.4, 'rgba(255,170,240,.35)'); mg.addColorStop(1, 'rgba(255,100,200,0)');
       g.fillStyle = mg; g.fillRect(680, 40, 160, 160);
     } else {
-      for (let i = 0; i < 46; i++) {
-        const x = rnd() * 1024, y = 90 + rnd() * 150, r = 20 + rnd() * 50;
-        const rg = g.createRadialGradient(x, y, 0, x, y, r);
-        rg.addColorStop(0, 'rgba(255,255,255,0.24)'); rg.addColorStop(1, 'rgba(255,255,255,0)');
-        g.fillStyle = rg; g.fillRect(x - r, y - r, r * 2, r * 2);
-      }
+      try { skyClouds(cv, g); } catch (e) { for (let i = 0; i < 46; i++) { const x = rnd() * 1024, y = 90 + rnd() * 150, r = 20 + rnd() * 50; const rg = g.createRadialGradient(x, y, 0, x, y, r); rg.addColorStop(0, 'rgba(255,255,255,0.24)'); rg.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = rg; g.fillRect(x - r, y - r, r * 2, r * 2); } }
     }
     return new THREE.CanvasTexture(cv);
   });
+}
+
+function skyNoise(period) {                                       // periodic value noise (wraps horizontally so the sky has no seam)
+  const T = 64, v = new Float32Array(T * T), r = mulberry(7);
+  for (let i = 0; i < T * T; i++) v[i] = r();
+  const sm = (t) => t * t * (3 - 2 * t);
+  return (x, y) => {
+    const xi = Math.floor(x), yi = Math.floor(y), fx = sm(x - xi), fy = sm(y - yi);
+    const X0 = ((xi % period) + period) % period, X1 = (X0 + 1) % period, Y0 = ((yi % T) + T) % T, Y1 = (Y0 + 1) % T;
+    const a = v[Y0 * T + X0], b = v[Y0 * T + X1], c = v[Y1 * T + X0], d = v[Y1 * T + X1];
+    return a + (b - a) * fx + (c - a) * fy + (a - b - c + d) * fx * fy;
+  };
+}
+function skyClouds(cv, g) {                                       // fluffy cumulus: fractal noise, lit from the sun side, grey-blue underneath, plus a sun glow in the sun's real direction
+  const W = cv.width, H = cv.height, y0 = Math.floor(H * 0.14), y1 = Math.floor(H * 0.5), h = y1 - y0;
+  const img = g.getImageData(0, y0, W, h), d = img.data, P = 8, n = skyNoise(P);
+  const fbm = (x, y) => { let s = 0, a = 0.5, f = 1, t = 0; for (let o = 0; o < 5; o++) { s += a * n(x * f, y * f); t += a; a *= 0.5; f *= 2; } return s / t; };
+  const L = Math.hypot(80, 140, 60), sx = 80 / L, sy = 140 / L, sz = 60 / L, sth = Math.acos(sy), sph = (Math.atan2(sz, -sx) + Math.PI * 2) % (Math.PI * 2);
+  const gu = (sph / (Math.PI * 2)) * W, gv = (sth / Math.PI) * H;
+  for (let j = 0; j < h; j++) {
+    const yy = y0 + j, el = (H * 0.5 - yy) / (H * 0.5), fade = Math.min(1, Math.max(0, el * 4)) * Math.min(1, Math.max(0, (0.92 - el) * 5));
+    for (let i = 0; i < W; i++) {
+      const u = (i / W) * P * 1.1, v = (yy / H) * P * 0.5 * 1.1 * (1 + (1 - el) * 0.8);          // same scale in both directions; a little squash toward the horizon for depth
+      const q = fbm(u, v), cov = (q - 0.52) * 4.2 + 0.5;
+      let dn = Math.min(1, Math.max(0, cov)); dn = dn * dn * (3 - 2 * dn); dn *= fade;
+      if (dn <= 0.004) continue;
+      const qa = fbm(u, v - 0.07), lit = Math.min(1, Math.max(0, 0.55 + (q - qa) * 7));          // top edges catch the sun, undersides stay grey-blue
+      const o = (j * W + i) * 4, cr = 150 + 105 * lit, cg = 168 + 87 * lit, cb = 200 + 55 * lit;
+      d[o] = d[o] + (cr - d[o]) * dn; d[o + 1] = d[o + 1] + (cg - d[o + 1]) * dn; d[o + 2] = d[o + 2] + (cb - d[o + 2]) * dn;
+    }
+  }
+  g.putImageData(img, 0, y0);
+  const R = W * 0.07, rg = g.createRadialGradient(gu, gv, 0, gu, gv, R);
+  rg.addColorStop(0, 'rgba(255,252,235,1)'); rg.addColorStop(0.06, 'rgba(255,250,225,0.95)'); rg.addColorStop(0.18, 'rgba(255,240,200,0.45)'); rg.addColorStop(1, 'rgba(255,230,180,0)');
+  g.fillStyle = rg; g.fillRect(gu - R, gv - R, R * 2, R * 2);
+}
+function grassPaint(cv, g) {                                      // photo-like grass: soft colour patches + thousands of blades, tiles without seams
+  const S = 1024; cv.width = cv.height = S;
+  const rnd = mulberry(99);
+  g.fillStyle = '#4a7f2c'; g.fillRect(0, 0, S, S);
+  const m = document.createElement('canvas'); m.width = m.height = 128; const mg = m.getContext('2d'), mi = mg.getImageData(0, 0, 128, 128), n = skyNoise(8);
+  for (let j = 0; j < 128; j++) for (let i = 0; i < 128; i++) {
+    const a = n((i / 128) * 8, (j / 128) * 8) * 0.6 + n((i / 128) * 16 + 3, (j / 128) * 16 + 5) * 0.4, o = (j * 128 + i) * 4;
+    mi.data[o] = 56 + a * 46; mi.data[o + 1] = 104 + a * 58; mi.data[o + 2] = 34 + a * 20; mi.data[o + 3] = 255;
+  }
+  mg.putImageData(mi, 0, 0); g.imageSmoothingEnabled = true; g.drawImage(m, 0, 0, S, S);
+  const put = (x, y, f) => { for (let ox = -S; ox <= S; ox += S) for (let oy = -S; oy <= S; oy += S) { if ((ox && x > 24 && x < S - 24) || (oy && y > 24 && y < S - 24)) continue; f(x + ox, y + oy); } };
+  for (let i = 0; i < 16000; i++) {
+    const x = rnd() * S, y = rnd() * S, len = 5 + rnd() * 11, ang = -Math.PI / 2 + (rnd() - 0.5) * 1.1, k = rnd();
+    g.strokeStyle = k < 0.45 ? 'rgba(28,78,22,' + (0.25 + rnd() * 0.3) + ')' : k < 0.85 ? 'rgba(120,190,70,' + (0.2 + rnd() * 0.3) + ')' : 'rgba(190,215,110,' + (0.18 + rnd() * 0.2) + ')'; g.lineWidth = 1 + rnd() * 1.4;
+    put(x, y, (px, py) => { g.beginPath(); g.moveTo(px, py); g.quadraticCurveTo(px + Math.cos(ang) * len * 0.5 + (rnd() - 0.5) * 3, py + Math.sin(ang) * len * 0.6, px + Math.cos(ang) * len, py + Math.sin(ang) * len); g.stroke(); });
+  }
+  for (let i = 0; i < 600; i++) { const x = rnd() * S, y = rnd() * S; g.fillStyle = rnd() < 0.5 ? 'rgba(235,225,120,0.35)' : 'rgba(255,255,255,0.22)'; put(x, y, (px, py) => g.fillRect(px, py, 2, 2)); }   // a few tiny flowers
 }
 function groundTexture(kind) {
   return cachedTex('ground_' + kind, () => {
@@ -1644,11 +1691,8 @@ function groundTexture(kind) {
     const rnd = mulberry(99);
     let rep = 160;
     if (kind === 'grass') {
-      g.fillStyle = '#3b6b3a'; g.fillRect(0, 0, 512, 512);
-      for (let i = 0; i < 3500; i++) { g.fillStyle = rnd() < 0.5 ? 'rgba(20,70,25,0.18)' : 'rgba(110,190,90,0.12)'; g.fillRect(rnd() * 512, rnd() * 512, 2 + rnd() * 3, 2 + rnd() * 3); }
-      g.strokeStyle = 'rgba(210,235,200,0.10)'; g.lineWidth = 2; g.strokeRect(0, 0, 512, 512);
-      g.strokeStyle = 'rgba(210,235,200,0.05)'; g.lineWidth = 1;
-      for (let i = 1; i < 8; i++) { g.beginPath(); g.moveTo(i * 64, 0); g.lineTo(i * 64, 512); g.stroke(); g.beginPath(); g.moveTo(0, i * 64); g.lineTo(512, i * 64); g.stroke(); }
+      rep = 320;
+      try { grassPaint(cv, g); } catch (e) { cv.width = cv.height = 512; g.fillStyle = '#3b6b3a'; g.fillRect(0, 0, 512, 512); rep = 160; }
     } else if (kind === 'sand') {
       g.fillStyle = '#d8b878'; g.fillRect(0, 0, 512, 512);
       for (let i = 0; i < 3800; i++) { g.fillStyle = rnd() < 0.5 ? 'rgba(150,110,50,0.16)' : 'rgba(255,235,180,0.18)'; g.fillRect(rnd() * 512, rnd() * 512, 2 + rnd() * 3, 1 + rnd() * 2); }
@@ -7437,7 +7481,7 @@ function frame(now) {
     } else gs.textContent = 'לא זוהה שלט. חבר שלט USB והזז סטיק.';
     if (inMenu) updateInput(0); // keep gamepad polling live while configuring
   }
-  if (!whoActive() && !fxRender(scene, activeCam)) renderer.render(scene, activeCam);       // the sign-in page covers the whole screen: no need to draw the simulator behind it
+  if (!whoActive()) { gfxFrame(dt); renderer.render(scene, activeCam); }       // the sign-in page covers the whole screen: no need to draw the simulator behind it
 }
 
 /* ============================================================
@@ -11317,73 +11361,54 @@ function edPathClear() {
   sync();
 })();
 
-/* ---------- FPV look: post-processing pass (lens distortion, chromatic aberration, analog noise, vignette, glow) ---------- */
-const FX = { on: false, level: 2, broken: false, rt: null, quad: null, cam: null, mat: null, w: 0, h: 0 };
-const FX_LEVELS = { 1: { dist: 0.06, ca: 0.0016, noise: 0.025, vig: 0.28, glow: 0.18 }, 2: { dist: 0.12, ca: 0.0030, noise: 0.045, vig: 0.42, glow: 0.30 }, 3: { dist: 0.20, ca: 0.0050, noise: 0.075, vig: 0.58, glow: 0.45 } };
-function fxSave() { try { localStorage.setItem('fpvNexusFx', JSON.stringify({ on: FX.on, level: FX.level })); } catch (e) {} }
-function fxLoad() {
-  try { const o = JSON.parse(localStorage.getItem('fpvNexusFx') || 'null'); if (o) { FX.on = o.on === true; if (o.level >= 1 && o.level <= 3) FX.level = o.level | 0; } } catch (e) {}
+/* ---------- Graphics: real-time shadows from the sun (follow the drone) ---------- */
+const GFX = { shadows: null, auto: false, t: 0, n: -1, lastKey: '' };
+function gfxDefault() { try { return !(window.matchMedia && matchMedia('(pointer:coarse)').matches) && window.innerWidth >= 900; } catch (e) { return true; } }
+function gfxSave() { try { localStorage.setItem('fpvNexusGfx', JSON.stringify({ shadows: GFX.shadows })); } catch (e) {} }
+function gfxLoad() {
+  GFX.shadows = gfxDefault();
+  try { const o = JSON.parse(localStorage.getItem('fpvNexusGfx') || 'null'); if (o && typeof o.shadows === 'boolean') GFX.shadows = o.shadows; } catch (e) {}
 }
-function fxSet(on, level) { FX.on = !!on; if (level >= 1 && level <= 3) FX.level = level | 0; FX.broken = false; fxSync(); fxSave(); }
-function fxSync() {
-  if (typeof document === 'undefined') return;
-  const c = $('chkFx'), s = $('selFx'), t = $('stFx');
-  if (c) c.checked = FX.on; if (s) { s.value = String(FX.level); s.disabled = !FX.on; } if (t) t.textContent = FX.broken ? 'לא נתמך במכשיר' : FX.on ? 'כן' : 'לא';
-}
-function fxActive() { return FX.on && !FX.broken && typeof editorMode !== 'undefined' && !editorMode && activeCam === fpvCam; }
-function fxDispose() { try { if (FX.rt) FX.rt.dispose(); } catch (e) {} FX.rt = null; FX.w = FX.h = 0; }
-function fxBuild(w, h) {
-  fxDispose();
-  const gl2 = renderer.capabilities && renderer.capabilities.isWebGL2, opt = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBAFormat };
-  FX.rt = gl2 && THREE.WebGLMultisampleRenderTarget ? new THREE.WebGLMultisampleRenderTarget(w, h, opt) : new THREE.WebGLRenderTarget(w, h, opt);
-  if (FX.rt.samples !== undefined && gl2) FX.rt.samples = 4;
-  if (!FX.mat) {
-    FX.mat = new THREE.ShaderMaterial({
-      uniforms: { tex: { value: null }, res: { value: new THREE.Vector2(w, h) }, time: { value: 0 }, dist: { value: 0 }, ca: { value: 0 }, noise: { value: 0 }, vig: { value: 0 }, glow: { value: 0 } },
-      vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }',
-      fragmentShader: [
-        'precision highp float; varying vec2 vUv; uniform sampler2D tex; uniform vec2 res; uniform float time, dist, ca, noise, vig, glow;',
-        'float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233)) + time) * 43758.5453); }',
-        'vec3 smp(vec2 uv){ return texture2D(tex, clamp(uv, 0.001, 0.999)).rgb; }',
-        'void main(){',
-        '  vec2 c = vUv - 0.5; float r2 = dot(c, c);',
-        '  vec2 uv = 0.5 + c * (1.0 + dist * r2 * 2.0) / (1.0 + dist * 0.25 * 2.0);',                    // barrel (wide-angle FPV lens), scaled so the edges stay inside the picture
-        '  vec2 off = c * ca * (1.0 + r2 * 6.0);',                                                      // chromatic aberration grows toward the edge
-        '  vec3 col = vec3(smp(uv + off).r, smp(uv).g, smp(uv - off).b);',
-        '  vec3 g = vec3(0.0); float px = 2.5 / res.y;',
-        '  for (int i = 0; i < 8; i++) { float a = float(i) * 0.7854; vec2 d = vec2(cos(a), sin(a)) * px * (3.0 + float(i - (i / 2) * 2) * 4.0); g += max(smp(uv + d) - 0.62, 0.0); }',
-        '  col += g * (glow / 8.0) * 2.2;',                                                             // cheap glow on the bright parts (sky, lights)
-        '  col *= 1.0 - vig * smoothstep(0.12, 0.62, r2 * 1.6);',
-        '  float n = hash(vUv * res) - 0.5; col += n * noise;',                                         // analog video grain
-        '  col *= 1.0 - 0.035 * (0.5 + 0.5 * sin(vUv.y * res.y * 1.2));',                               // faint scan lines
-        '  gl_FragColor = vec4(col, 1.0);',
-        '}'].join('\n'), depthTest: false, depthWrite: false });
-    FX.quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), FX.mat); FX.quad.frustumCulled = false;
-    FX.cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1); FX.scene = new THREE.Scene(); FX.scene.add(FX.quad);
-  }
-  FX.w = w; FX.h = h; FX.mat.uniforms.res.value.set(w, h);
-}
-function fxRender(sc, cam) {                                      // true when the frame was drawn through the pass; false = caller draws normally
-  if (!fxActive()) return false;
+function gfxSync() { if (typeof document === 'undefined') return; const c = $('chkShadow'), t = $('stShadow'); if (c) c.checked = !!GFX.shadows; if (t) t.textContent = GFX.shadows ? 'כן' : 'לא'; }
+function gfxApply() {                                             // switch the shadow system on/off (re-compile materials once)
+  const on = !!GFX.shadows;
   try {
-    const pr = renderer.getPixelRatio(), sz = renderer.getSize(new THREE.Vector2()), w = Math.max(2, Math.floor(sz.x * pr)), h = Math.max(2, Math.floor(sz.y * pr));
-    if (!FX.rt || FX.w !== w || FX.h !== h) fxBuild(w, h);
-    const L = FX_LEVELS[FX.level] || FX_LEVELS[2], u = FX.mat.uniforms;
-    u.tex.value = FX.rt.texture; u.time.value = (performance.now() % 1000) / 1000; u.dist.value = L.dist; u.ca.value = L.ca; u.noise.value = L.noise; u.vig.value = L.vig; u.glow.value = L.glow;
-    renderer.setRenderTarget(FX.rt); renderer.render(sc, cam);
-    renderer.setRenderTarget(null); renderer.render(FX.scene, FX.cam);
-    return true;
-  } catch (e) {
-    try { renderer.setRenderTarget(null); } catch (e2) {}
-    FX.broken = true; fxDispose(); fxSync(); return false;      // anything goes wrong -> back to the normal picture, never a black screen
-  }
+    renderer.shadowMap.enabled = on; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    sun.castShadow = on;
+    if (on) {
+      sun.shadow.mapSize.set(2048, 2048); sun.shadow.bias = -0.0006; sun.shadow.normalBias = 0.35; sun.shadow.radius = 2;
+      const c = sun.shadow.camera; c.left = -70; c.right = 70; c.top = 70; c.bottom = -70; c.near = 20; c.far = 520; c.updateProjectionMatrix();
+      if (!sun.target.parent) scene.add(sun.target);
+    }
+    scene.traverse((o) => { if (o.material) { const m = Array.isArray(o.material) ? o.material : [o.material]; m.forEach((x) => { x.needsUpdate = true; }); } });
+  } catch (e) { GFX.shadows = false; }
+  GFX.lastKey = ''; GFX.n = -1; gfxSync();
 }
-(function fxWire() {
-  fxLoad();
-  if (typeof document === 'undefined' || !$('chkFx')) return;
-  $('chkFx').addEventListener('change', (e) => { fxSet(e.target.checked); e.target.blur(); });
-  $('selFx').addEventListener('change', (e) => { fxSet(FX.on, parseInt(e.target.value, 10)); e.target.blur(); });
-  fxSync();
+function gfxSet(on) { GFX.shadows = !!on; gfxSave(); gfxApply(); }
+function gfxMark() {                                              // which objects cast / receive: everything solid except the sky, lines and see-through things
+  scene.traverse((o) => {
+    if (!o.isMesh || o === sky) return;
+    const m = Array.isArray(o.material) ? o.material[0] : o.material;
+    if (!m || m.transparent || m.visible === false || o.userData.noShadow) { o.castShadow = false; return; }
+    if (o === ground) { o.receiveShadow = true; o.castShadow = false; return; }
+    o.castShadow = true; o.receiveShadow = true;
+  });
+}
+function gfxFrame(dt) {                                           // called every frame: keeps the shadow box around the viewer, marks new objects
+  if (!GFX.shadows) return;
+  try {
+    const p = (activeCam === fpvCam && drone && drone.pos) ? drone.pos : activeCam.position, q = 6;     // snap the box to a grid so the shadows do not shimmer
+    const x = Math.round(p.x / q) * q, z = Math.round(p.z / q) * q;
+    sun.target.position.set(x, 0, z); sun.position.set(x + 80, 140, z + 60); sun.target.updateMatrixWorld();
+    GFX.t += dt; if (GFX.t > 1) { GFX.t = 0; const k = scene.children.length + ':' + (typeof currentStage !== 'undefined' && currentStage ? currentStage.id : ''); if (k !== GFX.lastKey) { GFX.lastKey = k; gfxMark(); } }
+  } catch (e) { GFX.shadows = false; gfxApply(); }
+}
+(function gfxWire() {
+  gfxLoad();
+  if (typeof document === 'undefined') return;
+  gfxApply();
+  if ($('chkShadow')) $('chkShadow').addEventListener('change', (e) => { gfxSet(e.target.checked); e.target.blur(); });
+  gfxSync();
 })();
 
 /* ---------- boot ---------- */
