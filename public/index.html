@@ -1299,7 +1299,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 292</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 293</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -10136,7 +10136,8 @@ function whoFrame() {
   const v = whoV; if (!v || !dvRenderer) return;
   v.model.rotation.y = -0.75 + t * 0.6; if (v.gx) v.gx(t);
   try {
-    const pr = v.model.userData.props || []; for (let i = 0; i < pr.length; i++) pr[i].rotation.y += (pr[i].userData.dir || 1) * 0.3;
+    const pr = v.model.userData.props || []; const wd = Math.min(0.1, Math.max(0, t - (whoV.last || t))); whoV.last = t;     // the same slow propeller turn as on the home screen, by time (not per frame)
+    for (let i = 0; i < pr.length; i++) pr[i].rotation.y += (pr[i].userData.dir || 1) * MAIN_PROP_SPIN * wd;
     dvRenderer.render(v.sc, v.cam);
     const g = v.cv.getContext('2d'); g.clearRect(0, 0, v.cv.width, v.cv.height); g.drawImage(dvRenderer.domElement, 0, 0, v.cv.width, v.cv.height);
   } catch (e) { /* ignore */ }
