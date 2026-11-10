@@ -1299,7 +1299,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 289</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 290</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -6975,10 +6975,48 @@ function selectTrack(id) {
   setTrkBg(id);
 }
 /* hover (or tap) on a track's name or map thumbnail: a floating preview of the track on the map; it closes when the mouse leaves */
+let trkPeekR = null; const trkPeekCache = {};
+function trkPeek3D(st) {                                          // a real 3D picture of the track: its gates (the same objects as in the game), its elements and the route, seen from above and behind
+  try {
+    const G = st.gen().map(gateCopy); if (G.length < 1) return '';
+    const O = (st.objects || []).filter((o) => o && isFinite(o.x) && isFinite(o.z)).slice(0, 400);
+    const key = st.id + '|' + G.map((g) => [g.x, g.y, g.z, g.yaw, g.pitch, g.k, g.sz].join(',')).join(';') + '|' + O.length;
+    if (trkPeekCache[key]) return trkPeekCache[key];
+    if (!trkPeekR) { trkPeekR = new THREE.WebGLRenderer({ antialias: true, alpha: false, preserveDrawingBuffer: true }); trkPeekR.setSize(560, 300, false); trkPeekR.setPixelRatio(1); }
+    const sc = new THREE.Scene(); sc.background = new THREE.Color(0x0d1218);
+    let x0 = 1e9, x1 = -1e9, z0 = 1e9, z1 = -1e9, y1 = 6;
+    G.forEach((g) => { x0 = Math.min(x0, g.x); x1 = Math.max(x1, g.x); z0 = Math.min(z0, g.z); z1 = Math.max(z1, g.z); y1 = Math.max(y1, g.y); });
+    const cx = (x0 + x1) / 2, cz = (z0 + z1) / 2, R = Math.max(30, Math.hypot(x1 - x0, z1 - z0) / 2 + 14);
+    const ground = new THREE.Mesh(new THREE.PlaneGeometry(R * 6, R * 6), new THREE.MeshBasicMaterial({ color: 0x1b2a1c })); ground.rotation.x = -Math.PI / 2; ground.position.set(cx, 0, cz); sc.add(ground);
+    const gh = new THREE.GridHelper(R * 6, 60, 0x2f4631, 0x243826); gh.position.set(cx, 0.02, cz); sc.add(gh);
+    const added = [];
+    G.forEach((g, i) => { const go = buildGateObj(i, g); sc.add(go.group); added.push(go); if (go.arrow) go.arrow.visible = false; });   // buildGateObj puts the gate in the game's gate group: move it here
+    const tint = { pine: 0x2f7d3a, oak: 0x3f8f3a, bush: 0x2f6f2f, tree: 0x2f7d3a };
+    O.forEach((o) => {
+      const t = String(o.t || ''), s = Math.max(0.4, Number(o.s) || 1); let m;
+      const col = /^#[0-9a-f]{6}$/i.test(o.c || '') ? new THREE.Color(o.c) : new THREE.Color(0xc9ccd2);
+      if (/pine|oak|bush|tree/.test(t)) { m = new THREE.Mesh(new THREE.ConeGeometry(1.6 * s, 6 * s, 7), new THREE.MeshBasicMaterial({ color: tint[t] || 0x2f7d3a })); m.position.set(o.x, 3 * s, o.z); }
+      else if (/build|wall|house|hall|tower|bando|block/.test(t)) { m = new THREE.Mesh(new THREE.BoxGeometry(5 * s, 7 * s, 5 * s), new THREE.MeshBasicMaterial({ color: 0x6b727d })); m.position.set(o.x, 3.5 * s, o.z); }
+      else { m = new THREE.Mesh(new THREE.CylinderGeometry(0.5 * s, 0.7 * s, 1.6 * s, 8), new THREE.MeshBasicMaterial({ color: col })); m.position.set(o.x, 0.8 * s, o.z); }
+      sc.add(m); added.push({ group: m });
+    });
+    const pts = G.map((g) => new THREE.Vector3(g.x, g.y, g.z));
+    if (pts.length > 1) { const ln = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0xe6b450 })); sc.add(ln); added.push({ group: ln }); }
+    let dx = G[G.length - 1].x - G[0].x, dz = G[G.length - 1].z - G[0].z; const dl = Math.hypot(dx, dz) || 1; dx /= dl; dz /= dl; if (dl < 1) { dx = 0; dz = -1; }
+    const cam = new THREE.PerspectiveCamera(40, 560 / 300, 1, 4000);
+    cam.position.set(cx - dx * R * 1.15 + (-dz) * R * 0.75, Math.max(R * 0.8, y1 + 12), cz - dz * R * 1.15 + dx * R * 0.75); cam.lookAt(cx, Math.min(y1, 10) * 0.6, cz);
+    trkPeekR.render(sc, cam);
+    const url = trkPeekR.domElement.toDataURL('image/jpeg', 0.85);
+    added.forEach((a) => { sc.remove(a.group); a.group.traverse((n) => { if (n.geometry) n.geometry.dispose(); if (n.material) { if (n.material.map) n.material.map.dispose(); n.material.dispose(); } }); });
+    ground.geometry.dispose(); ground.material.dispose();
+    if (typeof url !== 'string' || url.indexOf('data:image') !== 0) return '';
+    trkPeekCache[key] = url; return url;
+  } catch (e) { return ''; }
+}
 function trkPeekShow(id, x, y) {
   const st = STAGES[id], el = $('trkPeek'); if (!st || !el || typeof nxMapPreview !== 'function') return false;
-  const gts = st.gen(), len = Math.round(pathLen(gts));
-  el.innerHTML = '<div class="pt"><span>' + String(st.name).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])) + '</span><small>' + gts.length + ' שערים · ' + len + ' מ׳</small></div>' + nxMapPreview(st);
+  const gts = st.gen(), len = Math.round(pathLen(gts)), img = trkPeek3D(st);
+  el.innerHTML = '<div class="pt"><span>' + String(st.name).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])) + '</span><small>' + gts.length + ' שערים · ' + len + ' מ׳</small></div>' + (img ? '<img alt="" style="display:block;width:100%;height:auto" src="' + img + '">' : nxMapPreview(st));
   el.classList.add('on'); trkPeekMove(x, y); return true;
 }
 function trkPeekMove(x, y) {
