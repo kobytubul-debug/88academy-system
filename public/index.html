@@ -935,10 +935,8 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 body.mz-on #nxBar{right:104px}
 #mzDock button.mzb{width:36px;height:36px;border-radius:0;border:0;background:var(--tile,rgba(16,18,22,.88));box-shadow:inset 0 2px 0 var(--ac);color:var(--tx);display:flex;align-items:center;justify-content:center;cursor:pointer}
 #mzDock button.mzb:hover{color:var(--ac)}
-#mzSpk{cursor:default!important}
 #mzSpkWrap{position:relative;display:flex;align-items:center}
 #mzVolBox{position:absolute;right:0;top:40px;display:none;background:var(--tile,rgba(16,18,22,.95));box-shadow:inset 0 2px 0 var(--ac);padding:10px 14px}
-#mzSpkWrap:hover #mzVolBox,#mzSpkWrap:focus-within #mzVolBox{display:block}
 #mzVolBox input,#mzVolRow input{width:120px;accent-color:var(--ac)}
 #mzList{position:fixed;right:10px;top:52px;z-index:146;display:none;flex-direction:column;width:min(300px,80vw);max-height:70vh;background:var(--tile,rgba(16,18,22,.96));box-shadow:inset 0 2px 0 var(--ac);padding:10px;gap:8px;direction:rtl}
 .mzh{display:flex;align-items:center;justify-content:space-between;color:var(--ac);font-weight:700}
@@ -1324,9 +1322,9 @@ body.mz-on #nxBar{right:104px}
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="10" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
-<div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="10" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 331</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
+<div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 332</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -11798,8 +11796,8 @@ function mzPrefs() {
   return MZ.prefs;
 }
 function mzSavePrefs() { try { localStorage.setItem('fpvNexusMusic', JSON.stringify(MZ.prefs)); } catch (e) { /* ignore */ } }
-function mzVol() { const p = mzPrefs(), c = mzCfg(); return clamp(p.v === null ? (typeof c.vol === 'number' ? c.vol : 50) : p.v, 10, 100); }   // the music cannot be silenced: 10% is the floor
-function mzMuted() { return !!(typeof settings !== 'undefined' && settings.muted); }   // only the game's own mute (button / M key) silences the music; the music controls cannot stop it
+function mzVol() { const p = mzPrefs(), c = mzCfg(); return clamp(p.v === null ? (typeof c.vol === 'number' ? c.vol : 50) : p.v, 0, 100); }
+function mzMuted() { return !!mzPrefs().m || !!(typeof settings !== 'undefined' && settings.muted); }   // the speaker's own mute, or the game's mute (button / M key)
 function mzApplyVol() {
   if (!MZ.audio) return;
   try { MZ.audio.volume = mzVol() / 100; MZ.audio.muted = mzMuted(); } catch (e) { /* ignore */ }
@@ -11871,7 +11869,7 @@ function mzShow() {
     dock.style.display = showSpk || showNote ? 'flex' : 'none';
     const sp = $('mzSpkWrap'); if (sp) sp.style.display = showSpk ? '' : 'none';
     const nb = $('mzNote'); if (nb) nb.style.display = showNote ? '' : 'none';
-    const sb = $('mzSpk'); if (sb) { if (sb.dataset.k !== 'u') { sb.dataset.k = 'u'; sb.innerHTML = MZ_SPK(false); } sb.title = 'עוצמת מוזיקה'; }
+    const sb = $('mzSpk'); if (sb) { const mu = mzMuted(), k = mu ? 'm' : 'u'; if (sb.dataset.k !== k) { sb.dataset.k = k; sb.innerHTML = MZ_SPK(mu); } sb.title = mu ? 'בטל השתקה' : 'עוצמה (לחיצה נוספת משתיקה)'; }
     const vr = $('mzVol'); if (vr && document.activeElement !== vr && String(vr.value) !== String(Math.round(mzVol()))) vr.value = Math.round(mzVol());
   }
   try { document.body.classList.toggle('mz-on', showSpk || showNote); } catch (e) { /* ignore */ }
@@ -11902,13 +11900,17 @@ function mzPick(i) {
   if (MZ.cur && list[i] && MZ.cur.u === list[i].u && MZ.mode === kind && MZ.audio) { mzRenderList(); return; }   // already playing: it cannot be paused
   MZ.unlocked = true; mzPlay(kind, i);
 }
-function mzSetVol(v) { const p = mzPrefs(); p.v = clamp(Number(v) || 0, 10, 100); mzSavePrefs(); mzApplyVol(); mzShow(); }
-function mzToggleMute() { /* no off switch by design */ }
+function mzSetVol(v) { const p = mzPrefs(); p.v = clamp(Number(v) || 0, 0, 100); if (p.v > 0) p.m = false; mzSavePrefs(); mzApplyVol(); mzShow(); }
+function mzToggleMute() { const p = mzPrefs(); if (typeof settings !== 'undefined' && settings.muted) { settings.muted = false; if (typeof syncSliders === 'function') syncSliders(); if (typeof Sound !== 'undefined' && Sound.setVolume) Sound.setVolume(); p.m = false; } else p.m = !p.m; mzSavePrefs(); mzApplyVol(); mzShow(); }
+/* the speaker: first press opens the volume slider, a second press (while it is open) mutes with a slash through the icon, and again un-mutes */
+function mzVolBox(open) { MZ.volOpen = !!open; const b = $('mzVolBox'); if (b) b.style.display = open ? 'block' : 'none'; if (MZ.volTimer) clearTimeout(MZ.volTimer); if (open) MZ.volTimer = setTimeout(() => mzVolBox(false), 3500); }
+function mzSpkClick() { mzUnlock(); if (!MZ.volOpen) { mzVolBox(true); return; } mzToggleMute(); mzVolBox(true); }
 (function mzWire() {
   const on = (id, ev, f) => { const e = $(id); if (e && e.addEventListener) e.addEventListener(ev, f); };
   ['pointerdown', 'keydown', 'touchstart'].forEach((ev) => { try { window.addEventListener(ev, mzUnlock, { passive: true }); } catch (e) { /* ignore */ } });
-  on('mzSpk', 'click', () => { mzUnlock(); mzToggleMute(); });
-  on('mzVol', 'input', (e) => mzSetVol(e.target.value));
+  on('mzSpk', 'click', mzSpkClick);
+  try { window.addEventListener('pointerdown', (e) => { if (MZ.volOpen && e.target && e.target.closest && !e.target.closest('#mzSpkWrap')) mzVolBox(false); }, { passive: true }); } catch (e) { /* ignore */ }
+  on('mzVol', 'input', (e) => { mzSetVol(e.target.value); mzVolBox(true); });
   on('mzVol2', 'input', (e) => mzSetVol(e.target.value));
   on('mzMute2', 'click', () => mzToggleMute());
   on('mzNote', 'click', () => mzList());
