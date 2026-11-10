@@ -595,7 +595,7 @@ body.nx-staff #admPub,body.nx-staff #admPrev{display:none}
 .nxcard.pl.on .dot{background:#5fd08a;box-shadow:0 0 8px #5fd08a}
 .plh{display:flex;align-items:center;gap:6px}.plh span{margin-right:auto;font-size:12px;color:var(--ac)}
 .plst{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;color:var(--mu);margin:6px 0}
-#who{display:none;position:fixed;inset:0;z-index:140;background:rgba(5,6,8,.88);align-items:center;justify-content:center;direction:rtl}
+#who{display:none;position:fixed;inset:0;z-index:140;background:radial-gradient(ellipse at 30% 40%,color-mix(in srgb,var(--ac) 14%,var(--bg)),var(--bg) 72%);align-items:center;justify-content:center;direction:rtl;overflow:auto}
 #who.on{display:flex}
 #who .whobox{width:min(420px,92vw);background:var(--p1);border:1px solid var(--ln);padding:22px;text-align:center;color:var(--tx);font:15px 'Rubik',Arial,sans-serif;border-radius:4px}
 #who h3{color:var(--ti,#fff);font-size:20px;margin-bottom:6px}#who p{color:var(--mu);font-size:13px;margin:6px 0 14px}
@@ -605,6 +605,21 @@ body.nx-staff #admPub,body.nx-staff #admPrev{display:none}
 .nxslot .trkside{border:0;padding:0;background:transparent}
 .nxslot .trkside h3{display:none}
 body.nx-lite .adm-only{display:none!important}
+/* ---------- full-page sign-in ---------- */
+#whoBg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.whoWrap{position:relative;display:grid;grid-template-columns:1.15fr minmax(320px,420px);gap:48px;align-items:center;width:min(1100px,94vw);padding:24px 0}
+.whoBrand{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;animation:introRise .7s .05s both cubic-bezier(.2,.8,.2,1)}
+.whoLogo{font:700 italic clamp(40px,6vw,84px)/1 var(--ui);color:var(--ti,#fff);letter-spacing:.02em}.whoLogo b{color:var(--ac);font-weight:700}
+.whoSub{font:400 clamp(12px,1.3vw,16px) var(--mono),var(--ui);letter-spacing:.3em;color:var(--mu)}
+.whoDr{width:min(520px,100%)}.whoDr canvas{width:100%;height:auto;display:block;filter:drop-shadow(0 10px 18px rgba(0,0,0,.4))}
+#who .whobox{width:100%;padding:30px 28px;animation:introRise .7s .2s both cubic-bezier(.2,.8,.2,1)}
+#who h3{font-size:clamp(22px,2.2vw,28px)}
+.whopw{position:relative}.whopw input{padding-left:40px}
+#who button.eye{position:absolute;left:2px;top:6px;width:34px;height:36px;margin:0;padding:0;font-size:16px;background:transparent!important;color:var(--mu)!important;box-shadow:none!important;clip-path:none!important}
+.whoNote{margin-top:14px;font-size:12px;color:var(--mu)}
+.whoRem{display:flex;align-items:center;justify-content:center;gap:8px;margin:6px 0;font-size:13px;color:var(--mu)}.whoRem input{width:auto;margin:0}
+#whoAerr{color:#ff7a7a;min-height:18px;font-size:13px;margin:4px 0}
+@media (max-width:860px){.whoWrap{grid-template-columns:1fr;gap:10px}.whoDr{width:min(300px,70%)}}
 #whoErr{color:#ff7a7a;min-height:18px;font-size:13px;margin:4px 0}
 #nxBoard{display:none;position:fixed;left:10px;bottom:10px;z-index:60;width:240px;background:color-mix(in srgb,var(--p1) 92%,transparent);border:1px solid var(--ln);color:var(--tx);font:13px 'Rubik',Arial,sans-serif;padding:8px 10px;border-radius:4px;direction:rtl}
 #nxBoard h4{color:#e6b450;font-size:14px;margin-bottom:4px}#nxBoard .rk{color:var(--mu);font-size:12px;margin-bottom:6px}
@@ -1274,11 +1289,17 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 275</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
-<div id="who"><div class="whobox">
-  <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
-  <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
-</div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 276</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
+  <div class="whoWrap">
+    <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
+    <div class="whobox">
+      <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
+      <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><div class="whopw"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><button type="button" id="whoEye" class="eye" title="הצג או הסתר את הסיסמה" tabindex="-1">&#128065;</button></div><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button><div class="whoNote">אין לך חשבון? פנה למדריך שלך.</div></div>
+      <div id="whoAdminPane" style="display:none"><h3>כניסת מנהל</h3><p>הכניסה למנהלי המערכת בלבד.</p><input id="whoAu" type="text" maxlength="60" autocomplete="username" placeholder="שם משתמש" dir="ltr"><div class="whopw"><input id="whoAp" type="password" maxlength="80" autocomplete="current-password" placeholder="סיסמה" dir="ltr"></div><label class="whoRem"><input id="whoAr" type="checkbox"> זכור אותי במחשב הזה</label><div id="whoAerr"></div><button id="whoAGo">כניסה</button><button id="whoAStu" class="sec">כניסת תלמידים</button></div>
+    </div>
+  </div>
+</div>
 <div id="nxBar"></div>
 <div id="nxBoard"></div>
 <div id="nxSpec"><span id="nxSpecInfo"></span><button id="nxSpecCam">מצלמה: מעקב</button><button id="nxSpecX">סיום צפייה (Esc)</button></div>
@@ -1395,33 +1416,9 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
   window.NXHOST = {
     async checkCred(un, h) { const r = await api('POST', '/api/db/check', { un, h }); return !!r.ok; },
     async adminLogin(u, p, remember) { const r = await api('POST', '/api/admin/login', { u, p }); token = r.token; if (remember) ls.set('nxHostTokL', token); else ss.set('nxHostTok', token); },
-    adminLogout() { ss.del('nxHostTok'); ls.del('nxHostTokL'); ls.del('fpvNexusAsPlayer'); try { window.sessionStorage.removeItem('fpvNexusAsPlayer'); } catch (e) { /* ignore */ } window.location.reload(); }
+    adminLogout() { ss.del('nxHostTok'); ls.del('nxHostTokL'); ls.del('fpvNexusAsPlayer'); try { window.sessionStorage.removeItem('fpvNexusAsPlayer'); } catch (e) { /* ignore */ } window.location.href = '/'; }
   };
 
-  /* a small "manager sign-in" link under the player sign-in form */
-  document.addEventListener('DOMContentLoaded', () => {
-    const box = document.getElementById('whoPlayer'); if (!box) return;
-    const a = document.createElement('a'); a.href = '#'; a.id = 'nxHostAdm';
-    a.style.cssText = 'display:block;margin-top:14px;font-size:13px;opacity:.65;color:inherit;text-decoration:underline';
-    const refresh = () => { a.textContent = token ? 'יציאה ממצב מנהל' : 'כניסת מנהל'; };
-    refresh();
-    a.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (token) { window.NXHOST.adminLogout(); return; }
-      const ov = document.createElement('div');
-      ov.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;direction:rtl;font-family:inherit';
-      ov.innerHTML = '<form style="background:#14171c;border:1px solid #4fa3c7;padding:22px;min-width:280px;color:#fff;display:flex;flex-direction:column;gap:10px"><b>כניסת מנהל</b><input id="nxAu" autocomplete="username" placeholder="שם משתמש" style="padding:8px;background:#0b0c0e;color:#fff;border:1px solid #444"><input id="nxAp" type="password" autocomplete="current-password" placeholder="סיסמה" style="padding:8px;background:#0b0c0e;color:#fff;border:1px solid #444"><label style="font-size:13px;opacity:.85"><input type="checkbox" id="nxAr"> השאר מחובר במחשב הזה (לא מומלץ במחשב משותף)</label><div id="nxAe" style="color:#ff6b6b;min-height:18px;font-size:13px"></div><div style="display:flex;gap:8px"><button type="submit" style="flex:1;padding:9px;background:#4fa3c7;border:0;color:#06222b;font-weight:700;cursor:pointer">כניסה</button><button type="button" id="nxAc" style="padding:9px;background:#2a2f36;border:0;color:#fff;cursor:pointer">ביטול</button></div></form>';
-      document.body.appendChild(ov);
-      ov.querySelector('#nxAc').addEventListener('click', () => ov.remove());
-      ov.querySelector('#nxAu').focus();
-      ov.querySelector('form').addEventListener('submit', async (ev) => {
-        ev.preventDefault();
-        try { await window.NXHOST.adminLogin(ov.querySelector('#nxAu').value, ov.querySelector('#nxAp').value, ov.querySelector('#nxAr').checked); window.location.reload(); }
-        catch (er) { ov.querySelector('#nxAe').textContent = er.status === 429 ? 'נסיונות רבים מדי, נסה שוב בעוד כמה דקות' : 'שם משתמש או סיסמה שגויים'; }
-      });
-    });
-    box.appendChild(a);
-  });
 })();
 
 </script>
@@ -7215,6 +7212,7 @@ function frame(now) {
 
   applyGateLabels();
   introFrame(dt);
+  whoFrame();
   edSyncBody(dt);
   if (inMenu && currentScreen === 'main') drawMainDrone(dt); else if (MD.ph !== 'idle' || MD.t > 0) mdReset(mainDv);
   if (inMenu) {
@@ -7266,7 +7264,7 @@ function frame(now) {
     } else gs.textContent = 'לא זוהה שלט. חבר שלט USB והזז סטיק.';
     if (inMenu) updateInput(0); // keep gamepad polling live while configuring
   }
-  renderer.render(scene, activeCam);
+  if (!whoActive()) renderer.render(scene, activeCam);       // the sign-in page covers the whole screen: no need to draw the simulator behind it
 }
 
 /* ============================================================
@@ -8244,12 +8242,19 @@ async function nxHash(salt, pw) {
   for (let i = 0; i < t.length; i++) { h1 = Math.imul(h1 ^ t.charCodeAt(i), 16777619); h2 = Math.imul(h2 + t.charCodeAt(i), 2246822519) ^ (h2 >>> 13); }
   return 'f' + (h1 >>> 0).toString(16) + (h2 >>> 0).toString(16);
 }
+const nxIsAdminPath = () => { try { return /^\/admin\/?$/i.test(window.location.pathname); } catch (e) { return false; } };
+function nxShowAdminPane(msg) {                                // the manager's own sign-in page: the /admin address
+  $('who').classList.add('on'); $('whoRole').style.display = 'none'; $('whoPlayer').style.display = 'none'; $('whoAdminPane').style.display = 'block';
+  $('whoAerr').textContent = msg || ''; window.setTimeout(() => { try { $('whoAu').focus(); } catch (e) { /* ignore */ } }, 80);
+}
 function nxShowWho(force, msg) {
   const w = $('who');
   w.classList.add('on');
   const local = NX.local && !NX.role_chosen;
+  $('whoAdminPane').style.display = 'none';
   $('whoRole').style.display = local ? 'block' : 'none';
   $('whoPlayer').style.display = local ? 'none' : 'block';
+  if (!local) window.setTimeout(() => { try { ($('whoUn').value ? $('whoPw') : $('whoUn')).focus(); } catch (e) { /* ignore */ } }, 80);
   $('whoUn').value = NX.un || ''; $('whoPw').value = '';
   $('whoErr').textContent = msg || '';
   $('whoCancel').style.display = force ? 'inline-block' : 'none';
@@ -9843,6 +9848,7 @@ async function nxBoot() {
   if (db && uid) {
     NX.db = db; NX.uid = String(uid).replace(/[^A-Za-z0-9_\-.~:@+]/g, '_'); NX.checkCred = (window.NXHOST && window.NXHOST.checkCred) || null;
     NX.isOwner = !!(user.canEdit && user.canEdit());
+    if (nxIsAdminPath() && window.NXHOST && window.NXHOST.adminLogin && !NX.isOwner) { nxShowAdminPane(); await new Promise(() => { /* the manager signs in on this page, which then reloads */ }); }
     NX.role = NX.isOwner && !nxAsPlayer() ? 'admin' : 'player';
     NX.role_chosen = true;
   } else {
@@ -9878,6 +9884,30 @@ async function nxBoot() {
     window.addEventListener('keydown', (e) => { if (e.code === 'F9') { e.preventDefault(); nxOpen(!NX.open); } });
   }
 }
+
+/* ---------- sign-in page visuals: the same animated backdrop and drone platform as the home page ---------- */
+let whoV = null, whoTried = false;
+const whoActive = () => { const w = $('who'); return !!(w && w.classList && w.classList.contains('on')); };
+function whoFrame() {
+  if (!whoActive()) { if (whoV) { try { disposeGroup(whoV.sc); } catch (e) { /* ignore */ } whoV = null; } whoTried = false; return; }
+  const t = nowSec, cv = $('whoBg'), c = gxCfg();
+  if (cv && c && c.on && c.bg) {
+    cv.style.display = 'block';
+    const g = cv.getContext('2d'), w = cv.width, h = cv.height, a = gxAccent(), col = (al) => 'rgba(' + a[0] + ',' + a[1] + ',' + a[2] + ',' + al + ')';
+    g.clearRect(0, 0, w, h); (GX_BG[c.bgmode] || GX_BG.grid)(g, w, h, t, col);
+  } else if (cv) cv.style.display = 'none';
+  if (!whoV && !whoTried && $('whoDroneCv') && typeof makeDroneView === 'function') {
+    whoTried = true;
+    try { const ok = DRONE_IDS.filter(NXH.droneOk), id = ok.indexOf(settings.preset) >= 0 ? settings.preset : (ok.indexOf('fpv5') >= 0 ? 'fpv5' : (ok[0] || 'fpv5')); whoV = makeDroneView(id, $('whoDroneCv'), true); whoV.model.rotation.y = -0.75; } catch (e) { whoV = null; }
+  }
+  const v = whoV; if (!v || !dvRenderer) return;
+  v.model.rotation.y = -0.75 + t * 0.6; if (v.gx) v.gx(t);
+  try {
+    const pr = v.model.userData.props || []; for (let i = 0; i < pr.length; i++) pr[i].rotation.y += (pr[i].userData.dir || 1) * 0.3;
+    dvRenderer.render(v.sc, v.cam);
+    const g = v.cv.getContext('2d'); g.clearRect(0, 0, v.cv.width, v.cv.height); g.drawImage(dvRenderer.domElement, 0, 0, v.cv.width, v.cv.height);
+  } catch (e) { /* ignore */ }
+}
 function nxWireWho() {
   $('whoAdmin').addEventListener('click', () => { try { window.sessionStorage.setItem('fpvNexusRole', 'admin'); } catch (e) { /* ignore */ } NX.role = 'admin'; NX.role_chosen = true; $('who').classList.remove('on'); if (NX.roleResolve) NX.roleResolve(); });
   $('whoPl').addEventListener('click', () => { try { window.sessionStorage.setItem('fpvNexusRole', 'player'); } catch (e) { /* ignore */ } NX.role = 'player'; NX.role_chosen = true; $('whoRole').style.display = 'none'; if (NX.roleResolve) NX.roleResolve(); nxShowWho(false); });
@@ -9891,6 +9921,16 @@ function nxWireWho() {
     $('who').classList.remove('on'); nxApplyView(); nxHoldCheck(); nxTelemetry();
   });
   $('whoPw').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('whoGo').click(); });
+  $('whoEye').addEventListener('click', () => { const p = $('whoPw'); p.type = p.type === 'password' ? 'text' : 'password'; });
+  $('whoAGo').addEventListener('click', async () => {
+    const un = $('whoAu').value.trim(), pw = $('whoAp').value;
+    if (!un || !pw) { $('whoAerr').textContent = 'יש להזין שם משתמש וסיסמה'; return; }
+    $('whoAGo').disabled = true; $('whoAerr').textContent = '';
+    try { await window.NXHOST.adminLogin(un, pw, $('whoAr').checked); window.location.reload(); }
+    catch (er) { $('whoAGo').disabled = false; $('whoAerr').textContent = er && er.status === 429 ? 'נסיונות רבים מדי, נסה שוב בעוד כמה דקות' : er && er.status ? 'שם משתמש או סיסמה שגויים' : 'אין חיבור לשרת, נסה שוב'; }
+  });
+  $('whoAp').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('whoAGo').click(); });
+  $('whoAStu').addEventListener('click', () => { window.location.href = '/'; });
   $('whoCancel').addEventListener('click', () => $('who').classList.remove('on'));
   $('whoAdm').addEventListener('click', () => nxSetAsPlayer(false));
 }

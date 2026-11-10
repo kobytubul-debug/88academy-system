@@ -191,7 +191,7 @@ const server = http.createServer((req, res) => {
     return;
   }
   if (req.method !== 'GET' && req.method !== 'HEAD') { res.writeHead(405, HEAD); return res.end(); }
-  const map = { '/': 'index.html', '/index.html': 'index.html', '/import': 'import.html' };
+  const map = { '/': 'index.html', '/index.html': 'index.html', '/admin': 'index.html', '/admin/': 'index.html', '/import': 'import.html' };   // /admin is the same page: the game shows the manager sign-in there
   const f = map[url.pathname];
   if (!f) { res.writeHead(404, HEAD); return res.end('Not found'); }
   sendFile(req, res, path.join(PUBLIC, f));
