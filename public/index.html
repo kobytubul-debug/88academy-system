@@ -1325,7 +1325,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><button id="mzMute2" type="button"></button><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 326</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 327</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -8149,7 +8149,14 @@ const NX_HIDE = [
 function nxDefault() {
   return {
     theme: { ac: '#4cc3e6', am: '#e6b450', bg: '#0b0c0e', p1: '#14161a', p2: '#1b1e23', ln: '#2d3139', tx: '#d6d9de', mu: '#8b929c', ti: '', bt: '', bs: '', lg: '', lg2: '', it: '', ib: '', ot: '', tl: '', tl2: '', gr: '', rd: '', qb: '', qt: '', font: 'ui', btn: 'sharp', bw: 1, mbw: 420, balign: 'c', mvert: 'c', overlay: 0.75, bgImg: '', trans: 'slide', dur: 300, fadeMs: 450, gx: Object.assign({}, GX.st) },
-    tx: {}, hide: {}, home: [], tnames: {}, torder: [], stages: { off: {}, force: '', del: {}, bsel: false }, tcats: { cats: {}, of: {} }, drones: { off: {}, title: {}, desc: {}, col: {} }, music: { on: true, showVol: true, showList: true, menuOn: true, flyOn: true, flyAuto: false, shuffle: false, vol: 50, songs: [] },
+    tx: {}, hide: {}, home: [], tnames: {}, torder: [], stages: { off: {}, force: '', del: {}, bsel: false }, tcats: { cats: {}, of: {} }, drones: { off: {}, title: {}, desc: {}, col: {} }, music: { on: true, showVol: true, showList: true, menuOn: true, flyOn: true, flyAuto: false, shuffle: false, vol: 50, songs: [
+    { id: 'mz1', t: 'Sad ambient background', a: 'Melatronic', u: '/music/sad-ambient-background.mp3', menu: true, fly: false },
+    { id: 'mz2', t: 'Grounded #1', a: '1000 Handz', u: '/music/grounded-1.mp3', menu: true, fly: false },
+    { id: 'mz3', t: 'Life Cycle', a: 'Grumplefunk', u: '/music/life-cycle.mp3', menu: true, fly: false },
+    { id: 'mz4', t: 'Keep the secret', a: 'Melatronic', u: '/music/keep-the-secret.mp3', menu: true, fly: false },
+    { id: 'mz5', t: 'Rolling', a: 'BoxCat Games', u: '/music/rolling.mp3', menu: false, fly: true },
+    { id: 'mz6', t: 'Chilly place', a: 'Playsound', u: '/music/chilly-place.mp3', menu: false, fly: true }
+  ] },
     courses: {}, guides: {}, stick: {}, courseId: '', courseIds: [], staff: {},
     logo: { on: true, pages: { main: true, drone: false, missions: false, controls: false }, size: 6, x: 96, y: 91, color: '#ffffff', op: 85 }
   };
@@ -11768,11 +11775,20 @@ function gfxFrame(dt) {
 const MZ = { audio: null, mode: 'off', idx: -1, unlocked: false, bad: {}, flyPicked: false, listOpen: false, prefs: null, playing: '' };
 function mzCfg() {
   const c = (NX.eff && NX.eff.music) || (typeof nxDefault === 'function' ? nxDefault().music : null) || {};
+  if (c && !c.touched && (!Array.isArray(c.songs) || !c.songs.length) && typeof nxDefault === 'function') return Object.assign({}, c, { songs: nxDefault().music.songs });   // never edited by the manager: the starter playlist
   return c;
+}
+function mzUrl(u) {
+  u = String(u || '');
+  if (u.charAt(0) !== '/' || u.charAt(1) === '/') return u;
+  let host = '';
+  try { host = typeof location !== 'undefined' ? String(location.hostname || '') : ''; } catch (e) { host = ''; }
+  if (typeof window !== 'undefined' && window.NXHOST) return u;                 // on the 88ACADEMY site the files are served from the same place
+  return host === 'eight8academy-system.onrender.com' || !host ? u : 'https://eight8academy-system.onrender.com' + u;
 }
 function mzSongs(kind) {
   const c = mzCfg(), all = Array.isArray(c.songs) ? c.songs : [];
-  return all.filter((s) => s && s.u && (kind === 'menu' ? s.menu !== false : s.fly !== false));
+  return all.filter((s) => s && s.u && (kind === 'menu' ? s.menu !== false : s.fly !== false)).map((s) => Object.assign({}, s, { u: mzUrl(s.u) }));
 }
 function mzPrefs() {
   if (MZ.prefs) return MZ.prefs;
@@ -11864,7 +11880,7 @@ function mzShow() {
 function mzRenderList() {
   const box = $('mzListBody'); if (!box || !MZ.listOpen) return;
   const inM = typeof inMenu !== 'undefined' && inMenu, kind = inM ? 'menu' : 'fly', list = mzSongs(kind), c = mzCfg();
-  box.innerHTML = list.map((s, i) => '<button class="mzrow' + (MZ.cur && MZ.cur.u === s.u && MZ.mode === kind ? ' on' : '') + '" data-i="' + i + '"><span class="mzpl">' + (MZ.cur && MZ.cur.u === s.u && MZ.mode === kind && MZ.audio && !MZ.audio.paused ? '&#10074;&#10074;' : '&#9654;') + '</span><span class="mzt">' + nxEsc(s.t || 'שיר ' + (i + 1)) + '</span></button>').join('') || '<p class="mzempty">אין שירים ברשימה.</p>';
+  box.innerHTML = list.map((s, i) => '<button class="mzrow' + (MZ.cur && MZ.cur.u === s.u && MZ.mode === kind ? ' on' : '') + '" data-i="' + i + '"><span class="mzpl">' + (MZ.cur && MZ.cur.u === s.u && MZ.mode === kind && MZ.audio && !MZ.audio.paused ? '&#10074;&#10074;' : '&#9654;') + '</span><span class="mzt">' + nxEsc(s.t || 'שיר ' + (i + 1)) + (s.a ? ' <small style="opacity:.6">· ' + nxEsc(s.a) + '</small>' : '') + '</span></button>').join('') || '<p class="mzempty">אין שירים ברשימה.</p>';
   const vw = $('mzVolRow'); if (vw) vw.style.display = c.showVol !== false ? '' : 'none';
   const vr = $('mzVol2'); if (vr && document.activeElement !== vr) vr.value = Math.round(mzVol());
   const mb = $('mzMute2'); if (mb) mb.innerHTML = MZ_SPK(mzMuted());
@@ -11934,7 +11950,7 @@ function mzNewId() { return 's' + Date.now().toString(36) + Math.random().toStri
 function nxMzAct(a, el) {
   if (!a || a.indexOf('mz-') !== 0) return false;
   const m = NX.draft.music || (NX.draft.music = nxDefault().music); if (!Array.isArray(m.songs)) m.songs = [];
-  const i = Number(el.dataset.i), S = m.songs;
+  const i = Number(el.dataset.i), S = m.songs; m.touched = true;
   const done = (rerender) => { nxTouch(); if (rerender) nxAdmRender(); };
   if (a === 'mz-title') { if (S[i]) { S[i].t = String(el.value || '').trim().slice(0, 80); done(false); } }
   else if (a === 'mz-menu' || a === 'mz-fly') { if (S[i]) { S[i][a === 'mz-menu' ? 'menu' : 'fly'] = !!el.checked; done(false); } }
