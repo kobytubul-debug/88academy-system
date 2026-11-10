@@ -278,7 +278,7 @@ kbd{display:inline-block;min-width:26px;text-align:center;padding:1px 7px;margin
 .stkrow{display:flex;align-items:center;gap:8px;margin:3px 0;direction:ltr}.stkn{width:42px;font-size:12px;text-align:right;direction:rtl}.stksvg{flex:1;height:44px;background:rgba(0,0,0,.25)}.stkl{width:74px;font-size:11px;color:#e5483a;direction:rtl}
 .stknote{font-size:12px;opacity:.75;margin-top:4px}
 .stkhead{margin:4px 0 8px;font-size:15px;direction:rtl}.stkhead.ok b{color:#5fd08a}.stkhead.bad b{color:#e5483a}.stkhead span{color:var(--mu);font-size:13px}
-.stkv2{display:flex;direction:rtl;gap:10px;align-items:flex-end;padding:4px 0 2px}.stkv2 .c{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center}.stkv2 .vl{font-size:18px;font-weight:700;margin-bottom:4px}.stkv2 .pl{position:relative;width:62%;height:170px;background:rgba(255,255,255,.06);border-bottom:2px solid var(--ln)}.stkv2 .b{position:absolute;left:0;right:0;bottom:0}.stkv2 .dv{position:absolute;left:0;right:0}.stkv2 .tk{position:absolute;left:-14%;right:-14%;height:0;border-top:3px solid #fff}.stkv2 .tg{font-size:12px;margin-top:6px;color:#fff;background:rgba(255,255,255,.1);padding:1px 6px;white-space:nowrap}.stkv2 .nm{text-align:center;margin-top:5px;line-height:1.25}.stkv2 .nm b{display:block;font-size:14px}.stkv2 .nm small{display:block;font-size:11px;color:var(--mu)}.stkv2 .mk{font-size:20px;font-weight:700}.stkv2 .c.ok .mk{color:#5fd08a}.stkv2 .c.bad .mk{color:#e5483a}.stkv2 .c.soft .mk{color:#e6b450}.stkleg{font-size:11px;color:var(--mu);text-align:center;margin-top:6px}
+.stkv2{display:flex;direction:rtl;gap:10px;align-items:flex-end;padding:4px 0 2px}.stkv2 .c{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center}.stkv2 .vl{font-size:18px;font-weight:700;margin-bottom:4px}.stkv2 .pl{position:relative;width:62%;height:170px;background:rgba(255,255,255,.06);border-bottom:2px solid var(--ln)}.stkv2 .b{position:absolute;left:0;right:0;bottom:0}.stkv2 .dv{position:absolute;left:0;right:0}.stkv2 .tk{position:absolute;left:-14%;right:-14%;height:0;border-top:3px solid #fff}.stkv2 .tk span{position:absolute;right:50%;transform:translateX(50%);top:4px;font-size:12px;font-weight:700;white-space:nowrap;background:rgba(0,0,0,.72);color:#fff;padding:1px 6px}.stkv2 .tk span.up{top:auto;bottom:4px}.stkv2 .nm{text-align:center;margin-top:5px;line-height:1.25}.stkv2 .nm b{display:block;font-size:14px}.stkv2 .nm small{display:block;font-size:11px;color:var(--mu)}.stkv2 .mk{font-size:20px;font-weight:700}.stkv2 .c.ok .mk{color:#5fd08a}.stkv2 .c.bad .mk{color:#e5483a}.stkv2 .c.soft .mk{color:#e6b450}.stkleg{font-size:11px;color:var(--mu);text-align:center;margin-top:6px}
 .stktab{width:100%;border-collapse:collapse;font-size:14px;margin-top:6px;direction:rtl}.stktab th{font-weight:600;font-size:12px;color:var(--mu);text-align:right;padding:4px 8px;border-bottom:1px solid var(--ln)}.stktab td{padding:7px 8px;border-bottom:1px solid #ffffff14;text-align:right}.stktab td.n{font-weight:600}.stktab td[dir=ltr]{text-align:right;direction:ltr;unicode-bidi:plaintext}
 .stktab tr.ok .g{color:#5fd08a}.stktab tr.bad td{color:#ff8a7e}.stktab tr.bad .g{font-weight:700}.stktab tr.soft .g,.stktab tr.soft td b{color:#e6b450}.stktab tr.bad{background:rgba(229,72,58,.08)}.stkv{margin:6px 18px 0 0;padding:0;font-size:13px;color:#ffb3a8}
 
@@ -1298,7 +1298,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 285</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 286</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -8009,23 +8009,26 @@ function nxStickChart(j) {                                      // at most 5 col
   let cols = '', fails = 0;
   NXE_BORDER.filter((g) => by[g]).forEach((g) => {
     const m = by[g], v = m.v, ref = m.ref, gap = m.gap, inside = m.inside, over = !inside && gap > 0;
-    const top = Math.max(Math.abs(v), Math.abs(ref)) * 1.15 || 1;
+    const top = Math.max(Math.abs(v), Math.abs(ref)) * 1.25 || 1;
     const pc = (x) => Math.max(0, Math.min(100, Math.abs(x) / top * 100));
     const lo = Math.min(Math.abs(v), Math.abs(ref)), hi = Math.max(Math.abs(v), Math.abs(ref));
     const sev = inside ? 0 : Math.min(1, Math.abs(gap) / (Math.abs(ref) || Math.abs(gap) || 1));
     const base = over || inside ? 'hsl(130,62%,44%)' : 'hsl(' + Math.round(60 - 56 * sev) + ',75%,50%)';
-    const dv = inside ? '' : 'hsl(4,78%,' + Math.round(62 - 12 * sev) + '%)';
-    const tgt = m.mn !== null && m.mx !== null ? r1(m.mn) + '–' + r1(m.mx) : m.mx !== null ? 'עד ' + r1(m.mx) : 'לפחות ' + r1(m.mn);
+    const miss = 'hsl(4,78%,' + Math.round(62 - 12 * sev) + '%)';
+    let hh = pc(hi) - pc(lo); if (!inside && hh < 4) hh = 4;                          // even a small miss stays visible
+    const dv = inside ? 'hsla(130,62%,44%,.28)' : miss;                              // inside: the room left to the target is green; outside: the miss is red
+    const tgt = m.mn !== null && m.mx !== null ? r1(m.mn) + '\u2013' + r1(m.mx) : m.mx !== null ? 'עד ' + r1(m.mx) : 'לפחות ' + r1(m.mn);
     const st = inside ? 'ok' : m.soft ? 'soft' : 'bad'; if (st === 'bad') fails++;
+    const lineAt = pc(ref), flip = lineAt < 22 ? ' up' : '';          // the label sits just under the line (so a red miss above it stays visible); near the floor it goes above
     cols += '<div class="c ' + st + '"><div class="vl" dir="ltr">' + r1(v) + '</div><div class="pl">' +
       '<div class="b" style="height:' + pc(lo).toFixed(1) + '%;background:' + base + '"></div>' +
-      (dv ? '<div class="dv" style="bottom:' + pc(lo).toFixed(1) + '%;height:' + (pc(hi) - pc(lo)).toFixed(1) + '%;background:' + dv + '"></div>' : '') +
-      '<div class="tk" style="bottom:' + pc(ref).toFixed(1) + '%"></div></div>' +
-      '<div class="tg">יעד: ' + tgt + '</div><div class="nm"><b>' + g + '</b><small>' + nxEsc(NXE_M[m.k][0]) + (m.out > 1 ? ' (+' + (m.out - 1) + ')' : '') + '</small></div><div class="mk">' + (st === 'ok' ? '✓' : st === 'soft' ? '!' : '✗') + '</div></div>';
+      '<div class="dv" style="bottom:' + pc(lo).toFixed(1) + '%;height:' + hh.toFixed(1) + '%;background:' + dv + '"></div>' +
+      '<div class="tk" style="bottom:' + lineAt.toFixed(1) + '%"><span class="' + flip.trim() + '">יעד: ' + tgt + '</span></div></div>' +
+      '<div class="nm"><b>' + g + '</b><small>' + nxEsc(NXE_M[m.k][0]) + (m.out > 1 ? ' (+' + (m.out - 1) + ')' : '') + '</small></div><div class="mk">' + (st === 'ok' ? '\u2713' : st === 'soft' ? '!' : '\u2717') + '</div></div>';
   });
   const why = (j.viol || []).map((x) => x.text).slice(0, 3).join(' · ');
   return '<div class="stkhead ' + (j.ok ? 'ok' : 'bad') + '"><b>' + (j.ok ? '✓ עברת' : '✗ לא עברת') + '</b>' + (!j.ok && why ? ' <span>' + nxEsc(why) + '</span>' : '') + '</div>' +
-    '<div class="stkv2">' + cols + '</div><div class="stkleg">העמודה = התוצאה שלך · הקו הלבן = היעד · אדום = החריגה מהיעד</div>';
+    '<div class="stkv2">' + cols + '</div><div class="stkleg">העמודה = התוצאה שלך · הקו הלבן = היעד · אדום = חריגה · ירוק בהיר = מרווח עד היעד</div>';
 }
 function nxMeasured() {                                         // the judged flight of a track that has measurement limits (else null)
   const j = NXS.last; return j && j.rule && nxRuleKeys(j.rule).length ? j : null;
