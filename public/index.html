@@ -276,7 +276,9 @@ kbd{display:inline-block;min-width:26px;text-align:center;padding:1px 7px;margin
 #resStick:not(:empty){margin:6px 0 12px;padding:8px 10px;background:rgba(255,255,255,.04);border-radius:4px;text-align:right}
 .stktitle{font-size:13px;margin-bottom:6px}.stkok{color:#5fd08a}.stkbad{color:#e5483a}
 .stkrow{display:flex;align-items:center;gap:8px;margin:3px 0;direction:ltr}.stkn{width:42px;font-size:12px;text-align:right;direction:rtl}.stksvg{flex:1;height:44px;background:rgba(0,0,0,.25)}.stkl{width:74px;font-size:11px;color:#e5483a;direction:rtl}
-.stknote{font-size:12px;opacity:.75;margin-top:4px}.stkv{margin:6px 18px 0 0;padding:0;font-size:13px;color:#ffb3a8}
+.stknote{font-size:12px;opacity:.75;margin-top:4px}
+.stktab{width:100%;border-collapse:collapse;font-size:14px;margin-top:6px;direction:rtl}.stktab th{font-weight:600;font-size:12px;color:var(--mu);text-align:right;padding:4px 8px;border-bottom:1px solid var(--ln)}.stktab td{padding:7px 8px;border-bottom:1px solid #ffffff14;text-align:right}.stktab td.n{font-weight:600}.stktab td[dir=ltr]{text-align:right;direction:ltr;unicode-bidi:plaintext}
+.stktab tr.ok .g{color:#5fd08a}.stktab tr.bad td{color:#ff8a7e}.stktab tr.bad .g{font-weight:700}.stktab tr.soft .g,.stktab tr.soft td b{color:#e6b450}.stktab tr.bad{background:rgba(229,72,58,.08)}.stkv{margin:6px 18px 0 0;padding:0;font-size:13px;color:#ffb3a8}
 
 /* fade */
 #fade{position:fixed;inset:0;z-index:90;background:#000;opacity:0;pointer-events:none;transition:opacity .45s ease;display:flex;align-items:center;justify-content:center}
@@ -1289,7 +1291,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 276</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 278</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -2854,6 +2856,7 @@ function refreshGateTransform(i) {
 }
 
 function disposeGateObjs() {
+  if (typeof gmkClear === 'function') gmkClear();
   for (const go of gateObjs) {
     gateGroup.remove(go.group);
     go.group.traverse((o) => {
@@ -4976,11 +4979,55 @@ function paintGate(go, fc, bc, haloOp) {
   for (const h of go.halos) { h.material.color.copy(fc); h.material.opacity = haloOp; }
   go.arrow.material.color.copy(fc);
 }
+/* exit-direction cone: editor only, hung under the gate; the player sees 4 converging arrows on the next gate instead */
+function gateArrowSync(go) {
+  if (!go || !go.arrow) return;
+  const sp = go.spec, k = Math.max(sp.ow, sp.oh) / 1.55;
+  go.arrow.visible = !!editorMode && sp.kind !== 'none';
+  go.arrow.position.y = -(sp.oh + 0.55 * k);
+}
+const GMK = { grp: null, gate: -1, arrows: [], t: 0 };
+function gmkClear() {
+  if (GMK.grp && GMK.grp.parent) GMK.grp.parent.remove(GMK.grp);
+  for (const a of GMK.arrows) { a.geometry.dispose(); a.material.dispose(); }
+  GMK.grp = null; GMK.gate = -1; GMK.arrows = [];
+}
+function gmkBuild(i) {
+  gmkClear();
+  const go = gateObjs[i]; if (!go) return;
+  const sp = go.spec, k = Math.max(sp.ow, sp.oh) / 1.55;
+  const g = new THREE.Group();
+  for (let n = 0; n < 4; n++) {
+    const m = new THREE.Mesh(new THREE.ConeGeometry(0.16 * k, 0.45 * k, 10),
+      new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 1, depthTest: false, depthWrite: false }));
+    m.renderOrder = 20;
+    m.userData.ang = n * Math.PI / 2;          // 0 = right, 90 = up, 180 = left, 270 = down
+    g.add(m); GMK.arrows.push(m);
+  }
+  g.userData.R = Math.max(0.4, Math.min(sp.iw, sp.ih) * 0.5 * 0.85);
+  go.group.add(g);
+  GMK.grp = g; GMK.gate = i;
+}
+function gmkFrame(dt) {
+  const want = (!editorMode && !inMenu && (state === 'racing' || state === 'countdown') && gateObjs[nextGate] && gateObjs[nextGate].spec.kind !== 'none') ? nextGate : -1;
+  if (want !== GMK.gate || (want >= 0 && GMK.grp && GMK.grp.parent !== gateObjs[want].group)) { if (want < 0) gmkClear(); else gmkBuild(want); }
+  if (!GMK.grp) return;
+  GMK.t = (GMK.t + dt / 1.1) % 1;               // 1.1 s cycle: converge, vanish, restart
+  const t = GMK.t, e = t * t * (3 - 2 * t), R = GMK.grp.userData.R;
+  const r = R * (1 - 0.85 * e), op = t < 0.65 ? 1 : Math.max(0, 1 - (t - 0.65) / 0.35);
+  for (const m of GMK.arrows) {
+    const a = m.userData.ang;
+    m.position.set(Math.cos(a) * r, Math.sin(a) * r, 0);
+    m.rotation.set(0, 0, a - Math.PI / 2);      // cone tip (+Y) points back toward the centre
+    m.material.opacity = op;
+  }
+}
 const GCC = {};
 function gateTint(i, dflt) { const c = gates[i] && gates[i].c; if (!c) return dflt; return GCC[c] || (GCC[c] = new THREE.Color(c)); }
 function updateGateColors() {
   for (let i = 0; i < gateObjs.length; i++) {
     const go = gateObjs[i];
+    gateArrowSync(go);
     if (editorMode) {
       const sel = i === selected || edMultiHas('gate', i);
       paintGate(go, sel ? COL.sel : gateTint(i, COL.frontIdle), sel ? COL.sel : COL.back, sel ? 0.5 : 0.18);
@@ -7212,6 +7259,7 @@ function frame(now) {
   pulse += dt;
 
   applyGateLabels();
+  gmkFrame(dt);
   introFrame(dt);
   whoFrame();
   edSyncBody(dt);
@@ -7903,13 +7951,32 @@ function nxStickGraph(j) {                                      // a small chart
     (j.viol.length ? '<ul class="stkv">' + j.viol.map((v) => '<li>' + nxEsc(v.text) + '</li>').join('') + '</ul>' : '') +
     (j.softv && j.softv.length ? '<div class="stktitle" style="margin-top:6px">כדאי לשפר</div><ul class="stkv">' + j.softv.map((v) => '<li>' + nxEsc(v.text) + '</li>').join('') + '</ul>' : '');
 }
+function nxStickTable(j) {                                      // the flight as numbers: the target, the achievement, and the gap between them (+ over the target, - under it)
+  if (!j || !j.rule || !j.M) return '';
+  const R = j.rule, keys = nxRuleKeys(R); if (!keys.length) return '';
+  const r1 = (v) => Math.round(Number(v) * 10) / 10, sg = (d) => (d > 0 ? '+' : d < 0 ? '\u2212' : '') + Math.abs(r1(d)).toString();
+  let rows = '', soft = 0;
+  keys.forEach((k) => {
+    const L = R.lim[k], mn = nxRuleNum(L.min), mx = nxRuleNum(L.max), v = Number(j.M[k]), u = NXE_M[k][1] ? ' ' + NXE_M[k][1] : '', isSoft = !!(R.soft && R.soft[k]);
+    const tgt = mn !== null && mx !== null ? 'בין ' + r1(mn) + ' ל-' + r1(mx) + u : mx !== null ? 'עד ' + r1(mx) + u : 'לפחות ' + r1(mn) + u;
+    let gap, cls;
+    if (mx !== null && v > mx) { gap = v - mx; cls = isSoft ? 'soft' : 'bad'; }          // over the top of the target
+    else if (mn !== null && v < mn) { gap = v - mn; cls = isSoft ? 'soft' : 'bad'; }     // under the bottom of it
+    else { cls = 'ok'; gap = mx !== null && (mn === null || mx - v <= v - mn) ? v - mx : v - mn; }   // inside: how far from the nearest edge
+    if (cls === 'soft') soft++;
+    rows += '<tr class="' + cls + '"><td class="n">' + nxEsc(NXE_M[k][0]) + '</td><td dir="ltr">' + tgt + '</td><td dir="ltr"><b>' + r1(v) + u + '</b></td><td dir="ltr" class="g">' + sg(gap) + u + (cls === 'ok' ? ' \u2713' : '') + '</td></tr>';
+  });
+  return '<div class="stktitle">ניתוח הטיסה · ' + (j.ok ? '<b class="stkok">עומד ביעדים</b>' : '<b class="stkbad">לא עבר</b>') + (soft ? ' <span class="stknote">(' + soft + ' לשיפור)</span>' : '') + '</div>' +
+    '<table class="stktab"><thead><tr><th>מדד</th><th>יעד</th><th>הישג</th><th>לשיפור</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+    '<div class="stknote">לשיפור: ההפרש מהיעד. פלוס = מעל היעד, מינוס = מתחתיו. ירוק = בתוך היעד, אדום = מחוץ ליעד.</div>';
+}
 function nxMeasured() {                                         // the judged flight of a track that has measurement limits (else null)
   const j = NXS.last; return j && j.rule && nxRuleKeys(j.rule).length ? j : null;
 }
 function nxStickShow() {                                        // fills the results screen
   let el = typeof document !== 'undefined' ? $('resStick') : null;
   if (!el) { const a = $('resNew'); if (!a || !a.parentNode || !document.createElement) return; el = document.createElement('div'); el.id = 'resStick'; a.parentNode.insertBefore(el, a.nextSibling); }
-  el.innerHTML = NXS.last ? nxStickGraph(NXS.last) + nxCalTable(NXS.last) : '';
+  el.innerHTML = NXS.last ? nxStickTable(NXS.last) + nxCalTable(NXS.last) : '';
 }
 function nxCalTable(j) {                                        // admin only: every measured value of the flight, to set the limits from real flights
   if (NX.role !== 'admin' || !j || !j.M) return '';
