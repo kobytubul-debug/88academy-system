@@ -1299,7 +1299,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 291</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 292</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -6976,6 +6976,39 @@ function selectTrack(id) {
 }
 /* hover (or tap) on a track's map thumbnail (not the name): a floating preview of the track on the map; it closes when the mouse leaves */
 let trkPeekR = null; const trkPeekCache = {};
+function trkPeekCam(G) {                                          // a camera above and behind the start, far enough to take in the whole track
+  let x0 = 1e9, x1 = -1e9, z0 = 1e9, z1 = -1e9, y1 = 6;
+  G.forEach((g) => { x0 = Math.min(x0, g.x); x1 = Math.max(x1, g.x); z0 = Math.min(z0, g.z); z1 = Math.max(z1, g.z); y1 = Math.max(y1, g.y); });
+  const cx = (x0 + x1) / 2, cz = (z0 + z1) / 2, R = Math.max(30, Math.hypot(x1 - x0, z1 - z0) / 2 + 14);
+  let dx = G[G.length - 1].x - G[0].x, dz = G[G.length - 1].z - G[0].z; const dl = Math.hypot(dx, dz) || 1; dx /= dl; dz /= dl; if (dl < 1) { dx = 0; dz = -1; }
+  const cam = new THREE.PerspectiveCamera(40, 560 / 300, 1, 5000);
+  cam.position.set(cx - dx * R * 1.15 + (-dz) * R * 0.75, Math.max(R * 0.8, y1 + 12), cz - dz * R * 1.15 + dx * R * 0.75); cam.lookAt(cx, Math.min(y1, 10) * 0.6, cz);
+  cam.updateMatrixWorld(true);
+  return cam;
+}
+function trkPeekKey(st, G) { return st.id + '|' + G.map((g) => [g.x, g.y, g.z, g.yaw, g.pitch, g.k, g.sz].join(',')).join(';') + '|' + ((st.objects || []).length); }
+let trkPeekBusy = false;
+function trkPeekReal(st) {                                        // the REAL map: the game's own environment, gates and elements of this track, rendered from the preview camera
+  if (trkPeekBusy || typeof loadStage !== 'function' || editorMode || !inMenu) return '';
+  const prev = currentStage; if (!prev || !STAGES[prev.id] || (customized && !(prev.custom && !prev.pub))) return '';     // nothing to restore to: do not touch the loaded world
+  trkPeekBusy = true; let url = '', loaded = false;
+  const dm = droneMesh.visible, gm = ghostMesh.visible, sp = sky.position.clone();
+  try {
+    const G = st.gen().map(gateCopy); if (!G.length) return '';
+    const key = 'R' + trkPeekKey(st, G); if (trkPeekCache[key]) return trkPeekCache[key];
+    loadStage(st.id); loaded = true;
+    if (!trkPeekR) { trkPeekR = new THREE.WebGLRenderer({ antialias: true, alpha: false, preserveDrawingBuffer: true }); trkPeekR.setSize(560, 300, false); trkPeekR.setPixelRatio(1); }
+    const cam = trkPeekCam(G); droneMesh.visible = false; ghostMesh.visible = false; sky.position.copy(cam.position);
+    trkPeekR.render(scene, cam);
+    const u = trkPeekR.domElement.toDataURL('image/jpeg', 0.85);
+    if (typeof u === 'string' && u.indexOf('data:image') === 0) { url = u; trkPeekCache[key] = u; }
+  } catch (e) { url = ''; }
+  finally {
+    if (loaded) { try { loadStage(prev.id); } catch (e2) { /* ignore */ } }
+    droneMesh.visible = dm; ghostMesh.visible = gm; sky.position.copy(sp); trkPeekBusy = false;
+  }
+  return url;
+}
 function trkPeek3D(st) {                                          // a real 3D picture of the track: its gates (the same objects as in the game), its elements and the route, seen from above and behind
   try {
     const G = st.gen().map(gateCopy); if (G.length < 1) return '';
@@ -7002,9 +7035,7 @@ function trkPeek3D(st) {                                          // a real 3D p
     });
     const pts = G.map((g) => new THREE.Vector3(g.x, g.y, g.z));
     if (pts.length > 1) { const ln = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0xe6b450 })); sc.add(ln); added.push({ group: ln }); }
-    let dx = G[G.length - 1].x - G[0].x, dz = G[G.length - 1].z - G[0].z; const dl = Math.hypot(dx, dz) || 1; dx /= dl; dz /= dl; if (dl < 1) { dx = 0; dz = -1; }
-    const cam = new THREE.PerspectiveCamera(40, 560 / 300, 1, 4000);
-    cam.position.set(cx - dx * R * 1.15 + (-dz) * R * 0.75, Math.max(R * 0.8, y1 + 12), cz - dz * R * 1.15 + dx * R * 0.75); cam.lookAt(cx, Math.min(y1, 10) * 0.6, cz);
+    const cam = trkPeekCam(G);
     trkPeekR.render(sc, cam);
     const url = trkPeekR.domElement.toDataURL('image/jpeg', 0.85);
     added.forEach((a) => { sc.remove(a.group); a.group.traverse((n) => { if (n.geometry) n.geometry.dispose(); if (n.material) { if (n.material.map) n.material.map.dispose(); n.material.dispose(); } }); });
@@ -7013,11 +7044,20 @@ function trkPeek3D(st) {                                          // a real 3D p
     trkPeekCache[key] = url; return url;
   } catch (e) { return ''; }
 }
+let trkPeekSeq = 0;
+function trkPeekBody(st, img) { return img ? '<img alt="" style="display:block;width:100%;height:auto" src="' + img + '">' : nxMapPreview(st); }
 function trkPeekShow(id, x, y) {
   const st = STAGES[id], el = $('trkPeek'); if (!st || !el || typeof nxMapPreview !== 'function') return false;
-  const gts = st.gen(), len = Math.round(pathLen(gts)), img = trkPeek3D(st);
-  el.innerHTML = '<div class="pt"><span>' + String(st.name).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])) + '</span><small>' + gts.length + ' שערים · ' + len + ' מ׳</small></div>' + (img ? '<img alt="" style="display:block;width:100%;height:auto" src="' + img + '">' : nxMapPreview(st));
-  el.classList.add('on'); trkPeekMove(x, y); return true;
+  const gts = st.gen(), len = Math.round(pathLen(gts)), G = gts.map(gateCopy), my = ++trkPeekSeq;
+  const cached = trkPeekCache['R' + trkPeekKey(st, G)] || '';
+  el.innerHTML = '<div class="pt"><span>' + String(st.name).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])) + '</span><small>' + gts.length + ' שערים · ' + len + ' מ׳</small></div><div class="pb">' + trkPeekBody(st, cached) + '</div>';
+  el.classList.add('on'); trkPeekMove(x, y);
+  if (!cached) setTimeout(() => {                    // the drawing shows at once; the real map replaces it as soon as it is rendered
+    if (my !== trkPeekSeq || !el.classList.contains('on')) return;
+    const u = trkPeekReal(st) || trkPeek3D(st), pb = el.querySelector ? el.querySelector('.pb') : null;
+    if (u && pb && my === trkPeekSeq) { pb.innerHTML = trkPeekBody(st, u); trkPeekMove(x, y); }
+  }, 30);
+  return true;
 }
 function trkPeekMove(x, y) {
   const el = $('trkPeek'); if (!el) return;
@@ -7025,7 +7065,7 @@ function trkPeekMove(x, y) {
   let l = x + 18, t = y + 18; if (l + w > vw - 8) l = x - w - 18; if (l < 8) l = 8; if (t + hgt > vh - 8) t = vh - hgt - 8; if (t < 8) t = 8;
   el.style.left = l + 'px'; el.style.top = t + 'px';
 }
-function trkPeekHide() { const el = $('trkPeek'); if (el) el.classList.remove('on'); }
+function trkPeekHide() { trkPeekSeq++; const el = $('trkPeek'); if (el) el.classList.remove('on'); }
 (function trkPeekWire() {
   if (typeof document === 'undefined' || !document.addEventListener) return;
   const cell = (e) => { const t = e.target && e.target.closest ? e.target.closest('#trkBody td.thumb') : null; return t && t.parentNode && t.parentNode.dataset ? t : null; };
