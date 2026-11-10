@@ -1306,7 +1306,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 321</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 322</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -2689,17 +2689,37 @@ const Sound = {
   ui() { this.beep(540, 0.07, 'square', 0.1); },
   go() { this.beep(1320, 0.5, 'sine', 0.5); },
   finish() { [660, 880, 1100, 1320].forEach((f, i) => setTimeout(() => this.beep(f, 0.18, 'triangle', 0.4), i * 110)); },
-  crash(intensity) {
+  crash(intensity) {                                      // a real-sounding impact: low thud + sharp plastic crack + clatter of small parts + a prop-scrape buzz on hard hits
     if (!this.started) return;
-    const t = this.ctx.currentTime;
-    const src = this.ctx.createBufferSource();
-    src.buffer = this.noiseBuf;
-    const f = this.ctx.createBiquadFilter();
-    f.type = 'lowpass'; f.frequency.value = 900;
-    const g = this.ctx.createGain();
-    g.gain.value = clamp(intensity / 12, 0.1, 0.8);
-    src.connect(f); f.connect(g); g.connect(this.master);
-    src.start(t);
+    try {
+      const c = this.ctx, t = c.currentTime, k = clamp(intensity / 12, 0.1, 1), out = this.master;
+      const env = (g, peak, dur, att) => { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(Math.max(0.0002, peak), t + (att || 0.004)); g.gain.exponentialRampToValueAtTime(0.0001, t + dur); };
+      const noise = (when, dur, type, freq, q, peak, rate) => {
+        const s = c.createBufferSource(); s.buffer = this.noiseBuf; s.playbackRate.value = rate || 1;
+        const f = c.createBiquadFilter(); f.type = type; f.frequency.value = freq; f.Q.value = q || 0.8;
+        const g = c.createGain(); g.gain.setValueAtTime(0.0001, t + when); g.gain.exponentialRampToValueAtTime(Math.max(0.0002, peak), t + when + 0.003); g.gain.exponentialRampToValueAtTime(0.0001, t + when + dur);
+        s.connect(f); f.connect(g); g.connect(out); s.start(t + when, 0, dur + 0.05);
+      };
+      // 1) thud: a short falling sine
+      const th = c.createOscillator(), tg = c.createGain(); th.type = 'sine'; th.frequency.setValueAtTime(170, t); th.frequency.exponentialRampToValueAtTime(48, t + 0.18);
+      env(tg, 0.75 * k, 0.24); th.connect(tg); tg.connect(out); th.start(t); th.stop(t + 0.3);
+      // 2) crack: a very short bright band of noise (plastic/carbon snapping)
+      noise(0, 0.07, 'bandpass', 2600 + Math.random() * 900, 0.9, 0.6 * k, 1.6);
+      // 3) clatter: small parts bouncing, each tick lighter and a bit later
+      const n = 3 + Math.round(k * 3);
+      for (let i = 0; i < n; i++) noise(0.05 + i * (0.045 + Math.random() * 0.03), 0.04, 'highpass', 1800 + Math.random() * 2200, 1.2, 0.3 * k * (1 - i / (n + 1)), 1.2 + Math.random() * 0.8);
+      // 4) prop scrape on a hard hit: a chopped, dropping buzz
+      if (intensity > 5) {
+        const o = c.createOscillator(), og = c.createGain(), lfo = c.createOscillator(), lg = c.createGain();
+        o.type = 'sawtooth'; o.frequency.setValueAtTime(900 + Math.random() * 300, t); o.frequency.exponentialRampToValueAtTime(260, t + 0.3);
+        lfo.frequency.value = 38; lg.gain.value = 0.5; og.gain.value = 0.5;
+        lfo.connect(lg); lg.connect(og.gain);
+        const flt = c.createBiquadFilter(); flt.type = 'lowpass'; flt.frequency.value = 2400;
+        const env2 = c.createGain(); env2.gain.setValueAtTime(0.0001, t); env2.gain.exponentialRampToValueAtTime(0.16 * k + 0.02, t + 0.02); env2.gain.exponentialRampToValueAtTime(0.0001, t + 0.34);
+        o.connect(og); og.connect(flt); flt.connect(env2); env2.connect(out);
+        o.start(t); lfo.start(t); o.stop(t + 0.4); lfo.stop(t + 0.4);
+      }
+    } catch (e) { /* audio is optional */ }
   }
 };
 
