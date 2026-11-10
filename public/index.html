@@ -1302,7 +1302,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 299</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 300</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -1682,6 +1682,93 @@ function grassPaint(cv, g) {                                      // photo-like 
     put(x, y, (px, py) => { g.beginPath(); g.moveTo(px, py); g.quadraticCurveTo(px + Math.cos(ang) * len * 0.5 + (rnd() - 0.5) * 3, py + Math.sin(ang) * len * 0.6, px + Math.cos(ang) * len, py + Math.sin(ang) * len); g.stroke(); });
   }
   for (let i = 0; i < 600; i++) { const x = rnd() * S, y = rnd() * S; g.fillStyle = rnd() < 0.5 ? 'rgba(235,225,120,0.35)' : 'rgba(255,255,255,0.22)'; put(x, y, (px, py) => g.fillRect(px, py, 2, 2)); }   // a few tiny flowers
+}
+
+/* ---------- Trees: leafy clumps, bark, ragged pine tiers (shared geometry + textures) ---------- */
+function treeNoise(x, y, z) { return (Math.sin(x * 3.1 + y * 1.7) * Math.cos(z * 2.9 - y * 2.3) + Math.sin(x * 7.3 - z * 5.1) * Math.cos(y * 6.7 + x * 2.1)) * 0.5; }
+function leafTex() {
+  return cachedTex('leaf', () => {
+    const S = 256, cv = document.createElement('canvas'); cv.width = cv.height = S;
+    const g = cv.getContext('2d'), rnd = mulberry(31);
+    g.fillStyle = '#b9c9ad'; g.fillRect(0, 0, S, S);
+    const put = (x, y, f) => { for (let ox = -S; ox <= S; ox += S) for (let oy = -S; oy <= S; oy += S) { if ((ox && x > 20 && x < S - 20) || (oy && y > 20 && y < S - 20)) continue; f(x + ox, y + oy); } };
+    for (let i = 0; i < 1500; i++) {
+      const x = rnd() * S, y = rnd() * S, w = 3 + rnd() * 5, h = w * (1.4 + rnd() * 0.8), a = rnd() * Math.PI, k = rnd();
+      g.fillStyle = k < 0.30 ? 'rgba(70,92,60,' + (0.35 + rnd() * 0.3) + ')' : k < 0.75 ? 'rgba(176,200,150,' + (0.35 + rnd() * 0.3) + ')' : 'rgba(236,246,205,' + (0.3 + rnd() * 0.3) + ')';
+      put(x, y, (px, py) => { g.save(); g.translate(px, py); g.rotate(a); g.beginPath(); g.ellipse(0, 0, w, h, 0, 0, Math.PI * 2); g.fill(); g.restore(); });
+    }
+    for (let i = 0; i < 170; i++) { const x = rnd() * S, y = rnd() * S; g.fillStyle = 'rgba(25,38,22,0.38)'; put(x, y, (px, py) => { g.beginPath(); g.arc(px, py, 1.5 + rnd() * 2.5, 0, 7); g.fill(); }); }   // gaps between leaves
+    const t = new THREE.CanvasTexture(cv); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(3, 2); t.anisotropy = Math.min(4, renderer.capabilities.getMaxAnisotropy()); return t;
+  });
+}
+function barkTex() {
+  return cachedTex('bark', () => {
+    const W = 128, H = 256, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+    const g = cv.getContext('2d'), rnd = mulberry(17);
+    g.fillStyle = '#b4a79a'; g.fillRect(0, 0, W, H);
+    for (let i = 0; i < 160; i++) {
+      const x = rnd() * W, y0 = rnd() * H, len = 30 + rnd() * 110, w = 1.5 + rnd() * 3.5, dk = rnd() < 0.6;
+      g.strokeStyle = dk ? 'rgba(40,30,24,' + (0.25 + rnd() * 0.35) + ')' : 'rgba(228,214,196,' + (0.15 + rnd() * 0.25) + ')'; g.lineWidth = w;
+      for (const ox of [-W, 0, W]) { g.beginPath(); g.moveTo(x + ox, y0); g.bezierCurveTo(x + ox + (rnd() - 0.5) * 8, y0 + len * 0.3, x + ox + (rnd() - 0.5) * 8, y0 + len * 0.7, x + ox + (rnd() - 0.5) * 6, y0 + len); g.stroke(); }
+    }
+    const t = new THREE.CanvasTexture(cv); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(2, 3); return t;
+  });
+}
+const treeGeoCache = {};
+function leafBlobGeo(v) {                                          // lumpy ball with light-top / dark-bottom vertex colours; unit radius, reused by every tree
+  const key = 'blob' + (v % 4); if (treeGeoCache[key]) return treeGeoCache[key];
+  const g = new THREE.SphereGeometry(1, 18, 14), pos = g.attributes.position, col = new Float32Array(pos.count * 3), nor = new Float32Array(pos.count * 3);
+  for (let i = 0; i < pos.count; i++) {
+    let x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i); const L = Math.hypot(x, y, z) || 1, nx = x / L, ny = y / L, nz = z / L;
+    const n = treeNoise(nx * 2 + v * 1.3, ny * 2 + v * 0.7, nz * 2 + v * 2.1), n2 = treeNoise(nx * 6.5 + v, ny * 6.5, nz * 6.5 - v), r = 1 + 0.17 * n + 0.07 * n2;
+    pos.setXYZ(i, nx * r, ny * r * 0.9, nz * r);
+    const sh = 0.56 + 0.42 * (ny * 0.5 + 0.5) + 0.14 * n + 0.05 * n2;
+    col[i * 3] = sh * 0.98; col[i * 3 + 1] = sh; col[i * 3 + 2] = sh * 0.9; nor[i * 3] = nx; nor[i * 3 + 1] = ny * 0.8 + 0.2; nor[i * 3 + 2] = nz;
+  }
+  g.setAttribute('color', new THREE.BufferAttribute(col, 3)); g.setAttribute('normal', new THREE.BufferAttribute(nor, 3)); g.attributes.normal.needsUpdate = true;
+  return (treeGeoCache[key] = g);
+}
+function trunkGeo(v) {                                             // unit-height trunk: flared roots, slight wobble, bark UVs
+  const key = 'trunk' + (v % 3); if (treeGeoCache[key]) return treeGeoCache[key];
+  const g = new THREE.CylinderGeometry(0.62, 1, 1, 10, 6), pos = g.attributes.position;
+  for (let i = 0; i < pos.count; i++) {
+    const x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i), t = y + 0.5, a = Math.atan2(z, x), r = Math.hypot(x, z);
+    const f = 1 + 0.55 * Math.exp(-t * 9) * (0.6 + 0.4 * Math.sin(a * 5 + v)) + 0.06 * Math.sin(a * 3 + t * 6 + v);
+    pos.setXYZ(i, Math.cos(a) * r * f + Math.sin(t * 4 + v) * 0.05, y, Math.sin(a) * r * f);
+  }
+  g.computeVertexNormals(); return (treeGeoCache[key] = g);
+}
+function pineTierGeo(v) {                                          // ragged, slightly drooping cone tier (unit size)
+  const key = 'tier' + (v % 3); if (treeGeoCache[key]) return treeGeoCache[key];
+  const g = new THREE.ConeGeometry(1, 1, 16, 3), pos = g.attributes.position, col = new Float32Array(pos.count * 3);
+  for (let i = 0; i < pos.count; i++) {
+    const x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i), t = y + 0.5, a = Math.atan2(z, x), r = Math.hypot(x, z);
+    const rag = r > 0.02 ? 1 + 0.16 * Math.sin(a * 7 + v * 2) * (1 - t) + 0.08 * Math.sin(a * 13 + v) : 1, droop = (1 - t) * 0.07 * Math.sin(a * 5 + v);
+    pos.setXYZ(i, x * rag, y + droop, z * rag);
+    const sh = 0.5 + 0.55 * t + 0.08 * Math.sin(a * 9 + v); col[i * 3] = sh; col[i * 3 + 1] = sh; col[i * 3 + 2] = sh * 0.92;
+  }
+  g.setAttribute('color', new THREE.BufferAttribute(col, 3)); g.computeVertexNormals(); return (treeGeoCache[key] = g);
+}
+function leafMat(c, f) { return new THREE.MeshLambertMaterial({ color: new THREE.Color(c).multiplyScalar(1.45 * (f || 1)), map: leafTex(), vertexColors: true }); }
+function barkMat(c) { return new THREE.MeshLambertMaterial({ color: new THREE.Color(c || 0x6b4a2b).multiplyScalar(1.5), map: barkTex() }); }
+function makeTree(g, kind, R, H, col, rnd) {                       // adds a realistic tree to group g: kind 'oak' | 'pine' | 'bush'; R = crown radius, H = total height
+  const add = (geo, mat, x, y, z, sx, sy, sz) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.scale.set(sx, sy === undefined ? sx : sy, sz === undefined ? sx : sz); g.add(m); return m; };
+  const r = rnd || Math.random, v = Math.floor(r() * 6);
+  if (kind === 'oak') {
+    const th = H * 0.5, tr = Math.max(0.22, R * 0.17), bark = barkMat();
+    add(trunkGeo(v), bark, 0, th / 2, 0, tr, th, tr);
+    [[0.7, 0.8, 0.15], [-0.6, 0.72, -0.1], [0.1, 0.72, -0.7], [0.15, 0.7, 0.7]].forEach((q, i) => { const b = add(new THREE.CylinderGeometry(tr * 0.16, tr * 0.28, R * 0.9, 5), bark, q[0] * R * 0.3, th * 0.92 + R * 0.18, q[2] * R * 0.3); b.rotation.z = -q[0] * 0.9; b.rotation.x = q[2] * 0.9; });
+    [[0, 1.0, 0, 0.82], [0.62, 0.86, 0.22, 0.58], [-0.6, 0.9, -0.2, 0.6], [0.12, 0.84, -0.62, 0.56], [-0.2, 0.9, 0.62, 0.54], [0.05, 1.28, 0.05, 0.5]].forEach((q, i) => {
+      const s = R * q[3] * 1.12 * (0.92 + 0.16 * r()); add(leafBlobGeo(v + i), leafMat(col, 1 - (i % 3) * 0.05), q[0] * R, th + (q[1] - 0.1) * R * 0.95, q[2] * R, s, s * 0.92, s);
+    });
+  } else if (kind === 'pine') {
+    const th = H * 0.3, tr = Math.max(0.2, R * 0.12);
+    add(trunkGeo(v), barkMat(0x5a3d22), 0, th / 2 + 0.1, 0, tr, th + 0.2, tr);
+    for (let i = 0; i < 5; i++) { const t = i / 4, rr = R * 1.12 * (1 - t * 0.7), hh = H * (0.34 - t * 0.04), y = H * (0.2 + t * 0.62); const m = add(pineTierGeo(v + i), leafMat(col, 0.92 - t * 0.04), 0, y + hh * 0.3, 0, rr, hh, rr); m.rotation.y = i * 1.3 + r(); }
+  } else {                                                          // bush
+    [[0, 0.45, 0, 1], [0.7, 0.3, 0.2, 0.6], [-0.5, 0.3, -0.35, 0.62]].forEach((q, i) => add(leafBlobGeo(v + i), leafMat(col, 1 - i * 0.07), q[0] * R, H * q[1], q[2] * R, R * q[3], R * q[3] * 0.72, R * q[3]));
+  }
+  return g;
 }
 function groundTexture(kind) {
   return cachedTex('ground_' + kind, () => {
@@ -2273,8 +2360,7 @@ function nbHouse(g, x, z, rnd, wallCols, roofCols) {
 }
 function nbTree(g, x, z, rnd, big) {
   const h = (big ? 9 : 6) + rnd() * 4, t = new THREE.Group();
-  const k = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.4, h * 0.45, 6), nbMat(0x6b4a2a)); k.position.y = h * 0.22; t.add(k);
-  const c = new THREE.Mesh(new THREE.SphereGeometry(h * 0.32, 9, 7), nbMat(rnd() < 0.5 ? 0x3f9a4a : 0x2e7d46)); c.position.y = h * 0.65; t.add(c);
+  makeTree(t, 'oak', h * 0.36, h, rnd() < 0.5 ? 0x3f9a4a : 0x2e7d46, rnd);
   t.position.set(x, 0, z); g.add(t); world.colliders.push({ t: 0, x, z, r: 0.5, h: h * 0.45 }); world.colliders.push({ t: 0, x, z, r: h * 0.3, h: h * 0.95 });
 }
 NB.town = {
@@ -3262,14 +3348,11 @@ function buildPropMesh(p) {
     for (let i = 0; i < n; i++) add(new THREE.BoxGeometry(w, T.h * 0.5, 0.24), i % 2 ? white : propMat(col), (i - (n - 1) / 2) * w, T.h * 0.72, 0);
     [-1, 1].forEach((s) => add(new THREE.BoxGeometry(0.28, T.h * 0.5, 0.7), dark, s * (T.len / 2 - 0.5), T.h * 0.25, 0));
   } else if (p.t === 'pine') {
-    add(new THREE.CylinderGeometry(0.22, 0.32, T.h * 0.28, 8), propMat('#6b4a2b'), 0, T.h * 0.14, 0);
-    [[1, 0.2], [0.76, 0.42], [0.52, 0.62]].forEach((q, i) => add(new THREE.ConeGeometry(T.r * q[0], T.h * 0.42, 9), propShade(col, 1 - i * 0.08), 0, T.h * (q[1] + 0.2), 0));
+    makeTree(g, 'pine', T.r, T.h, col, mulberry(((p.x || 0) * 73 + (p.z || 0) * 31) | 0 || 5));
   } else if (p.t === 'oak') {
-    add(new THREE.CylinderGeometry(0.3, 0.45, T.h * 0.5, 8), propMat('#6b4a2b'), 0, T.h * 0.25, 0);
-    [[0, 0.68, 0, 0.9], [0.55, 0.55, 0.2, 0.62], [-0.5, 0.58, -0.25, 0.66], [0.1, 0.5, -0.55, 0.55]].forEach((q, i) => add(new THREE.IcosahedronGeometry(T.r * q[3], 1), propShade(col, 1 - i * 0.06, true), T.r * q[0], T.h * q[1], T.r * q[2]));
+    makeTree(g, 'oak', T.r, T.h, col, mulberry(((p.x || 0) * 73 + (p.z || 0) * 31) | 0 || 7));
   } else if (p.t === 'bush') {
-    const a = add(new THREE.IcosahedronGeometry(T.r, 1), propShade(col, 1, true), 0, T.h * 0.45, 0); a.scale.y = 0.7;
-    add(new THREE.IcosahedronGeometry(T.r * 0.6, 1), propShade(col, 0.88, true), T.r * 0.7, T.h * 0.3, T.r * 0.2);
+    makeTree(g, 'bush', T.r, T.h, col, mulberry(((p.x || 0) * 53 + (p.z || 0) * 17) | 0 || 3));
   } else if (p.t === 'rock') {
     const a = add(new THREE.DodecahedronGeometry(T.r, 0), propShade(col, 1, true), 0, T.h * 0.3, 0); a.scale.set(1, 0.66, 0.85); a.rotation.y = 0.6;
     const b = add(new THREE.DodecahedronGeometry(T.r * 0.5, 0), propShade(col, 0.85, true), T.r * 0.85, T.h * 0.12, T.r * 0.3); b.scale.y = 0.7;
