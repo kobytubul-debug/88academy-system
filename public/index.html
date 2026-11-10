@@ -1306,7 +1306,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 311</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 312</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -6787,8 +6787,8 @@ function buildDroneModel(id) {
     mk(new THREE.TorusGeometry(0.056, 0.012, 8, 22), metal, 0, 0.14 + 0.125 * Math.sin(TILT), -0.45 - 0.125 * Math.cos(TILT)).rotation.x = TILT;          // lens ring
     mk(roundBoxGeo(0.1, 0.06, 0.12, 0.02, 0.1), std(accent, 0.6, 0.0), 0, 0.16, 0.5);                  // 3D-printed antenna mount
     /* FPV antenna like a real Lumenier-style one: gold SMA base, thin black coax mast, coloured lollipop head; short on the 5" quads, long on the 10" ones */
-    const antLen = big ? 0.72 : 0.32, headL = big ? 0.27 : 0.19, headR = big ? 0.058 : 0.05, headCol = dcl(DC.t, big ? 0xd8372b : 0x8fd12f);
-    const A = new THREE.Group(), am = (geo, mat, y) => { const m = new THREE.Mesh(geo, mat); m.position.y = y; A.add(m); return m; }, yb = race ? 0 : antLen - headL;
+    const antLen = big ? 0.72 : 0.32, headL0 = big ? 0.27 : 0.19, headL = headL0 * 2, headR = (big ? 0.058 : 0.05) * 2, headCol = dcl(DC.t, big ? 0xd8372b : 0x8fd12f);
+    const A = new THREE.Group(), am = (geo, mat, y) => { const m = new THREE.Mesh(geo, mat); m.position.y = y; A.add(m); return m; }, yb = race ? 0 : antLen - headL0;
     const headMat = new THREE.MeshPhongMaterial({ color: headCol, shininess: 70, specular: 0xffffff });
     if (!race) {
       am(new THREE.CylinderGeometry(0.026, 0.026, 0.06, 12), gold, 0.03);                                         // SMA connector
