@@ -450,6 +450,35 @@ td.mv b{font-weight:400;color:var(--am);font-size:16px}
 @keyframes nxFade{from{opacity:0}to{opacity:1}}
 @keyframes nxZoom{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:none}}
 #fade{transition:opacity var(--fadeT,.45s) ease}
+
+/* ---------- stage intro: shown between choosing a track and the flight, in the colours of the active theme ---------- */
+#fade.intro{background:radial-gradient(ellipse at 50% 42%,color-mix(in srgb,var(--ac) 16%,var(--bg)),var(--bg) 72%)}
+#fade.intro #fadeText{display:none}
+#introBox{display:none;position:absolute;inset:0;align-items:center;justify-content:center;flex-direction:column;gap:22px;overflow:hidden}
+#fade.intro #introBox{display:flex}
+#introBg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.introCard{position:relative;display:grid;grid-template-columns:1.05fr 1fr;align-items:center;gap:8px;width:min(940px,92vw);padding:30px 34px;background:var(--tile,var(--p1));box-shadow:inset 0 3px 0 var(--ac),0 18px 50px rgba(0,0,0,.45);clip-path:polygon(0 0,calc(100% - var(--cut,14px)) 0,100% var(--cut,14px),100% 100%,var(--cut,14px) 100%,0 calc(100% - var(--cut,14px)));backdrop-filter:blur(6px);color:var(--tx)}
+.introTxt{display:flex;flex-direction:column;gap:12px;min-width:0}
+.introNum{font:400 clamp(13px,1.5vw,18px) var(--mono),var(--ui);letter-spacing:.32em;color:var(--ac)}
+.introName{font:700 italic clamp(26px,4.2vw,54px)/1.08 var(--ui);color:var(--ti,#fff);letter-spacing:.015em;overflow-wrap:anywhere}
+.introDesc{font:400 clamp(13px,1.45vw,18px)/1.55 var(--ui);color:var(--mu)}
+.introChips{display:flex;flex-wrap:wrap;gap:8px}
+.introChips span{font:400 clamp(11px,1.2vw,14px) var(--mono),var(--ui);letter-spacing:.1em;padding:4px 10px;border:1px solid var(--ln);color:var(--tx);background:var(--p2)}
+.introDr{font:600 clamp(12px,1.3vw,16px) var(--ui);letter-spacing:.08em;color:var(--am)}
+.introDrone canvas{width:100%;height:auto;display:block;filter:drop-shadow(0 10px 18px rgba(0,0,0,.4))}
+.introBar{position:relative;width:min(940px,92vw);height:4px;background:var(--ln);overflow:hidden}
+.introBar i{display:block;height:100%;width:100%;background:var(--ac);transform-origin:right center;transform:scaleX(0)}
+#fade.intro.on .introBar i{animation:introBar var(--introT,2600ms) linear forwards}
+#fade.intro.on .introNum{animation:introRise .5s .05s both cubic-bezier(.2,.8,.2,1)}
+#fade.intro.on .introName{animation:introRise .6s .15s both cubic-bezier(.2,.8,.2,1)}
+#fade.intro.on .introDesc{animation:introRise .6s .27s both cubic-bezier(.2,.8,.2,1)}
+#fade.intro.on .introChips{animation:introRise .6s .38s both cubic-bezier(.2,.8,.2,1)}
+#fade.intro.on .introDr{animation:introRise .6s .48s both cubic-bezier(.2,.8,.2,1)}
+#fade.intro.on .introDrone{animation:introDrone .9s .1s both cubic-bezier(.2,.8,.2,1)}
+@keyframes introRise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+@keyframes introDrone{from{opacity:0;transform:translateX(-60px) scale(.9)}to{opacity:1;transform:none}}
+@keyframes introBar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@media (max-width:700px){.introCard{grid-template-columns:1fr;padding:20px}.introDrone{order:-1}}
 .nxhide{display:none!important}
 .nxghost{opacity:.4;outline:1px dashed #e6b450;outline-offset:2px}
 body.nx-open #menu{padding-left:min(440px,42vw)}
@@ -1245,7 +1274,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 270</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 274</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -1255,7 +1284,11 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 <div id="nxSpec"><span id="nxSpecInfo"></span><button id="nxSpecCam">מצלמה: מעקב</button><button id="nxSpecX">סיום צפייה (Esc)</button></div>
 <div id="nxHold"><div></div></div>
 <div id="nxToast"></div>
-<div id="fade"><div id="fadeText">טוען...</div></div>
+<div id="fade"><div id="fadeText">טוען...</div>
+  <div id="introBox"><canvas id="introBg" width="480" height="270"></canvas>
+    <div class="introCard"><div class="introTxt"><div class="introNum" id="introNum"></div><div class="introName" id="introName"></div><div class="introDesc" id="introDesc"></div><div class="introChips" id="introChips"></div><div class="introDr" id="introDr"></div></div>
+      <div class="introDrone"><canvas id="introDroneCv" width="640" height="400"></canvas></div></div>
+    <div class="introBar"><i></i></div></div></div>
 </div>
 
 <script>
@@ -1856,7 +1889,8 @@ function buildCity() {
 
 /* ---------- Atmosphere + switching ---------- */
 function applyAtmosphere(id) {
-  if (id === 'arena') {
+  if (typeof NEW_BASES !== 'undefined' && NEW_BASES[id]) { NEW_BASES[id].atm(); }
+  else if (id === 'arena') {
     scene.fog = null; scene.background = new THREE.Color(0x15181c);
     sky.visible = false;
     ambientLight.color.set(0xffffff); ambientLight.intensity = 0.95;
@@ -1927,7 +1961,7 @@ function loadEnvironment(stage, gts) {
   clearWorld();
   const base = stage.base || stage.id;
   applyAtmosphere(base);
-  const grp = base === 'arena' ? buildArena() : base === 'redwood' ? buildForest(gts) : base === 'city' ? buildCity() : buildOpenMap(base, gts);
+  const grp = (typeof NEW_BASES !== 'undefined' && NEW_BASES[base]) ? NEW_BASES[base].build(gts) : base === 'arena' ? buildArena() : base === 'redwood' ? buildForest(gts) : base === 'city' ? buildCity() : buildOpenMap(base, gts);
   scene.add(grp);
   world.group = grp;
   world.stage = stage.id;
@@ -2004,6 +2038,316 @@ function buildOpenMap(base, gts) {
   }
   return g;
 }
+/* ============================================================
+   MORE MAP TYPES: closed big and small halls, sports hall, football pitch, small town, abandoned city, bando
+   Each one is { name, desc, atm(), build(gts) }; loadEnvironment / applyAtmosphere pick them up through NEW_BASES.
+   Collider rules (see collideWorld): { t:1, minx, maxx, minz, maxz, h } box, { t:0, x, z, r, h } cylinder; world.bounds is centred on 0.
+   ============================================================ */
+const NB = {};
+const NB_CV = {};
+function nbCanvas(key, w, h, draw) {                                   // one canvas per picture, a fresh texture per use
+  if (!NB_CV[key]) { const cv = document.createElement('canvas'); cv.width = w; cv.height = h; draw(cv.getContext('2d'), w, h); NB_CV[key] = cv; }
+  const t = new THREE.CanvasTexture(NB_CV[key]); t.wrapS = t.wrapT = THREE.RepeatWrapping; return t;
+}
+function nbRep(t, rx, ry) { t.repeat.set(rx, ry); return t; }
+function nbMat(c) { return new THREE.MeshLambertMaterial({ color: c }); }
+function nbBox(g, w, h, d, m, x, y, z) { const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); b.position.set(x, y, z); g.add(b); return b; }
+function nbSolid(g, w, h, d, m, x, z, o) {                              // a box standing on the floor that the drone collides with
+  nbBox(g, w, h, d, m, x, h / 2, z);
+  world.colliders.push({ t: 1, minx: x - w / 2, maxx: x + w / 2, minz: z - d / 2, maxz: z + d / 2, h });
+}
+function nbPost(g, r, h, m, x, z) {                                    // a round pole that the drone collides with
+  const c = new THREE.Mesh(new THREE.CylinderGeometry(r, r, h, 10), m); c.position.set(x, h / 2, z); g.add(c);
+  world.colliders.push({ t: 0, x, z, r, h });
+}
+function nbWallTex(key, base, seam, dirt, seed) {                      // painted or concrete wall panels
+  return nbCanvas(key, 256, 256, (c, w, h) => {
+    const rnd = mulberry(seed || 5);
+    c.fillStyle = base; c.fillRect(0, 0, w, h);
+    for (let i = 0; i < 900; i++) { c.fillStyle = rnd() < 0.5 ? 'rgba(255,255,255,.05)' : dirt; c.fillRect(rnd() * w, rnd() * h, 2 + rnd() * 5, 2 + rnd() * 9); }
+    c.strokeStyle = seam; c.lineWidth = 4; c.strokeRect(0, 0, w, h);
+    c.lineWidth = 2; c.beginPath(); c.moveTo(w / 2, 0); c.lineTo(w / 2, h); c.stroke();
+  });
+}
+function nbShell(g, W, L, H, wallTex, ceilTex, wallCol, ceilCol, rep) { // the closed box: four walls, a ceiling, no floor (the ground plane is the floor)
+  const sx = new THREE.MeshBasicMaterial({ map: nbRep(wallTex(), L / rep, H / rep), side: THREE.BackSide, color: wallCol });
+  const sz = new THREE.MeshBasicMaterial({ map: nbRep(wallTex(), W / rep, H / rep), side: THREE.BackSide, color: wallCol });
+  const ce = new THREE.MeshBasicMaterial({ map: nbRep(ceilTex(), W / rep, L / rep), side: THREE.BackSide, color: ceilCol });
+  const hid = new THREE.MeshBasicMaterial({ visible: false });
+  const shell = new THREE.Mesh(new THREE.BoxGeometry(2 * W, H, 2 * L), [sx, sx, ce, hid, sz, sz]);
+  shell.position.y = H / 2; g.add(shell);
+  world.bounds = { x: W - 0.6, z: L - 0.6, ymax: H - 0.8 };
+}
+function nbIndoor(bg, amb, hemiG) {                                    // lights of a closed room, like the hangar
+  scene.fog = null; scene.background = new THREE.Color(bg); sky.visible = false;
+  ambientLight.color.set(0xffffff); ambientLight.intensity = amb;
+  hemiLight.color.set(0xdfe4ea); hemiLight.groundColor.set(hemiG); hemiLight.intensity = 0.5;
+  sun.color.set(0xffffff); sun.intensity = 0.2;
+}
+function nbGround(key, w, h, draw, rep) { const t = nbCanvas(key, w, h, draw); t.repeat.set(rep, rep); ground.material.map = t; }
+function nbConcrete(c, w, h) { c.fillStyle = '#8d9298'; c.fillRect(0, 0, w, h); const r = mulberry(31); for (let i = 0; i < 1400; i++) { c.fillStyle = r() < 0.5 ? 'rgba(255,255,255,.05)' : 'rgba(0,0,0,.07)'; c.fillRect(r() * w, r() * h, 2 + r() * 3, 2 + r() * 3); } c.strokeStyle = 'rgba(40,46,52,.5)'; c.lineWidth = 3; c.strokeRect(0, 0, w, h); }
+function nbCeilStrips(g, W, L, H, nx, spacing, color) {                // rows of bright light strips under the ceiling
+  for (let i = 0; i < nx; i++) {
+    const x = (i - (nx - 1) / 2) * (2 * W / nx);
+    for (let z = -L + spacing / 2; z < L; z += spacing) g.add(neonBox(1.6, 0.4, Math.min(14, spacing * 0.6), color, x, H - 0.4, z));
+  }
+}
+
+/* ---------- closed halls: large and small ---------- */
+function nbHall(W, L, H, colSpacing, lightSpacing, rep) {
+  const g = new THREE.Group();
+  nbShell(g, W, L, H, () => nbWallTex('nb_hall_w', '#7d858d', '#3b4148', 'rgba(20,28,36,.18)', 6), () => nbWallTex('nb_hall_c', '#6e757c', '#454b52', 'rgba(0,0,0,.12)', 7), 0xe8f0ff, 0xbfd0e8, rep);
+  for (let x = -W + W / 3; x < W; x += W / 1.5) g.add(neonBox(1, 0.5, 2 * L - 2, 0x9fb4c8, x, H - 0.2, 0));   // roof ribs
+  nbCeilStrips(g, W, L, H, Math.max(2, Math.round(W / 40)), lightSpacing, 0xffffff);
+  [-1, 1].forEach((s) => {                                              // painted stripes along the walls
+    g.add(neonBox(0.5, 0.6, 2 * L - 1, 0xc9a24a, s * (W - 0.4), 1.2, 0));
+    g.add(neonBox(2 * W - 1, 0.6, 0.5, 0xc9a24a, 0, 1.2, s * (L - 0.4)));
+  });
+  const pm = nbMat(0x4a4f55);
+  for (let z = -L + colSpacing; z < L - 1; z += colSpacing) [-1, 1].forEach((s) => {   // columns along the long walls only
+    const x = s * (W - 3.5); nbSolid(g, 6, H, 6, pm, x, z);
+    g.add(neonBox(0.5, H - 4, 0.5, 0xc9a24a, x - s * 3.2, H / 2, z));
+  });
+  return g;
+}
+NB.hallbig = {
+  name: 'חלל סגור גדול', desc: 'אולם ענק סגור: 300 על 1400 מטר וגובה 60 מטר, עמודים רק ליד הקירות',
+  atm() { nbIndoor(0x15181c, 0.95, 0x333840); nbGround('nb_floor_big', 256, 256, nbConcrete, 320); },
+  build() { return nbHall(150, 700, 60, 100, 50, 12); }
+};
+NB.hallsmall = {
+  name: 'חלל סגור קטן', desc: 'אולם סגור קטן: 60 על 150 מטר וגובה 14 מטר, לטיסה צפופה',
+  atm() { nbIndoor(0x15181c, 1.0, 0x333840); nbGround('nb_floor_small', 256, 256, nbConcrete, 320); },
+  build() { return nbHall(30, 75, 14, 25, 15, 6); }
+};
+
+/* ---------- sports hall ---------- */
+NB.gym = {
+  name: 'אולם ספורט', desc: 'אולם כדורסל עם פרקט, קווי מגרש, סלים, יציע וגופי תאורה: 60 על 100 מטר וגובה 14 מטר',
+  atm() { nbIndoor(0x1b1d22, 1.0, 0x6a4a2a); nbGround('nb_parquet', 256, 256, (c, w, h) => { const r = mulberry(8); for (let i = 0; i < 8; i++) { c.fillStyle = r() < 0.5 ? '#c58f4d' : '#bd8644'; c.fillRect(0, i * 32, w, 32); c.strokeStyle = 'rgba(60,30,10,.35)'; c.lineWidth = 2; c.strokeRect(0, i * 32, w, 32); for (let k = 0; k < 3; k++) { c.beginPath(); c.moveTo(r() * w, i * 32); c.lineTo(r() * w, i * 32 + 32); c.stroke(); } } }, 480); },
+  build() {
+    const g = new THREE.Group(), W = 30, L = 50, H = 14;
+    nbShell(g, W, L, H, () => nbWallTex('nb_gym_w', '#d8dde3', '#7d858d', 'rgba(60,70,80,.12)', 9), () => nbWallTex('nb_gym_c', '#cfd5dc', '#8a929a', 'rgba(0,0,0,.08)', 10), 0xf2f6ff, 0xe8eef8, 8);
+    // painted wall band and court markings (one big floor picture)
+    [-1, 1].forEach((s) => { g.add(neonBox(0.4, 3.2, 2 * L - 1, 0x2d6ab3, s * (W - 0.3), 1.6, 0)); g.add(neonBox(2 * W - 1, 3.2, 0.4, 0x2d6ab3, 0, 1.6, s * (L - 0.3))); });
+    const court = nbCanvas('nb_court', 300, 560, (c, w, h) => {
+      const m = 10;                                                     // 10 px per metre: a 28 x 15 m court across the hall, two cross courts behind it
+      const lines = (cx, cy, vertical) => {
+        c.save(); c.translate(cx, cy); if (vertical) c.rotate(Math.PI / 2);
+        c.strokeStyle = '#fff'; c.lineWidth = 2;
+        c.strokeRect(-14 * m, -7.5 * m, 28 * m, 15 * m); c.beginPath(); c.moveTo(0, -7.5 * m); c.lineTo(0, 7.5 * m); c.stroke();
+        c.beginPath(); c.arc(0, 0, 1.8 * m, 0, Math.PI * 2); c.stroke();
+        [-1, 1].forEach((s) => { c.fillStyle = 'rgba(45,106,179,.55)'; c.fillRect(s > 0 ? 14 * m - 5.8 * m : -14 * m, -2.45 * m, 5.8 * m, 4.9 * m); c.strokeRect(s > 0 ? 14 * m - 5.8 * m : -14 * m, -2.45 * m, 5.8 * m, 4.9 * m); c.beginPath(); c.arc(s * (14 * m - 1.6 * m), 0, 6.75 * m, s > 0 ? Math.PI / 2 : -Math.PI / 2, s > 0 ? Math.PI * 1.5 : Math.PI / 2, false); c.stroke(); });
+        c.restore();
+      };
+      lines(w / 2, h / 2 - 0, true);
+    });
+    const fl = new THREE.Mesh(new THREE.PlaneGeometry(30, 56), new THREE.MeshBasicMaterial({ map: court, transparent: true })); fl.rotation.x = -Math.PI / 2; fl.position.set(0, 0.05, 0); g.add(fl);
+    // hoops at both ends of the court
+    const pm = nbMat(0x2a2d33), bm = new THREE.MeshLambertMaterial({ color: 0xf2f4f7 });
+    [-1, 1].forEach((s) => { const z = s * 13.2; nbPost(g, 0.18, 3.05, pm, 0, z + s * 1.2); nbBox(g, 1.8, 1.05, 0.08, bm, 0, 3.4, z + s * 0.6); const rim = new THREE.Mesh(new THREE.TorusGeometry(0.23, 0.02, 6, 16), nbMat(0xff6a1a)); rim.rotation.x = Math.PI / 2; rim.position.set(0, 3.05, z); g.add(rim); });
+    // bleachers on one long wall: three steps
+    const sm = nbMat(0x7d858d);
+    for (let k = 0; k < 3; k++) nbSolid(g, 3 - k * 0.8, 1 + k * 0.9, 56, sm, -(W - 2 - k * 0.9), 0);
+    // roof trusses and big light panels
+    for (let z = -L + 8; z < L; z += 16) { g.add(neonBox(2 * W - 1, 0.5, 0.5, 0x8a929a, 0, H - 1.2, z)); [-16, 0, 16].forEach((x) => g.add(neonBox(5, 0.3, 3, 0xffffff, x, H - 0.6, z))); }
+    // scoreboard
+    nbBox(g, 8, 3, 0.5, nbMat(0x16181c), 0, 9, -(L - 0.8)); nbBox(g, 7, 2.2, 0.1, new THREE.MeshBasicMaterial({ color: 0xff9a1a }), 0, 9, -(L - 1.1));
+    return g;
+  }
+};
+
+/* ---------- football pitch (open, a stadium without a roof) ---------- */
+NB.football = {
+  name: 'מגרש כדורגל', desc: 'מגרש דשא מלא עם קווים ושערים, יציעים, פנסי תאורה ושלטי פרסום; הסביבה פתוחה',
+  atm() {
+    scene.fog = new THREE.Fog(0xb7d3e6, 220, 1400); scene.background = null; sky.visible = true; sky.material.map = skyTexture('day');
+    ambientLight.color.set(0xd6e6ff); ambientLight.intensity = 0.72; hemiLight.color.set(0xcfe6ff); hemiLight.groundColor.set(0x3f7a3a); hemiLight.intensity = 0.6;
+    sun.color.set(0xfff4dc); sun.intensity = 1.0; ground.material.map = groundTexture('grass');
+  },
+  build() {
+    const g = new THREE.Group(), cz = -45, PW = 68, PL = 105;           // the pitch lies along z, starting a little behind the first gate
+    const tex = nbCanvas('nb_pitch', 340, 525, (c, w, h) => {
+      for (let i = 0; i < 15; i++) { c.fillStyle = i % 2 ? '#3f8a3f' : '#468f43'; c.fillRect(0, (i * h) / 15, w, h / 15 + 1); }
+      const m = 5; c.strokeStyle = 'rgba(255,255,255,.92)'; c.lineWidth = 2.5;
+      c.strokeRect(2, 2, w - 4, h - 4); c.beginPath(); c.moveTo(0, h / 2); c.lineTo(w, h / 2); c.stroke();
+      c.beginPath(); c.arc(w / 2, h / 2, 9.15 * m, 0, Math.PI * 2); c.stroke();
+      [0, 1].forEach((e) => { const y = e ? h : 0, s = e ? -1 : 1; c.strokeRect(w / 2 - 20.15 * m, e ? h - 16.5 * m : 0, 40.3 * m, 16.5 * m); c.strokeRect(w / 2 - 9.15 * m, e ? h - 5.5 * m : 0, 18.3 * m, 5.5 * m); c.beginPath(); c.arc(w / 2, y + s * 11 * m, 9.15 * m, s > 0 ? 0.93 : Math.PI + 0.93, s > 0 ? Math.PI - 0.93 : 2 * Math.PI - 0.93, false); c.stroke(); });
+    });
+    const p = new THREE.Mesh(new THREE.PlaneGeometry(PW, PL), new THREE.MeshLambertMaterial({ map: tex })); p.rotation.x = -Math.PI / 2; p.position.set(0, 0.05, cz); g.add(p);
+    const wm = nbMat(0xf2f4f7);
+    [-1, 1].forEach((s) => {                                            // goals: posts, bar and a net behind
+      const z = cz + s * (PL / 2);
+      nbPost(g, 0.12, 2.44, wm, -3.66, z); nbPost(g, 0.12, 2.44, wm, 3.66, z);
+      nbBox(g, 7.4, 0.12, 0.12, wm, 0, 2.44, z);
+      const net = new THREE.Mesh(new THREE.BoxGeometry(7.3, 2.4, 2.2), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.16 })); net.position.set(0, 1.2, z + s * 1.2); g.add(net);
+    });
+    // stands on both long sides, five steps each, and advertising boards at the pitch edge
+    const st = [0x7d858d, 0x6a727b, 0x8a929a, 0x5f6770, 0x79828c], cols = [0xe5484d, 0x2d8cff, 0xffd23f, 0x35c46b];
+    [-1, 1].forEach((s) => {
+      for (let k = 0; k < 5; k++) nbSolid(g, 4, 1.6 + k * 1.6, 100, nbMat(st[k]), s * (PW / 2 + 8 + k * 4), cz);
+      for (let z = cz - 48; z <= cz + 48; z += 8) nbBox(g, 0.3, 1, 7.6, nbMat(cols[((Math.round((z - cz) / 8) % 4) + 4) % 4]), s * (PW / 2 + 2), 0.5, z);
+    });
+    // floodlight towers at the four corners
+    const tm = nbMat(0xb4bcc6);
+    [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach((q) => {
+      const x = q[0] * (PW / 2 + 14), z = cz + q[1] * (PL / 2 + 12); nbPost(g, 0.7, 38, tm, x, z);
+      const head = nbBox(g, 7, 3.5, 0.6, new THREE.MeshBasicMaterial({ color: 0xfff6dc }), x, 38.5, z); head.rotation.y = Math.atan2(x, z - cz) + Math.PI;
+    });
+    // dugouts and corner flags
+    [-1, 1].forEach((s) => nbSolid(g, 1.6, 2.2, 9, nbMat(0x2d6ab3), s * (PW / 2 + 5), cz - 12));
+    [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach((q) => nbPost(g, 0.04, 1.6, nbMat(0xffd23f), q[0] * PW / 2, cz + q[1] * PL / 2));
+    return g;
+  }
+};
+
+/* ---------- small town ---------- */
+function nbHouse(g, x, z, rnd, wallCols, roofCols) {
+  const w = 8 + rnd() * 6, d = 7 + rnd() * 5, h = 4.5 + rnd() * 4, rh = 2 + rnd() * 1.6, yaw = rnd() < 0.5 ? 0 : Math.PI / 2;
+  const grp = new THREE.Group();
+  nbBox(grp, w, h, d, nbMat(wallCols[Math.floor(rnd() * wallCols.length)]), 0, h / 2, 0);
+  const roof = new THREE.Mesh(new THREE.ConeGeometry(Math.max(w, d) * 0.78, rh, 4), nbMat(roofCols[Math.floor(rnd() * roofCols.length)])); roof.rotation.y = Math.PI / 4; roof.scale.set(w / Math.max(w, d), 1, d / Math.max(w, d)); roof.position.y = h + rh / 2; grp.add(roof);
+  nbBox(grp, 1.2, 2, 0.2, nbMat(0x5a4030), 0, 1, d / 2 + 0.05);          // door
+  [-1, 1].forEach((s) => nbBox(grp, 1.3, 1.1, 0.15, new THREE.MeshBasicMaterial({ color: 0xbcd7ee }), s * w * 0.28, h * 0.6, d / 2 + 0.05));
+  grp.position.set(x, 0, z); grp.rotation.y = yaw; g.add(grp);
+  const hx = yaw ? d : w, hz = yaw ? w : d;
+  world.colliders.push({ t: 1, minx: x - hx / 2, maxx: x + hx / 2, minz: z - hz / 2, maxz: z + hz / 2, h: h + rh * 0.55 });
+}
+function nbTree(g, x, z, rnd, big) {
+  const h = (big ? 9 : 6) + rnd() * 4, t = new THREE.Group();
+  const k = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.4, h * 0.45, 6), nbMat(0x6b4a2a)); k.position.y = h * 0.22; t.add(k);
+  const c = new THREE.Mesh(new THREE.SphereGeometry(h * 0.32, 9, 7), nbMat(rnd() < 0.5 ? 0x3f9a4a : 0x2e7d46)); c.position.y = h * 0.65; t.add(c);
+  t.position.set(x, 0, z); g.add(t); world.colliders.push({ t: 0, x, z, r: 0.5, h: h * 0.45 }); world.colliders.push({ t: 0, x, z, r: h * 0.3, h: h * 0.95 });
+}
+NB.town = {
+  name: 'עיירה', desc: 'רחוב ראשי רחב, בתים עם גגות רעפים, כנסייה, עצים ורחובות חוצים; הרבה מקום באמצע',
+  atm() {
+    scene.fog = new THREE.Fog(0xc9d8e4, 150, 1250); scene.background = null; sky.visible = true; sky.material.map = skyTexture('day');
+    ambientLight.color.set(0xe0ebff); ambientLight.intensity = 0.72; hemiLight.color.set(0xd6e8ff); hemiLight.groundColor.set(0x4a6e3a); hemiLight.intensity = 0.6;
+    sun.color.set(0xfff0d0); sun.intensity = 1.0; ground.material.map = groundTexture('grass');
+  },
+  build() {
+    const g = new THREE.Group(), rnd = mulberry(7001);
+    const roadM = new THREE.MeshLambertMaterial({ color: 0x3a3d42 }), road = (w, l, x, z) => { const r = new THREE.Mesh(new THREE.PlaneGeometry(w, l), roadM); r.rotation.x = -Math.PI / 2; r.position.set(x, 0.04, z); g.add(r); };
+    road(16, 1100, 0, -300);                                            // main street along the track direction, 16 m wide
+    for (let z = 20; z > -700; z -= 110) road(900, 9, 0, z);
+    const wall = [0xe9d9b8, 0xf0e6d2, 0xd9c7a3, 0xe6c9a0, 0xf2efe6, 0xc9d6d9], roofs = [0xb5583a, 0xa94b30, 0x8a3f2e, 0x6b4a3a];
+    for (let z = 20; z > -700; z -= 110) {                              // blocks between the cross streets: houses on both sides, set back from the road
+      for (let k = 0; k < 4; k++) for (let side = -1; side <= 1; side += 2) {
+        const zz = z - 22 - k * 22 + (rnd() - 0.5) * 4, xx = side * (22 + rnd() * 5);
+        if (rnd() < 0.85) nbHouse(g, xx, zz, rnd, wall, roofs);
+        if (rnd() < 0.7) nbHouse(g, side * (62 + rnd() * 30), zz + (rnd() - 0.5) * 8, rnd, wall, roofs);
+        if (rnd() < 0.5) nbTree(g, side * (11 + rnd() * 2), zz + 8, rnd, false);
+      }
+    }
+    // church with a tower on the left of the main street
+    nbSolid(g, 14, 9, 22, nbMat(0xefe6d2), -36, -240);
+    nbSolid(g, 6, 22, 6, nbMat(0xefe6d2), -36, -255); const cone = new THREE.Mesh(new THREE.ConeGeometry(4.6, 9, 4), nbMat(0x8a3f2e)); cone.rotation.y = Math.PI / 4; cone.position.set(-36, 26.5, -255); g.add(cone);
+    world.colliders[world.colliders.length - 1].h = 30;
+    // street lamps and a few big trees in the open gaps
+    for (let z = 5; z > -700; z -= 40) [-1, 1].forEach((s) => nbPost(g, 0.15, 6, nbMat(0x2a2d33), s * 9.5, z));
+    for (let i = 0; i < 40; i++) nbTree(g, (rnd() < 0.5 ? -1 : 1) * (150 + rnd() * 250), 80 - rnd() * 900, rnd, true);
+    return g;
+  }
+};
+
+/* ---------- abandoned city: wide avenues, broken towers, wrecks ---------- */
+NB.ghost = {
+  name: 'עיר נטושה', desc: 'עיר חרבה ומרווחת: שדרות רחבות של 70 מטר בין הבניינים, מרכז פנוי לגמרי, ערפל ושברי בטון',
+  atm() {
+    scene.fog = new THREE.Fog(0x8a8374, 70, 900); scene.background = new THREE.Color(0x8a8374); sky.visible = false;
+    ambientLight.color.set(0xd8d0c0); ambientLight.intensity = 0.62; hemiLight.color.set(0xbfb7a8); hemiLight.groundColor.set(0x3a352c); hemiLight.intensity = 0.5;
+    sun.color.set(0xffe6c0); sun.intensity = 0.65; ground.material.map = groundTexture('asphalt');
+  },
+  build() {
+    const g = new THREE.Group(), rnd = mulberry(9917), wt = windowTexture();
+    const mats = [0x6f6a60, 0x5f5b54, 0x7a7266, 0x6a5f55].map((c) => new THREE.MeshLambertMaterial({ color: c, map: wt, emissive: 0x15120e, emissiveMap: wt, emissiveIntensity: 0.12 }));
+    const rust = nbMat(0x6a4a34), PITCH = 100, LOT = 30;
+    for (let i = -5; i <= 5; i++) for (let j = -9; j <= 3; j++) {
+      const x = i * PITCH, z = j * PITCH - 20;
+      if (Math.abs(i) <= 0) continue;                                   // the central avenue stays completely clear, 70 m wide
+      if (Math.abs(i) === 1 && Math.abs(z) < 90) continue;             // and nothing close to the start
+      if (rnd() < 0.42) { if (rnd() < 0.5) nbSolid(g, 3 + rnd() * 5, 1 + rnd() * 1.4, 3 + rnd() * 5, nbMat(0x6a655c), x + (rnd() - 0.5) * 24, z + (rnd() - 0.5) * 24); continue; }
+      const h = 18 + rnd() * 42, w = LOT * (0.7 + rnd() * 0.3), d = LOT * (0.7 + rnd() * 0.3);
+      const b = cityBox(w, h, d, mats[Math.floor(rnd() * mats.length)]); b.position.set(x, h / 2, z); g.add(b);
+      world.colliders.push({ t: 1, minx: x - w / 2, maxx: x + w / 2, minz: z - d / 2, maxz: z + d / 2, h });
+      if (rnd() < 0.55) {                                               // the collapsed top: a smaller broken block, leaning a little
+        const w2 = w * 0.55, d2 = d * 0.55, h2 = 6 + rnd() * 10, c = cityBox(w2, h2, d2, mats[Math.floor(rnd() * mats.length)]);
+        c.position.set(x + (rnd() - 0.5) * w * 0.3, h + h2 / 2 - 1, z + (rnd() - 0.5) * d * 0.3); c.rotation.z = (rnd() - 0.5) * 0.18; g.add(c);
+        world.colliders.push({ t: 1, minx: x - w2 / 2, maxx: x + w2 / 2, minz: z - d2 / 2, maxz: z + d2 / 2, h: h + h2 });
+      }
+      if (rnd() < 0.5) nbSolid(g, 5 + rnd() * 6, 1.2 + rnd() * 1.6, 5 + rnd() * 6, rust, x + (rnd() < 0.5 ? -1 : 1) * (w / 2 + 6), z + (rnd() - 0.5) * 16);   // rubble beside the ruin
+    }
+    // wrecked cars along the avenues, kept off the centre line
+    const carC = [0x5a4a3a, 0x4a5058, 0x6a5238, 0x52463e];
+    for (let k = 0; k < 28; k++) { const x = (rnd() < 0.5 ? -1 : 1) * (76 + rnd() * 3), z = 40 - rnd() * 800; nbSolid(g, 2, 1.4, 4.4, nbMat(carC[k % 4]), x, z); }
+    // dead street lamps
+    for (let z = 20; z > -900; z -= 60) [-1, 1].forEach((s) => nbPost(g, 0.18, 9, nbMat(0x3a3a3a), s * 80, z));
+    return g;
+  }
+};
+
+/* ---------- bando: several abandoned concrete buildings, only frames, slabs and partial walls (window openings), open on most sides ---------- */
+function nbSlab(g, x0, x1, z0, z1, y0, y1, m) {                         // a floor slab between two heights; the drone can fly under it
+  if (x1 - x0 < 0.1 || z1 - z0 < 0.1) return;
+  nbBox(g, x1 - x0, y1 - y0, z1 - z0, m, (x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2);
+  world.colliders.push({ t: 1, minx: x0, maxx: x1, minz: z0, maxz: z1, h: y1, y0 });
+}
+function nbRuin(g, rnd, cx, cz, w, d, floors, yaw) {
+  const FH = 4.5, TH = 0.5, H = floors * FH, bx = Math.max(2, Math.round(w / 7)), bz = Math.max(2, Math.round(d / 7));
+  const cm = nbMat(0x5e6165), sm = nbMat(0x4b4e52), wm = nbMat(0x56595c);
+  const X = (k) => cx - w / 2 + (k * w) / bx, Z = (k) => cz - d / 2 + (k * d) / bz;
+  for (let a = 0; a <= bx; a++) for (let b = 0; b <= bz; b++) if (a === 0 || a === bx || b === 0 || b === bz) nbSolid(g, 1.1, H, 1.1, cm, X(a), Z(b));   // pillars on the edge
+  for (let a = 1; a < bx; a++) if (rnd() < 0.5) nbSolid(g, 1.1, H, 1.1, cm, X(a), cz);                                                              // a few inner pillars
+  for (let f = 1; f <= floors; f++) {                                     // slabs: whole at the roof, with a stairwell hole below it
+    const y1 = f * FH, y0 = y1 - TH, x0 = cx - w / 2, x1 = cx + w / 2, z0 = cz - d / 2, z1 = cz + d / 2;
+    if (f === floors) { nbSlab(g, x0, x1, z0, z1, y0, y1, sm); continue; }
+    const hw = 6 + rnd() * 3, hd = 5 + rnd() * 3, hx = cx + (rnd() - 0.5) * (w - hw - 6), hz = cz + (rnd() - 0.5) * (d - hd - 6);
+    nbSlab(g, x0, hx - hw / 2, z0, z1, y0, y1, sm); nbSlab(g, hx + hw / 2, x1, z0, z1, y0, y1, sm);
+    nbSlab(g, hx - hw / 2, hx + hw / 2, z0, hz - hd / 2, y0, y1, sm); nbSlab(g, hx - hw / 2, hx + hw / 2, hz + hd / 2, z1, y0, y1, sm);
+  }
+  for (let f = 0; f < floors; f++) {                                      // bays on the perimeter: open, a window wall, a solid piece or a low parapet
+    const yb = f * FH, top = (f + 1) * FH - TH;
+    const bay = (ax, az, bxp, bzp) => {
+      const r = rnd(), mx = (ax + bxp) / 2, mz = (az + bzp) / 2, len = Math.hypot(bxp - ax, bzp - az) - 1.1, alongX = Math.abs(bzp - az) < 0.01;
+      const wd = alongX ? len : 0.45, dp = alongX ? 0.45 : len;
+      if (r < 0.34) return;                                               // open
+      if (r < 0.52) { nbSolid(g, wd, 1.0, dp, wm, mx, mz); return; }       // low parapet
+      if (r < 0.82) {                                                     // a window: sill below, lintel above, the opening between them
+        nbSlab(g, mx - wd / 2, mx + wd / 2, mz - dp / 2, mz + dp / 2, yb, yb + 1.0, wm);
+        nbSlab(g, mx - wd / 2, mx + wd / 2, mz - dp / 2, mz + dp / 2, top - 1.0, top, wm); return;
+      }
+      nbSlab(g, mx - wd / 2, mx + wd / 2, mz - dp / 2, mz + dp / 2, yb, top, wm);   // a solid wall panel
+    };
+    for (let a = 0; a < bx; a++) { bay(X(a), Z(0), X(a + 1), Z(0)); bay(X(a), Z(bz), X(a + 1), Z(bz)); }
+    for (let b = 0; b < bz; b++) { bay(X(0), Z(b), X(0), Z(b + 1)); bay(X(bx), Z(b), X(bx), Z(b + 1)); }
+  }
+}
+NB.bando = {
+  name: 'באנדו', desc: 'כמה מבני בטון נטושים: שלדים עם קומות, חללי מדרגות, קירות חלקיים וחלונות, חצר פתוחה ושברי בטון',
+  atm() {
+    scene.fog = new THREE.Fog(0xb9c7d2, 180, 1400); scene.background = null; sky.visible = true; sky.material.map = skyTexture('day');
+    ambientLight.color.set(0xdde6ee); ambientLight.intensity = 0.72; hemiLight.color.set(0xdbe7f2); hemiLight.groundColor.set(0x4a4c44); hemiLight.intensity = 0.55;
+    sun.color.set(0xfff0d8); sun.intensity = 0.9;
+    nbGround('nb_bando_ground', 256, 256, (c, w, h) => { c.fillStyle = '#5b5d55'; c.fillRect(0, 0, w, h); const r = mulberry(61); for (let i = 0; i < 1800; i++) { c.fillStyle = r() < 0.5 ? 'rgba(255,255,255,.04)' : 'rgba(0,0,0,.09)'; c.fillRect(r() * w, r() * h, 2 + r() * 4, 2 + r() * 4); } }, 240);
+  },
+  build() {
+    const g = new THREE.Group(), rnd = mulberry(2024);
+    const hm = nbMat(0xa9b7c3);
+    for (let k = 0; k < 18; k++) { const a = (k / 18) * Math.PI * 2 + rnd() * 0.3, d = 750 + rnd() * 350, r = 110 + rnd() * 120, m = new THREE.Mesh(new THREE.SphereGeometry(r, 16, 8), hm); m.scale.y = 0.3 + rnd() * 0.15; m.position.set(Math.cos(a) * d, -r * 0.08, -250 + Math.sin(a) * d); g.add(m); }   // pale far hills
+    const spec = [[0, -70, 32, 22, 3], [-80, -150, 28, 20, 3], [75, -215, 30, 22, 4], [0, -305, 34, 24, 3], [-85, -395, 28, 22, 4], [78, -470, 30, 20, 3], [0, -565, 32, 24, 4]];
+    spec.forEach((s) => nbRuin(g, rnd, s[0], s[1], s[2], s[3], s[4]));
+    const bm = nbMat(0x56595c);                                           // flat-roofed concrete blocks and rubble between the buildings
+    [[-45, -105, 14, 6, 9], [42, -165, 12, 5, 10], [-40, -250, 16, 6, 8], [45, -360, 14, 5, 9], [-42, -455, 12, 6, 10], [40, -520, 16, 5, 8]].forEach((s) => nbSolid(g, s[2], s[3], s[4], bm, s[0], s[1]));
+    for (let k = 0; k < 40; k++) nbSolid(g, 1.5 + rnd() * 2.5, 0.8 + rnd() * 1.2, 1.5 + rnd() * 2.5, nbMat(0x4f524f), (rnd() - 0.5) * 220, 30 - rnd() * 640);
+    return g;
+  }
+};
+
+/* ---------- registration ---------- */
+const NEW_BASES = NB;
+Object.keys(NB).forEach((k) => { MAP_BASES[k] = NB[k].name; });
+MAP_BASE_LIST.push(...Object.keys(NB));
 /* ============================================================
    DRONE MESH FACTORY
    ============================================================ */
@@ -4327,6 +4671,7 @@ function collideWorld() {
   for (let i = 0; i < cs.length; i++) {
     const c = cs[i];
     if (pos.y > c.h + R) continue;
+    if (c.y0 !== undefined && pos.y < c.y0 - R) continue;                // a slab that starts above the floor: the drone can fly under it
     if (c.t === 0) {
       const dx = pos.x - c.x, dz = pos.z - c.z, rr = c.r + R;
       const d2 = dx * dx + dz * dz;
@@ -4339,8 +4684,9 @@ function collideWorld() {
     } else {
       if (pos.x < c.minx - R || pos.x > c.maxx + R || pos.z < c.minz - R || pos.z > c.maxz + R) continue;
       const a1 = pos.x - (c.minx - R), a2 = (c.maxx + R) - pos.x, a3 = pos.z - (c.minz - R), a4 = (c.maxz + R) - pos.z, a5 = (c.h + R) - pos.y;
-      const m = Math.min(a1, a2, a3, a4, a5);
-      if (m === a5) { pos.y = c.h + R; if (vel.y < 0) { impact(-vel.y, 0, 1, 0); vel.y *= -0.2; } vel.x *= 0.92; vel.z *= 0.92; }
+      const a6 = c.y0 !== undefined ? pos.y - (c.y0 - R) : 1e9, m = Math.min(a1, a2, a3, a4, a5, a6);
+      if (m === a6) { pos.y = c.y0 - R; if (vel.y > 0) { impact(vel.y, 0, -1, 0); vel.y *= -0.2; } vel.x *= 0.92; vel.z *= 0.92; }
+      else if (m === a5) { pos.y = c.h + R; if (vel.y < 0) { impact(-vel.y, 0, 1, 0); vel.y *= -0.2; } vel.x *= 0.92; vel.z *= 0.92; }
       else if (m === a1) { pos.x = c.minx - R; if (vel.x > 0) { impact(vel.x, -1, 0, 0); vel.x *= -0.3; } }
       else if (m === a2) { pos.x = c.maxx + R; if (vel.x < 0) { impact(-vel.x, 1, 0, 0); vel.x *= -0.3; } }
       else if (m === a3) { pos.z = c.minz - R; if (vel.z > 0) { impact(vel.z, 0, 0, -1); vel.z *= -0.3; } }
@@ -4789,13 +5135,13 @@ function checkGate(prev, cur, dt) {
     nextGate = seq % N;
     if (k === 0) {
       startLap(since);
-      showFlash('שער נעבר  1/' + N, '#5fd08a'); Sound.gate(); gxGate();
+      Sound.gate(); gxGate();
     } else if (trackLaps() === 1 && k === N - 1) {
       Sound.gate(); gxGate(); completeLap(1, lapTime - since, since);                         // single run: the last gate ends the track
     } else if (k % N === 0) {
       completeLap(k / N, lapTime - since, since);
     } else {
-      showFlash('שער נעבר  ' + (k % N + 1) + '/' + N, '#5fd08a'); Sound.gate(); gxGate();
+      Sound.gate(); gxGate();
     }
     updateGateColors();
   }
@@ -5882,15 +6228,54 @@ loadCross();
 let fadeBusy = false, currentScreen = 'main', menuAngle = 0;
 let resultsVisible = false, resultToken = 0;
 
-function fadeThrough(text, midCb) {
+let introV = null, introOn = false;
+function introOpen(st) {                                        // fill the stage intro: number, name, description, map and the chosen drone
+  const id0 = settings.preset, ok = DRONE_IDS.filter(NXH.droneOk);
+  const id = DRONE_INFO[id0] && ok.indexOf(id0) >= 0 ? id0 : (ok.indexOf('fpv5') >= 0 ? 'fpv5' : (ok[0] || 'fpv5'));
+  $('introNum').textContent = 'שלב ' + st.num;
+  $('introName').textContent = st.name;
+  $('introDesc').textContent = String(st.desc || '').slice(0, 170);
+  let n = 0; try { n = st.gen().length; } catch (e) { /* no gates yet */ }
+  const chips = [MAP_BASES[st.base || st.id] || '', n ? n + ' שערים' : '', st.laps > 1 ? st.laps + ' הקפות' : ''].filter(Boolean);
+  $('introChips').innerHTML = chips.map((c) => '<span>' + String(c).replace(/[<&]/g, '') + '</span>').join('');
+  $('introDr').textContent = DRONE_INFO[id] ? DRONE_INFO[id].en + '  //  ' + DRONE_INFO[id].title : '';
+  document.documentElement.style.setProperty('--introT', NXH.introMs + 'ms');
+  const f = $('fade'); f.classList.add('intro');
+  try { introV = makeDroneView(id, $('introDroneCv'), true); introV.model.rotation.y = -0.75; } catch (e) { introV = null; }
+  introOn = true;
+}
+function introClose() {
+  introOn = false; $('fade').classList.remove('intro');
+  if (introV) { try { disposeGroup(introV.sc); } catch (e) { /* ignore */ } introV = null; }
+}
+function introFrame(dt) {                                       // the same animated backdrop and holographic platform as the home page, in the theme accent
+  if (!introOn) return;
+  const t = nowSec, cv = $('introBg'), c = gxCfg();
+  if (cv && c && c.on && c.bg) {
+    cv.style.display = 'block';
+    const g = cv.getContext('2d'), w = cv.width, h = cv.height, a = gxAccent(), col = (al) => 'rgba(' + a[0] + ',' + a[1] + ',' + a[2] + ',' + al + ')';
+    g.clearRect(0, 0, w, h); (GX_BG[c.bgmode] || GX_BG.grid)(g, w, h, t, col);
+  } else if (cv) cv.style.display = 'none';
+  const v = introV; if (!v || !dvRenderer) return;
+  v.model.rotation.y = -0.75 + t * 0.9;
+  if (v.gx) v.gx(t);
+  try {
+    const pr = v.model.userData.props || []; for (let i = 0; i < pr.length; i++) pr[i].rotation.y += (pr[i].userData.dir || 1) * 18 * dt;   // propellers turn gently
+    dvRenderer.render(v.sc, v.cam);
+    const g = v.cv.getContext('2d'); g.clearRect(0, 0, v.cv.width, v.cv.height); g.drawImage(dvRenderer.domElement, 0, 0, v.cv.width, v.cv.height);
+  } catch (e) { /* a failed draw must never stop the game from starting */ }
+}
+function fadeThrough(text, midCb, intro) {
   if (fadeBusy) return;
   fadeBusy = true;
-  const f = $('fade');
+  const f = $('fade'), ims = intro && NXH.introMs > 0 ? NXH.introMs : 0, t0 = performance.now();
   $('fadeText').textContent = text || '';
+  if (ims) { try { introOpen(intro); } catch (e) { console.error(e); } }
   f.classList.add('on');
   setTimeout(() => {
     try { if (midCb) midCb(); } catch (err) { console.error(err); }
-    setTimeout(() => { f.classList.remove('on'); setTimeout(() => { fadeBusy = false; }, NXH.fadeOut); }, 200);
+    const hold = ims ? Math.max(250, ims - (performance.now() - t0) - NXH.fadeIn) : 200;     // the intro stays up for about introMs in total, loading included
+    setTimeout(() => { f.classList.remove('on'); if (ims) setTimeout(introClose, NXH.fadeOut); setTimeout(() => { fadeBusy = false; }, NXH.fadeOut); }, hold);
   }, NXH.fadeIn);
 }
 
@@ -6396,7 +6781,7 @@ function openNewMapPicker() {
   const g = $('nmpGrid');
   if (!g.dataset.built) {
     g.dataset.built = '1';
-    g.innerHTML = MAP_BASE_LIST.map((k) => '<button class="b nmpb' + (k === 'clean' ? ' pick' : '') + '" data-base="' + k + '"><b>' + MAP_BASES[k] + (k === 'clean' ? ' (מומלץ)' : '') + '</b><span>' + NMP_DESC[k] + '</span></button>').join('');
+    g.innerHTML = MAP_BASE_LIST.map((k) => '<button class="b nmpb' + (k === 'clean' ? ' pick' : '') + '" data-base="' + k + '"><b>' + MAP_BASES[k] + (k === 'clean' ? ' (מומלץ)' : '') + '</b><span>' + (NMP_DESC[k] || (NEW_BASES[k] && NEW_BASES[k].desc) || '') + '</span></button>').join('');
     g.querySelectorAll('.nmpb').forEach((b) => b.addEventListener('click', () => { el.classList.remove('open'); createCustomTrack(b.dataset.base); }));
     $('nmpCancel').addEventListener('click', () => el.classList.remove('open'));
   }
@@ -6623,7 +7008,7 @@ function startStage(id, editNow) {
     updateGateColors();
     canvas.focus();
     if (editNow) setEditor(true);   // new custom track: no countdown, straight into the editor
-  });
+  }, editNow ? null : st);
 }
 function goMenu(screen) {
   if (fadeBusy) return;
@@ -6829,6 +7214,7 @@ function frame(now) {
   pulse += dt;
 
   applyGateLabels();
+  introFrame(dt);
   edSyncBody(dt);
   if (inMenu && currentScreen === 'main') drawMainDrone(dt); else if (MD.ph !== 'idle' || MD.t > 0) mdReset(mainDv);
   if (inMenu) {
@@ -6893,7 +7279,7 @@ const GX = {
   cfg: null, lastStage: null, combo: 0, comboT: -99, spdA: 0, spdOn: false, bgClock: 0, bgDraw: 0, ac: [76, 195, 230], acT: -9,
   lastHover: null, lastTick: 0, audioInit: false, streaks: null
 };
-const GX_AUTO = { arena: 'neon', clean: 'cine', redwood: 'cine', city: 'neon', field: 'sunset', desert: 'apoc', snow: 'frost', dusk: 'sunset', blue: 'cine' };
+const GX_AUTO = { arena: 'neon', clean: 'cine', redwood: 'cine', city: 'neon', field: 'sunset', desert: 'apoc', snow: 'frost', dusk: 'sunset', blue: 'cine', hallbig: 'neon', hallsmall: 'neon', gym: 'cine', football: 'sunset', town: 'cine', ghost: 'apoc', bando: 'apoc' };
 const GX_GRADES = {
   off: { name: 'ללא', f: 'none', t: 'none' },
   cine: { name: 'קולנועי', f: 'contrast(1.1) saturate(1.2) brightness(1.02)', t: 'linear-gradient(180deg,rgba(255,176,96,.16),rgba(40,96,190,.2))' },
@@ -7759,7 +8145,7 @@ function nxApplyTheme(t) {
   const b = document.body;
   ['tr-slide', 'tr-fade', 'tr-zoom', 'tr-none', 'ba-l', 'ba-c', 'ba-r'].forEach((c) => b.classList.remove(c));
   b.classList.add('tr-' + t.trans, 'ba-' + t.balign);
-  NXH.fadeIn = t.fadeMs + 70; NXH.fadeOut = t.fadeMs + 10;
+  NXH.fadeIn = t.fadeMs + 70; NXH.fadeOut = t.fadeMs + 10; NXH.introMs = typeof t.introMs === 'number' ? clamp(t.introMs, 0, 6000) : 2600;
   const rgb = nxRgb(t.bg), a = clamp(t.overlay, 0, 1);
   $('menu').style.background = 'linear-gradient(180deg,rgba(' + rgb + ',' + (a * 0.85).toFixed(2) + '),rgba(' + rgb + ',' + Math.min(1, a * 1.2).toFixed(2) + '))' +
     (t.bgImg ? ',url("' + String(t.bgImg).replace(/"/g, '%22') + '") center/cover no-repeat' : '');
@@ -8414,6 +8800,7 @@ function nxLookParts(t) {
   h += nxF('סוג מעבר', nxSel('theme.trans', t.trans, [['slide', 'החלקה'], ['fade', 'עמעום'], ['zoom', 'זום'], ['none', 'ללא']]));
   h += nxF('משך (מ"ש)', nxRange('theme.dur', t.dur, 0, 1000, 25));
   h += nxF('מסך שחור בין שלבים (מ"ש)', nxRange('theme.fadeMs', t.fadeMs, 150, 1500, 50));
+  h += nxF('מסך פתיחת שלב: זמן תצוגה (מ"ש, 0 = כבוי)', nxRange('theme.introMs', typeof t.introMs === 'number' ? t.introMs : 2600, 0, 6000, 100));
   P.trans = h;
   h = '<div class="nxchk">';
   NX_HIDE.forEach((r) => { h += '<label><input type="checkbox" data-k="hide.' + r[0] + '"' + (NX.draft.hide[r[0]] ? ' checked' : '') + '> הסתר: ' + r[1] + '</label>'; });
