@@ -999,6 +999,8 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
     </div>
     <details class="eds" open><summary>מסלול</summary>
     <div class="row"><label style="flex:0 0 70px">הקפות</label><select id="edLaps"><option value="1">1 · מסלול חד פעמי: השער האחרון הוא הסיום</option><option value="2">2</option><option value="3">3 (ברירת מחדל)</option><option value="4">4</option><option value="5">5</option><option value="8">8</option><option value="10">10</option></select></div>
+    <div class="row"><label style="flex:0 0 70px">חצי שער</label><label style="flex:1"><input type="checkbox" id="edGmOn" checked> הצג חצים מתכנסים בשער הבא</label></div>
+    <div class="row"><label style="flex:0 0 70px">גודל</label><input type="range" id="edGmSz" min="0.3" max="3" step="0.1" value="1"><output id="edGmSzV">1</output><input type="color" id="edGmCol" value="#ffffff" title="צבע החצים" style="flex:0 0 44px;height:34px;padding:0;border:0;background:none;cursor:pointer"><button class="b" id="edGmReset" title="חזרה לברירת מחדל">איפוס</button></div>
     </details>
     <details class="eds" open><summary>מראה</summary>
     <div class="row"><label style="flex:0 0 70px">צבע</label><select id="propType" style="display:none"></select><select id="propColor"></select><input type="color" id="propColorFree" value="#ff6a1a" title="צבע חופשי: בחר כל צבע" style="flex:0 0 44px;height:34px;padding:0;border:0;background:none;cursor:pointer"><button class="b" id="propColorAll" title="צבע את כל האלמנטים מאותו סוג במסלול בצבע שנבחר" style="flex:0 0 auto">כל הסוג</button></div>
@@ -1293,7 +1295,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 281</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 282</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -8084,17 +8086,6 @@ function nxSetLock(id, f, v, checked) {                         // the "flight m
   st.lock = L ? normLock(L) : null; saveCustomList(); nxTouch();
   return true;
 }
-function nxSetGm(id, f, v, checked) {                           // design of the "next gate" arrows of a custom track: shown or not, size, colour
-  const st = STAGES[id]; if (!st || !st.custom) return false;
-  const G = Object.assign({ on: true, size: 1, col: '#ffffff' }, st.gm || {});
-  if (f === 'on') G.on = !!checked;
-  else if (f === 'size') { const x = parseFloat(v); if (!isFinite(x)) return false; G.size = x; }
-  else if (f === 'col') G.col = v;
-  else if (f === 'reset') { st.gm = null; saveCustomList(); nxTouch(); return true; }
-  else return false;
-  st.gm = normGm(G); saveCustomList(); nxTouch();
-  return true;
-}
 function nxMapPreview(st) {                                     // top view (distance across, sideways up) and side view (height) of a track, before flying it
   const G = st.gen(), O = st.objects || []; if (!G.length) return '';
   let z0 = 1e9, z1 = -1e9, x0 = 1e9, x1 = -1e9, y1 = 8;
@@ -8998,12 +8989,6 @@ function nxTrackPanel(id) {
     fm += nxF('פיצוי על ירידה בגובה בנטייה', '<label class="nxchk1"><input type="checkbox" data-act="trk-lock" data-f="comp" data-id="' + id + '"' + (Lk && Lk.comp ? ' checked' : '') + (Lk ? '' : ' disabled') + '> פעיל</label>');
     fm += nxF('שמירת גובה מלאה', '<label class="nxchk1"><input type="checkbox" data-act="trk-lock" data-f="hold" data-id="' + id + '"' + (Lk && Lk.hold ? ' checked' : '') + (Lk ? '' : ' disabled') + '> הרחפן מחזיק גובה לבד (המצערת רק מוצגת)</label>');
     h += nxTrkSec(tag('lock'), 'מצב טיסה (נעילת צירים)', Lk ? (Lk.axis === 'roll' ? 'רול בלבד' : 'פיץ׳ בלבד') : 'רגיל', fm);
-    const Gm = gmOf(st);
-    let gm = '<p class="nxn">החצים המתכנסים שמסמנים לתלמיד את השער הבא. ההגדרה נשמרת עם המסלול.</p>';
-    gm += nxF('הצג חצים', '<label class="stgsw"><input type="checkbox" data-act="trk-gm" data-f="on" data-id="' + id + '"' + (Gm.on ? ' checked' : '') + '><i></i></label>');
-    gm += nxF('גודל', '<input type="range" min="0.3" max="3" step="0.1" data-act="trk-gm" data-f="size" data-id="' + id + '" value="' + Gm.size + '"' + (Gm.on ? '' : ' disabled') + '> <output>' + Gm.size + '</output>');
-    gm += nxF('צבע', '<input type="color" data-act="trk-gm" data-f="col" data-id="' + id + '" value="' + Gm.col + '"' + (Gm.on ? '' : ' disabled') + '> <button class="nxb" data-act="trk-gm" data-f="reset" data-id="' + id + '">איפוס</button>');
-    h += nxTrkSec(tag('gm'), 'חצי השער הבא (עיצוב)', Gm.on ? 'מוצג' : 'מוסתר', gm);
   }
   h += nxTrkSec(tag('prev'), 'תצוגה מקדימה של המפה', '', nxMapPreview(st), false);
   const gd = (D.guides || {})[k] || {}, hasG = !!(String(gd.text || '').trim() || String(gd.fly || '').trim());
@@ -9705,7 +9690,6 @@ function nxAdmWire() {
       const key = el.dataset.key, v = parseFloat(el.value); if (!isFinite(v)) return;
       E[key] = key === 'turb' ? v / 100 : v; saveEnv(); nxTouch(); if (trkSel === id) { try { syncEnvUI(); } catch (e2) { /* ignore */ } } nxAdmRender(); return;
     }
-    if (a === 'trk-gm') { if (nxSetGm(id, el.dataset.f, el.value, el.checked)) nxAdmRender(); return; }
     if (a === 'trk-lock') { if (nxSetLock(id, el.dataset.f, el.value, el.checked)) nxAdmRender(); return; }
     if (a === 'trk-name') {
       const st = STAGES[id]; if (!st) return;
@@ -10862,6 +10846,18 @@ function edSyncLaps() {
   const n = trackLaps(); if (!Array.prototype.some.call(sel.options, (o) => +o.value === n)) { const o = document.createElement('option'); o.value = String(n); o.textContent = String(n); sel.appendChild(o); }
   sel.value = String(n); sel.disabled = !(currentStage.custom && !currentStage.pub);
 }
+function edSyncGm() {                                 // the next-gate arrow design of the track being edited
+  if (!$('edGmOn') || !currentStage) return;
+  const G = gmOf(currentStage), own = !!(currentStage.custom && !currentStage.pub);
+  $('edGmOn').checked = G.on; $('edGmSz').value = G.size; $('edGmSzV').textContent = String(G.size); $('edGmCol').value = G.col;
+  ['edGmOn', 'edGmSz', 'edGmCol', 'edGmReset'].forEach((id) => { $(id).disabled = !own; });
+}
+function edSetGm(f, v) {
+  if (!currentStage || !currentStage.custom || currentStage.pub) return;
+  const G = gmOf(currentStage);
+  if (f === 'on') G.on = !!v; else if (f === 'size') G.size = parseFloat(v) || 1; else if (f === 'col') G.col = v; else if (f === 'reset') { G.on = true; G.size = 1; G.col = '#ffffff'; }
+  currentStage.gm = normGm(G); saveCustomList(); markCustom(); edSyncGm(); if (window.__onTrackChanged) window.__onTrackChanged();
+}
 function edSyncBody(dt) {                             // runs every frame: the editor dock follows editorMode, whichever way it was entered or left
   edSyncTestFlight();
   if (editorMode) {
@@ -10876,7 +10872,7 @@ function edSyncBody(dt) {                             // runs every frame: the e
   document.body.classList.toggle('ed-on', editorMode);
   if (editorMode) {
     const acc = $('edAcc'); if (acc) acc.open = true;
-    edSyncBase(); edSyncMsg(); edSyncLaps(); edNavKey = '';
+    edSyncBase(); edSyncMsg(); edSyncLaps(); edSyncGm(); edNavKey = '';
     if (currentStage && envSettings[currentStage.id]) { trkSel = currentStage.id; syncEnvUI(); }     // wind panel edits the track being edited
   } else { edCancelPlace(); edTogglePicker(false, 'rep'); edClosePops(); }
 }
@@ -10955,6 +10951,11 @@ function edpApply(what, v) {
     if (currentStage && currentStage.custom && !currentStage.pub && n >= 1) { currentStage.laps = n; saveCustomList(); markCustom(); rebuildTrack(); if (window.__onTrackChanged) window.__onTrackChanged(); }
     e.target.blur();
   });
+  $('edGmOn').addEventListener('change', (e) => { edSetGm('on', e.target.checked); e.target.blur(); });
+  $('edGmSz').addEventListener('input', (e) => { $('edGmSzV').textContent = e.target.value; });
+  $('edGmSz').addEventListener('change', (e) => { edSetGm('size', e.target.value); e.target.blur(); });
+  $('edGmCol').addEventListener('change', (e) => { edSetGm('col', e.target.value); e.target.blur(); });
+  $('edGmReset').addEventListener('click', (e) => { edSetGm('reset'); e.target.blur(); });
   $('edUndo').addEventListener('click', (e) => { edUndoStep(); e.target.blur(); });
   $('edRedo').addEventListener('click', (e) => { edRedoStep(); e.target.blur(); });
   $('edClone').addEventListener('click', (e) => { edCloneSel(); e.target.blur(); });
