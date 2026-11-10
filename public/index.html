@@ -1306,7 +1306,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 323</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 324</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -6800,13 +6800,14 @@ function buildDroneModel(id) {
     mk(new THREE.BoxGeometry(0.32, 0.022, 0.34), std(0x14161a, 0.5, 0.1), 0, 0.045, 0.02);        // flight controller
     mk(new THREE.BoxGeometry(0.3, 0.02, 0.3), std(0x1f4a35, 0.5, 0.1), 0, 0.09, 0.02);           // VTX board
     mk(new THREE.CylinderGeometry(0.04, 0.04, 0.09, 14), std(0x15171b, 0.5, 0.3), 0.0, 0.06, 0.32).rotation.x = Math.PI / 2;   // capacitor at the rear
+    const BW = big ? 0.48 : 0.41;                            // the two 5" packs are a touch narrower than the 10" one
     const BH = 0.448;                                        // every pack is twice the old height; the racer carries the same full-size pack as the freestyler, slung under the frame
     const packC = dcl(DC.b, race ? 0x14161a : 0x1b2230);
     const bz = race ? 0.05 : 0.1, batY = race ? -0.03 - BH / 2 : 0.148 + BH / 2, savedTgt = tgt;
     if (race) tgt = grp;                                     // the racer's frame group is shrunk, the pack must keep its real size
-    mk(roundBoxGeo(0.48, BH, 0.78, 0.05, 0.3), std(packC, 0.55, 0.1), 0, batY, bz);                  // LiPo pack
-    mk(new THREE.BoxGeometry(0.32, 0.004, 0.5), std(accent, 0.6, 0.0), 0, batY + (race ? -BH / 2 - 0.002 : BH / 2 + 0.002), bz);         // sticker on the pack
-    [-0.16, 0.36].forEach((z) => mk(roundBoxGeo(0.51, BH + 0.016, 0.045, 0.018, 0.3), rubber, 0, batY, z - 0.1 + bz));        // two battery straps
+    mk(roundBoxGeo(BW, BH, 0.78, 0.05, 0.3), std(packC, 0.55, 0.1), 0, batY, bz);                  // LiPo pack
+    mk(new THREE.BoxGeometry(BW - 0.16, 0.004, 0.5), std(accent, 0.6, 0.0), 0, batY + (race ? -BH / 2 - 0.002 : BH / 2 + 0.002), bz);         // sticker on the pack
+    [-0.16, 0.36].forEach((z) => mk(roundBoxGeo(BW + 0.03, BH + 0.016, 0.045, 0.018, 0.3), rubber, 0, batY, z - 0.1 + bz));        // two battery straps
     tgt = savedTgt;
     mk(new THREE.BoxGeometry(0.09, 0.05, 0.08), std(0xe8b81a, 0.5, 0.1), 0, race ? -0.03 : 0.12, 0.54);   // XT60 plug
     const sideMat = carbon;
