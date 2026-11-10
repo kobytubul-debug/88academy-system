@@ -1301,7 +1301,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 295</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 296</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -10272,10 +10272,16 @@ function nxGuideSeen(id, set) {
 /* ---------- big list editor for the guide card (steps / in-flight notes): one row per line, add / remove / reorder, save or cancel ---------- */
 const NXED = { k: '', f: '', rows: [] };
 const NXED_TXT = { text: ['צעדים של כרטיס ההסבר', 'כל שורה היא צעד אחד שהתלמיד רואה בכרטיס.', (i) => 'צעד ' + (i + 1), 'לדוגמה: מגבירים גז לאט עד שהרחפן מתרומם'],
-  fly: ['הוראות בזמן הטיסה', 'כל שורה היא הערה אחת. הערה רגילה מוצגת עד השער הבא. "באמצע בין שערים" קופצת בדיוק באמצע הדרך בין שני שערים.', (i) => (i === 0 ? 'מההתחלה' : 'אחרי שער ' + i), 'לדוגמה: כוון את האיקס למרכז השער הבא'] };
+  fly: ['הוראות בזמן הטיסה', 'כל שורה היא הערה אחת. הערה רגילה מוצגת עד השער הבא. "באמצע בין שערים" קופצת בדיוק באמצע הדרך בין השער שמעליה לשער שאחריו, לפי מקומה ברשימה.', (i) => (i === 0 ? 'מההתחלה' : 'אחרי שער ' + i), 'לדוגמה: כוון את האיקס למרכז השער הבא'] };
 function nxGdLines(s) { return String(s || '').split('\n').map((x) => x.trim()).filter(Boolean); }
 function nxGdParse(f, s) {                                       // lines -> rows {m: null (normal) or N (half way after gate N), t: text}
   return nxGdLines(s).map((x) => { const m = f === 'fly' ? /^~(\d+)\|(.*)$/.exec(x) : null; return m ? { m: +m[1], t: m[2].trim() } : { m: null, t: x }; });
+}
+function nxGdOrder(rows) {                                      // a half-way note sits in the list right after the normal note of its gate
+  const nor = rows.filter((r) => r.m === null), mid = rows.filter((r) => r.m !== null), out = [];
+  if (!nor.length) return mid.map((r) => ({ m: 0, t: r.t }));
+  nor.forEach((r, i) => { out.push(r); mid.filter((x) => Math.min(x.m, nor.length - 1) === i).forEach((x) => out.push({ m: 0, t: x.t })); });
+  return out;
 }
 function nxGdShow(x) { const m = /^~(\d+)\|(.*)$/.exec(x); return m ? '⇅ באמצע, אחרי שער ' + m[1] + ': ' + m[2].trim() : x; }
 function nxGdSummary(k, f, txt) {                               // what the admin panel shows instead of a tiny text box
@@ -10291,9 +10297,8 @@ function nxEdRender() {
     let lab;
     if (NXED.f === 'fly') {
       if (r.m === null) { seqN++; lab = '<span class="edn">' + nxEsc(T[2](seqN)) + '</span>'; }
-      else lab = '<span class="edn mid">באמצע בין שערים</span>';
-      lab = '<div class="edk">' + lab + '<select data-kind="' + i + '"><option value="seq"' + (r.m === null ? ' selected' : '') + '>בהתקדמות (אחרי שער)</option><option value="mid"' + (r.m !== null ? ' selected' : '') + '>באמצע בין שערים</option></select>' +
-        (r.m !== null ? '<label class="edg">בין שער <input type="number" min="0" max="999" data-n="' + i + '" value="' + r.m + '"> לשער הבא<small>0 = בין ההתחלה לשער הראשון</small></label>' : '') + '</div>';
+      else lab = '<span class="edn mid">' + (seqN < 1 ? 'באמצע, בין ההתחלה לשער 1' : 'באמצע, בין שער ' + seqN + ' לשער ' + (seqN + 1)) + '</span>';
+      lab = '<div class="edk">' + lab + '<select data-kind="' + i + '"><option value="seq"' + (r.m === null ? ' selected' : '') + '>בהתקדמות (אחרי שער)</option><option value="mid"' + (r.m !== null ? ' selected' : '') + '>באמצע בין שערים</option></select></div>';
     } else { seqN++; lab = '<div class="edk"><span class="edn">' + nxEsc(T[2](seqN)) + '</span></div>'; }
     return '<div class="edr' + (r.m !== null ? ' ismid' : '') + '">' + lab + '<textarea rows="2" data-i="' + i + '" placeholder="' + nxEsc(T[3]) + '">' + nxEsc(r.t) + '</textarea>' +
       '<div class="edc"><button data-ed="up" data-i="' + i + '"' + (i ? '' : ' disabled') + ' title="הזז למעלה">&uarr;</button><button data-ed="down" data-i="' + i + '"' + (i < NXED.rows.length - 1 ? '' : ' disabled') + ' title="הזז למטה">&darr;</button><button data-ed="del" data-i="' + i + '" title="הסר שורה">&times;</button></div></div>';
@@ -10301,29 +10306,29 @@ function nxEdRender() {
 }
 function nxEdOpen(k, f) {
   const g = (NX.draft.guides || {})[k] || {}; if (!NXED_TXT[f]) return false;
-  NXED.k = k; NXED.f = f; NXED.rows = nxGdParse(f, g[f]); if (!NXED.rows.length) NXED.rows = [{ m: null, t: '' }];
+  NXED.k = k; NXED.f = f; NXED.rows = nxGdOrder(nxGdParse(f, g[f])); if (!NXED.rows.length) NXED.rows = [{ m: null, t: '' }];
   nxEdRender(); if ($('nxEd')) $('nxEd').classList.add('on'); return true;
 }
 function nxEdClose() { if ($('nxEd')) $('nxEd').classList.remove('on'); NXED.k = ''; NXED.rows = []; }
 function nxEdSave() {
   if (!NXED.k) return false;
-  const v = NXED.rows.map((r) => { const t = String(r.t).replace(/\s*\n\s*/g, ' ').trim(); return !t ? '' : r.m !== null ? '~' + Math.max(0, Math.floor(Number(r.m) || 0)) + '|' + t : t; }).filter(Boolean).join('\n');
+  let nn = 0; const v = NXED.rows.map((r) => { const t = String(r.t).replace(/\s*\n\s*/g, ' ').trim(); if (r.m === null) { nn++; return t; } return !t ? '' : '~' + Math.max(0, nn - 1) + '|' + t; }).filter(Boolean).join('\n');
   nxSetPath(NX.draft, 'guides.' + NXED.k + '.' + NXED.f, v); NX.draft = nxMerge(nxDefault(), NX.draft); nxTouch(); nxEdClose(); nxAdmRender(); return true;
 }
 function nxEdAct(a, i) {
   const r = NXED.rows;
   if (a === 'add') { r.push({ m: null, t: '' }); nxEdRender(); const t = $('nxEdRows') && $('nxEdRows').querySelectorAll ? $('nxEdRows').querySelectorAll('textarea') : []; if (t.length) t[t.length - 1].focus(); return; }
-  if (a === 'addmid') { r.push({ m: 1, t: '' }); nxEdRender(); const t = $('nxEdRows') && $('nxEdRows').querySelectorAll ? $('nxEdRows').querySelectorAll('textarea') : []; if (t.length) t[t.length - 1].focus(); return; }
+  if (a === 'addmid') { r.push({ m: 0, t: '' }); nxEdRender(); const t = $('nxEdRows') && $('nxEdRows').querySelectorAll ? $('nxEdRows').querySelectorAll('textarea') : []; if (t.length) t[t.length - 1].focus(); return; }
   if (a === 'del') { r.splice(i, 1); if (!r.length) r.push({ m: null, t: '' }); }
   else if (a === 'up' && i > 0) { const x = r[i]; r[i] = r[i - 1]; r[i - 1] = x; }
   else if (a === 'down' && i < r.length - 1) { const x = r[i]; r[i] = r[i + 1]; r[i + 1] = x; }
-  else if (a === 'kind') { r[i].m = r[i].m === null ? 1 : null; }
+  else if (a === 'kind') { r[i].m = r[i].m === null ? 0 : null; }
   else return;
   nxEdRender();
 }
 (function nxEdWire() {
   if (typeof document === 'undefined' || !$('nxEd')) return;
-  $('nxEd').addEventListener('input', (e) => { const t = e.target; if (!t || !t.dataset) return; if (t.dataset.i !== undefined && t.tagName === 'TEXTAREA') NXED.rows[+t.dataset.i].t = t.value; else if (t.dataset.n !== undefined) NXED.rows[+t.dataset.n].m = Math.max(0, Math.floor(Number(t.value) || 0)); });
+  $('nxEd').addEventListener('input', (e) => { const t = e.target; if (!t || !t.dataset) return; if (t.dataset.i !== undefined && t.tagName === 'TEXTAREA') NXED.rows[+t.dataset.i].t = t.value; });
   $('nxEd').addEventListener('change', (e) => { const t = e.target; if (t && t.dataset && t.dataset.kind !== undefined) { const i = +t.dataset.kind, mid = t.value === 'mid'; if ((NXED.rows[i].m !== null) !== mid) nxEdAct('kind', i); } });
   $('nxEd').addEventListener('click', (e) => {
     if (e.target === $('nxEd')) { nxEdClose(); return; }
