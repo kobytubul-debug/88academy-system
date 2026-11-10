@@ -1302,7 +1302,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 298</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 299</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -1549,9 +1549,9 @@ orbit.maxPolarAngle = Math.PI * 0.495;
 orbit.enabled = false;
 let activeCam = fpvCam;
 
-const ambientLight = new THREE.AmbientLight(0xbfd4ff, 0.65);
-const hemiLight = new THREE.HemisphereLight(0xcfe6ff, 0x2a5a2a, 0.55);
-const sun = new THREE.DirectionalLight(0xfff2d6, 0.9);
+const ambientLight = new THREE.AmbientLight(0xbfd4ff, 0.4);
+const hemiLight = new THREE.HemisphereLight(0xcfe6ff, 0x2a5a2a, 0.45);
+const sun = new THREE.DirectionalLight(0xfff2d6, 1.0);
 sun.position.set(80, 140, 60);
 scene.add(ambientLight, hemiLight, sun);
 
@@ -1668,17 +1668,17 @@ function skyClouds(cv, g) {                                       // fluffy cumu
 function grassPaint(cv, g) {                                      // photo-like grass: soft colour patches + thousands of blades, tiles without seams
   const S = 1024; cv.width = cv.height = S;
   const rnd = mulberry(99);
-  g.fillStyle = '#4a7f2c'; g.fillRect(0, 0, S, S);
+  g.fillStyle = '#34591f'; g.fillRect(0, 0, S, S);
   const m = document.createElement('canvas'); m.width = m.height = 128; const mg = m.getContext('2d'), mi = mg.getImageData(0, 0, 128, 128), n = skyNoise(8);
   for (let j = 0; j < 128; j++) for (let i = 0; i < 128; i++) {
     const a = n((i / 128) * 8, (j / 128) * 8) * 0.6 + n((i / 128) * 16 + 3, (j / 128) * 16 + 5) * 0.4, o = (j * 128 + i) * 4;
-    mi.data[o] = 56 + a * 46; mi.data[o + 1] = 104 + a * 58; mi.data[o + 2] = 34 + a * 20; mi.data[o + 3] = 255;
+    mi.data[o] = 42 + a * 34; mi.data[o + 1] = 70 + a * 42; mi.data[o + 2] = 24 + a * 14; mi.data[o + 3] = 255;
   }
   mg.putImageData(mi, 0, 0); g.imageSmoothingEnabled = true; g.drawImage(m, 0, 0, S, S);
   const put = (x, y, f) => { for (let ox = -S; ox <= S; ox += S) for (let oy = -S; oy <= S; oy += S) { if ((ox && x > 24 && x < S - 24) || (oy && y > 24 && y < S - 24)) continue; f(x + ox, y + oy); } };
   for (let i = 0; i < 16000; i++) {
     const x = rnd() * S, y = rnd() * S, len = 5 + rnd() * 11, ang = -Math.PI / 2 + (rnd() - 0.5) * 1.1, k = rnd();
-    g.strokeStyle = k < 0.45 ? 'rgba(28,78,22,' + (0.25 + rnd() * 0.3) + ')' : k < 0.85 ? 'rgba(120,190,70,' + (0.2 + rnd() * 0.3) + ')' : 'rgba(190,215,110,' + (0.18 + rnd() * 0.2) + ')'; g.lineWidth = 1 + rnd() * 1.4;
+    g.strokeStyle = k < 0.45 ? 'rgba(18,48,14,' + (0.25 + rnd() * 0.3) + ')' : k < 0.85 ? 'rgba(98,150,56,' + (0.2 + rnd() * 0.3) + ')' : 'rgba(150,172,84,' + (0.18 + rnd() * 0.2) + ')'; g.lineWidth = 1 + rnd() * 1.4;
     put(x, y, (px, py) => { g.beginPath(); g.moveTo(px, py); g.quadraticCurveTo(px + Math.cos(ang) * len * 0.5 + (rnd() - 0.5) * 3, py + Math.sin(ang) * len * 0.6, px + Math.cos(ang) * len, py + Math.sin(ang) * len); g.stroke(); });
   }
   for (let i = 0; i < 600; i++) { const x = rnd() * S, y = rnd() * S; g.fillStyle = rnd() < 0.5 ? 'rgba(235,225,120,0.35)' : 'rgba(255,255,255,0.22)'; put(x, y, (px, py) => g.fillRect(px, py, 2, 2)); }   // a few tiny flowers
