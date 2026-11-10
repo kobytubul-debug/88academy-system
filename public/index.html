@@ -1306,7 +1306,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 310</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 311</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -6787,15 +6787,17 @@ function buildDroneModel(id) {
     mk(new THREE.TorusGeometry(0.056, 0.012, 8, 22), metal, 0, 0.14 + 0.125 * Math.sin(TILT), -0.45 - 0.125 * Math.cos(TILT)).rotation.x = TILT;          // lens ring
     mk(roundBoxGeo(0.1, 0.06, 0.12, 0.02, 0.1), std(accent, 0.6, 0.0), 0, 0.16, 0.5);                  // 3D-printed antenna mount
     /* FPV antenna like a real Lumenier-style one: gold SMA base, thin black coax mast, coloured lollipop head; short on the 5" quads, long on the 10" ones */
-    const antLen = big ? 0.72 : 0.32, headL = big ? 0.27 : 0.19, headR = big ? 0.058 : 0.05, headCol = big ? 0xd8372b : 0x8fd12f;
-    const A = new THREE.Group(), am = (geo, mat, y) => { const m = new THREE.Mesh(geo, mat); m.position.y = y; A.add(m); return m; }, yb = antLen - headL;
+    const antLen = big ? 0.72 : 0.32, headL = big ? 0.27 : 0.19, headR = big ? 0.058 : 0.05, headCol = dcl(DC.t, big ? 0xd8372b : 0x8fd12f);
+    const A = new THREE.Group(), am = (geo, mat, y) => { const m = new THREE.Mesh(geo, mat); m.position.y = y; A.add(m); return m; }, yb = race ? 0 : antLen - headL;
     const headMat = new THREE.MeshPhongMaterial({ color: headCol, shininess: 70, specular: 0xffffff });
-    am(new THREE.CylinderGeometry(0.026, 0.026, 0.06, 12), gold, 0.03);                                         // SMA connector
-    am(new THREE.CylinderGeometry(0.017, 0.019, yb - 0.04, 12), black, 0.06 + (yb - 0.04 - 0.02) / 2);           // black mast
+    if (!race) {
+      am(new THREE.CylinderGeometry(0.026, 0.026, 0.06, 12), gold, 0.03);                                         // SMA connector
+      am(new THREE.CylinderGeometry(0.017, 0.019, yb - 0.04, 12), black, 0.06 + (yb - 0.04 - 0.02) / 2);           // black mast
+    }                                                                                                          // racer: no mast, the head sits straight on the body
     am(new THREE.CylinderGeometry(headR, 0.02, headL * 0.28, 16), headMat, yb + headL * 0.15);                  // tapered shoulder
     am(new THREE.CylinderGeometry(headR, headR, headL * 0.5, 16), headMat, yb + headL * 0.53);                  // head body
     am(new THREE.SphereGeometry(headR, 16, 10), headMat, yb + headL * 0.78).scale.y = 1.0;                        // rounded top
-    A.position.set(0, race ? 0.12 : 0.19, race ? 0.29 : 0.5); A.rotation.x = 0.6;
+    A.position.set(0, race ? 0.07 : 0.19, race ? 0.24 : 0.5); A.rotation.x = 0.6;
     (race ? grp : tgt).add(A);
     /* flight-controller details: signal LEDs, wiring and a status light, so the electronics read as real parts */
     const led = (c, x, y, z) => mk(new THREE.BoxGeometry(0.02, 0.012, 0.02), new THREE.MeshBasicMaterial({ color: c }), x, y, z);
@@ -6888,7 +6890,7 @@ function buildDroneModel(id) {
     lens.position.set(0, YC + 0.22 + 0.1 * Math.sin(TILT), -0.2 - 0.1 * Math.cos(TILT)); lens.rotation.x = TILT - Math.PI / 2; grp.add(lens);
     const lring = new THREE.Mesh(new THREE.TorusGeometry(0.095, 0.014, 8, 24), metal); lring.position.set(0, YC + 0.22 + 0.14 * Math.sin(TILT), -0.2 - 0.14 * Math.cos(TILT)); lring.rotation.x = TILT; grp.add(lring);
     // black antenna tube rising towards the back and a little to the side
-    const ant = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.018, 0.5, 10), black); ant.position.set(0.09, YC + 0.4, 0.14); ant.rotation.set(0.35, 0, -0.35); grp.add(ant);
+    const ant = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.018, 0.5, 10), DC.t ? new THREE.MeshStandardMaterial({ color: DC.t, roughness: 0.5 }) : black); ant.position.set(0.09, YC + 0.4, 0.14); ant.rotation.set(0.35, 0, -0.35); grp.add(ant);
     const wip = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.005, 0.2, 6), new THREE.MeshPhongMaterial({ color: 0xdfe3e8, shininess: 80 })); wip.position.set(0.17, YC + 0.7, 0.22); wip.rotation.set(0.35, 0, -0.35); grp.add(wip);
     const bt = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.1, 0.56), new THREE.MeshStandardMaterial({ color: 0x1a1c20, roughness: 0.6 })); bt.position.set(0, YC - 0.1, 0.06); grp.add(bt);
     grp.scale.setScalar(1.3);
@@ -8632,11 +8634,11 @@ NXH.droneOk = (id) => nxAdminEditing() || !NX.eff || !NX.eff.drones.off[id];
 
 const NX_DRONE0 = {};
 const NX_DCOL = {
-  fpv5: [['m', 'מנועים', '#c0392b'], ['p', 'פרופלורים', '#ff8a1a'], ['a', 'מצבר ואקסנט (מדבקה ובסיס אנטנה)', '#e8751a'], ['b', 'גוף הסוללה', '#1b2230'], ['c', 'גוף המצלמה', '#0f1113'], ['f', 'מסגרת וזרועות (גוון)', '#ffffff']],
-  race5: [['m', 'מנועים', '#2f6fd0'], ['p', 'פרופלורים', '#2f8fd0'], ['a', 'מצבר ואקסנט (מדבקה ובסיס אנטנה)', '#1fa89a'], ['b', 'גוף הסוללה', '#14161a'], ['c', 'גוף המצלמה', '#0f1113'], ['f', 'מסגרת וזרועות (גוון)', '#ffffff'], ['s1', 'פס זרוע ראשון', '#c0392b'], ['s2', 'פס זרוע שני', '#2f6fd0']],
-  fpv10: [['m', 'מנועים', '#c0392b'], ['p', 'פרופלורים', '#ff8a1a'], ['a', 'מצבר ואקסנט (מדבקה ובסיס אנטנה)', '#e8751a'], ['b', 'גוף הסוללה', '#1b2230'], ['c', 'גוף המצלמה', '#0f1113'], ['f', 'מסגרת וזרועות (גוון)', '#ffffff']],
-  fpv10w: [['m', 'מנועים', '#c0392b'], ['p', 'פרופלורים', '#ff8a1a'], ['a', 'מצבר ואקסנט (מדבקה ובסיס אנטנה)', '#e8751a'], ['b', 'גוף הסוללה', '#1b2230'], ['c', 'גוף המצלמה', '#0f1113'], ['f', 'מסגרת וזרועות (גוון)', '#ffffff']],
-  whoop: [['a', 'גוף שקוף (מחזיקים וחישוקים)', '#f2f6fa'], ['p1', 'מגיני מדחפים', '#4fa3ee'], ['p2', 'פרופלורים', '#ffffff'], ['m', 'טבעת המנוע', '#2f6fd0'], ['c', 'גוף המצלמה', '#0f1113']]
+  fpv5: [['m', 'מנועים', '#c0392b'], ['p', 'פרופלורים', '#ff8a1a'], ['a', 'מצבר ואקסנט (מדבקה ובסיס אנטנה)', '#e8751a'], ['b', 'גוף הסוללה', '#1b2230'], ['c', 'גוף המצלמה', '#0f1113'], ['f', 'מסגרת וזרועות (גוון)', '#ffffff'], ['t', 'אנטנה (ראש)', '#8fd12f']],
+  race5: [['m', 'מנועים', '#2f6fd0'], ['p', 'פרופלורים', '#2f8fd0'], ['a', 'מצבר ואקסנט (מדבקה ובסיס אנטנה)', '#1fa89a'], ['b', 'גוף הסוללה', '#14161a'], ['c', 'גוף המצלמה', '#0f1113'], ['f', 'מסגרת וזרועות (גוון)', '#ffffff'], ['s1', 'פס זרוע ראשון', '#c0392b'], ['s2', 'פס זרוע שני', '#2f6fd0'], ['t', 'אנטנה (ראש)', '#8fd12f']],
+  fpv10: [['m', 'מנועים', '#c0392b'], ['p', 'פרופלורים', '#ff8a1a'], ['a', 'מצבר ואקסנט (מדבקה ובסיס אנטנה)', '#e8751a'], ['b', 'גוף הסוללה', '#1b2230'], ['c', 'גוף המצלמה', '#0f1113'], ['f', 'מסגרת וזרועות (גוון)', '#ffffff'], ['t', 'אנטנה (ראש)', '#d8372b']],
+  fpv10w: [['m', 'מנועים', '#c0392b'], ['p', 'פרופלורים', '#ff8a1a'], ['a', 'מצבר ואקסנט (מדבקה ובסיס אנטנה)', '#e8751a'], ['b', 'גוף הסוללה', '#1b2230'], ['c', 'גוף המצלמה', '#0f1113'], ['f', 'מסגרת וזרועות (גוון)', '#ffffff'], ['t', 'אנטנה (ראש)', '#d8372b']],
+  whoop: [['a', 'גוף שקוף (מחזיקים וחישוקים)', '#f2f6fa'], ['p1', 'מגיני מדחפים', '#4fa3ee'], ['p2', 'פרופלורים', '#ffffff'], ['m', 'טבעת המנוע', '#2f6fd0'], ['c', 'גוף המצלמה', '#0f1113'], ['t', 'אנטנה', '#0f1113']]
 };
 function nxApplyTexts(c, ghost) {
   NX_TX.forEach((r) => {
