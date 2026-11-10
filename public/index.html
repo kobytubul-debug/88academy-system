@@ -1299,7 +1299,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 290</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 291</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -6974,7 +6974,7 @@ function selectTrack(id) {
   syncEnvUI();
   setTrkBg(id);
 }
-/* hover (or tap) on a track's name or map thumbnail: a floating preview of the track on the map; it closes when the mouse leaves */
+/* hover (or tap) on a track's map thumbnail (not the name): a floating preview of the track on the map; it closes when the mouse leaves */
 let trkPeekR = null; const trkPeekCache = {};
 function trkPeek3D(st) {                                          // a real 3D picture of the track: its gates (the same objects as in the game), its elements and the route, seen from above and behind
   try {
@@ -7028,7 +7028,7 @@ function trkPeekMove(x, y) {
 function trkPeekHide() { const el = $('trkPeek'); if (el) el.classList.remove('on'); }
 (function trkPeekWire() {
   if (typeof document === 'undefined' || !document.addEventListener) return;
-  const cell = (e) => { const t = e.target && e.target.closest ? e.target.closest('#trkBody td.thumb, #trkBody td.nm') : null; return t && t.parentNode && t.parentNode.dataset ? t : null; };
+  const cell = (e) => { const t = e.target && e.target.closest ? e.target.closest('#trkBody td.thumb') : null; return t && t.parentNode && t.parentNode.dataset ? t : null; };
   document.addEventListener('mouseover', (e) => { const c = cell(e); if (c) trkPeekShow(c.parentNode.dataset.id, e.clientX, e.clientY); });
   document.addEventListener('mousemove', (e) => { const c = cell(e); if (c) trkPeekMove(e.clientX, e.clientY); else trkPeekHide(); });
   document.addEventListener('mouseout', (e) => { if (cell(e) && !(e.relatedTarget && e.relatedTarget.closest && cell({ target: e.relatedTarget }) === cell(e))) trkPeekHide(); });
