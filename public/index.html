@@ -1306,7 +1306,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 304</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 305</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -6774,20 +6774,20 @@ function buildDroneModel(id) {
       mk(new THREE.CylinderGeometry(0.115, 0.115, 0.1, 28), bellM, px, 0.16, pz);                                    // anodised bell
       mk(new THREE.CylinderGeometry(0.098, 0.1, 0.02, 28), std(0x15171b, 0.4, 0.5), px, 0.22, pz);                  // bell top
       for (let k = 0; k < 8; k++) { const an = k * Math.PI / 4; mk(new THREE.BoxGeometry(0.03, 0.05, 0.012), black, px + Math.cos(an) * 0.116, 0.16, pz + Math.sin(an) * 0.116).rotation.y = -an; }   // cooling slots
-      const wire = new THREE.Mesh(new THREE.CylinderGeometry(0.011, 0.011, len * 0.78, 6), std(i % 2 ? 0x15171b : 0xc0392b, 0.7, 0.0)); wire.position.set(px * 0.5, 0.047, pz * 0.5); wire.rotation.z = Math.PI / 2; wire.rotation.y = -Math.atan2(pz, px) + 0; wire.rotation.order = 'YXZ'; grp.add(wire);
       [0.3, 0.52, 0.72].forEach((f) => mk(new THREE.CylinderGeometry(0.014, 0.014, 0.085, 8), metal, px * f, 0.012, pz * f).rotation.x = 0);      // arm screws
       mk(new THREE.BoxGeometry(0.03, 0.012, 0.03), new THREE.MeshBasicMaterial({ color: i < 2 ? 0xff3b30 : 0x3dff7a }), px * 1.0, -0.02, pz * 1.0 + (pz > 0 ? 0.13 : -0.13));      // nav LED (red front / green back) under the arm tip
       const pg = new THREE.Group(); pg.position.set(px, 0.235, pz);
       const pc = dcl(DC.p || DC.p1, cP1);          // one propeller colour for all four props
       const mat = new THREE.MeshPhongMaterial({ color: pc, emissive: i % 2 ? 0x2a2000 : 0x2a1000, shininess: 80,
-        transparent: true, opacity: 0.8, side: THREE.DoubleSide, depthWrite: false });
-      const bg = bladeGeo(race ? R * 1.12 : R, 0.17, 0.22);
+        transparent: true, opacity: 0.66, side: THREE.DoubleSide, depthWrite: false });
+      const bg = bladeGeo(race ? R * 1.12 : R, 0.15, 0.22);
       const nb = 3;                                             // 3 blades on every 5/10-inch quad
       for (let k = 0; k < nb; k++) { const bl = new THREE.Mesh(bg, mat); bl.rotation.y = k * Math.PI * 2 / nb; pg.add(bl); }
       const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.065, 0.04, 20), std(0x1b1c1f, 0.5, 0.2)); pg.add(hub);
       const nut = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.05, 6), metal); nut.position.y = 0.03; pg.add(nut);
-      const blur = new THREE.Mesh(new THREE.CylinderGeometry(R, R, 0.004, 40), new THREE.MeshBasicMaterial({ color: pc, transparent: true, opacity: 0.05, depthWrite: false }));
+      const blur = new THREE.Mesh(new THREE.CylinderGeometry(R, R, 0.004, 40), new THREE.MeshBasicMaterial({ color: pc, transparent: true, opacity: 0.13, depthWrite: false }));
       pg.add(blur);
+      const blur2 = new THREE.Mesh(new THREE.RingGeometry(R * 0.78, R * 1.0, 48), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.08, depthWrite: false, side: THREE.DoubleSide })); blur2.rotation.x = -Math.PI / 2; blur2.position.y = 0.006; pg.add(blur2);
       pg.userData.dir = (i === 0 || i === 3) ? 1 : -1;
       grp.add(pg); props.push(pg);
     });
