@@ -1306,7 +1306,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 322</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 323</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -8857,7 +8857,7 @@ async function nxLogin(un, pw, knownHash) {
   else if (h !== c.h) return 'שם משתמש או סיסמה שגויים';
   NX.un = un; NX.kickSeen = -1; nxDoneLoad(); await nxHistLoad();
   try { const ps = await NX.db.doc('players/' + NX.uid).get(); const pd = ps && ps.exists ? ps.data() : null; if (pd && pd.un === un && Array.isArray(pd.done)) { pd.done.forEach((k) => { NX.done[k] = 1; }); try { localStorage.setItem(nxDoneKey(), JSON.stringify(NX.done)); } catch (e) { /* ignore */ } } } catch (e) { /* ignore */ }
-  try { localStorage.setItem('fpvNexusLogin', JSON.stringify({ un, h })); } catch (e) { /* ignore */ }
+  try { window.sessionStorage.setItem('fpvNexusLogin', JSON.stringify({ un, h })); localStorage.removeItem('fpvNexusLogin'); } catch (e) { /* ignore */ }      // the sign-in lives only as long as this tab: closing the page signs the student out (a reload keeps it)
   nxWatchAcct();
   return '';
 }
@@ -8875,7 +8875,7 @@ function nxWatchAcct() {
   }, () => { /* ignore */ });
 }
 function nxLogout(msg) {
-  try { localStorage.removeItem('fpvNexusLogin'); } catch (e) { /* ignore */ }
+  try { localStorage.removeItem('fpvNexusLogin'); window.sessionStorage.removeItem('fpvNexusLogin'); } catch (e) { /* ignore */ }
   if (NX.acctUnsub) { try { NX.acctUnsub(); } catch (e) { /* ignore */ } NX.acctUnsub = null; }
   NX.un = ''; NX.acct = null; NX.name = ''; NX.accReady = false; NX.done = {}; NX.hist = []; if (NX.staff) nxStaffOff();
   if (NX.db && NX.uid && NX.role === 'player') NX.db.doc('live/' + NX.uid).set({ sid: '', ts: Date.now() }).catch(() => { /* ignore */ });
@@ -8921,10 +8921,10 @@ function nxLiveTick() {
     yaw: Math.round(Math.atan2(-nxFwd.x, -nxFwd.z) / DEG), spd: Math.round(drone.vel.length() * 3.6), st: state, ts: Date.now()
   }).catch(() => { /* ignore */ });
 }
-function nxAsPlayer() { try { return window.sessionStorage.getItem('fpvNexusAsPlayer') === '1' || window.localStorage.getItem('fpvNexusAsPlayer') === '1'; } catch (e) { return false; } }
+function nxAsPlayer() { try { window.localStorage.removeItem('fpvNexusAsPlayer'); return window.sessionStorage.getItem('fpvNexusAsPlayer') === '1'; } catch (e) { return false; } }
 function nxSetAsPlayer(on) {                                  // the owner/editor can enter as a real student (username + password) and go back
   if (on && window.NXHOST && window.NXHOST.adminLogout) { window.NXHOST.adminLogout(); return; }   // on the 88ACADEMY site entering as a student signs the manager out: coming back needs the manager password
-  try { if (on) { window.sessionStorage.setItem('fpvNexusAsPlayer', '1'); window.localStorage.setItem('fpvNexusAsPlayer', '1'); } else { window.sessionStorage.removeItem('fpvNexusAsPlayer'); window.localStorage.removeItem('fpvNexusAsPlayer'); } } catch (e) { /* ignore */ }
+  try { if (on) { window.sessionStorage.setItem('fpvNexusAsPlayer', '1'); } else { window.sessionStorage.removeItem('fpvNexusAsPlayer'); window.localStorage.removeItem('fpvNexusAsPlayer'); } } catch (e) { /* ignore */ }
   try { window.location.reload(); } catch (e) { /* ignore */ }
 }
 function nxBar() {
@@ -10457,7 +10457,7 @@ async function nxBoot() {
   nxSubscribe();
   if (NX.role === 'player') {
     let ses = null;
-    try { ses = JSON.parse(localStorage.getItem('fpvNexusLogin') || 'null'); } catch (e) { ses = null; }
+    try { localStorage.removeItem('fpvNexusLogin'); ses = JSON.parse(window.sessionStorage.getItem('fpvNexusLogin') || 'null'); } catch (e) { ses = null; }     // an older saved sign-in (kept across closes) is dropped here
     const bad = ses && ses.un && ses.h ? await nxLogin(ses.un, '', ses.h) : 'x';
     if (bad) nxShowWho(false, ses ? 'יש להתחבר מחדש' : '');
   }
