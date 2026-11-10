@@ -1324,7 +1324,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 335</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 336</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -6972,9 +6972,9 @@ function makeDroneView(id, cv, fit, big) {
   const rs = DRONE_REAL[id] || 1; model.scale.multiplyScalar(rs);
   const pivot = new THREE.Group(); pivot.add(model); pivot.rotation.x = 0.14; sc.add(pivot);
   try { const lo = new THREE.Box3().setFromObject(model).min.y; if (isFinite(lo) && lo < 0) floor.position.y = Math.min(-0.62, lo - 0.06); } catch (e) { /* keep default */ }   // the floor sits under the lowest part (cargo box)
-  const ck = fit ? (id === 'whoop' ? 0.62 : id === 'fpv10' || id === 'fpv10w' ? DV_CAM_ALL * 1.16 : 1.22) : (big && (id === 'fpv10' || id === 'fpv10w') ? DV_CAM_ALL * 1.2 : DV_CAM_ALL);   // the 10" on the main screen sits a bit further back so its lower propeller is not cut by the canvas edge   // fit = single-drone view (main screen): frame the drone itself
+  const ck = fit ? (id === 'whoop' ? 0.62 : id === 'fpv10' || id === 'fpv10w' ? DV_CAM_ALL * 1.28 : 1.22) : (big && (id === 'fpv10' || id === 'fpv10w') ? DV_CAM_ALL * 1.2 : DV_CAM_ALL);   // the 10" on the main screen sits a bit further back so its lower propeller is not cut by the canvas edge   // fit = single-drone view (main screen): frame the drone itself
   const cam = new THREE.PerspectiveCamera(32, DV_W / DV_H, 0.1, 80); cam.position.set(0, 2.25 * ck, 4.3 * ck); cam.lookAt(0, -0.05 * ck, 0);   // ~28 degrees above the drone
-  return { cv, sc, cam, model, pivot, floor, phase: id === 'whoop' ? 1.7 : 0, gx: gxDroneStage(sc, floor.position.y, model, 2.23 * ck / 1.45 * (fit ? 0.74 : 1)), get gxfn() { return this.gx; } };
+  return { cv, sc, cam, model, pivot, floor, phase: id === 'whoop' ? 1.7 : 0, gx: gxDroneStage(sc, floor.position.y, model, 2.23 * ck / 1.45 * (fit ? 0.74 : 0.8)), get gxfn() { return this.gx; } };
 }
 function renderDroneViews(tsec) {
   if (!droneViews.length || !dvRenderer) return;
@@ -7032,7 +7032,7 @@ function mdStep(v, dt) {
   const host = document.querySelector('#scrMain .mdrone'); if (!host) return;
   if (MD.baseY === null) MD.baseY = v.model.position.y;
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const m = v.model;
+  const m = v.model, tk = v.id === 'fpv10' || v.id === 'fpv10w' ? 0.5 : 1;     // the big 10" banks less so no propeller leaves the canvas
   const set = (x, y) => { const c = mdFlyer(); if (c) c.style.translate = (x ? x.toFixed(1) + 'px ' : '0 ') + (y ? y.toFixed(1) + 'px' : '0'); };
   MD.t += dt;
   if (MD.ph === 'idle') {
@@ -7043,12 +7043,12 @@ function mdStep(v, dt) {
   } else if (MD.ph === 'rev') {                                  // motors wind up, nose dips, the body shakes
     const k = Math.min(1, MD.t / 1.5), e = k * k;
     MD.spin = MAIN_PROP_SPIN + (46 - MAIN_PROP_SPIN) * e;
-    m.rotation.x = 0.28 * mdEase3(k); m.position.y = MD.baseY + 0.05 * Math.sin(MD.t * 55) * e + 0.12 * k;
+    m.rotation.x = 0.28 * tk * mdEase3(k); m.position.y = MD.baseY + 0.05 * Math.sin(MD.t * 55) * e + 0.12 * k;
     if (MD.t >= 1.5) { MD.ph = 'go'; MD.t = 0; MD.fly = true; set(0, 0); const c = mdFlyer(); if (c) c.style.display = 'block'; }
   } else if (MD.ph === 'go') {                                   // bank right and accelerate out of the screen
     const k = Math.min(1, MD.t / 0.95);
-    m.rotation.z = -0.55 * MD.dir * Math.min(1, k * 3); m.rotation.x = 0.28; m.rotation.y = -0.75 - 0.5 * MD.dir * k;   // banks and turns towards the exit side
-    if (MD.side === 'up') { m.rotation.x = 0.28 - 0.5 * Math.min(1, k * 2); set(0, MD.uy * Math.pow(k, 2.3)); }   // straight up and off the top
+    m.rotation.z = -0.55 * tk * MD.dir * Math.min(1, k * 3); m.rotation.x = 0.28 * tk; m.rotation.y = -0.75 - 0.5 * MD.dir * k;   // banks and turns towards the exit side
+    if (MD.side === 'up') { m.rotation.x = (0.28 - 0.5 * Math.min(1, k * 2)) * tk; set(0, MD.uy * Math.pow(k, 2.3)); }   // straight up and off the top
     else set(MD.bx * Math.pow(k, 2.3), -30 * k);
     if (k >= 1) { MD.ph = 'away'; MD.t = 0; }
   } else if (MD.ph === 'away') {                                 // out of sight for a moment before it comes back
@@ -7056,7 +7056,7 @@ function mdStep(v, dt) {
   } else if (MD.ph === 'in') {                                   // straight back: rises from below the screen and settles
     const k = Math.min(1, MD.t / 1.5), e = mdEase3(k);
     set(0, MD.by * (1 - e));
-    m.rotation.z = 0; m.rotation.y = -0.75; m.rotation.x = -0.12 * Math.sin(Math.PI * k);
+    m.rotation.z = 0; m.rotation.y = -0.75; m.rotation.x = -0.12 * tk * Math.sin(Math.PI * k);
     MD.spin += (MAIN_PROP_SPIN - MD.spin) * (1 - Math.exp(-dt * 1.6));      // the props wind down smoothly from the first moment of the return
     m.position.y = MD.baseY;
     if (k >= 1) { MD.ph = 'settle'; MD.t = 0; set(0, 0); }
