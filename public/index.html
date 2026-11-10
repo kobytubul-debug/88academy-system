@@ -1326,7 +1326,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="10" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="10" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 330</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 331</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -6521,7 +6521,7 @@ function setPreset(name) {
   if (!inMenu && !editorMode && !paused) resetRace();
 }
 function toggleMode() { settings.mode = settings.mode === 'acro' ? 'angle' : settings.mode === 'angle' ? 'horizon' : 'acro'; syncSliders(); showFlash('מצב ' + MODE_HE[settings.mode], '#4cc3e6'); }
-function toggleMute() { settings.muted = !settings.muted; syncSliders(); Sound.setVolume(); }
+function toggleMute() { settings.muted = !settings.muted; syncSliders(); Sound.setVolume(); if (typeof mzApplyVol === 'function') mzApplyVol(); }
 function setTilt(v) { settings.tilt = clamp(Math.round(v), 25, 45); syncSliders(); }
 let tiltPopT = 0;
 function showTiltPop() {                       // big camera-angle readout while +/- are pressed, hides ~2 s after the last press
@@ -11799,7 +11799,7 @@ function mzPrefs() {
 }
 function mzSavePrefs() { try { localStorage.setItem('fpvNexusMusic', JSON.stringify(MZ.prefs)); } catch (e) { /* ignore */ } }
 function mzVol() { const p = mzPrefs(), c = mzCfg(); return clamp(p.v === null ? (typeof c.vol === 'number' ? c.vol : 50) : p.v, 10, 100); }   // the music cannot be silenced: 10% is the floor
-function mzMuted() { return false; }                                                // the music cannot be stopped or muted by the student (not even by the game's mute key)
+function mzMuted() { return !!(typeof settings !== 'undefined' && settings.muted); }   // only the game's own mute (button / M key) silences the music; the music controls cannot stop it
 function mzApplyVol() {
   if (!MZ.audio) return;
   try { MZ.audio.volume = mzVol() / 100; MZ.audio.muted = mzMuted(); } catch (e) { /* ignore */ }
@@ -11837,21 +11837,21 @@ function mzNext(d) {
   if (tries > list.length && MZ.bad[list[i].id || list[i].u]) { mzStop(); return; }
   mzPlay(kind, i);
 }
-function mzMuteShuffle() { return !!mzCfg().shuffle; }
+function mzMuteShuffle() { return false; }                                       // always in list order
 /* what should be playing right now */
 function mzWant() {
   const c = mzCfg();
   if (!c.on) return 'off';
   if (typeof inMenu !== 'undefined' && inMenu) return c.menuOn !== false && mzSongs('menu').length ? 'menu' : 'off';
   if (c.flyOn === false) return 'off';
-  return (MZ.flyPicked || c.flyAuto) && mzSongs('fly').length ? 'fly' : 'off';
+  return mzSongs('fly').length ? 'fly' : 'off';                                   // flight music starts by itself, from the top of the list
 }
 function mzTick() {
   const want = mzWant(), inM = typeof inMenu !== 'undefined' && inMenu;
   if (inM && MZ.flyPicked) MZ.flyPicked = false;                                   // back in the menus: the flight choice is forgotten
   if (want !== MZ.mode) {
     if (want === 'off') { mzStop(); MZ.mode = 'off'; }
-    else if (MZ.unlocked) { const list = mzSongs(want); mzPlay(want, want === 'fly' && mzCfg().shuffle ? Math.floor(Math.random() * list.length) : 0); }
+    else if (MZ.unlocked) { const list = mzSongs(want); mzPlay(want, 0); }
   } else if (want !== 'off') {
     const list = mzSongs(want);                                                   // the manager edited the list while playing
     if (MZ.cur && !list.some((s) => s.u === MZ.cur.u)) mzPlay(want, 0);
