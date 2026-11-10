@@ -1292,7 +1292,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 279</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 280</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -4988,7 +4988,7 @@ function gateArrowSync(go) {
   go.arrow.position.y = -(sp.oh + 0.55 * k);
 }
 const GMK = { grp: null, gate: -1, arrows: [], t: 0, key: '' };
-function gmDesign() { const g = NXH.gm || {}; return { on: g.on !== false, size: g.size || 1, col: g.col || '#ffffff' }; }
+function gmDesign() { return gmOf(typeof currentStage !== 'undefined' ? currentStage : null); }
 function gmkClear() {
   if (GMK.grp && GMK.grp.parent) GMK.grp.parent.remove(GMK.grp);
   for (const a of GMK.arrows) { a.geometry.dispose(); a.material.dispose(); }
@@ -6777,6 +6777,12 @@ function normBall(b) {                                   // a track without a dr
   const alt = Number(b.alt);
   return { ctl: b.ctl === 'climb' || b.ctl === 'speed' ? b.ctl : 'turn', view: b.view === 'chase' ? 'chase' : 'fpv', speed: n(b.speed, 1, 20, 6), turn: n(b.turn, 20, 180, 80), climb: n(b.climb, 0.5, 10, 3), alt: isFinite(alt) && b.alt !== null && b.alt !== '' ? Math.min(40, Math.max(0.3, alt)) : null };
 }
+function normGm(g) {                                            // design of the next-gate arrows: null = the defaults
+  if (!g || typeof g !== 'object') return null;
+  const on = g.on !== false, size = Math.max(0.3, Math.min(3, Number(g.size) || 1)), col = /^#[0-9a-f]{6}$/i.test(g.col || '') ? g.col.toLowerCase() : '#ffffff';
+  return on && size === 1 && col === '#ffffff' ? null : { on, size: Math.round(size * 10) / 10, col };
+}
+function gmOf(st) { return Object.assign({ on: true, size: 1, col: '#ffffff' }, (st && st.gm) || {}); }
 function normLock(l) {                                   // a pitch-only track: the drone starts airborne in angle mode, holds its height by itself, only the pitch stick (forward/back) works
   if (!l || typeof l !== 'object') return null;
   const n = (v, lo, hi, d) => { v = Number(v); return isFinite(v) ? Math.min(hi, Math.max(lo, v)) : d; };
@@ -6788,7 +6794,7 @@ function registerCustom(def) {
     art: 'linear-gradient(180deg,#232a33,#0f1317)',
     desc: 'מפה שנבנתה על ידי הטייס: התחל משני שערים והוסף, הזז וסובב שערים במצב עריכה.',
     gen: () => (st.saved && st.saved.length >= 2 ? st.saved : defaultCustomGates()).map(gateCopy),
-    gate: { type: 'ring', outer: 4.5, inner: 4.1 }, parV: 14, menuCam: { r: 62, h: 26 }, saved: def.gates || null, objects: cleanProps(def.objects), ball: normBall(def.ball), lock: normLock(def.lock), laps: Number(def.laps) >= 1 && Number(def.laps) <= 20 ? Math.floor(Number(def.laps)) : 0
+    gate: { type: 'ring', outer: 4.5, inner: 4.1 }, parV: 14, menuCam: { r: 62, h: 26 }, saved: def.gates || null, objects: cleanProps(def.objects), ball: normBall(def.ball), lock: normLock(def.lock), gm: normGm(def.gm), laps: Number(def.laps) >= 1 && Number(def.laps) <= 20 ? Math.floor(Number(def.laps)) : 0
   };
   STAGES[def.id] = st;
   if (!envSettings[def.id]) envSettings[def.id] = { wind: 0, dir: 0, turb: 0 };
@@ -6798,7 +6804,7 @@ function registerCustom(def) {
 function saveCustomList() {
   try {
     localStorage.setItem(CUSTOM_KEY, JSON.stringify(CUSTOM_ORDER.filter((id) => !STAGES[id].pub).map((id) => {
-      const st = STAGES[id]; return { id, num: st.num, name: st.name, base: st.base, laps: st.laps || 0, gates: st.saved || null, objects: st.objects || [], ball: st.ball || null, lock: st.lock || null };
+      const st = STAGES[id]; return { id, num: st.num, name: st.name, base: st.base, laps: st.laps || 0, gates: st.saved || null, objects: st.objects || [], ball: st.ball || null, lock: st.lock || null, gm: st.gm || null };
     })));
   } catch (e) { /* ignore */ }
 }
@@ -6808,7 +6814,7 @@ function saveCustomList() {
     const env = JSON.parse(localStorage.getItem(ENV_KEY) || 'null');
     if (Array.isArray(arr)) arr.forEach((d) => {
       if (!d || typeof d.id !== 'string' || !/^custom\d+$/.test(d.id)) return;
-      registerCustom({ id: d.id, num: d.num || 4, name: String(d.name || 'מסלול מותאם אישית').slice(0, 40), gates: Array.isArray(d.gates) ? d.gates : null, objects: d.objects, base: d.base, laps: d.laps, ball: d.ball, lock: d.lock });
+      registerCustom({ id: d.id, num: d.num || 4, name: String(d.name || 'מסלול מותאם אישית').slice(0, 40), gates: Array.isArray(d.gates) ? d.gates : null, objects: d.objects, base: d.base, laps: d.laps, ball: d.ball, lock: d.lock, gm: d.gm });
       if (env && env[d.id]) ['wind', 'dir', 'turb'].forEach((k) => { if (typeof env[d.id][k] === 'number' && isFinite(env[d.id][k])) envSettings[d.id][k] = env[d.id][k]; });
     });
   } catch (e) { /* ignore */ }
@@ -8047,11 +8053,11 @@ function nxImportPackage(pk, to) {                              // creates a cus
   if (updated) {
     const st = STAGES[id];
     st.name = nm; st.base = MAP_BASE_LIST.indexOf(m.base) >= 0 ? m.base : 'field'; st.saved = m.gates.map(gateCopy); st.objects = cleanProps(m.objects);
-    st.laps = Number(m.laps) >= 1 && Number(m.laps) <= 20 ? Math.floor(Number(m.laps)) : 1; st.ball = normBall(pk.ball || m.ball); st.lock = normLock(pk.lock || m.lock);
+    st.laps = Number(m.laps) >= 1 && Number(m.laps) <= 20 ? Math.floor(Number(m.laps)) : 1; st.ball = normBall(pk.ball || m.ball); st.gm = normGm(pk.gm || m.gm); st.lock = normLock(pk.lock || m.lock);
   } else {
     let n = 1; while (STAGES['custom' + n]) n++;
     id = 'custom' + n;
-    registerCustom({ id, num: 3 + CUSTOM_ORDER.length + 1, name: nm, gates: m.gates.map(gateCopy), objects: m.objects || [], base: m.base || 'field', laps: m.laps || 1, ball: pk.ball || m.ball, lock: pk.lock || m.lock });
+    registerCustom({ id, num: 3 + CUSTOM_ORDER.length + 1, name: nm, gates: m.gates.map(gateCopy), objects: m.objects || [], base: m.base || 'field', laps: m.laps || 1, ball: pk.ball || m.ball, lock: pk.lock || m.lock, gm: pk.gm || m.gm });
   }
   if (pk.env && envSettings[id]) ['wind', 'dir', 'turb'].forEach((k) => { if (typeof pk.env[k] === 'number') envSettings[id][k] = pk.env[k]; });
   try { saveCustomList(); saveEnv(); buildCards(); } catch (e) { /* ignore */ }
@@ -8071,6 +8077,17 @@ function nxSetLock(id, f, v, checked) {                         // the "flight m
     else { let x = parseFloat(v); if (!isFinite(x)) return false; if (f === 'thr') x /= 100; L[f] = x; }
   } else return false;
   st.lock = L ? normLock(L) : null; saveCustomList(); nxTouch();
+  return true;
+}
+function nxSetGm(id, f, v, checked) {                           // design of the "next gate" arrows of a custom track: shown or not, size, colour
+  const st = STAGES[id]; if (!st || !st.custom) return false;
+  const G = Object.assign({ on: true, size: 1, col: '#ffffff' }, st.gm || {});
+  if (f === 'on') G.on = !!checked;
+  else if (f === 'size') { const x = parseFloat(v); if (!isFinite(x)) return false; G.size = x; }
+  else if (f === 'col') G.col = v;
+  else if (f === 'reset') { st.gm = null; saveCustomList(); nxTouch(); return true; }
+  else return false;
+  st.gm = normGm(G); saveCustomList(); nxTouch();
   return true;
 }
 function nxMapPreview(st) {                                     // top view (distance across, sideways up) and side view (height) of a track, before flying it
@@ -8240,7 +8257,6 @@ function nxApplyTheme(t) {
   ['tr-slide', 'tr-fade', 'tr-zoom', 'tr-none', 'ba-l', 'ba-c', 'ba-r'].forEach((c) => b.classList.remove(c));
   b.classList.add('tr-' + t.trans, 'ba-' + t.balign);
   NXH.fadeIn = t.fadeMs + 70; NXH.fadeOut = t.fadeMs + 10; NXH.introMs = typeof t.introMs === 'number' ? clamp(t.introMs, 0, 6000) : 2600;
-  NXH.gm = { on: t.gmOn !== false, size: clamp(Number(t.gmSize) || 1, 0.3, 3), col: /^#[0-9a-f]{6}$/i.test(t.gmColor || '') ? t.gmColor : '#ffffff' };   // next-gate marker design
   const rgb = nxRgb(t.bg), a = clamp(t.overlay, 0, 1);
   $('menu').style.background = 'linear-gradient(180deg,rgba(' + rgb + ',' + (a * 0.85).toFixed(2) + '),rgba(' + rgb + ',' + Math.min(1, a * 1.2).toFixed(2) + '))' +
     (t.bgImg ? ',url("' + String(t.bgImg).replace(/"/g, '%22') + '") center/cover no-repeat' : '');
@@ -8299,7 +8315,7 @@ function nxSyncTracks(list, env) {
     if (CUSTOM_ORDER.some((id) => STAGES[id] && !STAGES[id].pub)) return;
     list.forEach((d, i) => {
       if (!d || typeof d.id !== 'string' || !/^custom\d+$/.test(d.id)) return;
-      registerCustom({ id: d.id, num: d.num || (4 + i), name: String(d.name || 'מסלול').slice(0, 40), gates: Array.isArray(d.gates) ? d.gates : null, objects: d.objects, base: d.base, laps: d.laps, ball: d.ball, lock: d.lock });
+      registerCustom({ id: d.id, num: d.num || (4 + i), name: String(d.name || 'מסלול').slice(0, 40), gates: Array.isArray(d.gates) ? d.gates : null, objects: d.objects, base: d.base, laps: d.laps, ball: d.ball, lock: d.lock, gm: d.gm });
       if (env && env[d.id]) ['wind', 'dir', 'turb'].forEach((k) => { if (typeof env[d.id][k] === 'number' && isFinite(env[d.id][k])) envSettings[d.id][k] = env[d.id][k]; });
     });
     try { saveCustomList(); } catch (e) { /* ignore */ }
@@ -8314,7 +8330,7 @@ function nxSyncTracks(list, env) {
   });
   Object.keys(want).forEach((id) => {
     const d = want[id].d;
-    const st = registerCustom({ id, num: 100 + want[id].i, name: String(d.name || 'מסלול').slice(0, 40), gates: Array.isArray(d.gates) ? d.gates : null, objects: d.objects, base: d.base, laps: d.laps, ball: d.ball, lock: d.lock, pub: true });
+    const st = registerCustom({ id, num: 100 + want[id].i, name: String(d.name || 'מסלול').slice(0, 40), gates: Array.isArray(d.gates) ? d.gates : null, objects: d.objects, base: d.base, laps: d.laps, ball: d.ball, lock: d.lock, gm: d.gm, pub: true });
     st.saved = Array.isArray(d.gates) ? d.gates : null;
     st.desc = 'מסלול שהוכן על ידי המדריך.';
   });
@@ -8574,7 +8590,7 @@ async function nxPublish() {
   const cfg = nxClone(NX.draft);
   const tracks = CUSTOM_ORDER.filter((id) => STAGES[id] && !STAGES[id].pub && !cfg.stages.off[id]).map((id) => {
     const st = STAGES[id];
-    return { id, name: st.name, base: st.base || 'arena', laps: st.laps || 0, ball: st.ball || null, lock: st.lock || null, objects: cleanProps(st.objects), gates: st.gen().map((g) => Object.assign(gateCopy(g), { x: +g.x.toFixed(2), y: +g.y.toFixed(2), z: +g.z.toFixed(2) })) };
+    return { id, name: st.name, base: st.base || 'arena', laps: st.laps || 0, ball: st.ball || null, lock: st.lock || null, gm: st.gm || null, objects: cleanProps(st.objects), gates: st.gen().map((g) => Object.assign(gateCopy(g), { x: +g.x.toFixed(2), y: +g.y.toFixed(2), z: +g.z.toFixed(2) })) };
   });
   try {
     if (!tracks.length) {                 // never wipe published tracks by accident
@@ -8903,9 +8919,6 @@ function nxLookParts(t) {
   h += nxF('משך (מ"ש)', nxRange('theme.dur', t.dur, 0, 1000, 25));
   h += nxF('מסך שחור בין שלבים (מ"ש)', nxRange('theme.fadeMs', t.fadeMs, 150, 1500, 50));
   h += nxF('מסך פתיחת שלב: זמן תצוגה (מ"ש, 0 = כבוי)', nxRange('theme.introMs', typeof t.introMs === 'number' ? t.introMs : 2600, 0, 6000, 100));
-  h += '<div class="nxchk"><label><input type="checkbox" data-k="theme.gmOn"' + (t.gmOn !== false ? ' checked' : '') + '> הצג חצים מתכנסים בשער הבא</label></div>';
-  h += nxF('חצי השער: גודל', nxRange('theme.gmSize', typeof t.gmSize === 'number' ? t.gmSize : 1, 0.3, 3, 0.1));
-  h += nxF('חצי השער: צבע', nxColor('theme.gmColor', /^#[0-9a-f]{6}$/i.test(t.gmColor || '') ? t.gmColor : '#ffffff'));
   P.trans = h;
   h = '<div class="nxchk">';
   NX_HIDE.forEach((r) => { h += '<label><input type="checkbox" data-k="hide.' + r[0] + '"' + (NX.draft.hide[r[0]] ? ' checked' : '') + '> הסתר: ' + r[1] + '</label>'; });
@@ -8980,6 +8993,12 @@ function nxTrackPanel(id) {
     fm += nxF('פיצוי על ירידה בגובה בנטייה', '<label class="nxchk1"><input type="checkbox" data-act="trk-lock" data-f="comp" data-id="' + id + '"' + (Lk && Lk.comp ? ' checked' : '') + (Lk ? '' : ' disabled') + '> פעיל</label>');
     fm += nxF('שמירת גובה מלאה', '<label class="nxchk1"><input type="checkbox" data-act="trk-lock" data-f="hold" data-id="' + id + '"' + (Lk && Lk.hold ? ' checked' : '') + (Lk ? '' : ' disabled') + '> הרחפן מחזיק גובה לבד (המצערת רק מוצגת)</label>');
     h += nxTrkSec(tag('lock'), 'מצב טיסה (נעילת צירים)', Lk ? (Lk.axis === 'roll' ? 'רול בלבד' : 'פיץ׳ בלבד') : 'רגיל', fm);
+    const Gm = gmOf(st);
+    let gm = '<p class="nxn">החצים המתכנסים שמסמנים לתלמיד את השער הבא. ההגדרה נשמרת עם המסלול.</p>';
+    gm += nxF('הצג חצים', '<label class="stgsw"><input type="checkbox" data-act="trk-gm" data-f="on" data-id="' + id + '"' + (Gm.on ? ' checked' : '') + '><i></i></label>');
+    gm += nxF('גודל', '<input type="range" min="0.3" max="3" step="0.1" data-act="trk-gm" data-f="size" data-id="' + id + '" value="' + Gm.size + '"' + (Gm.on ? '' : ' disabled') + '> <output>' + Gm.size + '</output>');
+    gm += nxF('צבע', '<input type="color" data-act="trk-gm" data-f="col" data-id="' + id + '" value="' + Gm.col + '"' + (Gm.on ? '' : ' disabled') + '> <button class="nxb" data-act="trk-gm" data-f="reset" data-id="' + id + '">איפוס</button>');
+    h += nxTrkSec(tag('gm'), 'חצי השער הבא (עיצוב)', Gm.on ? 'מוצג' : 'מוסתר', gm);
   }
   h += nxTrkSec(tag('prev'), 'תצוגה מקדימה של המפה', '', nxMapPreview(st), false);
   const gd = (D.guides || {})[k] || {}, hasG = !!(String(gd.text || '').trim() || String(gd.fly || '').trim());
@@ -9681,6 +9700,7 @@ function nxAdmWire() {
       const key = el.dataset.key, v = parseFloat(el.value); if (!isFinite(v)) return;
       E[key] = key === 'turb' ? v / 100 : v; saveEnv(); nxTouch(); if (trkSel === id) { try { syncEnvUI(); } catch (e2) { /* ignore */ } } nxAdmRender(); return;
     }
+    if (a === 'trk-gm') { if (nxSetGm(id, el.dataset.f, el.value, el.checked)) nxAdmRender(); return; }
     if (a === 'trk-lock') { if (nxSetLock(id, el.dataset.f, el.value, el.checked)) nxAdmRender(); return; }
     if (a === 'trk-name') {
       const st = STAGES[id]; if (!st) return;
