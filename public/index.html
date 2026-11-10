@@ -1306,7 +1306,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 305</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 306</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -6680,17 +6680,49 @@ const DV_W = 640, DV_H = 400;
 const DV_SPIN = Math.PI * 2 / 23;     // one full turn every ~23 s, like the reference turntable
 const droneViews = [];
 let dvRenderer = null;
-function carbonTexture() {
-  const cv = document.createElement('canvas'); cv.width = cv.height = 64;
-  const g = cv.getContext('2d');
-  g.fillStyle = '#16181c'; g.fillRect(0, 0, 64, 64);
-  for (let y = 0; y < 8; y++) for (let x = 0; x < 8; x++) {       // 2x2 twill weave
-    const on = ((x >> 0) + (y >> 0)) % 2 === 0;
-    g.fillStyle = on ? '#2b2f36' : '#101215';
-    g.fillRect(x * 8, y * 8, 8, 4); g.fillStyle = on ? '#101215' : '#2b2f36'; g.fillRect(x * 8, y * 8 + 4, 8, 4);
+let _carbonTex = null;
+function carbonTexture() {                                            // rough carbon fibre: fine 2x2 twill, uneven fibres, grain and resin specks (also used as a bump map)
+  if (_carbonTex) return _carbonTex;
+  const S = 256, cv = document.createElement('canvas'); cv.width = cv.height = S;
+  const g = cv.getContext('2d'), rnd = mulberry(88), N = 32, c = S / N;
+  g.fillStyle = '#15171b'; g.fillRect(0, 0, S, S);
+  for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+    const on = (((x >> 1) + (y >> 1)) & 1) === 0, h = on ? 1 : 0;
+    const gr = g.createLinearGradient(h ? x * c : x * c, h ? y * c : y * c, h ? x * c + c : x * c, h ? y * c : y * c + c);
+    gr.addColorStop(0, on ? '#454a53' : '#1a1c21'); gr.addColorStop(0.5, on ? '#2c3037' : '#0c0d10'); gr.addColorStop(1, on ? '#454a53' : '#1a1c21');
+    g.fillStyle = gr; g.fillRect(x * c, y * c, c, c);
+    g.strokeStyle = 'rgba(0,0,0,0.5)'; g.lineWidth = 0.7; g.strokeRect(x * c + 0.35, y * c + 0.35, c - 0.7, c - 0.7);
   }
-  const t = new THREE.CanvasTexture(cv); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(2, 2);
-  return t;
+  for (let i = 0; i < 2600; i++) { g.fillStyle = rnd() < 0.5 ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.22)'; g.fillRect(rnd() * S, rnd() * S, 1 + rnd() * 2, 1 + rnd() * 6); }
+  const t = new THREE.CanvasTexture(cv); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = 4;
+  return (_carbonTex = t);
+}
+/* rounded box: smooth bevelled edges and corners (radius r), normals follow the rounding so the light rolls off the edges like a soft shadow;
+   UVs are in metres (tile = uvTile) so the carbon weave keeps the same size on every part */
+function roundBoxGeo(w, h, d, r, uvTile) {
+  const geo = new THREE.BoxGeometry(w, h, d, 5, 5, 5);
+  try {
+    const P = geo.attributes.position, Nn = geo.attributes.normal, U = geo.attributes.uv;
+    if (!P || !P.array || !Nn || !U) return geo;
+    const half = [w / 2, h / 2, d / 2], rr = Math.min(r, Math.min(w, h, d) * 0.45);
+    const coordAt = (k, hh) => [-hh, -hh + 0.35 * rr, -hh + rr, hh - rr, hh - 0.35 * rr, hh][k];
+    const tile = uvTile || 0.1;
+    for (let i = 0; i < P.count; i++) {
+      const o = [P.array[i * 3], P.array[i * 3 + 1], P.array[i * 3 + 2]], nrm = [Nn.array[i * 3], Nn.array[i * 3 + 1], Nn.array[i * 3 + 2]], dim = [w, h, d], p = [0, 0, 0];
+      for (let a = 0; a < 3; a++) {
+        if (Math.abs(nrm[a]) > 0.5) p[a] = nrm[a] > 0 ? half[a] : -half[a];                               // the face's own axis stays on the face
+        else p[a] = coordAt(Math.max(0, Math.min(5, Math.round((o[a] / dim[a] + 0.5) * 5))), half[a]);
+      }
+      const inner = [0, 1, 2].map((a) => Math.max(-half[a] + rr, Math.min(half[a] - rr, p[a]))), dv = [0, 1, 2].map((a) => p[a] - inner[a]), len = Math.hypot(dv[0], dv[1], dv[2]);
+      let q = p, n = nrm;
+      if (len > 1e-9) { n = dv.map((v) => v / len); q = inner.map((v, a) => v + n[a] * rr); }
+      P.array[i * 3] = q[0]; P.array[i * 3 + 1] = q[1]; P.array[i * 3 + 2] = q[2]; Nn.array[i * 3] = n[0]; Nn.array[i * 3 + 1] = n[1]; Nn.array[i * 3 + 2] = n[2];
+      const ax = Math.abs(nrm[0]) > 0.5 ? 0 : Math.abs(nrm[1]) > 0.5 ? 1 : 2, uu = ax === 0 ? 2 : 0, vv = ax === 1 ? 2 : 1;
+      U.array[i * 2] = q[uu] / tile; U.array[i * 2 + 1] = q[vv] / tile;
+    }
+    P.needsUpdate = true; Nn.needsUpdate = true; U.needsUpdate = true;
+  } catch (e) { /* keep the plain box */ }
+  return geo;
 }
 /* leaf-shaped, pitched prop blade lying in the XZ plane, root at the origin, tip at +X */
 function bladeGeo(R, wid, pitch) {
@@ -6713,7 +6745,7 @@ function buildDroneModel(id) {
   const dcl = (v, d) => (v || d);
   const grp = new THREE.Group(), props = [];
   const carbonTex = carbonTexture();
-  const carbon = new THREE.MeshStandardMaterial({ map: carbonTex, color: dcl(DC.f, 0xffffff), roughness: 0.45, metalness: 0.35 });
+  const carbon = new THREE.MeshStandardMaterial({ map: carbonTex, bumpMap: carbonTex, bumpScale: 1.6, color: dcl(DC.f, 0xffffff), roughness: 0.62, metalness: 0.3 });
   const black = new THREE.MeshStandardMaterial({ color: 0x0f1113, roughness: 0.5, metalness: 0.3 });
   const metal = new THREE.MeshPhongMaterial({ color: 0xc7ccd3, shininess: 120, specular: 0xffffff });
   const bell = new THREE.MeshPhongMaterial({ color: 0x3a3f47, shininess: 90, specular: 0x9aa4b0 });
@@ -6723,7 +6755,7 @@ function buildDroneModel(id) {
     /* ---------- 5" RACING QUAD ---------- */
     const R = big ? 0.84 : (race ? 0.6 : 0.62), M = big ? 0.9 : (race ? 0.7 : 0.74);                                  // prop radius, motor offset on each axis
     const ctr = new THREE.Group(); grp.add(ctr); let tgt = ctr;      // the central frame is its own group (a racer's is far smaller than a freestyler's)
-    const plate = (y, w, d) => { const m = new THREE.Mesh(new THREE.BoxGeometry(w, 0.035, d), carbon); m.position.y = y; tgt.add(m); };
+    const plate = (y, w, d) => { const m = new THREE.Mesh(roundBoxGeo(w, 0.035, d, 0.014, 0.3), carbon); m.position.y = y; tgt.add(m); };
     const mk = (geo, mat, x, y, z) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); tgt.add(m); return m; };
     const std = (c, r, mt) => new THREE.MeshStandardMaterial({ color: c, roughness: r === undefined ? 0.55 : r, metalness: mt === undefined ? 0.2 : mt });
     const accent = dcl(DC.a, cA);
@@ -6738,19 +6770,19 @@ function buildDroneModel(id) {
     mk(new THREE.CylinderGeometry(0.04, 0.04, 0.09, 14), std(0x15171b, 0.5, 0.3), 0.0, 0.06, 0.32).rotation.x = Math.PI / 2;   // capacitor at the rear
     const batY = race ? -0.15 : 0.26;                        // racer: pack slung under the frame, freestyle: strapped on top
     const packC = dcl(DC.b, race ? 0x14161a : 0x1b2230);
-    mk(new THREE.BoxGeometry(0.48, 0.224, 0.78), std(packC, 0.55, 0.1), 0, batY, 0.1);                  // LiPo pack (twice the old size)
+    mk(roundBoxGeo(0.48, 0.224, 0.78, 0.05, 0.3), std(packC, 0.55, 0.1), 0, batY, 0.1);                  // LiPo pack (twice the old size)
     mk(new THREE.BoxGeometry(0.32, 0.004, 0.5), std(accent, 0.6, 0.0), 0, batY + (race ? -0.113 : 0.113), 0.1);         // sticker on the pack
-    [-0.16, 0.36].forEach((z) => mk(new THREE.BoxGeometry(0.51, 0.24, 0.045), rubber, 0, batY, z));        // two battery straps
+    [-0.16, 0.36].forEach((z) => mk(roundBoxGeo(0.51, 0.24, 0.045, 0.018, 0.3), rubber, 0, batY, z));        // two battery straps
     mk(new THREE.BoxGeometry(0.09, 0.05, 0.08), std(0xe8b81a, 0.5, 0.1), 0, race ? -0.03 : 0.12, 0.54);   // XT60 plug
     const sideMat = carbon;
-    [-1, 1].forEach((sx) => mk(new THREE.BoxGeometry(0.035, 0.2, 0.26), sideMat, sx * 0.115, 0.1, -0.4));  // camera side plates
+    [-1, 1].forEach((sx) => mk(roundBoxGeo(0.035, 0.2, 0.26, 0.014, 0.3), sideMat, sx * 0.115, 0.1, -0.4));  // camera side plates
     const TILT = 0.52;                                          // camera angled 30 degrees up, like a real FPV cam
     const camMat = DC.c ? new THREE.MeshStandardMaterial({ color: DC.c, roughness: 0.5, metalness: 0.3 }) : black;
-    const camBox = mk(new THREE.BoxGeometry(0.17, 0.16, 0.14), camMat, 0, 0.14, -0.45); camBox.rotation.x = TILT;
+    const camBox = mk(roundBoxGeo(0.17, 0.16, 0.14, 0.03, 0.1), camMat, 0, 0.14, -0.45); camBox.rotation.x = TILT;
     const lens = mk(new THREE.CylinderGeometry(0.052, 0.058, 0.07, 22), new THREE.MeshPhongMaterial({ color: 0x0a1a24, emissive: 0x0f4258, shininess: 160, specular: 0x9fd8f0 }), 0, 0.14 + 0.09 * Math.sin(TILT), -0.45 - 0.09 * Math.cos(TILT));
     lens.rotation.x = TILT - Math.PI / 2;
     mk(new THREE.TorusGeometry(0.056, 0.012, 8, 22), metal, 0, 0.14 + 0.125 * Math.sin(TILT), -0.45 - 0.125 * Math.cos(TILT)).rotation.x = TILT;          // lens ring
-    mk(new THREE.BoxGeometry(0.1, 0.06, 0.12), std(accent, 0.6, 0.0), 0, 0.16, 0.5);                  // 3D-printed antenna mount
+    mk(roundBoxGeo(0.1, 0.06, 0.12, 0.02, 0.1), std(accent, 0.6, 0.0), 0, 0.16, 0.5);                  // 3D-printed antenna mount
     const ant = mk(new THREE.CylinderGeometry(0.014, 0.018, 0.42, 10), black, 0, 0.3, 0.6); ant.rotation.x = 0.6;   // VTX antenna
     mk(new THREE.CylinderGeometry(0.02, 0.02, 0.09, 10), std(0xf2f2f2, 0.6, 0.0), 0, 0.49, 0.73).rotation.x = 0.6;      // white antenna tip
     /* flight-controller details: signal LEDs, wiring and a status light, so the electronics read as real parts */
@@ -6762,7 +6794,7 @@ function buildDroneModel(id) {
     const motC = dcl(DC.m, race ? 0x2f6fd0 : 0xc0392b);
     [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach((p, i) => {
       const px = p[0] * M, pz = p[1] * M, len = Math.hypot(px, pz);
-      const arm = new THREE.Mesh(new THREE.BoxGeometry(len, race ? 0.05 : 0.07, race ? 0.1 : 0.15), carbon);          // thick solid arm
+      const arm = new THREE.Mesh(roundBoxGeo(len, race ? 0.05 : 0.07, race ? 0.1 : 0.15, race ? 0.02 : 0.03, 0.3), carbon);          // thick solid arm
       arm.position.set(px / 2, 0.01, pz / 2); arm.rotation.y = -Math.atan2(pz, px); grp.add(arm);
       if (race) [[0.34, dcl(DC.s1, 0xc0392b)], [0.6, dcl(DC.s2, 0x2f6fd0)]].forEach((st) => {       // red / blue accent stripes on the carbon arms
         const sm = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.056, 0.104), new THREE.MeshStandardMaterial({ color: st[1], roughness: 0.6 }));
