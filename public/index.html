@@ -999,8 +999,10 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
     </div>
     <details class="eds" open><summary>מסלול</summary>
     <div class="row"><label style="flex:0 0 70px">הקפות</label><select id="edLaps"><option value="1">1 · מסלול חד פעמי: השער האחרון הוא הסיום</option><option value="2">2</option><option value="3">3 (ברירת מחדל)</option><option value="4">4</option><option value="5">5</option><option value="8">8</option><option value="10">10</option></select></div>
-    <div class="row"><label style="flex:0 0 70px">חצי שער</label><label style="flex:1"><input type="checkbox" id="edGmOn" checked> הצג חצים מתכנסים בשער הבא</label></div>
-    <div class="row"><label style="flex:0 0 70px">גודל</label><input type="range" id="edGmSz" min="0.3" max="3" step="0.1" value="1"><output id="edGmSzV">1</output><input type="color" id="edGmCol" value="#ffffff" title="צבע החצים" style="flex:0 0 44px;height:34px;padding:0;border:0;background:none;cursor:pointer"><button class="b" id="edGmReset" title="חזרה לברירת מחדל">איפוס</button></div>
+    <div class="row" style="margin-top:8px;border-top:1px solid var(--ln);padding-top:8px"><b style="flex:1">חצי השער הבא</b><label style="flex:0 0 auto;display:flex;align-items:center;gap:6px"><input type="checkbox" id="edGmOn" checked> הצג</label></div>
+    <div class="row"><label style="flex:0 0 70px">גודל</label><input type="range" id="edGmSz" min="0.3" max="3" step="0.1" value="1" style="flex:1;min-width:0"><output id="edGmSzV" style="flex:0 0 30px;text-align:center">1</output></div>
+    <div class="row"><label style="flex:0 0 70px">צבע</label><input type="color" id="edGmCol" value="#ffffff" title="צבע החצים" style="flex:0 0 52px;height:34px;padding:0;border:0;background:none;cursor:pointer"><button class="b" id="edGmReset" title="חזרה לברירת מחדל" style="flex:1">איפוס</button></div>
+    <div class="keys" style="font-size:11px">התצוגה המקדימה מופיעה על השער הנבחר.</div>
     </details>
     <details class="eds" open><summary>מראה</summary>
     <div class="row"><label style="flex:0 0 70px">צבע</label><select id="propType" style="display:none"></select><select id="propColor"></select><input type="color" id="propColorFree" value="#ff6a1a" title="צבע חופשי: בחר כל צבע" style="flex:0 0 44px;height:34px;padding:0;border:0;background:none;cursor:pointer"><button class="b" id="propColorAll" title="צבע את כל האלמנטים מאותו סוג במסלול בצבע שנבחר" style="flex:0 0 auto">כל הסוג</button></div>
@@ -1295,7 +1297,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 282</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 283</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -5014,7 +5016,9 @@ function gmkBuild(i) {
   GMK.grp = g; GMK.gate = i;
 }
 function gmkFrame(dt) {
-  const D = gmDesign(), want = (D.on && !editorMode && !inMenu && (state === 'racing' || state === 'countdown') && gateObjs[nextGate] && gateObjs[nextGate].spec.kind !== 'none') ? nextGate : -1;
+  const D = gmDesign(), ok = (i) => D.on && gateObjs[i] && gateObjs[i].spec.kind !== 'none';
+  // flying: the next gate. Editing: a live preview on the selected gate, so the design can be judged on the map
+  const want = editorMode ? (selected >= 0 && ok(selected) ? selected : -1) : (!inMenu && (state === 'racing' || state === 'countdown') && ok(nextGate) ? nextGate : -1);
   if (want !== GMK.gate || (want >= 0 && GMK.key !== D.size + D.col) || (want >= 0 && GMK.grp && GMK.grp.parent !== gateObjs[want].group)) { if (want < 0) gmkClear(); else gmkBuild(want); }
   if (!GMK.grp) return;
   GMK.t = (GMK.t + dt / 1.1) % 1;               // 1.1 s cycle: converge, vanish, restart
