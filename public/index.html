@@ -681,7 +681,7 @@ body.ed-on #edTop .b{padding:0 14px;height:40px;flex:none;font-size:14px;white-s
 #edExit{background:color-mix(in srgb,var(--rd) 70%,#000)!important}
 #edMap{position:relative}
 .edmapbtn{display:flex;align-items:center;gap:8px;min-width:150px;justify-content:space-between}
-#edBase{display:none;position:absolute;top:46px;right:0;width:230px;background:rgba(8,10,14,.97);padding:6px;box-shadow:0 14px 40px rgba(0,0,0,.6),inset 0 3px 0 var(--ac);z-index:60}
+#edBase{display:none;position:absolute;top:46px;right:0;width:230px;max-height:calc(100vh - 130px);overflow-y:auto;background:rgba(8,10,14,.97);padding:6px;box-shadow:0 14px 40px rgba(0,0,0,.6),inset 0 3px 0 var(--ac);z-index:60}
 #edBase.open{display:block}
 #edBase .b{display:block;width:100%;height:40px;margin:3px 0;text-align:center}
 #edBase .b.on{background:var(--acfill);color:var(--ot,#06222b)}
@@ -1274,7 +1274,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 274</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 275</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><div class="whobox">
   <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
   <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button></div>
@@ -1431,7 +1431,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 <button id="btnBackEdit">&#9998; חזרה לעריכה <kbd>G</kbd></button>
 <div id="edTop">
   <div id="edMap"><button class="b edmapbtn" id="edMapBtn"><span id="edMapName">סוג מפה</span><i>&#9662;</i></button>
-    <div id="edBase"><button class="b" data-base="clean">מפה נקיה</button><button class="b" data-base="arena">אולם</button><button class="b" data-base="redwood">יער</button><button class="b" data-base="city">עיר</button><button class="b" data-base="field">שדה פתוח</button><button class="b" data-base="desert">מדבר</button><button class="b" data-base="snow">שלג</button><button class="b" data-base="dusk">שקיעה</button><button class="b" data-base="blue">שדה כחול</button><div class="keys" id="edBaseNote"></div></div></div>
+    <div id="edBase"><div class="keys" id="edBaseNote"></div></div></div>
   <button class="b" id="edPrev">&#9654;</button><span id="edNavLbl"></span><button class="b" id="edNext">&#9664;</button>
   <button class="b" id="edFocus">מיקוד</button><button class="b" id="edUndo" title="Ctrl+Z">↶ בטל</button><button class="b" id="edRedo" title="Ctrl+Shift+Z">↷ שחזר</button><button class="b" id="edClone">שכפל</button><button class="b" id="edDelBtn">מחק</button>
   <button class="b" id="edNumBtn" title="עריכת מספרי השערים">מספרי שערים</button><button class="b" id="edBackBtn" title="חזרה לחלון המסלולים">&#9664; חזרה למסלולים</button><button class="b" id="edExit">&#9654; טיסת בדיקה</button>
@@ -10778,6 +10778,7 @@ function edpApply(what, v) {
   $('edNext').addEventListener('click', (e) => { edStep(1); e.target.blur(); });
   $('edRepBtn').addEventListener('click', (e) => { edTogglePicker(undefined, 'rep'); e.currentTarget.blur(); });
   $('edMapBtn').addEventListener('click', (e) => { $('edBase').classList.toggle('open'); e.currentTarget.blur(); });
+  { const eb = $('edBase'); if (eb) eb.innerHTML = MAP_BASE_LIST.map((k) => '<button class="b" data-base="' + k + '">' + MAP_BASES[k] + '</button>').join('') + '<div class="keys" id="edBaseNote"></div>'; }   // every map type, new ones included
   document.querySelectorAll('#edBase [data-base]').forEach((b) => b.addEventListener('click', () => { edSetBase(b.dataset.base); $('edBase').classList.remove('open'); b.blur(); }));
   $('edFocus').addEventListener('click', (e) => {
     const t = selProp >= 0 && propData[selProp] ? propData[selProp] : selected >= 0 && gates[selected] ? gates[selected] : null;
