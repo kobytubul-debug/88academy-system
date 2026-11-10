@@ -930,6 +930,23 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 .rolebd{font-size:11px;padding:1px 7px;border:1px solid #6b7480;color:#9aa4b0}.rolebd.r-manager{border-color:#e0a030;color:#e0a030}.rolebd.r-instructor{border-color:#4fa3c7;color:#4fa3c7}
 .stkcal{width:100%;font-size:12px;border-collapse:collapse;margin-top:6px}.stkcal td{padding:2px 6px;border-bottom:1px solid #ffffff14}.stkcal td:last-child{text-align:left}
 .fpt{margin:12px 0 4px}.fpbox{margin:6px 0 10px;padding:8px;background:rgba(255,255,255,.04);border-radius:4px}.stkstars{color:#e0b255;letter-spacing:1px}.stkstars .off{color:#4a4f57}.spk{width:160px;height:34px;background:rgba(0,0,0,.25);display:block}.fpgr{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:4px}.fptr{margin-top:6px}
+
+#mzDock{position:fixed;left:10px;top:50%;transform:translateY(-50%);z-index:60;display:none;flex-direction:column;gap:8px;align-items:center}
+#mzDock button.mzb{width:42px;height:42px;border-radius:50%;border:1px solid var(--ln);background:rgba(10,14,22,.78);color:var(--tx);display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(6px)}
+#mzDock button.mzb:hover{border-color:var(--ac);color:var(--ac)}
+#mzSpkWrap{position:relative;display:flex;align-items:center}
+#mzVolBox{position:absolute;left:48px;top:50%;transform:translateY(-50%);display:none;background:rgba(10,14,22,.9);border:1px solid var(--ln);border-radius:20px;padding:10px 14px}
+#mzSpkWrap:hover #mzVolBox,#mzSpkWrap:focus-within #mzVolBox{display:block}
+#mzVolBox input,#mzVolRow input{width:120px;accent-color:var(--ac)}
+#mzList{position:fixed;left:62px;top:50%;transform:translateY(-50%);z-index:61;display:none;flex-direction:column;width:min(300px,80vw);max-height:70vh;background:rgba(10,14,22,.95);border:1px solid var(--ln);border-radius:12px;padding:10px;gap:8px;direction:rtl}
+#mzList.fly{left:auto;right:16px;top:auto;bottom:70px;transform:none}
+.mzh{display:flex;align-items:center;justify-content:space-between;color:var(--ac);font-weight:700}
+#mzListBody{overflow:auto;display:flex;flex-direction:column;gap:4px}
+.mzrow{display:flex;gap:8px;align-items:center;text-align:right;background:transparent;border:1px solid transparent;border-radius:8px;color:var(--tx);padding:7px 8px;cursor:pointer;font:inherit}
+.mzrow:hover{background:rgba(255,255,255,.06)}.mzrow.on{border-color:var(--ac);color:var(--ac)}
+.mzpl{font-size:11px;width:14px}.mzempty{color:var(--mu);font-size:13px}
+#mzVolRow{display:flex;gap:8px;align-items:center}
+#mzMute2,#mzClose,#mzPrev,#mzNext{background:none;border:0;color:var(--tx);cursor:pointer;font:inherit;font-size:16px}
 </style>
 </head>
 <body>
@@ -970,7 +987,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 <div id="panel">
   <div class="ptitle"><span class="pt-logo">FPV <b>NEXUS</b></span><span class="pt-h">תפריט סימולטור</span><small>PILOT MENU &middot; Tab</small></div>
   <details class="pacc" id="raceAcc" open><summary>מרוץ</summary>
-  <div class="btns plist"><button class="b" id="btnPickTrack"><span>בחירת מסלול</span><i>TRACKS</i></button><button class="b hot" id="btnRace"><span>הפעל מרוץ מסלול</span><i>START</i></button><button class="b" id="btnReset"><span>אתחל מרוץ</span><kbd>R</kbd></button><button class="b" id="btnMute"><span>השתק</span><kbd>M</kbd></button></div>
+  <div class="btns plist"><button class="b" id="btnPickTrack"><span>בחירת מסלול</span><i>TRACKS</i></button><button class="b hot" id="btnRace"><span>הפעל מרוץ מסלול</span><i>START</i></button><button class="b" id="btnReset"><span>אתחל מרוץ</span><kbd>R</kbd></button><button class="b" id="btnMute"><span>השתק</span><kbd>M</kbd></button><button class="b" id="btnMusic" style="display:none"><span>מוזיקה</span><i>&#9835;</i></button></div>
   </details>
   <div class="pacc prow" id="ratesRow"><span class="prl">רמת רייטים</span>
   <div id="quickRates">
@@ -1306,7 +1323,9 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 324</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
+<div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><button id="mzMute2" type="button"></button><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 325</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -8130,7 +8149,7 @@ const NX_HIDE = [
 function nxDefault() {
   return {
     theme: { ac: '#4cc3e6', am: '#e6b450', bg: '#0b0c0e', p1: '#14161a', p2: '#1b1e23', ln: '#2d3139', tx: '#d6d9de', mu: '#8b929c', ti: '', bt: '', bs: '', lg: '', lg2: '', it: '', ib: '', ot: '', tl: '', tl2: '', gr: '', rd: '', qb: '', qt: '', font: 'ui', btn: 'sharp', bw: 1, mbw: 420, balign: 'c', mvert: 'c', overlay: 0.75, bgImg: '', trans: 'slide', dur: 300, fadeMs: 450, gx: Object.assign({}, GX.st) },
-    tx: {}, hide: {}, home: [], tnames: {}, torder: [], stages: { off: {}, force: '', del: {}, bsel: false }, tcats: { cats: {}, of: {} }, drones: { off: {}, title: {}, desc: {}, col: {} },
+    tx: {}, hide: {}, home: [], tnames: {}, torder: [], stages: { off: {}, force: '', del: {}, bsel: false }, tcats: { cats: {}, of: {} }, drones: { off: {}, title: {}, desc: {}, col: {} }, music: { on: true, showVol: true, showList: true, menuOn: true, flyOn: true, flyAuto: false, shuffle: false, vol: 50, songs: [] },
     courses: {}, guides: {}, stick: {}, courseId: '', courseIds: [], staff: {},
     logo: { on: true, pages: { main: true, drone: false, missions: false, controls: false }, size: 6, x: 96, y: 91, color: '#ffffff', op: 85 }
   };
@@ -10052,10 +10071,10 @@ function nxAdmRender() {
   }
   if (NX.role !== 'admin') return;
   nxEnvPark();
-  const tabs = [['game', 'עריכת משחק'], ['stages', 'שלבים'], ['tracks', 'מסלולים'], ['courses', 'קורסים'], ['drones', 'רחפנים'], ['groups', 'קבוצות'], ['players', 'שחקנים'], ['progress', 'מעקב']];
+  const tabs = [['game', 'עריכת משחק'], ['stages', 'שלבים'], ['tracks', 'מסלולים'], ['courses', 'קורסים'], ['drones', 'רחפנים'], ['music', 'מוזיקה'], ['groups', 'קבוצות'], ['players', 'שחקנים'], ['progress', 'מעקב']];
   $('admTabs').style.display = NX.ted ? 'none' : '';
   $('admTabs').innerHTML = tabs.map((t) => '<button data-tab="' + t[0] + '"' + (NX.tab === t[0] ? ' class="on"' : '') + '>' + t[1] + '</button>').join('');
-  const fn = { game: nxTabGame, look: nxTabLook, stages: nxTabStages, tracks: nxTabTracks, courses: nxTabCourses, drones: nxTabDrones, progress: nxTabProgress, groups: () => nxTabGroups() + (Object.keys(NX.themes).length ? '<h3 style="margin-top:16px">ערכות נושא שמורות</h3>' + nxTabThemes() : ''), players: nxTabPlayers }[NX.tab];
+  const fn = { game: nxTabGame, look: nxTabLook, stages: nxTabStages, tracks: nxTabTracks, courses: nxTabCourses, drones: nxTabDrones, music: nxTabMusic, progress: nxTabProgress, groups: () => nxTabGroups() + (Object.keys(NX.themes).length ? '<h3 style="margin-top:16px">ערכות נושא שמורות</h3>' + nxTabThemes() : ''), players: nxTabPlayers }[NX.tab];
   const body = $('admBody'), st = body.scrollTop;
   body.innerHTML = NX.ted ? nxTedHead() + nxTabLook() : nxThemeBanner() + (fn ? fn() : '');
   body.scrollTop = st;
@@ -10073,7 +10092,7 @@ function nxAdmSoftRender() {
   nxAdmRender();
 }
 /* each admin tab takes the game to the screen that tab edits */
-const NX_TAB_SCREEN = { game: 'main', look: 'main', themes: 'main', groups: 'main', stages: 'missions', tracks: 'missions', drones: 'drone' };
+const NX_TAB_SCREEN = { music: 'main', game: 'main', look: 'main', themes: 'main', groups: 'main', stages: 'missions', tracks: 'missions', drones: 'drone' };
 function nxGoScreen(tab) {
   const sc = NX_TAB_SCREEN[tab];
   if (!sc || NXH.spec || NX.role !== 'admin' || fadeBusy) return;
@@ -10163,6 +10182,7 @@ function nxAdmWire() {
     }
     if (el.dataset.k && !el.dataset.ai && !el.dataset.act) { nxField(el); return; }   // some browsers fire only "change" for colour pickers and menus
     const a = el.dataset.act, id = el.dataset.id, gid = el.dataset.gid;
+    if (a && a.indexOf('mz-') === 0) { nxMzAct(a, el); return; }
     if (a === 'trk-env') {
       const E = envSettings[id]; if (!E) return;
       const key = el.dataset.key, v = parseFloat(el.value); if (!isFinite(v)) return;
@@ -10199,6 +10219,7 @@ function nxAdmWire() {
     const el = e.target.closest('[data-act]'); if (!el || el.tagName === 'INPUT' || el.tagName === 'SELECT') return;
     const a = el.dataset.act, id = el.dataset.id, gid = el.dataset.gid;
     if (nxCrsAct(a, el)) return;
+    if (nxMzAct(a, el)) return;
     if (a === 'gd-edit') { nxEdOpen(el.dataset.k, el.dataset.f); return; }
     if (a === 'pkg-import') {
       const t = $('admPkg'); let pk = null;
@@ -11740,6 +11761,196 @@ function gfxFrame(dt) {
   window.addEventListener('gamepadconnected', (e) => { try { nxToast('🎮 שלט חובר: ' + short(e.gamepad && e.gamepad.id) + ' · הזז סטיק להפעלה'); } catch (err) { /* no toast element yet */ } });
   window.addEventListener('gamepaddisconnected', (e) => { try { nxToast('🎮 השלט נותק: ' + short(e.gamepad && e.gamepad.id)); } catch (err) { /* ignore */ } });
 })();
+
+/* ============================================================
+   MUSIC — background music in the menus, a playlist in flight, all controlled by the manager (config key "music")
+   ============================================================ */
+const MZ = { audio: null, mode: 'off', idx: -1, unlocked: false, bad: {}, flyPicked: false, listOpen: false, prefs: null, playing: '' };
+function mzCfg() {
+  const c = (NX.eff && NX.eff.music) || (typeof nxDefault === 'function' ? nxDefault().music : null) || {};
+  return c;
+}
+function mzSongs(kind) {
+  const c = mzCfg(), all = Array.isArray(c.songs) ? c.songs : [];
+  return all.filter((s) => s && s.u && (kind === 'menu' ? s.menu !== false : s.fly !== false));
+}
+function mzPrefs() {
+  if (MZ.prefs) return MZ.prefs;
+  let o = null; try { o = JSON.parse(localStorage.getItem('fpvNexusMusic') || 'null'); } catch (e) { o = null; }
+  MZ.prefs = o && typeof o === 'object' ? { v: typeof o.v === 'number' ? o.v : null, m: !!o.m } : { v: null, m: false };
+  return MZ.prefs;
+}
+function mzSavePrefs() { try { localStorage.setItem('fpvNexusMusic', JSON.stringify(MZ.prefs)); } catch (e) { /* ignore */ } }
+function mzVol() { const p = mzPrefs(), c = mzCfg(); return clamp(p.v === null ? (typeof c.vol === 'number' ? c.vol : 50) : p.v, 0, 100); }
+function mzMuted() { return !!mzPrefs().m || !!(typeof settings !== 'undefined' && settings.muted); }
+function mzApplyVol() {
+  if (!MZ.audio) return;
+  try { MZ.audio.volume = mzVol() / 100; MZ.audio.muted = mzMuted(); } catch (e) { /* ignore */ }
+}
+function mzEnsureAudio() {
+  if (MZ.audio || typeof Audio === 'undefined') return MZ.audio;
+  try {
+    const a = new Audio(); a.preload = 'auto'; a.loop = false;
+    a.addEventListener('ended', () => mzNext(1));
+    a.addEventListener('error', () => { const s = MZ.cur; if (s) MZ.bad[s.id || s.u] = true; setTimeout(() => mzNext(1), 400); });
+    MZ.audio = a;
+  } catch (e) { MZ.audio = null; }
+  return MZ.audio;
+}
+function mzPlay(kind, i) {
+  const list = mzSongs(kind); if (!list.length) { mzStop(); return; }
+  const a = mzEnsureAudio(); if (!a) return;
+  i = ((i % list.length) + list.length) % list.length;
+  const s = list[i]; MZ.cur = s; MZ.idx = i; MZ.mode = kind;
+  try { if (a.getAttribute('data-u') !== s.u) { a.src = s.u; a.setAttribute('data-u', s.u); } mzApplyVol(); const p = a.play(); if (p && p.catch) p.catch(() => { MZ.blockedAt = Date.now(); }); } catch (e) { /* ignore */ }
+  mzRenderList();
+}
+function mzStop() {
+  if (MZ.audio) { try { MZ.audio.pause(); MZ.audio.removeAttribute('src'); MZ.audio.setAttribute('data-u', ''); MZ.audio.load && MZ.audio.load(); } catch (e) { /* ignore */ } }
+  MZ.cur = null; MZ.idx = -1; mzRenderList();
+}
+function mzNext(d) {
+  const kind = MZ.mode; if (kind !== 'menu' && kind !== 'fly') return;
+  const list = mzSongs(kind); if (!list.length) return;
+  let i = MZ.idx, tries = 0;
+  do {
+    i = mzMuteShuffle() && list.length > 1 && d > 0 ? Math.floor(Math.random() * list.length) : i + d;
+    i = ((i % list.length) + list.length) % list.length; tries++;
+  } while (MZ.bad[list[i].id || list[i].u] && tries <= list.length);
+  if (tries > list.length && MZ.bad[list[i].id || list[i].u]) { mzStop(); return; }
+  mzPlay(kind, i);
+}
+function mzMuteShuffle() { return !!mzCfg().shuffle; }
+/* what should be playing right now */
+function mzWant() {
+  const c = mzCfg();
+  if (!c.on) return 'off';
+  if (typeof inMenu !== 'undefined' && inMenu) return c.menuOn !== false && mzSongs('menu').length ? 'menu' : 'off';
+  if (c.flyOn === false) return 'off';
+  return (MZ.flyPicked || c.flyAuto) && mzSongs('fly').length ? 'fly' : 'off';
+}
+function mzTick() {
+  const want = mzWant(), inM = typeof inMenu !== 'undefined' && inMenu;
+  if (inM && MZ.flyPicked) MZ.flyPicked = false;                                   // back in the menus: the flight choice is forgotten
+  if (want !== MZ.mode) {
+    if (want === 'off') { mzStop(); MZ.mode = 'off'; }
+    else if (MZ.unlocked) { const list = mzSongs(want); mzPlay(want, mzCfg().shuffle ? Math.floor(Math.random() * list.length) : 0); }
+  } else if (want !== 'off') {
+    const list = mzSongs(want);                                                   // the manager edited the list while playing
+    if (MZ.cur && !list.some((s) => s.u === MZ.cur.u)) mzPlay(want, 0);
+    else if (MZ.audio && MZ.audio.paused && MZ.unlocked && !MZ.audio.ended && MZ.cur && Date.now() - (MZ.blockedAt || 0) > 800) { try { const p = MZ.audio.play(); if (p && p.catch) p.catch(() => { MZ.blockedAt = Date.now(); }); } catch (e) { /* ignore */ } }
+  }
+  mzApplyVol(); mzShow();
+}
+/* ---------- on-screen controls ---------- */
+const MZ_SPK = (m) => '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor" stroke="none"/>' + (m ? '<path d="M17 9l5 6M22 9l-5 6"/>' : '<path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/>') + '</svg>';
+const MZ_NOTE = '<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg>';
+function mzShow() {
+  const c = mzCfg(), on = !!c.on, inM = typeof inMenu !== 'undefined' && inMenu;
+  const hasList = (inM ? c.menuOn !== false : c.flyOn !== false) && mzSongs(inM ? 'menu' : 'fly').length > 0;
+  const dock = $('mzDock');
+  if (dock) {
+    const showSpk = on && c.showVol !== false && inM && c.menuOn !== false, showNote = on && c.showList !== false && inM && hasList;
+    dock.style.display = showSpk || showNote ? 'flex' : 'none';
+    const sp = $('mzSpkWrap'); if (sp) sp.style.display = showSpk ? '' : 'none';
+    const nb = $('mzNote'); if (nb) nb.style.display = showNote ? '' : 'none';
+    const sb = $('mzSpk'); if (sb) { const m = mzMuted(); const k = m ? 'm' : 'u'; if (sb.dataset.k !== k) { sb.dataset.k = k; sb.innerHTML = MZ_SPK(m); } sb.title = m ? 'הדלק מוזיקה' : 'כבה מוזיקה'; }
+    const vr = $('mzVol'); if (vr && document.activeElement !== vr && String(vr.value) !== String(Math.round(mzVol()))) vr.value = Math.round(mzVol());
+  }
+  const fb = $('btnMusic'); if (fb) fb.style.display = on && c.showList !== false && !inM && c.flyOn !== false && mzSongs('fly').length ? '' : 'none';
+  if (!(on && c.showList !== false && hasList) && MZ.listOpen) mzList(false);
+}
+function mzRenderList() {
+  const box = $('mzListBody'); if (!box || !MZ.listOpen) return;
+  const inM = typeof inMenu !== 'undefined' && inMenu, kind = inM ? 'menu' : 'fly', list = mzSongs(kind), c = mzCfg();
+  box.innerHTML = list.map((s, i) => '<button class="mzrow' + (MZ.cur && MZ.cur.u === s.u && MZ.mode === kind ? ' on' : '') + '" data-i="' + i + '"><span class="mzpl">' + (MZ.cur && MZ.cur.u === s.u && MZ.mode === kind && MZ.audio && !MZ.audio.paused ? '&#10074;&#10074;' : '&#9654;') + '</span><span class="mzt">' + nxEsc(s.t || 'שיר ' + (i + 1)) + '</span></button>').join('') || '<p class="mzempty">אין שירים ברשימה.</p>';
+  const vw = $('mzVolRow'); if (vw) vw.style.display = c.showVol !== false ? '' : 'none';
+  const vr = $('mzVol2'); if (vr && document.activeElement !== vr) vr.value = Math.round(mzVol());
+  const mb = $('mzMute2'); if (mb) mb.innerHTML = MZ_SPK(mzMuted());
+}
+function mzList(open) {
+  MZ.listOpen = open === undefined ? !MZ.listOpen : !!open;
+  const p = $('mzList'); if (p && p.classList) p.classList.toggle('fly', !(typeof inMenu !== 'undefined' && inMenu)); if (p) p.style.display = MZ.listOpen ? 'flex' : 'none';
+  if (MZ.listOpen) mzRenderList();
+}
+function mzUnlock() {
+  if (MZ.unlocked) return; MZ.unlocked = true;
+  mzTick();
+}
+function mzPick(i) {
+  const inM = typeof inMenu !== 'undefined' && inMenu, kind = inM ? 'menu' : 'fly';
+  if (!inM) MZ.flyPicked = true;
+  const list = mzSongs(kind); if (!list.length) return;
+  if (MZ.cur && list[i] && MZ.cur.u === list[i].u && MZ.mode === kind && MZ.audio) { if (MZ.audio.paused) { try { MZ.audio.play(); } catch (e) { /* ignore */ } } else { try { MZ.audio.pause(); } catch (e) { /* ignore */ } } mzRenderList(); return; }
+  MZ.unlocked = true; mzPlay(kind, i);
+}
+function mzSetVol(v) { const p = mzPrefs(); p.v = clamp(Number(v) || 0, 0, 100); if (p.v > 0) p.m = false; mzSavePrefs(); mzApplyVol(); mzShow(); }
+function mzToggleMute() { const p = mzPrefs(); p.m = !mzMuted(); if (!p.m && typeof settings !== 'undefined' && settings.muted) p.m = false; mzSavePrefs(); mzApplyVol(); mzShow(); mzRenderList(); }
+(function mzWire() {
+  const on = (id, ev, f) => { const e = $(id); if (e && e.addEventListener) e.addEventListener(ev, f); };
+  ['pointerdown', 'keydown', 'touchstart'].forEach((ev) => { try { window.addEventListener(ev, mzUnlock, { passive: true }); } catch (e) { /* ignore */ } });
+  on('mzSpk', 'click', () => { mzUnlock(); mzToggleMute(); });
+  on('mzVol', 'input', (e) => mzSetVol(e.target.value));
+  on('mzVol2', 'input', (e) => mzSetVol(e.target.value));
+  on('mzMute2', 'click', () => mzToggleMute());
+  on('mzNote', 'click', () => mzList());
+  on('btnMusic', 'click', () => { mzList(); const b = $('btnMusic'); if (b && b.blur) b.blur(); });
+  on('mzClose', 'click', () => mzList(false));
+  on('mzPrev', 'click', () => { MZ.unlocked = true; mzNext(-1); });
+  on('mzNext', 'click', () => { MZ.unlocked = true; mzNext(1); });
+  on('mzListBody', 'click', (e) => { const r = e.target.closest ? e.target.closest('.mzrow') : null; if (r) mzPick(Number(r.dataset.i)); });
+  try { window.setInterval(mzTick, 400); } catch (e) { /* ignore */ }
+})();
+
+/* ---------- manager tab ---------- */
+function nxTabMusic() {
+  const m = NX.draft.music || (NX.draft.music = nxDefault().music);
+  const chk = (k, label, v) => '<label class="nxchk1"><input type="checkbox" data-k="music.' + k + '"' + (v ? ' checked' : '') + '> ' + label + '</label>';
+  let h = '<p class="nxn">מוזיקה במשחק: מוזיקת רקע במסכי התפריט, ורשימת השמעה בזמן טיסה. כשהמוזיקה כבויה כאן, שום דבר ממנה לא מוצג לתלמידים.</p>';
+  h += '<div class="nxcard">' + chk('on', '<b>מוזיקה פעילה במשחק</b>', m.on);
+  if (m.on) {
+    h += '<p class="nxn" style="margin-top:8px">מה מוצג לתלמיד:</p><div class="nxchk">' + chk('showVol', 'כפתור הדלקה/כיבוי ועוצמה (רמקול)', m.showVol !== false) + chk('showList', 'כפתור רשימת השמעה (♪)', m.showList !== false) + '</div>';
+    h += '<p class="nxn">מתי מנגנת:</p><div class="nxchk">' + chk('menuOn', 'מוזיקת רקע במסכי התפריט (עד בחירת השלב)', m.menuOn !== false) + chk('flyOn', 'מוזיקה בזמן טיסה (רשימה לבחירת התלמיד)', m.flyOn !== false) + chk('flyAuto', 'להתחיל לנגן אוטומטית כשהשלב עולה', !!m.flyAuto) + chk('shuffle', 'סדר אקראי', !!m.shuffle) + '</div>';
+    h += nxF('עוצמה התחלתית', nxRange('music.vol', typeof m.vol === 'number' ? m.vol : 50, 0, 100, 1));
+  }
+  h += '</div>';
+  const songs = Array.isArray(m.songs) ? m.songs : [];
+  h += '<h3 style="margin-top:14px">שירים (' + songs.length + ')</h3>';
+  songs.forEach((s, i) => {
+    h += '<div class="nxcard" data-mz="' + i + '"><div class="nxrow"><input type="text" data-act="mz-title" data-i="' + i + '" value="' + nxEsc(s.t || '') + '" placeholder="שם השיר" style="flex:1">' +
+      '<button class="nxb" data-act="mz-test" data-i="' + i + '" title="האזנה">&#9654;</button><button class="nxb" data-act="mz-up" data-i="' + i + '"' + (i ? '' : ' disabled') + '>&#9650;</button><button class="nxb" data-act="mz-down" data-i="' + i + '"' + (i < songs.length - 1 ? '' : ' disabled') + '>&#9660;</button><button class="nxb danger" data-act="mz-del" data-i="' + i + '">מחק</button></div>' +
+      '<div class="nxn" style="direction:ltr;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + nxEsc(s.u) + '</div>' +
+      '<div class="nxchk"><label><input type="checkbox" data-act="mz-menu" data-i="' + i + '"' + (s.menu !== false ? ' checked' : '') + '> במסכי התפריט</label><label><input type="checkbox" data-act="mz-fly" data-i="' + i + '"' + (s.fly !== false ? ' checked' : '') + '> בטיסה</label></div></div>';
+  });
+  if (!songs.length) h += '<p class="nxn">אין עדיין שירים. הוסף שיר בקישור ישיר לקובץ שמע (mp3 / ogg / m4a), או קובץ שהועלה לשרת.</p>';
+  h += '<div class="nxcard"><h4>הוספת שיר</h4>' + nxF('שם', '<input type="text" id="mzNewT" placeholder="שם השיר">') + nxF('קישור', '<input type="text" id="mzNewU" placeholder="https://.../song.mp3" style="direction:ltr">') +
+    '<div class="nxbtns"><button class="nxb" data-act="mz-add">הוסף שיר</button></div>' +
+    '<p class="nxn" style="margin-top:10px">להוספת כמה שירים בבת אחת: שורה לכל שיר בצורה <b>שם | קישור</b>.</p><textarea id="mzBulk" rows="4" style="direction:ltr;width:100%" placeholder="Song one | https://.../one.mp3"></textarea><div class="nxbtns"><button class="nxb" data-act="mz-bulk">הוסף את כל השורות</button></div></div>';
+  return h;
+}
+function mzOkUrl(u) { return /^(https?:\/\/|\/)[^\s]+$/i.test(u); }
+function mzNewId() { return 's' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5); }
+function nxMzAct(a, el) {
+  if (!a || a.indexOf('mz-') !== 0) return false;
+  const m = NX.draft.music || (NX.draft.music = nxDefault().music); if (!Array.isArray(m.songs)) m.songs = [];
+  const i = Number(el.dataset.i), S = m.songs;
+  const done = (rerender) => { nxTouch(); if (rerender) nxAdmRender(); };
+  if (a === 'mz-title') { if (S[i]) { S[i].t = String(el.value || '').trim().slice(0, 80); done(false); } }
+  else if (a === 'mz-menu' || a === 'mz-fly') { if (S[i]) { S[i][a === 'mz-menu' ? 'menu' : 'fly'] = !!el.checked; done(false); } }
+  else if (a === 'mz-del') { if (S[i]) { S.splice(i, 1); done(true); } }
+  else if (a === 'mz-up' || a === 'mz-down') { const j = a === 'mz-up' ? i - 1 : i + 1; if (S[i] && S[j]) { const t = S[i]; S[i] = S[j]; S[j] = t; done(true); } }
+  else if (a === 'mz-test') { if (S[i]) { MZ.unlocked = true; const au = mzEnsureAudio(); if (au) { MZ.mode = 'test'; MZ.cur = S[i]; try { au.src = S[i].u; au.setAttribute('data-u', S[i].u); mzApplyVol(); const p = au.play(); if (p && p.catch) p.catch(() => nxToast('לא ניתן לנגן את הקישור הזה')); } catch (e) { nxToast('לא ניתן לנגן את הקישור הזה'); } } } }
+  else if (a === 'mz-add') {
+    const u = String(($('mzNewU') || {}).value || '').trim(), t = String(($('mzNewT') || {}).value || '').trim();
+    if (!mzOkUrl(u)) { nxToast('הקישור צריך להתחיל ב-https:// או ב-/'); return true; }
+    S.push({ id: mzNewId(), t: (t || decodeURIComponent(u.split('/').pop().split('?')[0].replace(/\.[a-z0-9]+$/i, '')) || 'שיר').slice(0, 80), u, menu: true, fly: true }); done(true); nxToast('השיר נוסף. לחץ שמירה כדי שהתלמידים יקבלו אותו');
+  } else if (a === 'mz-bulk') {
+    const lines = String(($('mzBulk') || {}).value || '').split('\n').map((x) => x.trim()).filter(Boolean); let n = 0, bad = 0;
+    lines.forEach((ln) => { const p = ln.split('|').map((x) => x.trim()), u = p.length > 1 ? p[p.length - 1] : p[0], t = p.length > 1 ? p.slice(0, -1).join(' | ') : ''; if (!mzOkUrl(u)) { bad++; return; } S.push({ id: mzNewId(), t: (t || decodeURIComponent(u.split('/').pop().split('?')[0].replace(/\.[a-z0-9]+$/i, '')) || 'שיר').slice(0, 80), u, menu: true, fly: true }); n++; });
+    done(true); nxToast(n + ' שירים נוספו' + (bad ? ' · ' + bad + ' שורות לא תקינות דולגו' : ''));
+  }
+  return true;
+}
 
 /* ---------- boot ---------- */
 buildAdvUI();
