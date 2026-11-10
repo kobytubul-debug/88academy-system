@@ -1324,7 +1324,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 333</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 334</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -6972,7 +6972,7 @@ function makeDroneView(id, cv, fit) {
   const rs = DRONE_REAL[id] || 1; model.scale.multiplyScalar(rs);
   const pivot = new THREE.Group(); pivot.add(model); pivot.rotation.x = 0.14; sc.add(pivot);
   try { const lo = new THREE.Box3().setFromObject(model).min.y; if (isFinite(lo) && lo < 0) floor.position.y = Math.min(-0.62, lo - 0.06); } catch (e) { /* keep default */ }   // the floor sits under the lowest part (cargo box)
-  const ck = fit ? (id === 'whoop' ? 0.62 : id === 'fpv10' || id === 'fpv10w' ? DV_CAM_ALL : 1.22) : DV_CAM_ALL;   // fit = single-drone view (main screen): frame the drone itself
+  const ck = fit ? (id === 'whoop' ? 0.62 : id === 'fpv10' || id === 'fpv10w' ? DV_CAM_ALL * 1.16 : 1.22) : DV_CAM_ALL;   // the 10" on the main screen sits a bit further back so its lower propeller is not cut by the canvas edge   // fit = single-drone view (main screen): frame the drone itself
   const cam = new THREE.PerspectiveCamera(32, DV_W / DV_H, 0.1, 80); cam.position.set(0, 2.25 * ck, 4.3 * ck); cam.lookAt(0, -0.05 * ck, 0);   // ~28 degrees above the drone
   return { cv, sc, cam, model, pivot, floor, phase: id === 'whoop' ? 1.7 : 0, gx: gxDroneStage(sc, floor.position.y, model, 2.23 * ck / 1.45 * (fit ? 0.74 : 1)), get gxfn() { return this.gx; } };
 }
