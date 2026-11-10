@@ -1302,7 +1302,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 300</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 301</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -1694,10 +1694,10 @@ function leafTex() {
     const put = (x, y, f) => { for (let ox = -S; ox <= S; ox += S) for (let oy = -S; oy <= S; oy += S) { if ((ox && x > 20 && x < S - 20) || (oy && y > 20 && y < S - 20)) continue; f(x + ox, y + oy); } };
     for (let i = 0; i < 1500; i++) {
       const x = rnd() * S, y = rnd() * S, w = 3 + rnd() * 5, h = w * (1.4 + rnd() * 0.8), a = rnd() * Math.PI, k = rnd();
-      g.fillStyle = k < 0.30 ? 'rgba(70,92,60,' + (0.35 + rnd() * 0.3) + ')' : k < 0.75 ? 'rgba(176,200,150,' + (0.35 + rnd() * 0.3) + ')' : 'rgba(236,246,205,' + (0.3 + rnd() * 0.3) + ')';
+      g.fillStyle = k < 0.30 ? 'rgba(70,92,60,' + (0.22 + rnd() * 0.2) + ')' : k < 0.75 ? 'rgba(176,200,150,' + (0.35 + rnd() * 0.3) + ')' : 'rgba(236,246,205,' + (0.3 + rnd() * 0.3) + ')';
       put(x, y, (px, py) => { g.save(); g.translate(px, py); g.rotate(a); g.beginPath(); g.ellipse(0, 0, w, h, 0, 0, Math.PI * 2); g.fill(); g.restore(); });
     }
-    for (let i = 0; i < 170; i++) { const x = rnd() * S, y = rnd() * S; g.fillStyle = 'rgba(25,38,22,0.38)'; put(x, y, (px, py) => { g.beginPath(); g.arc(px, py, 1.5 + rnd() * 2.5, 0, 7); g.fill(); }); }   // gaps between leaves
+    for (let i = 0; i < 170; i++) { const x = rnd() * S, y = rnd() * S; g.fillStyle = 'rgba(25,38,22,0.16)'; put(x, y, (px, py) => { g.beginPath(); g.arc(px, py, 1.5 + rnd() * 2.5, 0, 7); g.fill(); }); }   // gaps between leaves
     const t = new THREE.CanvasTexture(cv); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(3, 2); t.anisotropy = Math.min(4, renderer.capabilities.getMaxAnisotropy()); return t;
   });
 }
@@ -1749,7 +1749,10 @@ function pineTierGeo(v) {                                          // ragged, sl
   }
   g.setAttribute('color', new THREE.BufferAttribute(col, 3)); g.computeVertexNormals(); return (treeGeoCache[key] = g);
 }
-function leafMat(c, f) { return new THREE.MeshLambertMaterial({ color: new THREE.Color(c).multiplyScalar(1.45 * (f || 1)), map: leafTex(), vertexColors: true }); }
+const LEAF_TONE = new THREE.Color(0x5b7a3c);
+function leafCol(c, f) { const k = new THREE.Color(c), t = LEAF_TONE; if (typeof k.r === 'number' && typeof t.r === 'number') { k.r += (t.r - k.r) * 0.3; k.g += (t.g - k.g) * 0.3; k.b += (t.b - k.b) * 0.3; } return k.multiplyScalar(1.2 * (f || 1)); }   // pulls neon greens toward a natural leaf tone
+function leafMat(c, f) { return new THREE.MeshLambertMaterial({ color: leafCol(c, f), map: leafTex(), vertexColors: true }); }
+function leafMatPlain(c, f) { return new THREE.MeshLambertMaterial({ color: leafCol(c, f), map: leafTex() }); }   // for geometry without vertex colours
 function barkMat(c) { return new THREE.MeshLambertMaterial({ color: new THREE.Color(c || 0x6b4a2b).multiplyScalar(1.5), map: barkTex() }); }
 function makeTree(g, kind, R, H, col, rnd) {                       // adds a realistic tree to group g: kind 'oak' | 'pine' | 'bush'; R = crown radius, H = total height
   const add = (geo, mat, x, y, z, sx, sy, sz) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.scale.set(sx, sy === undefined ? sx : sy, sz === undefined ? sx : sz); g.add(m); return m; };
@@ -2045,8 +2048,8 @@ function applyAtmosphere(id) {
   } else if (id === 'redwood') {
     scene.fog = new THREE.Fog(0xa9c7d9, 90, 950); scene.background = null;
     sky.visible = true; sky.material.map = skyTexture('day');
-    ambientLight.color.set(0xbfd4ff); ambientLight.intensity = 0.62;
-    hemiLight.color.set(0xcfe6ff); hemiLight.groundColor.set(0x2a5a2a); hemiLight.intensity = 0.55;
+    ambientLight.color.set(0xbfd4ff); ambientLight.intensity = 0.34;
+    hemiLight.color.set(0xcfe6ff); hemiLight.groundColor.set(0x2a5a2a); hemiLight.intensity = 0.41;
     sun.color.set(0xfff2d6); sun.intensity = 0.95;
     ground.material.map = groundTexture('grass');
   } else if (id === 'clean') {
@@ -2066,22 +2069,22 @@ function applyAtmosphere(id) {
   } else if (id === 'field') {
     scene.fog = new THREE.Fog(0xb7d3e6, 160, 1300); scene.background = null;
     sky.visible = true; sky.material.map = skyTexture('day');
-    ambientLight.color.set(0xd6e6ff); ambientLight.intensity = 0.7;
-    hemiLight.color.set(0xcfe6ff); hemiLight.groundColor.set(0x3f7a3a); hemiLight.intensity = 0.6;
+    ambientLight.color.set(0xd6e6ff); ambientLight.intensity = 0.39;
+    hemiLight.color.set(0xcfe6ff); hemiLight.groundColor.set(0x3f7a3a); hemiLight.intensity = 0.45;
     sun.color.set(0xfff4dc); sun.intensity = 1.0;
     ground.material.map = groundTexture('grass');
   } else if (id === 'desert') {
     scene.fog = new THREE.Fog(0xecd3a4, 120, 1100); scene.background = new THREE.Color(0xecd3a4);
     sky.visible = false;
-    ambientLight.color.set(0xfff0d0); ambientLight.intensity = 0.78;
-    hemiLight.color.set(0xfff0d0); hemiLight.groundColor.set(0xb08a4a); hemiLight.intensity = 0.55;
+    ambientLight.color.set(0xfff0d0); ambientLight.intensity = 0.43;
+    hemiLight.color.set(0xfff0d0); hemiLight.groundColor.set(0xb08a4a); hemiLight.intensity = 0.41;
     sun.color.set(0xfff0c8); sun.intensity = 1.05;
     ground.material.map = groundTexture('sand');
   } else if (id === 'snow') {
     scene.fog = new THREE.Fog(0xdde8f2, 90, 950); scene.background = new THREE.Color(0xdde8f2);
     sky.visible = false;
-    ambientLight.color.set(0xe8f0ff); ambientLight.intensity = 0.9;
-    hemiLight.color.set(0xf2f7ff); hemiLight.groundColor.set(0x9fb2c8); hemiLight.intensity = 0.6;
+    ambientLight.color.set(0xe8f0ff); ambientLight.intensity = 0.50;
+    hemiLight.color.set(0xf2f7ff); hemiLight.groundColor.set(0x9fb2c8); hemiLight.intensity = 0.45;
     sun.color.set(0xffffff); sun.intensity = 0.7;
     ground.material.map = groundTexture('snow');
   } else if (id === 'dusk') {
@@ -2094,8 +2097,8 @@ function applyAtmosphere(id) {
   } else {
     scene.fog = new THREE.Fog(0x9aa6b2, 70, 620); scene.background = null;
     sky.visible = true; sky.material.map = skyTexture('day');
-    ambientLight.color.set(0xdde3ea); ambientLight.intensity = 0.8;
-    hemiLight.color.set(0xe6ecf2); hemiLight.groundColor.set(0x3a3d42); hemiLight.intensity = 0.5;
+    ambientLight.color.set(0xdde3ea); ambientLight.intensity = 0.44;
+    hemiLight.color.set(0xe6ecf2); hemiLight.groundColor.set(0x3a3d42); hemiLight.intensity = 0.38;
     sun.color.set(0xffffff); sun.intensity = 0.75;
     ground.material.map = groundTexture('asphalt');
   }
@@ -2307,7 +2310,7 @@ NB.football = {
   name: 'מגרש כדורגל', desc: 'מגרש דשא מלא עם קווים ושערים, יציעים, פנסי תאורה ושלטי פרסום; הסביבה פתוחה',
   atm() {
     scene.fog = new THREE.Fog(0xb7d3e6, 220, 1400); scene.background = null; sky.visible = true; sky.material.map = skyTexture('day');
-    ambientLight.color.set(0xd6e6ff); ambientLight.intensity = 0.72; hemiLight.color.set(0xcfe6ff); hemiLight.groundColor.set(0x3f7a3a); hemiLight.intensity = 0.6;
+    ambientLight.color.set(0xd6e6ff); ambientLight.intensity = 0.40; hemiLight.color.set(0xcfe6ff); hemiLight.groundColor.set(0x3f7a3a); hemiLight.intensity = 0.45;
     sun.color.set(0xfff4dc); sun.intensity = 1.0; ground.material.map = groundTexture('grass');
   },
   build() {
@@ -2367,7 +2370,7 @@ NB.town = {
   name: 'עיירה', desc: 'רחוב ראשי רחב, בתים עם גגות רעפים, כנסייה, עצים ורחובות חוצים; הרבה מקום באמצע',
   atm() {
     scene.fog = new THREE.Fog(0xc9d8e4, 150, 1250); scene.background = null; sky.visible = true; sky.material.map = skyTexture('day');
-    ambientLight.color.set(0xe0ebff); ambientLight.intensity = 0.72; hemiLight.color.set(0xd6e8ff); hemiLight.groundColor.set(0x4a6e3a); hemiLight.intensity = 0.6;
+    ambientLight.color.set(0xe0ebff); ambientLight.intensity = 0.40; hemiLight.color.set(0xd6e8ff); hemiLight.groundColor.set(0x4a6e3a); hemiLight.intensity = 0.45;
     sun.color.set(0xfff0d0); sun.intensity = 1.0; ground.material.map = groundTexture('grass');
   },
   build() {
@@ -2400,7 +2403,7 @@ NB.ghost = {
   name: 'עיר נטושה', desc: 'עיר חרבה ומרווחת: שדרות רחבות של 70 מטר בין הבניינים, מרכז פנוי לגמרי, ערפל ושברי בטון',
   atm() {
     scene.fog = new THREE.Fog(0x8a8374, 70, 900); scene.background = new THREE.Color(0x8a8374); sky.visible = false;
-    ambientLight.color.set(0xd8d0c0); ambientLight.intensity = 0.62; hemiLight.color.set(0xbfb7a8); hemiLight.groundColor.set(0x3a352c); hemiLight.intensity = 0.5;
+    ambientLight.color.set(0xd8d0c0); ambientLight.intensity = 0.34; hemiLight.color.set(0xbfb7a8); hemiLight.groundColor.set(0x3a352c); hemiLight.intensity = 0.38;
     sun.color.set(0xffe6c0); sun.intensity = 0.65; ground.material.map = groundTexture('asphalt');
   },
   build() {
@@ -2471,7 +2474,7 @@ NB.bando = {
   name: 'באנדו', desc: 'כמה מבני בטון נטושים: שלדים עם קומות, חללי מדרגות, קירות חלקיים וחלונות, חצר פתוחה ושברי בטון',
   atm() {
     scene.fog = new THREE.Fog(0xb9c7d2, 180, 1400); scene.background = null; sky.visible = true; sky.material.map = skyTexture('day');
-    ambientLight.color.set(0xdde6ee); ambientLight.intensity = 0.72; hemiLight.color.set(0xdbe7f2); hemiLight.groundColor.set(0x4a4c44); hemiLight.intensity = 0.55;
+    ambientLight.color.set(0xdde6ee); ambientLight.intensity = 0.40; hemiLight.color.set(0xdbe7f2); hemiLight.groundColor.set(0x4a4c44); hemiLight.intensity = 0.41;
     sun.color.set(0xfff0d8); sun.intensity = 0.9;
     nbGround('nb_bando_ground', 256, 256, (c, w, h) => { c.fillStyle = '#5b5d55'; c.fillRect(0, 0, w, h); const r = mulberry(61); for (let i = 0; i < 1800; i++) { c.fillStyle = r() < 0.5 ? 'rgba(255,255,255,.04)' : 'rgba(0,0,0,.09)'; c.fillRect(r() * w, r() * h, 2 + r() * 4, 2 + r() * 4); } }, 240);
   },
@@ -4364,6 +4367,65 @@ PX.pathdisc = (add, T, col) => {
   const top = add(new THREE.CylinderGeometry(T.r * 0.86, T.r, T.h - 0.1, 8), propMat(col), 0, 0.14 + (T.h - 0.1) / 2, 0);
   top.rotation.y = Math.PI / 8;
   add(new THREE.CylinderGeometry(T.r * 0.62, T.r * 0.7, 0.05, 8), propShade(col, 1.18), 0, T.h + 0.01, 0).rotation.y = Math.PI / 8;    // lighter raised centre
+};
+
+/* ---------- realistic versions of the editor's trees (same names, sizes and colours; better shape, bark and leaves) ---------- */
+function pyAdd(add) { return (geo, mat, x, y, z, sx, sy, sz) => { const m = add(geo, mat, x, y, z); if (sx !== undefined) m.scale.set(sx, sy === undefined ? sx : sy, sz === undefined ? sx : sz); return m; }; }
+function pyBranch(a, mat, bx, by, bz, len, rz, rx, r0, r1) {      // a branch that starts AT (bx,by,bz) and points away along its rotation; returns the tip so branches can chain
+  const b = a(new THREE.CylinderGeometry(r0, r1, len, 5), mat, 0, 0, 0), dx = -Math.sin(rz), dy = Math.cos(rz) * Math.cos(rx), dz = Math.cos(rz) * Math.sin(rx);
+  b.position.set(bx + dx * len / 2, by + dy * len / 2, bz + dz * len / 2); b.rotation.z = rz; b.rotation.x = rx; return [bx + dx * len, by + dy * len, bz + dz * len];
+}
+PX.palm = (add, T, col) => {
+  const a = pyAdd(add), bark = barkMat(0x8a6a43), lean = 0.09, tx = -Math.sin(lean) * T.h;
+  const t = a(trunkGeo(1), bark, -Math.sin(lean) * T.h / 2, Math.cos(lean) * T.h / 2, 0, 0.3, T.h, 0.3); t.rotation.z = lean;
+  const mat = leafMatPlain(col, 1), mat2 = leafMatPlain(col, 0.82), ty = Math.cos(lean) * T.h;
+  for (let i = 0; i < 10; i++) { const an = i / 10 * Math.PI * 2, l = a(new THREE.ConeGeometry(0.3, 4.2, 4), i % 2 ? mat : mat2, tx + Math.cos(an) * 1.7, ty - 0.1 - (i % 2) * 0.12, Math.sin(an) * 1.7, 1, 1, 0.22); l.rotation.z = -Math.cos(an) * 1.32; l.rotation.x = Math.sin(an) * 1.32; }
+  a(new THREE.SphereGeometry(0.34, 8, 6), bark, tx, ty - 0.05, 0);
+};
+PX.birch = (add, T, col) => {
+  const a = pyAdd(add);
+  a(trunkGeo(1), barkMat(0xb9b5ab), 0, T.h * 0.3, 0, 0.2, T.h * 0.6, 0.2);
+  pyBranch(a, barkMat(0xb9b5ab), 0.05, T.h * 0.55, 0, T.h * 0.28, -0.6, 0, 0.03, 0.07);
+  [[0, 0.72, 0, 0.8], [0.5, 0.62, 0.15, 0.55], [-0.45, 0.66, -0.2, 0.58], [0.1, 0.84, 0.1, 0.45]].forEach((q, i) => { const s = T.r * q[3] * 1.2; a(leafBlobGeo(i + 2), leafMat(col, 1.05 - i * 0.05), T.r * q[0], T.h * q[1], T.r * q[2], s, s * 1.15, s); });
+};
+PX.deadtree = (add, T) => {
+  const a = pyAdd(add), bark = barkMat(0x6b5a48);
+  a(trunkGeo(2), bark, 0, T.h * 0.4, 0, 0.36, T.h * 0.8, 0.36);
+  [[-0.9, 0.6, 0.0], [0.95, 0.72, 0.4], [-0.5, 0.85, -0.9], [0.5, 0.5, -0.8], [0.0, 0.93, 0.7]].forEach((q) => { const tip = pyBranch(a, bark, 0, T.h * q[1], 0, 2.4, q[0], q[2], 0.05, 0.14); pyBranch(a, bark, tip[0], tip[1], tip[2], 1.3, q[0] * 0.4 - 0.3, q[2] * 1.2, 0.02, 0.06); });
+};
+PX.cypress = (add, T, col) => {
+  const a = pyAdd(add);
+  a(trunkGeo(0), barkMat(0x5a3d22), 0, T.h * 0.06, 0, 0.18, T.h * 0.12, 0.18);
+  [[0.16, 0.9], [0.34, 1], [0.54, 0.86], [0.74, 0.6], [0.9, 0.36]].forEach((q, i) => { const s = T.r * q[1]; a(leafBlobGeo(i), leafMat(col, 0.9 + i * 0.03), 0, T.h * q[0], 0, s, T.h * 0.2, s); });
+};
+PX.sapling = (add, T, col) => {
+  const a = pyAdd(add);
+  a(trunkGeo(1), barkMat(0x6b4a2b), 0, T.h * 0.3, 0, 0.07, T.h * 0.6, 0.07);
+  [[0, 0.78, 0, 1], [0.4, 0.62, 0.1, 0.6]].forEach((q, i) => a(leafBlobGeo(i), leafMat(col, 1.05), T.r * q[0], T.h * q[1], T.r * q[2], T.r * q[3] * 1.2, T.r * q[3] * 1.1, T.r * q[3] * 1.2));
+};
+PX.willow = (add, T, col) => {
+  const a = pyAdd(add), bark = barkMat(0x6b5a48), mat = leafMatPlain(col, 0.95);
+  a(trunkGeo(0), bark, 0, T.h * 0.27, 0, 0.4, T.h * 0.55, 0.4);
+  [[0, 0.86, 0, 0.62], [0.5, 0.78, 0.2, 0.44], [-0.5, 0.8, -0.2, 0.46]].forEach((q, i) => { const s = T.r * q[3]; a(leafBlobGeo(i), leafMat(col, 1), T.r * q[0] * 0.5, T.h * q[1], T.r * q[2] * 0.5, s, s * 0.8, s); });
+  for (let i = 0; i < 30; i++) { const an = i / 30 * Math.PI * 2 + (i % 2) * 0.1, rr = T.r * (0.45 + (i % 3) * 0.16), len = T.h * (0.3 + (i % 4) * 0.06); const st = a(new THREE.CylinderGeometry(0.015, 0.06, len, 3), mat, Math.cos(an) * rr, T.h * 0.8 - len / 2, Math.sin(an) * rr, 1, 1, 0.6); st.rotation.y = -an; st.rotation.x = 0.0; }
+};
+PX.olive = (add, T, col) => {
+  const a = pyAdd(add), t = a(trunkGeo(2), barkMat(0x7a6a55), 0, T.h * 0.25, 0, 0.42, T.h * 0.5, 0.42); t.rotation.z = 0.12;
+  [[0, 0.72, 0, 1], [0.7, 0.62, 0.3, 0.72], [-0.6, 0.66, -0.3, 0.76], [0.1, 0.58, -0.7, 0.66], [-0.1, 0.84, 0.3, 0.55]].forEach((q, i) => { const s = T.r * 0.7 * q[3]; a(leafBlobGeo(i + 1), leafMat(col, 1.02 + i * 0.03), T.r * q[0], T.h * q[1], T.r * q[2], s, s * 0.78, s); });
+};
+PX.spruce = (add, T, col) => {
+  const a = pyAdd(add);
+  a(trunkGeo(0), barkMat(0x5a3d22), 0, 0.7, 0, 0.26, 1.5, 0.26);
+  for (let i = 0; i < 7; i++) { const t = i / 6, rr = T.r * 1.1 * (1 - t * 0.78), hh = T.h * 0.2; const m = a(pineTierGeo(i), leafMat(col, 0.95 - t * 0.05), 0, 1.4 + t * (T.h - 2.6) + hh * 0.3, 0, rr, hh, rr); m.rotation.y = i * 1.1; }
+};
+PX.acacia = (add, T, col) => {
+  const a = pyAdd(add), bark = barkMat(0x7a5a3a), t = a(trunkGeo(1), bark, 0, T.h * 0.38, 0, 0.36, T.h * 0.75, 0.36); t.rotation.z = -0.1;
+  pyBranch(a, bark, 0, T.h * 0.7, 0, T.r * 0.9, -1.0, 0, 0.05, 0.14); pyBranch(a, bark, 0, T.h * 0.68, 0, T.r * 0.8, 1.0, 0, 0.05, 0.14);
+  [[0.3, 0.86, 0, 1], [-T.r * 0.55, 0.8, T.r * 0.2, 0.62], [T.r * 0.6, 0.82, -T.r * 0.2, 0.6]].forEach((q, i) => { const s = T.r * 0.62 * q[3] * 1.25; a(leafBlobGeo(i + 3), leafMat(col, 1.1 - i * 0.04), q[0], T.h * q[1], q[2], s * 1.35, s * 0.55, s * 1.2); });
+};
+PX.hedge = (add, T, col) => {
+  const a = pyAdd(add), n = Math.max(3, Math.round(T.len / 1.1));
+  for (let i = 0; i < n; i++) { const x = (i / (n - 1) - 0.5) * (T.len - 1), s = T.dep * 0.72; a(leafBlobGeo(i), leafMat(col, 0.95 + (i % 3) * 0.05), x, T.h * 0.45, (i % 2 ? 0.08 : -0.08), s * 1.1, T.h * 0.52, s); }
 };
 /* ============================================================
    ADVANCED QUAD SETUP (Betaflight-style PID / rates / angle / TPA / anti-gravity / throttle curve)
