@@ -1306,7 +1306,7 @@ body.skin-paper .rbox,body.skin-paper #pause .glass,body.skin-paper #who .whobox
 </div>
 
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 303</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 304</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -2908,6 +2908,30 @@ function gateCopy(g) {
   const nn = cleanNum(g.n); if (nn) o.n = nn;
   return o;
 }
+
+/* physical details so a gate reads as a real race gate: dark corner joints, clamps on rings, a safety-striped stand with a weighted foot */
+function gateDeco(grp, sp, d, k) {
+  if (sp.kind === 'none') return;
+  const dk = () => new THREE.MeshLambertMaterial({ color: 0x23272e }), add = (geo, mat, x, y, z) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.castShadow = true; grp.add(m); return m; };
+  const t = sp.t;
+  if (sp.ring) {
+    const Rr = (sp.ow + sp.iw) / 2;
+    for (let i = 0; i < 4; i++) { const a = i * Math.PI / 2 + Math.PI / 4; add(new THREE.BoxGeometry(t * 0.9, t * 0.55, t * 1.05), dk(), Math.cos(a) * Rr, Math.sin(a) * Rr, 0).rotation.z = a; }
+  } else {
+    sp.bars.forEach((br) => [-1, 1].forEach((s) => {
+      const x = br.cx + Math.cos(br.a) * br.hl * s, y = br.cy + Math.sin(br.a) * br.hl * s;
+      add(new THREE.BoxGeometry(t * 0.62, t * 0.62, t * 0.8), dk(), x - Math.cos(br.a) * t * 0.2 * s, y - Math.sin(br.a) * t * 0.2 * s, 0).rotation.z = br.a;
+    }));
+  }
+  const upright = !sp.ring && Math.abs(d.pitch || 0) < 5, h = d.y - sp.oh;
+  if (upright && h > 0.2) {                                              // striped collars on the stand + a weighted foot on the ground
+    const yel = new THREE.MeshLambertMaterial({ color: 0xe8b81a }), r = 0.075 * k, n = Math.max(1, Math.min(4, Math.floor(h / 1.2)));
+    for (let i = 0; i < n; i++) add(new THREE.CylinderGeometry(r, r, 0.18 * k, 10), i % 2 ? dk() : yel, 0, -sp.oh - (i + 0.5) * h / n, 0);
+    const foot = add(new THREE.BoxGeometry(1.5 * k, 0.1, 0.5 * k), dk(), 0, -d.y + 0.05, 0);
+    add(new THREE.BoxGeometry(0.5 * k, 0.1, 1.5 * k), dk(), 0, -d.y + 0.05, 0);
+    add(new THREE.CylinderGeometry(0.34 * k, 0.4 * k, 0.22, 12), new THREE.MeshLambertMaterial({ color: 0x7a7f87 }), 0, -d.y + 0.11, 0);
+  }
+}
 function buildGateObj(i, d) {
   const grp = new THREE.Group();
   const bars = [], fronts = [], backs = [], halos = [];
@@ -2963,6 +2987,7 @@ function buildGateObj(i, d) {
     pole.userData.isPole = true;
     grp.add(pole);
   }
+  gateDeco(grp, sp, d, k);
   grp.position.set(d.x, d.y, d.z);
   grp.rotation.set((d.pitch || 0) * DEG, (d.yaw || 0) * DEG, 0, 'YXZ');
   grp.updateMatrixWorld(true);
@@ -6728,6 +6753,10 @@ function buildDroneModel(id) {
     mk(new THREE.BoxGeometry(0.1, 0.06, 0.12), std(accent, 0.6, 0.0), 0, 0.16, 0.5);                  // 3D-printed antenna mount
     const ant = mk(new THREE.CylinderGeometry(0.014, 0.018, 0.42, 10), black, 0, 0.3, 0.6); ant.rotation.x = 0.6;   // VTX antenna
     mk(new THREE.CylinderGeometry(0.02, 0.02, 0.09, 10), std(0xf2f2f2, 0.6, 0.0), 0, 0.49, 0.73).rotation.x = 0.6;      // white antenna tip
+    /* flight-controller details: signal LEDs, wiring and a status light, so the electronics read as real parts */
+    const led = (c, x, y, z) => mk(new THREE.BoxGeometry(0.02, 0.012, 0.02), new THREE.MeshBasicMaterial({ color: c }), x, y, z);
+    led(0x3dff7a, 0.12, 0.062, -0.12); led(0xff3b30, 0.12, 0.062, -0.07); led(0x2d8cff, -0.12, 0.062, -0.1);
+    [[-0.1, 0.1], [0.1, 0.1]].forEach((q) => mk(new THREE.CylinderGeometry(0.008, 0.008, 0.3, 6), std(q[0] < 0 ? 0xc0392b : 0x15171b, 0.6, 0.0), q[0], 0.02, q[1] - 0.12));
     if (race) ctr.scale.setScalar(0.58);                         // racing frame: about half the size of a freestyle frame
     tgt = grp;
     const motC = dcl(DC.m, race ? 0x2f6fd0 : 0xc0392b);
@@ -6745,6 +6774,9 @@ function buildDroneModel(id) {
       mk(new THREE.CylinderGeometry(0.115, 0.115, 0.1, 28), bellM, px, 0.16, pz);                                    // anodised bell
       mk(new THREE.CylinderGeometry(0.098, 0.1, 0.02, 28), std(0x15171b, 0.4, 0.5), px, 0.22, pz);                  // bell top
       for (let k = 0; k < 8; k++) { const an = k * Math.PI / 4; mk(new THREE.BoxGeometry(0.03, 0.05, 0.012), black, px + Math.cos(an) * 0.116, 0.16, pz + Math.sin(an) * 0.116).rotation.y = -an; }   // cooling slots
+      const wire = new THREE.Mesh(new THREE.CylinderGeometry(0.011, 0.011, len * 0.78, 6), std(i % 2 ? 0x15171b : 0xc0392b, 0.7, 0.0)); wire.position.set(px * 0.5, 0.047, pz * 0.5); wire.rotation.z = Math.PI / 2; wire.rotation.y = -Math.atan2(pz, px) + 0; wire.rotation.order = 'YXZ'; grp.add(wire);
+      [0.3, 0.52, 0.72].forEach((f) => mk(new THREE.CylinderGeometry(0.014, 0.014, 0.085, 8), metal, px * f, 0.012, pz * f).rotation.x = 0);      // arm screws
+      mk(new THREE.BoxGeometry(0.03, 0.012, 0.03), new THREE.MeshBasicMaterial({ color: i < 2 ? 0xff3b30 : 0x3dff7a }), px * 1.0, -0.02, pz * 1.0 + (pz > 0 ? 0.13 : -0.13));      // nav LED (red front / green back) under the arm tip
       const pg = new THREE.Group(); pg.position.set(px, 0.235, pz);
       const pc = dcl(DC.p || DC.p1, cP1);          // one propeller colour for all four props
       const mat = new THREE.MeshPhongMaterial({ color: pc, emissive: i % 2 ? 0x2a2000 : 0x2a1000, shininess: 80,
