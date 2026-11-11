@@ -604,6 +604,15 @@ body.nx-staff #admPub,body.nx-staff #admPrev{display:none}
 .plst{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;color:var(--mu);margin:6px 0}
 #who{display:none;position:fixed;inset:0;z-index:140;background:radial-gradient(ellipse at 30% 40%,color-mix(in srgb,var(--ac) 14%,var(--bg)),var(--bg) 72%);align-items:center;justify-content:center;direction:rtl;overflow:auto}
 #who.on{display:flex}
+#nxPw{display:none;position:fixed;inset:0;z-index:150;background:rgba(6,8,12,.94);align-items:center;justify-content:center}
+#nxPw.on{display:flex}
+#nxPw .pwbox{width:min(420px,92vw);background:var(--p1);border:1px solid var(--ln);padding:26px 24px;text-align:center;color:var(--tx);font:15px 'Rubik',Arial,sans-serif;border-radius:4px}
+#nxPw h3{color:var(--ti,#fff);font-size:22px;margin-bottom:6px}#nxPw p{color:var(--mu);font-size:13px;margin:6px 0 14px;line-height:1.5}
+#nxPw input{width:100%;margin:6px 0;padding:10px;background:var(--ib,#0b0c0e);color:var(--it,#fff);border:1px solid var(--ln);font:15px 'Rubik',Arial,sans-serif;text-align:center;border-radius:3px;box-sizing:border-box}
+#nxPw .pwrow{position:relative}#nxPw .eye{position:absolute;left:2px;top:6px;width:34px;height:38px;background:transparent;border:0;color:var(--mu);font-size:16px;cursor:pointer}
+#nxPwErr{color:#ff8a7a;min-height:20px;font-size:13px;margin:4px 0}
+#nxPwGo{margin-top:6px;padding:10px 22px;background:#e8751a;border:1px solid #ff9340;color:#17120d;font:700 15px 'Rubik',Arial,sans-serif;cursor:pointer;border-radius:3px}
+#nxPwGo:disabled{opacity:.5}
 #who .whobox{width:min(420px,92vw);background:var(--p1);border:1px solid var(--ln);padding:22px;text-align:center;color:var(--tx);font:15px 'Rubik',Arial,sans-serif;border-radius:4px}
 #who h3{color:var(--ti,#fff);font-size:20px;margin-bottom:6px}#who p{color:var(--mu);font-size:13px;margin:6px 0 14px}
 #who input{width:100%;margin:6px 0;padding:10px;background:var(--ib,#0b0c0e);color:var(--it,#fff);border:1px solid var(--ln);font:15px 'Rubik',Arial,sans-serif;text-align:center;border-radius:3px;user-select:text}
@@ -1326,7 +1335,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 347</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 348</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -1337,6 +1346,7 @@ body.mz-on #nxBar{right:104px}
     </div>
   </div>
 </div>
+<div id="nxPw"><div class="pwbox"><h3>בחירת סיסמה אישית</h3><p>זו הכניסה הראשונה שלך עם סיסמה זמנית. בחר סיסמה חדשה שרק אתה מכיר (לפחות 6 תווים). אחרי ההחלפה תוכל להיכנס לסימולטור.</p><div class="pwrow"><input id="nxPw1" type="password" maxlength="40" autocomplete="new-password" placeholder="סיסמה חדשה" dir="ltr"><button id="nxPwEye" type="button" class="eye" title="הצג או הסתר">&#128065;</button></div><input id="nxPw2" type="password" maxlength="40" autocomplete="new-password" placeholder="הקלד שוב את הסיסמה" dir="ltr"><div id="nxPwErr"></div><button id="nxPwGo" type="button">החלף סיסמה והמשך</button></div></div>
 <div id="nxBar"></div>
 <div id="nxBoard"></div>
 <div id="nxSpec"><span id="nxSpecInfo"></span><button id="nxSpecCam">מצלמה: מעקב</button><button id="nxSpecX">סיום צפייה (Esc)</button></div>
@@ -1351,6 +1361,118 @@ body.mz-on #nxBar{right:104px}
     <div class="introBar"><i></i></div></div></div>
 </div>
 
+<script>
+/* ---------- hosted mode: the game talks to its own server instead of Claude's artifact capabilities ----------
+   Inside a Claude artifact window.claude already exists and this file does nothing. On the 88ACADEMY site it supplies
+   claude.use('db' | 'user' | 'downloads') on top of the server's /api endpoints, so the game code stays the same. */
+(function () {
+  if (window.claude && window.claude.use) return;
+  const SEG = /^[A-Za-z0-9_\-.~:@+]{1,80}$/;
+  const ls = { get(k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { window.localStorage.setItem(k, v); } catch (e) { /* ignore */ } }, del(k) { try { window.localStorage.removeItem(k); } catch (e) { /* ignore */ } } };
+  const rnd = () => Array.from(window.crypto.getRandomValues(new Uint8Array(10))).map((b) => b.toString(16).padStart(2, '0')).join('');
+  let UID = ls.get('nxHostUid'); if (!UID || !SEG.test(UID)) { UID = 'u' + rnd(); ls.set('nxHostUid', UID); }
+  const SID = 's' + rnd();
+  const ss = { get(k) { try { return window.sessionStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { window.sessionStorage.setItem(k, v); } catch (e) { /* ignore */ } }, del(k) { try { window.sessionStorage.removeItem(k); } catch (e) { /* ignore */ } } };
+  ls.del('nxHostToken');                       // an older build kept the manager sign-in in the whole browser: a new tab then opened as the manager
+  const ADM_PATH = /^\/admin\/?$/i.test(window.location.pathname);   // the manager acts as the manager only on /admin; the regular address is always the student page
+  let token = ADM_PATH ? (ss.get('nxHostTok') || ls.get('nxHostTokL') || '') : '', adminOk = false;   // by default the manager is signed in for this tab only
+  const clone = (o) => JSON.parse(JSON.stringify(o));
+  const hdr = () => { const h = { 'X-Uid': UID, 'Content-Type': 'application/json' }; if (token) h.Authorization = 'Bearer ' + token; return h; };
+  async function api(method, url, body) {
+    const r = await window.fetch(url, { method, headers: hdr(), body: body === undefined ? undefined : JSON.stringify(body) });
+    if (!r.ok) { const e = new Error('http ' + r.status); e.status = r.status; throw e; }
+    return r.json();
+  }
+
+  /* ----- live updates ----- */
+  const subs = new Map();                      // path -> Set of listeners
+  let es = null, esOpen = false, esWait = [], everOpen = false;
+  const colOf = (p) => p.split('/')[0];
+  function connect() {
+    if (es) return;
+    es = new window.EventSource('/api/stream?sid=' + SID + (token ? '&t=' + encodeURIComponent(token) : ''));
+    es.onopen = () => { esOpen = true; const again = everOpen; everOpen = true; sendSubs().then(() => { if (again) listeners().forEach((l) => l.load()); }); esWait.splice(0).forEach((f) => f()); };
+    es.onerror = () => { esOpen = false; };
+    es.onmessage = (m) => { let ev; try { ev = JSON.parse(m.data); } catch (e) { return; } hit(ev.p, ev.d); };
+  }
+  const waitOpen = () => (esOpen ? Promise.resolve() : new Promise((res) => { esWait.push(res); window.setTimeout(res, 4000); }));
+  function sendSubs() { return api('POST', '/api/stream/sub', { sid: SID, paths: Array.from(subs.keys()) }).catch(() => { /* retried on reconnect */ }); }
+  function listeners() { const out = []; subs.forEach((s) => s.forEach((l) => out.push(l))); return out; }
+  function hit(p, d) {
+    const doc = subs.get(p); if (doc) doc.forEach((l) => l.event(p, d));
+    const col = subs.get(colOf(p)); if (col) col.forEach((l) => l.event(p, d));
+  }
+  window.setInterval(() => { if (!esOpen) listeners().forEach((l) => l.load()); }, 5000);   // fallback while the stream is down
+  function add(path, l) {
+    if (!subs.has(path)) subs.set(path, new Set());
+    subs.get(path).add(l); connect();
+    Promise.resolve().then(waitOpen).then(sendSubs).then(() => l.load());          // every listener loads itself once the stream knows its path
+    return () => { const s = subs.get(path); if (s) { s.delete(l); if (!s.size) { subs.delete(path); sendSubs(); } } };
+  }
+
+  /* ----- the db namespace ----- */
+  const snapOf = (path, exists, data) => ({ id: path.split('/').pop(), exists, data: () => (exists ? clone(data) : undefined) });
+  const q = (p) => encodeURIComponent(p);
+  const docRef = (path) => ({
+    id: path.split('/').pop(), path,
+    async get() { const r = await api('GET', '/api/db/doc?p=' + q(path)); return snapOf(path, r.exists, r.data); },
+    async set(d) { await api('PUT', '/api/db/doc?p=' + q(path), { data: d }); hit(path, clone(d)); },
+    async update(d) { await api('PUT', '/api/db/doc?p=' + q(path), { data: d, merge: true }); },
+    async delete() { await api('DELETE', '/api/db/doc?p=' + q(path)); hit(path, null); },
+    onSnapshot(next, err) {
+      let last = null, dead = false;
+      const emit = (exists, data) => { const s = JSON.stringify(exists ? data : null); if (s === last) return; last = s; next(snapOf(path, exists, data)); };
+      const l = {
+        load() { api('GET', '/api/db/doc?p=' + q(path)).then((r) => { if (!dead) emit(r.exists, r.data); }).catch((e) => { if (err && !dead) err(e); }); },
+        event(p, d) { if (!dead) emit(d !== null && d !== undefined, d); }
+      };
+      const off = add(path, l);
+      return () => { dead = true; off(); };
+    }
+  });
+  const colRef = (path) => ({
+    path,
+    doc: (id) => docRef(path + '/' + (id || ('d' + rnd().slice(0, 9)))),
+    onSnapshot(next, err) {
+      const map = new Map(); let last = null, dead = false, t = 0;
+      const emit = () => {
+        const docs = Array.from(map.keys()).sort().map((id) => snapOf(path + '/' + id, true, map.get(id)));
+        const s = JSON.stringify(docs.map((d) => [d.id, map.get(d.id)])); if (s === last) return; last = s;
+        next({ docs, size: docs.length, empty: !docs.length });
+      };
+      const later = () => { window.clearTimeout(t); t = window.setTimeout(() => { if (!dead) emit(); }, 40); };
+      const l = {
+        load() { api('GET', '/api/db/col?p=' + q(path)).then((r) => { if (dead) return; map.clear(); r.docs.forEach((d) => map.set(d.id, d.data)); later(); }).catch((e) => { if (err && !dead) err(e); }); },
+        event(p, d) { if (dead) return; const id = p.split('/')[1]; if (d === null || d === undefined) map.delete(id); else map.set(id, d); later(); }
+      };
+      const off = add(path, l);
+      return () => { dead = true; window.clearTimeout(t); off(); };
+    }
+  });
+  const dbNs = { doc: docRef, collection: colRef };
+
+  const userNs = { id: async () => UID, canEdit: () => adminOk };
+  const dlNs = {
+    async save(o) {
+      const blob = o.data instanceof window.Blob ? o.data : new window.Blob([o.data], { type: 'application/octet-stream' });
+      const a = document.createElement('a'); a.href = window.URL.createObjectURL(blob); a.download = o.filename || 'file'; document.body.appendChild(a); a.click();
+      window.setTimeout(() => { window.URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+    }
+  };
+  const ready = token ? api('GET', '/api/admin/me').then((r) => { adminOk = !!r.admin; if (!adminOk) { token = ''; ss.del('nxHostTok'); ls.del('nxHostTokL'); } }).catch(() => { /* offline: stay a player */ }) : Promise.resolve();
+  window.claude = { use: async (name) => { await ready; return name === 'db' ? dbNs : name === 'user' ? userNs : name === 'downloads' ? dlNs : null; } };
+
+  /* ----- sign-in helpers used by the game ----- */
+  window.NXHOST = {
+    async checkCred(un, h) { const r = await api('POST', '/api/db/check', { un, h }); return !!r.ok; },
+    async changePw(un, h, salt, nh) { const r = await api('POST', '/api/db/changepw', { un, h, salt, nh }); if (!r || !r.ok) { const e = new Error('changepw'); e.status = 400; throw e; } },
+    async adminLogin(u, p, remember) { const r = await api('POST', '/api/admin/login', { u, p }); token = r.token; if (remember) ls.set('nxHostTokL', token); else ss.set('nxHostTok', token); },
+    adminLogout() { ss.del('nxHostTok'); ls.del('nxHostTokL'); ls.del('fpvNexusAsPlayer'); try { window.sessionStorage.removeItem('fpvNexusAsPlayer'); } catch (e) { /* ignore */ } window.location.href = '/'; }
+  };
+
+})();
+
+</script>
 <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
 <script src="https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <div id="nmp"><div class="edjbox"><div class="edh">מפה חדשה: בחר סוג מפה</div><div id="nmpGrid"></div><button class="b" id="nmpCancel">ביטול</button></div></div>
@@ -9030,6 +9152,7 @@ async function nxLogin(un, pw, knownHash) {
   try { const sn = await NX.db.doc('creds/' + un).get(); c = sn && sn.exists ? sn.data() : null; } catch (e) { return 'אין חיבור לשרת, נסה שוב'; }
   if (!c) return 'שם משתמש או סיסמה שגויים';
   const h = knownHash || await nxHash(c.salt, pw);
+  NX.curH = h; NX.curSalt = c.salt;                          // kept so the first-sign-in password change can prove who is asking and refuse the temporary password again
   if (NX.checkCred) { let good = false; try { good = await NX.checkCred(un, h); } catch (e) { return 'אין חיבור לשרת, נסה שוב'; } if (!good) return 'שם משתמש או סיסמה שגויים'; }   // hosted: the server compares, the hash is never sent out
   else if (h !== c.h) return 'שם משתמש או סיסמה שגויים';
   NX.un = un; NX.kickSeen = -1; nxDoneLoad(); await nxHistLoad();
@@ -9038,6 +9161,35 @@ async function nxLogin(un, pw, knownHash) {
   nxWatchAcct();
   return '';
 }
+function nxPwCheck() {                                          // a temporary password (new account or reset by the manager) must be replaced before playing
+  const box = $('nxPw'); if (!box) return;
+  const need = !!(NX.un && NX.acct && NX.acct.mustPw && window.NXHOST && window.NXHOST.changePw);
+  box.classList.toggle('on', need);
+  if (need && !NX.pwShown) { NX.pwShown = true; const a = $('nxPw1'); if (a) { a.value = ''; $('nxPw2').value = ''; $('nxPwErr').textContent = ''; window.setTimeout(() => { try { a.focus(); } catch (e) { /* ignore */ } }, 50); } }
+  if (!need) NX.pwShown = false;
+}
+function nxWirePw() {
+  const go = $('nxPwGo'); if (!go) return;
+  go.addEventListener('click', async () => {
+    const p1 = $('nxPw1').value, p2 = $('nxPw2').value, er = $('nxPwErr');
+    if (p1.length < 6) { er.textContent = 'הסיסמה חייבת להכיל לפחות 6 תווים'; return; }
+    if (p1 !== p2) { er.textContent = 'שתי הסיסמאות אינן זהות'; return; }
+    if (!NX.curH || !NX.un) { er.textContent = 'יש להתחבר מחדש'; return; }
+    go.disabled = true; er.textContent = '';
+    try {
+      if (NX.curSalt && await nxHash(NX.curSalt, p1) === NX.curH) { er.textContent = 'בחר סיסמה שונה מהסיסמה הזמנית'; go.disabled = false; return; }
+      const salt = Math.random().toString(36).slice(2, 10) + Date.now().toString(36), nh = await nxHash(salt, p1);
+      await window.NXHOST.changePw(NX.un, NX.curH, salt, nh);
+      NX.curH = nh; NX.curSalt = salt;
+      try { window.sessionStorage.setItem('fpvNexusLogin', JSON.stringify({ un: NX.un, h: nh })); } catch (e) { /* ignore */ }
+      if (NX.acct) NX.acct.mustPw = false;
+      nxPwCheck(); nxToast('הסיסמה הוחלפה. בהצלחה!');
+    } catch (e) { er.textContent = e && e.status === 429 ? 'נסיונות רבים מדי, נסה שוב בעוד כמה דקות' : 'ההחלפה נכשלה, נסה שוב'; }
+    go.disabled = false;
+  });
+  $('nxPw2').addEventListener('keydown', (e) => { if (e.key === 'Enter') go.click(); });
+  $('nxPwEye').addEventListener('click', () => { const t = $('nxPw1').type === 'password' ? 'text' : 'password'; $('nxPw1').type = t; $('nxPw2').type = t; });
+}
 function nxWatchAcct() {
   if (NX.acctUnsub) { try { NX.acctUnsub(); } catch (e) { /* ignore */ } NX.acctUnsub = null; }
   const un = NX.un; if (!un) return;
@@ -9045,7 +9197,7 @@ function nxWatchAcct() {
     if (NX.un !== un) return;
     if (!sn.exists) { if (NX.acct !== null || NX.accReady) nxLogout('החשבון הוסר'); NX.accReady = true; return; }
     NX.accReady = true;
-    const d = sn.data(); NX.acct = d; NX.name = d.name || un; nxStaffSync(d);
+    const d = sn.data(); NX.acct = d; NX.name = d.name || un; nxStaffSync(d); nxPwCheck();
     const k = d.kick || 0;
     if (NX.kickSeen < 0) NX.kickSeen = k; else if (k > NX.kickSeen) { nxLogout('המדריך ניתק אותך'); return; }
     nxApplyView(); nxHoldCheck(); nxBar(); nxTelemetry();
@@ -9989,7 +10141,7 @@ async function nxCreatePlayer(name, un, pw, gid, extra) {
   if (NX.accts[un]) { nxToast('שם המשתמש כבר קיים'); return; }
   const salt = Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
   const h = await nxHash(salt, pw);
-  NX.accts[un] = Object.assign({ name, un, gid: gid || '', created: Date.now() }, extra || {});
+  NX.accts[un] = Object.assign({ name, un, gid: gid || '', created: Date.now(), mustPw: true }, extra || {});      // the student must choose their own password at the first sign-in
   await nxWrite('creds/' + un, { salt, h });
   await nxWrite('accounts/' + un, NX.accts[un]);
   NX.np = null; NX.openP = un; nxToast((extra && extra.role ? (extra.role === 'manager' ? 'המנהל' : 'המדריך') : 'השחקן') + ' נוצר. שם משתמש: ' + un + '  סיסמה: ' + pw); nxAdmRender();
@@ -9998,7 +10150,9 @@ async function nxResetPw(un, pw) {
   if (String(pw || '').length < 4) { nxToast('הסיסמה חייבת להכיל לפחות 4 תווים'); return; }
   const salt = Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
   const h = await nxHash(salt, pw);
-  await nxWrite('creds/' + un, { salt, h }); nxToast('הסיסמה עודכנה');
+  await nxWrite('creds/' + un, { salt, h });
+  if (NX.accts[un]) { NX.accts[un].mustPw = true; await nxWrite('accounts/' + un, NX.accts[un]); }       // a password set by the manager is temporary: the student replaces it at the next sign-in
+  nxToast('הסיסמה עודכנה. השחקן יתבקש להחליף אותה בכניסה הבאה');
 }
 function nxTabGroups() {
   let h = '<p class="nxn">קבוצות: לכל קבוצה קוד הצטרפות, שלבים משלה, ערכת נושא, הודעות ועצירה מרחוק. שחקן מצטרף עם הקוד או שאתה משבץ אותו.</p>';
@@ -10679,6 +10833,7 @@ function whoFrame() {
   } catch (e) { /* ignore */ }
 }
 function nxWireWho() {
+  nxWirePw();
   $('whoAdmin').addEventListener('click', () => { try { window.sessionStorage.setItem('fpvNexusRole', 'admin'); } catch (e) { /* ignore */ } NX.role = 'admin'; NX.role_chosen = true; $('who').classList.remove('on'); if (NX.roleResolve) NX.roleResolve(); });
   $('whoPl').addEventListener('click', () => { try { window.sessionStorage.setItem('fpvNexusRole', 'player'); } catch (e) { /* ignore */ } NX.role = 'player'; NX.role_chosen = true; $('whoRole').style.display = 'none'; if (NX.roleResolve) NX.roleResolve(); nxShowWho(false); });
   $('whoGo').addEventListener('click', async () => {

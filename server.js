@@ -153,6 +153,16 @@ async function api(req, res, url) {
     if (!ok) failed(ip);
     return json(res, 200, { ok });
   }
+  if (p === '/api/db/changepw' && req.method === 'POST') {           // a student replaces the temporary password: proves the old one, sets the new one and clears the "must change" flag
+    const ip = ipOf(req); if (limited(ip, 20)) return json(res, 429, { ok: false });
+    const b = await body(req), un = String(b.un || ''), c = SEG.test(un) ? docs.get('creds/' + un) : null;
+    const good = !!(c && typeof b.h === 'string' && eq(c.h, b.h));
+    if (!good) { failed(ip); return json(res, 403, { ok: false }); }
+    if (typeof b.salt !== 'string' || typeof b.nh !== 'string' || b.salt.length < 6 || b.salt.length > 60 || b.nh.length < 20 || b.nh.length > 200 || b.nh === c.h) return json(res, 400, { ok: false });
+    const next = { salt: b.salt, h: b.nh }; docs.set('creds/' + un, next); broadcast('creds/' + un, next);
+    const ac = docs.get('accounts/' + un); if (ac && ac.mustPw) { const na = Object.assign({}, ac); delete na.mustPw; docs.set('accounts/' + un, na); broadcast('accounts/' + un, na); }
+    touch(); return json(res, 200, { ok: true });
+  }
   if (p === '/api/db/doc') {
     if (!validPath(q.get('p'), true)) return json(res, 400, { error: 'bad path' });
     const [col, id] = segs(q.get('p'));
