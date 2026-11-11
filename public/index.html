@@ -1326,7 +1326,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 341</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 342</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -5432,7 +5432,7 @@ function placeDroneAtStart() {
   drone.quat.setFromEuler(new THREE.Euler(0, s.yaw * DEG, 0, 'YXZ'));
   drone.thrAct = 0;
   if (lockOn()) {
-    const L = currentStage.lock; drone.pos.y = L.alt; drone.thrAct = lockCmd(PRESETS[settings.preset]);
+    const L = currentStage.lock; drone.pos.y = L.alt; drone.thrAct = 0;                          // motors idle until the race starts, then they spin up to the fixed throttle
     if (L.v0 > 0) drone.vel.set(-Math.sin(s.yaw * DEG) * L.v0, 0, -Math.cos(s.yaw * DEG) * L.v0);          // already moving when the stage begins
   }          // starts airborne at the track's height, in flight at its fixed throttle
 }
@@ -7791,15 +7791,16 @@ function frame(now) {
       if (typeof nxStickTick === 'function') nxStickTick(dt);
       if (!editorMode) {
         if (state === 'countdown') onCountdown(dt);
-        if (state === 'racing' || state === 'free' || state === 'crashed') {
+        if (state === 'racing' || (state === 'free' && !lockOn()) || state === 'crashed') {      // a locked track waits quietly (motors idle, drone still) until its race starts
           physAcc += dt;
           let n = 0;
-          while (physAcc >= PHYS_DT && n < 20 && (state === 'racing' || state === 'free' || state === 'crashed')) { stepPhysics(PHYS_DT); physAcc -= PHYS_DT; n++; }
+          while (physAcc >= PHYS_DT && n < 20 && (state === 'racing' || (state === 'free' && !lockOn()) || state === 'crashed')) { stepPhysics(PHYS_DT); physAcc -= PHYS_DT; n++; }
           if (n >= 20) physAcc = 0;
         }
       }
     }
-    Sound.updateMotor(throttleCurve(input.throttle), !paused && !editorMode && (state === 'racing' || state === 'free'), drone.vel.length());
+    const lkq = lockOn();                                          // locked track: silent until the race starts, then the sound follows the motors as they spin up to the fixed throttle
+    Sound.updateMotor(lkq ? drone.thrAct : throttleCurve(input.throttle), !paused && !editorMode && (state === 'racing' || (state === 'free' && !lkq)), drone.vel.length());
   }
 
   // pulsing glow on the target gate
