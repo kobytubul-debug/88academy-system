@@ -1326,7 +1326,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 345</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 346</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -3522,9 +3522,20 @@ function buildPropMesh(p) {
   }
   return g;
 }
+const PROP_OPEN = {                              // props with open space under them (legs, poles): thin solid legs plus a solid top that starts above the opening, so the drone can fly through underneath
+  watertank: (T) => { const o = [{ x: 0, z: 0, r: T.r * 1.02, y0: T.h * 0.62, h: T.h }]; for (let i = 0; i < 4; i++) { const a = i * Math.PI / 2 + Math.PI / 4; o.push({ x: Math.cos(a) * T.r * 0.7, z: Math.sin(a) * T.r * 0.7, r: 0.22, h: T.h * 0.62 }); } return o; },
+  watchtower: (T) => { const o = [{ x: 0, z: 0, r: 2.3, y0: T.h * 0.7, h: T.h }]; [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach((q) => o.push({ x: q[0] * 1.2, z: q[1] * 1.2, r: 0.26, h: T.h * 0.7 })); return o; },
+  gazebo: (T) => { const o = [{ x: 0, z: 0, r: T.r * 1.15, y0: T.h * 0.78, h: T.h }]; for (let i = 0; i < 8; i++) { const a = i / 8 * Math.PI * 2; o.push({ x: Math.cos(a) * T.r * 0.9, z: Math.sin(a) * T.r * 0.9, r: 0.2, h: T.h * 0.8 }); } return o; },
+  billboard: (T) => { const o = []; for (let i = 0; i <= 8; i++) o.push({ x: (i / 8 - 0.5) * T.len, z: 0, r: 0.45, y0: T.h * 0.62, h: T.h }); [-1, 1].forEach((sg) => o.push({ x: sg * T.len * 0.3, z: 0, r: 0.35, h: T.h * 0.7 })); return o; }
+};
 function propColliders(p) {
   const T = PROP_TYPES[p.t], s = p.s || 1, out = [];
   if (T.nc) return out;                          // flat markers on the ground are never solid
+  if (PROP_OPEN[p.t]) {                         // open underneath: the legs are solid, the space between them is not
+    const a0 = (p.yaw || 0) * DEG, c0 = Math.cos(a0), s0 = Math.sin(a0);
+    PROP_OPEN[p.t](T).forEach((q) => out.push({ t: 0, x: p.x + (q.x * c0 + q.z * s0) * s, z: p.z + (-q.x * s0 + q.z * c0) * s, r: q.r * s, h: q.h * s, y0: q.y0 !== undefined ? q.y0 * s : undefined, prop: true }));
+    return out;
+  }
   if (T.len) {                                   // long props (barrier, buildings, fences...): a row of round colliders along the length
     const cr = (T.cr || 0.42) * s, L = T.len * s, n = Math.max(3, Math.ceil(L / Math.max(0.5 * s, cr))), a = (p.yaw || 0) * DEG, c = Math.cos(a), sn = Math.sin(a);
     for (let i = 0; i <= n; i++) {
