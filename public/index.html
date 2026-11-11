@@ -1324,7 +1324,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 337</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 338</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -6776,11 +6776,12 @@ function bladeGeo(R, wid, pitch) {
   return geo;
 }
 /* glossy glass on an FPV camera lens: a domed coated front element, a faint violet coating ring and two bright highlights (the glint) */
-function lensGlint(lens, R, yTop) {
-  const glass = new THREE.Mesh(new THREE.SphereGeometry(R * 0.92, 24, 10, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshPhongMaterial({ color: 0x0c1e2c, emissive: 0x0a2a44, shininess: 240, specular: 0xffffff, transparent: true, opacity: 0.9 }));
+function lensGlint(lens, R, yTop, tint) {                      // tint: the camera colour picked by the manager (the lens glass and its coating follow it), none = the default blue glass
+  const tc = tint ? new THREE.Color(tint) : null;
+  const glass = new THREE.Mesh(new THREE.SphereGeometry(R * 0.92, 24, 10, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshPhongMaterial({ color: tc ? tc.clone().multiplyScalar(0.3) : 0x0c1e2c, emissive: tc ? tc.clone().multiplyScalar(0.2) : 0x0a2a44, shininess: 240, specular: 0xffffff, transparent: true, opacity: 0.9 }));
   glass.scale.y = 0.38; glass.position.y = yTop; lens.add(glass);
   const flat = (geo, mat, x, z, y) => { const m = new THREE.Mesh(geo, mat); m.rotation.x = -Math.PI / 2; m.position.set(x, yTop + y, z); lens.add(m); return m; };
-  flat(new THREE.RingGeometry(R * 0.52, R * 0.8, 28), new THREE.MeshBasicMaterial({ color: 0x7a5cff, transparent: true, opacity: 0.32, side: THREE.DoubleSide, depthWrite: false }), 0, 0, R * 0.16);
+  flat(new THREE.RingGeometry(R * 0.52, R * 0.8, 28), new THREE.MeshBasicMaterial({ color: tc ? tc.clone().lerp(new THREE.Color(0xffffff), 0.35) : 0x7a5cff, transparent: true, opacity: 0.32, side: THREE.DoubleSide, depthWrite: false }), 0, 0, R * 0.16);
   const hl = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.95, side: THREE.DoubleSide, depthWrite: false });
   flat(new THREE.CircleGeometry(R * 0.2, 16), hl, -R * 0.36, -R * 0.3, R * 0.34);               // main highlight, upper left
   flat(new THREE.CircleGeometry(R * 0.085, 12), hl, R * 0.32, R * 0.34, R * 0.3);               // small second glint, lower right
@@ -6833,8 +6834,8 @@ function buildDroneModel(id) {
     const TILT = 0.52;                                          // camera angled 30 degrees up, like a real FPV cam
     const camMat = DC.c ? new THREE.MeshStandardMaterial({ color: DC.c, roughness: 0.5, metalness: 0.3 }) : black;
     const camBox = mk(roundBoxGeo(0.17, 0.16, 0.14, 0.03, 0.1), camMat, 0, 0.14, -0.45); camBox.rotation.x = TILT;
-    const lens = mk(new THREE.CylinderGeometry(0.052, 0.058, 0.07, 22), new THREE.MeshPhongMaterial({ color: 0x0a1a24, emissive: 0x0f4258, shininess: 160, specular: 0x9fd8f0 }), 0, 0.14 + 0.09 * Math.sin(TILT), -0.45 - 0.09 * Math.cos(TILT));
-    lens.rotation.x = TILT - Math.PI / 2; lensGlint(lens, 0.055, 0.035);
+    const lens = mk(new THREE.CylinderGeometry(0.052, 0.058, 0.07, 22), DC.c ? new THREE.MeshPhongMaterial({ color: new THREE.Color(DC.c).multiplyScalar(0.35), emissive: new THREE.Color(DC.c).multiplyScalar(0.3), shininess: 160, specular: new THREE.Color(DC.c).lerp(new THREE.Color(0xffffff), 0.5) }) : new THREE.MeshPhongMaterial({ color: 0x0a1a24, emissive: 0x0f4258, shininess: 160, specular: 0x9fd8f0 }), 0, 0.14 + 0.09 * Math.sin(TILT), -0.45 - 0.09 * Math.cos(TILT));
+    lens.rotation.x = TILT - Math.PI / 2; lensGlint(lens, 0.055, 0.035, DC.c);
     mk(new THREE.TorusGeometry(0.056, 0.012, 8, 22), metal, 0, 0.14 + 0.125 * Math.sin(TILT), -0.45 - 0.125 * Math.cos(TILT)).rotation.x = TILT;          // lens ring
     mk(roundBoxGeo(0.1, 0.06, 0.12, 0.02, 0.1), std(accent, 0.6, 0.0), 0, 0.16, 0.5);                  // 3D-printed antenna mount
     /* FPV antenna like a real Lumenier-style one: gold SMA base, thin black coax mast, coloured lollipop head; short on the 5" quads, long on the 10" ones */
@@ -6952,8 +6953,8 @@ function buildDroneModel(id) {
     const TILT = 0.52;
     const mount = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.22, 0.17), clearMat); mount.position.set(0, YC + 0.22, -0.2); mount.rotation.x = TILT; grp.add(mount);
     const cam = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.16, 0.12), DC.c ? new THREE.MeshStandardMaterial({ color: DC.c, roughness: 0.5, metalness: 0.3 }) : black); cam.position.set(0, YC + 0.22, -0.2); cam.rotation.x = TILT; grp.add(cam);
-    const lens = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.095, 0.08, 24), new THREE.MeshPhongMaterial({ color: 0x0b0e12, emissive: 0x0a1620, shininess: 160, specular: 0x88aadd }));
-    lens.position.set(0, YC + 0.22 + 0.1 * Math.sin(TILT), -0.2 - 0.1 * Math.cos(TILT)); lens.rotation.x = TILT - Math.PI / 2; grp.add(lens); lensGlint(lens, 0.092, 0.04);
+    const lens = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.095, 0.08, 24), DC.c ? new THREE.MeshPhongMaterial({ color: new THREE.Color(DC.c).multiplyScalar(0.35), emissive: new THREE.Color(DC.c).multiplyScalar(0.3), shininess: 160, specular: new THREE.Color(DC.c).lerp(new THREE.Color(0xffffff), 0.5) }) : new THREE.MeshPhongMaterial({ color: 0x0b0e12, emissive: 0x0a1620, shininess: 160, specular: 0x88aadd }));
+    lens.position.set(0, YC + 0.22 + 0.1 * Math.sin(TILT), -0.2 - 0.1 * Math.cos(TILT)); lens.rotation.x = TILT - Math.PI / 2; grp.add(lens); lensGlint(lens, 0.092, 0.04, DC.c);
     const lring = new THREE.Mesh(new THREE.TorusGeometry(0.095, 0.014, 8, 24), metal); lring.position.set(0, YC + 0.22 + 0.14 * Math.sin(TILT), -0.2 - 0.14 * Math.cos(TILT)); lring.rotation.x = TILT; grp.add(lring);
     const bt = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.1, 0.56), new THREE.MeshStandardMaterial({ color: 0x1a1c20, roughness: 0.6 })); bt.position.set(0, YC - 0.1, 0.06); grp.add(bt);
     grp.scale.setScalar(1.3);
