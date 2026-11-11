@@ -1326,7 +1326,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 346</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 347</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -3528,9 +3528,97 @@ const PROP_OPEN = {                              // props with open space under 
   gazebo: (T) => { const o = [{ x: 0, z: 0, r: T.r * 1.15, y0: T.h * 0.78, h: T.h }]; for (let i = 0; i < 8; i++) { const a = i / 8 * Math.PI * 2; o.push({ x: Math.cos(a) * T.r * 0.9, z: Math.sin(a) * T.r * 0.9, r: 0.2, h: T.h * 0.8 }); } return o; },
   billboard: (T) => { const o = []; for (let i = 0; i <= 8; i++) o.push({ x: (i / 8 - 0.5) * T.len, z: 0, r: 0.45, y0: T.h * 0.62, h: T.h }); [-1, 1].forEach((sg) => o.push({ x: sg * T.len * 0.3, z: 0, r: 0.35, h: T.h * 0.7 })); return o; }
 };
+/* ---------- collision shapes taken from the real geometry of each prop (legs, poles, roofs, gaps) ---------- */
+function pcEul(v, e) {                           // three.js Euler 'XYZ': z first, then y, then x
+  let x = v[0], y = v[1], z = v[2], c, sn, t;
+  if (e.z) { c = Math.cos(e.z); sn = Math.sin(e.z); t = x * c - y * sn; y = x * sn + y * c; x = t; }
+  if (e.y) { c = Math.cos(e.y); sn = Math.sin(e.y); t = x * c + z * sn; z = -x * sn + z * c; x = t; }
+  if (e.x) { c = Math.cos(e.x); sn = Math.sin(e.x); t = y * c - z * sn; z = y * sn + z * c; y = t; }
+  return [x, y, z];
+}
+function pcGeo(geo) {                            // -> { kind: 'box'|'cyl'|'sph'|'custom', min, max, rt, rb } in the geometry's own space, or null when it is not solid
+  if (!geo) return null;
+  const ty = String(geo.type || ''), pr = geo.parameters || {}, fin = (x) => typeof x === 'number' && isFinite(x);
+  if (/^(Plane|Circle|Ring|Shape)/.test(ty)) return null;
+  if (ty === 'BoxGeometry' && fin(pr.width) && fin(pr.height) && fin(pr.depth)) return { kind: 'box', min: [-pr.width / 2, -pr.height / 2, -pr.depth / 2], max: [pr.width / 2, pr.height / 2, pr.depth / 2] };
+  if ((ty === 'CylinderGeometry' || ty === 'ConeGeometry') && fin(pr.height)) {
+    const rt = ty === 'ConeGeometry' ? 0 : pr.radiusTop, rb = ty === 'ConeGeometry' ? pr.radius : pr.radiusBottom;
+    if (fin(rt) && fin(rb)) { const R = Math.max(rt, rb); return { kind: 'cyl', min: [-R, -pr.height / 2, -R], max: [R, pr.height / 2, R], rt, rb }; }
+  }
+  if (/^(Sphere|Dodecahedron|Icosahedron|Octahedron|Tetrahedron)Geometry$/.test(ty) && fin(pr.radius)) { const R = pr.radius; return { kind: 'sph', min: [-R, -R, -R], max: [R, R, R] }; }
+  if (ty === 'TorusGeometry' && fin(pr.radius) && fin(pr.tube)) { const R = pr.radius + pr.tube; return { kind: 'box', min: [-R, -R, -pr.tube], max: [R, R, pr.tube] }; }
+  let bb = geo.boundingBox; if (!bb && typeof geo.computeBoundingBox === 'function') { geo.computeBoundingBox(); bb = geo.boundingBox; }
+  if (!bb || !bb.min || !bb.max || ![bb.min.x, bb.min.y, bb.min.z, bb.max.x, bb.max.y, bb.max.z].every(fin)) return null;
+  return { kind: 'custom', min: [bb.min.x, bb.min.y, bb.min.z], max: [bb.max.x, bb.max.y, bb.max.z] };
+}
+function pcParts(m) {                            // one mesh -> solid parts: { k:'c', x, z, r, y0, y1 } (round) or { k:'b', x, z, hx, hz, a, y0, y1 } (box turned by a)
+  const G = pcGeo(m.geometry); if (!G) return [];
+  const sc = m.scale || { x: 1, y: 1, z: 1 }, ro = m.rotation || { x: 0, y: 0, z: 0 }, po = m.position || { x: 0, y: 0, z: 0 };
+  const sx = Math.abs(sc.x), sy = Math.abs(sc.y), sz = Math.abs(sc.z), out = [];
+  if (![sx, sy, sz, ro.x, ro.y, ro.z, po.x, po.y, po.z].every((v) => typeof v === 'number' && isFinite(v))) return [];
+  const upright = Math.abs(ro.x) < 0.2 && Math.abs(ro.z) < 0.2;
+  const cx = (G.min[0] + G.max[0]) / 2 * sx, cy = (G.min[1] + G.max[1]) / 2 * sy, cz = (G.min[2] + G.max[2]) / 2 * sz;
+  const hx = (G.max[0] - G.min[0]) / 2 * sx, hy = (G.max[1] - G.min[1]) / 2 * sy, hz = (G.max[2] - G.min[2]) / 2 * sz;
+  if (upright && (G.kind === 'cyl' || G.kind === 'sph' || (G.kind === 'custom' && Math.max(hx, hz) < 1.6 * Math.min(hx, hz)))) {
+    const cc = pcEul([cx, cy, cz], { x: 0, y: ro.y, z: 0 }), X = po.x + cc[0], Z = po.z + cc[2], ylo = po.y + cc[1] - hy, H = 2 * hy;
+    const rr = G.kind === 'custom' ? (hx + hz) / 2 : (sx + sz) / 2 * (G.kind === 'cyl' ? Math.max(G.rt, G.rb) : G.max[0]);
+    if (G.kind === 'cyl' && Math.abs(G.rt - G.rb) > 0.05 * Math.max(G.rt, G.rb)) {          // tapered (cone, trunk): a few stacked rounds
+      for (let i = 0; i < 3; i++) { const f0 = i / 3, f1 = (i + 1) / 3, r0 = (G.rb + (G.rt - G.rb) * f0), r1 = (G.rb + (G.rt - G.rb) * f1); out.push({ k: 'c', x: X, z: Z, r: Math.max(r0, r1) * (sx + sz) / 2, y0: ylo + H * f0, y1: ylo + H * f1 }); }
+    } else out.push({ k: 'c', x: X, z: Z, r: rr, y0: ylo, y1: ylo + H });
+  } else {
+    let X, Z, ax, az, a = 0, ylo, yhi;
+    if (Math.abs(ro.x) < 0.02 && Math.abs(ro.z) < 0.02) {                                   // upright box, maybe turned about y: stays an oriented box
+      const cc = pcEul([cx, cy, cz], { x: 0, y: ro.y, z: 0 }); X = po.x + cc[0]; Z = po.z + cc[2]; ax = hx; az = hz; a = ro.y; ylo = po.y + cc[1] - hy; yhi = ylo + 2 * hy;
+    } else {                                                                                 // tilted: the box around the turned shape
+      let mnx = 1e9, mxx = -1e9, mnz = 1e9, mxz = -1e9, mny = 1e9, mxy = -1e9;
+      for (let i = 0; i < 8; i++) { const v = pcEul([(i & 1 ? G.max[0] : G.min[0]) * sx, (i & 2 ? G.max[1] : G.min[1]) * sy, (i & 4 ? G.max[2] : G.min[2]) * sz], ro); mnx = Math.min(mnx, v[0]); mxx = Math.max(mxx, v[0]); mny = Math.min(mny, v[1]); mxy = Math.max(mxy, v[1]); mnz = Math.min(mnz, v[2]); mxz = Math.max(mxz, v[2]); }
+      X = po.x + (mnx + mxx) / 2; Z = po.z + (mnz + mxz) / 2; ax = (mxx - mnx) / 2; az = (mxz - mnz) / 2; ylo = po.y + mny; yhi = po.y + mxy;
+    }
+    out.push({ k: 'b', x: X, z: Z, hx: ax, hz: az, a, y0: ylo, y1: yhi });
+  }
+  return out.filter((q) => q.y1 > 0.2 && (q.k === 'c' ? q.r >= 0.07 : Math.min(q.hx, q.hz) >= 0.03 && Math.max(q.hx, q.hz) >= 0.07));
+}
+function pcInside(A, B) {                        // is the footprint and height range of part A fully inside part B?
+  if (A.y0 < B.y0 - 0.05 || A.y1 > B.y1 + 0.05) return false;
+  const pts = [];
+  if (A.k === 'c') for (let i = 0; i < 8; i++) pts.push([A.x + A.r * Math.cos(i * Math.PI / 4), A.z + A.r * Math.sin(i * Math.PI / 4)]);
+  else { const c = Math.cos(A.a), sn = Math.sin(A.a); [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach((q) => pts.push([A.x + q[0] * A.hx * c + q[1] * A.hz * sn, A.z - q[0] * A.hx * sn + q[1] * A.hz * c])); }
+  return pts.every((q) => {
+    if (B.k === 'c') return Math.hypot(q[0] - B.x, q[1] - B.z) <= B.r + 0.12;
+    const c = Math.cos(B.a), sn = Math.sin(B.a), dx = q[0] - B.x, dz = q[1] - B.z;
+    return Math.abs(dx * c - dz * sn) <= B.hx + 0.12 && Math.abs(dx * sn + dz * c) <= B.hz + 0.12;
+  });
+}
+function pcBuild(meshes) {                       // parts of all meshes, without parts hidden inside bigger ones, at most 70 of them
+  let parts = []; meshes.forEach((m) => { try { pcParts(m).forEach((q) => parts.push(q)); } catch (e) { /* skip a mesh that cannot be measured */ } });
+  const vol = (q) => (q.y1 - q.y0) * (q.k === 'c' ? Math.PI * q.r * q.r : 4 * q.hx * q.hz);
+  parts.sort((a, b) => vol(b) - vol(a));
+  const keep = []; parts.forEach((q) => { if (!keep.some((k) => pcInside(q, k))) keep.push(q); });
+  return keep.slice(0, 70);
+}
+const _pcCache = {};
+function pcTemplate(type) {                      // measured once per prop type from its real mesh; null when it cannot be measured
+  if (type in _pcCache) return _pcCache[type];
+  let res = null;
+  try {
+    const g = buildPropMesh({ t: type, x: 0, z: 0, yaw: 0, s: 1 });
+    if (g && Array.isArray(g.children) && g.children.length) { const parts = pcBuild(g.children.filter((m) => m && m.geometry)), T = PROP_TYPES[type], top = parts.reduce((m, q) => Math.max(m, q.y1), 0); if (parts.length && top >= 0.5 * T.h && top <= 2 * T.h + 6) res = parts; }          // sanity: the measured shape must reach about the height the prop is meant to have
+  } catch (e) { res = null; }
+  _pcCache[type] = res; return res;
+}
 function propColliders(p) {
   const T = PROP_TYPES[p.t], s = p.s || 1, out = [];
   if (T.nc) return out;                          // flat markers on the ground are never solid
+  const tpl = pcTemplate(p.t);                   // real geometry: legs, poles, roofs and the gaps between them
+  if (tpl) {
+    const a0 = (p.yaw || 0) * DEG, c0 = Math.cos(a0), s0 = Math.sin(a0);
+    tpl.forEach((q) => {
+      const X = p.x + (q.x * c0 + q.z * s0) * s, Z = p.z + (-q.x * s0 + q.z * c0) * s, y0 = q.y0 * s, y1 = q.y1 * s, lo = y0 > 0.05 ? y0 : undefined;
+      if (q.k === 'c') out.push({ t: 0, x: X, z: Z, r: q.r * s, h: y1, y0: lo, prop: true });
+      else { const a = q.a + a0, hx = q.hx * s, hz = q.hz * s; out.push({ t: 2, x: X, z: Z, hx, hz, c: Math.cos(a), s: Math.sin(a), br2: Math.pow(Math.hypot(hx, hz) + 0.3, 2), h: y1, y0: lo, prop: true }); }
+    });
+    return out;
+  }
   if (PROP_OPEN[p.t]) {                         // open underneath: the legs are solid, the space between them is not
     const a0 = (p.yaw || 0) * DEG, c0 = Math.cos(a0), s0 = Math.sin(a0);
     PROP_OPEN[p.t](T).forEach((q) => out.push({ t: 0, x: p.x + (q.x * c0 + q.z * s0) * s, z: p.z + (-q.x * s0 + q.z * c0) * s, r: q.r * s, h: q.h * s, y0: q.y0 !== undefined ? q.y0 * s : undefined, prop: true }));
@@ -5014,6 +5102,23 @@ function collideWorld() {
       const vn = vel.x * nx + vel.z * nz;
       if (vn < 0) { vel.x -= 1.3 * vn * nx; vel.z -= 1.3 * vn * nz; impact(-vn, nx, 0, nz); }
       drone.w.multiplyScalar(0.85);
+    } else if (c.t === 2) {                                                  // box turned about y (props measured from their real shape)
+      const dx = pos.x - c.x, dz = pos.z - c.z;
+      if (dx * dx + dz * dz > c.br2) continue;
+      let lx = dx * c.c - dz * c.s, lz = dx * c.s + dz * c.c;
+      if (Math.abs(lx) > c.hx + R || Math.abs(lz) > c.hz + R) continue;
+      const a1 = lx + c.hx + R, a2 = c.hx + R - lx, a3 = lz + c.hz + R, a4 = c.hz + R - lz, a5 = (c.h + R) - pos.y;
+      const a6 = c.y0 !== undefined ? pos.y - (c.y0 - R) : 1e9, m = Math.min(a1, a2, a3, a4, a5, a6);
+      if (m === a6) { pos.y = c.y0 - R; if (vel.y > 0) { impact(vel.y, 0, -1, 0); vel.y *= -0.2; } vel.x *= 0.92; vel.z *= 0.92; }
+      else if (m === a5) { pos.y = c.h + R; if (vel.y < 0) { impact(-vel.y, 0, 1, 0); vel.y *= -0.2; } vel.x *= 0.92; vel.z *= 0.92; }
+      else {
+        let nlx = 0, nlz = 0;
+        if (m === a1) { lx = -(c.hx + R); nlx = -1; } else if (m === a2) { lx = c.hx + R; nlx = 1; } else if (m === a3) { lz = -(c.hz + R); nlz = -1; } else { lz = c.hz + R; nlz = 1; }
+        pos.x = c.x + lx * c.c + lz * c.s; pos.z = c.z - lx * c.s + lz * c.c;
+        const nx = nlx * c.c + nlz * c.s, nz = -nlx * c.s + nlz * c.c, vn = vel.x * nx + vel.z * nz;
+        if (vn < 0) { vel.x -= 1.3 * vn * nx; vel.z -= 1.3 * vn * nz; impact(-vn, nx, 0, nz); }
+      }
+      drone.w.multiplyScalar(0.9);
     } else {
       if (pos.x < c.minx - R || pos.x > c.maxx + R || pos.z < c.minz - R || pos.z > c.maxz + R) continue;
       const a1 = pos.x - (c.minx - R), a2 = (c.maxx + R) - pos.x, a3 = pos.z - (c.minz - R), a4 = (c.maxz + R) - pos.z, a5 = (c.h + R) - pos.y;
