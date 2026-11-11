@@ -1324,7 +1324,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 338</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 339</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -5121,7 +5121,8 @@ function stepPhysics(dt) {
   if (LK) {                                         // one free stick only: pitch (forward/back) or roll (sideways, the drone flies forward by itself at a fixed pitch); throttle fixed
     const L = currentStage.lock;
     input.yaw = 0; input.throttle = L.thr;
-    if (L.axis === 'roll') { input.roll = clamp(input.roll || 0, -1, 1) * L.gain; input.pitch = L.fwd; }
+    if (L.axis === 'both') { input.roll = clamp(input.roll || 0, -1, 1) * L.gain; input.pitch = clamp(input.pitch || 0, -1, 1) * L.gain; }          // both sticks free
+    else if (L.axis === 'roll') { input.roll = clamp(input.roll || 0, -1, 1) * L.gain; input.pitch = L.mode === 'acro' ? 0 : L.fwd; }   // the automatic forward lean only exists in angle mode
     else { input.roll = 0; input.pitch = clamp(input.pitch || 0, -1, 1) * L.gain; }
   }   // only the pitch stick works
   const thrCmd = LK && armed ? lockCmd(p) : armed ? throttleCurve(thrStick) : 0;    // Betaflight throttle mid / expo; a pitch-only track holds its height by itself
@@ -5133,7 +5134,7 @@ function stepPhysics(dt) {
     ty = -bfRate(input.yaw, A.rates.yaw) * DEG;
     const acroX = -bfRate(input.pitch, A.rates.pitch) * DEG;    // stick forward = nose down
     const acroZ = -bfRate(input.roll, A.rates.roll) * DEG;      // stick right = roll right
-    if (!LK && settings.mode === 'acro') {
+    if (LK ? currentStage.lock.mode === 'acro' : settings.mode === 'acro') {                // a locked track flies in the mode the track chose (angle or acro)
       tx = acroX; tz = acroZ;
     } else {
       _eu.setFromQuaternion(drone.quat, 'YXZ');
@@ -7184,7 +7185,7 @@ function gmOf(st) { return Object.assign({ on: true, size: 1, col: '#ffffff' }, 
 function normLock(l) {                                   // a pitch-only track: the drone starts airborne in angle mode, holds its height by itself, only the pitch stick (forward/back) works
   if (!l || typeof l !== 'object') return null;
   const n = (v, lo, hi, d) => { v = Number(v); return isFinite(v) ? Math.min(hi, Math.max(lo, v)) : d; };
-  return { alt: n(l.alt, 0.5, 40, 5), thr: n(l.thr, 0.1, 0.9, 0.4), gain: n(l.gain, 0.2, 1, 0.5), axis: l.axis === 'roll' ? 'roll' : 'pitch', v0: n(l.v0, 0, 20, 0), fwd: n(l.fwd, 0.05, 0.8, 0.25), hold: l.hold === true, comp: l.comp !== false };
+  return { alt: n(l.alt, 0.5, 40, 5), thr: n(l.thr, 0.1, 0.9, 0.4), gain: n(l.gain, 0.2, 1, 0.5), axis: l.axis === 'roll' ? 'roll' : l.axis === 'both' ? 'both' : 'pitch', mode: l.mode === 'acro' ? 'acro' : 'angle', v0: n(l.v0, 0, 20, 0), fwd: n(l.fwd, 0.05, 0.8, 0.25), hold: l.hold === true, comp: l.comp !== false };
 }
 function registerCustom(def) {
   const st = {
@@ -8603,7 +8604,8 @@ function nxSetLock(id, f, v, checked) {                         // the "flight m
   let L = st.lock ? Object.assign({}, st.lock) : null;
   if (f === 'on') L = checked ? (L || normLock({ alt: st.gen()[0] ? st.gen()[0].y : 5 })) : null;
   else if (L) {
-    if (f === 'axis') L.axis = v === 'roll' ? 'roll' : 'pitch';
+    if (f === 'axis') L.axis = v === 'roll' ? 'roll' : v === 'both' ? 'both' : 'pitch';
+    else if (f === 'mode') L.mode = v === 'acro' ? 'acro' : 'angle';
     else if (f === 'hold' || f === 'comp') L[f] = !!checked;
     else { let x = parseFloat(v); if (!isFinite(x)) return false; if (f === 'thr') x /= 100; L[f] = x; }
   } else return false;
@@ -9506,14 +9508,15 @@ function nxTrackPanel(id) {
   h += nxTrkSec(tag('env'), 'תנאי סביבה (רוח)', (Number(E.wind) || 0) > 0 ? (Number(E.wind) || 0) + " מ'/ש" : 'ללא', e);
   if (mine && !st.pub) {
     const Lk = st.lock, lf = (key, label, val, unit, step) => nxF(label, '<input type="number" step="' + (step || 'any') + '" data-act="trk-lock" data-f="' + key + '" data-id="' + id + '" value="' + val + '" style="width:90px"' + (Lk ? '' : ' disabled') + '> ' + (unit || ''));
-    let fm = '<p class="nxn">נעילת צירים: הרחפן מתחיל באוויר במוד אנגל, במצערת קבועה, ורק סטיק אחד חופשי. שאר הצירים נעולים.</p>';
+    let fm = '<p class="nxn">נעילת צירים: הרחפן מתחיל באוויר, במצערת קבועה. בוחרים מוד טיסה (אנגל או אקרו) ואיזה צירים חופשיים. שאר הצירים נעולים.</p>';
     fm += nxF('נעילת צירים', '<label class="stgsw"><input type="checkbox" data-act="trk-lock" data-f="on" data-id="' + id + '"' + (Lk ? ' checked' : '') + '><i></i></label>');
-    fm += nxF('הציר החופשי', '<select data-act="trk-lock" data-f="axis" data-id="' + id + '"' + (Lk ? '' : ' disabled') + '><option value="pitch"' + (Lk && Lk.axis === 'pitch' ? ' selected' : '') + '>פיץ׳ (קדימה/אחורה)</option><option value="roll"' + (Lk && Lk.axis === 'roll' ? ' selected' : '') + '>רול (ימינה/שמאלה), הרחפן מתקדם לבד</option></select>');
+    fm += nxF('מוד טיסה', '<select data-act="trk-lock" data-f="mode" data-id="' + id + '"' + (Lk ? '' : ' disabled') + '><option value="angle"' + (!Lk || Lk.mode !== 'acro' ? ' selected' : '') + '>אנגל (הרחפן מתיישר לבד)</option><option value="acro"' + (Lk && Lk.mode === 'acro' ? ' selected' : '') + '>אקרו (שליטה בקצב סיבוב)</option></select>');
+    fm += nxF('הציר החופשי', '<select data-act="trk-lock" data-f="axis" data-id="' + id + '"' + (Lk ? '' : ' disabled') + '><option value="pitch"' + (Lk && Lk.axis === 'pitch' ? ' selected' : '') + '>פיץ׳ (קדימה/אחורה)</option><option value="roll"' + (Lk && Lk.axis === 'roll' ? ' selected' : '') + '>רול (ימינה/שמאלה), הרחפן מתקדם לבד (באנגל)</option><option value="both"' + (Lk && Lk.axis === 'both' ? ' selected' : '') + '>שני הצירים חופשיים (פיץ׳ ורול)</option></select>');
     fm += lf('alt', 'גובה התחלה', Lk ? Lk.alt : '', 'מ׳') + lf('thr', 'מצערת קבועה', Lk ? Math.round(Lk.thr * 100) : '', '%') + lf('v0', 'מהירות כניסה (0 = מרחף)', Lk ? Lk.v0 : '', 'מ׳/ש׳') + lf('gain', 'עוצמת הסטיק החופשי (0.2-1)', Lk ? Lk.gain : '', '');
     fm += lf('fwd', 'התקדמות אוטומטית (ציר רול בלבד, 0.05-0.8)', Lk ? Lk.fwd : '', '');
     fm += nxF('פיצוי על ירידה בגובה בנטייה', '<label class="nxchk1"><input type="checkbox" data-act="trk-lock" data-f="comp" data-id="' + id + '"' + (Lk && Lk.comp ? ' checked' : '') + (Lk ? '' : ' disabled') + '> פעיל</label>');
     fm += nxF('שמירת גובה מלאה', '<label class="nxchk1"><input type="checkbox" data-act="trk-lock" data-f="hold" data-id="' + id + '"' + (Lk && Lk.hold ? ' checked' : '') + (Lk ? '' : ' disabled') + '> הרחפן מחזיק גובה לבד (המצערת רק מוצגת)</label>');
-    h += nxTrkSec(tag('lock'), 'מצב טיסה (נעילת צירים)', Lk ? (Lk.axis === 'roll' ? 'רול בלבד' : 'פיץ׳ בלבד') : 'רגיל', fm);
+    h += nxTrkSec(tag('lock'), 'מצב טיסה (נעילת צירים)', Lk ? (Lk.axis === 'roll' ? 'רול בלבד' : Lk.axis === 'both' ? 'פיץ׳ ורול' : 'פיץ׳ בלבד') + ' · ' + (Lk.mode === 'acro' ? 'אקרו' : 'אנגל') : 'רגיל', fm);
   }
   h += nxTrkSec(tag('prev'), 'תצוגה מקדימה של המפה', '', nxMapPreview(st), false);
   const gd = (D.guides || {})[k] || {}, hasG = !!(String(gd.text || '').trim() || String(gd.fly || '').trim());
