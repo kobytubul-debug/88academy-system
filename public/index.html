@@ -770,7 +770,9 @@ body.ed-on #editBadge{top:64px;font-size:12px;background:rgba(0,0,0,.45);padding
 #edPlaceMsg{margin-top:8px;padding:8px;background:color-mix(in srgb,var(--ac) 16%,transparent);font:600 13px var(--ui);color:var(--ti,#fff)}
 .trktbl .edt{margin-top:6px;display:block;margin-right:auto;margin-left:auto;background:transparent;border:1px solid var(--ln);color:var(--ac);border-radius:0;padding:3px 12px;font:12px var(--ui);cursor:pointer}
 .trktbl .edt:hover{border-color:var(--ac);color:var(--bt,#fff)}
-body.nx-lite .edt{display:none!important}
+body.nx-lite .edt,body.nx-lite .dup{display:none!important}
+.trktbl .dup{margin-top:6px;display:block;margin-right:auto;margin-left:auto;background:transparent;border:1px solid var(--ln);color:var(--mu);border-radius:0;padding:3px 12px;font:12px var(--ui);cursor:pointer}
+.trktbl .dup:hover{border-color:var(--ac);color:var(--bt,#fff)}
 
 #scrMain .mtiles .mbtn.quit{color:var(--qt,#fff)}
 .nxcol{margin:10px 0;background:var(--tile2);box-shadow:inset 3px 0 0 var(--ac)}.nxcol>summary{cursor:pointer;list-style:none;padding:11px 12px;font:700 italic 15px var(--ui);color:var(--ti,#fff)}.nxcol>summary:after{content:'\25BE';float:left;color:var(--mu)}.nxcol[open]>summary{border-bottom:1px solid var(--ln)}.nxcol .nxcol{margin:8px 10px;background:var(--tile)}.nxcol .nxcolb{padding:6px 10px 12px}.nxcol .nxcolb .nxrow{margin:6px 0}.nxcol .colauto{padding:4px 8px;font-size:11px}.nxcol .colon{font-size:11px;color:var(--mu);margin-inline-start:6px}
@@ -1324,7 +1326,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 340</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 341</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -7493,6 +7495,7 @@ function buildCards() {
       '<td class="stars">' + stars + '</td>' +
       '<td><button class="fly" data-id="' + id + '"' + (lk ? ' disabled' : '') + '>' + (lk ? '&#128274; נעול' : 'טוס <span class="en">FLY</span>') + '</button>' +
       (lk ? '' : '<button class="edt" data-id="' + id + '">' + (st.custom && !st.pub ? 'ערוך' : 'שכפל ועריך') + '</button>') +
+      (lk ? '' : '<button class="dup" data-id="' + id + '">שכפל</button>') +
       (st.custom && !st.pub ? '<button class="del" data-id="' + id + '">מחק</button>' : '') + '</td>';
     drawMiniMap(tr.querySelector('canvas'), gts, st.color);
     tr.addEventListener('click', () => { selectTrack(id); if (typeof nxTrackPick === 'function') nxTrackPick(id); });
@@ -7505,6 +7508,12 @@ function buildCards() {
       setTimeout(() => { dl.dataset.armed = ''; dl.textContent = 'מחק'; }, 2500);
     });
     tr.querySelector('.fly').addEventListener('click', (ev) => { ev.stopPropagation(); selectTrack(id); startStage(id); });
+    const dpb = tr.querySelector('.dup');
+    if (dpb) dpb.addEventListener('click', (ev) => {                  // admins: copy the whole map as a new track of their own (stays on the list)
+      ev.stopPropagation();
+      const nid = duplicateToCustom(id);
+      if (nid) { trkSel = nid; selectTrack(nid); if (typeof nxToast === 'function') nxToast('המסלול שוכפל: ' + STAGES[nid].name); }
+    });
     const edb = tr.querySelector('.edt');
     if (edb) edb.addEventListener('click', (ev) => {                  // admins: open any track in the editor (built-in and published ones are copied first)
       ev.stopPropagation();
@@ -9494,8 +9503,8 @@ function nxTrackPanel(id) {
   g += nxF('קטגוריה', '<select class="catsel" data-act="trk-cat" data-id="' + id + '"><option value="">ללא קטגוריה</option>' + list.map((c) => '<option value="' + c.id + '"' + (NXH.catOf(id) === c.id ? ' selected' : '') + '>' + nxEsc(c.name) + '</option>').join('') + '</select>');
   g += nxF('מיקום ברשימה', '<button class="nxb" data-act="trk-up" data-id="' + id + '" title="הזז למעלה">&#9650;</button><button class="nxb" data-act="trk-down" data-id="' + id + '" title="הזז למטה">&#9660;</button>');
   g += '<p class="nxn">' + (MAP_BASES[st.base || id] || '') + ' &middot; ' + st.gen().length + ' שערים' + (mine ? ' &middot; ' + (st.objects ? st.objects.length : 0) + ' אלמנטים' : ' &middot; מובנה') + '</p>';
-  g += '<div class="nxbtns">' + (mine ? '<button class="nxb pri" data-act="trk-open" data-id="' + id + '">ערוך במפה</button><button class="nxb danger" data-act="trk-del" data-id="' + id + '">מחק</button>'
-    : '<button class="nxb pri" data-act="trk-copy" data-id="' + id + '">שכפל ועריך</button><button class="nxb danger" data-act="trk-delb" data-id="' + id + '">מחק</button>') + '</div>';
+  g += '<div class="nxbtns">' + (mine ? '<button class="nxb pri" data-act="trk-open" data-id="' + id + '">ערוך במפה</button><button class="nxb" data-act="trk-dup" data-id="' + id + '">שכפל</button><button class="nxb danger" data-act="trk-del" data-id="' + id + '">מחק</button>'
+    : '<button class="nxb pri" data-act="trk-copy" data-id="' + id + '">שכפל ועריך</button><button class="nxb" data-act="trk-dup" data-id="' + id + '">שכפל</button><button class="nxb danger" data-act="trk-delb" data-id="' + id + '">מחק</button>') + '</div>';
   h += nxTrkSec(tag('gen'), 'כללי', '', g, true);
   let v = nxF('מוצג לשחקנים', '<label class="stgsw"><input type="checkbox" data-act="stg-vis" data-id="' + id + '"' + (hid ? '' : ' checked') + '><i></i></label>');
   v += '<div class="nxbtns"><button class="nxb stglock' + (locked ? ' on' : '') + '" data-act="stg-lock" data-id="' + id + '" title="השחקנים יראו רק את המסלול הזה">' + (locked ? '&#128274; נעול, לחץ לביטול' : 'נעל עליו (רק הוא יוצג)') + '</button></div>';
@@ -10264,6 +10273,7 @@ function nxAdmWire() {
     if (a === 'trk-crs') { NX.tab = 'courses'; nxAdmRender(); return; }
     if (a === 'trk-new') { nxOpen(false); createCustomTrack(); }
     else if (a === 'trk-copy') { const nid = duplicateToCustom(id); if (nid) { nxOpen(false); selectTrack(nid); startStage(nid, true); } }
+    else if (a === 'trk-dup') { const nid = duplicateToCustom(id); if (nid) { NX.selTrk = nid; try { selectTrack(nid); } catch (e) { /* ignore */ } nxToast('המסלול שוכפל: ' + STAGES[nid].name); nxAdmRender(); } }
     else if (a === 'trk-open') { nxOpen(false); selectTrack(id); startStage(id, true); }
     else if (a === 'trk-del') {
       if (el.dataset.armed) { deleteCustomTrack(id); nxTouch(); nxAdmRender(); return; }
