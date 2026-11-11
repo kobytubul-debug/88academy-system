@@ -156,10 +156,10 @@ async function api(req, res, url) {
   const p = url.pathname, q = url.searchParams, admin = isAdmin(req, p === '/api/stream' ? q.get('t') : ''), uid = uidOf(req);
   if (p === '/api/health') return json(res, 200, { ok: true, docs: docs.size });
   if (p === '/api/admin/login' && req.method === 'POST') {
-    const ip = ipOf(req); if (limited(ip, 8)) return json(res, 429, { error: 'נסיונות רבים מדי. נסה שוב בעוד כמה דקות' });
+    const ip = ipOf(req); if (limited('a:' + ip, 8)) return json(res, 429, { error: 'נסיונות רבים מדי. נסה שוב בעוד כמה דקות' });      // the manager's counter is separate: students typing wrong passwords on the same network never lock the manager out
     const b = await body(req);
     if (eq(b.u || '', ADMIN_USER) && eq(b.p || '', ADMIN_PASS)) return json(res, 200, { token: makeToken() });
-    failed(ip); return json(res, 401, { error: 'שם משתמש או סיסמה שגויים' });
+    failed('a:' + ip); return json(res, 401, { error: 'שם משתמש או סיסמה שגויים' });
   }
   if (p === '/api/admin/me') return json(res, 200, { admin });
   if (p === '/api/admin/backups' && req.method === 'GET') {          // list of the server's automatic backups (admin only)
@@ -191,17 +191,19 @@ async function api(req, res, url) {
     touch(); flush(); return json(res, 200, { imported: n });
   }
   if (p === '/api/db/check' && req.method === 'POST') {              // password check: the hash never leaves the server
-    const ip = ipOf(req); if (limited(ip, 20)) return json(res, 429, { ok: false });
-    const b = await body(req); const c = docs.get('creds/' + String(b.un || ''));
+    const ip = ipOf(req), b = await body(req), ku = 's:' + ip + ':' + String(b.un || '').slice(0, 40);
+    if (limited(ku, 10) || limited('s:' + ip, 80)) return json(res, 429, { ok: false });          // per student name and address (10), and a wide limit for a whole school network (80)
+    const c = docs.get('creds/' + String(b.un || ''));
     const ok = !!(c && typeof b.h === 'string' && eq(c.h, b.h));
-    if (!ok) failed(ip);
+    if (!ok) { failed(ku); failed('s:' + ip); }
     return json(res, 200, { ok });
   }
   if (p === '/api/db/changepw' && req.method === 'POST') {           // a student replaces the temporary password: proves the old one, sets the new one and clears the "must change" flag
-    const ip = ipOf(req); if (limited(ip, 20)) return json(res, 429, { ok: false });
-    const b = await body(req), un = String(b.un || ''), c = SEG.test(un) ? docs.get('creds/' + un) : null;
+    const ip = ipOf(req), b = await body(req), un = String(b.un || ''), ku = 's:' + ip + ':' + un.slice(0, 40);
+    if (limited(ku, 10) || limited('s:' + ip, 80)) return json(res, 429, { ok: false });
+    const c = SEG.test(un) ? docs.get('creds/' + un) : null;
     const good = !!(c && typeof b.h === 'string' && eq(c.h, b.h));
-    if (!good) { failed(ip); return json(res, 403, { ok: false }); }
+    if (!good) { failed(ku); failed('s:' + ip); return json(res, 403, { ok: false }); }
     if (typeof b.salt !== 'string' || typeof b.nh !== 'string' || b.salt.length < 6 || b.salt.length > 60 || b.nh.length < 20 || b.nh.length > 200 || b.nh === c.h) return json(res, 400, { ok: false });
     const next = { salt: b.salt, h: b.nh }; docs.set('creds/' + un, next); broadcast('creds/' + un, next);
     const ac = docs.get('accounts/' + un); if (ac && ac.mustPw) { const na = Object.assign({}, ac); delete na.mustPw; docs.set('accounts/' + un, na); broadcast('accounts/' + un, na); }
