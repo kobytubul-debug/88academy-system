@@ -1326,7 +1326,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 342</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 343</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -10612,9 +10612,13 @@ function nxCoachParts() {                                        // live feedbac
   const hx = gt.x - drone.pos.x, hz = gt.z - drone.pos.z, dy = gt.y - drone.pos.y, dist = Math.round(Math.sqrt(hx * hx + hz * hz));
   const q = drone.quat, f = { x: -2 * (q.x * q.z + q.w * q.y), z: -(1 - 2 * (q.x * q.x + q.y * q.y)) }, fl = Math.sqrt(f.x * f.x + f.z * f.z) || 1, fx = f.x / fl, fz = f.z / fl;   // nose direction on the ground plane
   const ang = Math.atan2(hx * -fz + hz * fx, hx * fx + hz * fz) * 180 / Math.PI;
-  const dir = ang > 15 ? { ic: '\u25b6', t: 'הטבעת מימין: סובב ימינה (Yaw)', ok: false } : ang < -15 ? { ic: '\u25c0', t: 'הטבעת משמאל: סובב שמאלה (Yaw)', ok: false } : { ic: '\u2713', t: 'הכיוון טוב', ok: true };
+  const LKc = currentStage && currentStage.lock && !editorMode ? currentStage.lock : null;     // locked track: yaw and (usually) throttle are not the player's to use
+  const how = LKc ? 'Roll' : 'Yaw + Roll';                                                      // free flight turns with yaw and roll together; a locked track turns with roll only
+  const dir = ang > 15 ? { ic: '\u25b6', t: 'הטבעת מימין: סובב ימינה (' + how + ')', ok: false } : ang < -15 ? { ic: '\u25c0', t: 'הטבעת משמאל: סובב שמאלה (' + how + ')', ok: false } : { ic: '\u2713', t: 'הכיוון טוב', ok: true };
   const alt = dy > 2.5 ? { ic: '\u25b2', t: 'הטבעת גבוהה יותר: הוסף מעט Throttle', ok: false } : dy < -2.5 ? { ic: '\u25bc', t: 'הטבעת נמוכה יותר: הורד מעט Throttle', ok: false } : { ic: '\u2713', t: 'הגובה טוב', ok: true };
-  return [dir, alt, { ic: '\u25ce', t: dist + ' מ\u2019 לטבעת', ok: null }];
+  const dst = { ic: '\u25ce', t: dist + ' מ\u2019 לטבעת', ok: null };
+  if (LKc) return LKc.axis === 'pitch' ? [dst] : [dir, dst];                                    // throttle is fixed (no height tip); a pitch-only track cannot turn, so no direction tip
+  return [dir, alt, dst];
 }
 function nxCoachText() { return nxCoachParts().map((p) => p.t).join('  \u00b7  '); }
 let nxGuideIsOpen = false;
@@ -10773,8 +10777,8 @@ const NX_LEARN = [
   { name: 'שלב 1: המראה וטיסה ישרה', title: 'המראה וטיסה ישרה', fly: 'הרם Throttle לאט עד שהרחפן מתרומם. המצערת היא כוח ההרמה. מכוונים אל הטבעת הראשונה\nעברת שער! עכשיו שומרים את האף ישר מול הטבעת הבאה. תנועות קטנות מייצבות\nתיקון קטן ימינה או שמאלה עדיף על תיקון גדול. נשארים רגועים\nהטבעת האחרונה. ישר דרכה והשלב נגמר',
     text: 'מעלים את ה-Throttle קצת, עד שהרחפן מתרומם מהקרקע. אל תמהרו, תנועה איטית ועדינה.\nכשהרחפן באוויר, מייצבים אותו בגובה של כמה מטרים.\nמכוונים את האף אל הטבעת הראשונה ומקדימה (Pitch קדימה) טסים ישר דרכה.\nאם הרחפן סוטה לצד, מתקנים בעדינות עם Roll ימינה או שמאלה.\nממשיכים דרך כל הטבעות עד הסוף.',
     gates: [[-100, 8, 0, -90], [-40, 8, 0, -90], [20, 8, 0, -90], [80, 8, 0, -90]] },
-  { name: 'שלב 2: פניות', title: 'איך מסתובבים', fly: 'מכוונים ישר אל הטבעת הראשונה\nהפנייה מתקרבת. מאטים עכשיו, כי קשה לפנות במהירות גבוהה\nפנייה: מסובבים עם Yaw עד שהאף מול הטבעת הבאה, ואז מיישרים\nהאף מול הטבעת? ממשיכים ישר. פנייה טובה נגמרת בקו ישר\nפנייה שנייה מתקרבת: מאטים שוב ופונים בעדינות\nמכוונים אל הטבעת האחרונה וממשיכים עד הסוף',
-    text: 'מאטים לפני הפנייה: מקטינים את ה-Pitch קדימה.\nמסובבים את האף לכיוון הבא עם Yaw שמאלה או ימינה.\nבזמן הפנייה ממשיכים קדימה לאט, לא מגבירים מהר.\nכשהאף מכוון לטבעת הבאה, מיישרים וממשיכים ישר.\nעוברים את כל הטבעות, פנייה אחר פנייה.',
+  { name: 'שלב 2: פניות', title: 'איך מסתובבים', fly: 'מכוונים ישר אל הטבעת הראשונה\nהפנייה מתקרבת. מאטים עכשיו, כי קשה לפנות במהירות גבוהה\nפנייה: מסובבים עם Yaw ו-Roll יחד עד שהאף מול הטבעת הבאה, ואז מיישרים\nהאף מול הטבעת? ממשיכים ישר. פנייה טובה נגמרת בקו ישר\nפנייה שנייה מתקרבת: מאטים שוב ופונים בעדינות\nמכוונים אל הטבעת האחרונה וממשיכים עד הסוף',
+    text: 'מאטים לפני הפנייה: מקטינים את ה-Pitch קדימה.\nמסובבים את האף לכיוון הבא עם Yaw ו-Roll שמאלה או ימינה.\nבזמן הפנייה ממשיכים קדימה לאט, לא מגבירים מהר.\nכשהאף מכוון לטבעת הבאה, מיישרים וממשיכים ישר.\nעוברים את כל הטבעות, פנייה אחר פנייה.',
     gates: [[-100, 8, 40, 0], [-100, 8, -30, 0], [-75, 8, -85, 315], [-20, 8, -110, 270], [50, 8, -110, 270], [95, 8, -80, 225]] },
   { name: 'שלב 3: שמירה על גובה', title: 'איך שומרים על גובה', fly: 'עולים לגובה הטבעת הראשונה ומייצבים. המצערת מכוונת את הגובה\nאם הרחפן יורד, מוסיפים מעט Throttle לפני שהוא נופל\nאם הוא עולה, מורידים מעט Throttle. תיקון קטן מספיק\nהטבעת האחרונה. שומרים על אותו גובה עד הסוף',
     text: 'ה-Throttle (עלייה וירידה) הוא מה ששומר על הגובה.\nאם הרחפן יורד, מוסיפים מעט Throttle. אם הוא עולה, מורידים מעט.\nעושים תיקונים קטנים ולא חדים. תיקון גדול גורם לקפיצות.\nמנסים לעבור בכל הטבעות באותו גובה, בלי לעלות ולרדת.',
@@ -10783,7 +10787,7 @@ const NX_LEARN = [
 function nxMakeLearnCourse() {
   const D = NX.draft; D.courses = D.courses || {}; D.guides = D.guides || {};
   if (D.courses.cLearn1) {                                         // already created: fill in the in-flight hints of its tracks
-    let n = 0; (D.courses.cLearn1.stages || []).forEach((st, i) => { const id = st.tracks && st.tracks[0], L = NX_LEARN[i]; if (id && L) { const g = D.guides[id] = D.guides[id] || { title: L.title, text: L.text }; if (g.flyV !== 3) { g.fly = L.fly; g.text = L.text; g.flyV = 3; n++; } if (g.race === undefined) g.race = true; if (g.live === undefined) g.live = true; } });
+    let n = 0; (D.courses.cLearn1.stages || []).forEach((st, i) => { const id = st.tracks && st.tracks[0], L = NX_LEARN[i]; if (id && L) { const g = D.guides[id] = D.guides[id] || { title: L.title, text: L.text }; if (g.flyV !== 4) { g.fly = L.fly; g.text = L.text; g.flyV = 4; n++; } if (g.race === undefined) g.race = true; if (g.live === undefined) g.live = true; } });
     nxTouch(); nxAdmRender(); nxToast(n ? 'עודכנו הוראות הטיסה והמשוב החי ב-' + n + ' שלבים. לחץ "שמור ופרסם"' : 'הקורס כבר מעודכן'); return;
   }
   const stages = [];
@@ -10792,7 +10796,7 @@ function nxMakeLearnCourse() {
     const id = 'custom' + n;
     registerCustom({ id, num: 3 + CUSTOM_ORDER.length + 1, name: L.name, base: 'clean', laps: 1,
       gates: L.gates.map((g) => ({ k: 'ring', sz: 1.8, x: g[0], y: g[1], z: g[2], yaw: g[3], pitch: 0 })) });
-    D.guides[id] = { title: L.title, text: L.text, fly: L.fly, race: true, live: true, flyV: 3 };
+    D.guides[id] = { title: L.title, text: L.text, fly: L.fly, race: true, live: true, flyV: 4 };
     stages.push({ name: L.name, on: true, tracks: [id], exam: '', pass: { t: 0, c: -1, s: 0 } });
   });
   const ids = stages.map((x) => x.tracks[0]), tc = D.tcats = D.tcats || { cats: {}, of: {} };
