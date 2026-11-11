@@ -45,6 +45,36 @@ process.on('SIGTERM', () => { flush(); process.exit(0); });
 process.on('SIGINT', () => { flush(); process.exit(0); });
 setInterval(flush, 30000).unref();
 
+// ---------- automatic backups (every change of people or groups can be undone) ----------
+const BK_DIR = path.join(DATA_DIR, 'backups');
+const BK_KEEP = { auto: 40, start: 10, del: 80, import: 20, restore: 20 };
+let lastBk = 0, lastDel = 0;
+function snapshot(reason) {
+  try {
+    fs.mkdirSync(BK_DIR, { recursive: true });
+    const o = { at: Date.now(), reason, docs: {} };
+    docs.forEach((v, p) => { if (!p.startsWith('live/')) o.docs[p] = v; });
+    if (!Object.keys(o.docs).length) return;                           // never keep an empty snapshot
+    const name = new Date().toISOString().replace(/[:.]/g, '-').replace('Z', '') + '-' + reason + '.json';
+    fs.writeFileSync(path.join(BK_DIR, name), JSON.stringify(o));
+    const all = fs.readdirSync(BK_DIR).filter((n) => n.endsWith('-' + reason + '.json')).sort();
+    all.slice(0, Math.max(0, all.length - (BK_KEEP[reason] || 20))).forEach((n) => { try { fs.unlinkSync(path.join(BK_DIR, n)); } catch (e) { /* ignore */ } });
+    lastBk = Date.now();
+  } catch (e) { console.error('backup failed', e.message); }
+}
+function bkList() {
+  try { return fs.readdirSync(BK_DIR).filter((n) => /^[0-9T\-]+-[a-z]+\.json$/.test(n)).sort().reverse(); } catch (e) { return []; }
+}
+function bkInfo(name) {
+  try {
+    const d = JSON.parse(fs.readFileSync(path.join(BK_DIR, name), 'utf8')), ks = Object.keys(d.docs || {});
+    return { name, at: d.at || 0, reason: d.reason || '', accounts: ks.filter((k) => k.startsWith('accounts/')).length, groups: ks.filter((k) => k.startsWith('groups/')).length };
+  } catch (e) { return null; }
+}
+setTimeout(() => snapshot('start'), 5000).unref();
+let bkSeen = '';
+setInterval(() => { const sig = String(docs.size) + ':' + JSON.stringify(Array.from(docs.keys()).filter((k) => /^(accounts|groups)\//.test(k)).sort()); if (sig !== bkSeen && Date.now() - lastBk > 20 * 60000) { bkSeen = sig; snapshot('auto'); } }, 10 * 60000).unref();
+
 // ---------- sign-in ----------
 const b64 = (b) => Buffer.from(b).toString('base64url');
 const sign = (s) => crypto.createHmac('sha256', secret).update(s).digest('base64url');
@@ -132,8 +162,22 @@ async function api(req, res, url) {
     failed(ip); return json(res, 401, { error: 'שם משתמש או סיסמה שגויים' });
   }
   if (p === '/api/admin/me') return json(res, 200, { admin });
+  if (p === '/api/admin/backups' && req.method === 'GET') {          // list of the server's automatic backups (admin only)
+    if (!admin) return json(res, 403, { error: 'forbidden' });
+    return json(res, 200, { list: bkList().slice(0, 60).map(bkInfo).filter(Boolean) });
+  }
+  if (p === '/api/admin/restore' && req.method === 'POST') {         // bring back what is missing now (accounts, groups...) from a backup; nothing existing is overwritten
+    if (!admin) return json(res, 403, { error: 'forbidden' });
+    const b = await body(req), name = String(b.name || '');
+    if (!/^[0-9T\-]+-[a-z]+\.json$/.test(name) || !bkList().includes(name)) return json(res, 404, { error: 'not found' });
+    let d; try { d = JSON.parse(fs.readFileSync(path.join(BK_DIR, name), 'utf8')); } catch (e) { return json(res, 500, { error: 'unreadable' }); }
+    snapshot('restore');
+    const back = []; Object.keys(d.docs || {}).forEach((k) => { if (validPath(k, true) && !k.startsWith('live/') && !k.startsWith('_') && !docs.has(k) && k !== 'tracks/main' && d.docs[k] && typeof d.docs[k] === 'object') { docs.set(k, d.docs[k]); broadcast(k, d.docs[k]); back.push(k); } });
+    touch(); flush(); return json(res, 200, { restored: back.length, accounts: back.filter((k) => k.startsWith('accounts/')).length, groups: back.filter((k) => k.startsWith('groups/')).length });
+  }
   if (p === '/api/admin/import' && req.method === 'POST') {            // load an export of the old data (admin only)
     if (!admin) return json(res, 403, { error: 'forbidden' });
+    snapshot('import');
     const b = await body(req); const list = Array.isArray(b.docs) ? b.docs : [];
     let n = 0;
     const onlyMissing = q.get('mode') === 'missing';                  // keep what already exists (tracks count as missing when their list is empty)
@@ -177,7 +221,7 @@ async function api(req, res, url) {
       const next = b.merge ? Object.assign({}, docs.get(q.get('p')) || {}, b.data) : b.data;
       docs.set(q.get('p'), next); touch(); broadcast(q.get('p'), next); return json(res, 200, { ok: true });
     }
-    if (req.method === 'DELETE') { docs.delete(q.get('p')); touch(); broadcast(q.get('p'), null); return json(res, 200, { ok: true }); }
+    if (req.method === 'DELETE') { if (/^(accounts|groups|creds|themes)$/.test(col) && Date.now() - lastDel > 20000) { lastDel = Date.now(); snapshot('del'); } docs.delete(q.get('p')); touch(); broadcast(q.get('p'), null); return json(res, 200, { ok: true }); }
   }
   if (p === '/api/db/col' && req.method === 'GET') {
     const col = q.get('p'); if (!validPath(col, false)) return json(res, 400, { error: 'bad path' });

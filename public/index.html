@@ -1335,7 +1335,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 348</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 349</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -1466,6 +1466,8 @@ body.mz-on #nxBar{right:104px}
   window.NXHOST = {
     async checkCred(un, h) { const r = await api('POST', '/api/db/check', { un, h }); return !!r.ok; },
     async changePw(un, h, salt, nh) { const r = await api('POST', '/api/db/changepw', { un, h, salt, nh }); if (!r || !r.ok) { const e = new Error('changepw'); e.status = 400; throw e; } },
+    async listBackups() { const r = await api('GET', '/api/admin/backups'); return r.list || []; },
+    async restoreBackup(name) { return api('POST', '/api/admin/restore', { name }); },
     async adminLogin(u, p, remember) { const r = await api('POST', '/api/admin/login', { u, p }); token = r.token; if (remember) ls.set('nxHostTokL', token); else ss.set('nxHostTok', token); },
     adminLogout() { ss.del('nxHostTok'); ls.del('nxHostTokL'); ls.del('fpvNexusAsPlayer'); try { window.sessionStorage.removeItem('fpvNexusAsPlayer'); } catch (e) { /* ignore */ } window.location.href = '/'; }
   };
@@ -10100,7 +10102,16 @@ async function nxExportAll() {
   try { await dl.save({ filename: name, data: blob }); nxToast('נשמר: ' + docs.length + ' מסמכים'); } catch (e) { nxToast('השמירה בוטלה או נכשלה'); }
 }
 function nxExportCard() {
-  return '<details class="nxcard" data-un="_ex"' + (NX.openP === '_ex' ? ' open' : '') + '><summary><b>גיבוי וייצוא נתונים</b></summary><p class="nxn">קובץ אחד עם הקבוצות, החשבונות (כולל סיסמאות מוצפנות), המסלולים והתקדמות התלמידים. מתאים לגיבוי ולהעברה לאתר של 88ACADEMY.</p><div class="nxbtns"><button class="nxb pri" data-act="ex-all">שמור קובץ ייצוא</button></div></details>';
+  return '<details class="nxcard" data-un="_ex"' + (NX.openP === '_ex' ? ' open' : '') + '><summary><b>גיבוי וייצוא נתונים</b></summary><p class="nxn">קובץ אחד עם הקבוצות, החשבונות (כולל סיסמאות מוצפנות), המסלולים והתקדמות התלמידים. מתאים לגיבוי ולהעברה לאתר של 88ACADEMY.</p><div class="nxbtns"><button class="nxb pri" data-act="ex-all">שמור קובץ ייצוא</button></div>' + nxBackupsBox() + '</details>';
+}
+function nxBackupsBox() {                                       // the server keeps automatic backups; here the manager can bring back a deleted student or group
+  if (!(window.NXHOST && window.NXHOST.listBackups)) return '';
+  const L = NX.bks;
+  let h = '<p class="nxn" style="margin-top:12px"><b>גיבויים אוטומטיים של השרת</b><br>השרת שומר עותק לפני כל מחיקה של שחקן או קבוצה, ובנוסף כל כמה שעות. שחזור מחזיר רק מה שחסר עכשיו, ולא דורס כלום.</p><div class="nxbtns"><button class="nxb" data-act="bk-load">' + (L ? 'רענן רשימה' : 'הצג גיבויים') + '</button></div>';
+  if (L && !L.length) h += '<p class="nxn">אין עדיין גיבויים.</p>';
+  if (L) L.forEach((b) => { const d = new Date(b.at), t = d.toLocaleDateString('he-IL') + ' ' + d.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' }), why = { del: 'לפני מחיקה', auto: 'אוטומטי', start: 'הפעלת שרת', import: 'לפני ייבוא', restore: 'לפני שחזור' }[b.reason] || b.reason;
+    h += '<div class="nxrow" style="display:flex;gap:8px;align-items:center;justify-content:space-between;margin:4px 0"><span class="nxn" style="margin:0">' + nxEsc(t) + ' · ' + nxEsc(why) + ' · ' + b.accounts + ' חשבונות · ' + b.groups + ' קבוצות</span><button class="nxb" data-act="bk-restore" data-id="' + nxEsc(b.name) + '">שחזר מה שחסר</button></div>'; });
+  return h;
 }
 async function nxRpSave() {
   const pages = nxRpPages(await nxRpLogo()); NX.rpPrev = pages.map((p) => p.toDataURL('image/jpeg', 0.7)); nxAdmRender();
@@ -10573,6 +10584,8 @@ function nxAdmWire() {
     else if (a === 'rp-close') { NX.rpPrev = []; NX.openP = '_rp'; nxAdmRender(); }
     else if (a === 'rp-pdf') { NX.openP = '_rp'; nxRpSave(); }
     else if (a === 'ex-all') { NX.openP = '_ex'; nxExportAll(); }
+    else if (a === 'bk-load') { NX.openP = '_ex'; window.NXHOST.listBackups().then((l) => { NX.bks = l; nxAdmRender(); }).catch(() => nxToast('טעינת הגיבויים נכשלה')); }
+    else if (a === 'bk-restore') { NX.openP = '_ex'; window.NXHOST.restoreBackup(id).then((r) => { nxToast(r.restored ? 'שוחזרו ' + r.accounts + ' חשבונות ו-' + r.groups + ' קבוצות (סה"כ ' + r.restored + ' מסמכים)' : 'לא חסר כלום מהגיבוי הזה'); }).catch(() => nxToast('השחזור נכשל')); }
     else if (a === 'rp-30') { const d = new Date(), f = new Date(Date.now() - 29 * 86400000), s = (x) => x.getFullYear() + '-' + String(x.getMonth() + 1).padStart(2, '0') + '-' + String(x.getDate()).padStart(2, '0'); NX.rp.from = s(f); NX.rp.to = s(d); NX.openP = '_rp'; nxAdmRender(); }
     else if (a === 'rp-all') { NX.rp.from = ''; NX.rp.to = ''; NX.openP = '_rp'; nxAdmRender(); }
     else if (a === 'pg-g') { NX.pgGid = el.dataset.v || ''; nxAdmRender(); }
