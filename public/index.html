@@ -403,6 +403,23 @@ kbd{display:inline-block;min-width:26px;text-align:center;padding:1px 7px;margin
 .osdtbl .nin{width:62px}
 .osdtbl select{background:var(--ib,#0e1013);color:var(--it,#fff);border:1px solid var(--ln);border-radius:2px;padding:5px 6px;font:13px var(--ui);color-scheme:dark}
 
+#osdEd .advwin{width:min(1760px,99vw);height:96vh;max-height:96vh;display:flex;flex-direction:column;overflow:hidden}
+#osdEd .osdgrid{flex:1;min-height:0;grid-template-columns:minmax(0,1fr) 400px;align-items:start;padding:16px 18px}
+@media(max-width:1000px){#osdEd .osdgrid{grid-template-columns:1fr;overflow-y:auto}}
+#osdEd .osdgrid>div:first-child{min-width:0}
+#osdEd .advsec{border:0;background:transparent;padding:0}
+.osdlist{display:flex;flex-direction:column;gap:6px;overflow-y:auto;max-height:calc(96vh - 170px);padding-inline-end:4px}
+.osdrow{background:var(--p1);border:1px solid var(--ln);border-radius:6px;overflow:hidden}
+.osdrow .osdrh{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;cursor:pointer}
+.osdrow .osdnm{font-size:15px;color:var(--mu)}.osdrow.on .osdnm{color:var(--tx);font-weight:500}
+.osdrow.sel{border-color:var(--ac)}
+.osdrow .osdrd{display:none;grid-template-columns:repeat(4,1fr);gap:8px;padding:2px 14px 12px}
+.osdrow.sel .osdrd{display:grid}
+.osdf{display:flex;flex-direction:column;gap:3px;font-size:11.5px;color:var(--mu)}
+.osdf .nin{width:100%}
+.osdf select{width:100%;background:var(--ib,#0e1013);color:var(--it,#fff);border:1px solid var(--ln);border-radius:2px;padding:5px 4px;font:12.5px var(--ui);color-scheme:dark}
+#osdMock .mkstk{position:absolute;left:50%;bottom:64px;transform:translateX(-50%);display:flex;gap:14px;direction:ltr;align-items:flex-end;pointer-events:none}
+#osdMock .mkstk canvas{width:112px;height:112px;display:block}
 /* ---------- Advanced quad setup ---------- */
 #adv{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;background:rgba(8,9,11,.82);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);color-scheme:dark}
 #adv.on{display:flex}
@@ -1398,10 +1415,7 @@ body.mz-on #nxBar{right:104px}
       </div>
       <div class="advsec" style="padding-top:8px">
         <h3>TELEMETRY BLOCKS <span>בלוקי טלמטריה</span></h3>
-        <table class="osdtbl">
-          <thead><tr><th>הצג/הסתר</th><th>X %</th><th>Y %</th><th>גודל גופן</th><th>סגנון גופן</th></tr></thead>
-          <tbody id="osdEdRows"></tbody>
-        </table>
+        <div id="osdEdRows" class="osdlist"></div>
       </div>
     </div>
   </div>
@@ -1410,7 +1424,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 367</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 368</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -5996,8 +6010,9 @@ let osdEdOpen = false, osdEdPrevPaused = false;
 const mockEls = {};
 function mockScale() {
   const wrap = $('osdMockWrap'), W = window.innerWidth, H = window.innerHeight;
-  const w = wrap.clientWidth, k = w / W;
-  wrap.style.height = Math.round(H * k) + 'px';
+  const availW = wrap.parentElement.clientWidth || wrap.clientWidth, availH = Math.max(240, H * 0.96 - 190);
+  const k = Math.min(availW / W, availH / H);
+  wrap.style.width = Math.round(W * k) + 'px'; wrap.style.height = Math.round(H * k) + 'px'; wrap.style.margin = '0 auto';
   const mk = $('osdMock'); mk.style.width = W + 'px'; mk.style.height = H + 'px'; mk.style.transform = 'scale(' + k + ')';
   return k;
 }
@@ -6029,6 +6044,9 @@ function renderOsdMock() {
     el.dataset.id = b.id; el.classList.add('mkblk'); el.style.position = 'absolute';
     mk.appendChild(el); mockEls[b.id] = el;
   });
+  const st = document.createElement('div'); st.className = 'mkstk';                        // the two sticks, bottom centre, as in the flight screen
+  st.innerHTML = '<canvas width="264" height="264"></canvas><canvas width="264" height="264"></canvas>';
+  mk.appendChild(st); st.querySelectorAll('canvas').forEach((cv) => { if (typeof drawGimbal === 'function') drawGimbal(cv, 0, 0, false); });
   layoutMock();
 }
 function layoutMock() {
@@ -6044,16 +6062,16 @@ function layoutMock() {
 function buildOsdRows() {
   const body = $('osdEdRows'); body.innerHTML = '';
   OSD_BLOCKS.forEach((b) => {
-    const c = OSD[b.id], tr = document.createElement('tr');
+    const row = document.createElement('div'); row.className = 'osdrow'; row.dataset.row = b.id;
     const ranges = b.kind === 'text' ? [10, 40] : b.kind === 'cross' ? [8, 40] : b.kind === 'prop' ? [8, 32] : [8, 30];
-    tr.innerHTML =
-      '<td class="nm"><label><input type="checkbox" data-id="' + b.id + '" data-k="show"><span>' + b.name + '</span></label></td>' +
-      '<td><input type="number" class="nin" data-id="' + b.id + '" data-k="x" min="0" max="100" step="1"></td>' +
-      '<td><input type="number" class="nin" data-id="' + b.id + '" data-k="y" min="0" max="100" step="1"></td>' +
-      '<td><input type="number" class="nin" data-id="' + b.id + '" data-k="size" min="' + ranges[0] + '" max="' + ranges[1] + '" step="1"></td>' +
-      '<td><select data-id="' + b.id + '" data-k="font">' + Object.keys(FONT_FAM).map((k) => '<option value="' + k + '">' + FONT_FAM[k].name + '</option>').join('') + '</select></td>';
-    body.appendChild(tr);
+    const fld = (lab, k, mn, mx) => '<label class="osdf"><span>' + lab + '</span><input type="number" class="nin" data-id="' + b.id + '" data-k="' + k + '" min="' + mn + '" max="' + mx + '" step="1"></label>';
+    row.innerHTML =
+      '<div class="osdrh" data-pick="' + b.id + '"><span class="osdnm">' + b.name + '</span><label class="stgsw"><input type="checkbox" data-id="' + b.id + '" data-k="show"><i></i></label></div>' +
+      '<div class="osdrd">' + fld('X %', 'x', 0, 100) + fld('Y %', 'y', 0, 100) + fld('גודל', 'size', ranges[0], ranges[1]) +
+      '<label class="osdf"><span>גופן</span><select data-id="' + b.id + '" data-k="font">' + Object.keys(FONT_FAM).map((k) => '<option value="' + k + '">' + FONT_FAM[k].name + '</option>').join('') + '</select></label></div>';
+    body.appendChild(row);
   });
+  body.querySelectorAll('[data-pick]').forEach((h) => h.addEventListener('click', (e) => { if (e.target.closest('.stgsw')) return; osdSelect(h.dataset.pick); }));
   body.querySelectorAll('[data-k]').forEach((el) => {
     const id = el.dataset.id, k = el.dataset.k;
     el.addEventListener(k === 'font' || k === 'show' ? 'change' : 'input', () => {
@@ -6078,7 +6096,7 @@ function buildOsdRows() {
 function syncOsdRows() {
   document.querySelectorAll('#osdEdRows [data-k]').forEach((el) => {
     const id = el.dataset.id, k = el.dataset.k, c = OSD[id];
-    if (k === 'show') el.checked = isShown(id);
+    if (k === 'show') { el.checked = isShown(id); const rw = el.closest('.osdrow'); if (rw) rw.classList.toggle('on', el.checked); }
     else if (document.activeElement !== el) el.value = c[k];
   });
 }
@@ -6097,7 +6115,10 @@ function osdGridApply() {
   try { localStorage.setItem(OSD_GRID_KEY, JSON.stringify(osdGrid)); } catch (e) { /* ignore */ }
 }
 let osdSel = '';
-function osdSelect(id) { osdSel = id; document.querySelectorAll('#osdMock .mkblk').forEach((el) => el.classList.toggle('mksel', el.dataset.id === id)); }
+function osdSelect(id) {
+  osdSel = id; document.querySelectorAll('#osdMock .mkblk').forEach((el) => el.classList.toggle('mksel', el.dataset.id === id));
+  document.querySelectorAll('#osdEdRows .osdrow').forEach((r) => r.classList.toggle('sel', r.dataset.row === id));
+}
 function osdChanged() { applyOsdLayout(); layoutMock(); saveOsd(); }
 function openOsdEd() {
   if (osdEdOpen) return;
