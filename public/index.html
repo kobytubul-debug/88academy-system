@@ -1420,7 +1420,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 365</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 366</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -11310,7 +11310,7 @@ function nxDevRef(cfg) {                                         // where the dr
   return { i: bi, t, nx: a.x + t * dx, nz: a.z + t * dz, ty: yAt(bi, tc), yAt };
 }
 function nxDevAhead(i, t, dist, ref) {                           // a point on the ideal line `dist` metres further on
-  const g = gates, n = g.length; let u = clamp(t, 0, 1), left = dist;
+  const g = gates, n = g.length; let u = i === 0 ? Math.min(t, 1) : clamp(t, 0, 1), left = dist;       // the first leg reaches back past gate 1
   for (let k = i; k < n - 1; k++) {
     const a = g[k], b = g[k + 1], L = Math.hypot(b.x - a.x, b.z - a.z) || 1e-6, rem = (1 - u) * L;
     if (left <= rem || k === n - 2) { const uu = u + left / L; return { x: a.x + uu * (b.x - a.x), z: a.z + uu * (b.z - a.z), y: ref.yAt(k, clamp(uu, 0, 1)) }; }
@@ -11334,14 +11334,26 @@ function nxDevHudFrame(now) {
   const a = Math.abs(DX) / cfg.lx, b = Math.abs(DY) / cfg.ly, m = Math.max(a, b), st = m >= 1 ? 2 : m >= 0.7 ? 1 : 0, col = ['#5fd38a', '#efb74d', '#ff5a4d'][st], spOver = cfg.lv > 0 && drone.vel.length() > cfg.lv;
   const proj = (x, y, z) => { nxDvV.set(x, y, z).project(activeCam); return nxDvV.z > 1 || nxDvV.z < -1 ? null : [(nxDvV.x + 1) / 2 * W, (1 - nxDvV.y) / 2 * H]; };
   const showP = cfg.path === 'always' || (cfg.path === 'warn' && m >= 0.7) || (cfg.path === 'out' && m >= 1);
-  if (showP) {                                                   // the way back: from the drone to the line, a little way ahead
-    const Lc = 22 + 8 * Math.min(m, 2), pts = [], offY = drone.pos.y - ref.ty;
-    for (let u = 0; u <= 1.001; u += 0.04) { const s = u * u * (3 - 2 * u), lp = nxDevAhead(ref.i, ref.t, Lc * u, ref), sp = proj(lp.x + ox * (1 - s), lp.y + offY * (1 - s), lp.z + oz * (1 - s)); if (sp) pts.push(sp); }
+  if (showP) {                                                   // the way back: a thick glowing ribbon (width follows distance), with beads flowing along it, from the drone to the line further on
+    const Lc = 8 + 3 * Math.min(m, 2), offY = drone.pos.y - ref.ty, foc = (H / 2) / Math.tan((activeCam.fov || 100) * Math.PI / 360), cp = activeCam.position, pts = [];
+    const at = (u) => { const s = u, lp = nxDevAhead(ref.i, ref.t, Lc * u, ref), x = lp.x + ox * (1 - s), y = lp.y + offY * (1 - s), z = lp.z + oz * (1 - s), sp = proj(x, y, z); if (!sp) return null; const d = Math.hypot(x - cp.x, y - cp.y, z - cp.z); return d < 2.5 ? null : { x: sp[0], y: sp[1], d }; };
+    const wd = (d, mt) => clamp(mt * foc / d, 3, 26);
+    for (let u = 0; u <= 1.0001; u += 0.02) { const q = at(u); if (q) pts.push(q); }
+    if (pts.length > 1) pts.unshift({ x: W / 2, y: H / 2, d: 9 });          // the ribbon starts at the crosshair (the drone), so it is always visible
     if (pts.length > 2) {
-      c.save(); c.lineCap = 'round'; c.lineJoin = 'round'; c.beginPath(); pts.forEach((p, i) => i ? c.lineTo(p[0], p[1]) : c.moveTo(p[0], p[1])); c.strokeStyle = 'rgba(0,0,0,.55)'; c.lineWidth = 11; c.stroke();
-      c.setLineDash([14, 9]); c.lineDashOffset = -(nxDvT * 40) % 23; c.beginPath(); pts.forEach((p, i) => i ? c.lineTo(p[0], p[1]) : c.moveTo(p[0], p[1])); c.strokeStyle = '#efb74d'; c.lineWidth = 6; c.stroke(); c.restore();
-      const ep = pts[pts.length - 1]; c.beginPath(); c.arc(ep[0], ep[1], 14, 0, 7); c.lineWidth = 4; c.strokeStyle = '#0b0c0e'; c.stroke(); c.lineWidth = 2.5; c.strokeStyle = '#efb74d'; c.stroke();
-      c.font = '700 14px Heebo,system-ui,sans-serif'; c.direction = 'rtl'; const tw = c.measureText('חזור לנתיב כאן').width + 16; c.fillStyle = 'rgba(20,22,26,.9)'; c.fillRect(ep[0] - tw / 2, ep[1] - 42, tw, 22); c.fillStyle = '#efb74d'; c.textAlign = 'center'; c.fillText('חזור לנתיב כאן', ep[0], ep[1] - 26);
+      c.save(); c.lineCap = 'round'; c.lineJoin = 'round';
+      const ln = []; for (let dd = 3; dd <= 70; dd += 1.5) { const lp = nxDevAhead(ref.i, ref.t, dd, ref), sp = proj(lp.x, lp.y, lp.z); if (sp) ln.push({ x: sp[0], y: sp[1], d: Math.hypot(lp.x - cp.x, lp.y - cp.y, lp.z - cp.z) }); }
+      if (ln.length > 2) { c.setLineDash([16, 12]); c.lineDashOffset = -(nxDvT * 50) % 28; for (let i = 1; i < ln.length; i++) { const lw = wd(ln[i].d, 0.22); c.beginPath(); c.moveTo(ln[i - 1].x, ln[i - 1].y); c.lineTo(ln[i].x, ln[i].y); c.lineWidth = lw + 5; c.strokeStyle = 'rgba(0,0,0,.5)'; c.stroke(); c.lineWidth = lw; c.strokeStyle = 'rgba(95,211,138,.95)'; c.stroke(); } c.setLineDash([]); }
+      const pass = (extra, mt, col, al) => { c.globalAlpha = al; c.strokeStyle = col; for (let i = 1; i < pts.length; i++) { c.lineWidth = wd(pts[i].d, mt) + extra; c.beginPath(); c.moveTo(pts[i - 1].x, pts[i - 1].y); c.lineTo(pts[i].x, pts[i].y); c.stroke(); } };
+      pass(7, 0.4, '#000', 0.55); pass(0, 0.4, '#efb74d', 0.95); pass(0, 0.12, '#fff6d6', 0.95); c.globalAlpha = 1;
+      for (let k = 0; k < 7; k++) {                                // beads flowing toward the line
+        const u = ((nxDvT * 0.5 + k / 7) % 1), q = at(u); if (!q) continue; const r = wd(q.d, 0.5) * 0.7;
+        c.beginPath(); c.arc(q.x, q.y, r, 0, 7); c.fillStyle = '#14161a'; c.fill(); c.lineWidth = Math.max(3, r * 0.4); c.strokeStyle = '#efb74d'; c.stroke();
+      }
+      const ep = pts[pts.length - 1], er = clamp(1.4 * foc / ep.d, 12, 44);
+      c.beginPath(); c.arc(ep.x, ep.y, er, 0, 7); c.lineWidth = 9; c.strokeStyle = 'rgba(0,0,0,.6)'; c.stroke(); c.lineWidth = 5; c.strokeStyle = '#efb74d'; c.stroke();
+      c.font = '800 16px Heebo,system-ui,sans-serif'; c.direction = 'rtl'; const tw = c.measureText('חזור לנתיב כאן').width + 20; c.fillStyle = 'rgba(20,22,26,.92)'; c.fillRect(ep.x - tw / 2, ep.y - er - 32, tw, 26); c.fillStyle = '#efb74d'; c.textAlign = 'center'; c.fillText('חזור לנתיב כאן', ep.x, ep.y - er - 13);
+      c.restore();
     }
   }
   const vx = -DX / cfg.lx, vy = DY / cfg.ly, ang = Math.atan2(vy, vx), len = 46 + Math.min(m, 2) * 26, w = 14 + Math.min(m, 2) * 5;
