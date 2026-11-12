@@ -809,7 +809,8 @@ body.ed-on #edJson.open{display:flex}
 #editorBox{display:none;position:fixed;left:0;top:0;bottom:0;width:272px;z-index:45;overflow-y:auto;background:var(--tile);box-shadow:10px 0 40px rgba(0,0,0,.45),inset -3px 0 0 var(--ac);padding:10px 12px 14px;font-size:13px;backdrop-filter:blur(4px)}
 #editorBox .eddh{font:700 italic 20px var(--ui);color:var(--ti,#fff);letter-spacing:.04em;margin-bottom:4px}
 #editorBox{transition:transform .22s ease}#editorBox.shut{transform:translateX(-105%);box-shadow:none;pointer-events:none}
-#edDockTab{display:none;position:fixed;left:0;top:78px;z-index:46;background:var(--ac);color:var(--ot,#06222b);font:700 13px var(--ui);padding:9px 14px;cursor:pointer;border-radius:0 8px 8px 0;box-shadow:4px 4px 16px rgba(0,0,0,.4);transition:left .22s ease;user-select:none}
+#edDockTab{display:none;position:fixed;left:0;top:78px;z-index:70;width:48px;height:48px;background:var(--ac);cursor:pointer;border-radius:0 10px 10px 0;flex-direction:column;justify-content:center;align-items:center;gap:6px;box-shadow:4px 4px 16px rgba(0,0,0,.4);transition:left .22s ease;user-select:none}
+#edDockTab i{display:block;width:24px;height:3px;background:var(--ot,#06222b);border-radius:2px}
 body.edop #edDockTab{left:272px}
 #edAdmBtns .edadmh{font:700 italic 14px var(--ui);color:var(--am);margin:14px 0 6px}
 #edAdmBtns .edab{display:block;width:100%;text-align:right;background:rgba(255,255,255,.06);color:var(--tx);border:0;border-inline-start:3px solid var(--ac);padding:9px 11px;margin:6px 0;font:inherit;cursor:pointer}
@@ -1121,7 +1122,7 @@ body.mz-on #nxBar{right:104px}
   <details class="pacc adm-only" id="edAcc"><summary>עורך מסלולים</summary>
   <div style="color:#c4d2e8;margin-bottom:6px">מסלול: <b id="trackLabel" style="color:#e6b450">-</b></div>
   <div class="btns"><button class="b" id="btnEditor">מצב עריכה (G)</button></div>
-  <div id="edDockTab" role="button" tabindex="0" title="פתח / סגור את כלי העריכה">☰ כלי עריכה</div>
+  <div id="edDockTab" role="button" tabindex="0" title="פתח / סגור את כלי העריכה"><i></i><i></i><i></i></div>
   <div id="edAdmSlot"></div>
   <div id="editorBox">
     <div class="eddh">בקרה<button class="b" id="edDockX" title="סגור את החלון (הכלים נשארים זמינים בלשונית)" style="float:left;padding:2px 10px;font-size:14px">✕</button></div>
@@ -1416,7 +1417,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 370</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 371</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -6750,6 +6751,7 @@ function edDockSet(open, keep) {                                 // the editor d
 }
 (function () {
   const t = $('edDockTab'), x = $('edDockX');
+  if (t) document.body.appendChild(t); if ($('edAdmSlot')) document.body.appendChild($('edAdmSlot'));   // outside the side panel so they never hide with it
   if (t) { t.addEventListener('click', () => edDockSet(!$('editorBox').classList.contains('shut') ? false : true)); t.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); t.click(); } }); }
   if (x) x.addEventListener('click', () => edDockSet(false));
 })();
@@ -6759,7 +6761,7 @@ function setEditor(on) {
   editorMode = on;
   if (on) edHistBase();
   $('editorBox').style.display = on ? 'block' : 'none';
-  edDockSet(on ? edDockWant() : false, true); $('edDockTab').style.display = on ? 'block' : 'none';
+  edDockSet(on ? edDockWant() : false, true); $('edDockTab').style.display = on ? 'flex' : 'none';
   if (!on && typeof nxEdWinClose === 'function') nxEdWinClose();
   $('editBadge').style.display = on ? 'block' : 'none';
   $('btnEditor').textContent = on ? 'צא מעריכה וטוס (G / Esc)' : 'מצב עריכה (G)';
