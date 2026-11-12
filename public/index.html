@@ -544,10 +544,10 @@ body.nx-open #menu #scrMain{left:min(440px,42vw)}
 #admTabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px 10px;border-bottom:1px solid var(--ln)}
 #admTabs button.on{background:var(--ac);border-color:var(--ac);color:var(--ot,#06222b)}
 #admBody{flex:1;overflow-y:auto;padding:10px 14px 40px}
-#admBody h4{font-size:12px;letter-spacing:.12em;color:var(--mu);margin:16px 0 8px;border-bottom:1px solid var(--ln);padding-bottom:4px}
-#admBody h5{font-size:12px;color:var(--mu);margin:12px 0 4px}
+:is(#admBody,#edAdmSlot) h4{font-size:12px;letter-spacing:.12em;color:var(--mu);margin:16px 0 8px;border-bottom:1px solid var(--ln);padding-bottom:4px}
+:is(#admBody,#edAdmSlot) h5{font-size:12px;color:var(--mu);margin:12px 0 4px}
 #admMap{width:100%;height:auto;border:1px solid var(--ln);background:var(--bg);margin-bottom:8px}
-#admBody .nxn{font-size:12.5px;color:var(--mu);line-height:1.5;margin:6px 0 10px}
+:is(#admBody,#edAdmSlot) .nxn{font-size:12.5px;color:var(--mu);line-height:1.5;margin:6px 0 10px}
 .nxf{display:flex;align-items:center;gap:8px;margin:6px 0}
 .nxf label{flex:0 0 150px;font-size:13px;color:var(--mu)}
 .nxi{flex:1;display:flex;align-items:center;gap:6px;min-width:0}
@@ -566,54 +566,54 @@ body.nx-open #menu #scrMain{left:min(440px,42vw)}
 .stgrow.hid{opacity:.55}.stgrow.dim{opacity:.4}
 .stgnm{display:flex;flex-direction:column;min-width:0}.stgnm b{font-size:14px;color:var(--ti,#fff)}.stgnm small{font-size:11px;color:var(--mu)}
 .stgst{font-size:11px;color:var(--mu);white-space:nowrap}
-#admBody .lmsum{background:var(--p2);border:1px solid var(--ln);border-radius:10px;padding:10px 12px;margin-bottom:8px;position:sticky;top:0;z-index:4}
-#admBody .lmsum b{font-size:15px}#admBody .lmh{color:#ff9aa8;margin-inline-start:10px}#admBody .lms{color:#ffd77a;margin-inline-start:10px}
-#admBody .lmchips{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
-#admBody button.lmchip{color:var(--tx);font:inherit;font-size:11.5px;cursor:pointer}#admBody button.lmchip:hover{background:var(--p2);border-width:2px;padding:0 8px}
+:is(#admBody,#edAdmSlot) .lmsum{background:var(--p2);border:1px solid var(--ln);border-radius:10px;padding:10px 12px;margin-bottom:8px;position:sticky;top:0;z-index:4}
+:is(#admBody,#edAdmSlot) .lmsum b{font-size:15px}:is(#admBody,#edAdmSlot) .lmh{color:#ff9aa8;margin-inline-start:10px}:is(#admBody,#edAdmSlot) .lms{color:#ffd77a;margin-inline-start:10px}
+:is(#admBody,#edAdmSlot) .lmchips{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+:is(#admBody,#edAdmSlot) button.lmchip{color:var(--tx);font:inherit;font-size:11.5px;cursor:pointer}:is(#admBody,#edAdmSlot) button.lmchip:hover{background:var(--p2);border-width:2px;padding:0 8px}
 @keyframes lmflash{0%,100%{box-shadow:0 0 0 0 transparent}30%{box-shadow:0 0 0 3px var(--ac)}}
-#admBody .lmflash{animation:lmflash 1.8s ease;border-radius:8px}
-#admBody .lmchip{border:1px solid var(--ln);border-radius:14px;padding:1px 9px;font-size:11.5px;background:var(--p1)}
-#admBody .lmchip.hard{border-color:#e0556a;color:#ff9aa8}#admBody .lmchip.soft{border-color:#d4a73a;color:#ffd77a}
-#admBody .lmbt{background:var(--p1);color:var(--tx);border:1px solid var(--ln);border-radius:7px;padding:4px 10px;font:inherit;font-size:12.5px;cursor:pointer;margin-inline-start:6px}
-#admBody .lmbt:hover{border-color:var(--ac)}
-#admBody .lmhow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
-#admBody .lmhow div{flex:1;min-width:150px;background:var(--p1);border:1px solid var(--ln);border-radius:8px;padding:7px 9px;font-size:12px;color:var(--mu)}
-#admBody .lmhow b{display:block;color:var(--tx);margin-bottom:1px}
-#admBody .lmpre{margin-bottom:8px;font-size:12.5px;color:var(--mu)}
-#admBody .lmtop{border:2px solid var(--ac)}#admBody .lmtin{padding:2px 11px 11px}
-#admBody .lmtt{font-weight:700;font-size:15px;margin-bottom:2px}
-#admBody .lmstep{background:var(--p1);border:1px solid var(--ln);border-radius:10px;padding:10px 11px;margin-top:8px}
-#admBody .lmstep>b{display:block;margin-bottom:6px}
-#admBody .lmseg2{display:flex;width:100%}#admBody .lmseg2 button{flex:1}
-#admBody .lmseg2 small{opacity:.75}
-#admBody .lmseg.lmseg2 button.hardon{background:var(--ac);color:var(--ot,#06222b)}
-#admBody .lmwarn{margin-top:6px;background:rgba(229,72,77,.12);border:1px solid #e5484d;border-radius:7px;padding:5px 9px;font-size:12.5px}
-#admBody .lmg{background:var(--p1);border:1px solid var(--ln);border-radius:10px;margin-bottom:7px;overflow:hidden}
-#admBody .lmg>summary{cursor:pointer;padding:9px 11px;display:flex;align-items:center;gap:9px;list-style:none}
-#admBody .lmg>summary::-webkit-details-marker{display:none}
-#admBody .lmgi{font-size:18px}#admBody .lmg summary small{display:block;color:var(--mu);font-size:11.5px}
-#admBody .lmcnt{margin-inline-start:auto;background:var(--p2);border-radius:12px;padding:1px 9px;font-size:11.5px;color:var(--mu)}
-#admBody .lmcnt.has{background:var(--ac);color:#06222b}
-#admBody .lmm{border-top:1px solid var(--ln);padding:9px 11px}#admBody .lmm.act{background:rgba(76,195,230,.06)}
-#admBody .lmmh{display:flex;gap:10px;align-items:flex-start}#admBody .lmmh .nxn{margin:1px 0 0}
-#admBody .lmctl{margin-top:8px}
-#admBody .lmvals{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:12.5px;margin-bottom:4px}
-#admBody .lmvals>div{display:flex;align-items:center;gap:5px}
-#admBody .lmn{width:72px;text-align:center}
-#admBody .stgsw.sm{transform:scale(.75)}
-#admBody .lmrng{position:relative;height:28px;direction:ltr}
-#admBody .lmtr,#admBody .lmfl{position:absolute;top:12px;height:5px;border-radius:3px}
-#admBody .lmtr{left:0;right:0;background:var(--ln)}#admBody .lmfl{background:var(--ac)}
-#admBody .lmrng input[type=range]{position:absolute;left:0;top:0;width:100%;height:28px;margin:0;background:none;pointer-events:none;-webkit-appearance:none;appearance:none}
-#admBody .lmrng input[type=range]::-webkit-slider-runnable-track{background:none}
-#admBody .lmrng input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;pointer-events:auto;width:18px;height:18px;border-radius:50%;background:#fff;border:3px solid var(--ac);cursor:grab}
-#admBody .lmrng input[type=range]::-moz-range-thumb{pointer-events:auto;width:12px;height:12px;border-radius:50%;background:#fff;border:3px solid var(--ac);cursor:grab}
-#admBody .lmsc{display:flex;justify-content:space-between;direction:ltr;color:#5f6c88;font-size:10.5px}
-#admBody .lmsen{margin-top:6px;background:var(--bg);border-radius:7px;padding:5px 9px;font-size:12.5px}
-#admBody .lmseg{display:inline-flex;margin-top:7px;border:1px solid var(--ln);border-radius:8px;overflow:hidden}
-#admBody .lmseg button{background:var(--p1);color:var(--tx);border:0;padding:5px 11px;font:inherit;font-size:12.5px;cursor:pointer}
-#admBody .lmseg .hardon{background:#a8283d}#admBody .lmseg .softon{background:#9a7418}
-#admBody .lmgen{margin-top:10px}
+:is(#admBody,#edAdmSlot) .lmflash{animation:lmflash 1.8s ease;border-radius:8px}
+:is(#admBody,#edAdmSlot) .lmchip{border:1px solid var(--ln);border-radius:14px;padding:1px 9px;font-size:11.5px;background:var(--p1)}
+:is(#admBody,#edAdmSlot) .lmchip.hard{border-color:#e0556a;color:#ff9aa8}:is(#admBody,#edAdmSlot) .lmchip.soft{border-color:#d4a73a;color:#ffd77a}
+:is(#admBody,#edAdmSlot) .lmbt{background:var(--p1);color:var(--tx);border:1px solid var(--ln);border-radius:7px;padding:4px 10px;font:inherit;font-size:12.5px;cursor:pointer;margin-inline-start:6px}
+:is(#admBody,#edAdmSlot) .lmbt:hover{border-color:var(--ac)}
+:is(#admBody,#edAdmSlot) .lmhow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+:is(#admBody,#edAdmSlot) .lmhow div{flex:1;min-width:150px;background:var(--p1);border:1px solid var(--ln);border-radius:8px;padding:7px 9px;font-size:12px;color:var(--mu)}
+:is(#admBody,#edAdmSlot) .lmhow b{display:block;color:var(--tx);margin-bottom:1px}
+:is(#admBody,#edAdmSlot) .lmpre{margin-bottom:8px;font-size:12.5px;color:var(--mu)}
+:is(#admBody,#edAdmSlot) .lmtop{border:2px solid var(--ac)}:is(#admBody,#edAdmSlot) .lmtin{padding:2px 11px 11px}
+:is(#admBody,#edAdmSlot) .lmtt{font-weight:700;font-size:15px;margin-bottom:2px}
+:is(#admBody,#edAdmSlot) .lmstep{background:var(--p1);border:1px solid var(--ln);border-radius:10px;padding:10px 11px;margin-top:8px}
+:is(#admBody,#edAdmSlot) .lmstep>b{display:block;margin-bottom:6px}
+:is(#admBody,#edAdmSlot) .lmseg2{display:flex;width:100%}:is(#admBody,#edAdmSlot) .lmseg2 button{flex:1}
+:is(#admBody,#edAdmSlot) .lmseg2 small{opacity:.75}
+:is(#admBody,#edAdmSlot) .lmseg.lmseg2 button.hardon{background:var(--ac);color:var(--ot,#06222b)}
+:is(#admBody,#edAdmSlot) .lmwarn{margin-top:6px;background:rgba(229,72,77,.12);border:1px solid #e5484d;border-radius:7px;padding:5px 9px;font-size:12.5px}
+:is(#admBody,#edAdmSlot) .lmg{background:var(--p1);border:1px solid var(--ln);border-radius:10px;margin-bottom:7px;overflow:hidden}
+:is(#admBody,#edAdmSlot) .lmg>summary{cursor:pointer;padding:9px 11px;display:flex;align-items:center;gap:9px;list-style:none}
+:is(#admBody,#edAdmSlot) .lmg>summary::-webkit-details-marker{display:none}
+:is(#admBody,#edAdmSlot) .lmgi{font-size:18px}:is(#admBody,#edAdmSlot) .lmg summary small{display:block;color:var(--mu);font-size:11.5px}
+:is(#admBody,#edAdmSlot) .lmcnt{margin-inline-start:auto;background:var(--p2);border-radius:12px;padding:1px 9px;font-size:11.5px;color:var(--mu)}
+:is(#admBody,#edAdmSlot) .lmcnt.has{background:var(--ac);color:#06222b}
+:is(#admBody,#edAdmSlot) .lmm{border-top:1px solid var(--ln);padding:9px 11px}:is(#admBody,#edAdmSlot) .lmm.act{background:rgba(76,195,230,.06)}
+:is(#admBody,#edAdmSlot) .lmmh{display:flex;gap:10px;align-items:flex-start}:is(#admBody,#edAdmSlot) .lmmh .nxn{margin:1px 0 0}
+:is(#admBody,#edAdmSlot) .lmctl{margin-top:8px}
+:is(#admBody,#edAdmSlot) .lmvals{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:12.5px;margin-bottom:4px}
+:is(#admBody,#edAdmSlot) .lmvals>div{display:flex;align-items:center;gap:5px}
+:is(#admBody,#edAdmSlot) .lmn{width:72px;text-align:center}
+:is(#admBody,#edAdmSlot) .stgsw.sm{transform:scale(.75)}
+:is(#admBody,#edAdmSlot) .lmrng{position:relative;height:28px;direction:ltr}
+:is(#admBody,#edAdmSlot) .lmtr,:is(#admBody,#edAdmSlot) .lmfl{position:absolute;top:12px;height:5px;border-radius:3px}
+:is(#admBody,#edAdmSlot) .lmtr{left:0;right:0;background:var(--ln)}:is(#admBody,#edAdmSlot) .lmfl{background:var(--ac)}
+:is(#admBody,#edAdmSlot) .lmrng input[type=range]{position:absolute;left:0;top:0;width:100%;height:28px;margin:0;background:none;pointer-events:none;-webkit-appearance:none;appearance:none}
+:is(#admBody,#edAdmSlot) .lmrng input[type=range]::-webkit-slider-runnable-track{background:none}
+:is(#admBody,#edAdmSlot) .lmrng input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;pointer-events:auto;width:18px;height:18px;border-radius:50%;background:#fff;border:3px solid var(--ac);cursor:grab}
+:is(#admBody,#edAdmSlot) .lmrng input[type=range]::-moz-range-thumb{pointer-events:auto;width:12px;height:12px;border-radius:50%;background:#fff;border:3px solid var(--ac);cursor:grab}
+:is(#admBody,#edAdmSlot) .lmsc{display:flex;justify-content:space-between;direction:ltr;color:#5f6c88;font-size:10.5px}
+:is(#admBody,#edAdmSlot) .lmsen{margin-top:6px;background:var(--bg);border-radius:7px;padding:5px 9px;font-size:12.5px}
+:is(#admBody,#edAdmSlot) .lmseg{display:inline-flex;margin-top:7px;border:1px solid var(--ln);border-radius:8px;overflow:hidden}
+:is(#admBody,#edAdmSlot) .lmseg button{background:var(--p1);color:var(--tx);border:0;padding:5px 11px;font:inherit;font-size:12.5px;cursor:pointer}
+:is(#admBody,#edAdmSlot) .lmseg .hardon{background:#a8283d}:is(#admBody,#edAdmSlot) .lmseg .softon{background:#9a7418}
+:is(#admBody,#edAdmSlot) .lmgen{margin-top:10px}
 .stgsw{position:relative;display:inline-block;width:40px;height:22px}.stgsw input{opacity:0;width:0;height:0;position:absolute}
 .stgsw i{position:absolute;inset:0;background:#3a3f48;border-radius:11px;transition:background .15s}
 .stgsw i:before{content:"";position:absolute;width:16px;height:16px;left:3px;top:3px;background:#fff;border-radius:50%;transition:transform .15s}
@@ -737,12 +737,12 @@ button.b kbd{font-style:normal}
 .advwin,.trkwin,#pause .glass,.rbox,#who .whobox,#adm{background:var(--tile)!important;border:0!important;border-radius:0!important;box-shadow:inset 0 3px 0 var(--ac),0 18px 50px rgba(0,0,0,.55);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 .advwin,.trkwin,#pause .glass,.rbox,#who .whobox{clip-path:polygon(0 0,calc(100% - var(--cut)) 0,100% var(--cut),100% 100%,var(--cut) 100%,0 calc(100% - var(--cut)))}
 .advtop,.trkhead,.trktools,#adm .admh,.advfoot{background:rgba(0,0,0,.26)!important;border-color:rgba(255,255,255,.07)!important}
-.advsec,.trkside,.nxcard,.card,#admBody .nxrow2{background:var(--tile)!important;border:0!important;border-radius:0!important;border-inline-start:3px solid color-mix(in srgb,var(--ac) 55%,transparent)!important}
+.advsec,.trkside,.nxcard,.card,:is(#admBody,#edAdmSlot) .nxrow2{background:var(--tile)!important;border:0!important;border-radius:0!important;border-inline-start:3px solid color-mix(in srgb,var(--ac) 55%,transparent)!important}
 .card{border-inline-start:0!important}
 .card:hover{background:var(--tile2)!important;box-shadow:inset 0 -3px 0 var(--cc,var(--ac));transform:translateY(-2px)}
 .card .play{border:0!important;background:rgba(255,255,255,.07);font-weight:700;font-style:italic}
 .card:hover .play{background:var(--acfill);color:var(--ot,#06222b)}
-.advsec h3,.trkside h3,#admBody h4,#panel h3,.scr h3{font:600 11px var(--mono);letter-spacing:.18em;color:var(--mu);border-bottom:1px solid rgba(255,255,255,.08)}
+.advsec h3,.trkside h3,:is(#admBody,#edAdmSlot) h4,#panel h3,.scr h3{font:600 11px var(--mono);letter-spacing:.18em;color:var(--mu);border-bottom:1px solid rgba(255,255,255,.08)}
 .advtbl th,.osdtbl th,.trktbl th{font:600 11px var(--mono);letter-spacing:.12em;color:var(--mu);background:rgba(0,0,0,.22)!important;text-transform:uppercase}
 .trktbl td,.osdtbl td,.advtbl td{border-color:rgba(255,255,255,.06)!important}
 .trktbl tbody tr:hover{background:var(--tile2)}
@@ -1111,28 +1111,29 @@ body.mz-on #nxBar{right:104px}
     <div class="eddh">בקרה</div>
     <div id="edSel">לא נבחר שער</div>
     <div class="row" style="gap:6px"><button class="b" id="edGatePrev" style="flex:1" title="עבור לשער הקודם">&#9654; שער קודם</button><button class="b" id="edGateNext" style="flex:1" title="עבור לשער הבא">שער הבא &#9664;</button></div>
+    <div class="btns edacts"><button class="b" data-act="add">+ הוסף שער</button><button class="b" data-act="del">&minus; מחק שער</button><button class="b" id="btnPropDup">שכפל אלמנט</button><button class="b" id="btnPropDel">&minus; מחק אלמנט</button><button class="b" id="btnPropAdd" style="display:none">+</button><input type="hidden" id="edStep" value="1"><input type="hidden" id="edYawStep" value="5"></div>
     <div id="edProps" style="display:none">
-      <details class="eds" open><summary>מיקום</summary>
+      <details class="eds"><summary>מיקום</summary>
       <div class="edprow2"><label>X</label><input type="number" id="edpX" step="0.5"><label>Z</label><input type="number" id="edpZ" step="0.5"><label id="edpYl">גובה</label><input type="number" id="edpY" step="0.5"></div>
-      </details><details class="eds" open><summary>סיבוב וגודל</summary>
+      </details><details class="eds"><summary>סיבוב וגודל</summary>
       <div class="edprow"><label>סיבוב</label><input type="range" id="edpYaw" min="0" max="360" step="1"><output id="edpYawV"></output></div>
       <div class="edprow"><label>גודל</label><input type="range" id="edpSz" min="0.4" max="4" step="0.05"><output id="edpSzV"></output></div>
       <div class="btns"><button class="b" id="edpReset">איפוס גודל וסיבוב</button></div>
       </details>
     </div>
-    <details class="eds" open><summary>מסלול</summary>
+    <details class="eds"><summary>מסלול</summary>
     <div class="row"><label style="flex:0 0 70px">הקפות</label><select id="edLaps"><option value="1">1 · מסלול חד פעמי: השער האחרון הוא הסיום</option><option value="2">2</option><option value="3">3 (ברירת מחדל)</option><option value="4">4</option><option value="5">5</option><option value="8">8</option><option value="10">10</option></select></div>
     <div class="row" style="margin-top:8px;border-top:1px solid var(--ln);padding-top:8px"><b style="flex:1">חצי השער הבא</b><label style="flex:0 0 auto;display:flex;align-items:center;gap:6px"><input type="checkbox" id="edGmOn" checked> הצג</label></div>
     <div class="row"><label style="flex:0 0 70px">גודל</label><input type="range" id="edGmSz" min="0.3" max="3" step="0.1" value="1" style="flex:1;min-width:0"><output id="edGmSzV" style="flex:0 0 30px;text-align:center">1</output></div>
     <div class="row"><label style="flex:0 0 70px">צבע</label><input type="color" id="edGmCol" value="#ffffff" title="צבע החצים" style="flex:0 0 52px;height:34px;padding:0;border:0;background:none;cursor:pointer"><button class="b" id="edGmReset" title="חזרה לברירת מחדל" style="flex:1">איפוס</button></div>
     <div class="keys" style="font-size:11px">התצוגה המקדימה מופיעה על השער הנבחר.</div>
     </details>
-    <details class="eds" open><summary>סביבה: דשא וצללים</summary>
+    <details class="eds"><summary>סביבה: דשא וצללים</summary>
     <div class="row"><label style="flex:0 0 70px">צבע דשא</label><input type="color" id="inpGrass" value="#5b8e30" title="צבע הדשא" style="flex:0 0 52px;height:34px;padding:0;border:0;background:none"><button class="b" id="btnGrassReset" style="margin-inline-start:8px">איפוס</button></div>
     <div class="row"><label style="flex:1">צללים מהשמש <b id="stShadow">כן</b></label><input type="checkbox" id="chkShadow"></div>
     <div class="keys" style="font-size:11px">ההגדרות האלה נשמרות בדפדפן הזה. הצללים כבויים אוטומטית בנייד.</div>
     </details>
-    <details class="eds" open><summary>מראה</summary>
+    <details class="eds"><summary>מראה</summary>
     <div class="row"><label style="flex:0 0 70px">צבע</label><select id="propType" style="display:none"></select><select id="propColor"></select><input type="color" id="propColorFree" value="#ff6a1a" title="צבע חופשי: בחר כל צבע" style="flex:0 0 44px;height:34px;padding:0;border:0;background:none;cursor:pointer"><button class="b" id="propColorAll" title="צבע את כל האלמנטים מאותו סוג במסלול בצבע שנבחר" style="flex:0 0 auto">כל הסוג</button></div>
     <div class="row"><label style="flex:0 0 70px">צורת שער</label><select id="gateKind"><option value="">ברירת מחדל של המפה</option><option value="ring">טבעת</option><option value="square">ריבוע</option><option value="arch">קשת (ללא בסיס)</option><option value="wide">רחב ושטוח</option><option value="tall">גבוה וצר</option><option value="hex">משושה</option><option value="double">שער כפול</option></select></div>
     </details>
@@ -1156,41 +1157,15 @@ body.mz-on #nxBar{right:104px}
     <div class="row"><label style="flex:0 0 70px">מרווח (מ')</label><input type="number" id="edPcGap" value="8" min="3" max="40" step="1"></div>
     <div class="btns"><button class="b" id="edPcMake">צור נתיב בין השערים</button><button class="b" id="edPcClear">מחק נתיב</button></div>
     </details>
-    <details class="eds" id="edAlign"><summary>יישור מרובה</summary>
+    <details class="eds" id="edAlign"><summary>מירכוז אלמנטים</summary>
     <div id="edAlInfo" class="keys">לא נבחרו אלמנטים. החזק Shift או Ctrl וגרור מסגרת על כמה אלמנטים, או לחץ עליהם אחד אחד.</div>
-    <div class="btns"><button class="b" id="edAlAll">בחר הכול</button><button class="b" id="edAlNone">נקה בחירה</button><button class="b" id="edAlUndo">בטל יישור</button></div>
-    <div class="row"><label style="flex:0 0 90px">מרווח (מ')</label><input type="number" id="edAlGap" value="12" min="1" step="1"></div>
-    <label class="keys" style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="edAlUseGap" checked> פיזור וקו ישר לפי המרווח (בלי סימון: פורס על הטווח הקיים)</label>
-    <div class="edsh2">שליטה בכולם יחד (מתי שיש 2 ויותר)</div>
-    <div class="edal"><button class="b" data-gn="x-">X −</button><button class="b" data-gn="z-">Z −</button><button class="b" data-gn="x+">X +</button>
-    <button class="b" data-gn="y+">גובה +</button><button class="b" data-gn="z+">Z +</button><button class="b" data-gn="y-">גובה −</button>
-    <button class="b" data-gn="yaw+">סיבוב ↻</button><button class="b" data-gn="sz+">גדול +</button><button class="b" data-gn="yaw-">סיבוב ↺</button>
-    <button class="b" data-gn="sz-">קטן −</button><button class="b" data-gn="dup">שכפל את כולם</button><button class="b" data-gn="del">מחק את כולם</button></div>
-    <div class="edsh2">יישור לפי ציר (קטן / אמצע / גדול)</div>
-    <div class="edal"><button class="b" data-al="x-min">X קטן</button><button class="b" data-al="x-mid">X אמצע</button><button class="b" data-al="x-max">X גדול</button>
-    <button class="b" data-al="z-min">Z קטן</button><button class="b" data-al="z-mid">Z אמצע</button><button class="b" data-al="z-max">Z גדול</button>
-    <button class="b" data-al="y-min">גובה נמוך</button><button class="b" data-al="y-mid">גובה אמצע</button><button class="b" data-al="y-max">גובה גבוה</button></div>
-    <div class="edsh2">פיזור וסידור</div>
-    <div class="edal"><button class="b" data-al="dist-x">פיזור שווה X</button><button class="b" data-al="dist-z">פיזור שווה Z</button><button class="b" data-al="line">קו ישר</button>
-    <button class="b" data-al="circle">מעגל</button><button class="b" data-al="grid">רשת</button><button class="b" data-al="face">פנים למרכז</button>
-    <button class="b" data-al="yaw">אותו סיבוב</button><button class="b" data-al="size">אותו גודל</button><button class="b" data-al="ground">גובה מינימלי</button></div>
-    </details>
-    <details class="eds" open><summary>הזזה בכפתורים</summary>
-    <div class="row"><label style="flex:0 0 70px">צעד (מ')</label><input type="number" id="edStep" value="1" min="0.1" step="0.5"><label style="flex:0 0 50px;margin-right:6px">סיבוב</label><input type="number" id="edYawStep" value="5" min="1" step="1"></div>
-    <div class="btns ltr edmv">
-      <button class="b" data-act="x-">X &minus;</button><button class="b" data-act="x+">X +</button>
-      <button class="b" data-act="y-">Y &minus;</button><button class="b" data-act="y+">Y +</button>
-      <button class="b" data-act="z-">Z &minus;</button><button class="b" data-act="z+">Z +</button>
-      <button class="b" data-act="yaw-">YAW &#8630;</button><button class="b" data-act="yaw+">YAW &#8631;</button>
-      <button class="b" data-act="sz-">SIZE &minus;</button><button class="b" data-act="sz+">SIZE +</button>
-    </div>
-    <div class="btns"><button class="b" data-act="add">+ הוסף שער</button><button class="b" data-act="del">&minus; מחק שער</button></div>
-    <div class="btns"><button class="b" id="btnPropAdd" style="display:none">+</button><button class="b" id="btnPropDup">שכפל אלמנט</button><button class="b" id="btnPropDel">&minus; מחק אלמנט</button></div>
+    <div class="row" style="gap:12px"><label style="flex:0 0 auto">מרכז לפי:</label><label class="edaxl"><input type="checkbox" id="edAxX" checked> X</label><label class="edaxl"><input type="checkbox" id="edAxZ" checked> Z</label><label class="edaxl"><input type="checkbox" id="edAxY"> גובה</label></div>
+    <div class="row"><label style="flex:0 0 70px">מירכוז</label><input type="range" id="edAlSlide" min="0" max="100" step="1" value="0" style="flex:1;min-width:0"><output id="edAlSlideV" style="flex:0 0 40px;text-align:center">0%</output></div>
+    <div class="btns"><button class="b" id="edAlCenter">מרכז לגמרי</button></div>
     </details><details class="eds"><summary>תנאי סביבה (רוח וטורבולנציה)</summary>
     <div id="edEnvSlot"></div>
-    </details><details class="eds"><summary>החלפה</summary>
-    <div id="edRep"><button class="b edpickbtn" id="edRepBtn"><span>החלף את האלמנט הנבחר באלמנט אחר</span><i>&#9662;</i></button><div id="edRepList" class="edlist"></div></div>
     </details>
+    <div id="edAdmSlot"></div>
     <div class="keys">גרור שער או אלמנט בעכבר כדי להזיז. <kbd>Del</kbd> מחיקה &middot; <kbd>Q</kbd>/<kbd>E</kbd> סיבוב &middot; <kbd>Shift</kbd> צעד &times;5 &middot; <kbd>Esc</kbd> יציאה &middot; <kbd>Z</kbd>/<kbd>X</kbd> או <kbd>+</kbd>/<kbd>&minus;</kbd> זום על האלמנט הנבחר &middot; <kbd>F</kbd> התמקדות &middot; חיצים: תנועה</div>
   </div>
   <div style="margin-top:8px;color:#c4d2e8;font-size:13px">JSON של המסלול הפעיל (רצף השערים):</div>
@@ -1424,7 +1399,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 368</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 369</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -10016,7 +9991,7 @@ function nxCloseAll() {                                          // every window
 }
 function nxLimGo(k, m) {                                         // a chip in the summary: open the window that holds this limit, scroll to it and flash it
   const ck = 'lm.' + k + '.' + (NXL_TOP[m] ? 'top' : (NXE_M[m] || [])[2]); NX.openK = NX.openK || {}; NX.openK[ck] = true;
-  const body = $('admBody'); if (!body) return;
+  const body = $('edAdmSlot') && $('edAdmSlot').querySelector('details[data-ck]') ? $('edAdmSlot') : $('admBody'); if (!body) return;
   const d = Array.from(body.querySelectorAll('details[data-ck]')).find((x) => x.dataset.ck === ck); if (!d) return;
   d.open = true;
   const row = Array.from(d.querySelectorAll('.lmm')).find((x) => x.dataset.m === m) || d;
@@ -10034,6 +10009,40 @@ function nxTrkSec(key, title, badge, inner, defOpen) {         // one collapsibl
   const o = NX.openK && NX.openK[key] !== undefined ? NX.openK[key] : !!defOpen;
   return '<details class="catbox gcard tpsec" data-ck="' + key + '"' + (o ? ' open' : '') + '><summary><b>' + title + '</b>' + (badge ? '<span class="catn">' + badge + '</span>' : '') + '</summary>' + inner + '</details>';
 }
+function nxEdSections(id) {                                      // the per-track admin sections that now live inside the track editor: flight mode, student card, measurement limits
+  const st = STAGES[id], mine = !!st.custom, k = nxGuideKey(id), D = NX.draft, tag = (t) => 'tp_' + t; let h = '';
+  if (mine && !st.pub) {
+    const Lk = st.lock, lf = (key, label, val, unit, step) => nxF(label, '<input type="number" step="' + (step || 'any') + '" data-act="trk-lock" data-f="' + key + '" data-id="' + id + '" value="' + val + '" style="width:90px"' + (Lk ? '' : ' disabled') + '> ' + (unit || ''));
+    let fm = '<p class="nxn">נעילת צירים: הרחפן מתחיל באוויר, במצערת קבועה. בוחרים מוד טיסה (אנגל או אקרו) ואיזה צירים חופשיים. שאר הצירים נעולים.</p>';
+    fm += nxF('נעילת צירים', '<label class="stgsw"><input type="checkbox" data-act="trk-lock" data-f="on" data-id="' + id + '"' + (Lk ? ' checked' : '') + '><i></i></label>');
+    fm += nxF('מוד טיסה', '<select data-act="trk-lock" data-f="mode" data-id="' + id + '"' + (Lk ? '' : ' disabled') + '><option value="angle"' + (!Lk || Lk.mode !== 'acro' ? ' selected' : '') + '>אנגל (הרחפן מתיישר לבד)</option><option value="acro"' + (Lk && Lk.mode === 'acro' ? ' selected' : '') + '>אקרו (שליטה בקצב סיבוב)</option></select>');
+    fm += nxF('הציר החופשי', '<select data-act="trk-lock" data-f="axis" data-id="' + id + '"' + (Lk ? '' : ' disabled') + '><option value="pitch"' + (Lk && Lk.axis === 'pitch' ? ' selected' : '') + '>פיץ׳ (קדימה/אחורה)</option><option value="roll"' + (Lk && Lk.axis === 'roll' ? ' selected' : '') + '>רול (ימינה/שמאלה), הרחפן מתקדם לבד (באנגל)</option><option value="both"' + (Lk && Lk.axis === 'both' ? ' selected' : '') + '>שני הצירים חופשיים (פיץ׳ ורול)</option></select>');
+    fm += lf('alt', 'גובה התחלה', Lk ? Lk.alt : '', 'מ׳') + lf('thr', 'מצערת קבועה', Lk ? Math.round(Lk.thr * 100) : '', '%') + lf('v0', 'מהירות כניסה (0 = מרחף)', Lk ? Lk.v0 : '', 'מ׳/ש׳') + lf('gain', 'עוצמת הסטיק החופשי (0.2-1)', Lk ? Lk.gain : '', '');
+    fm += lf('fwd', 'התקדמות אוטומטית (ציר רול בלבד, 0.05-0.8)', Lk ? Lk.fwd : '', '');
+    fm += nxF('פיצוי על ירידה בגובה בנטייה', '<label class="nxchk1"><input type="checkbox" data-act="trk-lock" data-f="comp" data-id="' + id + '"' + (Lk && Lk.comp ? ' checked' : '') + (Lk ? '' : ' disabled') + '> פעיל</label>');
+    fm += nxF('שמירת גובה מלאה', '<label class="nxchk1"><input type="checkbox" data-act="trk-lock" data-f="hold" data-id="' + id + '"' + (Lk && Lk.hold ? ' checked' : '') + (Lk ? '' : ' disabled') + '> הרחפן מחזיק גובה לבד (המצערת רק מוצגת)</label>');
+    h += nxTrkSec(tag('lock'), 'מצב טיסה (נעילת צירים)', Lk ? (Lk.axis === 'roll' ? 'רול בלבד' : Lk.axis === 'both' ? 'פיץ׳ ורול' : 'פיץ׳ בלבד') + ' · ' + (Lk.mode === 'acro' ? 'אקרו' : 'אנגל') : 'רגיל', fm);
+  }
+  const gd = (D.guides || {})[k] || {}, hasG = !!(String(gd.text || '').trim() || String(gd.fly || '').trim());
+  h += nxTrkSec(tag('guide'), 'כרטיס הסבר לתלמיד', hasG ? (gd.off ? 'מוסתר' : 'יש כרטיס') : 'אין כרטיס', nxGuideFields(k, gd));
+  const sk = (D.stick || {})[k] || {}, lm = sk.lim || {}, nsk = nxRuleKeys(sk).length;
+  const sg = nxLimUI(k, sk);
+  h += nxTrkSec(tag('stick'), 'מגבלות מדידה', nsk ? nsk + ' מגבלות' : 'ללא', sg);
+  return h;
+}
+function nxEdSlotRender() {
+  const slot = typeof document !== 'undefined' && document.getElementById('edAdmSlot'); if (!slot) return;
+  const ok = NX.role === 'admin' && !NX.preview && NX.draft && typeof currentStage !== 'undefined' && currentStage && STAGES[currentStage.id];
+  slot.innerHTML = ok ? '<div class="edadmh">הגדרות המסלול (מנהל)</div>' + nxEdSections(currentStage.id) : '';
+}
+let nxEdLast = '';
+function nxEdSync() {                                           // the editor shows the sections of the track being edited; the wind panel follows the same track
+  if (NX.role !== 'admin' || typeof currentStage === 'undefined' || !currentStage) return;
+  const key = currentStage.id + '|' + (NX.preview ? 1 : 0) + '|' + (NX.draft ? 1 : 0); if (key === nxEdLast) return; nxEdLast = key;
+  try { if (typeof envSettings !== 'undefined' && envSettings[currentStage.id] && trkSel !== currentStage.id) { trkSel = currentStage.id; syncEnvUI(); } } catch (e) { /* ignore */ }
+  nxEdSlotRender();
+}
+if (typeof window !== 'undefined' && window.setInterval) window.setInterval(nxEdSync, 500);
 function nxTrackPanel(id) {
   const st = STAGES[id], list = NXH.catList(), mine = !!st.custom, k = nxGuideKey(id), D = NX.draft;
   const off = D.stages.off || {}, hid = !!off[id], locked = D.stages.force === id;
@@ -10050,43 +10059,6 @@ function nxTrackPanel(id) {
   let v = nxF('מוצג לשחקנים', '<label class="stgsw"><input type="checkbox" data-act="stg-vis" data-id="' + id + '"' + (hid ? '' : ' checked') + '><i></i></label>');
   v += '<div class="nxbtns"><button class="nxb stglock' + (locked ? ' on' : '') + '" data-act="stg-lock" data-id="' + id + '" title="השחקנים יראו רק את המסלול הזה">' + (locked ? '&#128274; נעול, לחץ לביטול' : 'נעל עליו (רק הוא יוצג)') + '</button></div>';
   h += nxTrkSec(tag('vis'), 'תצוגה לשחקנים', locked ? 'נעול' : hid ? 'מוסתר' : 'מוצג', v);
-  const E = (typeof envSettings !== 'undefined' && envSettings[id]) || { wind: 0, dir: 0, turb: 0 };
-  const rg = (key, min, max, step, val, unit) => '<input type="range" min="' + min + '" max="' + max + '" step="' + step + '" value="' + val + '" data-act="trk-env" data-id="' + id + '" data-key="' + key + '"> <span class="nxsm">' + val + unit + '</span>';
-  let e = nxF('עוצמת רוח', rg('wind', 0, 20, 0.5, Number(E.wind) || 0, " מ'/ש"));
-  e += nxF('כיוון הרוח', rg('dir', 0, 359, 1, Math.round(Number(E.dir) || 0), '°'));
-  e += nxF('turbulence / סערה', rg('turb', 0, 100, 1, Math.round((Number(E.turb) || 0) * 100), '%'));
-  h += nxTrkSec(tag('env'), 'תנאי סביבה (רוח)', (Number(E.wind) || 0) > 0 ? (Number(E.wind) || 0) + " מ'/ש" : 'ללא', e);
-  if (mine && !st.pub) {
-    const Lk = st.lock, lf = (key, label, val, unit, step) => nxF(label, '<input type="number" step="' + (step || 'any') + '" data-act="trk-lock" data-f="' + key + '" data-id="' + id + '" value="' + val + '" style="width:90px"' + (Lk ? '' : ' disabled') + '> ' + (unit || ''));
-    let fm = '<p class="nxn">נעילת צירים: הרחפן מתחיל באוויר, במצערת קבועה. בוחרים מוד טיסה (אנגל או אקרו) ואיזה צירים חופשיים. שאר הצירים נעולים.</p>';
-    fm += nxF('נעילת צירים', '<label class="stgsw"><input type="checkbox" data-act="trk-lock" data-f="on" data-id="' + id + '"' + (Lk ? ' checked' : '') + '><i></i></label>');
-    fm += nxF('מוד טיסה', '<select data-act="trk-lock" data-f="mode" data-id="' + id + '"' + (Lk ? '' : ' disabled') + '><option value="angle"' + (!Lk || Lk.mode !== 'acro' ? ' selected' : '') + '>אנגל (הרחפן מתיישר לבד)</option><option value="acro"' + (Lk && Lk.mode === 'acro' ? ' selected' : '') + '>אקרו (שליטה בקצב סיבוב)</option></select>');
-    fm += nxF('הציר החופשי', '<select data-act="trk-lock" data-f="axis" data-id="' + id + '"' + (Lk ? '' : ' disabled') + '><option value="pitch"' + (Lk && Lk.axis === 'pitch' ? ' selected' : '') + '>פיץ׳ (קדימה/אחורה)</option><option value="roll"' + (Lk && Lk.axis === 'roll' ? ' selected' : '') + '>רול (ימינה/שמאלה), הרחפן מתקדם לבד (באנגל)</option><option value="both"' + (Lk && Lk.axis === 'both' ? ' selected' : '') + '>שני הצירים חופשיים (פיץ׳ ורול)</option></select>');
-    fm += lf('alt', 'גובה התחלה', Lk ? Lk.alt : '', 'מ׳') + lf('thr', 'מצערת קבועה', Lk ? Math.round(Lk.thr * 100) : '', '%') + lf('v0', 'מהירות כניסה (0 = מרחף)', Lk ? Lk.v0 : '', 'מ׳/ש׳') + lf('gain', 'עוצמת הסטיק החופשי (0.2-1)', Lk ? Lk.gain : '', '');
-    fm += lf('fwd', 'התקדמות אוטומטית (ציר רול בלבד, 0.05-0.8)', Lk ? Lk.fwd : '', '');
-    fm += nxF('פיצוי על ירידה בגובה בנטייה', '<label class="nxchk1"><input type="checkbox" data-act="trk-lock" data-f="comp" data-id="' + id + '"' + (Lk && Lk.comp ? ' checked' : '') + (Lk ? '' : ' disabled') + '> פעיל</label>');
-    fm += nxF('שמירת גובה מלאה', '<label class="nxchk1"><input type="checkbox" data-act="trk-lock" data-f="hold" data-id="' + id + '"' + (Lk && Lk.hold ? ' checked' : '') + (Lk ? '' : ' disabled') + '> הרחפן מחזיק גובה לבד (המצערת רק מוצגת)</label>');
-    h += nxTrkSec(tag('lock'), 'מצב טיסה (נעילת צירים)', Lk ? (Lk.axis === 'roll' ? 'רול בלבד' : Lk.axis === 'both' ? 'פיץ׳ ורול' : 'פיץ׳ בלבד') + ' · ' + (Lk.mode === 'acro' ? 'אקרו' : 'אנגל') : 'רגיל', fm);
-  }
-  h += nxTrkSec(tag('prev'), 'תצוגה מקדימה של המפה', '', nxMapPreview(st), false);
-  const gd = (D.guides || {})[k] || {}, hasG = !!(String(gd.text || '').trim() || String(gd.fly || '').trim());
-  h += nxTrkSec(tag('guide'), 'כרטיס הסבר לתלמיד', hasG ? (gd.off ? 'מוסתר' : 'יש כרטיס') : 'אין כרטיס', nxGuideFields(k, gd));
-  const sk = (D.stick || {})[k] || {}, lm = sk.lim || {}, nsk = nxRuleKeys(sk).length;
-  const sg = nxLimUI(k, sk);
-  h += nxTrkSec(tag('stick'), 'מגבלות מדידה', nsk ? nsk + ' מגבלות' : 'ללא', sg);
-  const cs = D.courses || {}, inC = [];
-  Object.keys(cs).forEach((cid) => {
-    const co = cs[cid];
-    (co.stages || []).forEach((sg, n) => {
-      const ts = (sg.tracks || []).map((x) => nxGuideKey(x));
-      const isT = ts.indexOf(k) >= 0, isE = nxGuideKey(sg.exam || '') === k;
-      if (isT || isE) inC.push((co.name || 'קורס') + ' · ' + (sg.name || 'שלב ' + (n + 1)) + (isE ? ' (מבחן)' : ''));
-    });
-    if (co.final && nxGuideKey(co.final.exam || '') === k) inC.push((co.name || 'קורס') + ' · מבחן מסכם');
-  });
-  let c = inC.length ? '<ul class="nxn">' + inC.map((x) => '<li>' + nxEsc(x) + '</li>').join('') + '</ul>' : '<p class="nxn">המסלול לא שייך לאף קורס.</p>';
-  c += '<div class="nxbtns"><button class="nxb" data-act="trk-crs">פתח את לשונית הקורסים</button></div>';
-  h += nxTrkSec(tag('crs'), 'קורסים', inC.length ? inC.length + '' : 'אין', c);
   return h;
 }
 function nxTrackPick(id) {                                      // a track was clicked in the player-side list: show its editor in the admin panel
@@ -10667,6 +10639,7 @@ function nxAdmRender() {
   if (NX.tab === 'drones') nxDroneMark();
   $('admPrev').classList.toggle('on', NX.preview);
   nxPubBtn();
+  nxEdSlotRender();
 }
 function nxDroneMark() {                                          // the card of the drone shown on the stage is outlined in the drones tab
   const b = $('admBody'); if (!b || !b.querySelectorAll) return;
@@ -10674,7 +10647,7 @@ function nxDroneMark() {                                          // the card of
 }
 function nxAdmSoftRender() {
   const a = document.activeElement;
-  if (a && $('admBody').contains(a) && /^(INPUT|SELECT|TEXTAREA)$/.test(a.tagName)) return;
+  if (a && ($('admBody').contains(a) || ($('edAdmSlot') && $('edAdmSlot').contains(a))) && /^(INPUT|SELECT|TEXTAREA)$/.test(a.tagName)) return;
   nxAdmRender();
 }
 /* each admin tab takes the game to the screen that tab edits */
@@ -10739,8 +10712,8 @@ if (typeof document !== 'undefined' && document.addEventListener) document.addEv
   el.dispatchEvent(new Event('input', { bubbles: true }));
   el.dispatchEvent(new Event('change', { bubbles: true }));
 }, true);
-function nxAdmWire() {
-  const body = $('admBody');
+function nxAdmWire() { nxAdmWireOn($('admBody')); if ($('edAdmSlot')) nxAdmWireOn($('edAdmSlot')); nxAdmWireTop(); }
+function nxAdmWireOn(body) {
   const nxShowDrone = (e) => {                                    // touching a drone's card in the drones tab shows that drone on the stage
     const c = e.target && e.target.closest ? e.target.closest('[data-drn]') : null, id = c && c.dataset.drn;
     if (!id || NX.tab !== 'drones' || !DRONE_INFO[id]) return;
@@ -10975,6 +10948,8 @@ function nxAdmWire() {
     }
   });
   body.addEventListener('toggle', (e) => { const d = e.target; if (d && d.tagName === 'DETAILS' && d.open) { if (d.dataset.un) NX.openP = d.dataset.un; else if (d.dataset.gid) NX.openG = d.dataset.gid; } }, true);      // inner sections (no gid) must not clear which group card is open
+}
+function nxAdmWireTop() {
   $('admTabs').addEventListener('click', (e) => { const b = e.target.closest('[data-tab]'); if (b) { if (NX.tab !== b.dataset.tab) nxCloseAll(); NX.tab = b.dataset.tab; if (NX.tab === 'courses') nxSeedSkills(); if (NX.tab !== 'groups') NX.kitPeek = ''; nxApplyView(); nxAdmRender(); nxGoScreen(NX.tab); } });
   $('admPub').addEventListener('click', nxPublish);
   $('admPrev').addEventListener('click', () => { NX.preview = !NX.preview; if (!NX.preview) { NX.previewGid = ''; NX.previewUn = ''; } nxApplyView(); nxAdmRender(); });
@@ -11426,12 +11401,13 @@ function edMultiToggle(kind, i) {
     if (selProp >= 0 && propData[selProp]) edMulti.push({ kind: 'prop', i: selProp });
     else if (selected >= 0 && gates[selected]) edMulti.push({ kind: 'gate', i: selected });
   }
+  edCenSnap = null;
   const k = edMulti.findIndex((m) => m.kind === kind && m.i === i);
   if (k >= 0) edMulti.splice(k, 1); else edMulti.push({ kind, i });
   edMultiCounts = gates.length + '|' + propData.length;
   edMultiSync();
 }
-function edMultiClear() { if (!edMulti.length) return; edMulti = []; edMultiSync(); }
+function edMultiClear() { edCenSnap = null; if (!edMulti.length) return; edMulti = []; edMultiSync(); }
 function edMultiSync() {
   const el = $('edAlInfo');
   if (el) el.textContent = edMulti.length ? 'נבחרו ' + edMulti.length + ' אלמנטים: גרור אחד מהם להזזת כולם. J/L/I/K הזזה, U/O גובה, Q/E סיבוב סביב המרכז, V שכפול, Del מחיקה, או השתמש בכפתורים.' : 'לא נבחרו אלמנטים. החזק Shift או Ctrl וגרור מסגרת על כמה אלמנטים, או לחץ עליהם אחד אחד.';
@@ -11448,7 +11424,7 @@ function edAlign(act) {
   const it = edMultiItems();
   if (it.length < 2) { nxToast('בחר לפחות שני אלמנטים (Shift + לחיצה)'); return; }
   edAlUndo = it.map((m) => ({ kind: m.kind, i: m.i, x: m.el.x, y: m.el.y, z: m.el.z, yaw: m.el.yaw, s: m.el.s, sz: m.el.sz }));
-  const gap = Math.max(1, parseFloat($('edAlGap').value) || 12), n = it.length;
+  const gap = Math.max(1, parseFloat($('edAlGap') && $('edAlGap').value) || 12), n = it.length;
   const cx = it.reduce((a, m) => a + m.el.x, 0) / n, cz = it.reduce((a, m) => a + m.el.z, 0) / n;
   const put = (m, x, z) => { const q = edLimit(x, z); m.el.x = round2(q[0]); m.el.z = round2(q[1]); };
   const a = act.split('-');
@@ -12154,7 +12130,6 @@ function edpApply(what, v) {
   $('edPlaceStop').addEventListener('click', (e) => { edCancelPlace(); e.target.blur(); });
   $('edPrev').addEventListener('click', (e) => { edStep(-1); e.target.blur(); });
   $('edNext').addEventListener('click', (e) => { edStep(1); e.target.blur(); });
-  $('edRepBtn').addEventListener('click', (e) => { edTogglePicker(undefined, 'rep'); e.currentTarget.blur(); });
   $('edMapBtn').addEventListener('click', (e) => { $('edBase').classList.toggle('open'); e.currentTarget.blur(); });
   { const eb = $('edBase'); if (eb) eb.innerHTML = MAP_BASE_LIST.map((k) => '<button class="b" data-base="' + k + '">' + MAP_BASES[k] + '</button>').join('') + '<div class="keys" id="edBaseNote"></div>'; }   // every map type, new ones included
   document.querySelectorAll('#edBase [data-base]').forEach((b) => b.addEventListener('click', () => { edSetBase(b.dataset.base); $('edBase').classList.remove('open'); b.blur(); }));
@@ -12213,13 +12188,32 @@ function edClearAll() {                             // remove every element; a c
   trackEdited();
 }
 
+/* centring several picked elements: a "centre fully" button and a slider that pulls them toward their common centre, on the axes that are ticked */
+let edCenSnap = null;
+function edCenAxes() { return { x: !!($('edAxX') && $('edAxX').checked), z: !!($('edAxZ') && $('edAxZ').checked), y: !!($('edAxY') && $('edAxY').checked) }; }
+function edCenterTo(t) {
+  const it = edMultiItems(); if (it.length < 2) { nxToast('בחר לפחות שני אלמנטים (Shift + לחיצה)'); return false; }
+  if (!edCenSnap || edCenSnap.n !== it.length) {                       // remember where everything was when the pull began
+    const gy = it.filter((m) => m.kind === 'gate');
+    edCenSnap = { n: it.length, cx: it.reduce((a, m) => a + m.el.x, 0) / it.length, cz: it.reduce((a, m) => a + m.el.z, 0) / it.length, cy: gy.length ? gy.reduce((a, m) => a + m.el.y, 0) / gy.length : 0,
+      o: it.map((m) => ({ x: m.el.x, y: m.el.y, z: m.el.z })) };
+  }
+  const S = edCenSnap, ax = edCenAxes();
+  it.forEach((m, k) => {
+    const o = S.o[k], x = ax.x ? o.x + (S.cx - o.x) * t : o.x, z = ax.z ? o.z + (S.cz - o.z) * t : o.z, q = edLimit(x, z);
+    m.el.x = round2(q[0]); m.el.z = round2(q[1]);
+    if (ax.y && m.kind === 'gate') m.el.y = round2(Math.max(0.5, o.y + (S.cy - o.y) * t));
+  });
+  rebuildTrack(); trackEdited(); edMultiSync();
+  return true;
+}
 (function wireEdAlign() {
-  const bx = $('edAlign'); if (!bx) return;
-  bx.querySelectorAll('[data-al]').forEach((b) => b.addEventListener('click', () => { edAlign(b.dataset.al); b.blur(); }));
-  $('edAlAll').addEventListener('click', (e) => { edMulti = gates.map((g, i) => ({ kind: 'gate', i })).concat(propData.map((p, i) => ({ kind: 'prop', i }))); edMultiCounts = gates.length + '|' + propData.length; edMultiSync(); e.target.blur(); });
-  $('edAlNone').addEventListener('click', (e) => { edMultiClear(); e.target.blur(); });
-  $('edAlUndo').addEventListener('click', (e) => { edAlignUndo(); e.target.blur(); });
-  bx.querySelectorAll('[data-gn]').forEach((b) => b.addEventListener('click', () => { if (b.dataset.gn === 'del') edGroupDelete(); else if (b.dataset.gn === 'dup') edCloneSel(); else edGroupNudge(b.dataset.gn, false); b.blur(); }));
+  const sl = $('edAlSlide'); if (!sl) return;
+  const val = (v) => { $('edAlSlideV').textContent = Math.round(v) + '%'; };
+  sl.addEventListener('input', () => { val(+sl.value); if (!edCenterTo(+sl.value / 100)) { sl.value = 0; val(0); } });
+  sl.addEventListener('change', () => { edCenSnap = null; sl.value = 0; val(0); sl.blur(); });
+  $('edAlCenter').addEventListener('click', (e) => { edCenterTo(1); edCenSnap = null; sl.value = 0; val(0); e.target.blur(); });
+  ['edAxX', 'edAxZ', 'edAxY'].forEach((id) => $(id).addEventListener('change', () => { edCenSnap = null; }));
 })();
 
 /* ---- path of round discs laid between the gates ---- */
