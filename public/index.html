@@ -572,7 +572,6 @@ body.nx-open #menu #scrMain{left:min(440px,42vw)}
 #admBody .lmseg.lmseg2 button.hardon{background:var(--ac);color:var(--ot,#06222b)}
 #admBody .lmwarn{margin-top:6px;background:rgba(229,72,77,.12);border:1px solid #e5484d;border-radius:7px;padding:5px 9px;font-size:12.5px}
 #admBody .dvw .dvstage{position:relative;background:#0f1114;overflow:hidden;border-radius:8px;margin-top:6px}#admBody .dvw canvas{display:block;width:100%}
-#admBody .dvw.off canvas{filter:grayscale(.6) brightness(.8)}
 #admBody .dvst{position:absolute;top:8px;inset-inline-start:8px;padding:3px 10px;font-size:12.5px;font-weight:700;background:#14161a;border-inline-start:5px solid #5fd38a;color:#f4f1e8}
 #admBody .dvchips{position:absolute;left:0;right:0;bottom:8px;display:flex;flex-wrap:wrap;gap:6px;justify-content:center;pointer-events:none}
 #admBody .dvchip{background:#14161a;border:2px solid #efb74d;color:#f4f1e8;padding:4px 11px;font-size:13.5px;font-weight:700;transform:skewX(-8deg)}#admBody .dvchip.r{border-color:#ff5a4d}#admBody .dvchip.g{border-color:#5fd38a}#admBody .dvchip b{display:inline-block;transform:skewX(8deg)}
@@ -1421,7 +1420,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 364</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 365</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -10023,7 +10022,7 @@ function nxLimPreset(k, p) {
 /* ---- deviation arrow + correction path: one window per track, with a live pilot-view demo ---- */
 const NXDV = { T: 0, S0: 0, DX: 0, DY: 0, SPD: 10, auto: true, play: true, sx: 0, sy: 0, trail: [], lastTr: -9, last: 0, run: false, k: '' };
 const NXDV_C = { g: '#5fd38a', r: '#ff5a4d', y: '#efb74d', b: '#7fc4e8' }, NXDV_ST = ['#5fd38a', '#efb74d', '#ff5a4d'];
-function nxDevCfg(k) { const c = ((NX.draft && NX.draft.devhud) || {})[k] || {}; return { on: !!c.on, style: c.style === '3' ? '3' : '2', path: c.path === 'always' || c.path === 'out' ? c.path : 'warn' }; }
+function nxDevCfg(k) { const c = ((NX.draft && NX.draft.devhud) || {})[k] || {}; return { on: c.on === true, style: c.style === '3' ? '3' : '2', path: c.path === 'always' || c.path === 'out' ? c.path : 'warn' }; }
 function nxDevLims(k) {
   const lm = (((NX.draft && NX.draft.stick) || {})[k] || {}).lim || {}, g = (m, d) => (lm[m] && Number(lm[m].max) > 0 ? Number(lm[m].max) : d);
   return { x: g('lineMax', 4), y: g('altDev', 2.5), v: g('spdMax', 0), set: !!((lm.lineMax && lm.lineMax.max > 0) || (lm.altDev && lm.altDev.max > 0)) };
@@ -10089,7 +10088,7 @@ function nxDevDraw(cv, L) {
   const cxw = (s) => 8 * Math.sin(s / 35), tyw = (s) => 9 + 2 * Math.sin(s / 50);
   const P = (s, a, b) => { const d = s - S0 + CAM; if (d < 3) return null; const X = cxw(s) + a - (cxw(S0) + DX), Y = tyw(s) + b - (tyw(S0) + DY) - 1.2; return [W / 2 + F * X / d, HZ - F * Y / d, d]; };
   const sa = (x, y) => Math.max(Math.abs(DX) / LX, Math.abs(DY) / LY);
-  const m = sa(), spOver = L.v > 0 && Z.SPD > L.v, a = Math.abs(DX) / LX, bb = Math.abs(DY) / LY, st = m >= 1 ? 2 : m >= 0.7 ? 1 : 0, on = cfg.on;
+  const m = sa(), spOver = L.v > 0 && Z.SPD > L.v, a = Math.abs(DX) / LX, bb = Math.abs(DY) / LY, st = m >= 1 ? 2 : m >= 0.7 ? 1 : 0, on = true;                 // the demo always shows the aids; the switch only decides whether the game uses them
   const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#1b222b'); g.addColorStop(0.3, '#2b323c'); g.addColorStop(0.3, '#181b20'); g.addColorStop(1, '#0e1013'); c.fillStyle = g; c.fillRect(0, 0, W, H);
   const s1 = S0 - CAM + 6, s2 = S0 + 95;
   for (let s = Math.floor(s1 / 3) * 3; s < s2; s += 3) {
@@ -10146,7 +10145,7 @@ function nxDevDraw(cv, L) {
     if (!chips.length) chips.push(['✓ בתוך הנתיב', 'g']);
   }
   const ce = document.getElementById('nxdChips'); if (ce) { const sig = chips.map((q) => q[1] + q[0]).join('|'); if (ce.dataset.sig !== sig) { ce.dataset.sig = sig; ce.innerHTML = chips.map((q) => '<div class="dvchip ' + q[1] + '"><b>' + q[0] + '</b></div>').join(''); } }
-  const se = document.getElementById('nxdState'); if (se) { const tx = on ? ['בתוך הנתיב', 'קרוב לגבול', 'מחוץ לנתיב, חזור'][st] : 'כבוי, בלי חץ ובלי נתיב'; if (se.textContent !== tx) se.textContent = tx; se.style.borderInlineStartColor = on ? NXDV_ST[st] : '#666'; }
+  const se = document.getElementById('nxdState'); if (se) { const tx = ['בתוך הנתיב', 'קרוב לגבול', 'מחוץ לנתיב, חזור'][st] + (cfg.on ? '' : ' · כבוי במשחק'); if (se.textContent !== tx) se.textContent = tx; se.style.borderInlineStartColor = NXDV_ST[st]; }
 }
 function nxTrkSec(key, title, badge, inner, defOpen) {         // one collapsible section of the single-track panel
   const o = NX.openK && NX.openK[key] !== undefined ? NX.openK[key] : !!defOpen;
@@ -11294,6 +11293,77 @@ function nxCoachParts() {                                        // live feedbac
   if (LKc) return LKc.axis === 'pitch' ? [dst] : [dir, dst];                                    // throttle is fixed (no height tip); a pitch-only track cannot turn, so no direction tip
   return [dir, alt, dst];
 }
+/* ---- in-flight deviation arrow + correction path: drawn over the game when switched on for the track (replaces the direction / height text tips) ---- */
+function nxDevOn() {
+  if (typeof currentStage === 'undefined' || !currentStage || inMenu || editorMode || nxGuideIsOpen || state !== 'racing' || !gates || gates.length < 2 || !drone || drone.onGround) return null;
+  const k = nxGuideKey(currentStage.id), c = NX.eff || NX.draft || NX.pub, h = c && c.devhud && c.devhud[k]; if (!h || h.on !== true) return null;
+  const R = nxStickRule(k) || {}, lm = R.lim || {}, g = (m, d) => (lm[m] && Number(lm[m].max) > 0 ? Number(lm[m].max) : d);
+  return { k, style: h.style === '3' ? '3' : '2', path: h.path === 'always' || h.path === 'out' ? h.path : 'warn', lx: g('lineMax', 4), ly: g('altDev', 2.5), lv: g('spdMax', 0), alt: nxRuleNum(R.alt) };
+}
+function nxDevRef(cfg) {                                         // where the drone is relative to the ideal line: nearest leg, point on it, target height
+  const g = gates, n = g.length; let bi = 0, bd = 1e9;
+  for (let i = 0; i < n - 1; i++) { const d = nxSegDist(drone.pos.x, drone.pos.z, g[i].x, g[i].z, g[i + 1].x, g[i + 1].z, i === 0, i === n - 2); if (d < bd) { bd = d; bi = i; } }
+  const a = g[bi], b = g[bi + 1], dx = b.x - a.x, dz = b.z - a.z, l2 = dx * dx + dz * dz || 1e-6;
+  let t = ((drone.pos.x - a.x) * dx + (drone.pos.z - a.z) * dz) / l2; if (bi > 0) t = Math.max(t, 0); if (bi < n - 2) t = Math.min(t, 1);
+  const gy = g.map((q) => Number(q.y) || 0), flat = Math.max.apply(null, gy) - Math.min.apply(null, gy) <= 0.5, tc = clamp(t, 0, 1);
+  const yAt = (i, u) => cfg.alt !== null ? cfg.alt : flat ? gy[0] : gy[i] + u * (gy[i + 1] - gy[i]);
+  return { i: bi, t, nx: a.x + t * dx, nz: a.z + t * dz, ty: yAt(bi, tc), yAt };
+}
+function nxDevAhead(i, t, dist, ref) {                           // a point on the ideal line `dist` metres further on
+  const g = gates, n = g.length; let u = clamp(t, 0, 1), left = dist;
+  for (let k = i; k < n - 1; k++) {
+    const a = g[k], b = g[k + 1], L = Math.hypot(b.x - a.x, b.z - a.z) || 1e-6, rem = (1 - u) * L;
+    if (left <= rem || k === n - 2) { const uu = u + left / L; return { x: a.x + uu * (b.x - a.x), z: a.z + uu * (b.z - a.z), y: ref.yAt(k, clamp(uu, 0, 1)) }; }
+    left -= rem; u = 0;
+  }
+  return { x: g[n - 1].x, z: g[n - 1].z, y: ref.yAt(n - 2, 1) };
+}
+let nxDvCv = null, nxDvT = 0, nxDvLast = 0;
+const nxDvV = typeof THREE !== 'undefined' ? new THREE.Vector3() : null;
+function nxDevHudFrame(now) {
+  requestAnimationFrame(nxDevHudFrame);
+  let cfg = null; try { cfg = nxDevOn(); } catch (e) { cfg = null; }
+  if (!cfg) { if (nxDvCv && nxDvCv.style.display !== 'none') nxDvCv.style.display = 'none'; nxDvLast = now; return; }
+  if (!nxDvCv) { nxDvCv = document.createElement('canvas'); nxDvCv.id = 'nxDevHud'; nxDvCv.style.cssText = 'position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:39'; document.body.appendChild(nxDvCv); }
+  const dpr = Math.min(window.devicePixelRatio || 1, 2), W = window.innerWidth, H = window.innerHeight; nxDvCv.style.display = 'block';
+  if (nxDvCv.width !== Math.round(W * dpr) || nxDvCv.height !== Math.round(H * dpr)) { nxDvCv.width = Math.round(W * dpr); nxDvCv.height = Math.round(H * dpr); }
+  nxDvT += Math.min(0.05, (now - (nxDvLast || now)) / 1000); nxDvLast = now;
+  const c = nxDvCv.getContext('2d'); c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, W, H);
+  const ref = nxDevRef(cfg), q = drone.quat, f = { x: -2 * (q.x * q.z + q.w * q.y), z: -(1 - 2 * (q.x * q.x + q.y * q.y)) }, fl = Math.sqrt(f.x * f.x + f.z * f.z) || 1, fx = f.x / fl, fz = f.z / fl;
+  const ox = drone.pos.x - ref.nx, oz = drone.pos.z - ref.nz, DX = ox * -fz + oz * fx, DY = drone.pos.y - ref.ty;       // + = right of the line / too high
+  const a = Math.abs(DX) / cfg.lx, b = Math.abs(DY) / cfg.ly, m = Math.max(a, b), st = m >= 1 ? 2 : m >= 0.7 ? 1 : 0, col = ['#5fd38a', '#efb74d', '#ff5a4d'][st], spOver = cfg.lv > 0 && drone.vel.length() > cfg.lv;
+  const proj = (x, y, z) => { nxDvV.set(x, y, z).project(activeCam); return nxDvV.z > 1 || nxDvV.z < -1 ? null : [(nxDvV.x + 1) / 2 * W, (1 - nxDvV.y) / 2 * H]; };
+  const showP = cfg.path === 'always' || (cfg.path === 'warn' && m >= 0.7) || (cfg.path === 'out' && m >= 1);
+  if (showP) {                                                   // the way back: from the drone to the line, a little way ahead
+    const Lc = 22 + 8 * Math.min(m, 2), pts = [], offY = drone.pos.y - ref.ty;
+    for (let u = 0; u <= 1.001; u += 0.04) { const s = u * u * (3 - 2 * u), lp = nxDevAhead(ref.i, ref.t, Lc * u, ref), sp = proj(lp.x + ox * (1 - s), lp.y + offY * (1 - s), lp.z + oz * (1 - s)); if (sp) pts.push(sp); }
+    if (pts.length > 2) {
+      c.save(); c.lineCap = 'round'; c.lineJoin = 'round'; c.beginPath(); pts.forEach((p, i) => i ? c.lineTo(p[0], p[1]) : c.moveTo(p[0], p[1])); c.strokeStyle = 'rgba(0,0,0,.55)'; c.lineWidth = 11; c.stroke();
+      c.setLineDash([14, 9]); c.lineDashOffset = -(nxDvT * 40) % 23; c.beginPath(); pts.forEach((p, i) => i ? c.lineTo(p[0], p[1]) : c.moveTo(p[0], p[1])); c.strokeStyle = '#efb74d'; c.lineWidth = 6; c.stroke(); c.restore();
+      const ep = pts[pts.length - 1]; c.beginPath(); c.arc(ep[0], ep[1], 14, 0, 7); c.lineWidth = 4; c.strokeStyle = '#0b0c0e'; c.stroke(); c.lineWidth = 2.5; c.strokeStyle = '#efb74d'; c.stroke();
+      c.font = '700 14px Heebo,system-ui,sans-serif'; c.direction = 'rtl'; const tw = c.measureText('חזור לנתיב כאן').width + 16; c.fillStyle = 'rgba(20,22,26,.9)'; c.fillRect(ep[0] - tw / 2, ep[1] - 42, tw, 22); c.fillStyle = '#efb74d'; c.textAlign = 'center'; c.fillText('חזור לנתיב כאן', ep[0], ep[1] - 26);
+    }
+  }
+  const vx = -DX / cfg.lx, vy = DY / cfg.ly, ang = Math.atan2(vy, vx), len = 46 + Math.min(m, 2) * 26, w = 14 + Math.min(m, 2) * 5;
+  const arrow = (x, y, an, ln, wd) => { c.save(); c.translate(x, y); c.rotate(an); c.beginPath(); c.moveTo(ln / 2, 0); c.lineTo(ln / 2 - wd * 1.15, -wd); c.lineTo(ln / 2 - wd * 0.9, -wd * 0.38); c.lineTo(-ln / 2, -wd * 0.38); c.lineTo(-ln / 2, wd * 0.38); c.lineTo(ln / 2 - wd * 0.9, wd * 0.38); c.lineTo(ln / 2 - wd * 1.15, wd); c.closePath(); c.lineJoin = 'round'; c.lineWidth = 4; c.strokeStyle = '#0b0c0e'; c.stroke(); c.fillStyle = col; c.fill(); c.restore(); };
+  if (m > 0.12) {
+    if (cfg.style === '2') {
+      const cx = W / 2, cy = H / 2, r = 46; c.beginPath(); c.arc(cx, cy, r, 0, 7); c.lineWidth = 3; c.strokeStyle = 'rgba(15,17,20,.8)'; c.stroke(); c.setLineDash([3, 7]); c.strokeStyle = col; c.lineWidth = 2; c.stroke(); c.setLineDash([]);
+      arrow(cx + Math.cos(ang) * (r + len * 0.38), cy + Math.sin(ang) * (r + len * 0.38), ang, len * 0.75, w * 0.85);
+    } else {
+      let x, y, an; if (Math.abs(vx) >= Math.abs(vy)) { x = vx < 0 ? 60 : W - 60; y = H * 0.45; an = vx < 0 ? Math.PI : 0; } else { x = W / 2; y = vy < 0 ? 80 : H - 110; an = vy < 0 ? -Math.PI / 2 : Math.PI / 2; }
+      for (let k = 0; k < 3; k++) { const o = (k - 1) * 24; c.save(); c.globalAlpha = Math.min(1, 0.5 + 0.3 * k + 0.15 * Math.sin(nxDvT * 8 - k)); c.translate(x + Math.cos(an) * o, y + Math.sin(an) * o); c.rotate(an); c.beginPath(); c.moveTo(-10, -24); c.lineTo(13, 0); c.lineTo(-10, 24); c.lineWidth = 12; c.lineCap = 'round'; c.lineJoin = 'round'; c.strokeStyle = '#0b0c0e'; c.stroke(); c.lineWidth = 6.5; c.strokeStyle = col; c.stroke(); c.restore(); }
+    }
+  }
+  const chips = [];
+  if (a >= 0.7) chips.push([(DX > 0 ? '↶ שמאלה' : '↷ ימינה') + ' · ' + Math.abs(DX).toFixed(1) + ' מ׳', a >= 1 ? '#ff5a4d' : '#efb74d']);
+  if (b >= 0.7) chips.push([(DY > 0 ? '↓ הורד' : '↑ העלה') + ' · ' + Math.abs(DY).toFixed(1) + ' מ׳', b >= 1 ? '#ff5a4d' : '#efb74d']);
+  if (spOver) chips.push(['⏷ האט · ' + (drone.vel.length() - cfg.lv).toFixed(1) + ' מ/ש', '#ff5a4d']);
+  c.font = '700 17px Heebo,system-ui,sans-serif'; c.direction = 'rtl'; c.textAlign = 'center';
+  const ws = chips.map((p) => c.measureText(p[0]).width + 28), tot = ws.reduce((s, x) => s + x + 8, -8); let x0 = W / 2 - tot / 2;
+  chips.forEach((p, i) => { c.fillStyle = 'rgba(20,22,26,.92)'; c.fillRect(x0, H - 78, ws[i], 34); c.fillStyle = p[1]; c.fillRect(x0, H - 78, 4, 34); c.fillStyle = '#f4f1e8'; c.fillText(p[0], x0 + ws[i] / 2, H - 55); x0 += ws[i] + 8; });
+}
+if (typeof requestAnimationFrame === 'function' && typeof document !== 'undefined') requestAnimationFrame(nxDevHudFrame);
 function nxCoachText() { return nxCoachParts().map((p) => p.t).join('  \u00b7  '); }
 let nxGuideIsOpen = false;
 function nxGuideShow(id) {
@@ -11350,7 +11420,7 @@ function nxGuideSeen(id, set) {
     let parts = [];
     if (state === 'racing' && currentStage && !inMenu && !editorMode && !nxGuideIsOpen && gates.length) {
       const g = nxGuideOf(currentStage.id);
-      if (g && g.live) parts = nxCoachParts();
+      if (g && g.live) { parts = nxCoachParts(); if (nxDevOn()) parts = parts.filter((p) => p.ic === '\u25ce' || p.ic === '\u21e7'); }
     }
     const key = parts.map((p) => p.t).join('|');
     if (cb.dataset.t !== key) {
