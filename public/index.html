@@ -1446,7 +1446,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 376</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 377</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -8073,7 +8073,7 @@ document.addEventListener('keydown', unlockAudio, { passive: true });
 /* ---------- keyboard ---------- */
 window.addEventListener('keydown', (e) => {
   if (osdEdOpen) { if (e.code === 'Escape') { e.preventDefault(); closeOsdEd(); } return; }
-  if (typeof NX !== 'undefined' && NX.edWin) { if (e.code === 'Escape') { e.preventDefault(); nxEdWinClose(); } return; }
+  if (typeof NX !== 'undefined' && NX.edWin) { if (e.code === 'Escape' && !($('nxEd') && $('nxEd').classList.contains('on'))) { e.preventDefault(); nxEdWinClose(); } return; }
   if (advOpen) { advKey(e); return; }
   const t = e.target, tag = t && t.tagName;
   const typing = tag === 'TEXTAREA' || (tag === 'INPUT' && t.type !== 'range' && t.type !== 'checkbox');
@@ -10133,7 +10133,7 @@ if (typeof document !== 'undefined') document.addEventListener('click', (e) => {
 });
 document.addEventListener('mousedown', (e) => {                  // outside press closes the window; checked on press, because a click re-renders the window and the pressed node is gone by then
   const t = e.target && e.target.closest ? e.target : null; if (!t || !NX.edWin) return;
-  const w = document.getElementById('edAdmSlot'); if (w && !w.contains(t) && !t.closest('#edAdmBtns')) nxEdWinClose();
+  const w = document.getElementById('edAdmSlot'); if (w && !w.contains(t) && !t.closest('#edAdmBtns') && !t.closest('#nxEd')) nxEdWinClose();
 });
 let nxEdLast = '';
 function nxEdSync() {                                           // the editor shows the sections of the track being edited; the wind panel follows the same track
@@ -11354,6 +11354,7 @@ function nxEdOpen(k, f) {
   NXED.k = k; NXED.f = f; NXED.rows = nxGdOrder(nxGdParse(f, g[f])); if (!NXED.rows.length) NXED.rows = [{ m: null, t: '' }];
   nxEdRender(); if ($('nxEd')) $('nxEd').classList.add('on'); return true;
 }
+if (typeof document !== 'undefined' && document.getElementById('nxEd')) document.body.appendChild(document.getElementById('nxEd'));   // the list editor must sit above every window, so it lives directly in the page
 function nxEdClose() { if ($('nxEd')) $('nxEd').classList.remove('on'); NXED.k = ''; NXED.rows = []; }
 function nxEdSave() {
   if (!NXED.k) return false;
