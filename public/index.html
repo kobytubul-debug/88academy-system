@@ -841,6 +841,15 @@ body.edop #edDockTab{left:272px}
 #editorBox details.eds.pop>.row,#editorBox details.eds.pop>.edprow,#editorBox details.eds.pop>.edprow2{display:flex}
 #editorBox .edsh{font:700 italic 13px var(--ui);color:var(--am);margin:12px 0 4px}
 #editorBox details.eds{margin:8px 0;background:rgba(255,255,255,.035)}#editorBox details.eds>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:9px 12px;font:700 italic 14px var(--ui);color:var(--am);background:rgba(255,255,255,.05)}#editorBox details.eds>summary::-webkit-details-marker{display:none}#editorBox details.eds>summary:after{content:'\25BE';transition:transform .15s}#editorBox details.eds[open]>summary:after{transform:rotate(180deg)}#editorBox details.eds>*:not(summary){margin-left:8px;margin-right:8px}#editorBox details.eds>*:last-child{margin-bottom:8px}
+#editorBox details.eds>summary,#edAdmBtns .edab{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;box-sizing:border-box;margin:6px 0;padding:11px 12px;background:rgba(255,255,255,.06);border:0;border-inline-start:3px solid var(--ac);color:var(--tx);font:700 13.5px var(--ui);font-style:normal;text-align:right;cursor:pointer;list-style:none}
+#editorBox details.eds>summary:hover,#edAdmBtns .edab:hover{background:rgba(255,255,255,.12)}
+#editorBox details.eds>summary:after,#edAdmBtns .edab:after{content:'\25C0';transform:none;color:var(--mu);font-size:11px;font-style:normal;order:3}
+#edAdmBtns .edab b{flex:1;font:inherit;display:block}#edAdmBtns .edab .catn{float:none;order:2;background:none;color:var(--mu);font:600 11.5px var(--ui);padding:0}
+#editorBox details.eds.pop>summary{display:flex;border:0;border-bottom:1px solid var(--ln);background:var(--tile);padding:14px 0 10px;margin:0 0 8px;font:700 italic 20px var(--ui);color:var(--ti,#fff)}
+#editorBox details.eds.pop>summary:after,#edAdmSlot .edwh .b{font:700 italic 14px var(--ui);color:var(--am);content:'\2715  סגור';direction:rtl;unicode-bidi:isolate}
+#edAdmSlot .edwh .b{content:none}
+body.edop #edDockTab{display:none!important}
+
 .edal{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}.edal .b{padding:7px 2px;font-size:12px}.edsh2{font:700 italic 12px var(--ui);color:var(--mu);margin:8px 0 4px}
 #editorBox #edSel{font:600 12px var(--ui);color:var(--ti,#fff);background:rgba(255,255,255,.06);padding:6px 8px;line-height:1.4;word-break:break-word}
 #editorBox .btns{margin:6px 0}#editorBox .btns .b{padding:8px 6px;font-size:12px}
@@ -1435,7 +1444,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 373</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 374</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -10102,10 +10111,10 @@ function nxEdSlotRender() {                                      // dock: three 
   const tmp = document.createElement('div'); tmp.innerHTML = nxEdSections(currentStage.id);
   const secs = {}; tmp.querySelectorAll('details[data-ck]').forEach((d) => { secs[d.getAttribute('data-ck')] = d; });
   if (NX.edWin && !secs[NX.edWin]) NX.edWin = null;
-  let h = '<div class="edadmh">הגדרות המסלול (מנהל)</div>';
+  let h = '';
   Object.keys(NX_EDW).forEach((k) => {
     const d = secs[k]; if (!d) return; const bd = d.querySelector('.catn');
-    h += '<button type="button" class="edab" data-edwin="' + k + '"><b>' + NX_EDW[k][0] + (bd ? '<span class="catn">' + bd.textContent + '</span>' : '') + '</b><small>' + NX_EDW[k][1] + '</small></button>';
+    h += '<button type="button" class="edab" data-edwin="' + k + '"><b>' + NX_EDW[k][0] + '</b>' + (bd ? '<span class="catn">' + bd.textContent + '</span>' : '') + '</button>';
   });
   bx.innerHTML = h;
   if (!win) return;
