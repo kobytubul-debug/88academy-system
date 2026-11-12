@@ -771,9 +771,7 @@ input[type=checkbox]{accent-color:var(--ac)}
 
 /* ---------- track editor: top bar + left controls + right element grid (the 3D view stays in the middle) ---------- */
 body.ed-on #panelDim,body.ed-on #panel,body.ed-on #menuBtn{display:none!important}
-#edTop,#edRight,#edJson{display:none}
-body.ed-on #edTop{display:flex;align-items:center;gap:6px;position:fixed;top:0;left:286px;right:min(392px,36vw);height:56px;padding:0 8px;z-index:45;background:var(--tile);box-shadow:inset 0 -3px 0 var(--ac);backdrop-filter:blur(4px)}
-body.ed-on #edTop .b{padding:0 14px;height:40px;flex:none;font-size:14px;white-space:nowrap}
+#edRight,#edJson{display:none}
 #edNavLbl{flex:1;text-align:center;font:600 13px var(--ui);color:var(--ti,#fff);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #edExit{background:color-mix(in srgb,var(--rd) 70%,#000)!important}
 #edMap{position:relative}
@@ -806,7 +804,7 @@ body.ed-on #edJson.open{display:flex}
 .edjbox .edh{font:700 italic 15px var(--ui);color:var(--ti,#fff);margin-bottom:8px}
 .edjbox textarea{width:100%;height:220px}
 .edjbox .btns{margin-top:8px}
-#editorBox{display:none;position:fixed;left:0;top:0;bottom:0;width:272px;z-index:45;overflow-y:auto;background:var(--tile);box-shadow:10px 0 40px rgba(0,0,0,.45),inset -3px 0 0 var(--ac);padding:10px 12px 14px;font-size:13px;backdrop-filter:blur(4px)}
+#editorBox{display:none;position:fixed;left:0;top:0;bottom:0;width:272px;z-index:45;overflow-y:auto;background:var(--tile);box-shadow:10px 0 40px rgba(0,0,0,.45),inset -3px 0 0 var(--ac);padding:10px 12px 14px;font-size:13px}
 #editorBox .eddh{font:700 italic 20px var(--ui);color:var(--ti,#fff);letter-spacing:.04em;margin-bottom:4px}
 #editorBox{transition:transform .22s ease}#editorBox.shut{transform:translateX(-105%);box-shadow:none;pointer-events:none}
 #edDockTab{display:none;position:fixed;left:0;top:78px;z-index:70;width:48px;height:48px;background:var(--ac);cursor:pointer;border-radius:0 10px 10px 0;flex-direction:column;justify-content:center;align-items:center;gap:6px;box-shadow:4px 4px 16px rgba(0,0,0,.4);transition:left .22s ease;user-select:none}
@@ -823,6 +821,24 @@ body.edop #edDockTab{left:272px}
 #edAdmSlot .edwh b{flex:1;font:700 italic 20px var(--ui);color:var(--ti,#fff)}#edAdmSlot .edwh small{color:var(--mu);font-size:12px}
 #edAdmSlot details.tpsec{border:0!important;background:none!important;box-shadow:none!important}
 #edAdmSlot details.tpsec>summary{display:none}
+#edMap .edmapbtn{width:100%;height:42px;font-size:14px}
+#edRight .edtl{display:flex;align-items:center;gap:6px}#edRight .edtl .b{flex:none;height:36px;padding:0 14px}#edRight .edtl #edNavLbl{flex:1}
+#edRight .edtl2{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}#edRight .edtl2 .b{height:36px;font-size:13px;padding:0 4px;white-space:nowrap}
+#edRight .edbar2{display:flex;gap:8px}#edRight .edbar2 .b{flex:1;height:42px;font-size:13.5px;padding:0 6px}
+#editorBox #edSel{display:none}
+#editorBox .edacts{display:grid;grid-template-columns:1fr 1fr;gap:6px}#editorBox .edacts .b{width:100%;margin:0}
+#editorBox .row.edgn{display:grid;grid-template-columns:1fr 1fr;gap:6px}#editorBox .row.edgn .b{width:100%;flex:none}
+#editorBox details.eds{margin:6px 0;background:none}
+#editorBox details.eds>summary{background:rgba(255,255,255,.06);border-inline-start:3px solid var(--ac);padding:10px 11px;font:700 13.5px var(--ui);font-style:normal;color:var(--tx)}
+#editorBox details.eds>summary:hover{background:rgba(255,255,255,.12)}
+#editorBox details.eds>summary:after{content:'\25C0';transform:none;color:var(--mu);font-size:11px}
+#editorBox details.eds[open]:not(.pop)>*:not(summary){display:none}
+#editorBox.haspop{z-index:62}
+#editorBox details.eds.pop{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(560px,94vw);max-height:86vh;overflow:auto;background:var(--tile);box-shadow:0 0 0 100vmax rgba(0,0,0,.55),0 20px 60px rgba(0,0,0,.6);border-top:3px solid var(--ac);padding:0 18px 18px;z-index:5}
+#editorBox details.eds.pop>summary{position:sticky;top:0;z-index:5;background:var(--tile);border-inline-start:0;border-bottom:1px solid var(--ln);padding:14px 0 10px;margin-bottom:8px;font:700 italic 20px var(--ui);color:var(--ti,#fff)}
+#editorBox details.eds.pop>summary:after{content:'\2715  סגור';font:600 13px var(--ui);font-style:normal;color:var(--am)}
+#editorBox details.eds.pop>*:not(summary){display:revert}
+#editorBox details.eds.pop>.row,#editorBox details.eds.pop>.edprow,#editorBox details.eds.pop>.edprow2{display:flex}
 #editorBox .edsh{font:700 italic 13px var(--ui);color:var(--am);margin:12px 0 4px}
 #editorBox details.eds{margin:8px 0;background:rgba(255,255,255,.035)}#editorBox details.eds>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:9px 12px;font:700 italic 14px var(--ui);color:var(--am);background:rgba(255,255,255,.05)}#editorBox details.eds>summary::-webkit-details-marker{display:none}#editorBox details.eds>summary:after{content:'\25BE';transition:transform .15s}#editorBox details.eds[open]>summary:after{transform:rotate(180deg)}#editorBox details.eds>*:not(summary){margin-left:8px;margin-right:8px}#editorBox details.eds>*:last-child{margin-bottom:8px}
 .edal{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}.edal .b{padding:7px 2px;font-size:12px}.edsh2{font:700 italic 12px var(--ui);color:var(--mu);margin:8px 0 4px}
@@ -1128,7 +1144,7 @@ body.mz-on #nxBar{right:104px}
     <div class="eddh">בקרה<button class="b" id="edDockX" title="סגור את החלון (הכלים נשארים זמינים בלשונית)" style="float:left;padding:2px 10px;font-size:14px">✕</button></div>
     <div class="keys" style="font-size:11.5px;margin:0 0 6px">בחרו שער או אלמנט במסלול כדי לערוך אותו. הקטגוריות למטה נפתחות בלחיצה.</div>
     <div id="edSel">לא נבחר שער</div>
-    <div class="row" style="gap:6px"><button class="b" id="edGatePrev" style="flex:1" title="עבור לשער הקודם">&#9654; שער קודם</button><button class="b" id="edGateNext" style="flex:1" title="עבור לשער הבא">שער הבא &#9664;</button></div>
+    <div class="row edgn"><button class="b" id="edGatePrev" title="עבור לשער הקודם">&#9654; שער קודם</button><button class="b" id="edGateNext" title="עבור לשער הבא">שער הבא &#9664;</button></div>
     <div class="btns edacts"><button class="b" data-act="add">+ הוסף שער</button><button class="b" data-act="del">&minus; מחק שער</button><button class="b" id="btnPropDup">שכפל אלמנט</button><button class="b" id="btnPropDel">&minus; מחק אלמנט</button><button class="b" id="btnPropAdd" style="display:none">+</button><input type="hidden" id="edStep" value="1"><input type="hidden" id="edYawStep" value="5"></div>
     <div id="edProps" style="display:none">
       <details class="eds"><summary>מיקום</summary>
@@ -1417,7 +1433,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 371</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 372</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -1559,17 +1575,15 @@ body.mz-on #nxBar{right:104px}
 <script src="https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <div id="nmp"><div class="edjbox"><div class="edh">מפה חדשה: בחר סוג מפה</div><div id="nmpGrid"></div><button class="b" id="nmpCancel">ביטול</button></div></div>
 <button id="btnBackEdit">&#9998; חזרה לעריכה <kbd>G</kbd></button>
-<div id="edTop">
+<div id="edRight">
   <div id="edMap"><button class="b edmapbtn" id="edMapBtn"><span id="edMapName">סוג מפה</span><i>&#9662;</i></button>
     <div id="edBase"><div class="keys" id="edBaseNote"></div></div></div>
-  <button class="b" id="edPrev">&#9654;</button><span id="edNavLbl"></span><button class="b" id="edNext">&#9664;</button>
-  <button class="b" id="edFocus">מיקוד</button><button class="b" id="edUndo" title="Ctrl+Z">↶ בטל</button><button class="b" id="edRedo" title="Ctrl+Shift+Z">↷ שחזר</button><button class="b" id="edClone">שכפל</button><button class="b" id="edDelBtn">מחק</button>
-  <button class="b" id="edNumBtn" title="עריכת מספרי השערים">מספרי שערים</button><button class="b" id="edBackBtn" title="חזרה לחלון המסלולים">&#9664; חזרה למסלולים</button><button class="b" id="edExit">&#9654; טיסת בדיקה</button>
-</div>
-<div id="edRight">
+  <div class="edtl"><button class="b" id="edPrev">&#9654;</button><span id="edNavLbl"></span><button class="b" id="edNext">&#9664;</button></div>
+  <div class="edtl2"><button class="b" id="edFocus">מיקוד</button><button class="b" id="edUndo" title="Ctrl+Z">↶ בטל</button><button class="b" id="edRedo" title="Ctrl+Shift+Z">↷ שחזר</button><button class="b" id="edClone">שכפל</button><button class="b" id="edDelBtn">מחק</button><button class="b" id="edNumBtn" title="עריכת מספרי השערים">מספרי שערים</button></div>
   <div id="edCatList" style="display:none"></div>
   <div id="edGrid"></div>
   <div id="edPlaceMsg" style="display:none"><span></span><div class="btns"><button class="b" id="edAddCenter">הוסף במרכז המסך</button><button class="b" id="edPlaceStop">סיום הצבה</button></div></div>
+  <div class="edbar2"><button class="b" id="edBackBtn" title="חזרה לחלון המסלולים">&#9664; חזרה למסלולים</button><button class="b" id="edExit">&#9654; טיסת בדיקה</button></div>
   <div class="edbar"><button class="b" id="edSave">שמור</button><button class="b" id="edLoad">טען / ייצוא</button><button class="b" id="edClear">נקה</button></div>
 </div>
 <div id="edJson"><div class="edjbox"><div class="edh">JSON של המסלול (ייצוא / ייבוא)</div><div id="edJsonSlot"></div><button class="b" id="edJsonClose">סגור</button></div></div>
@@ -6755,6 +6769,18 @@ function edDockSet(open, keep) {                                 // the editor d
   if (t) { t.addEventListener('click', () => edDockSet(!$('editorBox').classList.contains('shut') ? false : true)); t.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); t.click(); } }); }
   if (x) x.addEventListener('click', () => edDockSet(false));
 })();
+(function () {                                                   // every dock section is a button that opens its own window (like the admin ones)
+  const box = $('editorBox'); if (!box) return;
+  const shut = () => { box.querySelectorAll('details.eds.pop').forEach((d) => { d.classList.remove('pop'); d.open = false; }); box.classList.remove('haspop'); };
+  window.edPopClose = shut;
+  box.addEventListener('click', (e) => {
+    const s = e.target.closest ? e.target.closest('details.eds>summary') : null; if (!s) return;
+    e.preventDefault(); const d = s.parentNode, was = d.classList.contains('pop'); shut();
+    if (!was) { d.open = true; d.classList.add('pop'); box.classList.add('haspop'); }
+  });
+  document.addEventListener('mousedown', (e) => { if (box.classList.contains('haspop') && e.target.closest && !e.target.closest('details.eds.pop')) shut(); });
+  window.addEventListener('keydown', (e) => { if (box.classList.contains('haspop') && e.code === 'Escape') { e.preventDefault(); e.stopImmediatePropagation(); shut(); } }, true);
+})();
 function setEditor(on) {
   if (on && document.body.classList.contains('nx-lite')) return;     // track editing is for admins only
   if (on === editorMode || inMenu || state === 'select') return;
@@ -6763,6 +6789,7 @@ function setEditor(on) {
   $('editorBox').style.display = on ? 'block' : 'none';
   edDockSet(on ? edDockWant() : false, true); $('edDockTab').style.display = on ? 'flex' : 'none';
   if (!on && typeof nxEdWinClose === 'function') nxEdWinClose();
+  if (!on && window.edPopClose) window.edPopClose();
   $('editBadge').style.display = on ? 'block' : 'none';
   $('btnEditor').textContent = on ? 'צא מעריכה וטוס (G / Esc)' : 'מצב עריכה (G)';
   $('btnEditor').classList.toggle('hot', on);
