@@ -552,6 +552,9 @@ body.nx-open #menu #scrMain{left:min(440px,42vw)}
 #admBody .lmsum{background:var(--p2);border:1px solid var(--ln);border-radius:10px;padding:10px 12px;margin-bottom:8px;position:sticky;top:0;z-index:4}
 #admBody .lmsum b{font-size:15px}#admBody .lmh{color:#ff9aa8;margin-inline-start:10px}#admBody .lms{color:#ffd77a;margin-inline-start:10px}
 #admBody .lmchips{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+#admBody button.lmchip{color:var(--tx);font:inherit;font-size:11.5px;cursor:pointer}#admBody button.lmchip:hover{background:var(--p2);border-width:2px;padding:0 8px}
+@keyframes lmflash{0%,100%{box-shadow:0 0 0 0 transparent}30%{box-shadow:0 0 0 3px var(--ac)}}
+#admBody .lmflash{animation:lmflash 1.8s ease;border-radius:8px}
 #admBody .lmchip{border:1px solid var(--ln);border-radius:14px;padding:1px 9px;font-size:11.5px;background:var(--p1)}
 #admBody .lmchip.hard{border-color:#e0556a;color:#ff9aa8}#admBody .lmchip.soft{border-color:#d4a73a;color:#ffd77a}
 #admBody .lmbt{background:var(--p1);color:var(--tx);border:1px solid var(--ln);border-radius:7px;padding:4px 10px;font:inherit;font-size:12.5px;cursor:pointer;margin-inline-start:6px}
@@ -1407,7 +1410,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 359</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 360</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -9892,7 +9895,7 @@ function nxLimUI(k, sk) {
   const dk = (m, f) => ' data-act="lim" data-tk="' + k + '" data-m="' + m + '" data-f="' + f + '"';
   let h = '<div class="lmsum"><b>' + (act.length ? act.length + ' מגבלות פעילות' : 'אין מגבלות') + '</b>' + (act.length ? ' <span class="lmh">🔴 ' + hardN + ' קשיחות</span> <span class="lms">🟡 ' + softN + ' רכות</span>' : '') +
     ' <button type="button" class="lmbt" data-act="lim-pre" data-tk="' + k + '" data-p="none">איפוס הכל</button>';
-  if (act.length) h += '<div class="lmchips">' + act.map((m) => { const mn = nxRuleNum(lm[m].min), mx = nxRuleNum(lm[m].max), soft = !!(sk.soft && sk.soft[m]); return '<span class="lmchip ' + (soft ? 'soft' : 'hard') + '">' + NXE_M[m][0] + ': ' + (mn !== null && mx !== null ? nxLimFmt(m, mn) + '–' + nxLimFmt(m, mx) : mx !== null ? '≤ ' + nxLimFmt(m, mx) : '≥ ' + nxLimFmt(m, mn)) + (NXE_M[m][1] ? ' ' + NXE_M[m][1] : '') + '</span>'; }).join('') + '</div>';
+  if (act.length) h += '<div class="lmchips">' + act.map((m) => { const mn = nxRuleNum(lm[m].min), mx = nxRuleNum(lm[m].max), soft = !!(sk.soft && sk.soft[m]); return '<button type="button" class="lmchip ' + (soft ? 'soft' : 'hard') + '" data-act="lim-go" data-tk="' + k + '" data-m="' + m + '" title="לחץ למעבר להגדרת המגבלה">' + NXE_M[m][0] + ': ' + (mn !== null && mx !== null ? nxLimFmt(m, mn) + '–' + nxLimFmt(m, mx) : mx !== null ? '≤ ' + nxLimFmt(m, mx) : '≥ ' + nxLimFmt(m, mn)) + (NXE_M[m][1] ? ' ' + NXE_M[m][1] : '') + '</button>'; }).join('') + '</div>';
   h += '</div>';
   h += '<div class="lmhow"><div><b>1. מדליקים מגבלה</b>רק מה שמדליקים נבדק. כל השאר ללא מגבלה.</div><div><b>2. קובעים טווח</b>גוררים את הידיות: מתחת למינימום או מעל למקסימום = חריגה.</div><div><b>3. בוחרים חומרה</b>קשיח פוסל את השלב. רך רק מוריד כוכבים (1-3 כוכבים לפי הנוחות בתוך המגבלות).</div></div>';
   h += '<div class="lmpre"><span>התחלה מהירה:</span>' + [['none', 'ללא מגבלות'], ['easy', 'מתחילים'], ['mid', 'בינוני'], ['hard', 'מתקדמים']].map((p) => '<button type="button" class="lmbt" data-act="lim-pre" data-tk="' + k + '" data-p="' + p[0] + '">' + p[1] + '</button>').join('') + '</div>';
@@ -9989,6 +9992,16 @@ function nxLimLiveAlt(el, v) {                                   // the fixed-he
   const row = el.closest('.lmstep'); if (!row) return;
   const n = row.querySelector('input.lmn'), fl = row.querySelector('.lmfl'), se = row.querySelector('.lmsen');
   if (n) n.value = v; if (fl) fl.style.right = (100 - Math.min(100, v)) + '%'; if (se) se.textContent = 'הרחפן צריך לטוס בגובה ' + v + ' מ׳ לאורך כל המסלול, בלי קשר לגובה השערים.';
+}
+function nxLimGo(k, m) {                                         // a chip in the summary: open the window that holds this limit, scroll to it and flash it
+  const ck = 'lm.' + k + '.' + (NXL_TOP[m] ? 'top' : (NXE_M[m] || [])[2]); NX.openK = NX.openK || {}; NX.openK[ck] = true;
+  const body = $('admBody'); if (!body) return;
+  const d = Array.from(body.querySelectorAll('details[data-ck]')).find((x) => x.dataset.ck === ck); if (!d) return;
+  d.open = true;
+  const row = Array.from(d.querySelectorAll('.lmm')).find((x) => x.dataset.m === m) || d;
+  try { row.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (e) { row.scrollIntoView(); }
+  row.classList.remove('lmflash'); void row.offsetWidth; row.classList.add('lmflash');
+  setTimeout(() => { row.classList.remove('lmflash'); }, 1800);
 }
 function nxLimPreset(k, p) {
   const D = NX.draft; const sk = (D.stick = D.stick || {}); sk[k] = sk[k] || {}; sk[k].lim = {}; sk[k].soft = {};
@@ -10773,6 +10786,7 @@ function nxAdmWire() {
     const el = e.target.closest('[data-act]'); if (!el || el.tagName === 'INPUT' || el.tagName === 'SELECT') return;
     const a = el.dataset.act, id = el.dataset.id, gid = el.dataset.gid;
     if (a === 'lim' && el.tagName === 'BUTTON') { if (nxLimSet(el.dataset.tk, el.dataset.m, el.dataset.f, el)) nxAdmRender(); return; }
+    if (a === 'lim-go') { nxLimGo(el.dataset.tk, el.dataset.m); return; }
     if (a === 'lim-pre') { nxLimPreset(el.dataset.tk, el.dataset.p); nxAdmRender(); return; }
     if (nxCrsAct(a, el)) return;
     if (nxMzAct(a, el)) return;
