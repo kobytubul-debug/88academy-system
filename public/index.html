@@ -907,7 +907,7 @@ body.skin-tact .scr h2,body.skin-tact .rtitle,body.skin-tact #pause h2{position:
 body.skin-tact .scr h2:before,body.skin-tact .rtitle:before,body.skin-tact #pause h2:before{content:"";display:block;position:absolute;inset:0;width:auto;height:auto;background:var(--ac);box-shadow:none;filter:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='t' x='-5%25' y='-5%25' width='110%25' height='110%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.05' numOctaves='3' seed='7'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='7'/%3E%3C/filter%3E%3C/svg%3E#t");transform:rotate(-1deg);z-index:-1}
 body.skin-tact .rbox,body.skin-tact #pause .glass,body.skin-tact #who .whobox,body.skin-tact .card{border-radius:14px!important;border:2px solid var(--ac);background:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px) 0 0/24px 24px,linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px) 0 0/24px 24px,var(--p1)}
 body.skin-tact .card:hover{border-color:var(--am)}
-#droneCards .dside .dgo{width:100%!important;max-width:100%!important;margin:0!important;box-sizing:border-box}
+#droneCards>#dGo,#droneCards .dgo{width:100%!important;max-width:100%!important;min-width:0;margin:0!important;box-sizing:border-box}
 body.skin-tact,body.skin-tact *{font-weight:700!important}
 body.skin-tact #scrMain .mhead .logo2,body.skin-tact #scrMain .mtiles .mbtn:after,body.skin-tact .hint{font-weight:900!important}
 
@@ -1399,7 +1399,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 356</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 357</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
