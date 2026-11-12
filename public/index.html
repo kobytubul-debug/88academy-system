@@ -838,7 +838,7 @@ body.edop #edDockTab{left:272px}
 #editorBox.haspop{z-index:62}
 #editorBox details.eds.pop{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(560px,94vw);max-height:86vh;overflow:auto;background:var(--tile);box-shadow:0 0 0 100vmax rgba(0,0,0,.55),0 20px 60px rgba(0,0,0,.6);border-top:3px solid var(--ac);padding:0 18px 18px;z-index:5}
 #editorBox details.eds.pop>summary{position:sticky;top:0;z-index:5;background:var(--tile);border-inline-start:0;border-bottom:1px solid var(--ln);padding:14px 0 10px;margin-bottom:8px;font:700 italic 20px var(--ui);color:var(--ti,#fff)}
-#editorBox details.eds.pop>summary:after{content:'\2715  סגור';font:600 13px var(--ui);font-style:normal;color:var(--am)}
+#editorBox details.eds.pop>summary:after{content:'\2715';font:600 13px var(--ui);font-style:normal;color:var(--am)}
 #editorBox details.eds.pop>*:not(summary){display:revert}
 #editorBox details.eds.pop>.row,#editorBox details.eds.pop>.edprow,#editorBox details.eds.pop>.edprow2{display:flex}
 #editorBox .edsh{font:700 italic 13px var(--ui);color:var(--am);margin:12px 0 4px}
@@ -848,7 +848,7 @@ body.edop #edDockTab{left:272px}
 #editorBox details.eds>summary:after,#edAdmBtns .edab:after{content:'\25C0';transform:none;color:var(--mu);font-size:11px;font-style:normal;order:3}
 #edAdmBtns .edab b{flex:1;font:inherit;display:block}#edAdmBtns .edab .catn{float:none;order:2;background:none;color:var(--mu);font:600 11.5px var(--ui);padding:0}
 #editorBox details.eds.pop>summary{display:flex;border:0;border-bottom:1px solid var(--ln);background:var(--tile);padding:14px 0 10px;margin:0 0 8px;font:700 italic 20px var(--ui);color:var(--ti,#fff)}
-#editorBox details.eds.pop>summary:after,#edAdmSlot .edwh .b{font:700 italic 14px var(--ui);color:var(--am);content:'\2715  סגור';direction:rtl;unicode-bidi:isolate}
+#editorBox details.eds.pop>summary:after,#edAdmSlot .edwh .b{font:700 italic 14px var(--ui);color:var(--am);content:'\2715';font-size:22px;font-style:normal}
 #edAdmSlot .edwh .b{content:none}
 body.edop #edDockTab{display:none!important}
 
@@ -1446,7 +1446,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 375</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 376</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -10122,7 +10122,7 @@ function nxEdSlotRender() {                                      // dock: three 
   if (!win) return;
   if (NX.edWin) {
     const sc = win.scrollTop, d = secs[NX.edWin]; d.setAttribute('open', '');
-    win.innerHTML = '<div class="edwh"><b>' + NX_EDW[NX.edWin][0] + '</b><small>' + (currentStage.name || '') + '</small><button type="button" class="b" data-edwinx="1">✕ סגור</button></div>' + d.outerHTML;
+    win.innerHTML = '<div class="edwh"><b>' + NX_EDW[NX.edWin][0] + '</b><small>' + (currentStage.name || '') + '</small><button type="button" class="b" data-edwinx="1">✕</button></div>' + d.outerHTML;
     win.classList.add('on'); win.scrollTop = sc;
   } else { win.innerHTML = ''; win.classList.remove('on'); }
 }
