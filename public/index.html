@@ -560,6 +560,14 @@ body.nx-open #menu #scrMain{left:min(440px,42vw)}
 #admBody .lmhow div{flex:1;min-width:150px;background:var(--p1);border:1px solid var(--ln);border-radius:8px;padding:7px 9px;font-size:12px;color:var(--mu)}
 #admBody .lmhow b{display:block;color:var(--tx);margin-bottom:1px}
 #admBody .lmpre{margin-bottom:8px;font-size:12.5px;color:var(--mu)}
+#admBody .lmtop{background:var(--p2);border:2px solid var(--ac);border-radius:12px;padding:11px 12px;margin-bottom:10px}
+#admBody .lmtt{font-weight:700;font-size:15px;margin-bottom:2px}
+#admBody .lmstep{background:var(--p1);border:1px solid var(--ln);border-radius:10px;padding:10px 11px;margin-top:8px}
+#admBody .lmstep>b{display:block;margin-bottom:6px}
+#admBody .lmseg2{display:flex;width:100%}#admBody .lmseg2 button{flex:1}
+#admBody .lmseg2 small{opacity:.75}
+#admBody .lmseg2 .hardon{background:var(--ac);color:var(--ot,#06222b)}
+#admBody .lmwarn{margin-top:6px;background:rgba(229,72,77,.12);border:1px solid #e5484d;border-radius:7px;padding:5px 9px;font-size:12.5px}
 #admBody .lmg{background:var(--p1);border:1px solid var(--ln);border-radius:10px;margin-bottom:7px;overflow:hidden}
 #admBody .lmg>summary{cursor:pointer;padding:9px 11px;display:flex;align-items:center;gap:9px;list-style:none}
 #admBody .lmg>summary::-webkit-details-marker{display:none}
@@ -1399,7 +1407,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 357</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 358</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -8643,7 +8651,7 @@ const NXE_M = {                                                  // every measur
   recMax: ['זמן התאוששות מקסימלי', 'שנ׳', 'התאוששות'], recN: ['סטיות גדולות מהקו', '', 'התאוששות'],
   crashes: ['התרסקויות', '', 'התרסקויות']
 };
-const NXE_CH = ['thr', 'spd', 'alt', 'roll', 'pitch', 'line', 'rS', 'pS', 'yS'];
+const NXE_CH = ['thr', 'spd', 'alt', 'roll', 'pitch', 'line', 'rS', 'pS', 'yS', 'altT'];
 function nxEReset() {
   NXS.last = null; NXS.T = 0; NXS.f = {}; NXE_CH.forEach((c) => { NXS.f[c] = []; });
   Object.assign(NXS, { prev: null, lat: 0, latV: 0, dir: 0, fixes: 0, sharp: 0, stopT: 0, stops: 0, inStop: false, rate: 0, rateN: 0, thrOsc: 0, rec: null, recMax: 0, recN: 0, ring: { t: [], r: [], p: [], y: [] }, lastJ: { t: -9, r: -9, p: -9, y: -9 }, alt0: null });
@@ -8662,17 +8670,17 @@ function nxStickTick(dt) {                                      // called every 
   const sp = drone.vel.length(), fwd = nxFwd.set(0, 0, -1).applyQuaternion(drone.quat), right = nxRight.set(1, 0, 0).applyQuaternion(drone.quat);
   const roll = Math.asin(clamp(right.y, -1, 1)) * 57.2958, pitch = Math.asin(clamp(fwd.y, -1, 1)) * 57.2958;
   F.thr.push(thr); F.spd.push(sp); F.alt.push(drone.pos.y); F.roll.push(roll); F.pitch.push(pitch); F.rS.push(rl); F.pS.push(pt); F.yS.push(yw);
-  let lat = 0, ld = 0;                                          // signed distance from the ideal line (nearest leg)
+  let lat = 0, ld = 0, aT = null;                               // signed distance from the ideal line (nearest leg), and the height of that line right there
   const g = gates;
   if (g && g.length >= 2) {
     let bd = 1e9;
     for (let i = 0; i < g.length - 1; i++) {
       const d = nxSegDist(drone.pos.x, drone.pos.z, g[i].x, g[i].z, g[i + 1].x, g[i + 1].z, i === 0, i === g.length - 2);   // the first leg extends back past gate 1, the last one forward past the end
-      if (d < bd) { bd = d; const dx = g[i + 1].x - g[i].x, dz = g[i + 1].z - g[i].z; lat = ((drone.pos.x - g[i].x) * dz - (drone.pos.z - g[i].z) * dx) / (Math.hypot(dx, dz) || 1); }
+      if (d < bd) { bd = d; const dx = g[i + 1].x - g[i].x, dz = g[i + 1].z - g[i].z; const L2 = dx * dx + dz * dz || 1, tt = clamp(((drone.pos.x - g[i].x) * dx + (drone.pos.z - g[i].z) * dz) / L2, 0, 1); aT = (Number(g[i].y) || 0) + tt * ((Number(g[i + 1].y) || 0) - (Number(g[i].y) || 0)); lat = ((drone.pos.x - g[i].x) * dz - (drone.pos.z - g[i].z) * dx) / (Math.hypot(dx, dz) || 1); }
     }
     ld = bd;
   }
-  F.line.push(ld);
+  F.line.push(ld); F.altT.push(aT === null ? drone.pos.y : aT);
   const P = NXS.prev;
   if (P) {
     NXS.rate += (Math.abs(rl - P.rl) + Math.abs(pt - P.pt) + Math.abs(yw - P.yw) + Math.abs(thr - P.thr)) / 4 / dt; NXS.rateN++;
@@ -8702,12 +8710,14 @@ function nxSd(a) { const m = nxMean(a); return a.length ? Math.sqrt(nxMean(a.map
 function nxRuleNum(v) { return v === undefined || v === null || v === '' || !isFinite(Number(v)) ? null : Number(v); }
 function nxEMetrics(R, crashes) {                               // all measured values for the flight that just ended
   const F = NXS.f, pk = R && R.hard ? 1 : 0.98, ab = (a) => a.map(Math.abs);
-  const alt0 = nxRuleNum(R && R.alt) !== null ? Number(R.alt) : (gates && gates[0] ? gates[0].y : F.alt[0] || 0);
-  NXS.alt0 = alt0;
+  const fixedAlt = nxRuleNum(R && R.alt) !== null, gy = (gates || []).map((q) => Number(q.y) || 0), flat = gy.length && Math.max.apply(null, gy) - Math.min.apply(null, gy) <= 0.5;
+  const alt0 = fixedAlt ? Number(R.alt) : (gates && gates[0] ? gates[0].y : F.alt[0] || 0);
+  NXS.alt0 = fixedAlt || flat || !gy.length ? alt0 : undefined;           // a fixed height, or a flat track: one target; otherwise the target follows the heights of the gates
+  const aTs = F.altT && F.altT.length === F.alt.length ? F.altT : null;
   const M = {
     thrAvg: nxMean(F.thr) * 100, thrMax: nxPerc(F.thr, pk) * 100, thrOsc: NXS.thrOsc / Math.max(NXS.rateN, 1) * 100,
     spdAvg: nxMean(F.spd), spdMax: nxPerc(F.spd, pk), spdSd: nxSd(F.spd), time: NXS.T,
-    altDev: nxPerc(F.alt.map((v) => Math.abs(v - alt0)), pk), altSd: nxSd(F.alt),
+    altDev: nxPerc(F.alt.map((v, i) => Math.abs(v - (fixedAlt || flat || !aTs ? alt0 : aTs[i]))), pk), altSd: nxSd(F.alt),
     rollMax: nxPerc(ab(F.roll), pk), rollSd: nxSd(F.roll), pitchMax: nxPerc(ab(F.pitch), pk), pitchSd: nxSd(F.pitch),
     rollIn: nxPerc(ab(F.rS), 1) * 100, pitchIn: nxPerc(ab(F.pS), 1) * 100, yawIn: nxPerc(ab(F.yS), 1) * 100,
     rollAv: nxMean(ab(F.rS)) * 100, pitchAv: nxMean(ab(F.pS)) * 100, yawAv: nxMean(ab(F.yS)) * 100, samples: F.thr.length,
@@ -9860,6 +9870,10 @@ const NXL_R = {                                                  // metric -> [m
   recN: [0, 20, 1, 'כמה פעמים הטייס ברח רחוק מהקו.'],
   crashes: [0, 10, 1, 'מספר ההתרסקויות המותר. 0 = אסור להתרסק בכלל.']
 };
+const NXL_TOP = {                                                      // the two deviation limits shown in the main card: [title, explanation, default, max slider]
+  altDev: ['סטייה בגובה (למעלה או למטה)', 'כמה מטרים מותר לטייס להתרחק מהגובה שנקבע, למעלה או למטה.', 2],
+  lineMax: ['סטייה לרוחב (ימינה או שמאלה)', 'כמה מטרים מותר לטייס להתרחק מהקו הישר בין השערים, לצדדים.', 3]
+};
 const NXL_PRE = {
   none: {},
   easy: { thrMax: [null, 70, 1], spdMax: [null, 10, 1], rollMax: [null, 35, 1], crashes: [null, 3, 1] },
@@ -9882,8 +9896,9 @@ function nxLimUI(k, sk) {
   h += '</div>';
   h += '<div class="lmhow"><div><b>1. מדליקים מגבלה</b>רק מה שמדליקים נבדק. כל השאר ללא מגבלה.</div><div><b>2. קובעים טווח</b>גוררים את הידיות: מתחת למינימום או מעל למקסימום = חריגה.</div><div><b>3. בוחרים חומרה</b>קשיח פוסל את השלב. רך רק מוריד כוכבים (1-3 כוכבים לפי הנוחות בתוך המגבלות).</div></div>';
   h += '<div class="lmpre"><span>התחלה מהירה:</span>' + [['none', 'ללא מגבלות'], ['easy', 'מתחילים'], ['mid', 'בינוני'], ['hard', 'מתקדמים']].map((p) => '<button type="button" class="lmbt" data-act="lim-pre" data-tk="' + k + '" data-p="' + p[0] + '">' + p[1] + '</button>').join('') + '</div>';
+  h += nxLimTop(k, sk, dk);
   NXL_G.forEach((g) => {
-    const ms = Object.keys(NXE_M).filter((m) => NXE_M[m][2] === g[0] && NXL_R[m]), n = ms.filter((m) => act.indexOf(m) >= 0).length;
+    const ms = Object.keys(NXE_M).filter((m) => NXE_M[m][2] === g[0] && NXL_R[m] && !NXL_TOP[m]), n = ms.filter((m) => act.indexOf(m) >= 0).length;
     const ck = 'lm.' + k + '.' + g[0], o = NX.openK && NX.openK[ck] !== undefined ? NX.openK[ck] : n > 0;
     h += '<details class="lmg" data-ck="' + ck + '"' + (o ? ' open' : '') + '><summary><span class="lmgi">' + g[1] + '</span><span><b>' + g[0] + '</b><small>' + g[2] + '</small></span><span class="lmcnt' + (n ? ' has' : '') + '">' + (n ? n + ' פעילות' : 'ללא') + '</span></summary>';
     ms.forEach((m) => {
@@ -9904,24 +9919,55 @@ function nxLimUI(k, sk) {
     });
     h += '</details>';
   });
-  h += '<div class="lmgen"><b>הגדרות כלליות</b>' + nxF('גובה יעד (מ׳, ריק = גובה שער ההתחלה)', '<input type="number" step="any" data-num="1" data-k="stick.' + k + '.alt" value="' + (nxRuleNum(sk.alt) !== null ? sk.alt : '') + '" style="width:90px">') +
-    nxF('מצב בדיקה', '<label class="nxchk1"><input type="checkbox" data-k="stick.' + k + '.hard"' + (sk.hard ? ' checked' : '') + '> קשיח: שיאים נמדדים בלי סובלנות (אחרת מתעלמים מ-2% הקיצוניים)</label>') + '</div>';
+  h += '<div class="lmgen"><b>הגדרות כלליות</b>' + nxF('מצב בדיקה', '<label class="nxchk1"><input type="checkbox" data-k="stick.' + k + '.hard"' + (sk.hard ? ' checked' : '') + '> קשיח: שיאים נמדדים בלי סובלנות (אחרת מתעלמים מ-2% הקיצוניים)</label>') + '</div>';
   h += '<p class="nxn">הבדיקה מתחילה בחציית שער ההתחלה. האפליקציה בודקת לבד, בלי AI.</p>';
   return h;
 }
+function nxLimTop(k, sk, dk) {                                    // the main card: the flight path. Height in the middle, then how far off it the pilot may drift
+  const lm = sk.lim || {}, fixed = nxRuleNum(sk.alt) !== null, alt = fixed ? Number(sk.alt) : 10;
+  let h = '<div class="lmtop"><div class="lmtt">📐 מסלול הטיסה: גובה וסטייה</div><p class="nxn">כאן קובעים באיזה גובה הרחפן אמור לטוס, וכמה מותר לו לסטות ממנו ומהקו בין השערים. כל מה שמדליקים נבדק בכל טיסה.</p>';
+  h += '<div class="lmstep"><b>1. באיזה גובה טסים?</b><div class="lmseg lmseg2"><button type="button" data-act="lim" data-tk="' + k + '" data-m="_" data-f="altmode" value="gates"' + (fixed ? '' : ' class="hardon"') + '>לפי גובה השערים <small>(מומלץ)</small></button><button type="button" data-act="lim" data-tk="' + k + '" data-m="_" data-f="altmode" value="fixed"' + (fixed ? ' class="hardon"' : '') + '>גובה קבוע אחד</button></div>';
+  if (fixed) h += '<div class="lmvals"><div>גובה הטיסה <input type="number" class="lmn" min="0" max="100" step="0.5" data-act="lim" data-tk="' + k + '" data-m="_" data-f="alt" value="' + alt + '"> מ׳</div></div><div class="lmrng"><div class="lmtr"></div><div class="lmfl" style="left:0;right:' + (100 - Math.min(100, alt)) + '%"></div><input type="range" class="rhi" min="0" max="100" step="0.5" value="' + alt + '" data-act="lim" data-tk="' + k + '" data-m="_" data-f="alt"></div><div class="lmsc"><span>0</span><span>50</span><span>100 מ׳</span></div><div class="lmsen">הרחפן צריך לטוס בגובה ' + alt + ' מ׳ לאורך כל המסלול, בלי קשר לגובה השערים.</div>';
+  else h += '<div class="lmsen">הגובה הנדרש הוא הגובה של השערים. אם גובה השערים משתנה לאורך המסלול, גם הגובה הנדרש משתנה איתו. את גובה השערים קובעים בעורך המפה.</div>';
+  h += '</div>';
+  ['altDev', 'lineMax'].forEach((m, i) => {
+    const r = NXL_R[m], T = NXL_TOP[m], L = lm[m] || {}, mn = nxRuleNum(L.min), mx = nxRuleNum(L.max), on = mn !== null || mx !== null, soft = !!(sk.soft && sk.soft[m]), hi = mx !== null ? mx : T[2];
+    h += '<div class="lmstep lmm' + (on ? ' act' : '') + '" data-m="' + m + '"><div class="lmmh"><label class="stgsw"><input type="checkbox"' + dk(m, 'on') + (on ? ' checked' : '') + '><i></i></label><div><b>' + (i + 2) + '. ' + T[0] + '</b><div class="nxn">' + T[1] + '</div></div></div>';
+    if (on) {
+      h += '<div class="lmtctl"><div class="lmvals"><div>עד <input type="number" class="lmn" step="' + r[2] + '"' + dk(m, 'hi') + ' value="' + (mx !== null ? mx : '') + '"' + (mx !== null ? '' : ' disabled') + '> מ׳</div></div>' +
+        '<div class="lmrng"><div class="lmtr"></div><div class="lmfl" style="left:0;right:' + (100 - (mx !== null ? Math.max(0, Math.min(100, mx / r[1] * 100)) : 100)) + '%"></div><input type="range" class="rhi" min="0" max="' + r[1] + '" step="' + r[2] + '" value="' + hi + '"' + dk(m, 'hi') + '></div>' +
+        '<div class="lmsc"><span>0</span><span>' + r[1] / 2 + '</span><span>' + r[1] + ' מ׳</span></div>' +
+        '<div class="lmsen">' + nxLimSentence(m, null, mx, soft) + '</div>' +
+        (mn !== null ? '<div class="lmwarn">מוגדר גם מינימום של ' + nxLimFmt(m, mn) + ' מ׳, כלומר הטייס חייב לסטות לפחות כך. <button type="button" class="lmbt"' + dk(m, 'clrmin') + '>הסר מינימום</button></div>' : '') +
+        '<div class="lmseg"><button type="button"' + dk(m, 'hard') + (soft ? '' : ' class="hardon"') + '>🔴 קשיח: פוסל</button><button type="button"' + dk(m, 'soft') + (soft ? ' class="softon"' : '') + '>🟡 רך: מוריד כוכבים</button></div></div>';
+    }
+    h += '</div>';
+  });
+  return h + '</div>';
+}
 function nxLimSet(k, m, f, el) {
-  const D = NX.draft, r = NXL_R[m]; if (!r) return false;
+  const D = NX.draft;
+  if (f === 'altmode' || f === 'alt') {                         // the target height: follow the gates, or one fixed height
+    let v = f === 'alt' ? Number(el.value) : (el.value === 'fixed' ? 10 : null);
+    if (f === 'alt' && (!isFinite(v) || el.value === '')) return false;
+    if (v !== null) v = Math.max(0, Math.min(100, v));
+    nxSetPath(D, 'stick.' + k + '.alt', v === null ? '' : v);
+    NX.draft = nxMerge(nxDefault(), D); nxTouch();
+    return { structural: f === 'altmode', alt: v };
+  }
+  const r = NXL_R[m]; if (!r) return false;
   const lp = 'stick.' + k + '.lim.' + m + '.', L = ((D.stick || {})[k] || {}).lim || {}, cur = L[m] || {};
   let mn = nxRuleNum(cur.min), mx = nxRuleNum(cur.max);
   const clampV = (v) => Math.max(r[0], Math.min(r[1], v)), mid = Math.round((r[0] + r[1]) / 2 / r[2]) * r[2];
   let structural = true;
-  if (f === 'on') { if (el.checked) { mx = mid; mn = null; } else { mn = null; mx = null; nxSetPath(D, 'stick.' + k + '.soft.' + m, false); } }
+  if (f === 'on') { if (el.checked) { mx = NXL_TOP[m] ? NXL_TOP[m][2] : mid; mn = null; } else { mn = null; mx = null; nxSetPath(D, 'stick.' + k + '.soft.' + m, false); } }
   else if (f === 'uselo') mn = el.checked ? (mx !== null ? Math.min(r[0], mx) : r[0]) : null;
   else if (f === 'usehi') mx = el.checked ? (mn !== null ? Math.max(r[1], mn) : r[1]) : null;
   else if (f === 'lo' || f === 'hi') {
     const v = Number(el.value); structural = false; if (!isFinite(v) || el.value === '') return false;
     if (f === 'lo') { mn = clampV(v); if (mx !== null && mn > mx) mn = mx; } else { mx = clampV(v); if (mn !== null && mx < mn) mx = mn; }
   }
+  else if (f === 'clrmin') mn = null;
   else if (f === 'hard' || f === 'soft') nxSetPath(D, 'stick.' + k + '.soft.' + m, f === 'soft');
   nxSetPath(D, lp + 'min', mn === null ? '' : mn); nxSetPath(D, lp + 'max', mx === null ? '' : mx);
   if (mn === null && mx === null) { const q = ((D.stick || {})[k] || {}).lim; if (q) delete q[m]; }
@@ -9937,6 +9983,11 @@ function nxLimLive(el, res) {                                    // while draggi
   if (nl && res.mn !== null && nl !== el) nl.value = res.mn; if (nh && res.mx !== null && nh !== el) nh.value = res.mx;
   const sen = row.querySelector('.lmsen'), sk = ((NX.draft.stick || {})[row.closest('[data-ck]') ? el.dataset.tk : el.dataset.tk] || {});
   if (sen) sen.textContent = nxLimSentence(m, res.mn, res.mx, !!(sk.soft && sk.soft[m]));
+}
+function nxLimLiveAlt(el, v) {                                   // the fixed-height slider, while dragging
+  const row = el.closest('.lmstep'); if (!row) return;
+  const n = row.querySelector('input.lmn'), fl = row.querySelector('.lmfl'), se = row.querySelector('.lmsen');
+  if (n) n.value = v; if (fl) fl.style.right = (100 - Math.min(100, v)) + '%'; if (se) se.textContent = 'הרחפן צריך לטוס בגובה ' + v + ' מ׳ לאורך כל המסלול, בלי קשר לגובה השערים.';
 }
 function nxLimPreset(k, p) {
   const D = NX.draft; const sk = (D.stick = D.stick || {}); sk[k] = sk[k] || {}; sk[k].lim = {}; sk[k].soft = {};
@@ -10672,7 +10723,7 @@ function nxAdmWire() {
       const v = el.value; nxGroupSave(el.dataset.gid, el.dataset.gf === 'themeId' ? { themeId: v, kit: '' } : { [el.dataset.gf]: v }); if (el.dataset.gf === 'themeId') { NX.kitPeek = el.dataset.gid; nxApplyView(); } return;
     }
     if (el.dataset.af) { NX.openP = el.dataset.un; nxAcctSave(el.dataset.un, { [el.dataset.af]: el.value }); return; }
-    if (el.dataset.act === 'lim') { if (el.type === 'range') { const r = nxLimSet(el.dataset.tk, el.dataset.m, el.dataset.f, el); if (r) nxLimLive(el, r); } return; }
+    if (el.dataset.act === 'lim') { if (el.type === 'range') { const r = nxLimSet(el.dataset.tk, el.dataset.m, el.dataset.f, el); if (r) { if (r.alt !== undefined) nxLimLiveAlt(el, r.alt); else nxLimLive(el, r); } } return; }
     nxField(el);
   });
   body.addEventListener('change', (e) => {
