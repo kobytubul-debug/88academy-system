@@ -1410,7 +1410,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 361</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 362</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -9718,7 +9718,7 @@ function nxTabGame() {
   const P = nxLookParts(NX.draft.theme), noH = (x) => String(x).replace(/^<h4>[^<]*<\/h4>/, '');
   const sec = (k, t, inner, open) => nxCrsSec('gm|' + k, t, '', inner, open);
   h += P.btns;
-  h += sec('kit', 'שמירת המראה כערכת נושא', kitHtml, true);
+  h += sec('kit', 'שמירת המראה כערכת נושא', kitHtml, false);
   h += sec('home', 'מסך הבית', noH(nxHomeSection()));
   h += sec('logo', 'לוגו', noH(nxLogoSection()));
   h += P.gx + P.col;
@@ -9903,7 +9903,7 @@ function nxLimUI(k, sk) {
   h += nxLimTop(k, sk, dk);
   NXL_G.forEach((g) => {
     const ms = Object.keys(NXE_M).filter((m) => NXE_M[m][2] === g[0] && NXL_R[m] && !NXL_TOP[m]), n = ms.filter((m) => act.indexOf(m) >= 0).length;
-    const ck = 'lm.' + k + '.' + g[0], o = NX.openK && NX.openK[ck] !== undefined ? NX.openK[ck] : n > 0;
+    const ck = 'lm.' + k + '.' + g[0], o = NX.openK && NX.openK[ck] !== undefined ? NX.openK[ck] : false;
     h += '<details class="lmg" data-ck="' + ck + '"' + (o ? ' open' : '') + '><summary><span class="lmgi">' + g[1] + '</span><span><b>' + g[0] + '</b><small>' + g[2] + '</small></span><span class="lmcnt' + (n ? ' has' : '') + '">' + (n ? n + ' פעילות' : 'ללא') + '</span></summary>';
     ms.forEach((m) => {
       const r = NXL_R[m], L = lm[m] || {}, mn = nxRuleNum(L.min), mx = nxRuleNum(L.max), on = mn !== null || mx !== null, soft = !!(sk.soft && sk.soft[m]), u = NXE_M[m][1];
@@ -9929,7 +9929,7 @@ function nxLimUI(k, sk) {
 }
 function nxLimTop(k, sk, dk) {                                    // the main card: the flight path. Height in the middle, then how far off it the pilot may drift
   const lm = sk.lim || {}, fixed = nxRuleNum(sk.alt) !== null, alt = fixed ? Number(sk.alt) : 10;
-  const ck = 'lm.' + k + '.top', o = NX.openK && NX.openK[ck] !== undefined ? NX.openK[ck] : true, nAct = ['altDev', 'lineMax', 'altSd'].filter((m) => lm[m] && (nxRuleNum(lm[m].min) !== null || nxRuleNum(lm[m].max) !== null)).length;
+  const ck = 'lm.' + k + '.top', o = NX.openK && NX.openK[ck] !== undefined ? NX.openK[ck] : false, nAct = ['altDev', 'lineMax', 'altSd'].filter((m) => lm[m] && (nxRuleNum(lm[m].min) !== null || nxRuleNum(lm[m].max) !== null)).length;
   let h = '<details class="lmg lmtop" data-ck="' + ck + '"' + (o ? ' open' : '') + '><summary><span class="lmgi">📐</span><span><b>מסלול הטיסה: גובה וסטייה</b><small>באיזה גובה טסים, וכמה מותר לסטות ממנו ולצדדים</small></span><span class="lmcnt' + (nAct || fixed ? ' has' : '') + '">' + (fixed ? 'גובה קבוע' : 'גובה לפי השערים') + (nAct ? ' · ' + nAct + ' פעילות' : '') + '</span></summary><div class="lmtin"><p class="nxn">כאן קובעים באיזה גובה הרחפן אמור לטוס, וכמה מותר לו לסטות ממנו ומהקו בין השערים. כל מה שמדליקים נבדק בכל טיסה.</p>';
   h += '<div class="lmstep"><b>1. באיזה גובה טסים?</b><div class="lmseg lmseg2"><button type="button" data-act="lim" data-tk="' + k + '" data-m="_" data-f="altmode" value="gates"' + (fixed ? '' : ' class="hardon"') + '>לפי גובה השערים <small>(מומלץ)</small></button><button type="button" data-act="lim" data-tk="' + k + '" data-m="_" data-f="altmode" value="fixed"' + (fixed ? ' class="hardon"' : '') + '>גובה קבוע אחד</button></div>';
   if (fixed) h += '<div class="lmvals"><div>גובה הטיסה <input type="number" class="lmn" min="0" max="100" step="0.5" data-act="lim" data-tk="' + k + '" data-m="_" data-f="alt" value="' + alt + '"> מ׳</div></div><div class="lmrng"><div class="lmtr"></div><div class="lmfl" style="left:0;right:' + (100 - Math.min(100, alt)) + '%"></div><input type="range" class="rhi" min="0" max="100" step="0.5" value="' + alt + '" data-act="lim" data-tk="' + k + '" data-m="_" data-f="alt"></div><div class="lmsc"><span>0</span><span>50</span><span>100 מ׳</span></div><div class="lmsen">הרחפן צריך לטוס בגובה ' + alt + ' מ׳ לאורך כל המסלול, בלי קשר לגובה השערים.</div>';
@@ -9994,6 +9994,9 @@ function nxLimLiveAlt(el, v) {                                   // the fixed-he
   const n = row.querySelector('input.lmn'), fl = row.querySelector('.lmfl'), se = row.querySelector('.lmsen');
   if (n) n.value = v; if (fl) fl.style.right = (100 - Math.min(100, v)) + '%'; if (se) se.textContent = 'הרחפן צריך לטוס בגובה ' + v + ' מ׳ לאורך כל המסלול, בלי קשר לגובה השערים.';
 }
+function nxCloseAll() {                                          // every window in the manager panel starts closed again when the view changes
+  NX.openK = {}; NX.openG = ''; NX.openP = ''; NX.openC = ''; NX.openCats = {};
+}
 function nxLimGo(k, m) {                                         // a chip in the summary: open the window that holds this limit, scroll to it and flash it
   const ck = 'lm.' + k + '.' + (NXL_TOP[m] ? 'top' : (NXE_M[m] || [])[2]); NX.openK = NX.openK || {}; NX.openK[ck] = true;
   const body = $('admBody'); if (!body) return;
@@ -10026,7 +10029,7 @@ function nxTrackPanel(id) {
   g += '<p class="nxn">' + (MAP_BASES[st.base || id] || '') + ' &middot; ' + st.gen().length + ' שערים' + (mine ? ' &middot; ' + (st.objects ? st.objects.length : 0) + ' אלמנטים' : ' &middot; מובנה') + '</p>';
   g += '<div class="nxbtns">' + (mine ? '<button class="nxb pri" data-act="trk-open" data-id="' + id + '">ערוך במפה</button><button class="nxb" data-act="trk-dup" data-id="' + id + '">שכפל</button><button class="nxb danger" data-act="trk-del" data-id="' + id + '">מחק</button>'
     : '<button class="nxb pri" data-act="trk-copy" data-id="' + id + '">שכפל ועריך</button><button class="nxb" data-act="trk-dup" data-id="' + id + '">שכפל</button><button class="nxb danger" data-act="trk-delb" data-id="' + id + '">מחק</button>') + '</div>';
-  h += nxTrkSec(tag('gen'), 'כללי', '', g, true);
+  h += nxTrkSec(tag('gen'), 'כללי', '', g, false);
   let v = nxF('מוצג לשחקנים', '<label class="stgsw"><input type="checkbox" data-act="stg-vis" data-id="' + id + '"' + (hid ? '' : ' checked') + '><i></i></label>');
   v += '<div class="nxbtns"><button class="nxb stglock' + (locked ? ' on' : '') + '" data-act="stg-lock" data-id="' + id + '" title="השחקנים יראו רק את המסלול הזה">' + (locked ? '&#128274; נעול, לחץ לביטול' : 'נעל עליו (רק הוא יוצג)') + '</button></div>';
   h += nxTrkSec(tag('vis'), 'תצוגה לשחקנים', locked ? 'נעול' : hid ? 'מוסתר' : 'מוצג', v);
@@ -10433,7 +10436,7 @@ function nxTabGroups() {
     if (free.length) sm += '<div class="nxbtns"><select id="admAdd_' + gid + '">' + free.map((u) => '<option value="' + u + '">' + nxEsc(NX.accts[u].name || u) + '</option>').join('') + '</select><button class="nxb" data-act="grp-add" data-gid="' + gid + '">הוסף לקבוצה</button></div>';
 
     const gk = (n) => 'gs|' + gid + '|' + n;
-    h += nxCrsSec(gk('a'), 'הגדרות כלליות', g.mode === 'student' ? 'מצב תלמיד' : 'פריסטייל', sa, true);
+    h += nxCrsSec(gk('a'), 'הגדרות כלליות', g.mode === 'student' ? 'מצב תלמיד' : 'פריסטייל', sa, false);
     h += nxCrsSec(gk('k'), 'קורסים', nxGroupCourses(g).length ? nxGroupCourses(g).length + ' קורסים' : 'ללא', sk);
     h += nxCrsSec(gk('l'), 'מסלולים ורחפנים', (g.force ? 'נעולה על שלב' : '') + (ov ? ' שלבים מותאמים' : '') + (ovd ? ' רחפנים מותאמים' : '') || 'ברירת מחדל', sl);
     h += nxCrsSec(gk('v'), 'ערכת נושא', g.kit ? 'ערכה' : g.themeId ? 'שמורה' : 'כללית', sv);
@@ -10799,8 +10802,8 @@ function nxAdmWire() {
       if (r.ok) { NX.selTrk = r.id; nxAdmRender(); }
       return;
     }
-    if (a === 'trk-sel') { NX.selTrk = id; try { selectTrack(id); } catch (e) { /* ignore */ } nxAdmRender(); return; }
-    if (a === 'trk-back') { NX.selTrk = ''; nxAdmRender(); return; }
+    if (a === 'trk-sel') { nxCloseAll(); NX.selTrk = id; try { selectTrack(id); } catch (e) { /* ignore */ } nxAdmRender(); return; }
+    if (a === 'trk-back') { nxCloseAll(); NX.selTrk = ''; nxAdmRender(); return; }
     if (a === 'trk-crs') { NX.tab = 'courses'; nxAdmRender(); return; }
     if (a === 'trk-new') { nxOpen(false); createCustomTrack(); }
     else if (a === 'trk-copy') { const nid = duplicateToCustom(id); if (nid) { nxOpen(false); selectTrack(nid); startStage(nid, true); } }
@@ -10955,7 +10958,7 @@ function nxAdmWire() {
     }
   });
   body.addEventListener('toggle', (e) => { const d = e.target; if (d && d.tagName === 'DETAILS' && d.open) { if (d.dataset.un) NX.openP = d.dataset.un; else if (d.dataset.gid) NX.openG = d.dataset.gid; } }, true);      // inner sections (no gid) must not clear which group card is open
-  $('admTabs').addEventListener('click', (e) => { const b = e.target.closest('[data-tab]'); if (b) { NX.tab = b.dataset.tab; if (NX.tab !== 'groups') NX.kitPeek = ''; nxApplyView(); nxAdmRender(); nxGoScreen(NX.tab); } });
+  $('admTabs').addEventListener('click', (e) => { const b = e.target.closest('[data-tab]'); if (b) { if (NX.tab !== b.dataset.tab) nxCloseAll(); NX.tab = b.dataset.tab; if (NX.tab !== 'groups') NX.kitPeek = ''; nxApplyView(); nxAdmRender(); nxGoScreen(NX.tab); } });
   $('admPub').addEventListener('click', nxPublish);
   $('admPrev').addEventListener('click', () => { NX.preview = !NX.preview; if (!NX.preview) { NX.previewGid = ''; NX.previewUn = ''; } nxApplyView(); nxAdmRender(); });
   $('admX').addEventListener('click', () => nxOpen(false));
