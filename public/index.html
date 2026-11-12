@@ -571,16 +571,6 @@ body.nx-open #menu #scrMain{left:min(440px,42vw)}
 #admBody .lmseg2 small{opacity:.75}
 #admBody .lmseg.lmseg2 button.hardon{background:var(--ac);color:var(--ot,#06222b)}
 #admBody .lmwarn{margin-top:6px;background:rgba(229,72,77,.12);border:1px solid #e5484d;border-radius:7px;padding:5px 9px;font-size:12.5px}
-#admBody .dvw .dvstage{position:relative;background:#0f1114;overflow:hidden;border-radius:8px;margin-top:6px}#admBody .dvw canvas{display:block;width:100%}
-#admBody .dvst{position:absolute;top:8px;inset-inline-start:8px;padding:3px 10px;font-size:12.5px;font-weight:700;background:#14161a;border-inline-start:5px solid #5fd38a;color:#f4f1e8}
-#admBody .dvchips{position:absolute;left:0;right:0;bottom:8px;display:flex;flex-wrap:wrap;gap:6px;justify-content:center;pointer-events:none}
-#admBody .dvchip{background:#14161a;border:2px solid #efb74d;color:#f4f1e8;padding:4px 11px;font-size:13.5px;font-weight:700;transform:skewX(-8deg)}#admBody .dvchip.r{border-color:#ff5a4d}#admBody .dvchip.g{border-color:#5fd38a}#admBody .dvchip b{display:inline-block;transform:skewX(8deg)}
-#admBody .dvleg{display:flex;gap:6px 12px;flex-wrap:wrap;font-size:11.5px;color:var(--mu);margin-top:7px}#admBody .dvleg i{display:inline-block;width:16px;height:4px;margin-inline-end:4px;vertical-align:middle}
-#admBody .dvctl{display:flex;flex-wrap:wrap;gap:7px 12px;align-items:center;margin-top:9px;font-size:13px}
-#admBody .dvseg{display:inline-flex;border:1px solid var(--ln);border-radius:8px;overflow:hidden}#admBody .dvseg button,#admBody .dvplay,#admBody .dvonb{background:var(--p2);color:var(--tx);border:0;padding:6px 11px;font:inherit;font-size:12.5px;cursor:pointer}
-#admBody .dvplay,#admBody .dvonb{border:1px solid var(--ln);border-radius:8px}
-#admBody .dvseg button.on,#admBody .dvonb.on{background:var(--ac);color:var(--ot,#06222b)}
-#admBody .dvsl{display:flex;align-items:center;gap:6px}#admBody .dvsl input{width:110px}
 #admBody .lmg{background:var(--p1);border:1px solid var(--ln);border-radius:10px;margin-bottom:7px;overflow:hidden}
 #admBody .lmg>summary{cursor:pointer;padding:9px 11px;display:flex;align-items:center;gap:9px;list-style:none}
 #admBody .lmg>summary::-webkit-details-marker{display:none}
@@ -1420,7 +1410,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 366</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 367</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -8508,7 +8498,7 @@ function nxDefault() {
     { id: 'mz3', t: 'Life Cycle', a: 'Grumplefunk', u: '/music/life-cycle.mp3', menu: false, fly: true },
     { id: 'mz4', t: 'Keep the secret', a: 'Melatronic', u: '/music/keep-the-secret.mp3', menu: false, fly: true }
   ] },
-    courses: {}, guides: {}, stick: {}, devhud: {}, courseId: '', courseIds: [], staff: {},
+    courses: {}, guides: {}, stick: {}, courseId: '', courseIds: [], staff: {},
     logo: { on: true, pages: { main: true, drone: false, missions: false, controls: false }, size: 6, x: 96, y: 91, color: '#ffffff', op: 85 }
   };
 }
@@ -10019,134 +10009,6 @@ function nxLimPreset(k, p) {
   Object.keys(P).forEach((m) => { const v = P[m]; sk[k].lim[m] = {}; if (v[0] !== null) sk[k].lim[m].min = v[0]; if (v[1] !== null) sk[k].lim[m].max = v[1]; if (v[2]) sk[k].soft[m] = true; });
   NX.draft = nxMerge(nxDefault(), D); nxTouch();
 }
-/* ---- deviation arrow + correction path: one window per track, with a live pilot-view demo ---- */
-const NXDV = { T: 0, S0: 0, DX: 0, DY: 0, SPD: 10, auto: true, play: true, sx: 0, sy: 0, trail: [], lastTr: -9, last: 0, run: false, k: '' };
-const NXDV_C = { g: '#5fd38a', r: '#ff5a4d', y: '#efb74d', b: '#7fc4e8' }, NXDV_ST = ['#5fd38a', '#efb74d', '#ff5a4d'];
-function nxDevCfg(k) { const c = ((NX.draft && NX.draft.devhud) || {})[k] || {}; return { on: c.on === true, style: c.style === '3' ? '3' : '2', path: c.path === 'always' || c.path === 'out' ? c.path : 'warn' }; }
-function nxDevLims(k) {
-  const lm = (((NX.draft && NX.draft.stick) || {})[k] || {}).lim || {}, g = (m, d) => (lm[m] && Number(lm[m].max) > 0 ? Number(lm[m].max) : d);
-  return { x: g('lineMax', 4), y: g('altDev', 2.5), v: g('spdMax', 0), set: !!((lm.lineMax && lm.lineMax.max > 0) || (lm.altDev && lm.altDev.max > 0)) };
-}
-function nxDevSet(k, f, v) {
-  const D = NX.draft; D.devhud = D.devhud || {}; D.devhud[k] = Object.assign({}, D.devhud[k]); D.devhud[k][f] = v; nxTouch();
-  const sec = document.querySelector('details[data-ck="tp_dev"] .catn'); if (sec) sec.textContent = D.devhud[k].on ? 'פעיל' : 'כבוי';
-}
-function nxDevUI(k) {
-  NXDV.k = k;
-  if (!NXDV.run && typeof requestAnimationFrame === 'function') { NXDV.run = true; NXDV.last = 0; requestAnimationFrame(nxDevLoop); }
-  const c = nxDevCfg(k), L = nxDevLims(k), on = c.on;
-  const sg = (f, opts, cur) => '<span class="dvseg">' + opts.map((o) => '<button type="button" data-act="dev" data-f="' + f + '" data-v="' + o[0] + '" class="' + (String(cur) === o[0] ? 'on' : '') + '">' + o[1] + '</button>').join('') + '</span>';
-  let h = '<div class="dvw' + (on ? '' : ' off') + '" data-tk="' + k + '"><p class="nxn">חץ שמראה לאן לתקן, ונתיב שמראה איפה אתה, איפה הנתיב הנכון ואיך חוזרים אליו. הכל נשען על מגבלות המדידה של המסלול' + (L.set ? ' (כרגע: ±' + L.x + ' מ׳ לרוחב, ±' + L.y + ' מ׳ לגובה).' : ' (עדיין לא הוגדרו, ההדגמה משתמשת ב-±4 מ׳ לרוחב ו-±2.5 מ׳ לגובה).') + '</p>';
-  h += '<div class="dvstage"><canvas id="nxdMain"></canvas><div id="nxdState" class="dvst">בתוך הנתיב</div><div id="nxdChips" class="dvchips"></div></div>';
-  h += '<div class="dvleg"><span><i style="background:#5fd38a"></i>מרכז הנתיב הנכון</span><span><i style="background:#7fc4e8"></i>גבולות המגבלה</span><span><i style="background:#5fd38a;height:6px"></i>הדרך שטסת: תקין</span><span><i style="background:#ff5a4d;height:6px"></i>הדרך שטסת: חריגה</span><span><i style="background:#efb74d"></i>נתיב התיקון</span></div>';
-  h += '<div class="dvctl"><span>חץ וקו תיקון:</span><button type="button" data-act="dev" data-f="on" class="dvonb' + (on ? ' on' : '') + '">' + (on ? 'מופעל' : 'כבוי') + '</button><span>סגנון החץ:</span>' + sg('style', [['2', 'ב׳ סביב הרחפן'], ['3', 'ג׳ בקצה המסך']], c.style) + '<span>נתיב תיקון:</span><select data-act="dev-sel"><option value="always"' + (c.path === 'always' ? ' selected' : '') + '>תמיד</option><option value="warn"' + (c.path === 'warn' ? ' selected' : '') + '>מ-70% מהמגבלה</option><option value="out"' + (c.path === 'out' ? ' selected' : '') + '>רק בחריגה</option></select></div>';
-  h += '<div class="dvctl">' + sg('mode', [['auto', 'סימולציה אוטומטית'], ['man', 'ידני']], NXDV.auto ? 'auto' : 'man') + '<button type="button" data-act="dev" data-f="play" class="dvplay">' + (NXDV.play ? '⏸ עצור' : '▶ המשך') + '</button>' +
-    '<label class="dvsl">רוחב <input type="range" min="-9" max="9" step="0.1" value="' + NXDV.sx.toFixed(1) + '" data-act="dev-sl" data-f="sx"><b id="nxdVx">' + NXDV.sx.toFixed(1) + '</b></label><label class="dvsl">גובה <input type="range" min="-5" max="5" step="0.1" value="' + NXDV.sy.toFixed(1) + '" data-act="dev-sl" data-f="sy"><b id="nxdVy">' + NXDV.sy.toFixed(1) + '</b></label></div></div>';
-  return h;
-}
-function nxDevAct(el) {
-  const k = NXDV.k, f = el.dataset.f, v = el.dataset.v;
-  if (f === 'on') { nxDevSet(k, 'on', !nxDevCfg(k).on); }
-  else if (f === 'style') { nxDevSet(k, 'style', v); }
-  else if (f === 'mode') { NXDV.auto = v === 'auto'; if (!NXDV.auto) { NXDV.sx = NXDV.DX; NXDV.sy = NXDV.DY; } }
-  else if (f === 'play') { NXDV.play = !NXDV.play; }
-  const w = el.closest('.dvw'); if (!w) return; const c = nxDevCfg(k);
-  w.classList.toggle('off', !c.on);
-  const ob = w.querySelector('.dvonb'); if (ob) { ob.classList.toggle('on', c.on); ob.textContent = c.on ? 'מופעל' : 'כבוי'; }
-  w.querySelectorAll('button[data-f="style"]').forEach((b) => b.classList.toggle('on', b.dataset.v === c.style));
-  w.querySelectorAll('button[data-f="mode"]').forEach((b) => b.classList.toggle('on', (b.dataset.v === 'auto') === NXDV.auto));
-  const pl = w.querySelector('.dvplay'); if (pl) pl.textContent = NXDV.play ? '⏸ עצור' : '▶ המשך';
-}
-function nxDevInput(el) {
-  const f = el.dataset.f; if (f !== 'sx' && f !== 'sy') return;
-  NXDV[f] = Number(el.value) || 0; NXDV.auto = false;
-  const w = el.closest('.dvw'); if (w) w.querySelectorAll('button[data-f="mode"]').forEach((b) => b.classList.toggle('on', b.dataset.v === 'man'));
-  const o = document.getElementById(f === 'sx' ? 'nxdVx' : 'nxdVy'); if (o) o.textContent = NXDV[f].toFixed(1);
-}
-function nxDevLoop(now) {
-  requestAnimationFrame(nxDevLoop);
-  const cv = document.getElementById('nxdMain'); if (!cv || !cv.offsetParent) { NXDV.last = now; return; }
-  const dt = Math.min(0.05, (now - (NXDV.last || now)) / 1000); NXDV.last = now;
-  const Z = NXDV, L = nxDevLims(Z.k);
-  if (Z.play) {
-    Z.T += dt; Z.S0 += 9 * dt; Z.SPD = 10.8 + 3 * Math.sin(Z.T * 0.7);
-    let tx, ty;
-    if (Z.auto) { tx = 6.2 * Math.sin(Z.T * 0.55) + 1.4 * Math.sin(Z.T * 1.7); ty = 3.4 * Math.sin(Z.T * 0.4 + 1) + 0.6 * Math.sin(Z.T * 1.3); }
-    else { tx = Z.sx; ty = Z.sy; }
-    tx *= L.x / 4; ty *= L.y / 2.5;                                  // the demo drifts in proportion to the track's own limits
-    const kk = Math.min(1, dt * (Z.auto ? 20 : 6)); Z.DX += (tx - Z.DX) * kk; Z.DY += (ty - Z.DY) * kk;
-    if (Z.S0 - Z.lastTr >= 1) { Z.lastTr = Z.S0; Z.trail.push({ s: Z.S0, dx: Z.DX, dy: Z.DY, out: Math.max(Math.abs(Z.DX) / L.x, Math.abs(Z.DY) / L.y) >= 1 }); while (Z.trail.length && Z.trail[0].s < Z.S0 - 80) Z.trail.shift(); }
-  }
-  nxDevDraw(cv, L);
-}
-function nxDevDraw(cv, L) {
-  const Z = NXDV, cfg = nxDevCfg(Z.k), dpr = Math.min(window.devicePixelRatio || 1, 2), W = cv.clientWidth, H = Math.round(W * 0.56);
-  if (!W) return;
-  if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); cv.style.height = H + 'px'; }
-  const c = cv.getContext('2d'); c.setTransform(dpr, 0, 0, dpr, 0, 0);
-  const CAM = 10, F = 640 * (W / 760), HZ = H * 0.3, LX = L.x, LY = L.y, S0 = Z.S0, DX = Z.DX, DY = Z.DY, K = NXDV_C;
-  const cxw = (s) => 8 * Math.sin(s / 35), tyw = (s) => 9 + 2 * Math.sin(s / 50);
-  const P = (s, a, b) => { const d = s - S0 + CAM; if (d < 3) return null; const X = cxw(s) + a - (cxw(S0) + DX), Y = tyw(s) + b - (tyw(S0) + DY) - 1.2; return [W / 2 + F * X / d, HZ - F * Y / d, d]; };
-  const sa = (x, y) => Math.max(Math.abs(DX) / LX, Math.abs(DY) / LY);
-  const m = sa(), spOver = L.v > 0 && Z.SPD > L.v, a = Math.abs(DX) / LX, bb = Math.abs(DY) / LY, st = m >= 1 ? 2 : m >= 0.7 ? 1 : 0, on = true;                 // the demo always shows the aids; the switch only decides whether the game uses them
-  const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#1b222b'); g.addColorStop(0.3, '#2b323c'); g.addColorStop(0.3, '#181b20'); g.addColorStop(1, '#0e1013'); c.fillStyle = g; c.fillRect(0, 0, W, H);
-  const s1 = S0 - CAM + 6, s2 = S0 + 95;
-  for (let s = Math.floor(s1 / 3) * 3; s < s2; s += 3) {
-    const p1 = P(s, -LX, -tyw(s)), p2 = P(s, LX, -tyw(s)), p3 = P(s + 3, LX, -tyw(s + 3)), p4 = P(s + 3, -LX, -tyw(s + 3)); if (!p1 || !p2 || !p3 || !p4) continue;
-    c.beginPath(); c.moveTo(p1[0], p1[1]); c.lineTo(p2[0], p2[1]); c.lineTo(p3[0], p3[1]); c.lineTo(p4[0], p4[1]); c.closePath(); c.fillStyle = (Math.floor(s / 3) % 2) ? 'rgba(127,196,232,.10)' : 'rgba(127,196,232,.04)'; c.fill();
-  }
-  const cr = [[-LX, -LY, 'bottom'], [LX, -LY, 'right'], [LX, LY, 'top'], [-LX, LY, 'left']], ex = { left: DX < -LX, right: DX > LX, top: DY > LY, bottom: DY < -LY }, ed = [[0, 1, 'bottom'], [1, 2, 'right'], [2, 3, 'top'], [3, 0, 'left']];
-  for (let ci = 0; ci < 4; ci++) { c.beginPath(); let f1 = true; for (let s = Math.floor(s1 / 2) * 2; s < s2; s += 2) { const p = P(s, cr[ci][0], cr[ci][1]); if (!p) continue; if (f1) { c.moveTo(p[0], p[1]); f1 = false; } else c.lineTo(p[0], p[1]); } c.strokeStyle = 'rgba(127,196,232,.35)'; c.lineWidth = 1.5; c.stroke(); }
-  const fr = []; for (let s = Math.ceil(s1 / 12) * 12; s < s2; s += 12) fr.push(s);
-  for (let i = fr.length - 1; i >= 0; i--) {
-    const s = fr[i], ps = cr.map((q) => P(s, q[0], q[1])); if (ps.some((p) => !p)) continue; const al = Math.max(0.15, 1 - (s - S0) / 100);
-    ed.forEach(([x, y, nm]) => { c.beginPath(); c.moveTo(ps[x][0], ps[x][1]); c.lineTo(ps[y][0], ps[y][1]); c.strokeStyle = ex[nm] ? 'rgba(255,90,77,' + al + ')' : 'rgba(127,196,232,' + al + ')'; c.lineWidth = ex[nm] ? 4 : 2.5; c.stroke(); });
-    if (i < 3) { c.fillStyle = 'rgba(127,196,232,.05)'; c.beginPath(); ps.forEach((p, q) => q ? c.lineTo(p[0], p[1]) : c.moveTo(p[0], p[1])); c.fill(); }
-  }
-  c.save(); c.setLineDash([12, 10]); c.beginPath(); let f2 = true; for (let s = Math.floor(s1); s < s2; s += 2) { const p = P(s, 0, 0); if (!p) continue; if (f2) { c.moveTo(p[0], p[1]); f2 = false; } else c.lineTo(p[0], p[1]); } c.strokeStyle = 'rgba(95,211,138,.85)'; c.lineWidth = 3; c.stroke(); c.restore();
-  for (let i = 1; i < Z.trail.length; i++) { const t0 = Z.trail[i - 1], t1 = Z.trail[i], pa = P(t0.s, t0.dx, t0.dy), pb = P(t1.s, t1.dx, t1.dy); if (!pa || !pb) continue; c.beginPath(); c.moveTo(pa[0], pa[1]); c.lineTo(pb[0], pb[1]); c.strokeStyle = t1.out ? K.r : K.g; c.lineWidth = t1.out ? 7 : 4; c.lineCap = 'round'; c.globalAlpha = 0.9; c.stroke(); c.globalAlpha = 1; }
-  const showP = on && (cfg.path === 'always' || (cfg.path === 'warn' && m >= 0.7) || (cfg.path === 'out' && m >= 1)), Lc = 22 + 8 * Math.min(m, 2);
-  const cp = (u) => { const e = u * u * (3 - 2 * u); return { s: S0 + Lc * u, a: DX * (1 - e), b: DY * (1 - e) }; };
-  if (showP) {
-    const pts = []; for (let u = 0; u <= 1.001; u += 0.03) { const q = cp(u), p = P(q.s, q.a, q.b); if (p) pts.push(p); }
-    if (pts.length > 2) {
-      c.save(); c.lineCap = 'round'; c.lineJoin = 'round'; c.beginPath(); pts.forEach((p, i) => i ? c.lineTo(p[0], p[1]) : c.moveTo(p[0], p[1])); c.strokeStyle = 'rgba(0,0,0,.55)'; c.lineWidth = 11; c.stroke();
-      c.setLineDash([14, 9]); c.lineDashOffset = -(Z.T * 40) % 23; c.beginPath(); pts.forEach((p, i) => i ? c.lineTo(p[0], p[1]) : c.moveTo(p[0], p[1])); c.strokeStyle = K.y; c.lineWidth = 6; c.stroke(); c.restore();
-      const ep = pts[pts.length - 1];
-      [0.3, 0.55, 0.8].forEach((u) => { const q = cp(u), q2 = cp(u + 0.04), p = P(q.s, q.a, q.b), p2 = P(q2.s, q2.a, q2.b); if (p && p2) { const an = Math.atan2(p2[1] - p[1], p2[0] - p[0]); c.save(); c.translate(p[0], p[1]); c.rotate(an); c.beginPath(); c.moveTo(-9, -11); c.lineTo(5, 0); c.lineTo(-9, 11); c.lineWidth = 5; c.lineCap = 'round'; c.lineJoin = 'round'; c.strokeStyle = '#0b0c0e'; c.stroke(); c.lineWidth = 3; c.strokeStyle = K.y; c.stroke(); c.restore(); } });
-      c.beginPath(); c.arc(ep[0], ep[1], 14, 0, 7); c.lineWidth = 4; c.strokeStyle = '#0b0c0e'; c.stroke(); c.lineWidth = 2.5; c.strokeStyle = K.y; c.stroke();
-      c.font = '700 13px Heebo,sans-serif'; const tw = c.measureText('חזור לנתיב כאן').width + 16; c.fillStyle = '#14161a'; c.fillRect(ep[0] - tw / 2, ep[1] - 40, tw, 22); c.fillStyle = K.y; c.textAlign = 'center'; c.fillText('חזור לנתיב כאן', ep[0], ep[1] - 24);
-    }
-  }
-  const pi = P(S0, 0, 0), pd = P(S0, DX, DY);
-  if (pi && pd) {
-    if (m > 0.35) { c.save(); c.setLineDash([4, 6]); c.beginPath(); c.moveTo(pd[0], pd[1]); c.lineTo(pi[0], pi[1]); c.strokeStyle = 'rgba(244,241,232,.65)'; c.lineWidth = 2; c.stroke(); c.restore(); }
-    c.beginPath(); c.arc(pi[0], pi[1], 12, 0, 7); c.lineWidth = 3.5; c.strokeStyle = K.g; c.stroke(); c.beginPath(); c.arc(pi[0], pi[1], 3, 0, 7); c.fillStyle = K.g; c.fill();
-    const dc = NXDV_ST[st]; c.save(); c.translate(pd[0], pd[1]); c.lineWidth = 3; c.strokeStyle = '#0b0c0e'; c.beginPath(); c.moveTo(-14, -9); c.lineTo(14, 9); c.moveTo(14, -9); c.lineTo(-14, 9); c.stroke(); c.strokeStyle = dc; c.lineWidth = 1.8; c.stroke();
-    [[-14, -9], [14, -9], [-14, 9], [14, 9]].forEach((p) => { c.beginPath(); c.arc(p[0], p[1], 6, 0, 7); c.fillStyle = '#0b0c0e'; c.fill(); c.strokeStyle = dc; c.lineWidth = 2; c.stroke(); });
-    c.beginPath(); c.arc(0, 0, 4.5, 0, 7); c.fillStyle = dc; c.fill(); c.restore();
-  }
-  const arrow = (x, y, ang, len, w, col) => { c.save(); c.translate(x, y); c.rotate(ang); c.beginPath(); c.moveTo(len / 2, 0); c.lineTo(len / 2 - w * 1.15, -w); c.lineTo(len / 2 - w * 0.9, -w * 0.38); c.lineTo(-len / 2, -w * 0.38); c.lineTo(-len / 2, w * 0.38); c.lineTo(len / 2 - w * 0.9, w * 0.38); c.lineTo(len / 2 - w * 1.15, w); c.closePath(); c.lineJoin = 'round'; c.lineWidth = 4; c.strokeStyle = '#0b0c0e'; c.stroke(); c.fillStyle = col; c.fill(); c.restore(); };
-  const vx = -DX / LX, vy = DY / LY, ang = Math.atan2(vy, vx), col = NXDV_ST[st], len = 46 + Math.min(m, 2) * 26, w = 14 + Math.min(m, 2) * 5;
-  if (on && m > 0.12) {
-    if (cfg.style === '2' && pd) {
-      const r = 34; c.beginPath(); c.arc(pd[0], pd[1], r, 0, 7); c.lineWidth = 3; c.strokeStyle = 'rgba(15,17,20,.8)'; c.stroke(); c.setLineDash([3, 7]); c.strokeStyle = col; c.lineWidth = 2; c.stroke(); c.setLineDash([]);
-      arrow(pd[0] + Math.cos(ang) * (r + len * 0.38), pd[1] + Math.sin(ang) * (r + len * 0.38), ang, len * 0.75, w * 0.85, col);
-    } else if (cfg.style === '3') {
-      let x, y, an; if (Math.abs(vx) >= Math.abs(vy)) { x = vx < 0 ? 44 : W - 44; y = H * 0.45; an = vx < 0 ? Math.PI : 0; } else { x = W / 2; y = vy < 0 ? 44 : H - 72; an = vy < 0 ? -Math.PI / 2 : Math.PI / 2; }
-      for (let q = 0; q < 3; q++) { const o = (q - 1) * 22; c.save(); c.globalAlpha = Math.min(1, 0.5 + 0.3 * q + 0.15 * Math.sin(Z.T * 8 - q)); c.translate(x + Math.cos(an) * o, y + Math.sin(an) * o); c.rotate(an); c.beginPath(); c.moveTo(-10, -22); c.lineTo(12, 0); c.lineTo(-10, 22); c.lineWidth = 11; c.lineCap = 'round'; c.lineJoin = 'round'; c.strokeStyle = '#0b0c0e'; c.stroke(); c.lineWidth = 6; c.strokeStyle = col; c.stroke(); c.restore(); }
-    }
-  }
-  const chips = [];
-  if (on) {
-    if (a >= 0.7) chips.push([(DX > 0 ? '↶ שמאלה' : '↷ ימינה') + ' · ' + Math.abs(DX).toFixed(1) + ' מ׳', a >= 1 ? 'r' : '']);
-    if (bb >= 0.7) chips.push([(DY > 0 ? '↓ הורד' : '↑ העלה') + ' · ' + Math.abs(DY).toFixed(1) + ' מ׳', bb >= 1 ? 'r' : '']);
-    if (spOver) chips.push(['⏷ האט · ' + (Z.SPD - L.v).toFixed(1) + ' מ/ש', Z.SPD > L.v * 1.12 ? 'r' : '']);
-    if (!chips.length) chips.push(['✓ בתוך הנתיב', 'g']);
-  }
-  const ce = document.getElementById('nxdChips'); if (ce) { const sig = chips.map((q) => q[1] + q[0]).join('|'); if (ce.dataset.sig !== sig) { ce.dataset.sig = sig; ce.innerHTML = chips.map((q) => '<div class="dvchip ' + q[1] + '"><b>' + q[0] + '</b></div>').join(''); } }
-  const se = document.getElementById('nxdState'); if (se) { const tx = ['בתוך הנתיב', 'קרוב לגבול', 'מחוץ לנתיב, חזור'][st] + (cfg.on ? '' : ' · כבוי במשחק'); if (se.textContent !== tx) se.textContent = tx; se.style.borderInlineStartColor = NXDV_ST[st]; }
-}
 function nxTrkSec(key, title, badge, inner, defOpen) {         // one collapsible section of the single-track panel
   const o = NX.openK && NX.openK[key] !== undefined ? NX.openK[key] : !!defOpen;
   return '<details class="catbox gcard tpsec" data-ck="' + key + '"' + (o ? ' open' : '') + '><summary><b>' + title + '</b>' + (badge ? '<span class="catn">' + badge + '</span>' : '') + '</summary>' + inner + '</details>';
@@ -10188,7 +10050,6 @@ function nxTrackPanel(id) {
   h += nxTrkSec(tag('prev'), 'תצוגה מקדימה של המפה', '', nxMapPreview(st), false);
   const gd = (D.guides || {})[k] || {}, hasG = !!(String(gd.text || '').trim() || String(gd.fly || '').trim());
   h += nxTrkSec(tag('guide'), 'כרטיס הסבר לתלמיד', hasG ? (gd.off ? 'מוסתר' : 'יש כרטיס') : 'אין כרטיס', nxGuideFields(k, gd));
-  h += nxTrkSec(tag('dev'), 'חץ סטייה ונתיב תיקון', nxDevCfg(k).on ? 'פעיל' : 'כבוי', nxDevUI(k));
   const sk = (D.stick || {})[k] || {}, lm = sk.lim || {}, nsk = nxRuleKeys(sk).length;
   const sg = nxLimUI(k, sk);
   h += nxTrkSec(tag('stick'), 'מגבלות מדידה', nsk ? nsk + ' מגבלות' : 'ללא', sg);
@@ -10876,7 +10737,6 @@ function nxAdmWire() {
       const v = el.value; nxGroupSave(el.dataset.gid, el.dataset.gf === 'themeId' ? { themeId: v, kit: '' } : { [el.dataset.gf]: v }); if (el.dataset.gf === 'themeId') { NX.kitPeek = el.dataset.gid; nxApplyView(); } return;
     }
     if (el.dataset.af) { NX.openP = el.dataset.un; nxAcctSave(el.dataset.un, { [el.dataset.af]: el.value }); return; }
-    if (el.dataset.act === 'dev-sl') { nxDevInput(el); return; }
     if (el.dataset.act === 'lim') { if (el.type === 'range') { const r = nxLimSet(el.dataset.tk, el.dataset.m, el.dataset.f, el); if (r) { if (r.alt !== undefined) nxLimLiveAlt(el, r.alt); else nxLimLive(el, r); } } return; }
     nxField(el);
   });
@@ -10888,7 +10748,6 @@ function nxAdmWire() {
     }
     if (el.dataset.k && !el.dataset.ai && !el.dataset.act) { nxField(el); return; }   // some browsers fire only "change" for colour pickers and menus
     const a = el.dataset.act, id = el.dataset.id, gid = el.dataset.gid;
-    if (a === 'dev-sel') { nxDevSet(NXDV.k, 'path', el.value); return; }
     if (a === 'lim') { if (nxLimSet(el.dataset.tk, el.dataset.m, el.dataset.f, el)) nxAdmRender(); return; }
     if (a && a.indexOf('mz-') === 0) { nxMzAct(a, el); return; }
     if (a === 'trk-env') {
@@ -10926,7 +10785,6 @@ function nxAdmWire() {
   body.addEventListener('click', (e) => {
     const el = e.target.closest('[data-act]'); if (!el || el.tagName === 'INPUT' || el.tagName === 'SELECT') return;
     const a = el.dataset.act, id = el.dataset.id, gid = el.dataset.gid;
-    if (a === 'dev') { nxDevAct(el); return; }
     if (a === 'lim' && el.tagName === 'BUTTON') { if (nxLimSet(el.dataset.tk, el.dataset.m, el.dataset.f, el)) nxAdmRender(); return; }
     if (a === 'lim-go') { nxLimGo(el.dataset.tk, el.dataset.m); return; }
     if (a === 'lim-pre') { nxLimPreset(el.dataset.tk, el.dataset.p); nxAdmRender(); return; }
@@ -11293,89 +11151,6 @@ function nxCoachParts() {                                        // live feedbac
   if (LKc) return LKc.axis === 'pitch' ? [dst] : [dir, dst];                                    // throttle is fixed (no height tip); a pitch-only track cannot turn, so no direction tip
   return [dir, alt, dst];
 }
-/* ---- in-flight deviation arrow + correction path: drawn over the game when switched on for the track (replaces the direction / height text tips) ---- */
-function nxDevOn() {
-  if (typeof currentStage === 'undefined' || !currentStage || inMenu || editorMode || nxGuideIsOpen || state !== 'racing' || !gates || gates.length < 2 || !drone || drone.onGround) return null;
-  const k = nxGuideKey(currentStage.id), c = NX.eff || NX.draft || NX.pub, h = c && c.devhud && c.devhud[k]; if (!h || h.on !== true) return null;
-  const R = nxStickRule(k) || {}, lm = R.lim || {}, g = (m, d) => (lm[m] && Number(lm[m].max) > 0 ? Number(lm[m].max) : d);
-  return { k, style: h.style === '3' ? '3' : '2', path: h.path === 'always' || h.path === 'out' ? h.path : 'warn', lx: g('lineMax', 4), ly: g('altDev', 2.5), lv: g('spdMax', 0), alt: nxRuleNum(R.alt) };
-}
-function nxDevRef(cfg) {                                         // where the drone is relative to the ideal line: nearest leg, point on it, target height
-  const g = gates, n = g.length; let bi = 0, bd = 1e9;
-  for (let i = 0; i < n - 1; i++) { const d = nxSegDist(drone.pos.x, drone.pos.z, g[i].x, g[i].z, g[i + 1].x, g[i + 1].z, i === 0, i === n - 2); if (d < bd) { bd = d; bi = i; } }
-  const a = g[bi], b = g[bi + 1], dx = b.x - a.x, dz = b.z - a.z, l2 = dx * dx + dz * dz || 1e-6;
-  let t = ((drone.pos.x - a.x) * dx + (drone.pos.z - a.z) * dz) / l2; if (bi > 0) t = Math.max(t, 0); if (bi < n - 2) t = Math.min(t, 1);
-  const gy = g.map((q) => Number(q.y) || 0), flat = Math.max.apply(null, gy) - Math.min.apply(null, gy) <= 0.5, tc = clamp(t, 0, 1);
-  const yAt = (i, u) => cfg.alt !== null ? cfg.alt : flat ? gy[0] : gy[i] + u * (gy[i + 1] - gy[i]);
-  return { i: bi, t, nx: a.x + t * dx, nz: a.z + t * dz, ty: yAt(bi, tc), yAt };
-}
-function nxDevAhead(i, t, dist, ref) {                           // a point on the ideal line `dist` metres further on
-  const g = gates, n = g.length; let u = i === 0 ? Math.min(t, 1) : clamp(t, 0, 1), left = dist;       // the first leg reaches back past gate 1
-  for (let k = i; k < n - 1; k++) {
-    const a = g[k], b = g[k + 1], L = Math.hypot(b.x - a.x, b.z - a.z) || 1e-6, rem = (1 - u) * L;
-    if (left <= rem || k === n - 2) { const uu = u + left / L; return { x: a.x + uu * (b.x - a.x), z: a.z + uu * (b.z - a.z), y: ref.yAt(k, clamp(uu, 0, 1)) }; }
-    left -= rem; u = 0;
-  }
-  return { x: g[n - 1].x, z: g[n - 1].z, y: ref.yAt(n - 2, 1) };
-}
-let nxDvCv = null, nxDvT = 0, nxDvLast = 0;
-const nxDvV = typeof THREE !== 'undefined' ? new THREE.Vector3() : null;
-function nxDevHudFrame(now) {
-  requestAnimationFrame(nxDevHudFrame);
-  let cfg = null; try { cfg = nxDevOn(); } catch (e) { cfg = null; }
-  if (!cfg) { if (nxDvCv && nxDvCv.style.display !== 'none') nxDvCv.style.display = 'none'; nxDvLast = now; return; }
-  if (!nxDvCv) { nxDvCv = document.createElement('canvas'); nxDvCv.id = 'nxDevHud'; nxDvCv.style.cssText = 'position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:39'; document.body.appendChild(nxDvCv); }
-  const dpr = Math.min(window.devicePixelRatio || 1, 2), W = window.innerWidth, H = window.innerHeight; nxDvCv.style.display = 'block';
-  if (nxDvCv.width !== Math.round(W * dpr) || nxDvCv.height !== Math.round(H * dpr)) { nxDvCv.width = Math.round(W * dpr); nxDvCv.height = Math.round(H * dpr); }
-  nxDvT += Math.min(0.05, (now - (nxDvLast || now)) / 1000); nxDvLast = now;
-  const c = nxDvCv.getContext('2d'); c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, W, H);
-  const ref = nxDevRef(cfg), q = drone.quat, f = { x: -2 * (q.x * q.z + q.w * q.y), z: -(1 - 2 * (q.x * q.x + q.y * q.y)) }, fl = Math.sqrt(f.x * f.x + f.z * f.z) || 1, fx = f.x / fl, fz = f.z / fl;
-  const ox = drone.pos.x - ref.nx, oz = drone.pos.z - ref.nz, DX = ox * -fz + oz * fx, DY = drone.pos.y - ref.ty;       // + = right of the line / too high
-  const a = Math.abs(DX) / cfg.lx, b = Math.abs(DY) / cfg.ly, m = Math.max(a, b), st = m >= 1 ? 2 : m >= 0.7 ? 1 : 0, col = ['#5fd38a', '#efb74d', '#ff5a4d'][st], spOver = cfg.lv > 0 && drone.vel.length() > cfg.lv;
-  const proj = (x, y, z) => { nxDvV.set(x, y, z).project(activeCam); return nxDvV.z > 1 || nxDvV.z < -1 ? null : [(nxDvV.x + 1) / 2 * W, (1 - nxDvV.y) / 2 * H]; };
-  const showP = cfg.path === 'always' || (cfg.path === 'warn' && m >= 0.7) || (cfg.path === 'out' && m >= 1);
-  if (showP) {                                                   // the way back: a thick glowing ribbon (width follows distance), with beads flowing along it, from the drone to the line further on
-    const Lc = 8 + 3 * Math.min(m, 2), offY = drone.pos.y - ref.ty, foc = (H / 2) / Math.tan((activeCam.fov || 100) * Math.PI / 360), cp = activeCam.position, pts = [];
-    const at = (u) => { const s = u, lp = nxDevAhead(ref.i, ref.t, Lc * u, ref), x = lp.x + ox * (1 - s), y = lp.y + offY * (1 - s), z = lp.z + oz * (1 - s), sp = proj(x, y, z); if (!sp) return null; const d = Math.hypot(x - cp.x, y - cp.y, z - cp.z); return d < 2.5 ? null : { x: sp[0], y: sp[1], d }; };
-    const wd = (d, mt) => clamp(mt * foc / d, 3, 26);
-    for (let u = 0; u <= 1.0001; u += 0.02) { const q = at(u); if (q) pts.push(q); }
-    if (pts.length > 1) pts.unshift({ x: W / 2, y: H / 2, d: 9 });          // the ribbon starts at the crosshair (the drone), so it is always visible
-    if (pts.length > 2) {
-      c.save(); c.lineCap = 'round'; c.lineJoin = 'round';
-      const ln = []; for (let dd = 3; dd <= 70; dd += 1.5) { const lp = nxDevAhead(ref.i, ref.t, dd, ref), sp = proj(lp.x, lp.y, lp.z); if (sp) ln.push({ x: sp[0], y: sp[1], d: Math.hypot(lp.x - cp.x, lp.y - cp.y, lp.z - cp.z) }); }
-      if (ln.length > 2) { c.setLineDash([16, 12]); c.lineDashOffset = -(nxDvT * 50) % 28; for (let i = 1; i < ln.length; i++) { const lw = wd(ln[i].d, 0.22); c.beginPath(); c.moveTo(ln[i - 1].x, ln[i - 1].y); c.lineTo(ln[i].x, ln[i].y); c.lineWidth = lw + 5; c.strokeStyle = 'rgba(0,0,0,.5)'; c.stroke(); c.lineWidth = lw; c.strokeStyle = 'rgba(95,211,138,.95)'; c.stroke(); } c.setLineDash([]); }
-      const pass = (extra, mt, col, al) => { c.globalAlpha = al; c.strokeStyle = col; for (let i = 1; i < pts.length; i++) { c.lineWidth = wd(pts[i].d, mt) + extra; c.beginPath(); c.moveTo(pts[i - 1].x, pts[i - 1].y); c.lineTo(pts[i].x, pts[i].y); c.stroke(); } };
-      pass(7, 0.4, '#000', 0.55); pass(0, 0.4, '#efb74d', 0.95); pass(0, 0.12, '#fff6d6', 0.95); c.globalAlpha = 1;
-      for (let k = 0; k < 7; k++) {                                // beads flowing toward the line
-        const u = ((nxDvT * 0.5 + k / 7) % 1), q = at(u); if (!q) continue; const r = wd(q.d, 0.5) * 0.7;
-        c.beginPath(); c.arc(q.x, q.y, r, 0, 7); c.fillStyle = '#14161a'; c.fill(); c.lineWidth = Math.max(3, r * 0.4); c.strokeStyle = '#efb74d'; c.stroke();
-      }
-      const ep = pts[pts.length - 1], er = clamp(1.4 * foc / ep.d, 12, 44);
-      c.beginPath(); c.arc(ep.x, ep.y, er, 0, 7); c.lineWidth = 9; c.strokeStyle = 'rgba(0,0,0,.6)'; c.stroke(); c.lineWidth = 5; c.strokeStyle = '#efb74d'; c.stroke();
-      c.font = '800 16px Heebo,system-ui,sans-serif'; c.direction = 'rtl'; const tw = c.measureText('חזור לנתיב כאן').width + 20; c.fillStyle = 'rgba(20,22,26,.92)'; c.fillRect(ep.x - tw / 2, ep.y - er - 32, tw, 26); c.fillStyle = '#efb74d'; c.textAlign = 'center'; c.fillText('חזור לנתיב כאן', ep.x, ep.y - er - 13);
-      c.restore();
-    }
-  }
-  const vx = -DX / cfg.lx, vy = DY / cfg.ly, ang = Math.atan2(vy, vx), len = 46 + Math.min(m, 2) * 26, w = 14 + Math.min(m, 2) * 5;
-  const arrow = (x, y, an, ln, wd) => { c.save(); c.translate(x, y); c.rotate(an); c.beginPath(); c.moveTo(ln / 2, 0); c.lineTo(ln / 2 - wd * 1.15, -wd); c.lineTo(ln / 2 - wd * 0.9, -wd * 0.38); c.lineTo(-ln / 2, -wd * 0.38); c.lineTo(-ln / 2, wd * 0.38); c.lineTo(ln / 2 - wd * 0.9, wd * 0.38); c.lineTo(ln / 2 - wd * 1.15, wd); c.closePath(); c.lineJoin = 'round'; c.lineWidth = 4; c.strokeStyle = '#0b0c0e'; c.stroke(); c.fillStyle = col; c.fill(); c.restore(); };
-  if (m > 0.12) {
-    if (cfg.style === '2') {
-      const cx = W / 2, cy = H / 2, r = 46; c.beginPath(); c.arc(cx, cy, r, 0, 7); c.lineWidth = 3; c.strokeStyle = 'rgba(15,17,20,.8)'; c.stroke(); c.setLineDash([3, 7]); c.strokeStyle = col; c.lineWidth = 2; c.stroke(); c.setLineDash([]);
-      arrow(cx + Math.cos(ang) * (r + len * 0.38), cy + Math.sin(ang) * (r + len * 0.38), ang, len * 0.75, w * 0.85);
-    } else {
-      let x, y, an; if (Math.abs(vx) >= Math.abs(vy)) { x = vx < 0 ? 60 : W - 60; y = H * 0.45; an = vx < 0 ? Math.PI : 0; } else { x = W / 2; y = vy < 0 ? 80 : H - 110; an = vy < 0 ? -Math.PI / 2 : Math.PI / 2; }
-      for (let k = 0; k < 3; k++) { const o = (k - 1) * 24; c.save(); c.globalAlpha = Math.min(1, 0.5 + 0.3 * k + 0.15 * Math.sin(nxDvT * 8 - k)); c.translate(x + Math.cos(an) * o, y + Math.sin(an) * o); c.rotate(an); c.beginPath(); c.moveTo(-10, -24); c.lineTo(13, 0); c.lineTo(-10, 24); c.lineWidth = 12; c.lineCap = 'round'; c.lineJoin = 'round'; c.strokeStyle = '#0b0c0e'; c.stroke(); c.lineWidth = 6.5; c.strokeStyle = col; c.stroke(); c.restore(); }
-    }
-  }
-  const chips = [];
-  if (a >= 0.7) chips.push([(DX > 0 ? '↶ שמאלה' : '↷ ימינה') + ' · ' + Math.abs(DX).toFixed(1) + ' מ׳', a >= 1 ? '#ff5a4d' : '#efb74d']);
-  if (b >= 0.7) chips.push([(DY > 0 ? '↓ הורד' : '↑ העלה') + ' · ' + Math.abs(DY).toFixed(1) + ' מ׳', b >= 1 ? '#ff5a4d' : '#efb74d']);
-  if (spOver) chips.push(['⏷ האט · ' + (drone.vel.length() - cfg.lv).toFixed(1) + ' מ/ש', '#ff5a4d']);
-  c.font = '700 17px Heebo,system-ui,sans-serif'; c.direction = 'rtl'; c.textAlign = 'center';
-  const ws = chips.map((p) => c.measureText(p[0]).width + 28), tot = ws.reduce((s, x) => s + x + 8, -8); let x0 = W / 2 - tot / 2;
-  chips.forEach((p, i) => { c.fillStyle = 'rgba(20,22,26,.92)'; c.fillRect(x0, H - 78, ws[i], 34); c.fillStyle = p[1]; c.fillRect(x0, H - 78, 4, 34); c.fillStyle = '#f4f1e8'; c.fillText(p[0], x0 + ws[i] / 2, H - 55); x0 += ws[i] + 8; });
-}
-if (typeof requestAnimationFrame === 'function' && typeof document !== 'undefined') requestAnimationFrame(nxDevHudFrame);
 function nxCoachText() { return nxCoachParts().map((p) => p.t).join('  \u00b7  '); }
 let nxGuideIsOpen = false;
 function nxGuideShow(id) {
@@ -11432,7 +11207,7 @@ function nxGuideSeen(id, set) {
     let parts = [];
     if (state === 'racing' && currentStage && !inMenu && !editorMode && !nxGuideIsOpen && gates.length) {
       const g = nxGuideOf(currentStage.id);
-      if (g && g.live) { parts = nxCoachParts(); if (nxDevOn()) parts = parts.filter((p) => p.ic === '\u25ce' || p.ic === '\u21e7'); }
+      if (g && g.live) parts = nxCoachParts();
     }
     const key = parts.map((p) => p.t).join('|');
     if (cb.dataset.t !== key) {
