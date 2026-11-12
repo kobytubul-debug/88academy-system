@@ -821,6 +821,8 @@ body.edop #edDockTab{left:272px}
 #edAdmSlot .edwh b{flex:1;font:700 italic 20px var(--ui);color:var(--ti,#fff)}#edAdmSlot .edwh small{color:var(--mu);font-size:12px}
 #edAdmSlot details.tpsec{border:0!important;background:none!important;box-shadow:none!important}
 #edAdmSlot details.tpsec>summary{display:none}
+#edAdmSlot .edwh{height:54px;box-sizing:border-box;padding:0}
+#edAdmSlot .lmsum{top:54px;z-index:4}
 #edMapBox #edBase{display:block;position:static;width:auto;max-height:none;box-shadow:none;background:none;padding:2px 6px 8px}#edMapBox>summary span{max-width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #edRight .edtl{display:flex;align-items:center;gap:6px}#edRight .edtl .b{flex:none;height:36px;padding:0 14px}#edRight .edtl #edNavLbl{flex:1}
 #edRight .edtl2{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}#edRight .edtl2 .b{height:36px;font-size:13px;padding:0 4px;white-space:nowrap}
@@ -1444,7 +1446,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 374</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 375</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -10119,16 +10121,19 @@ function nxEdSlotRender() {                                      // dock: three 
   bx.innerHTML = h;
   if (!win) return;
   if (NX.edWin) {
-    const d = secs[NX.edWin]; d.setAttribute('open', '');
+    const sc = win.scrollTop, d = secs[NX.edWin]; d.setAttribute('open', '');
     win.innerHTML = '<div class="edwh"><b>' + NX_EDW[NX.edWin][0] + '</b><small>' + (currentStage.name || '') + '</small><button type="button" class="b" data-edwinx="1">✕ סגור</button></div>' + d.outerHTML;
-    win.classList.add('on');
+    win.classList.add('on'); win.scrollTop = sc;
   } else { win.innerHTML = ''; win.classList.remove('on'); }
 }
 if (typeof document !== 'undefined') document.addEventListener('click', (e) => {
   const t = e.target && e.target.closest ? e.target : null; if (!t) return;
   const o = t.closest('[data-edwin]'); if (o) { NX.edWin = o.getAttribute('data-edwin'); nxEdSlotRender(); return; }
   if (t.closest('[data-edwinx]')) { nxEdWinClose(); return; }
-  const w = document.getElementById('edAdmSlot'); if (NX.edWin && w && !w.contains(t) && !t.closest('#edAdmBtns')) nxEdWinClose();
+});
+document.addEventListener('mousedown', (e) => {                  // outside press closes the window; checked on press, because a click re-renders the window and the pressed node is gone by then
+  const t = e.target && e.target.closest ? e.target : null; if (!t || !NX.edWin) return;
+  const w = document.getElementById('edAdmSlot'); if (w && !w.contains(t) && !t.closest('#edAdmBtns')) nxEdWinClose();
 });
 let nxEdLast = '';
 function nxEdSync() {                                           // the editor shows the sections of the track being edited; the wind panel follows the same track
