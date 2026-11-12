@@ -1410,7 +1410,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 360</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 361</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -9841,7 +9841,7 @@ function nxTabStages() {
   return h;
 }
 /* ---- measurement limits window: grouped cards, on/off per metric, dual slider, hard/soft ---- */
-const NXL_G = [['מצערת', '🎚️', 'כמה גז הטייס נותן'], ['מהירות', '💨', 'כמה מהר הרחפן טס'], ['זמן', '⏱️', 'כמה זמן לוקחת הטיסה'], ['גובה', '📏', 'שמירה על גובה קבוע'], ['גלגול', '↔️', 'זווית הטיה לצדדים'], ['פיץ׳ ואופק', '↕️', 'זווית הטיה קדימה/אחורה'], ['סטיקים', '🕹️', 'כמה חזק מזיזים את הסטיקים'], ['חלקות', '🌊', 'עדינות התנועות'], ['קו טיסה', '📍', 'דבקות בקו בין השערים'], ['רציפות', '▶️', 'טיסה בלי עצירות'], ['התאוששות', '🔄', 'חזרה מהירה לקו אחרי סטייה'], ['התרסקויות', '💥', 'פגיעות במכשולים']];
+const NXL_G = [['מצערת', '🎚️', 'כמה גז הטייס נותן'], ['מהירות', '💨', 'כמה מהר הרחפן טס'], ['זמן', '⏱️', 'כמה זמן לוקחת הטיסה'], ['גלגול', '↔️', 'זווית הטיה לצדדים'], ['פיץ׳ ואופק', '↕️', 'זווית הטיה קדימה/אחורה'], ['סטיקים', '🕹️', 'כמה חזק מזיזים את הסטיקים'], ['חלקות', '🌊', 'עדינות התנועות'], ['קו טיסה', '📍', 'דבקות בקו בין השערים'], ['רציפות', '▶️', 'טיסה בלי עצירות'], ['התאוששות', '🔄', 'חזרה מהירה לקו אחרי סטייה'], ['התרסקויות', '💥', 'פגיעות במכשולים']];
 const NXL_R = {                                                  // metric -> [min, max, step, explanation]
   thrAvg: [0, 100, 1, 'הגז הממוצע לאורך כל הטיסה. נמוך מדי = טיסה איטית ומהססת, גבוה מדי = בזבוז.'],
   thrMax: [0, 100, 1, 'הגז הגבוה ביותר שניתן. מונע "דריכה עד הסוף" בשלב למתחילים.'],
@@ -9875,7 +9875,8 @@ const NXL_R = {                                                  // metric -> [m
 };
 const NXL_TOP = {                                                      // the two deviation limits shown in the main card: [title, explanation, default, max slider]
   altDev: ['סטייה בגובה (למעלה או למטה)', 'כמה מטרים מותר לטייס להתרחק מהגובה שנקבע, למעלה או למטה.', 2],
-  lineMax: ['סטייה לרוחב (ימינה או שמאלה)', 'כמה מטרים מותר לטייס להתרחק מהקו הישר בין השערים, לצדדים.', 3]
+  lineMax: ['סטייה לרוחב (ימינה או שמאלה)', 'כמה מטרים מותר לטייס להתרחק מהקו הישר בין השערים, לצדדים.', 3],
+  altSd: ['יציבות הגובה (נדנוד למעלה ולמטה)', 'כמה הגובה "מתנדנד" לאורך הטיסה. מספר נמוך = גובה יציב וחלק.', 1]
 };
 const NXL_PRE = {
   none: {},
@@ -9928,13 +9929,13 @@ function nxLimUI(k, sk) {
 }
 function nxLimTop(k, sk, dk) {                                    // the main card: the flight path. Height in the middle, then how far off it the pilot may drift
   const lm = sk.lim || {}, fixed = nxRuleNum(sk.alt) !== null, alt = fixed ? Number(sk.alt) : 10;
-  const ck = 'lm.' + k + '.top', o = NX.openK && NX.openK[ck] !== undefined ? NX.openK[ck] : true, nAct = ['altDev', 'lineMax'].filter((m) => lm[m] && (nxRuleNum(lm[m].min) !== null || nxRuleNum(lm[m].max) !== null)).length;
+  const ck = 'lm.' + k + '.top', o = NX.openK && NX.openK[ck] !== undefined ? NX.openK[ck] : true, nAct = ['altDev', 'lineMax', 'altSd'].filter((m) => lm[m] && (nxRuleNum(lm[m].min) !== null || nxRuleNum(lm[m].max) !== null)).length;
   let h = '<details class="lmg lmtop" data-ck="' + ck + '"' + (o ? ' open' : '') + '><summary><span class="lmgi">📐</span><span><b>מסלול הטיסה: גובה וסטייה</b><small>באיזה גובה טסים, וכמה מותר לסטות ממנו ולצדדים</small></span><span class="lmcnt' + (nAct || fixed ? ' has' : '') + '">' + (fixed ? 'גובה קבוע' : 'גובה לפי השערים') + (nAct ? ' · ' + nAct + ' פעילות' : '') + '</span></summary><div class="lmtin"><p class="nxn">כאן קובעים באיזה גובה הרחפן אמור לטוס, וכמה מותר לו לסטות ממנו ומהקו בין השערים. כל מה שמדליקים נבדק בכל טיסה.</p>';
   h += '<div class="lmstep"><b>1. באיזה גובה טסים?</b><div class="lmseg lmseg2"><button type="button" data-act="lim" data-tk="' + k + '" data-m="_" data-f="altmode" value="gates"' + (fixed ? '' : ' class="hardon"') + '>לפי גובה השערים <small>(מומלץ)</small></button><button type="button" data-act="lim" data-tk="' + k + '" data-m="_" data-f="altmode" value="fixed"' + (fixed ? ' class="hardon"' : '') + '>גובה קבוע אחד</button></div>';
   if (fixed) h += '<div class="lmvals"><div>גובה הטיסה <input type="number" class="lmn" min="0" max="100" step="0.5" data-act="lim" data-tk="' + k + '" data-m="_" data-f="alt" value="' + alt + '"> מ׳</div></div><div class="lmrng"><div class="lmtr"></div><div class="lmfl" style="left:0;right:' + (100 - Math.min(100, alt)) + '%"></div><input type="range" class="rhi" min="0" max="100" step="0.5" value="' + alt + '" data-act="lim" data-tk="' + k + '" data-m="_" data-f="alt"></div><div class="lmsc"><span>0</span><span>50</span><span>100 מ׳</span></div><div class="lmsen">הרחפן צריך לטוס בגובה ' + alt + ' מ׳ לאורך כל המסלול, בלי קשר לגובה השערים.</div>';
   else h += '<div class="lmsen">הגובה הנדרש הוא הגובה של השערים. אם גובה השערים משתנה לאורך המסלול, גם הגובה הנדרש משתנה איתו. את גובה השערים קובעים בעורך המפה.</div>';
   h += '</div>';
-  ['altDev', 'lineMax'].forEach((m, i) => {
+  ['altDev', 'lineMax', 'altSd'].forEach((m, i) => {
     const r = NXL_R[m], T = NXL_TOP[m], L = lm[m] || {}, mn = nxRuleNum(L.min), mx = nxRuleNum(L.max), on = mn !== null || mx !== null, soft = !!(sk.soft && sk.soft[m]), hi = mx !== null ? mx : T[2];
     h += '<div class="lmstep lmm' + (on ? ' act' : '') + '" data-m="' + m + '"><div class="lmmh"><label class="stgsw"><input type="checkbox"' + dk(m, 'on') + (on ? ' checked' : '') + '><i></i></label><div><b>' + (i + 2) + '. ' + T[0] + '</b><div class="nxn">' + T[1] + '</div></div></div>';
     if (on) {
