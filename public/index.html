@@ -1463,7 +1463,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 380</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 381</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -12052,13 +12052,24 @@ function edDragEnd() {
   if (d.grp) { edGroupCommit(); return; }
   if (d.kind === 'gate') { rebuildTrack(); trackEdited(); } else propsChanged(false);
 }
+let edBlank = null;
+function edDeselect() {                              // nothing marked any more
+  if (selected < 0 && selProp < 0 && !edMulti.length) return;
+  selected = -1; selProp = -1; propSelect(-1); edMultiClear(); edpKey = '';
+  updateGateColors(); updateEditorLabel(); edPropsSync();
+}
 (function wireEdDrag() {
+  window.addEventListener('pointerup', (e) => {          // a click on empty ground (not a camera drag) clears the selection
+    const b = edBlank; edBlank = null; if (!b || !editorMode) return;
+    if (Math.hypot(e.clientX - b.x, e.clientY - b.y) > 5 || performance.now() - b.t > 600) return;
+    edDeselect();
+  }, true);
   canvas.addEventListener('pointerdown', (e) => {
     const ae = document.activeElement;                 // leave number fields so the Delete key reaches the editor
     if (editorMode && ae && ae !== document.body && ae.blur) ae.blur();
     if (!editorMode || e.button !== 0 || edPlace) return;
     if (e.shiftKey || e.ctrlKey || e.metaKey) { edMarqBegin(e); return; }
-    const h = edHit(e.clientX, e.clientY); if (!h) return;
+    const h = edHit(e.clientX, e.clientY); if (!h) { edBlank = { x: e.clientX, y: e.clientY, t: performance.now() }; return; }   // empty ground: a plain click there clears the selection
     if (!edMultiHas(h.kind, h.i)) edMultiClear();
     const el = h.kind === 'gate' ? gates[h.i] : propData[h.i];
     const pt = edGroundPoint(e.clientX, e.clientY, h.kind === 'gate' && el ? el.y : 0);
