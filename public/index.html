@@ -1220,11 +1220,11 @@ body.mz-on #nxBar{right:104px}
     <div class="btns"><button class="b" id="edNumCopy">החל את הסגנון של השער הנבחר על כולם</button><button class="b" id="edNumReset">אפס סגנון</button></div>
     </details>
     <details class="eds" id="edPath"><summary>נתיב קונוסים</summary>
-    <div class="keys">יוצר דיסקים עגולים שטוחים על הקרקע בין כל שני שערים. יצירה חוזרת מחליפה את הנתיב הקודם.</div>
+    <div class="keys">יוצר דיסקים עגולים שטוחים בין כל שני שערים. "על הקרקע" מניח אותם על הקרקע, ו"בגובה השערים" מרים אותם יחד עם השערים כך שהנתיב עולה ויורד איתם. יצירה חוזרת מחליפה את הנתיב הקודם.</div>
     <div class="row"><label style="flex:0 0 70px">צבע</label><input type="color" id="edPcColor" value="#35c46b" style="flex:1;height:30px;padding:0"></div>
     <div class="row"><label style="flex:0 0 70px">גודל</label><input type="range" id="edPcSize" min="0.5" max="3" step="0.1" value="1" style="flex:1"><span id="edPcSizeV" style="flex:0 0 40px;text-align:center">×1.0</span></div>
     <div class="row"><label style="flex:0 0 70px">מרווח (מ')</label><input type="number" id="edPcGap" value="8" min="3" max="40" step="1"></div>
-    <div class="btns"><button class="b" id="edPcMake">צור נתיב בין השערים</button><button class="b" id="edPcClear">מחק נתיב</button></div>
+    <div class="btns"><button class="b" id="edPcMake">צור נתיב על הקרקע</button><button class="b" id="edPcMakeH">צור נתיב בגובה השערים</button><button class="b" id="edPcClear">מחק נתיב</button></div>
     </details>
 <details class="eds"><summary>תנאי סביבה (רוח וטורבולנציה)</summary>
     <div id="edEnvSlot"></div>
@@ -1463,7 +1463,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 381</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 382</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -3464,7 +3464,7 @@ function genCity() {
 function round2(v) { return Math.round(v * 100) / 100; }
 function trackToJSON() {
   const lines = gates.map((g) => '  {"x":' + round2(g.x) + ',"y":' + round2(g.y) + ',"z":' + round2(g.z) + ',"yaw":' + round2(g.yaw || 0) + ',"pitch":' + round2(g.pitch || 0) + (g.k ? ',"k":"' + g.k + '"' : '') + (g.sz && g.sz !== 1 ? ',"sz":' + round2(g.sz) : '') + (g.c ? ',"c":"' + g.c + '"' : '') + (cleanNum(g.n) ? ',"n":' + JSON.stringify(cleanNum(g.n)) : '') + '}');
-  const objs = propData.map((p) => '  {"t":"' + p.t + '","x":' + round2(p.x) + ',"z":' + round2(p.z) + ',"yaw":' + round2(p.yaw || 0) + ',"s":' + round2(p.s || 1) + ',"c":"' + p.c + '"}');
+  const objs = propData.map((p) => '  {"t":"' + p.t + '","x":' + round2(p.x) + ',"z":' + round2(p.z) + ',"yaw":' + round2(p.yaw || 0) + ',"s":' + round2(p.s || 1) + ',"c":"' + p.c + '"' + (p.y > 0.05 ? ',"y":' + round2(p.y) : '') + '}');
   return '{\n "name":' + JSON.stringify(trackName) + ',\n "gates":[\n' + lines.join(',\n') + '\n ]' + (objs.length ? ',\n "objects":[\n' + objs.join(',\n') + '\n ]' : '') + '\n}';
 }
 function updateJSONBox() { $('json').value = trackToJSON(); }
@@ -3675,10 +3675,12 @@ function cleanProps(arr) {
     if (!p || !PROP_TYPES[p.t]) continue;
     const x = Number(p.x), z = Number(p.z);
     if (!isFinite(x) || !isFinite(z)) continue;
-    out.push({
+    const o = {
       t: p.t, x: clamp(x, -3000, 3000), z: clamp(z, -3000, 3000), yaw: Number(p.yaw) || 0,
       s: clamp(Number(p.s) || 1, 0.4, 4), c: /^#[0-9a-f]{6}$/i.test(p.c) ? p.c : PROP_COLORS.orange
-    });
+    };
+    if (Number(p.y) > 0.05) o.y = clamp(Math.round(Number(p.y) * 100) / 100, 0, 300);       // an element lifted off the ground (a cone path at the gates' height)
+    out.push(o);
     if (out.length >= 600) break;
   }
   return out;
@@ -3896,7 +3898,7 @@ function refreshPropColliders() {
 function placePropMesh(i) {
   const p = propData[i], g = propObjs[i]; if (!p || !g) return;
   const s = p.s || 1;
-  g.position.set(p.x, 0, p.z); g.rotation.y = (p.yaw || 0) * DEG; g.scale.set(s, s, s);
+  g.position.set(p.x, p.y || 0, p.z); g.rotation.y = (p.yaw || 0) * DEG; g.scale.set(s, s, s);
 }
 function updatePropSel() {
   const p = propData[selProp];
@@ -3904,7 +3906,7 @@ function updatePropSel() {
   propSelRing.visible = show;
   if (show) {
     const r = (PROP_TYPES[p.t].len ? PROP_TYPES[p.t].len / 2 : PROP_TYPES[p.t].r * 1.4 + 0.6) * (p.s || 1);
-    propSelRing.position.x = p.x; propSelRing.position.z = p.z;
+    propSelRing.position.x = p.x; propSelRing.position.z = p.z; propSelRing.position.y = (p.y || 0) + 0.1;
     propSelRing.scale.set(r, r, r);
   }
 }
@@ -12004,7 +12006,7 @@ function edMarqEnd() {
   const x0 = Math.min(m.x0, m.x1), x1 = Math.max(m.x0, m.x1), y0 = Math.min(m.y0, m.y1), y1 = Math.max(m.y0, m.y1), found = [];
   const inside = (p) => p && p[0] >= x0 && p[0] <= x1 && p[1] >= y0 && p[1] <= y1;
   gates.forEach((g, i) => { if (inside(edScreenOf(g.x, g.y, g.z))) found.push({ kind: 'gate', i }); });
-  propData.forEach((p, i) => { const T = PROP_TYPES[p.t] || {}; if (inside(edScreenOf(p.x, (T.h || 1) * (p.s || 1) / 2, p.z))) found.push({ kind: 'prop', i }); });
+  propData.forEach((p, i) => { const T = PROP_TYPES[p.t] || {}; if (inside(edScreenOf(p.x, (p.y || 0) + (T.h || 1) * (p.s || 1) / 2, p.z))) found.push({ kind: 'prop', i }); });
   if (!edMulti.length) {                           // the element that is already marked joins the group
     if (selProp >= 0 && propData[selProp]) edMulti.push({ kind: 'prop', i: selProp });
     else if (selected >= 0 && gates[selected]) edMulti.push({ kind: 'gate', i: selected });
@@ -12019,7 +12021,7 @@ function edDragBegin(h, px, pz) {                  // px,pz: the ground point un
   if (!el) return false;
   if (h.kind === 'prop') { selProp = h.i; selected = -1; propSelect(h.i); } else { selected = h.i; selProp = -1; propSelect(-1); }
   updateGateColors(); updateEditorLabel();
-  edDrag = { kind: h.kind, i: h.i, y: h.kind === 'gate' ? el.y : 0, ox: el.x - px, oz: el.z - pz, moved: false, sx: el.x, sz: el.z, grp: null };
+  edDrag = { kind: h.kind, i: h.i, y: el.y || 0, ox: el.x - px, oz: el.z - pz, moved: false, sx: el.x, sz: el.z, grp: null };
   if (edMulti.length > 1 && edMultiHas(h.kind, h.i)) edDrag.grp = edGroupSnap().map((m) => ({ kind: m.kind, i: m.i, x: m.el.x, z: m.el.z }));   // the whole group follows
   orbit.enabled = false;                           // the camera must not turn while an element is being dragged
   return true;
@@ -12072,7 +12074,7 @@ function edDeselect() {                              // nothing marked any more
     const h = edHit(e.clientX, e.clientY); if (!h) { edBlank = { x: e.clientX, y: e.clientY, t: performance.now() }; return; }   // empty ground: a plain click there clears the selection
     if (!edMultiHas(h.kind, h.i)) edMultiClear();
     const el = h.kind === 'gate' ? gates[h.i] : propData[h.i];
-    const pt = edGroundPoint(e.clientX, e.clientY, h.kind === 'gate' && el ? el.y : 0);
+    const pt = edGroundPoint(e.clientX, e.clientY, el ? (el.y || 0) : 0);
     if (pt) edDragBegin(h, pt.x, pt.z);
   });
   window.addEventListener('pointermove', (e) => {
@@ -12352,7 +12354,7 @@ function edCenterTo(t) {
 })();
 
 /* ---- path of round discs laid between the gates ---- */
-function edPathMake() {
+function edPathMake(atHeight) {
   if (gates.length < 2) { nxToast('צריך לפחות 2 שערים'); return; }
   const col = /^#[0-9a-f]{6}$/i.test($('edPcColor').value) ? $('edPcColor').value : '#35c46b';
   const size = clamp(Number($('edPcSize').value) || 1, 0.4, 4), gap = clamp(Number($('edPcGap').value) || 8, 3, 40);
@@ -12365,14 +12367,16 @@ function edPathMake() {
     const dx = b.x - a.x, dz = b.z - a.z, d = Math.hypot(dx, dz), n = Math.max(1, Math.round(d / gap));
     for (let k = 1; k < n + (n === 1 ? 1 : 0); k++) {
       const f = n === 1 ? 0.5 : k / n;
-      made.push({ t: 'pathdisc', x: +(a.x + dx * f).toFixed(2), z: +(a.z + dz * f).toFixed(2), yaw: 0, s: size, c: col });
+      const o = { t: 'pathdisc', x: +(a.x + dx * f).toFixed(2), z: +(a.z + dz * f).toFixed(2), yaw: 0, s: size, c: col };
+      if (atHeight) { const y = (a.y || 0) + ((b.y || 0) - (a.y || 0)) * f; if (y > 0.4) o.y = +y.toFixed(2); }     // follows the gates' height, so a path through raised gates floats with them
+      made.push(o);
     }
   });
   if (keep.length + made.length > 600) { nxToast('יותר מדי אלמנטים במסלול (מקסימום 600). הגדל את המרווח'); return; }
   edMulti = []; edMultiSync();
   propData.length = 0; keep.concat(made).forEach((p) => propData.push(p)); selProp = -1;
   propsChanged(true);
-  nxToast('נוצרו ' + made.length + ' דיסקי נתיב');
+  nxToast('נוצרו ' + made.length + ' דיסקי נתיב' + (atHeight ? ' בגובה השערים' : ''));
 }
 function edPathClear() {
   const n = propData.filter((p) => p.t === 'pathdisc').length;
@@ -12385,7 +12389,8 @@ function edPathClear() {
 }
 (function wireEdPath() {
   const b = $('edPcMake'); if (!b) return;
-  b.addEventListener('click', (e) => { edPathMake(); e.target.blur(); });
+  b.addEventListener('click', (e) => { edPathMake(false); e.target.blur(); });
+  { const bh = $('edPcMakeH'); if (bh) bh.addEventListener('click', (e) => { edPathMake(true); e.target.blur(); }); }
   $('edPcClear').addEventListener('click', (e) => { edPathClear(); e.target.blur(); });
   const sz = $('edPcSize'), lb = $('edPcSizeV');
   sz.addEventListener('input', () => { lb.textContent = '×' + Number(sz.value).toFixed(1); });
