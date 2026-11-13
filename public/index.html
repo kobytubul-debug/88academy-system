@@ -1463,7 +1463,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 379</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 380</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -10189,7 +10189,7 @@ function nxTabTracks() {
   NX.selTrk = '';
   const list = NXH.catList(), ids = nxStageIds();
   let h = '<p class="nxn">לחץ על מסלול ברשימה שמימין (או כאן) כדי לערוך אותו: שם, קטגוריה, תצוגה, רוח, כרטיס הסבר ותיאור.</p>';
-  h += '<div class="nxbtns"><button class="nxb pri" data-act="trk-new">+ מסלול חדש</button><button class="nxb" data-act="trk-hide-builtin">הסתר מסלולים מובנים</button><button class="nxb" data-act="trk-show-builtin">החזר מסלולים מובנים</button></div>';
+  h += '<div class="nxbtns"><button class="nxb pri" data-act="trk-new">+ מסלול חדש</button></div>';
   h += '<details class="pkgbox"><summary><b>ייבוא חבילת שלב</b></summary><p class="nxn">הדבק כאן קובץ חבילת שלב (JSON). נוצר מסלול חדש עם המפה, כרטיס ההסבר ומגבלות המדידה. בשם זהה: המסלול הקיים מתעדכן במקום להיווצר שוב.</p><div class="nxn">יעד הייבוא: <select id="admPkgTo"><option value="auto">אוטומטי: אותו שם = עדכון המסלול הקיים</option><option value="new">תמיד מסלול חדש</option>' + CUSTOM_ORDER.filter((x) => STAGES[x] && !STAGES[x].pub).map((x) => '<option value="' + x + '">עדכן: ' + nxEsc(STAGES[x].name) + '</option>').join('') + '</select></div><textarea id="admPkg" rows="6" style="width:100%;direction:ltr" placeholder="{ &quot;pkg&quot;: 1, ... }"></textarea><div class="nxbtns"><button class="nxb pri" data-act="pkg-import">ייבא</button></div></details>';
   h += '<h4>קטגוריות</h4><div class="nxbtns"><input type="text" id="admCatName" maxlength="30" placeholder="שם קטגוריה חדשה, למשל: מתחילים"><button class="nxb pri" data-act="cat-add">+ הוסף קטגוריה</button></div>';
   const trow = (id) => '<div class="nxrow2"><button class="nxb" data-act="trk-sel" data-id="' + id + '">' + nxEsc(STAGES[id].name) + '</button><i class="nxsm">' + st_len(id) + ' שערים</i></div>';
