@@ -835,12 +835,19 @@ body.edop #edDockTab{left:272px}
 #editorBox details.eds>summary:hover{background:rgba(255,255,255,.12)}
 #editorBox details.eds>summary:after{content:'\25C0';transform:none;color:var(--mu);font-size:11px}
 #editorBox details.eds[open]:not(.pop)>*:not(summary){display:none}
+#editorBox details.eds.dockb.pop{left:296px;right:calc(min(392px,36vw) + 12px);bottom:12px;top:auto;transform:none;width:auto;max-height:46vh;box-shadow:0 12px 40px rgba(0,0,0,.65);border-top:3px solid var(--ac);padding:0 18px 14px}
+#editorBox details.eds.dockb.pop>summary{font-size:17px;padding:10px 0 8px;margin-bottom:6px}
+#edMoveRow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;align-items:start}
+#edMoveRow #edProps{display:contents}
+#edMoveHint{grid-column:1 / span 2;font-size:13px;margin:0}
+#edMoveRow .edcol{min-width:0}
+#edMoveRow .edprow label{flex:0 0 92px}
 #editorBox.haspop{z-index:62}
 #editorBox details.eds.pop{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(560px,94vw);max-height:86vh;overflow:auto;background:var(--tile);box-shadow:0 0 0 100vmax rgba(0,0,0,.55),0 20px 60px rgba(0,0,0,.6);border-top:3px solid var(--ac);padding:0 18px 18px;z-index:5}
 #editorBox details.eds.pop>summary{position:sticky;top:0;z-index:5;background:var(--tile);border-inline-start:0;border-bottom:1px solid var(--ln);padding:14px 0 10px;margin-bottom:8px;font:700 italic 20px var(--ui);color:var(--ti,#fff)}
 #editorBox details.eds.pop>summary:after{content:'\2715';font:600 13px var(--ui);font-style:normal;color:var(--am)}
 #editorBox details.eds.pop>*:not(summary){display:revert}
-#editorBox details.eds.pop>.row,#editorBox details.eds.pop>.edprow,#editorBox details.eds.pop>.edprow2{display:flex}
+#editorBox details.eds.pop .row,#editorBox details.eds.pop .edprow,#editorBox details.eds.pop .edprow2{display:flex}
 #editorBox .edsh{font:700 italic 13px var(--ui);color:var(--am);margin:12px 0 4px}
 #editorBox details.eds{margin:8px 0;background:rgba(255,255,255,.035)}#editorBox details.eds>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:9px 12px;font:700 italic 14px var(--ui);color:var(--am);background:rgba(255,255,255,.05)}#editorBox details.eds>summary::-webkit-details-marker{display:none}#editorBox details.eds>summary:after{content:'\25BE';transition:transform .15s}#editorBox details.eds[open]>summary:after{transform:rotate(180deg)}#editorBox details.eds>*:not(summary){margin-left:8px;margin-right:8px}#editorBox details.eds>*:last-child{margin-bottom:8px}
 #editorBox details.eds>summary,#edAdmBtns .edab{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;box-sizing:border-box;margin:6px 0;padding:11px 12px;background:rgba(255,255,255,.06);border:0;border-inline-start:3px solid var(--ac);color:var(--tx);font:700 13.5px var(--ui);font-style:normal;text-align:right;cursor:pointer;list-style:none}
@@ -1159,15 +1166,30 @@ body.mz-on #nxBar{right:104px}
     <div class="row edgn"><button class="b" id="edGatePrev" title="עבור לשער הקודם">&#9654; שער קודם</button><button class="b" id="edGateNext" title="עבור לשער הבא">שער הבא &#9664;</button></div>
     <div class="btns edacts"><button class="b" data-act="add">+ הוסף שער</button><button class="b" data-act="del">&minus; מחק שער</button><button class="b" id="btnPropDup">שכפל אלמנט</button><button class="b" id="btnPropDel">&minus; מחק אלמנט</button><button class="b" id="btnPropAdd" style="display:none">+</button><input type="hidden" id="edStep" value="1"><input type="hidden" id="edYawStep" value="5"></div>
     </div>
-    <div id="edProps" style="display:none">
-      <details class="eds"><summary>מיקום</summary>
-      <div class="edprow2"><label>X</label><input type="number" id="edpX" step="0.5"><label>Z</label><input type="number" id="edpZ" step="0.5"><label id="edpYl">גובה</label><input type="number" id="edpY" step="0.5"></div>
-      </details><details class="eds"><summary>סיבוב וגודל</summary>
-      <div class="edprow"><label>סיבוב</label><input type="range" id="edpYaw" min="0" max="360" step="1"><output id="edpYawV"></output></div>
-      <div class="edprow"><label>גודל</label><input type="range" id="edpSz" min="0.4" max="4" step="0.05"><output id="edpSzV"></output></div>
-      <div class="btns"><button class="b" id="edpReset">איפוס גודל וסיבוב</button></div>
-      </details>
+    <details class="eds dockb" id="edMove"><summary>מיקום, סיבוב ומירכוז</summary>
+    <div id="edMoveRow">
+      <div id="edMoveHint" class="keys">בחרו שער או אלמנט במפה כדי להזיז ולסובב אותו. אפשר להמשיך ללחוץ ולגרור על המפה בזמן שהחלון פתוח.</div>
+      <div id="edProps" style="display:none">
+        <div class="edcol"><div class="edsh">מיקום</div>
+          <div class="edprow2"><label>X</label><input type="number" id="edpX" step="0.5"><label>Z</label><input type="number" id="edpZ" step="0.5"><label id="edpYl">גובה</label><input type="number" id="edpY" step="0.5"></div>
+          <div class="edprow"><label>ימין / שמאל</label><input type="range" id="edpXs" aria-label="הזזה ימינה ושמאלה"></div>
+          <div class="edprow"><label>קדימה / אחורה</label><input type="range" id="edpZs" aria-label="הזזה קדימה ואחורה"></div>
+          <div class="edprow" id="edpYsRow"><label>גובה</label><input type="range" id="edpYs" aria-label="שינוי גובה"></div>
+        </div>
+        <div class="edcol"><div class="edsh">סיבוב וגודל</div>
+          <div class="edprow"><label>סיבוב</label><input type="range" id="edpYaw" min="0" max="360" step="1"><output id="edpYawV"></output></div>
+          <div class="edprow"><label>גודל</label><input type="range" id="edpSz" min="0.4" max="4" step="0.05"><output id="edpSzV"></output></div>
+          <div class="btns"><button class="b" id="edpReset">איפוס גודל וסיבוב</button></div>
+        </div>
+      </div>
+      <div class="edcol" id="edAlign"><div class="edsh">מירכוז כמה אלמנטים</div>
+    <div id="edAlInfo" class="keys">לא נבחרו אלמנטים. החזק Shift או Ctrl וגרור מסגרת על כמה אלמנטים, או לחץ עליהם אחד אחד.</div>
+    <div class="row" style="gap:12px"><label style="flex:0 0 auto">מרכז לפי:</label><label class="edaxl"><input type="checkbox" id="edAxX" checked> X</label><label class="edaxl"><input type="checkbox" id="edAxZ" checked> Z</label><label class="edaxl"><input type="checkbox" id="edAxY"> גובה</label></div>
+    <div class="row"><label style="flex:0 0 70px">מירכוז</label><input type="range" id="edAlSlide" min="0" max="100" step="1" value="0" style="flex:1;min-width:0"><output id="edAlSlideV" style="flex:0 0 40px;text-align:center">0%</output></div>
+    <div class="btns"><button class="b" id="edAlCenter">מרכז לגמרי</button></div>
     </div>
+    </div>
+    </details>
     <details class="eds"><summary>מסלול</summary>
     <div class="row"><label style="flex:0 0 70px">הקפות</label><select id="edLaps"><option value="1">1 · מסלול חד פעמי: השער האחרון הוא הסיום</option><option value="2">2</option><option value="3">3 (ברירת מחדל)</option><option value="4">4</option><option value="5">5</option><option value="8">8</option><option value="10">10</option></select></div>
     <div class="row" style="margin-top:8px;border-top:1px solid var(--ln);padding-top:8px"><b style="flex:1">חצי השער הבא</b><label style="flex:0 0 auto;display:flex;align-items:center;gap:6px"><input type="checkbox" id="edGmOn" checked> הצג</label></div>
@@ -1204,12 +1226,7 @@ body.mz-on #nxBar{right:104px}
     <div class="row"><label style="flex:0 0 70px">מרווח (מ')</label><input type="number" id="edPcGap" value="8" min="3" max="40" step="1"></div>
     <div class="btns"><button class="b" id="edPcMake">צור נתיב בין השערים</button><button class="b" id="edPcClear">מחק נתיב</button></div>
     </details>
-    <details class="eds" id="edAlign"><summary>מירכוז אלמנטים</summary>
-    <div id="edAlInfo" class="keys">לא נבחרו אלמנטים. החזק Shift או Ctrl וגרור מסגרת על כמה אלמנטים, או לחץ עליהם אחד אחד.</div>
-    <div class="row" style="gap:12px"><label style="flex:0 0 auto">מרכז לפי:</label><label class="edaxl"><input type="checkbox" id="edAxX" checked> X</label><label class="edaxl"><input type="checkbox" id="edAxZ" checked> Z</label><label class="edaxl"><input type="checkbox" id="edAxY"> גובה</label></div>
-    <div class="row"><label style="flex:0 0 70px">מירכוז</label><input type="range" id="edAlSlide" min="0" max="100" step="1" value="0" style="flex:1;min-width:0"><output id="edAlSlideV" style="flex:0 0 40px;text-align:center">0%</output></div>
-    <div class="btns"><button class="b" id="edAlCenter">מרכז לגמרי</button></div>
-    </details><details class="eds"><summary>תנאי סביבה (רוח וטורבולנציה)</summary>
+<details class="eds"><summary>תנאי סביבה (רוח וטורבולנציה)</summary>
     <div id="edEnvSlot"></div>
     </details>
     <div id="edAdmBtns"></div>
@@ -1446,7 +1463,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 378</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 379</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -6780,7 +6797,7 @@ function edDockSet(open, keep) {                                 // the editor d
   const t = $('edDockTab'), x = $('edDockX');
   if (t) document.body.appendChild(t); if ($('edAdmSlot')) document.body.appendChild($('edAdmSlot'));   // outside the side panel so they never hide with it
   if (t) { t.addEventListener('click', () => edDockSet(!$('editorBox').classList.contains('shut') ? false : true)); t.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); t.click(); } }); }
-  if (x) x.addEventListener('click', () => edDockSet(false));
+  if (x) x.addEventListener('click', () => { edDockSet(false); if (window.edPopClose) window.edPopClose(); });
 })();
 (function () {                                                   // every dock section is a button that opens its own window (like the admin ones)
   const box = $('editorBox'); if (!box) return;
@@ -6791,7 +6808,7 @@ function edDockSet(open, keep) {                                 // the editor d
     e.preventDefault(); const d = s.parentNode, was = d.classList.contains('pop'); shut();
     if (!was) { d.open = true; d.classList.add('pop'); box.classList.add('haspop'); }
   });
-  document.addEventListener('mousedown', (e) => { if (box.classList.contains('haspop') && e.target.closest && !e.target.closest('details.eds.pop')) shut(); });
+  document.addEventListener('mousedown', (e) => { if (box.classList.contains('haspop') && !box.querySelector('details.eds.pop.dockb') && e.target.closest && !e.target.closest('details.eds.pop')) shut(); });   // the bottom panel stays open so the map can still be clicked
   window.addEventListener('keydown', (e) => { if (box.classList.contains('haspop') && e.code === 'Escape') { e.preventDefault(); e.stopImmediatePropagation(); shut(); } }, true);
 })();
 function setEditor(on) {
@@ -12182,7 +12199,7 @@ function edpYaw(v) { return ((Math.round(v) % 360) + 360) % 360; }
 function edPropsSync() {
   const box = $('edProps'); if (!box) return;
   const e = edpEntity();
-  box.style.display = e ? '' : 'none';
+  box.style.display = e ? '' : 'none'; { const hn = $('edMoveHint'); if (hn) hn.style.display = e ? 'none' : ''; }
   if (!e) { edpKey = ''; return; }
   const d = e.d, sz = d.s || d.sz || 1;
   const key = e.kind + '|' + (e.kind === 'prop' ? selProp : selected) + '|' + round2(sz) + '|' + round2(d.yaw || 0) + '|' + round2(d.x) + '|' + round2(d.y || 0) + '|' + round2(d.z);
@@ -12193,7 +12210,7 @@ function edPropsSync() {
   const set = (id, v) => { const el = $(id); if (el !== document.activeElement) el.value = v; };
   set('edpSz', sz); set('edpYaw', edpYaw(d.yaw || 0)); set('edpX', round2(d.x)); set('edpZ', round2(d.z)); set('edpY', round2(d.y || 0));
   $('edpSzV').textContent = '×' + round2(sz); $('edpYawV').textContent = edpYaw(d.yaw || 0) + '°';
-  ['edpYl', 'edpY'].forEach((id) => { $(id).style.display = e.kind === 'gate' ? '' : 'none'; });
+  ['edpYl', 'edpY', 'edpYsRow'].forEach((id) => { $(id).style.display = e.kind === 'gate' ? '' : 'none'; });
 }
 function edpApply(what, v) {
   const e = edpEntity(); if (!e || !isFinite(v)) return;
@@ -12219,6 +12236,12 @@ function edpApply(what, v) {
   ['x', 'y', 'z'].forEach((k) => $('edp' + k.toUpperCase()).addEventListener('change', (ev) => edpApply(k, parseFloat(ev.target.value))));
   ['X', 'Y', 'Z'].forEach((k) => $('edp' + k).addEventListener('keydown', (ev) => { if (ev.code === 'Enter') ev.target.blur(); }));
   $('edpReset').addEventListener('click', (ev) => { edpApply('sz', 1); edpApply('yaw', 0); ev.target.blur(); });
+  [['x', 'edpXs', 30], ['z', 'edpZs', 30], ['y', 'edpYs', 10]].forEach((c) => {        // axis sliders: drag to move the element from where it was, they spring back to the middle on release
+    const s = $(c[1]); if (!s) return; let base = null;
+    s.min = -c[2]; s.max = c[2]; s.step = 0.1; s.value = 0;
+    s.addEventListener('input', () => { const en = edpEntity(); if (!en) return; if (base === null) base = c[0] === 'y' ? (en.d.y || 0) : en.d[c[0]]; edpApply(c[0], round2(base + parseFloat(s.value))); });
+    s.addEventListener('change', () => { base = null; s.value = 0; s.blur(); });
+  });
 })();
 
 (function wireEdUpgrade() {
