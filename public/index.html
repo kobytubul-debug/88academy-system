@@ -1098,6 +1098,34 @@ body.mz-on #nxBar{right:104px}
 .mzpl{font-size:11px;width:14px}.mzempty{color:var(--mu);font-size:13px}
 #mzVolRow{display:flex;gap:8px;align-items:center}
 #mzMute2,#mzClose,#mzPrev,#mzNext{background:none;border:0;color:var(--tx);cursor:pointer;font:inherit;font-size:16px}
+/* ---------- drones tab: description and fall physics behind buttons; the fall panel in a test flight ---------- */
+.drnbox{margin:8px 0 0}.drnbox>summary{padding:10px 12px;font-size:14px}.drnbox>summary b{flex:0 0 auto}
+.drnpv{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:400 12px 'Rubik',Arial,sans-serif;color:var(--mu);text-align:right}
+.drnbox[open]>summary .drnpv{display:none}
+.nxfall{display:flex;flex-direction:column;gap:8px;padding:8px 0 4px}
+.nxfh{display:flex;flex-direction:column;gap:2px}.nxfh b{font-size:14px;color:var(--ti,#fff)}.nxfh .nxn{margin:0}
+.nxfs{display:flex;align-items:center;gap:6px}.nxfs>span{font-size:11px;color:var(--mu);flex:none}
+.nxfsteps{flex:1;display:flex;gap:3px;min-width:0}
+#adm button.nxfst,#nxFall button.nxfst{flex:1;min-width:0;height:34px;padding:9px 0!important;background:#5a6270!important;background-clip:content-box!important;border:0;box-sizing:border-box;border-bottom:3px solid transparent!important;clip-path:none!important}
+#adm button.nxfst.lo,#nxFall button.nxfst.lo{background-color:#3d9bb8!important}
+#adm button.nxfst.on,#nxFall button.nxfst.on{background-color:var(--ac)!important;padding:3px 0!important}
+#adm button.nxfst.def,#nxFall button.nxfst.def{border-bottom-color:#e6b450!important}
+#adm button.nxfpm,#nxFall button.nxfpm{flex:none;width:34px;height:34px;padding:0!important;font-size:18px;font-style:normal!important}
+.nxfst2{margin:0!important}
+.nxfnums{display:flex;flex-wrap:wrap;gap:6px}.nxfnums>div{flex:1 1 120px;background:var(--ib,#0b0c0e);border:1px solid var(--ln);padding:6px 10px;display:flex;flex-direction:column;gap:1px;min-width:0}
+.nxfnums span{font-size:11px;color:var(--mu)}.nxfnums b{font-size:22px;color:var(--ti,#fff)}.nxfnums b i{font-style:normal;font-size:11px;color:var(--mu)}.nxfnums small{font-size:10.5px;color:var(--mu)}
+.nxfnums code{font:11px 'Share Tech Mono',monospace;color:var(--tx);direction:ltr;text-align:right;line-height:1.6}
+.nxfgw{background:var(--ib,#0b0c0e);border:1px solid var(--ln);padding:8px 10px}
+.nxfgl{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center;font-size:11px;color:var(--mu);margin-bottom:4px}.nxfgl b{flex:1 1 100%;font-size:12.5px;color:var(--ti,#fff)}
+.nxfgl i{display:inline-block;width:12px;height:3px;vertical-align:middle;margin-inline-end:4px}.nxfgl i.a{background:var(--ac)}.nxfgl i.b{background:#6b7380}
+.nxfg{display:block;width:100%;height:auto;direction:ltr}
+#nxFall{display:none;position:fixed;right:14px;top:14px;width:min(320px,calc(100vw - 28px));max-height:calc(100vh - 28px);overflow:auto;z-index:40;background:color-mix(in srgb,var(--p1) 94%,transparent);border:1px solid var(--ac);padding:10px 14px 12px;direction:rtl;font:13px 'Rubik',Arial,sans-serif;color:var(--tx)}
+#nxFall .nxn{font-size:12px;color:var(--mu);line-height:1.4}
+#nxFall button{font:700 13px 'Rubik',Arial,sans-serif;font-style:italic;color:var(--bt,#fff);background:var(--tile2);border:0;padding:8px 14px;cursor:pointer}
+#nxFall button.pri{background:var(--acfill,var(--ac));color:var(--ot,#06222b)}
+#nxFall button:disabled{opacity:.5;cursor:default}
+#nxFall .nxbtns{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 0}
+body.nx-open #nxFall{display:none!important}
 </style>
 </head>
 <body>
@@ -1463,7 +1491,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 383</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 384</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -1479,6 +1507,7 @@ body.mz-on #nxBar{right:104px}
 <div id="nxBoard"></div>
 <div id="nxSpec"><span id="nxSpecInfo"></span><button id="nxSpecCam">מצלמה: מעקב</button><button id="nxSpecX">סיום צפייה (Esc)</button></div>
 <div id="nxHold"><div></div></div>
+<div id="nxFall"></div>
 <div id="nxToast"></div>
 <div id="nxEd"><div class="box"><h3 id="nxEdT"></h3><p id="nxEdH"></p><div class="rows" id="nxEdRows"></div><div class="ft"><button data-ed="add">+ הוסף שורה</button><button data-ed="addmid" id="nxEdAddMid">+ הערה באמצע בין שערים</button><span style="flex:1"></span><button data-ed="cancel">ביטול</button><button class="go" data-ed="save">שמירה</button></div></div></div>
 <div id="trkPeek"></div>
@@ -5215,6 +5244,30 @@ const drone = {
   thrAct: 0, onGround: true
 };
 const PHYS_DT = 1 / 240;
+
+/* ---------- FALL FEEL: how fast a drone drops once the throttle is released ----------
+   One multiplier per drone type (PRESETS[id].fallK, 1 = the drone's own drag). It scales only the part of the vertical drag
+   that the vertical motion itself causes, so level forward flight and top speed stay exactly as they were. */
+const FALL_K = [0.4, 0.55, 0.7, 0.85, 1, 1.3, 1.7, 2.3, 3.2];
+const FALL_NAMES = ['אבן', 'כבד מאוד', 'כבד', 'מעט כבד', 'מציאותי', 'מעט צף', 'צף', 'צף מאוד', 'נוצה'];
+const FALL_DEF = 4;                                               // the step that means "the drone's own drag"
+function fallKClean(v) { v = +v; return v > 0 && isFinite(v) ? Math.min(4, Math.max(0.25, v)) : 1; }
+function fallStepOf(k) {                                          // the nearest step to a stored multiplier
+  k = fallKClean(k); let b = FALL_DEF, bd = Infinity;
+  for (let i = 0; i < FALL_K.length; i++) { const d = Math.abs(Math.log(FALL_K[i] / k)); if (d < bd) { bd = d; b = i; } }
+  return b;
+}
+function fallSim(p, k) {                                          // a level drop from 10 m with no thrust: the same drag formula and time step as stepPhysics
+  k = fallKClean(k);
+  const cl = p.cdLin[1] * k, cq = p.cdQuad[1] * k, pts = [[0, 10]];
+  let v = 0, h = 10, t = 0, hit = null, n = 0;
+  while (t < 4 && hit === null) {
+    v += (-G - (cl * v + cq * Math.abs(v) * v) / p.mass) * PHYS_DT; h += v * PHYS_DT; t += PHYS_DT; n++;
+    if (h <= 0) { hit = t; h = 0; }
+    if (n % 12 === 0 || hit !== null) pts.push([t, h]);          // a point every 0.05 s for the graph
+  }
+  return { k, cl, cq, hit, pts, vt: (-cl + Math.sqrt(cl * cl + 4 * cq * p.mass * G)) / (2 * cq) };
+}
 let physAcc = 0;
 let inMenu = true, paused = false;
 
@@ -5230,6 +5283,7 @@ let nowSec = 0, lastBump = -10;
 const ghostStore = {};      // key -> {time, tel(Float32Array of x,y,z,qx,qy,qz,qw @30Hz)}
 
 const _up = new THREE.Vector3(), _acc = new THREE.Vector3(), _vl = new THREE.Vector3(), _dl = new THREE.Vector3();
+const _vh = new THREE.Vector3(), _dh = new THREE.Vector3();          // fall feel: the horizontal part of the air speed and its drag
 const _qi = new THREE.Quaternion(), _dq = new THREE.Quaternion(), _qt = new THREE.Quaternion();
 const _eu = new THREE.Euler(0, 0, 0, 'YXZ'), _eu2 = new THREE.Euler(0, 0, 0, 'YXZ'), _ax = new THREE.Vector3(), _prev = new THREE.Vector3();
 const _a = new THREE.Vector3(), _b = new THREE.Vector3();
@@ -5566,6 +5620,16 @@ function stepPhysics(dt) {
     -(p.cdLin[1] * _vl.y + p.cdQuad[1] * Math.abs(_vl.y) * _vl.y) / p.mass,
     -(p.cdLin[2] * _vl.z + p.cdQuad[2] * Math.abs(_vl.z) * _vl.z) / p.mass
   ).applyQuaternion(drone.quat);
+  const fk = p.fallK;
+  if (fk > 0 && fk !== 1) {                                        // fall feel: only the vertical drag that the vertical motion adds is scaled (what is left without it stays as it is)
+    _vh.copy(drone.vel).sub(windVec); _vh.y = 0; _vh.applyQuaternion(_qi);
+    _dh.set(
+      -(p.cdLin[0] * _vh.x + p.cdQuad[0] * Math.abs(_vh.x) * _vh.x) / p.mass,
+      -(p.cdLin[1] * _vh.y + p.cdQuad[1] * Math.abs(_vh.y) * _vh.y) / p.mass,
+      -(p.cdLin[2] * _vh.z + p.cdQuad[2] * Math.abs(_vh.z) * _vh.z) / p.mass
+    ).applyQuaternion(drone.quat);
+    _dl.y += (fk - 1) * (_dl.y - _dh.y);
+  }
   _acc.add(_dl);
   _acc.y -= G;
   drone.vel.addScaledVector(_acc, dt);
@@ -8182,6 +8246,7 @@ function frame(now) {
   gmkFrame(dt);
   introFrame(dt);
   whoFrame();
+  if (typeof nxFallTick === 'function') nxFallTick();
   edSyncBody(dt);
   if (inMenu && currentScreen === 'main') drawMainDrone(dt); else if (MD.ph !== 'idle' || MD.t > 0) mdReset(mainDv);
   if (inMenu) {
@@ -8578,7 +8643,7 @@ const NX_HIDE = [
 function nxDefault() {
   return {
     theme: { ac: '#4cc3e6', am: '#e6b450', bg: '#0b0c0e', p1: '#14161a', p2: '#1b1e23', ln: '#2d3139', tx: '#d6d9de', mu: '#8b929c', ti: '', bt: '', bs: '', lg: '', lg2: '', it: '', ib: '', ot: '', tl: '', tl2: '', gr: '', rd: '', qb: '', qt: '', font: 'ui', btn: 'sharp', bw: 1, mbw: 420, balign: 'c', mvert: 'c', overlay: 0.75, bgImg: '', trans: 'slide', dur: 300, fadeMs: 450, gx: Object.assign({}, GX.st) },
-    tx: {}, hide: {}, home: [], tnames: {}, torder: [], stages: { off: {}, force: '', del: {}, bsel: false }, tcats: { cats: {}, of: {} }, drones: { off: {}, title: {}, desc: {}, col: {} }, music: { on: true, showVol: true, showList: true, menuOn: true, flyOn: true, flyAuto: false, shuffle: false, vol: 50, songs: [
+    tx: {}, hide: {}, home: [], tnames: {}, torder: [], stages: { off: {}, force: '', del: {}, bsel: false }, tcats: { cats: {}, of: {} }, drones: { off: {}, title: {}, desc: {}, col: {}, fall: {} }, music: { on: true, showVol: true, showList: true, menuOn: true, flyOn: true, flyAuto: false, shuffle: false, vol: 50, songs: [
     { id: 'mz1', t: 'Sad ambient background', a: 'Melatronic', u: '/music/sad-ambient-background.mp3', menu: true, fly: false },
     { id: 'mz5', t: 'Rolling', a: 'BoxCat Games', u: '/music/rolling.mp3', menu: false, fly: true },
     { id: 'mz6', t: 'Chilly place', a: 'Playsound', u: '/music/chilly-place.mp3', menu: false, fly: true },
@@ -9150,6 +9215,11 @@ function nxApplyTexts(c, ghost) {
     DRONE_INFO[id].title = c.drones.title[id] || NX_DRONE0[id].title;
     DRONE_INFO[id].desc = c.drones.desc[id] || NX_DRONE0[id].desc;
   });
+  nxFallApply(c);
+}
+function nxFallApply(c) {                                         // fall feel: the multiplier of each drone type goes into its preset (1 = the drone's own drag)
+  const f = (c && c.drones && c.drones.fall) || {};
+  DRONE_IDS.forEach((id) => { if (PRESETS[id]) PRESETS[id].fallK = fallKClean(f[id] === undefined ? 1 : f[id]); });
 }
 const NX_XCOL = ['ti', 'bt', 'bs', 'lg', 'lg2', 'it', 'ib', 'ot', 'tl', 'tl2', 'gr', 'rd', 'qb', 'qt'];
 const NX_HEX = /^#[0-9a-f]{6}$/i;
@@ -10215,16 +10285,128 @@ function nxSegDist(px, pz, ax, az, bx, bz, extBack, extFwd) {
   return Math.hypot(px - (ax + t * dx), pz - (az + t * dz));
 }
 function nxTabDrones() {
-  let h = '<p class="nxn">שליטה בסוגי הרחפנים שהשחקן יכול לבחור, ובכותרות ובתיאורים שלהם.</p>';
+  let h = '<p class="nxn">שליטה בסוגי הרחפנים שהשחקן יכול לבחור, בכותרות, בתיאורים ובפיזיקת הנפילה שלהם.</p>';
   DRONE_IDS.forEach((id) => {
     const d0 = NX_DRONE0[id] || { title: DRONE_INFO[id].title, desc: DRONE_INFO[id].desc };
+    const ok = NX.openK || {}, kd = 'drn.desc.' + id, kf = 'drn.fall.' + id, desc = NX.draft.drones.desc[id] || '';
     h += '<div class="nxcard" data-drn="' + id + '"><label class="nxchk1"><input type="checkbox" data-act="drn-vis" data-id="' + id + '"' + (NX.draft.drones.off[id] ? '' : ' checked') + '> גלוי לשחקן &mdash; ' + nxEsc(PRESETS[id].label) + '</label>';
     h += nxF('כותרת', '<input type="text" data-k="drones.title.' + id + '" placeholder="' + nxEsc(d0.title) + '" value="' + nxEsc(NX.draft.drones.title[id] || '') + '">');
     h += NX_DCOL[id].map((r) => nxF(r[1], nxColor('drones.col.' + id + '.' + r[0], (NX.draft.drones.col[id] || {})[r[0]] || r[2]))).join('') + '<div class="nxbtns"><button class="nxb" data-act="drn-reset" data-id="' + id + '">אפס צבעים</button></div>';
-    h += nxF('תיאור', '<textarea data-k="drones.desc.' + id + '" rows="3" placeholder="' + nxEsc(d0.desc) + '">' + nxEsc(NX.draft.drones.desc[id] || '') + '</textarea>');
+    h += '<details class="catbox drnbox" data-ck="' + kd + '"' + (ok[kd] ? ' open' : '') + '><summary><b>תיאור</b><span class="drnpv">' + nxEsc(desc || d0.desc) + '</span></summary>';
+    h += nxF('תיאור', '<textarea data-k="drones.desc.' + id + '" rows="3" placeholder="' + nxEsc(d0.desc) + '">' + nxEsc(desc) + '</textarea>') + '</details>';
+    h += '<details class="catbox drnbox" data-ck="' + kf + '"' + (ok[kf] ? ' open' : '') + '><summary><b>פיזיקת נפילה</b><span class="drnpv">' + nxEsc(nxFallLabel(id)) + '</span></summary>' + nxFallPanel(id, false) + '</details>';
     h += '</div>';
   });
   return h;
+}
+/* ---------- fall feel: one multiplier per drone type, shown as results (fall speed, time to the ground) rather than drag numbers ---------- */
+function nxFallK(id) { const f = NX.draft && NX.draft.drones && NX.draft.drones.fall || {}; return fallKClean(f[id] === undefined ? 1 : f[id]); }
+function nxFallLabel(id) { const p = PRESETS[id]; if (!p) return ''; const r = fallSim(p, nxFallK(id)); return FALL_NAMES[fallStepOf(nxFallK(id))] + ' · ' + r.vt.toFixed(1) + ' מ׳/ש׳'; }
+function nxFallSet(id, k) {                                       // null: back to the drone's own drag
+  const f = NX.draft.drones.fall = NX.draft.drones.fall || {};
+  if (k === null || Math.abs(k - 1) < 1e-9) delete f[id]; else f[id] = fallKClean(k);
+  nxTouch();
+}
+function nxFallStep(id, d) { const i = Math.max(0, Math.min(FALL_K.length - 1, fallStepOf(nxFallK(id)) + d)); nxFallSet(id, FALL_K[i]); }
+function nxFallGraph(p, cur, base) {                              // height over time of a level drop from 10 m: the chosen setting against the drone's default
+  const W = 300, H = 120, L = 30, B = 16, T = 4, pw = W - L - 6, ph = H - B - T;
+  const X = (t) => (L + t / 4 * pw).toFixed(1), Y = (y) => (T + (1 - y / 10) * ph).toFixed(1);
+  const line = (pts) => pts.map((q) => X(q[0]) + ',' + Y(q[1])).join(' ');
+  let s = '<svg class="nxfg" viewBox="0 0 ' + W + ' ' + H + '" direction="ltr" aria-label="גרף נפילה חופשית מ-10 מטר">';
+  s += '<line x1="' + L + '" y1="' + T + '" x2="' + L + '" y2="' + (T + ph) + '" stroke="#4a515c"/><line x1="' + L + '" y1="' + (T + ph) + '" x2="' + (L + pw) + '" y2="' + (T + ph) + '" stroke="#4a515c"/>';
+  [10, 5, 0].forEach((v) => { s += '<text x="' + (L - 4) + '" y="' + (+Y(v) + 3) + '" text-anchor="end" font-size="9" fill="#8b929c">' + (v ? v + ' מ׳' : 'קרקע') + '</text>'; });
+  [1, 2, 3, 4].forEach((t) => { s += '<text x="' + X(t) + '" y="' + (H - 4) + '" text-anchor="middle" font-size="9" fill="#8b929c">' + t + ' ש׳</text>'; });
+  s += '<polyline fill="none" stroke="#6b7380" stroke-width="2" stroke-dasharray="3 3" points="' + line(base.pts) + '"/>';
+  s += '<polyline fill="none" stroke="var(--ac,#4cc3e6)" stroke-width="2.5" points="' + line(cur.pts) + '"/>';
+  if (cur.hit !== null) s += '<circle cx="' + X(cur.hit) + '" cy="' + Y(0) + '" r="3.5" fill="var(--ac,#4cc3e6)"/>';
+  return s + '</svg>';
+}
+function nxFallPanel(id, inFlight) {
+  const p = PRESETS[id]; if (!p) return '';
+  const k = nxFallK(id), step = fallStepOf(k), cur = fallSim(p, k), base = fallSim(p, 1), def = step === FALL_DEF;
+  const t10 = (r) => (r.hit === null ? '4+' : r.hit.toFixed(2));
+  let h = '<div class="nxfall" data-fall="' + id + '">';
+  if (inFlight) h += '<div class="nxfh"><b>פיזיקת נפילה · ' + nxEsc(p.label) + '</b><span class="nxn">השינוי חל מיד, תוך כדי הטיסה.</span></div>';
+  else h += '<div class="nxfh"><b>תחושת נפילה</b><span class="nxn">חל על הרחפן הזה בלבד, בכל המשחק.</span></div>';
+  h += '<div class="nxfs"><span>נופל כמו אבן</span><button class="nxfpm" data-act="drn-fall-step" data-id="' + id + '" data-d="-1" aria-label="נופל מהר יותר">&minus;</button><div class="nxfsteps">';
+  FALL_K.forEach((v, i) => { h += '<button class="nxfst' + (i === step ? ' on' : i < step ? ' lo' : '') + (i === FALL_DEF ? ' def' : '') + '" data-act="drn-fall" data-id="' + id + '" data-v="' + i + '" title="' + FALL_NAMES[i] + '" aria-label="' + FALL_NAMES[i] + '"></button>'; });
+  h += '</div><button class="nxfpm" data-act="drn-fall-step" data-id="' + id + '" data-d="1" aria-label="נופל לאט יותר">+</button><span>צף</span></div>';
+  h += '<p class="nxn nxfst2">נבחר: ' + FALL_NAMES[step] + ' · גרר אנכי ×' + FALL_K[step] + (def ? ' (ברירת המחדל של הרחפן, מסומנת בצהוב)' : '') + '</p>';
+  h += '<div class="nxfnums"><div><span>מהירות נפילה מרבית</span><b>' + cur.vt.toFixed(1) + ' <i>מ׳/ש׳</i></b><small>ברירת מחדל: ' + base.vt.toFixed(1) + '</small></div>';
+  h += '<div><span>זמן נפילה מגובה 10 מ׳</span><b>' + t10(cur) + ' <i>ש׳</i></b><small>ברירת מחדל: ' + t10(base) + '</small></div>';
+  if (!inFlight) h += '<div><span>ערכים בקוד (מתקדם)</span><code>cdLin ' + cur.cl.toFixed(3) + '<br>cdQuad ' + cur.cq.toFixed(3) + '<br>mass ' + p.mass + ' kg</code></div>';
+  h += '</div>';
+  if (!inFlight) h += '<div class="nxfgw"><div class="nxfgl"><b>נפילה חופשית מ-10 מ׳ בלי גז</b><span><i class="a"></i> ההגדרה שנבחרה</span><span><i class="b"></i> ברירת המחדל של הרחפן</span></div>' + nxFallGraph(p, cur, base) + '</div>';
+  h += '<div class="nxbtns">' + (inFlight ? '<button class="nxb pri" data-act="drn-test-back">חזרה לרחפנים</button>' : '<button class="nxb pri" data-act="drn-test" data-id="' + id + '">טיסת בדיקה</button>') + '<button class="nxb" data-act="drn-fall-reset" data-id="' + id + '"' + (def ? ' disabled' : '') + '>אפס לברירת מחדל</button></div>';
+  return h + '</div>';
+}
+/* ---------- test flight: an open field with a water tower, the fall panel at the side, back to the drones tab ---------- */
+const NX_FALL_STAGE = '_falltest';
+function nxFallStage() {
+  if (STAGES[NX_FALL_STAGE]) return STAGES[NX_FALL_STAGE];
+  const objects = [{ t: 'watertank', x: 0, z: -62, yaw: 0, s: 1, c: '#c7ccd2' }];
+  for (let z = -10; z >= -100; z -= 10) { objects.push({ t: 'cone', x: -7, z, yaw: 0, s: 1, c: '#ff8a1a' }); objects.push({ t: 'cone', x: 7, z, yaw: 0, s: 1, c: '#ff8a1a' }); }     // a cone every 10 m: a distance scale for the fall
+  const st = {
+    id: NX_FALL_STAGE, num: 0, name: 'טיסת בדיקה · שדה עם מגדל מים', diff: 'בדיקה', color: '#4cc3e6', base: 'field', hidden: true, laps: 1,
+    art: 'linear-gradient(180deg,#5f9bd3,#4b7a37)', desc: 'שדה פתוח עם מגדל מים לבדיקת פיזיקת הנפילה.',
+    gen: () => [{ x: 0, y: 6, z: -30, yaw: 0, pitch: 0, k: 'none' }, { x: 0, y: 6, z: -90, yaw: 0, pitch: 0, k: 'none' }],   // two hidden measuring gates: nothing to fly through
+    gate: { type: 'square', outer: 4.5, inner: 4.1 }, parV: 0, objects, menuCam: { r: 70, h: 30 }
+  };
+  STAGES[NX_FALL_STAGE] = st;
+  if (!envSettings[NX_FALL_STAGE]) envSettings[NX_FALL_STAGE] = { wind: 0, dir: 0, turb: 0 };
+  return st;
+}
+NX.fallTest = null;
+function nxFallTest(id) {
+  if (!PRESETS[id] || fadeBusy || NX.role !== 'admin') return;
+  nxFallStage();
+  NX.fallTest = { id };
+  settings.preset = id; syncSliders();
+  nxOpen(false);
+  fadeThrough('טיסת בדיקה  //  ' + PRESETS[id].label, () => {
+    hideResults(); hidePause(); paused = false; $('crashMsg').classList.remove('on');
+    if (editorMode) setEditor(false);
+    loadStage(NX_FALL_STAGE); markCustom();                    // practice only: no records, no course progress
+    const lbl = $('trackLabel'); if (lbl) lbl.textContent = 'טיסת בדיקה';
+    inMenu = false; orbit.enabled = false; activeCam = fpvCam;
+    $('menu').classList.add('hidden'); $('menuBtn').style.display = 'flex'; $('panel').classList.remove('open');
+    flightMode = 'free'; raceLineFree = false;
+    resetRace();
+    $('countdown').style.opacity = '0';
+    updateGateColors();
+    nxFallPanelRender();
+    canvas.focus();
+  });
+}
+function nxFallPanelRender() {
+  const el = $('nxFall'); if (!el) return;
+  const t = NX.fallTest;
+  if (!t || !PRESETS[t.id]) { el.style.display = 'none'; el.innerHTML = ''; return; }
+  el.innerHTML = nxFallPanel(t.id, true);
+  el.style.display = 'block';
+}
+function nxFallTick() {                                           // the panel lives only while the test flight is on the screen
+  const t = NX.fallTest; if (!t) return;
+  if (inMenu || !currentStage || currentStage.id !== NX_FALL_STAGE) { NX.fallTest = null; nxFallPanelRender(); return; }
+  const el = $('nxFall'); if (el) el.style.display = paused || editorMode ? 'none' : 'block';
+}
+function nxFallBack() {
+  if (fadeBusy) return;
+  NX.fallTest = null; nxFallPanelRender();
+  NX.tab = 'drones';
+  goMenu('drone');
+  nxOpen(true);
+}
+function nxFallAct(a, el) {                                       // the fall buttons, in the admin tab and in the flight panel alike
+  const id = el.dataset.id;
+  if (a === 'drn-fall') nxFallSet(id, FALL_K[+el.dataset.v]);
+  else if (a === 'drn-fall-step') nxFallStep(id, +el.dataset.d);
+  else if (a === 'drn-fall-reset') nxFallSet(id, null);
+  else if (a === 'drn-test') { nxFallTest(id); return true; }
+  else if (a === 'drn-test-back') { nxFallBack(); return true; }
+  else return false;
+  if (NX.fallTest) nxFallPanelRender(); else nxAdmRender();
+  return true;
 }
 /* ---------- staff roles: an instructor / manager signs in with a normal account and gets a read-only panel (what they may see is set by the admin) ---------- */
 const NX_ROLES = [['instructor', 'מדריך'], ['manager', 'מנהל']];
@@ -10832,6 +11014,7 @@ if (typeof document !== 'undefined' && document.addEventListener) document.addEv
   el.dispatchEvent(new Event('change', { bubbles: true }));
 }, true);
 function nxAdmWire() { nxAdmWireOn($('admBody')); if ($('edAdmSlot')) nxAdmWireOn($('edAdmSlot')); nxAdmWireTop(); }
+(function nxFallWire() { const el = $('nxFall'); if (!el || !el.addEventListener) return; el.addEventListener('click', (e) => { const b = e.target.closest ? e.target.closest('[data-act]') : null; if (b && nxFallAct(b.dataset.act, b)) { e.preventDefault(); if (b.blur) b.blur(); } }); })();
 function nxAdmWireOn(body) {
   const nxShowDrone = (e) => {                                    // touching a drone's card in the drones tab shows that drone on the stage
     const c = e.target && e.target.closest ? e.target.closest('[data-drn]') : null, id = c && c.dataset.drn;
@@ -10949,6 +11132,7 @@ function nxAdmWireOn(body) {
     else if (a === 'rp-all') { NX.rp.from = ''; NX.rp.to = ''; NX.openP = '_rp'; nxAdmRender(); }
     else if (a === 'pg-g') { NX.pgGid = el.dataset.v || ''; nxAdmRender(); }
     else if (a === 'drn-reset') { delete NX.draft.drones.col[id]; nxTouch(); nxAdmRender(); }
+    else if (a === 'drn-fall' || a === 'drn-fall-step' || a === 'drn-fall-reset' || a === 'drn-test') nxFallAct(a, el);
     else if (a === 'pl-spec') nxSpecStart(el.dataset.u);
     else if (a === 'pl-watch') { NX.watch = el.dataset.u; nxAdmRender(); }
     else if (a === 'gx-saved') { const t = NX.themes[id]; if (t) { NX.draft.theme = nxMerge(nxDefault().theme, nxClone(t.theme)); NX.draft.tx = nxClone(t.tx || {}); NX.draft.hide = nxClone(t.hide || {}); NX.draft.gxp = ''; nxTouch(); nxAdmRender(); nxToast('הוחלה ערכה: ' + (t.name || id)); } }
