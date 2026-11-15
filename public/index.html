@@ -36,7 +36,7 @@ input[type=range],input[type=number],textarea,.ltr{direction:ltr}
 #batBar:after,.mbat:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 13px,rgba(0,0,0,.85) 13px 15px)}
 #batFill,.mfill{position:absolute;left:0;top:0;bottom:0;width:100%;background:#fff}
 #crosshair{position:absolute;left:50%;top:50%;width:128px;height:96px;transform:translate(-50%,-50%)}
-#sticks{position:absolute;left:50%;bottom:64px;transform:translateX(-50%);display:flex;gap:clamp(6px,1vw,14px);direction:ltr;align-items:flex-end}
+#sticks{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;gap:clamp(6px,1vw,14px);direction:ltr;align-items:flex-end}     /* same baseline as the menu button on the right */
 .gim{text-align:center}
 .gim canvas{width:112px;height:112px;display:block;margin:0 auto}
 #propHud{position:absolute;left:91%;top:50%;transform:translate(-50%,-50%);width:200px;height:200px}
@@ -1556,7 +1556,7 @@ body.nx-lite .tcBtns .edt,body.nx-lite .tcBtns .dup,body.nx-lite .tcBtns .del{di
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 387</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 388</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -5948,12 +5948,8 @@ function resetRace() {
   physAcc = 0;
 }
 
-function cdHTML(lit, go, num) {
-  let h = '<div class="cdrow">';
-  for (let i = 0; i < 3; i++) h += '<i class="cdl' + (go ? ' g' : i < lit ? ' r' : '') + '"></i>';
-  h += '</div>';
-  h += go ? '<div class="cdgo">GO!</div>' : '<div class="cdn">' + num + '</div>';
-  return h;
+function cdHTML(lit, go, num) {                                   // the number (or GO!) alone: no traffic lights
+  return go ? '<div class="cdgo">GO!</div>' : '<div class="cdn">' + num + '</div>';
 }
 function onCountdown(dt) {
   cdRemain -= dt;
@@ -8144,6 +8140,11 @@ function trkCarWire() {
     const t = e.target.closest ? e.target.closest('button,.tcCard') : null; if (!t) return;
     if (t.id === 'tcUp') { trkCarGo(TC.i - 1); return; }
     if (t.id === 'tcDn') { trkCarGo(TC.i + 1); return; }
+    if (t.classList.contains('tcCard')) {                            // the big picture starts the flight; a peeking neighbour slides into the middle
+      const k = +t.dataset.k, cid = t.dataset.id;
+      if (k === TC.i) { if (cid && STAGES[cid] && !NXH.locked(cid)) { selectTrack(cid); startStage(cid); } } else trkCarGo(k);
+      return;
+    }
     if (t.dataset.k !== undefined && !t.classList.contains('fly')) { trkCarGo(+t.dataset.k); return; }
     const id = t.dataset.id; if (!id || !STAGES[id]) return;
     if (t.classList.contains('fly')) { selectTrack(id); startStage(id); }
