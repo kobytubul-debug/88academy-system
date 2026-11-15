@@ -1023,6 +1023,23 @@ body.skin-race .scr h2,body.skin-race .rtitle,body.skin-race #pause h2{font-styl
 body.skin-race .scr h2:before{width:26px;height:6px;background:linear-gradient(90deg,var(--ac) 0 60%,var(--am) 60%);transform:skewX(-30deg);vertical-align:.2em;box-shadow:none}
 body.skin-race .rbox,body.skin-race #pause .glass,body.skin-race #who .whobox,body.skin-race .card{border-radius:0!important;border:0;border-top:3px solid var(--ac);background:repeating-linear-gradient(45deg,rgba(255,255,255,.03) 0 2px,transparent 2px 4px),var(--p1)}
 body.skin-race .logo{font-style:italic;font-weight:800;letter-spacing:.06em}
+/* --- party: game-show arena, deep night blue, neon accents, slanted panels, glow --- */
+body.skin-party #menu{background:radial-gradient(ellipse at 50% 20%,var(--p2) 0%,var(--p1) 45%,var(--bg) 100%)!important}
+body.skin-party .logo{font-weight:400;letter-spacing:.01em;text-shadow:0 0 24px rgba(255,255,255,.35),5px 5px 0 #ff3d6e,10px 10px 0 var(--bg)}
+body.skin-party #logoB{color:var(--am)!important}
+body.skin-party #scrMain .mhead .logo2{display:inline-block;padding:4px 22px;background:var(--bg);border:3px solid var(--ac);box-shadow:0 0 16px color-mix(in srgb,var(--ac) 50%,transparent);transform:skewX(-8deg)}
+body.skin-party #scrMain .mhead .tag{color:var(--am);letter-spacing:.34em}
+body.skin-party #scrMain .mtiles .mbtn{border:3px solid var(--tx)!important;border-radius:0;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:none;clip-path:polygon(14px 0,100% 0,calc(100% - 14px) 100%,0 100%);font-style:normal;font-weight:700;text-transform:none;letter-spacing:0;padding-left:22px;padding-right:22px;transition:transform .1s,filter .1s}
+body.skin-party #scrMain .mtiles .mbtn:hover{transform:translateY(-3px);background:var(--p1);filter:drop-shadow(0 0 12px color-mix(in srgb,var(--ac) 60%,transparent))}
+body.skin-party #scrMain .mtiles .mbtn.big{background:var(--ac);color:var(--ot,#0b0d2a);border-color:var(--ac)!important;filter:drop-shadow(0 0 16px color-mix(in srgb,var(--ac) 55%,transparent))}
+body.skin-party #scrMain .mtiles .mbtn.big:after{color:color-mix(in srgb,var(--ot,#0b0d2a) 75%,var(--ac))}
+body.skin-party #scrMain .mtiles .mbtn.quit{background:#ff3d6e;border-color:#ff3d6e!important;color:#fff;filter:drop-shadow(0 0 14px rgba(255,61,110,.55))}
+body.skin-party #scrMain .hint{background:var(--bg);border:1px solid rgba(255,255,255,.25);color:var(--mu);padding:6px 18px}
+body.skin-party .scr h2,body.skin-party .rtitle,body.skin-party #pause h2{font-weight:400;text-shadow:4px 4px 0 #ff3d6e}
+body.skin-party .scr h2:before{width:18px;height:18px;background:var(--am);transform:rotate(45deg);box-shadow:0 0 14px var(--am);vertical-align:0}
+body.skin-party .rbox,body.skin-party #pause .glass,body.skin-party #who .whobox,body.skin-party .card{border-radius:0!important;border:3px solid var(--am);box-shadow:0 0 0 6px var(--bg),0 0 40px color-mix(in srgb,var(--am) 35%,transparent);background:var(--p1);clip-path:polygon(24px 0,100% 0,100% calc(100% - 24px),calc(100% - 24px) 100%,0 100%,0 24px)}
+body.skin-party button.b,body.skin-party .newtrk,body.skin-party .fly,body.skin-party #who button{border:3px solid var(--tx);border-radius:0;clip-path:polygon(12px 0,100% 0,calc(100% - 12px) 100%,0 100%);padding-left:20px;padding-right:20px;font-style:normal;font-weight:700}
+body.skin-party button.b.pri,body.skin-party .fly{background:var(--ac);color:var(--ot,#0b0d2a);border-color:var(--ac)}
 /* --- paper: quiet light interface, hairlines, serif, no effects --- */
 body.skin-paper #scrMain .mtiles .mbtn{border:1px solid var(--ln)!important;border-radius:2px;background:var(--p1);color:var(--tx);backdrop-filter:none;box-shadow:0 1px 0 var(--ln);font-style:normal;font-weight:700;text-transform:none;letter-spacing:0}
 body.skin-paper #scrMain .mtiles .mbtn:after{color:var(--mu)}
@@ -1491,7 +1508,7 @@ body.nx-open #nxFall{display:none!important}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 384</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 385</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -8441,6 +8458,22 @@ const GX_BG = {
       g.fillStyle = col((0.06 + 0.1 * k).toFixed(3)); g.fillRect(x, y, 2, 2);
     }
   },
+  party(g, w, h, t, col) {                               // slow spotlight wheel over the top, confetti drifting down, a striped floor band
+    const cx = w / 2, cy = -h * 0.55, R = Math.hypot(w, h), cols = ['255,61,110', '255,210,63', '47,224,181', '79,124,255'];
+    for (let i = 0; i < 12; i++) {
+      const a0 = t * 0.12 + i * 0.5236, c = cols[i % 4];
+      g.fillStyle = 'rgba(' + c + ',0.07)'; g.beginPath(); g.moveTo(cx, cy); g.arc(cx, cy, R, a0, a0 + 0.26); g.closePath(); g.fill();
+    }
+    for (let i = 0; i < 70; i++) {                       // confetti: small bars that fall, sway and spin
+      const sp = 0.05 + gxRand(i, 3) * 0.09, y = ((gxRand(i, 1) + t * sp) % 1) * (h + 30) - 15, x = gxRand(i, 2) * w + Math.sin(t * 1.3 + i) * 14;
+      const c = cols[i % 4], rot = t * (1 + gxRand(i, 4) * 2) + i;
+      g.save(); g.translate(x, y); g.rotate(rot); g.fillStyle = 'rgba(' + c + ',' + (0.35 + gxRand(i, 5) * 0.45).toFixed(2) + ')'; g.fillRect(-5, -2.5, 10, 5); g.restore();
+    }
+    const bh = Math.max(24, h * 0.05), sk = h * 0.03;
+    g.save(); g.beginPath(); g.moveTo(0, h - bh); g.lineTo(w, h - bh - sk); g.lineTo(w, h); g.lineTo(0, h); g.closePath(); g.clip();
+    for (let x = -64, i = 0; x < w + 64; x += 64, i++) { g.fillStyle = 'rgba(' + cols[i % 4] + ',0.75)'; g.fillRect(x, h - bh - sk - 2, 64, bh + sk + 2); }
+    g.restore();
+  },
   none() { /* empty backdrop */ }
 };
 
@@ -9906,6 +9939,7 @@ const NX_GXPRESETS = [
   { id: 'glass', name: 'זכוכית', t: { ac: '#7cc4ff', am: '#ffb86b', bg: '#0a1020', p1: '#121a30', p2: '#1c2744', ln: '#3a4a74', tx: '#eef4ff', mu: '#9fb0d4', btn: 'pill', bw: 1, balign: 'c', overlay: 0.35, trans: 'fade', dur: 500, fadeMs: 700 }, gx: { font: 'heebo', skin: 'glass', bgmode: 'bokeh', grade: 'cine', btn: false, hud: false, glow: true } },
   { id: 'race', name: 'מירוץ קרבון', t: { ac: '#ff3b30', am: '#ffd23f', bg: '#08080a', p1: '#141416', p2: '#202024', ln: '#3a3a40', tx: '#f2f2f2', mu: '#9a9aa2', btn: 'sharp', bw: 1, balign: 'c', overlay: 0.55, trans: 'slide', dur: 220, fadeMs: 300 }, gx: { font: 'rajdhani', skin: 'race', bgmode: 'streaks', grade: 'sunset', btn: false, hud: false, glow: false } },
   { id: 'tact', name: 'צהוב טקטי', t: { ac: '#f2c744', am: '#ffd84d', bg: '#0b0b0c', p1: '#141415', p2: '#1c1c1e', ln: '#3a3320', tx: '#ececec', mu: '#9b9b9b', ot: '#0b0b0c', btn: 'sharp', bw: 2, balign: 'c', overlay: 0.6, trans: 'slide', dur: 220, fadeMs: 300 }, gx: { font: 'bebas', skin: 'tact', bgmode: 'grid', grade: 'off', btn: false, hud: true, glow: false, scan: false } },
+  { id: 'party', name: 'זירת מסיבה', t: { ac: '#2fe0b5', am: '#ffd23f', bg: '#0b0d2a', p1: '#161a4a', p2: '#2a2d7a', ln: '#4f7cff', tx: '#ffffff', mu: '#c3c8ff', ot: '#0b0d2a', btn: 'sharp', bw: 3, balign: 'c', overlay: 0.5, trans: 'slide', dur: 260, fadeMs: 350 }, gx: { font: 'secular', skin: 'party', bgmode: 'party', grade: 'retro', btn: false, hud: true, glow: true, scan: false } },
   { id: 'paper', name: 'נייר בהיר', t: { ac: '#274690', am: '#c4501b', bg: '#f4f1ea', p1: '#fffdf8', p2: '#ece7da', ln: '#cfc8b8', tx: '#23211d', mu: '#6f6a5e', btn: 'sharp', bw: 1, balign: 'c', overlay: 0.2, trans: 'fade', dur: 350, fadeMs: 500 }, gx: { font: 'frank', skin: 'paper', bgmode: 'dots', grade: 'off', btn: false, hud: false, glow: false, vig: false, stage: false, scan: false } }
 ];
 const NX_GXSW = [
@@ -9927,8 +9961,8 @@ function nxGxWindow(t) {
   NX_GXSW.forEach((r) => { h += '<label><input type="checkbox" data-k="theme.gx.' + r[0] + '"' + (g[r[0]] ? ' checked' : '') + '> ' + r[1] + '</label>'; });
   h += '</div>';
   h += nxF('פונט משחקי', nxSel('theme.gx.font', g.font, [['keep', 'השתמש בפונט הכללי (למטה)']].concat(Object.keys(NX_FONTS).map((k) => [k, NX_FONTS[k][0]]))));
-  h += nxF('סגנון ממשק (צורות, מסגרות ופאנלים)', nxSel('theme.gx.skin', g.skin || '', [['', 'בסיסי'], ['mil', 'צבאי טקטי'], ['tact', 'צהוב טקטי (שחור וזהב)'], ['glass', 'זכוכית'], ['arcade', 'ארקייד'], ['race', 'מירוץ קרבון'], ['paper', 'נייר בהיר']]));
-  h += nxF('רקע התפריט', nxSel('theme.gx.bgmode', g.bgmode || 'grid', [['grid', 'רשת ונצנוצים'], ['radar', 'מכ"ם'], ['bokeh', 'כדורי אור'], ['retro', 'שמש רטרו'], ['streaks', 'קווי מהירות'], ['dots', 'נקודות שקטות'], ['none', 'בלי רקע']]));
+  h += nxF('סגנון ממשק (צורות, מסגרות ופאנלים)', nxSel('theme.gx.skin', g.skin || '', [['', 'בסיסי'], ['mil', 'צבאי טקטי'], ['tact', 'צהוב טקטי (שחור וזהב)'], ['glass', 'זכוכית'], ['arcade', 'ארקייד'], ['race', 'מירוץ קרבון'], ['paper', 'נייר בהיר'], ['party', 'זירת מסיבה']]));
+  h += nxF('רקע התפריט', nxSel('theme.gx.bgmode', g.bgmode || 'grid', [['grid', 'רשת ונצנוצים'], ['radar', 'מכ"ם'], ['bokeh', 'כדורי אור'], ['retro', 'שמש רטרו'], ['streaks', 'קווי מהירות'], ['dots', 'נקודות שקטות'], ['party', 'זרקורים וקונפטי'], ['none', 'בלי רקע']]));
   h += nxF('גוון מפות', nxSel('theme.gx.grade', g.grade, [['auto', 'אוטומטי לפי המפה']].concat(Object.keys(GX_GRADES).map((k) => [k, GX_GRADES[k].name]))));
   h += '<h4>ערכות משחקיות מוכנות</h4><div class="nxbtns">' + NX_GXPRESETS.map((p, i) => '<button class="nxb' + (NX.draft.gxp === p.name ? ' sel' : '') + '" data-act="gx-preset" data-i="' + i + '">' + nxEsc(p.name) + '</button>').join('') + '' + Object.keys(NX.themes).map((id) => '<span style="display:inline-flex;align-items:stretch"><button class="nxb" data-act="gx-saved" data-id="' + id + '" title="ערכה שנשמרה">★ ' + nxEsc(NX.themes[id].name || id) + '</button><button class="nxb" data-act="th-del" data-id="' + id + '" title="מחק את הערכה" style="color:#ff453a;padding:0 8px;margin-inline-start:-1px">&#10005;</button></span>').join('') + '</div>';
   const swo = NX_GXSW.filter((r) => r[0] !== 'scan'), allOn = swo.every((r) => g[r[0]]), allOff = swo.every((r) => !g[r[0]]);
