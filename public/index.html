@@ -1186,6 +1186,30 @@ button.stgnm b,button.stgnm small{display:block;pointer-events:none}button.stgnm
 button.stgnm.cur b{color:var(--ac)}button.stgnm.cur b:before{content:'\25C0  ';font-size:10px}
 #adm .nxrow2 button.nxb.cur{box-shadow:inset 0 0 0 2px var(--ac)}
 #adm .nxrow2 button.nxb.sm{flex:none;padding:4px 10px;font-size:12px;margin-inline-start:auto}
+
+/* ---------- stage video: recording panel (admin), playback screen (student), admin fields ---------- */
+#vidRec{display:none;position:fixed;right:14px;top:14px;width:300px;z-index:41;box-sizing:border-box;padding:12px 14px;background:color-mix(in srgb,var(--p1) 94%,transparent);border:1px solid #ff3d3d;direction:rtl;font:13px 'Rubik',Arial,sans-serif;color:var(--tx)}
+#vidRec .vrh{display:flex;align-items:center;gap:10px;font-size:16px;color:var(--ti,#fff)}#vidRec .dot{width:12px;height:12px;border-radius:50%;background:#6b7380}#vidRec .dot.on{background:#ff3d3d;box-shadow:0 0 10px #ff3d3d;animation:vidBlink 1s step-end infinite}
+#vidRec .vrt{font:700 30px var(--mono);direction:ltr;text-align:right;color:var(--ti,#fff);margin:6px 0}#vidRec .nxn{margin:4px 0;line-height:1.4}#vidRec .nxn.sm{font-size:11px;color:var(--mu)}
+#vidRec .nxbtns{display:flex;gap:6px;margin:4px 0}#vidRec button{font:700 13px 'Rubik',Arial,sans-serif;color:#fff;background:var(--tile2);border:0;padding:8px 14px;cursor:pointer}#vidRec button.pri{background:#ff3d3d}#vidRec button:disabled{opacity:.5}
+@keyframes vidBlink{50%{opacity:.25}}
+#vidPlay{display:none;position:fixed;inset:0;z-index:66;direction:rtl}#vidPlay.on{display:flex}
+#vidPlay .vstage{flex:1;min-width:0;position:relative;pointer-events:none}
+#vidPlay .vlive{position:absolute;left:18px;top:16px;display:flex;align-items:center;gap:10px;padding:6px 12px;background:rgba(11,12,14,.72);border:1px solid rgba(255,255,255,.25);font:600 12px var(--mono);letter-spacing:.2em;color:#fff;direction:ltr}#vidPlay .vlive .dot{width:10px;height:10px;border-radius:50%;background:#ff3d3d;box-shadow:0 0 10px #ff3d3d;animation:vidBlink 1.2s step-end infinite}
+#vidPlay .vtime{position:absolute;right:18px;top:16px;font:600 14px var(--mono);color:#fff;text-shadow:0 1px 3px #000;direction:ltr}
+#vidPlay #vidMap{position:absolute;right:18px;bottom:40px;width:200px;height:200px;background:rgba(11,12,14,.78);border:1px solid var(--ac)}
+#vidPlay .vprog{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.15)}#vidPlay .vprog div{height:100%;width:0;background:var(--ac)}
+#vidPlay .vside{flex:none;width:min(460px,38vw);box-sizing:border-box;background:color-mix(in srgb,var(--p1) 96%,transparent);border-right:1px solid var(--ln);display:flex;flex-direction:column;gap:14px;padding:26px 26px 22px;overflow:auto;font:14px 'Rubik',Arial,sans-serif;color:var(--tx)}
+#vidPlay .vk{font:500 11px var(--mono);letter-spacing:.3em;color:var(--mu)}#vidPlay h2{margin:0;font:700 30px var(--ui);font-style:italic;color:var(--ti,#fff);line-height:1.1}
+#vidPlay .vh{font-size:14px;font-weight:700;color:var(--ac)}#vidPlay .vtxt{flex:1;min-height:80px;font-size:15px;line-height:1.7;white-space:pre-line;overflow:auto}
+#vidPlay .vbtns{display:flex;gap:10px}#vidPlay .vbtns .fly{flex:1;height:58px;font-size:22px}#vidPlay .vbtns .b{height:58px;padding:0 20px}
+#vidPlay .vfoot{text-align:center;font-size:12px;color:var(--mu)}
+body.nx-open #vidPlay,body.nx-open #vidRec{display:none!important}
+.vidbox{display:flex;flex-direction:column;gap:10px;padding:10px 12px;margin:4px 0 8px;background:var(--ib,#0b0c0e);border:1px solid var(--ln)}.vidbox.on{border-color:var(--ac)}
+.vidbox .vidsw{align-items:flex-start;gap:10px}.vidbox .vidsw span{display:flex;flex-direction:column;gap:2px}.vidbox .vidsw small{font-size:11.5px;color:var(--mu);line-height:1.4;font-weight:400}
+.vidrow{display:flex;gap:10px;align-items:stretch}.vidpv{flex:1;min-width:0;padding:8px 10px;background:var(--p2);border:1px solid var(--ln);display:flex;flex-direction:column;gap:2px;justify-content:center}.vidpv b{font:700 22px var(--mono);color:var(--ti,#fff);direction:ltr;text-align:right}.vidpv small{font-size:11px;color:var(--mu);line-height:1.4}
+.vidbtns{display:flex;flex-direction:column;gap:6px;justify-content:center}
+#adm button.nxb.rec{background:#ff3d3d!important;color:#fff!important;display:flex;align-items:center;gap:8px}#adm button.nxb.rec i{width:10px;height:10px;border-radius:50%;background:#fff}
 </style>
 </head>
 <body>
@@ -1440,6 +1464,7 @@ button.stgnm.cur b{color:var(--ac)}button.stgnm.cur b:before{content:'\25C0  ';f
     <button class="mbtn" id="pRestart">התחל מרוץ מחדש</button>
     <button class="mbtn" id="pAdv">הגדרות</button>
     <button class="mbtn" id="pMode">חזור לטיסה חופשית</button>
+    <button class="mbtn" id="pVideo" style="display:none">הצג שוב את ההסבר</button>
     <button class="mbtn" id="pMaps">החלף מפה</button>
     <button class="mbtn" id="pMenu">תפריט ראשי</button>
   </div>
@@ -1563,7 +1588,7 @@ button.stgnm.cur b{color:var(--ac)}button.stgnm.cur b:before{content:'\25C0  ';f
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 392</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 393</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -1580,6 +1605,8 @@ button.stgnm.cur b{color:var(--ac)}button.stgnm.cur b:before{content:'\25C0  ';f
 <div id="nxSpec"><span id="nxSpecInfo"></span><button id="nxSpecCam">מצלמה: מעקב</button><button id="nxSpecX">סיום צפייה (Esc)</button></div>
 <div id="nxHold"><div></div></div>
 <div id="nxFall"></div>
+<div id="vidRec" dir="rtl"></div>
+<div id="vidPlay" dir="rtl"><div class="vstage"><div class="vlive"><i class="dot"></i><span>REPLAY · סרטון הסבר</span></div><div class="vtime" id="vidTime"></div><canvas id="vidMap" width="200" height="200" aria-label="מפה ממבט-על: איפה הרחפן במסלול"></canvas><div class="vprog"><div id="vidBar"></div></div></div><div class="vside" id="vidSide"></div></div>
 <div id="nxToast"></div>
 <div id="nxEd"><div class="box"><h3 id="nxEdT"></h3><p id="nxEdH"></p><div class="rows" id="nxEdRows"></div><div class="ft"><button data-ed="add">+ הוסף שורה</button><button data-ed="addmid" id="nxEdAddMid">+ הערה באמצע בין שערים</button><span style="flex:1"></span><button data-ed="cancel">ביטול</button><button class="go" data-ed="save">שמירה</button></div></div></div>
 <div id="trkPeek"></div>
@@ -5788,6 +5815,7 @@ function calcStars(total) {
    ============================================================ */
 let flashTimer = null;
 function showFlash(text, color) {
+  if (currentStage && typeof vidOn === 'function' && vidOn(currentStage.id) && typeof VID !== 'undefined' && !VID.rec && text !== 'סיום!') return;      // a video stage: no notes during the flight
   const el = $('flash');
   el.textContent = text;
   el.style.color = color || '#5fd08a';
@@ -8243,6 +8271,7 @@ function pauseGame() {
   paused = true;
   for (const k in keys) keys[k] = false;
   $('pauseSub').textContent = (currentStage && !customized ? 'שלב ' + currentStage.num + ' // ' + currentStage.name : 'מסלול מותאם אישית') + (lapRunning ? '  \u00B7  הקפה ' + lapNo + '/' + LAPS : '');
+  const pv = $('pVideo'); if (pv) pv.style.display = currentStage && typeof vidOf === 'function' && vidOf(currentStage.id) ? '' : 'none';
   $('pause').classList.add('on');
 }
 function resumeGame() {
@@ -8308,6 +8337,7 @@ $('pMode').addEventListener('click', backToFree);
 $('pResume').addEventListener('click', resumeGame);
 $('pRestart').addEventListener('click', () => { paused = false; hidePause(); resetRace(); canvas.focus(); });
 $('pMaps').addEventListener('click', () => goMenu('missions'));
+$('pVideo').addEventListener('click', () => { if (typeof vidShowAgain === 'function') vidShowAgain(); });
 $('pMenu').addEventListener('click', () => goMenu('main'));
 $('rAgain').addEventListener('click', () => { if (fadeBusy) return; fadeThrough('מאתחל...', () => { hideResults(); resetRace(); canvas.focus(); }); });
 function nextStageId() {                          // the next track in the list the player sees (custom tracks included)
@@ -8425,6 +8455,7 @@ function frame(now) {
   introFrame(dt);
   whoFrame();
   if (typeof nxFallTick === 'function') nxFallTick();
+  if (typeof vidTick === 'function') vidTick(dt);
   edSyncBody(dt);
   if (inMenu && currentScreen === 'main') drawMainDrone(dt); else if (MD.ph !== 'idle' || MD.t > 0) mdReset(mainDv);
   if (inMenu) {
@@ -9585,7 +9616,7 @@ async function nxLogin(un, pw, knownHash) {
   if (NX.checkCred) { let good = false; try { good = await NX.checkCred(un, h); } catch (e) { return e && e.status === 429 ? 'נסיונות רבים מדי, נסה שוב בעוד כמה דקות' : 'אין חיבור לשרת, נסה שוב'; } if (!good) return 'שם משתמש או סיסמה שגויים'; }   // hosted: the server compares, the hash is never sent out
   else if (h !== c.h) return 'שם משתמש או סיסמה שגויים';
   NX.un = un; NX.kickSeen = -1; nxDoneLoad(); await nxHistLoad();
-  try { const ps = await NX.db.doc('players/' + NX.uid).get(); const pd = ps && ps.exists ? ps.data() : null; if (pd && pd.un === un && Array.isArray(pd.done)) { pd.done.forEach((k) => { NX.done[k] = 1; }); try { localStorage.setItem(nxDoneKey(), JSON.stringify(NX.done)); } catch (e) { /* ignore */ } } } catch (e) { /* ignore */ }
+  try { const ps = await NX.db.doc('players/' + NX.uid).get(); const pd = ps && ps.exists ? ps.data() : null; if (pd && pd.un === un && Array.isArray(pd.vseen)) { NX.vseen = NX.vseen || {}; pd.vseen.forEach((k) => { NX.vseen[k] = 1; }); } if (pd && pd.un === un && Array.isArray(pd.done)) { pd.done.forEach((k) => { NX.done[k] = 1; }); try { localStorage.setItem(nxDoneKey(), JSON.stringify(NX.done)); } catch (e) { /* ignore */ } } } catch (e) { /* ignore */ }
   try { window.sessionStorage.setItem('fpvNexusLogin', JSON.stringify({ un, h })); localStorage.removeItem('fpvNexusLogin'); } catch (e) { /* ignore */ }      // the sign-in lives only as long as this tab: closing the page signs the student out (a reload keeps it)
   nxWatchAcct();
   return '';
@@ -9658,7 +9689,7 @@ function nxTelemetry() {
     stage: inMenu ? '' : (currentStage ? currentStage.name : ''), lap: lapRunning ? lapNo : 0, laps: trackLaps(),
     tot: flightMode === 'race' && !inMenu ? +(sumLaps + (lapRunning ? lapTime : 0)).toFixed(2) : 0,
     best: bestDisplay() || 0, spd: inMenu ? 0 : Math.round(drone.vel.length() * 3.6), crashes: nxCrashes,
-    drone: settings.preset, done: Object.keys(NX.done || {}), ts: Date.now()
+    drone: settings.preset, done: Object.keys(NX.done || {}), vseen: Object.keys(NX.vseen || {}), ts: Date.now()
   };
   NX.db.doc('players/' + NX.uid).set(o).catch(() => { /* viewer cannot write: stay silent */ });
 }
@@ -11341,6 +11372,9 @@ function nxAdmWireOn(body) {
     else if (a === 'pg-g') { NX.pgGid = el.dataset.v || ''; nxAdmRender(); }
     else if (a === 'drn-reset') { delete NX.draft.drones.col[id]; nxTouch(); nxAdmRender(); }
     else if (a === 'drn-fall' || a === 'drn-fall-step' || a === 'drn-fall-reset' || a === 'drn-test') nxFallAct(a, el);
+    else if (a === 'vid-rec') { nxCloseAll(); vidRecStart(id); }
+    else if (a === 'vid-play') { nxCloseAll(); nxOpen(false); VID.pending = id; selectTrack(id); startStage(id); }
+    else if (a === 'vid-del') { if (!el.dataset.armed) { el.dataset.armed = '1'; el.textContent = 'בטוח? מחק'; setTimeout(() => { el.dataset.armed = ''; el.textContent = 'מחק סרטון'; }, 2500); return; } const g = NX.draft.guides && NX.draft.guides[nxGuideKey(id)]; if (g) { delete g.vid; g.vidOn = false; nxTouch(); nxAdmRender(); } }
     else if (a === 'pl-spec') nxSpecStart(el.dataset.u);
     else if (a === 'pl-watch') { NX.watch = el.dataset.u; nxAdmRender(); }
     else if (a === 'gx-saved') { const t = NX.themes[id]; if (t) { NX.draft.theme = nxMerge(nxDefault().theme, nxClone(t.theme)); NX.draft.tx = nxClone(t.tx || {}); NX.draft.hide = nxClone(t.hide || {}); NX.draft.gxp = ''; nxTouch(); nxAdmRender(); nxToast('הוחלה ערכה: ' + (t.name || id)); } }
@@ -11697,6 +11731,7 @@ function nxGuideSeen(id, set) {
       if (fadeBusy || inMenu || !currentStage || currentStage.id !== id) { setTimeout(tick, 200); return; }
       const g = nxGuideOf(id); if (!g) return;
       if (g.steps.length) btn.style.display = 'block';
+      if (typeof vidOn === 'function' && vidOn(id)) { btn.style.display = 'none'; return; }      // the video stage: the recording plays instead, and nothing else pops up
       if (g.steps.length && !nxGuideSeen(id)) { nxGuideSeen(id, true); nxGuideShow(id); } else nxGuideAutoStart(id);
     };
     setTimeout(tick, 300);
@@ -11704,7 +11739,7 @@ function nxGuideSeen(id, set) {
   const hb = $('nxHint');
   if (hb) setInterval(() => {                                    // the in-flight hint follows the number of gates passed
     let txt = '';
-    if (currentStage && !inMenu && !editorMode && !nxGuideIsOpen && (state === 'racing' || state === 'countdown' || state === 'free')) {
+    if (currentStage && !inMenu && !editorMode && !nxGuideIsOpen && !(typeof vidOn === 'function' && vidOn(currentStage.id)) && (state === 'racing' || state === 'countdown' || state === 'free')) {
       const g = nxGuideOf(currentStage.id);
       if (g && g.fly.length) txt = g.fly[Math.min(state === 'racing' ? seq : 0, g.fly.length - 1)];
       if (g) { const mn = nxMidNote(g); if (mn) txt = mn; }
@@ -11712,7 +11747,7 @@ function nxGuideSeen(id, set) {
     if (hb.dataset.t !== txt) { hb.dataset.t = txt; hb.innerHTML = txt ? '<span>' + nxEsc(txt) + '</span>' : ''; hb.style.display = txt ? 'block' : 'none'; hb.classList.remove('pop'); void hb.offsetWidth; hb.classList.add('pop'); }
     const cb = $('nxCoach'); if (!cb) return;
     let parts = [];
-    if (state === 'racing' && currentStage && !inMenu && !editorMode && !nxGuideIsOpen && gates.length) {
+    if (state === 'racing' && currentStage && !inMenu && !editorMode && !nxGuideIsOpen && gates.length && !(typeof vidOn === 'function' && vidOn(currentStage.id))) {
       const g = nxGuideOf(currentStage.id);
       if (g && g.live) parts = nxCoachParts();
     }
@@ -11794,7 +11829,21 @@ function nxEdAct(a, i) {
   });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && $('nxEd').classList.contains('on')) nxEdClose(); });
 })();
+function nxVidFields(k, g) {                                     // the stage video: switch, recording, text beside it
+  const v = g.vid, id = nxVidStageId(k), has = !!(v && v.d && v.d.length);
+  let h = '<div class="vidbox' + (g.vidOn ? ' on' : '') + '">';
+  h += '<label class="nxchk1 vidsw"><input type="checkbox" data-k="guides.' + k + '.vidOn"' + (g.vidOn ? ' checked' : '') + '> <span><b>פתח את השלב עם סרטון הסבר</b><small>דלוק: בזמן הטיסה בשלב הזה לא מופיעות הוראות, משוב חי או אזהרות. התלמיד רואה את הסרטון פעם אחת, ויכול לראות שוב מתפריט ההשהיה.</small></span></label>';
+  h += '<div class="vidrow"><div class="vidpv">' + (has ? '<b>' + vidFmt(vidLen(v)) + '</b><small>' + nxEsc(PRESETS[v.drone] ? PRESETS[v.drone].label : '') + ' · ' + new Date(v.at || 0).toLocaleDateString('he-IL') + (v.by ? ' · ' + nxEsc(v.by) : '') + '<br>כולל תנועות סטיקים</small>' : '<small>אין סרטון עדיין.<br>לחץ "הקלט" וטוס את השלב.</small>') + '</div>';
+  h += '<div class="vidbtns"><button class="nxb rec" data-act="vid-rec" data-id="' + id + '"' + (id ? '' : ' disabled') + '><i></i>' + (has ? 'הקלט מחדש' : 'הקלט סרטון הסבר') + '</button>' +
+    (has ? '<button class="nxb" data-act="vid-play" data-id="' + id + '">נגן לבדיקה</button><button class="nxb danger" data-act="vid-del" data-id="' + id + '">מחק סרטון</button>' : '') + '</div></div>';
+  h += nxF('הטקסט ליד הסרטון', '<textarea data-k="guides.' + k + '.vidText" rows="6" placeholder="' + nxEsc(String(g.text || '').trim() ? 'ריק: יוצגו הצעדים של הכרטיס' : 'איך מבצעים את השלב, בכמה שורות') + '">' + nxEsc(g.vidText || '') + '</textarea>');
+  return h + '</div>';
+}
+function nxVidStageId(k) { if (STAGES[k]) return k; if (STAGES['pub_' + k]) return 'pub_' + k; return ''; }
 function nxGuideFields(k, g) {
+  return nxVidFields(k, g) + '<details class="catbox vidold"' + (g.vidOn ? '' : ' open') + '><summary><b>הכרטיס הכתוב</b><span class="catn">' + (g.vidOn ? 'לא בשימוש כשהסרטון דלוק' : 'מוצג לתלמיד') + '</span></summary>' + nxGuideFieldsOld(k, g) + '</details>';
+}
+function nxGuideFieldsOld(k, g) {
   return nxF('כותרת', '<input type="text" maxlength="60" data-k="guides.' + k + '.title" value="' + nxEsc(g.title || '') + '" placeholder="ברירת מחדל: שם המסלול">') +
       nxF('צעדים', nxGdSummary(k, 'text', g.text)) +
       nxF('הוראות בזמן הטיסה', nxGdSummary(k, 'fly', g.fly)) +
@@ -13122,6 +13171,222 @@ function nxMzAct(a, el) {
     done(true); nxToast(n + ' שירים נוספו' + (bad ? ' · ' + bad + ' שורות לא תקינות דולגו' : ''));
   }
   return true;
+}
+
+/* ============================================================
+   STAGE VIDEO: the instructor records a flight of the stage (position, orientation and the sticks);
+   the student watches it from the drone's camera before flying, once, and can watch again from the pause menu.
+   While the switch is on, nothing pops up during the student's flight in that stage.
+   ============================================================ */
+const VID_FPS = 15, VID_MAX_S = 180;
+const VID = { rec: null, play: null, seenCache: null, pending: null };
+function vidKey(id) { return nxGuideKey(id); }
+function vidGuideRaw(id) { const c = NX.role === 'admin' && !NX.preview ? NX.draft : NX.pub; return c && c.guides && c.guides[vidKey(id)] || null; }
+function vidOf(id) {                                              // the recording of a stage, when the switch is on and there is something to play
+  const g = vidGuideRaw(id); if (!g || !g.vidOn || !g.vid || !g.vid.d || g.vid.d.length < 11 * 2) return null;
+  return g.vid;
+}
+function vidOn(id) { const g = vidGuideRaw(id); return !!(g && g.vidOn); }
+function vidText(id) { const g = vidGuideRaw(id); return g ? String(g.vidText || g.text || '') : ''; }
+function vidFrames(v) { return Math.floor(v.d.length / 11); }
+function vidLen(v) { return vidFrames(v) / (v.fps || VID_FPS); }
+function vidFmt(s) { s = Math.max(0, Math.round(s)); return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); }
+
+/* ---------- recording (admin) ---------- */
+function vidRecStart(id) {
+  if (!STAGES[id] || NX.role !== 'admin' || fadeBusy) return;
+  VID.rec = { id, d: [], acc: 0, t: 0, armed: false };
+  nxOpen(false);
+  if (typeof nxGuideSeen === 'function') nxGuideSeen(id, true);    // the old card must not pop up on the instructor while recording
+  selectTrack(id); startStage(id);
+  vidRecPanel();
+}
+function vidRecTick(dt) {
+  const r = VID.rec; if (!r) return;
+  if (fadeBusy) return;
+  if (inMenu || !currentStage || currentStage.id !== r.id) { vidRecCancel(); return; }
+  const moving = !paused && !editorMode && (state === 'racing' || (state === 'free' && !lockOn() && !stageIntro) || state === 'crashed');
+  if (!r.armed) { if (state === 'racing' || (state === 'free' && !stageIntro && (input.throttle > 0.05 || Math.abs(input.pitch) > 0.1))) r.armed = true; else { vidRecPanel(); return; } }
+  if (moving) {
+    r.acc += dt; r.t += dt;
+    while (r.acc >= 1 / VID_FPS) {
+      r.acc -= 1 / VID_FPS;
+      r.d.push(+drone.pos.x.toFixed(2), +drone.pos.y.toFixed(2), +drone.pos.z.toFixed(2), +drone.quat.x.toFixed(3), +drone.quat.y.toFixed(3), +drone.quat.z.toFixed(3), +drone.quat.w.toFixed(3),
+        +input.throttle.toFixed(2), +input.roll.toFixed(2), +input.pitch.toFixed(2), +input.yaw.toFixed(2));
+    }
+  }
+  if (state === 'finished' || r.t >= VID_MAX_S) { vidRecStop(true); return; }
+  vidRecPanel();
+}
+function vidRecPanel() {
+  const el = $('vidRec'); if (!el) return;
+  const r = VID.rec; if (!r) { el.style.display = 'none'; return; }
+  el.style.display = 'block';
+  const st = STAGES[r.id];
+  el.innerHTML = '<div class="vrh"><i class="dot' + (r.armed ? ' on' : '') + '"></i><b>' + (r.armed ? 'מקליט סרטון הסבר' : 'מוכן להקלטה') + '</b></div>' +
+    '<div class="nxn">' + nxEsc(st.name) + ' · ' + nxEsc(PRESETS[settings.preset].label) + '<br>' + (r.armed ? 'ההקלטה תיעצר בסיום המסלול.' : 'ההקלטה מתחילה ב-GO או ברגע שנותנים גז.') + '</div>' +
+    '<div class="vrt">' + vidFmt(r.t) + '.' + String(Math.floor((r.t % 1) * 10)) + '</div>' +
+    '<div class="nxbtns"><button class="nxb pri" data-act="vid-stop"' + (r.armed ? '' : ' disabled') + '>עצור ושמור</button><button class="nxb" data-act="vid-cancel">בטל</button></div>' +
+    '<div class="nxn sm">ללא הוראות, משוב או אזהרות: המסך נקי בדיוק כמו שהתלמיד יראה.</div>';
+}
+function vidRecStop(save) {
+  const r = VID.rec; if (!r) return;
+  VID.rec = null; vidRecPanel();
+  if (save && r.d.length >= 11 * VID_FPS) {
+    const k = vidKey(r.id), g = NX.draft.guides = NX.draft.guides || {};
+    g[k] = g[k] || {};
+    g[k].vid = { fps: VID_FPS, d: r.d, drone: settings.preset, at: Date.now(), by: NX.me && NX.me.name || '' };
+    g[k].vidOn = true;
+    nxTouch();
+    if (typeof nxToast === 'function') nxToast('הסרטון נשמר: ' + vidFmt(vidLen(g[k].vid)) + ' · לחץ "שמירה" כדי לפרסם לתלמידים');
+  } else if (save && typeof nxToast === 'function') nxToast('ההקלטה קצרה מדי, לא נשמרה');
+  vidBackToAdmin(r.id);
+}
+function vidRecCancel() { const r = VID.rec; if (!r) return; VID.rec = null; vidRecPanel(); }
+function vidBackToAdmin(id) {
+  if (fadeBusy) { setTimeout(() => vidBackToAdmin(id), 200); return; }
+  try { hideResults(); hidePause(); } catch (e) { /* ignore */ }
+  NX.tab = 'tracks'; NX.selTrk = id;
+  NX.openK = NX.openK || {}; NX.openK.tp_guide = true;
+  goMenu('missions');
+  nxOpen(true);
+}
+
+/* ---------- playback (student, and the admin's "play to check") ---------- */
+const _vq0 = new THREE.Quaternion(), _vq1 = new THREE.Quaternion();
+function vidPlayStart(id, opts) {
+  const v = vidOf(id); if (!v || !currentStage || currentStage.id !== id) return false;
+  opts = opts || {};
+  VID.play = { id, v, t: 0, n: vidFrames(v), onEnd: opts.onEnd || null, wasPaused: paused, map: null };
+  paused = true; stageIntro = true;
+  $('countdown').style.opacity = '0';
+  vidPlayUI(true);
+  vidPlayFrame(0);
+  return true;
+}
+function vidPlayFrame(t) {
+  const p = VID.play; if (!p) return;
+  const v = p.v, fps = v.fps || VID_FPS, f = Math.min(p.n - 1, t * fps), i0 = Math.floor(f), i1 = Math.min(p.n - 1, i0 + 1), a = f - i0, d = v.d;
+  const A = i0 * 11, B = i1 * 11;
+  drone.pos.set(d[A] + (d[B] - d[A]) * a, d[A + 1] + (d[B + 1] - d[A + 1]) * a, d[A + 2] + (d[B + 2] - d[A + 2]) * a);
+  _vq0.set(d[A + 3], d[A + 4], d[A + 5], d[A + 6]); _vq1.set(d[B + 3], d[B + 4], d[B + 5], d[B + 6]);
+  drone.quat.copy(_vq0).slerp(_vq1, a).normalize();
+  drone.vel.set(0, 0, 0); drone.thrAct = d[A + 7];
+  input.throttle = d[A + 7] + (d[B + 7] - d[A + 7]) * a; input.roll = d[A + 8] + (d[B + 8] - d[A + 8]) * a; input.pitch = d[A + 9] + (d[B + 9] - d[A + 9]) * a; input.yaw = d[A + 10] + (d[B + 10] - d[A + 10]) * a;
+}
+function vidPlayTick(dt) {
+  const p = VID.play; if (!p) return;
+  p.t += dt;
+  const len = p.n / (p.v.fps || VID_FPS);
+  if (p.t >= len) { p.t = len; vidPlayFrame(len); vidPlayProgress(len, len); vidPlayEnd(); return; }
+  vidPlayFrame(p.t); vidPlayProgress(p.t, len); vidPlayMap();
+}
+function vidPlayProgress(t, len) {
+  const bar = $('vidBar'), tm = $('vidTime'); if (bar) bar.style.width = (len ? t / len * 100 : 0).toFixed(1) + '%'; if (tm) tm.textContent = vidFmt(t) + ' / ' + vidFmt(len);
+}
+function vidPlayMap() {
+  const p = VID.play, cv = $('vidMap'); if (!p || !cv) return;
+  if (!p.map) { try { drawMiniMap(cv, currentStage.gen(), currentStage.color); } catch (e) { /* ignore */ } p.map = { base: null }; try { p.map.base = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height); } catch (e) { /* ignore */ } p.map.box = vidMapBox(); }
+  const g = cv.getContext('2d'), m = p.map; if (!g || !m.base || !m.box) return;
+  g.putImageData(m.base, 0, 0);
+  const b = m.box, x = (drone.pos.x - b.x0) / b.w, z = (drone.pos.z - b.z0) / b.h;
+  const px = cv.width * 0.5 + (x - 0.5) * cv.width * b.sc, py = cv.height * 0.5 + (z - 0.5) * cv.height * b.sc;
+  g.save(); g.translate(px, py); const yaw = Math.atan2(2 * (drone.quat.w * drone.quat.y + drone.quat.x * drone.quat.z), 1 - 2 * (drone.quat.y * drone.quat.y + drone.quat.z * drone.quat.z));
+  g.rotate(-yaw); g.fillStyle = '#e6b450'; g.shadowColor = '#e6b450'; g.shadowBlur = 8; g.beginPath(); g.moveTo(0, -7); g.lineTo(5, 6); g.lineTo(0, 3); g.lineTo(-5, 6); g.closePath(); g.fill(); g.restore();
+}
+function vidMapBox() {                                            // the same framing drawMiniMap uses: the track's bounding box, padded, centred
+  try {
+    const gts = currentStage.gen(); let x0 = Infinity, x1 = -Infinity, z0 = Infinity, z1 = -Infinity;
+    gts.forEach((q) => { x0 = Math.min(x0, q.x); x1 = Math.max(x1, q.x); z0 = Math.min(z0, q.z); z1 = Math.max(z1, q.z); });
+    const w = Math.max(x1 - x0, 1), h = Math.max(z1 - z0, 1), s = Math.max(w, h) * 1.25;
+    return { x0: (x0 + x1) / 2 - s / 2, z0: (z0 + z1) / 2 - s / 2, w: s, h: s, sc: 1 };
+  } catch (e) { return null; }
+}
+function vidPlayEnd() {                                           // the recording is over: the drone waits at the end for "start" or "watch again"
+  const p = VID.play; if (!p) return;
+  const b = $('vidPlayBtn'); if (b) b.textContent = 'נגן שוב';
+  p.done = true;
+}
+function vidPlayStop(start) {
+  const p = VID.play; if (!p) return;
+  VID.play = null; vidPlayUI(false);
+  input.throttle = 0; input.roll = 0; input.pitch = 0; input.yaw = 0;
+  try { placeDroneAtStart(); } catch (e) { /* ignore */ }
+  stageIntro = false; paused = false;
+  try { canvas.focus(); } catch (e) { /* ignore */ }
+  if (p.onEnd) p.onEnd(start);
+}
+function vidPlayUI(on) {
+  const el = $('vidPlay'); if (!el) return;
+  if (!on) { el.classList.remove('on'); return; }
+  const p = VID.play, st = STAGES[p.id], v = p.v, len = vidLen(v), c = typeof TC !== 'undefined' && TC.cat ? TC.cat[p.id] : null;
+  const req = typeof trkCarReq === 'function' ? trkCarReq(p.id) : [];
+  $('vidSide').innerHTML = '<div class="vk">' + nxEsc((st.num ? 'שלב ' + String(st.num).padStart(2, '0') : 'שלב') + (c ? ' · ' + c.cat : '')) + '</div><h2>' + nxEsc(st.name) + '</h2><div class="vh">איך מבצעים את השלב</div>' +
+    '<div class="vtxt">' + nxEsc(vidText(p.id)) + '</div>' +
+    (req.length ? '<div class="tcReq"><span>מה נדרש כדי לעבור</span><div>' + req.map((r) => '<em class="' + (r.soft ? 'soft' : 'hard') + '">' + nxEsc(r.t) + '</em>').join('') + '</div></div>' : '') +
+    '<div class="vbtns"><button class="fly" id="vidGo">התחל <span class="en">FLY</span></button><button class="b" id="vidSkip">דלג</button><button class="b" id="vidPlayBtn" title="נגן מההתחלה">&#8635;</button></div>' +
+    '<div class="nxn vfoot">' + (p.again ? 'הצגה חוזרת של ההסבר' : 'הסרטון מוצג בפעם הראשונה בלבד · אפשר לראות שוב מתפריט ההשהיה') + '</div>';
+  $('vidTime').textContent = '00:00 / ' + vidFmt(len); $('vidBar').style.width = '0';
+  el.classList.add('on');
+}
+(function vidWire() {
+  const el = $('vidPlay'), rp = $('vidRec'); if (!el || !el.addEventListener) return;
+  el.addEventListener('click', (e) => {
+    const t = e.target.closest ? e.target.closest('button') : null; if (!t) return;
+    if (t.id === 'vidGo') vidPlayStop(true);
+    else if (t.id === 'vidSkip') vidPlayStop(false);
+    else if (t.id === 'vidPlayBtn') { const p = VID.play; if (p) { p.t = 0; p.done = false; t.textContent = '↻'; vidPlayFrame(0); } }
+  });
+  if (rp) rp.addEventListener('click', (e) => {
+    const t = e.target.closest ? e.target.closest('[data-act]') : null; if (!t) return;
+    if (t.dataset.act === 'vid-stop') vidRecStop(true); else if (t.dataset.act === 'vid-cancel') { vidRecCancel(); vidBackToAdmin(currentStage ? currentStage.id : ''); }
+  });
+  window.addEventListener('keydown', (e) => {
+    if (!VID.play) return;
+    if (e.key === 'Enter') { e.preventDefault(); e.stopImmediatePropagation(); vidPlayStop(true); }
+    else if (e.key === 'Escape') { e.preventDefault(); e.stopImmediatePropagation(); vidPlayStop(false); }
+  }, true);
+})();
+function vidTick(dt) { vidRecTick(dt); vidPlayTick(dt); }
+
+/* ---------- "seen once" per student, kept with the player's record on the server ---------- */
+function vidSeenKey(id) { const v = vidOf(id); return vidKey(id) + ':' + (v ? v.at : 0); }
+function vidSeen(id) {
+  const k = vidSeenKey(id);
+  if (NX.vseen && NX.vseen[k]) return true;
+  try { const m = JSON.parse(localStorage.getItem('fpvNexusVidSeen') || '{}'); return !!m[k]; } catch (e) { return false; }
+}
+function vidMarkSeen(id) {
+  const k = vidSeenKey(id);
+  try { const m = JSON.parse(localStorage.getItem('fpvNexusVidSeen') || '{}'); m[k] = 1; localStorage.setItem('fpvNexusVidSeen', JSON.stringify(m)); } catch (e) { /* ignore */ }
+  NX.vseen = NX.vseen || {}; NX.vseen[k] = 1;                       // the player's record on the server carries it (written with the live status)
+}
+/* when a stage starts: the video first (once), then the normal flow (countdown / auto race) */
+(function vidHook() {
+  if (typeof startStage !== 'function') return;
+  const ss = startStage;
+  startStage = function (id, editNow) {
+    ss(id, editNow);
+    if (editNow || VID.rec) return;
+    const v = vidOf(id); if (!v) return;
+    const again = VID.pending === id; VID.pending = null;
+    if (!again && vidSeen(id)) return;
+    const t0 = Date.now(), tick = () => {
+      if (Date.now() - t0 > 5000) return;
+      if (fadeBusy || inMenu || !currentStage || currentStage.id !== id) { setTimeout(tick, 150); return; }
+      if (typeof nxGuideClose === 'function') nxGuideClose();
+      if (!again) vidMarkSeen(id);
+      vidPlayStart(id, { onEnd: (start) => { if (typeof nxGuideAutoStart === 'function') nxGuideAutoStart(id); } });
+      if (VID.play) VID.play.again = again;
+    };
+    setTimeout(tick, 120);
+  };
+})();
+function vidShowAgain() {                                         // from the pause menu: the stage restarts and the video plays once more
+  if (!currentStage || !vidOf(currentStage.id)) return;
+  const id = currentStage.id; VID.pending = id;
+  hidePause(); paused = false;
+  startStage(id);
 }
 
 /* ---------- boot ---------- */
