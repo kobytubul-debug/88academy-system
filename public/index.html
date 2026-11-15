@@ -1194,7 +1194,7 @@ button.stgnm.cur b{color:var(--ac)}button.stgnm.cur b:before{content:'\25C0  ';f
 #vidRec .nxbtns{display:flex;gap:6px;margin:4px 0}#vidRec button{font:700 13px 'Rubik',Arial,sans-serif;color:#fff;background:var(--tile2);border:0;padding:8px 14px;cursor:pointer}#vidRec button.pri{background:#ff3d3d}#vidRec button:disabled{opacity:.5}
 @keyframes vidBlink{50%{opacity:.25}}
 #vidPlay{display:none;position:fixed;inset:0;z-index:66;direction:rtl;background:#0b0c0e;overflow:auto;font:14px 'Rubik',Arial,sans-serif;color:var(--tx)}#vidPlay.on{display:block}
-#vidPlay .vcol{max-width:1120px;margin:0 auto;padding:22px 24px 40px;display:flex;flex-direction:column;gap:0}
+#vidPlay .vcol{display:flex;flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:22px;padding:22px 24px 40px}#vidPlay .vmain{flex:none;width:min(1072px,calc(100vw - 48px));display:flex;flex-direction:column}#vidPlay .vdesc{flex:1 1 300px;min-width:0}
 #vidPlay .vbox{position:relative;width:100%;aspect-ratio:16/9;background:#000;border:1px solid var(--ln);overflow:hidden}#vidPlay #vidCv{position:absolute;inset:0;width:100%;height:100%;display:block}
 #vidPlay .vlive{position:absolute;left:14px;top:12px;display:flex;align-items:center;gap:10px;padding:5px 10px;background:rgba(11,12,14,.72);border:1px solid rgba(255,255,255,.25);font:600 11px var(--mono);letter-spacing:.2em;color:#fff;direction:ltr}#vidPlay .vlive .dot{width:9px;height:9px;border-radius:50%;background:#ff3d3d;box-shadow:0 0 10px #ff3d3d;animation:vidBlink 1.2s step-end infinite}
 #vidPlay #vidMap{position:absolute;right:14px;bottom:14px;width:160px;height:160px;background:rgba(11,12,14,.78);border:1px solid var(--ac)}
@@ -1209,7 +1209,7 @@ button.stgnm.cur b{color:var(--ac)}button.stgnm.cur b:before{content:'\25C0  ';f
 #vidPlay .vside{display:flex;flex-direction:column;gap:12px;padding:18px 4px 0}
 #vidPlay .vk{font:500 11px var(--mono);letter-spacing:.3em;color:var(--mu)}#vidPlay h2{margin:0;font:700 28px var(--ui);font-style:italic;color:var(--ti,#fff);line-height:1.1}
 #vidPlay .vbtns{display:flex;gap:10px;margin:4px 0 6px}#vidPlay .vbtns .fly{height:56px;padding:0 44px;font-size:22px}#vidPlay .vbtns .b{height:56px;padding:0 22px}
-#vidPlay .vdesc{display:flex;flex-direction:column;gap:10px;padding:14px 16px;background:var(--p1);border:1px solid var(--ln)}
+#vidPlay .vdesc{display:flex;flex-direction:column;gap:10px;padding:14px 16px;background:var(--p1);border:1px solid var(--ln);min-height:200px}
 #vidPlay .vh{font-size:14px;font-weight:700;color:var(--ac)}#vidPlay .vtxt{font-size:15px;line-height:1.7;white-space:pre-line}
 #vidPlay .vfoot{font-size:12px;color:var(--mu)}
 .vidwin{position:relative;width:100%;aspect-ratio:16/9;background:#000;border:1px solid var(--ln);overflow:hidden}.vidwin canvas.vidcv{position:absolute;inset:0;width:100%;height:100%;display:block}
@@ -1599,7 +1599,7 @@ body.nx-open #vidPlay,body.nx-open #vidRec{display:none!important}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 396</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 397</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -1617,7 +1617,7 @@ body.nx-open #vidPlay,body.nx-open #vidRec{display:none!important}
 <div id="nxHold"><div></div></div>
 <div id="nxFall"></div>
 <div id="vidRec" dir="rtl"></div>
-<div id="vidPlay" dir="rtl"><div class="vcol"><div class="vbox" id="vidBox"><canvas id="vidCv" width="960" height="540"></canvas><div class="vlive"><i class="dot"></i><span>REPLAY · סרטון הסבר</span></div><canvas id="vidMap" width="160" height="160" aria-label="מפה ממבט-על: איפה הרחפן במסלול"></canvas><div class="vgims"><div class="gim"><canvas id="vidGimL" width="264" height="264"></canvas></div><div class="gim"><canvas id="vidGimR" width="264" height="264"></canvas></div></div></div><div class="vctl"><button id="vidPP" aria-label="נגן"><i class="play"></i></button><button id="vidStop" aria-label="עצור"><i class="stop"></i></button><div class="vprog" role="slider" aria-label="מיקום בסרטון"><div id="vidBar"></div></div><div class="vtime" id="vidTime"></div></div><div class="vside" id="vidSide"></div></div></div>
+<div id="vidPlay" dir="rtl"><div class="vcol"><div class="vmain"><div class="vbox" id="vidBox"><canvas id="vidCv" width="960" height="540"></canvas><div class="vlive"><i class="dot"></i><span>REPLAY · סרטון הסבר</span></div><canvas id="vidMap" width="160" height="160" aria-label="מפה ממבט-על: איפה הרחפן במסלול"></canvas><div class="vgims"><div class="gim"><canvas id="vidGimL" width="264" height="264"></canvas></div><div class="gim"><canvas id="vidGimR" width="264" height="264"></canvas></div></div></div><div class="vctl"><button id="vidPP" aria-label="נגן"><i class="play"></i></button><button id="vidStop" aria-label="עצור"><i class="stop"></i></button><div class="vprog" role="slider" aria-label="מיקום בסרטון"><div id="vidBar"></div></div><div class="vtime" id="vidTime"></div></div><div class="vside" id="vidSide"></div></div><div class="vdesc" id="vidDesc"></div></div></div>
 <div id="nxToast"></div>
 <div id="nxEd"><div class="box"><h3 id="nxEdT"></h3><p id="nxEdH"></p><div class="rows" id="nxEdRows"></div><div class="ft"><button data-ed="add">+ הוסף שורה</button><button data-ed="addmid" id="nxEdAddMid">+ הערה באמצע בין שערים</button><span style="flex:1"></span><button data-ed="cancel">ביטול</button><button class="go" data-ed="save">שמירה</button></div></div></div>
 <div id="trkPeek"></div>
@@ -13378,9 +13378,9 @@ function vidPlayUI(on) {
   const req = typeof trkCarReq === 'function' ? trkCarReq(p.id) : [];
   $('vidSide').innerHTML = '<div class="vk">' + nxEsc((st.num ? 'שלב ' + String(st.num).padStart(2, '0') : 'שלב') + (c ? ' · ' + c.cat : '') + ' · סרטון הסבר · ' + vidFmt(len)) + '</div><h2>' + nxEsc(st.name) + '</h2>' +
     '<div class="vbtns"><button class="fly" id="vidGo">התחל <span class="en">FLY</span></button><button class="b" id="vidSkip">דלג</button></div>' +
-    '<div class="vdesc"><div class="vh">איך מבצעים את השלב</div><div class="vtxt">' + nxEsc(vidText(p.id)) + '</div>' +
-    (req.length ? '<div class="tcReq"><span>מה נדרש כדי לעבור</span><div>' + req.map((r) => '<em class="' + (r.soft ? 'soft' : 'hard') + '">' + nxEsc(r.t) + '</em>').join('') + '</div></div>' : '') +
-    '<div class="nxn vfoot">' + (p.again ? 'הצגה חוזרת של ההסבר' : 'הסרטון מוצג בפעם הראשונה בלבד · אפשר לראות שוב מתפריט ההשהיה') + '</div></div>';
+    '<div class="nxn vfoot">' + (p.again ? 'הצגה חוזרת של ההסבר' : 'הסרטון מוצג בפעם הראשונה בלבד · אפשר לראות שוב מתפריט ההשהיה') + '</div>';
+  $('vidDesc').innerHTML = '<div class="vh">איך מבצעים את השלב</div><div class="vtxt">' + nxEsc(vidText(p.id)) + '</div>' +
+    (req.length ? '<div class="tcReq"><span>מה נדרש כדי לעבור</span><div>' + req.map((r) => '<em class="' + (r.soft ? 'soft' : 'hard') + '">' + nxEsc(r.t) + '</em>').join('') + '</div></div>' : '');
   $('vidTime').textContent = '00:00 / ' + vidFmt(len); $('vidBar').style.width = '0';
   p.gim = [$('vidGimL'), $('vidGimR')];
   try { const s = $('sticks'); if (s) p.gimStyle = getComputedStyle(s.querySelector('canvas')); } catch (e) { /* ignore */ }
