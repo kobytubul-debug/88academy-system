@@ -1198,7 +1198,7 @@ button.stgnm.cur b{color:var(--ac)}button.stgnm.cur b:before{content:'\25C0  ';f
 #vidPlay .vbox{position:relative;width:100%;aspect-ratio:16/9;background:#000;border:1px solid var(--ln);overflow:hidden}#vidPlay #vidCv{position:absolute;inset:0;width:100%;height:100%;display:block}
 #vidPlay .vlive{position:absolute;left:14px;top:12px;display:flex;align-items:center;gap:10px;padding:5px 10px;background:rgba(11,12,14,.72);border:1px solid rgba(255,255,255,.25);font:600 11px var(--mono);letter-spacing:.2em;color:#fff;direction:ltr}#vidPlay .vlive .dot{width:9px;height:9px;border-radius:50%;background:#ff3d3d;box-shadow:0 0 10px #ff3d3d;animation:vidBlink 1.2s step-end infinite}
 #vidPlay #vidMap{position:absolute;right:14px;bottom:14px;width:160px;height:160px;background:rgba(11,12,14,.78);border:1px solid var(--ac)}
-#vidPlay .vgims{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);display:flex;gap:12px;direction:ltr}#vidPlay .vgims canvas{width:90px;height:90px}
+#vidPlay .vgims{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;gap:clamp(6px,1vw,14px);direction:ltr;align-items:flex-end}
 #vidPlay .vctl{display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--p1);border:1px solid var(--ln);border-top:0;direction:ltr}
 #vidPlay .vctl button{width:44px;height:44px;border:0;background:var(--p2);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}#vidPlay .vctl button:hover{background:var(--ac)}
 #vidPlay .vctl i.play{display:block;width:0;height:0;border-top:11px solid transparent;border-bottom:11px solid transparent;border-left:18px solid #fff;margin-left:4px}
@@ -1599,7 +1599,7 @@ body.nx-open #vidPlay,body.nx-open #vidRec{display:none!important}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 394</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 395</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -1617,7 +1617,7 @@ body.nx-open #vidPlay,body.nx-open #vidRec{display:none!important}
 <div id="nxHold"><div></div></div>
 <div id="nxFall"></div>
 <div id="vidRec" dir="rtl"></div>
-<div id="vidPlay" dir="rtl"><div class="vcol"><div class="vbox" id="vidBox"><canvas id="vidCv" width="960" height="540"></canvas><div class="vlive"><i class="dot"></i><span>REPLAY · סרטון הסבר</span></div><canvas id="vidMap" width="160" height="160" aria-label="מפה ממבט-על: איפה הרחפן במסלול"></canvas><div class="vgims"><canvas id="vidGimL" width="90" height="90"></canvas><canvas id="vidGimR" width="90" height="90"></canvas></div></div><div class="vctl"><button id="vidPP" aria-label="נגן"><i class="play"></i></button><button id="vidStop" aria-label="עצור"><i class="stop"></i></button><div class="vprog" role="slider" aria-label="מיקום בסרטון"><div id="vidBar"></div></div><div class="vtime" id="vidTime"></div></div><div class="vside" id="vidSide"></div></div></div>
+<div id="vidPlay" dir="rtl"><div class="vcol"><div class="vbox" id="vidBox"><canvas id="vidCv" width="960" height="540"></canvas><div class="vlive"><i class="dot"></i><span>REPLAY · סרטון הסבר</span></div><canvas id="vidMap" width="160" height="160" aria-label="מפה ממבט-על: איפה הרחפן במסלול"></canvas><div class="vgims"><div class="gim"><canvas id="vidGimL" width="264" height="264"></canvas></div><div class="gim"><canvas id="vidGimR" width="264" height="264"></canvas></div></div></div><div class="vctl"><button id="vidPP" aria-label="נגן"><i class="play"></i></button><button id="vidStop" aria-label="עצור"><i class="stop"></i></button><div class="vprog" role="slider" aria-label="מיקום בסרטון"><div id="vidBar"></div></div><div class="vtime" id="vidTime"></div></div><div class="vside" id="vidSide"></div></div></div>
 <div id="nxToast"></div>
 <div id="nxEd"><div class="box"><h3 id="nxEdT"></h3><p id="nxEdH"></p><div class="rows" id="nxEdRows"></div><div class="ft"><button data-ed="add">+ הוסף שורה</button><button data-ed="addmid" id="nxEdAddMid">+ הערה באמצע בין שערים</button><span style="flex:1"></span><button data-ed="cancel">ביטול</button><button class="go" data-ed="save">שמירה</button></div></div></div>
 <div id="trkPeek"></div>
@@ -11386,7 +11386,7 @@ function nxAdmWireOn(body) {
     else if (a === 'vid-rec') { nxCloseAll(); vidRecStart(id); }
     else if (a === 'vid-play') { vidPrevStart(id); nxAdmRender(); }
     else if (a === 'vid-pause') { vidPrevStop(); nxAdmRender(); }
-    else if (a === 'vid-student') { nxCloseAll(); vidPrevStop(); nxOpen(false); VID.pending = id; selectTrack(id); startStage(id); }
+    else if (a === 'vid-student') { nxCloseAll(); vidPrevStop(); vidCloseWins(); nxOpen(false); VID.pending = id; selectTrack(id); startStage(id); }
     else if (a === 'vid-del') { if (!el.dataset.armed) { el.dataset.armed = '1'; el.textContent = 'בטוח? מחק'; setTimeout(() => { el.dataset.armed = ''; el.textContent = 'מחק סרטון'; }, 2500); return; } const g = NX.draft.guides && NX.draft.guides[nxGuideKey(id)]; if (g) { delete g.vid; g.vidOn = false; nxTouch(); nxAdmRender(); } }
     else if (a === 'pl-spec') nxSpecStart(el.dataset.u);
     else if (a === 'pl-watch') { NX.watch = el.dataset.u; nxAdmRender(); }
@@ -13210,7 +13210,8 @@ function vidFmt(s) { s = Math.max(0, Math.round(s)); return String(Math.floor(s 
 /* ---------- recording (admin) ---------- */
 function vidRecStart(id) {
   if (!STAGES[id] || NX.role !== 'admin' || fadeBusy) return;
-  VID.rec = { id, d: [], acc: 0, t: 0, armed: false };
+  VID.rec = { id, d: [], acc: 0, t: 0, armed: false, from: typeof editorMode !== 'undefined' && editorMode ? 'editor' : 'menu' };
+  vidCloseWins();
   nxOpen(false);
   if (typeof nxGuideSeen === 'function') nxGuideSeen(id, true);    // the old card must not pop up on the instructor while recording
   selectTrack(id); startStage(id);
@@ -13235,14 +13236,19 @@ function vidRecTick(dt) {
 }
 function vidRecPanel() {
   const el = $('vidRec'); if (!el) return;
-  const r = VID.rec; if (!r) { el.style.display = 'none'; return; }
+  const r = VID.rec; if (!r) { el.style.display = 'none'; el.innerHTML = ''; el.dataset.on = ''; return; }
   el.style.display = 'block';
-  const st = STAGES[r.id];
-  el.innerHTML = '<div class="vrh"><i class="dot' + (r.armed ? ' on' : '') + '"></i><b>' + (r.armed ? 'מקליט סרטון הסבר' : 'מוכן להקלטה') + '</b></div>' +
-    '<div class="nxn">' + nxEsc(st.name) + ' · ' + nxEsc(PRESETS[settings.preset].label) + '<br>' + (r.armed ? 'ההקלטה תיעצר בסיום המסלול.' : 'ההקלטה מתחילה ב-GO או ברגע שנותנים גז.') + '</div>' +
-    '<div class="vrt">' + vidFmt(r.t) + '.' + String(Math.floor((r.t % 1) * 10)) + '</div>' +
-    '<div class="nxbtns"><button class="nxb pri" data-act="vid-stop"' + (r.armed ? '' : ' disabled') + '>עצור ושמור</button><button class="nxb" data-act="vid-cancel">בטל</button></div>' +
-    '<div class="nxn sm">ללא הוראות, משוב או אזהרות: המסך נקי בדיוק כמו שהתלמיד יראה.</div>';
+  if (!el.innerHTML) {
+    const st = STAGES[r.id];
+    el.innerHTML = '<div class="vrh"><i class="dot" id="vrDot"></i><b id="vrTitle">מוכן להקלטה</b></div>' +
+      '<div class="nxn">' + nxEsc(st.name) + ' · ' + nxEsc(PRESETS[settings.preset].label) + '<br><span id="vrHint">ההקלטה מתחילה ב-GO או ברגע שנותנים גז.</span></div>' +
+      '<div class="vrt" id="vrTime">00:00.0</div>' +
+      '<div class="nxbtns"><button class="nxb pri" id="vrStop" data-act="vid-stop">עצור ושמור</button><button class="nxb" data-act="vid-cancel">בטל</button></div>' +
+      '<div class="nxn sm">ללא הוראות, משוב או אזהרות: המסך נקי בדיוק כמו שהתלמיד יראה.</div>';
+  }
+  const on = r.armed ? '1' : '';
+  if (el.dataset.on !== on) { el.dataset.on = on; $('vrDot').classList.toggle('on', r.armed); $('vrTitle').textContent = r.armed ? 'מקליט סרטון הסבר' : 'מוכן להקלטה'; $('vrHint').textContent = r.armed ? 'ההקלטה תיעצר בסיום המסלול.' : 'ההקלטה מתחילה ב-GO או ברגע שנותנים גז.'; $('vrStop').disabled = !r.armed; }
+  const tm = $('vrTime'), txt = vidFmt(r.t) + '.' + String(Math.floor((r.t % 1) * 10)); if (tm && tm.textContent !== txt) tm.textContent = txt;
 }
 function vidRecStop(save) {
   const r = VID.rec; if (!r) return;
@@ -13255,14 +13261,24 @@ function vidRecStop(save) {
     nxTouch();
     if (typeof nxToast === 'function') nxToast('הסרטון נשמר: ' + vidFmt(vidLen(g[k].vid)) + ' · לחץ "שמירה" כדי לפרסם לתלמידים');
   } else if (save && typeof nxToast === 'function') nxToast('ההקלטה קצרה מדי, לא נשמרה');
-  vidBackToAdmin(r.id);
+  vidBackToAdmin(r.id, r.from);
 }
 function vidRecCancel() { const r = VID.rec; if (!r) return; VID.rec = null; vidRecPanel(); }
-function vidBackToAdmin(id) {                                      // back to the stage's guide card in the admin panel, once the menu is really up
-  if (fadeBusy) { setTimeout(() => vidBackToAdmin(id), 200); return; }
+function vidCloseWins() {                                          // the big admin window (in the editor) and any popped dock window close before the flight
+  try { if (typeof nxEdWinClose === 'function' && NX.edWin) nxEdWinClose(); } catch (e) { /* ignore */ }
+  try { if (window.edPopClose) window.edPopClose(); } catch (e) { /* ignore */ }
+}
+function vidBackToAdmin(id, from) {                                // back to the stage's guide card: in the track editor when the recording was started there, else in the admin panel
+  if (fadeBusy) { setTimeout(() => vidBackToAdmin(id, from), 200); return; }
   try { hideResults(); hidePause(); } catch (e) { /* ignore */ }
-  NX.tab = 'tracks'; NX.selTrk = id;
   NX.openK = NX.openK || {}; NX.openK.tp_guide = true;
+  if (from === 'editor' && STAGES[id]) {
+    selectTrack(id); startStage(id, true);
+    const t0 = Date.now(), open = () => { if (fadeBusy || !editorMode) { if (Date.now() - t0 < 6000) setTimeout(open, 150); return; } NX.edWin = 'tp_guide'; if (typeof nxEdSlotRender === 'function') nxEdSlotRender(); };
+    setTimeout(open, 200);
+    return;
+  }
+  NX.tab = 'tracks'; NX.selTrk = id;
   if (!inMenu) goMenu('missions');
   const t0 = Date.now(), open = () => { if (fadeBusy || !inMenu) { if (Date.now() - t0 < 6000) setTimeout(open, 150); return; } nxOpen(true); };
   setTimeout(open, 150);
@@ -13364,6 +13380,7 @@ function vidPlayUI(on) {
     '<div class="nxn vfoot">' + (p.again ? 'הצגה חוזרת של ההסבר' : 'הסרטון מוצג בפעם הראשונה בלבד · אפשר לראות שוב מתפריט ההשהיה') + '</div></div>';
   $('vidTime').textContent = '00:00 / ' + vidFmt(len); $('vidBar').style.width = '0';
   p.gim = [$('vidGimL'), $('vidGimR')];
+  try { const s = $('sticks'); if (s) p.gimStyle = getComputedStyle(s.querySelector('canvas')); } catch (e) { /* ignore */ }
   const cv = $('vidCv'), box = $('vidBox'); if (cv && box) { const r = box.getBoundingClientRect(); cv.width = Math.max(320, Math.round(r.width || 960)); cv.height = Math.round(cv.width * 9 / 16); }
   el.classList.add('on');
 }
@@ -13399,7 +13416,7 @@ function vidPrevTick(dt) {
   });
   if (rp) rp.addEventListener('click', (e) => {
     const t = e.target.closest ? e.target.closest('[data-act]') : null; if (!t) return;
-    if (t.dataset.act === 'vid-stop') vidRecStop(true); else if (t.dataset.act === 'vid-cancel') { vidRecCancel(); vidBackToAdmin(currentStage ? currentStage.id : ''); }
+    if (t.dataset.act === 'vid-stop') vidRecStop(true); else if (t.dataset.act === 'vid-cancel') { const r = VID.rec; vidRecCancel(); vidBackToAdmin(r ? r.id : (currentStage ? currentStage.id : ''), r && r.from); }
   });
   window.addEventListener('keydown', (e) => {
     if (!VID.play) return;
