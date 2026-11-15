@@ -58,7 +58,7 @@ body.hudoff #menuBtn{opacity:0;pointer-events:none}
 .cdl.r{background:#ff2a1f;border-color:#ff8a80;box-shadow:0 0 22px 6px rgba(255,42,31,.75),inset 0 0 10px #ffb3ad}
 .cdl.g{background:#33ff7a;border-color:#b8ffd0;box-shadow:0 0 30px 10px rgba(51,255,122,.85),inset 0 0 10px #eafff1}
 .cdn{font-size:120px;line-height:1;font-weight:700;color:#fff;text-shadow:0 0 18px rgba(255,255,255,.55),0 3px 0 #000;animation:cdPop .9s ease-out}
-.cdgo{font-size:190px;line-height:1;font-weight:700;color:#33ff7a;letter-spacing:.06em;text-shadow:0 0 40px rgba(51,255,122,.95),0 0 90px rgba(51,255,122,.6),0 4px 0 #000;animation:cdGo 1.1s cubic-bezier(.2,1.4,.4,1)}
+.cdgo{font-size:190px;line-height:1;font-weight:700;color:#33ff7a;letter-spacing:.06em;text-shadow:0 0 40px rgba(51,255,122,.95),0 0 90px rgba(51,255,122,.6),0 4px 0 #000;animation:cdGo 1.1s cubic-bezier(.2,1.4,.4,1);direction:ltr;unicode-bidi:isolate}
 @keyframes cdPop{0%{transform:scale(1.7);opacity:0}25%{opacity:1}100%{transform:scale(1);opacity:1}}
 @keyframes cdGo{0%{transform:scale(.4);opacity:0;filter:brightness(3)}20%{transform:scale(1.25);opacity:1;filter:brightness(2.2)}35%{filter:brightness(1)}45%{filter:brightness(2)}60%{filter:brightness(1)}100%{transform:scale(1);opacity:1}}
 #crashMsg{position:absolute;left:50%;top:36%;transform:translate(-50%,-50%);text-align:center;display:none;color:var(--rd);background:rgba(10,10,12,.7);border:2px solid var(--rd);padding:12px 34px}
@@ -1556,7 +1556,7 @@ body.nx-lite .tcBtns .edt,body.nx-lite .tcBtns .dup,body.nx-lite .tcBtns .del{di
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 388</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 389</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
