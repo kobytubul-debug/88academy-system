@@ -1556,7 +1556,7 @@ body.nx-lite .tcBtns .edt,body.nx-lite .tcBtns .dup,body.nx-lite .tcBtns .del{di
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 386</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 387</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -10547,7 +10547,7 @@ NX.fallTest = null;
 function nxFallTest(id) {
   if (!PRESETS[id] || fadeBusy || NX.role !== 'admin') return;
   nxFallStage();
-  NX.fallTest = { id };
+  NX.fallTest = null;
   settings.preset = id; syncSliders();
   nxOpen(false);
   fadeThrough('טיסת בדיקה  //  ' + PRESETS[id].label, () => {
@@ -10561,6 +10561,7 @@ function nxFallTest(id) {
     resetRace();
     $('countdown').style.opacity = '0';
     updateGateColors();
+    NX.fallTest = { id };                                        // armed only now, once the map is loaded: the frame check must not cancel it during the fade
     nxFallPanelRender();
     canvas.focus();
   });
@@ -10574,15 +10575,20 @@ function nxFallPanelRender() {
 }
 function nxFallTick() {                                           // the panel lives only while the test flight is on the screen
   const t = NX.fallTest; if (!t) return;
+  if (fadeBusy) return;
   if (inMenu || !currentStage || currentStage.id !== NX_FALL_STAGE) { NX.fallTest = null; nxFallPanelRender(); return; }
   const el = $('nxFall'); if (el) el.style.display = paused || editorMode ? 'none' : 'block';
 }
-function nxFallBack() {
+function nxFallBack() {                                            // back to the drones tab of the admin panel, the fall window still open on the same drone
   if (fadeBusy) return;
+  const t = NX.fallTest, id = t && t.id;
   NX.fallTest = null; nxFallPanelRender();
+  if (typeof hideResults === 'function') hideResults(); if (typeof hidePause === 'function') hidePause();
   NX.tab = 'drones';
+  if (id) { NX.openK = NX.openK || {}; NX.openK['drn.fall.' + id] = true; }
   goMenu('drone');
   nxOpen(true);
+  setTimeout(() => { const el = document.querySelector('#admBody .nxcard[data-drn="' + id + '"]'); if (el && el.scrollIntoView) el.scrollIntoView({ block: 'start' }); }, 60);
 }
 function nxFallAct(a, el) {                                       // the fall buttons, in the admin tab and in the flight panel alike
   const id = el.dataset.id;
