@@ -1179,6 +1179,12 @@ body.nx-open #nxFall{display:none!important}
 .tcNums{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.tcNums button{min-width:32px;height:28px;padding:0 6px;border:1px solid var(--ln);background:var(--p2);color:var(--mu);font:700 12px var(--mono);cursor:pointer}.tcNums button.on{border-color:var(--ac);background:color-mix(in srgb,var(--ac) 18%,var(--p2));color:#fff}.tcNums button.lk{opacity:.5}
 body.nx-lite .tcBtns .edt,body.nx-lite .tcBtns .dup,body.nx-lite .tcBtns .del{display:none!important}
 @media(max-width:900px){.tcBody{flex-direction:column}.tcStage{min-height:300px}.tcInfo{order:2}#trkCar{height:auto;max-height:none}}
+
+/* ---------- admin lists: a track name is a button; the one on the screen is marked ---------- */
+button.stgnm{display:flex;flex-direction:column;align-items:flex-start;gap:2px;flex:1;min-width:0;background:none;border:0;padding:0;margin:0;color:inherit;font:inherit;text-align:right;cursor:pointer}
+button.stgnm b,button.stgnm small{display:block;pointer-events:none}button.stgnm:hover b{color:var(--ac)}
+button.stgnm.cur b{color:var(--ac)}button.stgnm.cur b:before{content:'\25C0  ';font-size:10px}
+#adm .nxrow2 button.nxb.cur{box-shadow:inset 0 0 0 2px var(--ac)}
 </style>
 </head>
 <body>
@@ -1556,7 +1562,7 @@ body.nx-lite .tcBtns .edt,body.nx-lite .tcBtns .dup,body.nx-lite .tcBtns .del{di
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 389</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 390</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -10172,7 +10178,7 @@ function nxTabStages() {
     const st = STAGES[id], hid = !!off[id], locked = force === id, dim = force && !locked;
     const sub = (MAP_BASES[st.base || id] || '') + ' &middot; ' + st.gen().length + ' שערים' + (st.custom ? ' &middot; ' + (st.objects ? st.objects.length : 0) + ' אלמנטים' : '');
     return '<div class="stgrow' + (hid ? ' hid' : '') + (dim ? ' dim' : '') + '"><label class="stgsw"><input type="checkbox" data-act="stg-vis" data-id="' + id + '"' + (hid ? '' : ' checked') + '><i></i></label>' +
-      '<span class="stgnm"><b>' + nxEsc(st.name) + '</b><small>' + sub + '</small></span>' +
+      '<button class="stgnm' + (trkSel === id ? ' cur' : '') + '" data-act="stg-show" data-id="' + id + '" title="הצג את המסלול במסך"><b>' + nxEsc(st.name) + '</b><small>' + sub + '</small></button>' +
       '<span class="stgst">' + (dim ? 'מוסתר בגלל הנעילה' : hid ? 'מוסתר' : 'מוצג') + '</span>' +
       '<button class="nxb stglock' + (locked ? ' on' : '') + '" data-act="stg-lock" data-id="' + id + '" title="השחקנים יראו רק את המסלול הזה">' + (locked ? '&#128274; נעול' : 'נעל עליו') + '</button></div>';
   };
@@ -10438,6 +10444,10 @@ function nxTrackPanel(id) {
   h += nxTrkSec(tag('vis'), 'תצוגה לשחקנים', locked ? 'נעול' : hid ? 'מוסתר' : 'מוצג', v);
   return h;
 }
+function nxShowTrack(id) {                                       // the track screen behind the panel jumps to this track (the big picture in the middle)
+  if (!STAGES[id]) return;
+  try { if (typeof TC !== 'undefined' && typeof trkCarGo === 'function') { const k = TC.ids.indexOf(id); if (k >= 0) { trkCarGo(k, true); return; } } selectTrack(id); } catch (e) { /* ignore */ }
+}
 function nxTrackPick(id) {                                      // a track was clicked in the player-side list: show its editor in the admin panel
   if (!nxAdminEditing() || !STAGES[id]) return;
   NX.selTrk = id; NX.tab = 'tracks';
@@ -10452,7 +10462,7 @@ function nxTabTracks() {
   h += '<div class="nxbtns"><button class="nxb pri" data-act="trk-new">+ מסלול חדש</button></div>';
   h += '<details class="pkgbox"><summary><b>ייבוא חבילת שלב</b></summary><p class="nxn">הדבק כאן קובץ חבילת שלב (JSON). נוצר מסלול חדש עם המפה, כרטיס ההסבר ומגבלות המדידה. בשם זהה: המסלול הקיים מתעדכן במקום להיווצר שוב.</p><div class="nxn">יעד הייבוא: <select id="admPkgTo"><option value="auto">אוטומטי: אותו שם = עדכון המסלול הקיים</option><option value="new">תמיד מסלול חדש</option>' + CUSTOM_ORDER.filter((x) => STAGES[x] && !STAGES[x].pub).map((x) => '<option value="' + x + '">עדכן: ' + nxEsc(STAGES[x].name) + '</option>').join('') + '</select></div><textarea id="admPkg" rows="6" style="width:100%;direction:ltr" placeholder="{ &quot;pkg&quot;: 1, ... }"></textarea><div class="nxbtns"><button class="nxb pri" data-act="pkg-import">ייבא</button></div></details>';
   h += '<h4>קטגוריות</h4><div class="nxbtns"><input type="text" id="admCatName" maxlength="30" placeholder="שם קטגוריה חדשה, למשל: מתחילים"><button class="nxb pri" data-act="cat-add">+ הוסף קטגוריה</button></div>';
-  const trow = (id) => '<div class="nxrow2"><button class="nxb" data-act="trk-sel" data-id="' + id + '">' + nxEsc(STAGES[id].name) + '</button><i class="nxsm">' + st_len(id) + ' שערים</i></div>';
+  const trow = (id) => '<div class="nxrow2"><button class="nxb' + (trkSel === id ? ' cur' : '') + '" data-act="trk-sel" data-id="' + id + '" title="הצג את המסלול במסך">' + nxEsc(STAGES[id].name) + '</button><i class="nxsm">' + st_len(id) + ' שערים</i></div>';
   NX.openCats = NX.openCats || {};
   list.forEach((c, i) => {
     const m = ids.filter((id) => NXH.catOf(id) === c.id);
@@ -11288,7 +11298,8 @@ function nxAdmWireOn(body) {
       if (r.ok) { NX.selTrk = r.id; nxAdmRender(); }
       return;
     }
-    if (a === 'trk-sel') { nxCloseAll(); NX.selTrk = id; try { selectTrack(id); } catch (e) { /* ignore */ } nxAdmRender(); return; }
+    if (a === 'trk-sel') { nxCloseAll(); NX.selTrk = id; nxShowTrack(id); nxAdmRender(); return; }
+    if (a === 'stg-show') { nxShowTrack(id); nxAdmRender(); return; }
     if (a === 'trk-back') { nxCloseAll(); NX.selTrk = ''; nxAdmRender(); return; }
     if (a === 'trk-crs') { NX.tab = 'courses'; nxSeedSkills(); nxAdmRender(); return; }
     if (a === 'trk-new') { nxOpen(false); createCustomTrack(); }
