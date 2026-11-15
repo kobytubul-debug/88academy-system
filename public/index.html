@@ -1193,17 +1193,28 @@ button.stgnm.cur b{color:var(--ac)}button.stgnm.cur b:before{content:'\25C0  ';f
 #vidRec .vrt{font:700 30px var(--mono);direction:ltr;text-align:right;color:var(--ti,#fff);margin:6px 0}#vidRec .nxn{margin:4px 0;line-height:1.4}#vidRec .nxn.sm{font-size:11px;color:var(--mu)}
 #vidRec .nxbtns{display:flex;gap:6px;margin:4px 0}#vidRec button{font:700 13px 'Rubik',Arial,sans-serif;color:#fff;background:var(--tile2);border:0;padding:8px 14px;cursor:pointer}#vidRec button.pri{background:#ff3d3d}#vidRec button:disabled{opacity:.5}
 @keyframes vidBlink{50%{opacity:.25}}
-#vidPlay{display:none;position:fixed;inset:0;z-index:66;direction:rtl}#vidPlay.on{display:flex}
-#vidPlay .vstage{flex:1;min-width:0;position:relative;pointer-events:none}
-#vidPlay .vlive{position:absolute;left:18px;top:16px;display:flex;align-items:center;gap:10px;padding:6px 12px;background:rgba(11,12,14,.72);border:1px solid rgba(255,255,255,.25);font:600 12px var(--mono);letter-spacing:.2em;color:#fff;direction:ltr}#vidPlay .vlive .dot{width:10px;height:10px;border-radius:50%;background:#ff3d3d;box-shadow:0 0 10px #ff3d3d;animation:vidBlink 1.2s step-end infinite}
-#vidPlay .vtime{position:absolute;right:18px;top:16px;font:600 14px var(--mono);color:#fff;text-shadow:0 1px 3px #000;direction:ltr}
-#vidPlay #vidMap{position:absolute;right:18px;bottom:40px;width:200px;height:200px;background:rgba(11,12,14,.78);border:1px solid var(--ac)}
-#vidPlay .vprog{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.15)}#vidPlay .vprog div{height:100%;width:0;background:var(--ac)}
-#vidPlay .vside{flex:none;width:min(460px,38vw);box-sizing:border-box;background:color-mix(in srgb,var(--p1) 96%,transparent);border-right:1px solid var(--ln);display:flex;flex-direction:column;gap:14px;padding:26px 26px 22px;overflow:auto;font:14px 'Rubik',Arial,sans-serif;color:var(--tx)}
-#vidPlay .vk{font:500 11px var(--mono);letter-spacing:.3em;color:var(--mu)}#vidPlay h2{margin:0;font:700 30px var(--ui);font-style:italic;color:var(--ti,#fff);line-height:1.1}
-#vidPlay .vh{font-size:14px;font-weight:700;color:var(--ac)}#vidPlay .vtxt{flex:1;min-height:80px;font-size:15px;line-height:1.7;white-space:pre-line;overflow:auto}
-#vidPlay .vbtns{display:flex;gap:10px}#vidPlay .vbtns .fly{flex:1;height:58px;font-size:22px}#vidPlay .vbtns .b{height:58px;padding:0 20px}
-#vidPlay .vfoot{text-align:center;font-size:12px;color:var(--mu)}
+#vidPlay{display:none;position:fixed;inset:0;z-index:66;direction:rtl;background:#0b0c0e;overflow:auto;font:14px 'Rubik',Arial,sans-serif;color:var(--tx)}#vidPlay.on{display:block}
+#vidPlay .vcol{max-width:1120px;margin:0 auto;padding:22px 24px 40px;display:flex;flex-direction:column;gap:0}
+#vidPlay .vbox{position:relative;width:100%;aspect-ratio:16/9;background:#000;border:1px solid var(--ln);overflow:hidden}#vidPlay #vidCv{position:absolute;inset:0;width:100%;height:100%;display:block}
+#vidPlay .vlive{position:absolute;left:14px;top:12px;display:flex;align-items:center;gap:10px;padding:5px 10px;background:rgba(11,12,14,.72);border:1px solid rgba(255,255,255,.25);font:600 11px var(--mono);letter-spacing:.2em;color:#fff;direction:ltr}#vidPlay .vlive .dot{width:9px;height:9px;border-radius:50%;background:#ff3d3d;box-shadow:0 0 10px #ff3d3d;animation:vidBlink 1.2s step-end infinite}
+#vidPlay #vidMap{position:absolute;right:14px;bottom:14px;width:160px;height:160px;background:rgba(11,12,14,.78);border:1px solid var(--ac)}
+#vidPlay .vgims{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);display:flex;gap:12px;direction:ltr}#vidPlay .vgims canvas{width:90px;height:90px}
+#vidPlay .vctl{display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--p1);border:1px solid var(--ln);border-top:0;direction:ltr}
+#vidPlay .vctl button{width:44px;height:44px;border:0;background:var(--p2);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}#vidPlay .vctl button:hover{background:var(--ac)}
+#vidPlay .vctl i.play{display:block;width:0;height:0;border-top:11px solid transparent;border-bottom:11px solid transparent;border-left:18px solid #fff;margin-left:4px}
+#vidPlay .vctl i.pause{display:block;width:16px;height:20px;border-left:6px solid #fff;border-right:6px solid #fff;box-sizing:border-box}
+#vidPlay .vctl i.stop{display:block;width:18px;height:18px;background:#fff}
+#vidPlay .vprog{flex:1;height:10px;background:rgba(255,255,255,.15);cursor:pointer;position:relative}#vidPlay .vprog div{height:100%;width:0;background:var(--ac);pointer-events:none}
+#vidPlay .vtime{font:600 13px var(--mono);color:var(--tx);min-width:100px;text-align:right}
+#vidPlay .vside{display:flex;flex-direction:column;gap:12px;padding:18px 4px 0}
+#vidPlay .vk{font:500 11px var(--mono);letter-spacing:.3em;color:var(--mu)}#vidPlay h2{margin:0;font:700 28px var(--ui);font-style:italic;color:var(--ti,#fff);line-height:1.1}
+#vidPlay .vbtns{display:flex;gap:10px;margin:4px 0 6px}#vidPlay .vbtns .fly{height:56px;padding:0 44px;font-size:22px}#vidPlay .vbtns .b{height:56px;padding:0 22px}
+#vidPlay .vdesc{display:flex;flex-direction:column;gap:10px;padding:14px 16px;background:var(--p1);border:1px solid var(--ln)}
+#vidPlay .vh{font-size:14px;font-weight:700;color:var(--ac)}#vidPlay .vtxt{font-size:15px;line-height:1.7;white-space:pre-line}
+#vidPlay .vfoot{font-size:12px;color:var(--mu)}
+.vidwin{position:relative;width:100%;aspect-ratio:16/9;background:#000;border:1px solid var(--ln);overflow:hidden}.vidwin canvas.vidcv{position:absolute;inset:0;width:100%;height:100%;display:block}
+.vidwin canvas.vidpvm{position:absolute;right:8px;bottom:8px;width:84px;height:84px;background:rgba(11,12,14,.78);border:1px solid var(--ac)}.vidwin .vidpvt{position:absolute;left:8px;top:6px;font:600 11px var(--mono);color:#fff;text-shadow:0 1px 2px #000;direction:ltr}
+#adm button.vidbig{position:absolute;left:50%;top:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;background:rgba(11,12,14,.72)!important;border:2px solid #fff!important;padding:0!important;cursor:pointer;clip-path:none!important}#adm button.vidbig i{display:block;width:0;height:0;margin:0 auto;border-top:11px solid transparent;border-bottom:11px solid transparent;border-left:18px solid #fff;transform:translateX(3px)}
 body.nx-open #vidPlay,body.nx-open #vidRec{display:none!important}
 .vidbox{display:flex;flex-direction:column;gap:10px;padding:10px 12px;margin:4px 0 8px;background:var(--ib,#0b0c0e);border:1px solid var(--ln)}.vidbox.on{border-color:var(--ac)}
 .vidbox .vidsw{align-items:flex-start;gap:10px}.vidbox .vidsw span{display:flex;flex-direction:column;gap:2px}.vidbox .vidsw small{font-size:11.5px;color:var(--mu);line-height:1.4;font-weight:400}
@@ -1588,7 +1599,7 @@ body.nx-open #vidPlay,body.nx-open #vidRec{display:none!important}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 393</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 394</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -1606,7 +1617,7 @@ body.nx-open #vidPlay,body.nx-open #vidRec{display:none!important}
 <div id="nxHold"><div></div></div>
 <div id="nxFall"></div>
 <div id="vidRec" dir="rtl"></div>
-<div id="vidPlay" dir="rtl"><div class="vstage"><div class="vlive"><i class="dot"></i><span>REPLAY · סרטון הסבר</span></div><div class="vtime" id="vidTime"></div><canvas id="vidMap" width="200" height="200" aria-label="מפה ממבט-על: איפה הרחפן במסלול"></canvas><div class="vprog"><div id="vidBar"></div></div></div><div class="vside" id="vidSide"></div></div>
+<div id="vidPlay" dir="rtl"><div class="vcol"><div class="vbox" id="vidBox"><canvas id="vidCv" width="960" height="540"></canvas><div class="vlive"><i class="dot"></i><span>REPLAY · סרטון הסבר</span></div><canvas id="vidMap" width="160" height="160" aria-label="מפה ממבט-על: איפה הרחפן במסלול"></canvas><div class="vgims"><canvas id="vidGimL" width="90" height="90"></canvas><canvas id="vidGimR" width="90" height="90"></canvas></div></div><div class="vctl"><button id="vidPP" aria-label="נגן"><i class="play"></i></button><button id="vidStop" aria-label="עצור"><i class="stop"></i></button><div class="vprog" role="slider" aria-label="מיקום בסרטון"><div id="vidBar"></div></div><div class="vtime" id="vidTime"></div></div><div class="vside" id="vidSide"></div></div></div>
 <div id="nxToast"></div>
 <div id="nxEd"><div class="box"><h3 id="nxEdT"></h3><p id="nxEdH"></p><div class="rows" id="nxEdRows"></div><div class="ft"><button data-ed="add">+ הוסף שורה</button><button data-ed="addmid" id="nxEdAddMid">+ הערה באמצע בין שערים</button><span style="flex:1"></span><button data-ed="cancel">ביטול</button><button class="go" data-ed="save">שמירה</button></div></div></div>
 <div id="trkPeek"></div>
@@ -11373,7 +11384,9 @@ function nxAdmWireOn(body) {
     else if (a === 'drn-reset') { delete NX.draft.drones.col[id]; nxTouch(); nxAdmRender(); }
     else if (a === 'drn-fall' || a === 'drn-fall-step' || a === 'drn-fall-reset' || a === 'drn-test') nxFallAct(a, el);
     else if (a === 'vid-rec') { nxCloseAll(); vidRecStart(id); }
-    else if (a === 'vid-play') { nxCloseAll(); nxOpen(false); VID.pending = id; selectTrack(id); startStage(id); }
+    else if (a === 'vid-play') { vidPrevStart(id); nxAdmRender(); }
+    else if (a === 'vid-pause') { vidPrevStop(); nxAdmRender(); }
+    else if (a === 'vid-student') { nxCloseAll(); vidPrevStop(); nxOpen(false); VID.pending = id; selectTrack(id); startStage(id); }
     else if (a === 'vid-del') { if (!el.dataset.armed) { el.dataset.armed = '1'; el.textContent = 'בטוח? מחק'; setTimeout(() => { el.dataset.armed = ''; el.textContent = 'מחק סרטון'; }, 2500); return; } const g = NX.draft.guides && NX.draft.guides[nxGuideKey(id)]; if (g) { delete g.vid; g.vidOn = false; nxTouch(); nxAdmRender(); } }
     else if (a === 'pl-spec') nxSpecStart(el.dataset.u);
     else if (a === 'pl-watch') { NX.watch = el.dataset.u; nxAdmRender(); }
@@ -11833,9 +11846,11 @@ function nxVidFields(k, g) {                                     // the stage vi
   const v = g.vid, id = nxVidStageId(k), has = !!(v && v.d && v.d.length);
   let h = '<div class="vidbox' + (g.vidOn ? ' on' : '') + '">';
   h += '<label class="nxchk1 vidsw"><input type="checkbox" data-k="guides.' + k + '.vidOn"' + (g.vidOn ? ' checked' : '') + '> <span><b>פתח את השלב עם סרטון הסבר</b><small>דלוק: בזמן הטיסה בשלב הזה לא מופיעות הוראות, משוב חי או אזהרות. התלמיד רואה את הסרטון פעם אחת, ויכול לראות שוב מתפריט ההשהיה.</small></span></label>';
+  const prev = typeof VID !== 'undefined' && VID.prev && VID.prev.id === id;
+  if (has) h += '<div class="vidwin"><canvas class="vidcv" data-id="' + id + '" width="384" height="216"></canvas><canvas class="vidpvm" width="96" height="96"></canvas><span class="vidpvt">00:00 / ' + vidFmt(vidLen(v)) + '</span>' + (prev ? '' : '<button class="vidbig" data-act="vid-play" data-id="' + id + '" aria-label="נגן לבדיקה"><i></i></button>') + '</div>';
   h += '<div class="vidrow"><div class="vidpv">' + (has ? '<b>' + vidFmt(vidLen(v)) + '</b><small>' + nxEsc(PRESETS[v.drone] ? PRESETS[v.drone].label : '') + ' · ' + new Date(v.at || 0).toLocaleDateString('he-IL') + (v.by ? ' · ' + nxEsc(v.by) : '') + '<br>כולל תנועות סטיקים</small>' : '<small>אין סרטון עדיין.<br>לחץ "הקלט" וטוס את השלב.</small>') + '</div>';
   h += '<div class="vidbtns"><button class="nxb rec" data-act="vid-rec" data-id="' + id + '"' + (id ? '' : ' disabled') + '><i></i>' + (has ? 'הקלט מחדש' : 'הקלט סרטון הסבר') + '</button>' +
-    (has ? '<button class="nxb" data-act="vid-play" data-id="' + id + '">נגן לבדיקה</button><button class="nxb danger" data-act="vid-del" data-id="' + id + '">מחק סרטון</button>' : '') + '</div></div>';
+    (has ? '<button class="nxb" data-act="' + (prev ? 'vid-pause' : 'vid-play') + '" data-id="' + id + '">' + (prev ? 'עצור' : 'נגן לבדיקה') + '</button><button class="nxb" data-act="vid-student" data-id="' + id + '">צפה כתלמיד</button><button class="nxb danger" data-act="vid-del" data-id="' + id + '">מחק סרטון</button>' : '') + '</div></div>';
   h += nxF('הטקסט ליד הסרטון', '<textarea data-k="guides.' + k + '.vidText" rows="6" placeholder="' + nxEsc(String(g.text || '').trim() ? 'ריק: יוצגו הצעדים של הכרטיס' : 'איך מבצעים את השלב, בכמה שורות') + '">' + nxEsc(g.vidText || '') + '</textarea>');
   return h + '</div>';
 }
@@ -13178,8 +13193,8 @@ function nxMzAct(a, el) {
    the student watches it from the drone's camera before flying, once, and can watch again from the pause menu.
    While the switch is on, nothing pops up during the student's flight in that stage.
    ============================================================ */
-const VID_FPS = 15, VID_MAX_S = 180;
-const VID = { rec: null, play: null, seenCache: null, pending: null };
+const VID_FPS = 30, VID_MAX_S = 180;
+const VID = { rec: null, play: null, prev: null, pending: null };
 function vidKey(id) { return nxGuideKey(id); }
 function vidGuideRaw(id) { const c = NX.role === 'admin' && !NX.preview ? NX.draft : NX.pub; return c && c.guides && c.guides[vidKey(id)] || null; }
 function vidOf(id) {                                              // the recording of a stage, when the switch is on and there is something to play
@@ -13243,13 +13258,14 @@ function vidRecStop(save) {
   vidBackToAdmin(r.id);
 }
 function vidRecCancel() { const r = VID.rec; if (!r) return; VID.rec = null; vidRecPanel(); }
-function vidBackToAdmin(id) {
+function vidBackToAdmin(id) {                                      // back to the stage's guide card in the admin panel, once the menu is really up
   if (fadeBusy) { setTimeout(() => vidBackToAdmin(id), 200); return; }
   try { hideResults(); hidePause(); } catch (e) { /* ignore */ }
   NX.tab = 'tracks'; NX.selTrk = id;
   NX.openK = NX.openK || {}; NX.openK.tp_guide = true;
-  goMenu('missions');
-  nxOpen(true);
+  if (!inMenu) goMenu('missions');
+  const t0 = Date.now(), open = () => { if (fadeBusy || !inMenu) { if (Date.now() - t0 < 6000) setTimeout(open, 150); return; } nxOpen(true); };
+  setTimeout(open, 150);
 }
 
 /* ---------- playback (student, and the admin's "play to check") ---------- */
@@ -13257,56 +13273,76 @@ const _vq0 = new THREE.Quaternion(), _vq1 = new THREE.Quaternion();
 function vidPlayStart(id, opts) {
   const v = vidOf(id); if (!v || !currentStage || currentStage.id !== id) return false;
   opts = opts || {};
-  VID.play = { id, v, t: 0, n: vidFrames(v), onEnd: opts.onEnd || null, wasPaused: paused, map: null };
+  VID.play = { id, v, t: 0, n: vidFrames(v), onEnd: opts.onEnd || null, wasPaused: paused, map: null, playing: true };
   paused = true; stageIntro = true;
   $('countdown').style.opacity = '0';
   vidPlayUI(true);
   vidPlayFrame(0);
+  vidPlayBtns();
   return true;
 }
-function vidPlayFrame(t) {
-  const p = VID.play; if (!p) return;
-  const v = p.v, fps = v.fps || VID_FPS, f = Math.min(p.n - 1, t * fps), i0 = Math.floor(f), i1 = Math.min(p.n - 1, i0 + 1), a = f - i0, d = v.d;
-  const A = i0 * 11, B = i1 * 11;
-  drone.pos.set(d[A] + (d[B] - d[A]) * a, d[A + 1] + (d[B + 1] - d[A + 1]) * a, d[A + 2] + (d[B + 2] - d[A + 2]) * a);
+function vidSetFrame(v, t) {                                     // puts the drone and the sticks where the recording was at time t (smooth between samples)
+  const fps = v.fps || VID_FPS, n = vidFrames(v), d = v.d, f = Math.max(0, Math.min(n - 1, t * fps)), i1 = Math.floor(f), a = f - i1;
+  const i0 = Math.max(0, i1 - 1), i2 = Math.min(n - 1, i1 + 1), i3 = Math.min(n - 1, i1 + 2);
+  const cr = (p0, p1, p2, p3) => 0.5 * ((2 * p1) + (-p0 + p2) * a + (2 * p0 - 5 * p1 + 4 * p2 - p3) * a * a + (-p0 + 3 * p1 - 3 * p2 + p3) * a * a * a);
+  const P = (k) => cr(d[i0 * 11 + k], d[i1 * 11 + k], d[i2 * 11 + k], d[i3 * 11 + k]);
+  drone.pos.set(P(0), P(1), P(2));
+  const A = i1 * 11, B = i2 * 11;
   _vq0.set(d[A + 3], d[A + 4], d[A + 5], d[A + 6]); _vq1.set(d[B + 3], d[B + 4], d[B + 5], d[B + 6]);
   drone.quat.copy(_vq0).slerp(_vq1, a).normalize();
   drone.vel.set(0, 0, 0); drone.thrAct = d[A + 7];
   input.throttle = d[A + 7] + (d[B + 7] - d[A + 7]) * a; input.roll = d[A + 8] + (d[B + 8] - d[A + 8]) * a; input.pitch = d[A + 9] + (d[B + 9] - d[A + 9]) * a; input.yaw = d[A + 10] + (d[B + 10] - d[A + 10]) * a;
 }
+function vidPlayFrame(t) { const p = VID.play; if (p) vidSetFrame(p.v, t); }
 function vidPlayTick(dt) {
   const p = VID.play; if (!p) return;
-  p.t += dt;
   const len = p.n / (p.v.fps || VID_FPS);
-  if (p.t >= len) { p.t = len; vidPlayFrame(len); vidPlayProgress(len, len); vidPlayEnd(); return; }
+  if (p.playing) {
+    p.t += Math.min(dt, 0.05);
+    if (p.t >= len) { p.t = len; p.playing = false; p.done = true; vidPlayBtns(); }
+  }
   vidPlayFrame(p.t); vidPlayProgress(p.t, len); vidPlayMap();
+  vidDrawTo($('vidCv'), p);
 }
+function vidDrawTo(cv, p) {                                       // the live scene, from the drone's camera, drawn into a window (a canvas) rather than the whole screen
+  if (!cv || !cv.isConnected) return;
+  try {
+    updateCameras();
+    renderer.render(scene, fpvCam);
+    const g = cv.getContext('2d'), src = renderer.domElement, W = cv.width, H = cv.height, sa = src.width / src.height, da = W / H;
+    let w = W, h = H; if (sa > da) h = W / sa; else w = H * sa;                     // the screen's aspect, letterboxed into the window
+    g.fillStyle = '#000'; g.fillRect(0, 0, W, H); g.drawImage(src, (W - w) / 2, (H - h) / 2, w, h);
+    const L = p.gim && p.gim[0], R = p.gim && p.gim[1];
+    if (L && R && typeof drawGimbal === 'function') { drawGimbal(L, input.yaw, input.throttle * 2 - 1, true); drawGimbal(R, input.roll, input.pitch, false); }
+  } catch (e) { /* ignore */ }
+}
+function vidPlayBtns() {
+  const p = VID.play, b = $('vidPP'); if (!p || !b) return;
+  b.innerHTML = p.playing ? '<i class="pause"></i>' : '<i class="play"></i>'; b.setAttribute('aria-label', p.playing ? 'השהה' : 'נגן');
+}
+function vidSeek(frac) { const p = VID.play; if (!p) return; const len = p.n / (p.v.fps || VID_FPS); p.t = Math.max(0, Math.min(len, frac * len)); p.done = false; }
 function vidPlayProgress(t, len) {
   const bar = $('vidBar'), tm = $('vidTime'); if (bar) bar.style.width = (len ? t / len * 100 : 0).toFixed(1) + '%'; if (tm) tm.textContent = vidFmt(t) + ' / ' + vidFmt(len);
 }
-function vidPlayMap() {
-  const p = VID.play, cv = $('vidMap'); if (!p || !cv) return;
-  if (!p.map) { try { drawMiniMap(cv, currentStage.gen(), currentStage.color); } catch (e) { /* ignore */ } p.map = { base: null }; try { p.map.base = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height); } catch (e) { /* ignore */ } p.map.box = vidMapBox(); }
-  const g = cv.getContext('2d'), m = p.map; if (!g || !m.base || !m.box) return;
+function vidMapDraw(cv, p) {                                      // the top view: the track as drawMiniMap draws it, plus the drone as a small arrow
+  if (!cv || !currentStage) return;
+  const gts = currentStage.gen();
+  if (!p.map || p.map.cv !== cv) {
+    drawMiniMap(cv, gts, currentStage.color);
+    let minx = 1e9, maxx = -1e9, minz = 1e9, maxz = -1e9;
+    gts.forEach((q) => { minx = Math.min(minx, q.x); maxx = Math.max(maxx, q.x); minz = Math.min(minz, q.z); maxz = Math.max(maxz, q.z); });
+    const W = cv.width, H = cv.height, rx = Math.max(maxx - minx, 1), rz = Math.max(maxz - minz, 1), s = Math.min((W - 46) / rx, (H - 34) / rz);
+    let base = null; try { base = cv.getContext('2d').getImageData(0, 0, W, H); } catch (e) { /* ignore */ }
+    p.map = { cv, base, minx, minz, s, ox: (W - rx * s) / 2, oy: (H - rz * s) / 2 };
+  }
+  const m = p.map, g = cv.getContext('2d'); if (!g || !m.base) return;
   g.putImageData(m.base, 0, 0);
-  const b = m.box, x = (drone.pos.x - b.x0) / b.w, z = (drone.pos.z - b.z0) / b.h;
-  const px = cv.width * 0.5 + (x - 0.5) * cv.width * b.sc, py = cv.height * 0.5 + (z - 0.5) * cv.height * b.sc;
-  g.save(); g.translate(px, py); const yaw = Math.atan2(2 * (drone.quat.w * drone.quat.y + drone.quat.x * drone.quat.z), 1 - 2 * (drone.quat.y * drone.quat.y + drone.quat.z * drone.quat.z));
-  g.rotate(-yaw); g.fillStyle = '#e6b450'; g.shadowColor = '#e6b450'; g.shadowBlur = 8; g.beginPath(); g.moveTo(0, -7); g.lineTo(5, 6); g.lineTo(0, 3); g.lineTo(-5, 6); g.closePath(); g.fill(); g.restore();
+  const px = m.ox + (drone.pos.x - m.minx) * m.s, py = m.oy + (drone.pos.z - m.minz) * m.s;
+  const q = drone.quat, yaw = Math.atan2(2 * (q.w * q.y + q.x * q.z), 1 - 2 * (q.y * q.y + q.z * q.z));
+  g.save(); g.translate(px, py); g.rotate(-yaw); g.fillStyle = '#e6b450'; g.shadowColor = '#e6b450'; g.shadowBlur = 8;
+  g.beginPath(); g.moveTo(0, -8); g.lineTo(5.5, 7); g.lineTo(0, 3.5); g.lineTo(-5.5, 7); g.closePath(); g.fill(); g.restore();
 }
-function vidMapBox() {                                            // the same framing drawMiniMap uses: the track's bounding box, padded, centred
-  try {
-    const gts = currentStage.gen(); let x0 = Infinity, x1 = -Infinity, z0 = Infinity, z1 = -Infinity;
-    gts.forEach((q) => { x0 = Math.min(x0, q.x); x1 = Math.max(x1, q.x); z0 = Math.min(z0, q.z); z1 = Math.max(z1, q.z); });
-    const w = Math.max(x1 - x0, 1), h = Math.max(z1 - z0, 1), s = Math.max(w, h) * 1.25;
-    return { x0: (x0 + x1) / 2 - s / 2, z0: (z0 + z1) / 2 - s / 2, w: s, h: s, sc: 1 };
-  } catch (e) { return null; }
-}
-function vidPlayEnd() {                                           // the recording is over: the drone waits at the end for "start" or "watch again"
-  const p = VID.play; if (!p) return;
-  const b = $('vidPlayBtn'); if (b) b.textContent = 'נגן שוב';
-  p.done = true;
-}
+function vidPlayMap() { const p = VID.play; if (p) vidMapDraw($('vidMap'), p); }
 function vidPlayStop(start) {
   const p = VID.play; if (!p) return;
   VID.play = null; vidPlayUI(false);
@@ -13321,21 +13357,45 @@ function vidPlayUI(on) {
   if (!on) { el.classList.remove('on'); return; }
   const p = VID.play, st = STAGES[p.id], v = p.v, len = vidLen(v), c = typeof TC !== 'undefined' && TC.cat ? TC.cat[p.id] : null;
   const req = typeof trkCarReq === 'function' ? trkCarReq(p.id) : [];
-  $('vidSide').innerHTML = '<div class="vk">' + nxEsc((st.num ? 'שלב ' + String(st.num).padStart(2, '0') : 'שלב') + (c ? ' · ' + c.cat : '')) + '</div><h2>' + nxEsc(st.name) + '</h2><div class="vh">איך מבצעים את השלב</div>' +
-    '<div class="vtxt">' + nxEsc(vidText(p.id)) + '</div>' +
+  $('vidSide').innerHTML = '<div class="vk">' + nxEsc((st.num ? 'שלב ' + String(st.num).padStart(2, '0') : 'שלב') + (c ? ' · ' + c.cat : '') + ' · סרטון הסבר · ' + vidFmt(len)) + '</div><h2>' + nxEsc(st.name) + '</h2>' +
+    '<div class="vbtns"><button class="fly" id="vidGo">התחל <span class="en">FLY</span></button><button class="b" id="vidSkip">דלג</button></div>' +
+    '<div class="vdesc"><div class="vh">איך מבצעים את השלב</div><div class="vtxt">' + nxEsc(vidText(p.id)) + '</div>' +
     (req.length ? '<div class="tcReq"><span>מה נדרש כדי לעבור</span><div>' + req.map((r) => '<em class="' + (r.soft ? 'soft' : 'hard') + '">' + nxEsc(r.t) + '</em>').join('') + '</div></div>' : '') +
-    '<div class="vbtns"><button class="fly" id="vidGo">התחל <span class="en">FLY</span></button><button class="b" id="vidSkip">דלג</button><button class="b" id="vidPlayBtn" title="נגן מההתחלה">&#8635;</button></div>' +
-    '<div class="nxn vfoot">' + (p.again ? 'הצגה חוזרת של ההסבר' : 'הסרטון מוצג בפעם הראשונה בלבד · אפשר לראות שוב מתפריט ההשהיה') + '</div>';
+    '<div class="nxn vfoot">' + (p.again ? 'הצגה חוזרת של ההסבר' : 'הסרטון מוצג בפעם הראשונה בלבד · אפשר לראות שוב מתפריט ההשהיה') + '</div></div>';
   $('vidTime').textContent = '00:00 / ' + vidFmt(len); $('vidBar').style.width = '0';
+  p.gim = [$('vidGimL'), $('vidGimR')];
+  const cv = $('vidCv'), box = $('vidBox'); if (cv && box) { const r = box.getBoundingClientRect(); cv.width = Math.max(320, Math.round(r.width || 960)); cv.height = Math.round(cv.width * 9 / 16); }
   el.classList.add('on');
+}
+/* ---------- the small preview inside the admin card ("play to check") ---------- */
+function vidPrevStart(id) {
+  const v = vidOf(id) || (vidGuideRaw(id) && vidGuideRaw(id).vid); if (!v || !v.d) return;
+  if (!currentStage || currentStage.id !== id) { try { loadStage(id); } catch (e) { /* ignore */ } }
+  VID.prev = { id, v, t: 0, n: vidFrames(v), playing: true, map: null };
+}
+function vidPrevStop() { VID.prev = null; }
+function vidPrevTick(dt) {
+  const p = VID.prev; if (!p) return;
+  const cv = document.querySelector('#admBody canvas.vidcv[data-id="' + p.id + '"], #edAdmSlot canvas.vidcv[data-id="' + p.id + '"]');
+  if (!cv || !cv.isConnected || !NX.open) { VID.prev = null; return; }
+  const len = p.n / (p.v.fps || VID_FPS);
+  if (p.playing) { p.t += Math.min(dt, 0.05); if (p.t >= len) { p.t = 0; } }
+  const keep = { x: drone.pos.x, y: drone.pos.y, z: drone.pos.z, q: drone.quat.clone(), th: input.throttle, r: input.roll, pi: input.pitch, ya: input.yaw };
+  vidSetFrame(p.v, p.t);
+  p.gim = null; vidDrawTo(cv, p);
+  const tm = cv.parentNode && cv.parentNode.querySelector('.vidpvt'); if (tm) tm.textContent = vidFmt(p.t) + ' / ' + vidFmt(len);
+  const mp = cv.parentNode && cv.parentNode.querySelector('canvas.vidpvm'); if (mp) vidMapDraw(mp, p);
+  drone.pos.set(keep.x, keep.y, keep.z); drone.quat.copy(keep.q); input.throttle = keep.th; input.roll = keep.r; input.pitch = keep.pi; input.yaw = keep.ya;
 }
 (function vidWire() {
   const el = $('vidPlay'), rp = $('vidRec'); if (!el || !el.addEventListener) return;
   el.addEventListener('click', (e) => {
-    const t = e.target.closest ? e.target.closest('button') : null; if (!t) return;
+    const p = VID.play, t = e.target.closest ? e.target.closest('button,.vprog') : null; if (!t || !p) return;
     if (t.id === 'vidGo') vidPlayStop(true);
     else if (t.id === 'vidSkip') vidPlayStop(false);
-    else if (t.id === 'vidPlayBtn') { const p = VID.play; if (p) { p.t = 0; p.done = false; t.textContent = '↻'; vidPlayFrame(0); } }
+    else if (t.id === 'vidPP') { if (p.done) { p.t = 0; p.done = false; } p.playing = !p.playing; vidPlayBtns(); }
+    else if (t.id === 'vidStop') { p.t = 0; p.playing = false; p.done = false; vidPlayBtns(); }
+    else if (t.classList.contains('vprog')) { const r = t.getBoundingClientRect(); vidSeek((e.clientX - r.left) / Math.max(1, r.width)); }
   });
   if (rp) rp.addEventListener('click', (e) => {
     const t = e.target.closest ? e.target.closest('[data-act]') : null; if (!t) return;
@@ -13345,9 +13405,10 @@ function vidPlayUI(on) {
     if (!VID.play) return;
     if (e.key === 'Enter') { e.preventDefault(); e.stopImmediatePropagation(); vidPlayStop(true); }
     else if (e.key === 'Escape') { e.preventDefault(); e.stopImmediatePropagation(); vidPlayStop(false); }
+    else if (e.key === ' ') { e.preventDefault(); e.stopImmediatePropagation(); const p = VID.play; if (p.done) { p.t = 0; p.done = false; } p.playing = !p.playing; vidPlayBtns(); }
   }, true);
 })();
-function vidTick(dt) { vidRecTick(dt); vidPlayTick(dt); }
+function vidTick(dt) { vidRecTick(dt); vidPlayTick(dt); vidPrevTick(dt); }
 
 /* ---------- "seen once" per student, kept with the player's record on the server ---------- */
 function vidSeenKey(id) { const v = vidOf(id); return vidKey(id) + ':' + (v ? v.at : 0); }
