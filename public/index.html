@@ -1143,6 +1143,42 @@ body.mz-on #nxBar{right:104px}
 #nxFall button:disabled{opacity:.5;cursor:default}
 #nxFall .nxbtns{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 0}
 body.nx-open #nxFall{display:none!important}
+
+/* ---------- track picker: one track at a time, its map big in the middle, the previous and next peeking above and below ---------- */
+.trktbl{display:none!important}
+#trkCar{outline:0;direction:rtl;display:flex;flex-direction:column;min-height:560px;height:calc(100vh - 230px);max-height:820px;background:var(--p1)}
+.tcHead{display:flex;align-items:center;gap:14px;padding:12px 18px 6px}
+.tcCourse{display:flex;align-items:baseline;gap:10px;flex:1;min-width:0}.tcCourse b{font-size:20px;font-style:italic;color:var(--ti,#fff);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tcCourse span{font-size:12px;color:var(--mu)}
+.tcDots{display:flex;gap:5px;align-items:center}.tcDots button{width:9px;height:9px;border:0;padding:0;background:var(--ln);cursor:pointer;transition:width .3s}.tcDots button.on{width:26px;background:var(--ac)}
+.tcPos{font:500 12px var(--mono);color:var(--mu);direction:ltr;min-width:60px;text-align:left}
+.tcBody{flex:1;min-height:0;display:flex;gap:18px;padding:4px 18px 6px}
+.tcInfo{flex:1 1 42%;min-width:0;display:flex;flex-direction:column;gap:10px;justify-content:center}
+.tcTitle{display:flex;align-items:baseline;gap:12px}.tcTitle .no{font:700 40px var(--mono);color:var(--ac);line-height:1}.tcTitle b{font-size:28px;font-style:italic;color:var(--ti,#fff);line-height:1.1}
+.tcDesc{font-size:14px;color:var(--mu);line-height:1.5;max-height:66px;overflow:hidden}
+.tcGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.tcGrid>div{background:var(--p2);border:1px solid var(--ln);padding:8px 12px;min-width:0}.tcGrid span{display:block;font-size:11px;color:var(--mu)}.tcGrid b{display:block;font:700 22px var(--mono);color:var(--ti,#fff);direction:ltr;text-align:right;white-space:nowrap}.tcGrid b.sm{font-size:18px}
+.tcGrid .stars i{font-size:18px;color:var(--ln);font-style:normal}.tcGrid .stars i.on{color:var(--am)}
+.tcReq{background:var(--p2);border:1px solid var(--ln);padding:8px 12px}.tcReq span{display:block;font-size:11px;color:var(--mu);margin-bottom:6px}.tcReq div{display:flex;flex-wrap:wrap;gap:5px}.tcReq em{font-style:normal;font-size:12px;padding:3px 9px;background:var(--bg);border:1px solid var(--ln);color:var(--tx)}.tcReq em.soft{border-color:var(--am)}
+.tcBtns{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:4px}
+.tcBtns .fly{height:56px;padding:0 34px;font-size:22px}.tcBtns .fly:disabled{opacity:.5}
+.tcStage{flex:1 1 58%;min-width:0;position:relative;display:flex;flex-direction:column;align-items:center}
+.tcArr{position:absolute;left:50%;transform:translateX(-50%);z-index:3;width:110px;height:30px;border:0;background:var(--ln);cursor:pointer;opacity:.8}.tcArr:hover{background:var(--ac);opacity:1}
+.tcArr.up{top:0;clip-path:polygon(0 100%,50% 0,100% 100%)}.tcArr.dn{bottom:0;clip-path:polygon(0 0,100% 0,50% 100%)}
+.tcStack{position:relative;flex:1;width:100%;overflow:hidden;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 12%,#000 88%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 12%,#000 88%,transparent 100%)}
+.tcCard{position:absolute;left:50%;top:50%;width:62%;height:34%;transform:translate(-50%,-50%) translateY(112%) scale(.92);transition:transform .45s cubic-bezier(.2,.8,.2,1),opacity .35s,width .45s,height .45s,filter .35s;opacity:.45;filter:blur(1px) grayscale(.4);pointer-events:none;background:var(--bg);border:1px solid var(--ln);overflow:hidden;cursor:pointer;z-index:1}
+.tcCard.prev{transform:translate(-50%,-50%) translateY(-112%) scale(.92)}
+.tcCard.cur{width:80%;height:60%;transform:translate(-50%,-50%);opacity:1;filter:none;pointer-events:auto;border-color:var(--ac);z-index:2;box-shadow:0 0 0 1px var(--ac),0 12px 40px rgba(0,0,0,.5)}
+.tcCard.far{opacity:0}
+.tcCard.prev,.tcCard.next{pointer-events:auto}
+.tcCard img,.tcCard canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.tcCard canvas{object-fit:contain;padding:8%;box-sizing:border-box;background:var(--bg)}
+.tcCard .lb{position:absolute;right:12px;top:10px;display:flex;align-items:center;gap:8px;z-index:2;text-shadow:0 1px 3px #000}.tcCard .lb i{font:700 20px var(--mono);color:var(--ac);font-style:normal}.tcCard .lb b{font-size:16px;font-style:italic;color:#fff}
+.tcCard .lk{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.55);color:#fff;font-size:22px;z-index:2}
+.tcCard .tg{position:absolute;left:12px;bottom:8px;font:500 11px var(--mono);letter-spacing:.2em;color:var(--mu);direction:ltr;z-index:2}
+.tcFoot{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 18px 12px;font-size:12px;color:var(--mu)}
+.tcNums{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.tcNums button{min-width:32px;height:28px;padding:0 6px;border:1px solid var(--ln);background:var(--p2);color:var(--mu);font:700 12px var(--mono);cursor:pointer}.tcNums button.on{border-color:var(--ac);background:color-mix(in srgb,var(--ac) 18%,var(--p2));color:#fff}.tcNums button.lk{opacity:.5}
+body.nx-lite .tcBtns .edt,body.nx-lite .tcBtns .dup,body.nx-lite .tcBtns .del{display:none!important}
+@media(max-width:900px){.tcBody{flex-direction:column}.tcStage{min-height:300px}.tcInfo{order:2}#trkCar{height:auto;max-height:none}}
 </style>
 </head>
 <body>
@@ -1333,6 +1369,18 @@ body.nx-open #nxFall{display:none!important}
         </aside>
         <section class="trkmain">
           <div class="trktools"><button class="newtrk" id="btnNewTrack">+ צור מפה חדשה בעריכה</button></div>
+          <div id="trkCar" tabindex="0" aria-label="בחירת מסלול: גלילה בין המסלולים">
+            <div class="tcHead"><div class="tcCourse"><b id="tcCat"></b><span id="tcCatN"></span></div><div class="tcDots" id="tcDots"></div><div class="tcPos" id="tcPos"></div></div>
+            <div class="tcBody">
+              <div class="tcInfo" id="tcInfo"></div>
+              <div class="tcStage">
+                <button class="tcArr up" id="tcUp" aria-label="המסלול הקודם"></button>
+                <div class="tcStack" id="tcStack"></div>
+                <button class="tcArr dn" id="tcDn" aria-label="המסלול הבא"></button>
+              </div>
+            </div>
+            <div class="tcFoot"><span>גלגלת העכבר או חיצים ↑↓ מעבירים למסלול הבא · Enter = טוס</span><div class="tcNums" id="tcNums"></div></div>
+          </div>
           <table class="trktbl">
             <thead><tr><th>#</th><th>מפה</th><th>מסלול</th><th>קושי</th><th>שערים</th><th>אורך</th><th>הקפה הכי טובה</th><th>מרוץ הכי טוב</th><th>כוכבים</th><th></th></tr></thead>
             <tbody id="trkBody"></tbody>
@@ -1508,7 +1556,7 @@ body.nx-open #nxFall{display:none!important}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 385</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 386</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -8007,6 +8055,111 @@ function buildCards() {
   body.onmouseleave = () => setTrkBg(trkSel);
   if (!STAGES[trkSel] || !NXH.stageOk(trkSel)) { const f = STAGE_ORDER.concat(CUSTOM_ORDER).filter(NXH.stageOk)[0]; if (f) trkSel = f; }
   selectTrack(trkSel);
+  trkCarBuild();
+}
+/* ---------- track carousel: one track at a time, its map big in the middle, the previous and next peeking above and below ---------- */
+const TC = { ids: [], cat: {}, i: 0, seq: 0, wheelT: 0, built: false };
+const tcEsc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+function trkCarBuild() {
+  const root = $('trkCar'); if (!root || !$('tcStack')) return;
+  TC.ids = []; TC.cat = {}; let cat = null;
+  NXH.orderedIds(STAGE_ORDER.concat(CUSTOM_ORDER).filter(NXH.stageOk)).forEach((id) => { if (typeof id === 'object') { cat = id; return; } TC.ids.push(id); TC.cat[id] = cat; });
+  const k = TC.ids.indexOf(trkSel); TC.i = k < 0 ? 0 : k;
+  if (!TC.built) { TC.built = true; trkCarWire(); }
+  trkCarRender(true);
+}
+function trkCarGo(j, fromRow) {
+  const n = TC.ids.length; if (!n) return;
+  j = Math.max(0, Math.min(n - 1, j));
+  if (j === TC.i && !fromRow) return;
+  TC.i = j; const id = TC.ids[j];
+  if (id !== trkSel) { selectTrack(id); if (typeof nxTrackPick === 'function') nxTrackPick(id); }
+  trkCarRender(false);
+}
+function trkCarReq(id) {                                          // what this track asks for, from the instructor's limits
+  if (typeof nxStickRule !== 'function') return [];
+  const R = nxStickRule(id); if (!R) return [];
+  return nxRuleKeys(R).map((m) => { const lo = nxRuleNum(R.lim[m].min), hi = nxRuleNum(R.lim[m].max), u = NXE_M[m][1] ? ' ' + NXE_M[m][1] : ''; let t = NXE_M[m][0] + ': ';
+    t += lo !== null && hi !== null ? lo + '–' + hi + u : hi !== null ? 'עד ' + hi + u : 'לפחות ' + lo + u;
+    return { t, soft: !!(R.soft && R.soft[m]) }; });
+}
+function trkCarInfo(id) {
+  const st = STAGES[id], sp = stageProgress(id), gts = st.gen(), lk = NXH.locked(id), adm = nxAdminEditing();
+  let stars = ''; for (let n = 1; n <= 3; n++) stars += '<i class="' + (n <= sp.stars ? 'on' : '') + '">★</i>';
+  const req = trkCarReq(id);
+  let h = '<div class="tcTitle"><span class="no">' + String(TC.i + 1).padStart(2, '0') + '</span><b>' + tcEsc(st.name) + '</b></div>';
+  if (st.desc) h += '<div class="tcDesc">' + tcEsc(st.desc) + '</div>';
+  h += '<div class="tcGrid"><div><span>אורך</span><b>' + Math.round(pathLen(gts)) + ' m</b></div><div><span>שערים</span><b>' + gts.length + '</b></div>';
+  h += adm ? '<div><span>קושי</span><b class="sm" style="font-family:inherit;color:' + st.color + '">' + tcEsc(st.diff) + '</b></div>' : '<div><span>הקפות</span><b>' + (st.laps || 1) + '</b></div>';
+  h += '<div><span>הקפה הכי טובה</span><b class="sm">' + fmtTime(sp.bestLap) + '</b></div><div><span>מרוץ הכי טוב</span><b class="sm">' + fmtTime(sp.bestTotal) + '</b></div><div class="stars"><span>כוכבים</span>' + stars + '</div></div>';
+  if (req.length) h += '<div class="tcReq"><span>מה נדרש כדי לעבור</span><div>' + req.map((r) => '<em class="' + (r.soft ? 'soft' : 'hard') + '">' + tcEsc(r.t) + '</em>').join('') + '</div></div>';
+  h += '<div class="tcBtns"><button class="fly" data-id="' + id + '"' + (lk ? ' disabled' : '') + '>' + (lk ? '&#128274; נעול' : 'טוס <span class="en">FLY</span>') + '</button>';
+  if (!lk) h += '<button class="b edt" data-id="' + id + '">' + (st.custom && !st.pub ? 'ערוך' : 'שכפל ועריך') + '</button><button class="b dup" data-id="' + id + '">שכפל</button>';
+  if (st.custom && !st.pub) h += '<button class="b del" data-id="' + id + '">מחק</button>';
+  h += '</div>';
+  return h;
+}
+function trkCarCard(id, k) {
+  const st = STAGES[id], gts = st.gen(), lk = NXH.locked(id);
+  const d = document.createElement('div'); d.className = 'tcCard'; d.dataset.id = id; d.dataset.k = k;
+  d.innerHTML = '<canvas width="560" height="300"></canvas><div class="lb"><i>' + String(k + 1).padStart(2, '0') + '</i><b>' + tcEsc(st.name) + '</b></div>' + (lk ? '<div class="lk">&#128274; נעול</div>' : '') + '<div class="tg">TOP VIEW · ' + Math.round(pathLen(gts)) + ' m</div>';
+  drawMiniMap(d.querySelector('canvas'), gts, st.color);
+  return d;
+}
+function trkCarPic(id, d, my) {                                   // the real map replaces the drawing once it is rendered (cached per track)
+  const st = STAGES[id]; if (!st || !d) return;
+  const G = st.gen().map(gateCopy), key = 'R' + trkPeekKey(st, G);
+  const put = (u) => { if (!u || my !== TC.seq || !d.isConnected) return; const cv = d.querySelector('canvas'); if (!cv) return; const im = document.createElement('img'); im.alt = ''; im.src = u; d.replaceChild(im, cv); };
+  if (trkPeekCache[key]) { put(trkPeekCache[key]); return; }
+  setTimeout(() => { if (my !== TC.seq) return; put(trkPeekReal(st) || trkPeek3D(st)); }, 40);
+}
+function trkCarRender(full) {
+  const stack = $('tcStack'), info = $('tcInfo'); if (!stack || !info) return;
+  const n = TC.ids.length, my = ++TC.seq;
+  if (!n) { stack.innerHTML = ''; info.innerHTML = '<p class="nxn">אין מסלולים להצגה.</p>'; $('tcDots').innerHTML = ''; $('tcNums').innerHTML = ''; $('tcPos').textContent = ''; return; }
+  const id = TC.ids[TC.i], c = TC.cat[id];
+  $('tcCat').textContent = c ? c.cat : ''; $('tcCatN').textContent = c ? c.n + ' מסלולים' : n + ' מסלולים';
+  $('tcPos').textContent = String(TC.i + 1).padStart(2, '0') + ' / ' + String(n).padStart(2, '0');
+  info.innerHTML = trkCarInfo(id);
+  // cards: keep the ones already on the screen (so the slide animates), add the missing neighbours, drop the far ones
+  const want = {}; for (let k = Math.max(0, TC.i - 2); k <= Math.min(n - 1, TC.i + 2); k++) want[TC.ids[k]] = k;
+  Array.from(stack.children).forEach((d) => { if (full || want[d.dataset.id] === undefined) stack.removeChild(d); });
+  Object.keys(want).forEach((wid) => { if (!stack.querySelector('.tcCard[data-id="' + wid + '"]')) { const d = trkCarCard(wid, want[wid]); d.classList.add(want[wid] < TC.i ? 'prev' : 'next'); if (Math.abs(want[wid] - TC.i) > 1) d.classList.add('far'); stack.appendChild(d); } });
+  requestAnimationFrame(() => Array.from(stack.children).forEach((d) => {
+    const k = +d.dataset.k, off = k - TC.i; d.querySelector('.lb i').textContent = String(k + 1).padStart(2, '0');
+    d.classList.toggle('cur', off === 0); d.classList.toggle('prev', off < 0); d.classList.toggle('next', off > 0); d.classList.toggle('far', Math.abs(off) > 1);
+    if (Math.abs(off) <= 1) trkCarPic(d.dataset.id, d, my);
+  }));
+  $('tcDots').innerHTML = TC.ids.map((x, k) => '<button data-k="' + k + '" class="' + (k === TC.i ? 'on' : '') + '" aria-label="' + tcEsc(STAGES[x].name) + '"></button>').join('');
+  $('tcNums').innerHTML = TC.ids.map((x, k) => '<button data-k="' + k + '" class="' + (k === TC.i ? 'on' : '') + (NXH.locked(x) ? ' lk' : '') + '" title="' + tcEsc(STAGES[x].name) + '">' + (k + 1) + '</button>').join('');
+}
+function trkCarWire() {
+  const root = $('trkCar'); if (!root || !root.addEventListener) return;
+  root.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const now = Date.now(); if (now - TC.wheelT < 420) return;        // one step per flick, not per tick of the wheel
+    TC.wheelT = now; trkCarGo(TC.i + (e.deltaY > 0 ? 1 : -1));
+  }, { passive: false });
+  root.addEventListener('click', (e) => {
+    const t = e.target.closest ? e.target.closest('button,.tcCard') : null; if (!t) return;
+    if (t.id === 'tcUp') { trkCarGo(TC.i - 1); return; }
+    if (t.id === 'tcDn') { trkCarGo(TC.i + 1); return; }
+    if (t.dataset.k !== undefined && !t.classList.contains('fly')) { trkCarGo(+t.dataset.k); return; }
+    const id = t.dataset.id; if (!id || !STAGES[id]) return;
+    if (t.classList.contains('fly')) { selectTrack(id); startStage(id); }
+    else if (t.classList.contains('edt')) { const st = STAGES[id], eid = st.custom && !st.pub ? id : duplicateToCustom(id); if (eid) { selectTrack(eid); startStage(eid, true); } }
+    else if (t.classList.contains('dup')) { const nid = duplicateToCustom(id); if (nid) { trkSel = nid; selectTrack(nid); if (typeof nxToast === 'function') nxToast('המסלול שוכפל: ' + STAGES[nid].name); } }
+    else if (t.classList.contains('del')) { if (t.dataset.armed) { deleteCustomTrack(id); return; } t.dataset.armed = '1'; t.textContent = 'בטוח?'; setTimeout(() => { t.dataset.armed = ''; t.textContent = 'מחק'; }, 2500); }
+  });
+  root.addEventListener('mouseenter', () => { if (TC.ids[TC.i]) setTrkBg(TC.ids[TC.i]); });
+  window.addEventListener('keydown', (e) => {
+    if (!inMenu || currentScreen !== 'missions' || fadeBusy) return;
+    const t = e.target, tag = t && t.tagName; if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+    if (typeof NX !== 'undefined' && (NX.open || NX.edWin)) return;
+    if (e.code === 'ArrowDown' || e.code === 'PageDown') { e.preventDefault(); trkCarGo(TC.i + 1); }
+    else if (e.code === 'ArrowUp' || e.code === 'PageUp') { e.preventDefault(); trkCarGo(TC.i - 1); }
+    else if (e.code === 'Enter' && !e.repeat) { const id = TC.ids[TC.i]; if (id && !NXH.locked(id)) { e.preventDefault(); selectTrack(id); startStage(id); } }
+  });
 }
 function envInput(id, key, scale) {
   $(id).addEventListener('input', (e) => {
