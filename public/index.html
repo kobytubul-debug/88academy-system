@@ -1195,7 +1195,7 @@ button.stgnm.cur b{color:var(--ac)}button.stgnm.cur b:before{content:'\25C0  ';f
 @keyframes vidBlink{50%{opacity:.25}}
 #vidPlay{display:none;position:fixed;inset:0;z-index:66;direction:rtl;background:#0b0c0e;overflow:auto;font:14px 'Rubik',Arial,sans-serif;color:var(--tx)}#vidPlay.on{display:block}
 #vidPlay .vcol{display:flex;flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:22px;padding:22px 24px 40px}#vidPlay .vmain{flex:none;width:min(1072px,calc(100vw - 48px));display:flex;flex-direction:column}#vidPlay .vdesc{flex:1 1 300px;min-width:0}
-#vidPlay .vbox{position:relative;width:100%;aspect-ratio:16/9;background:#000;border:1px solid var(--ln);overflow:hidden}#vidPlay #vidCv{position:absolute;inset:0;width:100%;height:100%;display:block}
+#vidPlay .vbox{position:relative;width:100%;aspect-ratio:16/9;background:transparent;border:1px solid var(--ln);overflow:hidden}
 #vidPlay .vlive{position:absolute;left:14px;top:12px;display:flex;align-items:center;gap:10px;padding:5px 10px;background:rgba(11,12,14,.72);border:1px solid rgba(255,255,255,.25);font:600 11px var(--mono);letter-spacing:.2em;color:#fff;direction:ltr}#vidPlay .vlive .dot{width:9px;height:9px;border-radius:50%;background:#ff3d3d;box-shadow:0 0 10px #ff3d3d;animation:vidBlink 1.2s step-end infinite}
 #vidPlay #vidMap{position:absolute;right:14px;bottom:14px;width:160px;height:160px;background:rgba(11,12,14,.78);border:1px solid var(--ac)}
 #vidPlay .vgims{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;gap:clamp(6px,1vw,14px);direction:ltr;align-items:flex-end}
@@ -1599,7 +1599,7 @@ body.nx-open #vidPlay,body.nx-open #vidRec{display:none!important}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 397</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 398</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -1617,7 +1617,7 @@ body.nx-open #vidPlay,body.nx-open #vidRec{display:none!important}
 <div id="nxHold"><div></div></div>
 <div id="nxFall"></div>
 <div id="vidRec" dir="rtl"></div>
-<div id="vidPlay" dir="rtl"><div class="vcol"><div class="vmain"><div class="vbox" id="vidBox"><canvas id="vidCv" width="960" height="540"></canvas><div class="vlive"><i class="dot"></i><span>REPLAY · סרטון הסבר</span></div><canvas id="vidMap" width="160" height="160" aria-label="מפה ממבט-על: איפה הרחפן במסלול"></canvas><div class="vgims"><div class="gim"><canvas id="vidGimL" width="264" height="264"></canvas></div><div class="gim"><canvas id="vidGimR" width="264" height="264"></canvas></div></div></div><div class="vctl"><button id="vidPP" aria-label="נגן"><i class="play"></i></button><button id="vidStop" aria-label="עצור"><i class="stop"></i></button><div class="vprog" role="slider" aria-label="מיקום בסרטון"><div id="vidBar"></div></div><div class="vtime" id="vidTime"></div></div><div class="vside" id="vidSide"></div></div><div class="vdesc" id="vidDesc"></div></div></div>
+<div id="vidPlay" dir="rtl"><div class="vcol"><div class="vmain"><div class="vbox" id="vidBox"><div class="vlive"><i class="dot"></i><span>REPLAY · סרטון הסבר</span></div><canvas id="vidMap" width="160" height="160" aria-label="מפה ממבט-על: איפה הרחפן במסלול"></canvas><div class="vgims"><div class="gim"><canvas id="vidGimL" width="264" height="264"></canvas></div><div class="gim"><canvas id="vidGimR" width="264" height="264"></canvas></div></div></div><div class="vctl"><button id="vidPP" aria-label="נגן"><i class="play"></i></button><button id="vidStop" aria-label="עצור"><i class="stop"></i></button><div class="vprog" role="slider" aria-label="מיקום בסרטון"><div id="vidBar"></div></div><div class="vtime" id="vidTime"></div></div><div class="vside" id="vidSide"></div></div><div class="vdesc" id="vidDesc"></div></div></div>
 <div id="nxToast"></div>
 <div id="nxEd"><div class="box"><h3 id="nxEdT"></h3><p id="nxEdH"></p><div class="rows" id="nxEdRows"></div><div class="ft"><button data-ed="add">+ הוסף שורה</button><button data-ed="addmid" id="nxEdAddMid">+ הערה באמצע בין שערים</button><span style="flex:1"></span><button data-ed="cancel">ביטול</button><button class="go" data-ed="save">שמירה</button></div></div></div>
 <div id="trkPeek"></div>
@@ -8519,7 +8519,7 @@ function frame(now) {
     } else gs.textContent = 'לא זוהה שלט. חבר שלט USB והזז סטיק.';
     if (inMenu) updateInput(0); // keep gamepad polling live while configuring
   }
-  if (!whoActive()) { gfxFrame(dt); renderer.render(scene, activeCam); }       // the sign-in page covers the whole screen: no need to draw the simulator behind it
+  if (!whoActive()) { gfxFrame(dt); if (!(typeof VID !== 'undefined' && VID.play)) renderer.render(scene, activeCam); }      // during the stage video the scene is drawn into the player's window instead       // the sign-in page covers the whole screen: no need to draw the simulator behind it
 }
 
 /* ============================================================
@@ -13312,13 +13312,32 @@ function vidSetFrame(v, t) {                                     // puts the dro
 function vidPlayFrame(t) { const p = VID.play; if (p) vidSetFrame(p.v, t); }
 function vidPlayTick(dt) {
   const p = VID.play; if (!p) return;
-  const len = p.n / (p.v.fps || VID_FPS);
-  if (p.playing) {
-    p.t += Math.min(dt, 0.05);
-    if (p.t >= len) { p.t = len; p.playing = false; p.done = true; vidPlayBtns(); }
-  }
+  const len = p.n / (p.v.fps || VID_FPS), now = performance.now();
+  if (p.playing) {                                                  // wall-clock time: a slow frame skips ahead instead of slowing the film down
+    if (p.t0 === undefined) p.t0 = now - p.t * 1000;
+    p.t = (now - p.t0) / 1000;
+    if (p.t >= len) { p.t = len; p.playing = false; p.done = true; p.t0 = undefined; vidPlayBtns(); }
+  } else p.t0 = undefined;
   vidPlayFrame(p.t); vidPlayProgress(p.t, len); vidPlayMap();
-  vidDrawTo($('vidCv'), p);
+  vidDrawBox($('vidBox'), p);
+}
+function vidDrawBox(box, p) {                                     // the scene is drawn straight into the window's area of the main canvas (no copy): the overlay leaves that area transparent
+  if (!box || !box.isConnected) return;
+  try {
+    updateCameras();
+    const r = box.getBoundingClientRect(), pr = renderer.getPixelRatio(), W = renderer.domElement.width, H = renderer.domElement.height;
+    const x = Math.round(r.left * pr), y = Math.round((window.innerHeight - r.bottom) * pr), w = Math.round(r.width * pr), h = Math.round(r.height * pr);
+    const dv = droneMesh.visible, gv = typeof ghostMesh !== 'undefined' && ghostMesh ? ghostMesh.visible : null, asp = fpvCam.aspect;
+    droneMesh.visible = false; if (gv !== null) ghostMesh.visible = false;
+    fpvCam.aspect = w / Math.max(1, h); fpvCam.updateProjectionMatrix();
+    renderer.setViewport(x, y, w, h); renderer.setScissor(x, y, w, h); renderer.setScissorTest(true);
+    renderer.render(scene, fpvCam);
+    renderer.setScissorTest(false); renderer.setViewport(0, 0, W, H); renderer.setScissor(0, 0, W, H);
+    fpvCam.aspect = asp; fpvCam.updateProjectionMatrix();
+    droneMesh.visible = dv; if (gv !== null) ghostMesh.visible = gv;
+    const L = p.gim && p.gim[0], R = p.gim && p.gim[1];
+    if (L && R && typeof drawGimbal === 'function') { drawGimbal(L, input.yaw, input.throttle * 2 - 1, true); drawGimbal(R, input.roll, input.pitch, false); }
+  } catch (e) { /* ignore */ }
 }
 function vidDrawTo(cv, p) {                                       // the live scene, from the drone's camera, drawn into a window (a canvas) rather than the whole screen
   if (!cv || !cv.isConnected) return;
@@ -13339,7 +13358,7 @@ function vidPlayBtns() {
   const p = VID.play, b = $('vidPP'); if (!p || !b) return;
   b.innerHTML = p.playing ? '<i class="pause"></i>' : '<i class="play"></i>'; b.setAttribute('aria-label', p.playing ? 'השהה' : 'נגן');
 }
-function vidSeek(frac) { const p = VID.play; if (!p) return; const len = p.n / (p.v.fps || VID_FPS); p.t = Math.max(0, Math.min(len, frac * len)); p.done = false; }
+function vidSeek(frac) { const p = VID.play; if (!p) return; const len = p.n / (p.v.fps || VID_FPS); p.t = Math.max(0, Math.min(len, frac * len)); p.done = false; p.t0 = undefined; }
 function vidPlayProgress(t, len) {
   const bar = $('vidBar'), tm = $('vidTime'); if (bar) bar.style.width = (len ? t / len * 100 : 0).toFixed(1) + '%'; if (tm) tm.textContent = vidFmt(t) + ' / ' + vidFmt(len);
 }
@@ -13384,7 +13403,6 @@ function vidPlayUI(on) {
   $('vidTime').textContent = '00:00 / ' + vidFmt(len); $('vidBar').style.width = '0';
   p.gim = [$('vidGimL'), $('vidGimR')];
   try { const s = $('sticks'); if (s) p.gimStyle = getComputedStyle(s.querySelector('canvas')); } catch (e) { /* ignore */ }
-  const cv = $('vidCv'), box = $('vidBox'); if (cv && box) { const r = box.getBoundingClientRect(); cv.width = Math.max(320, Math.round(r.width || 960)); cv.height = Math.round(cv.width * 9 / 16); }
   el.classList.add('on');
 }
 /* ---------- the small preview inside the admin card ("play to check") ---------- */
@@ -13413,8 +13431,8 @@ function vidPrevTick(dt) {
     const p = VID.play, t = e.target.closest ? e.target.closest('button,.vprog') : null; if (!t || !p) return;
     if (t.id === 'vidGo') vidPlayStop(true);
     else if (t.id === 'vidSkip') vidPlayStop(false);
-    else if (t.id === 'vidPP') { if (p.done) { p.t = 0; p.done = false; } p.playing = !p.playing; vidPlayBtns(); }
-    else if (t.id === 'vidStop') { p.t = 0; p.playing = false; p.done = false; vidPlayBtns(); }
+    else if (t.id === 'vidPP') { if (p.done) { p.t = 0; p.done = false; } p.playing = !p.playing; p.t0 = undefined; vidPlayBtns(); }
+    else if (t.id === 'vidStop') { p.t = 0; p.playing = false; p.done = false; p.t0 = undefined; vidPlayBtns(); }
     else if (t.classList.contains('vprog')) { const r = t.getBoundingClientRect(); vidSeek((e.clientX - r.left) / Math.max(1, r.width)); }
   });
   if (rp) rp.addEventListener('click', (e) => {
@@ -13425,7 +13443,7 @@ function vidPrevTick(dt) {
     if (!VID.play) return;
     if (e.key === 'Enter') { e.preventDefault(); e.stopImmediatePropagation(); vidPlayStop(true); }
     else if (e.key === 'Escape') { e.preventDefault(); e.stopImmediatePropagation(); vidPlayStop(false); }
-    else if (e.key === ' ') { e.preventDefault(); e.stopImmediatePropagation(); const p = VID.play; if (p.done) { p.t = 0; p.done = false; } p.playing = !p.playing; vidPlayBtns(); }
+    else if (e.key === ' ') { e.preventDefault(); e.stopImmediatePropagation(); const p = VID.play; if (p.done) { p.t = 0; p.done = false; } p.playing = !p.playing; p.t0 = undefined; vidPlayBtns(); }
   }, true);
 })();
 function vidTick(dt) { vidRecTick(dt); vidPlayTick(dt); vidPrevTick(dt); }
