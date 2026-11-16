@@ -1608,7 +1608,7 @@ body.vid-on #osd,body.vid-on #sticks,body.vid-on #propHud,body.vid-on #btnStartR
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 409</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 410</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -8986,14 +8986,7 @@ function nxEffective(base, grp, acct) {
   const c = nxMerge(nxDefault(), nxClone(base || {}));
   const ovr = (x, isGrp) => {                                     // tracks, drones, the stage lock and the mode come from the group only; a player sets just a look of their own
     if (!x) return;
-    if (x.themeId && NX.themes[x.themeId]) {
-      const t = NX.themes[x.themeId];
-      nxMerge(c.theme, t.theme || {});
-      if (t.tx) c.tx = Object.assign({}, c.tx, t.tx);
-      if (t.hide) c.hide = Object.assign({}, c.hide, t.hide);
-    }
-    if (x.kit) nxApplyKit(c, x.kit);                // a ready-made look chosen for this group or player
-    if (!isGrp) return;
+    if (!isGrp) return;                                           // the look is the game's general look for everyone (old per-group or per-player themes are ignored)
     if (x.stageOff) c.stages.off = x.stageOff;
     if (x.droneOff) c.drones.off = x.droneOff;
     if (x.force) c.stages.force = x.force;
@@ -11018,7 +11011,7 @@ function nxTabGroups() {
     if (ov) sl += '<div class="nxchk">' + nxStageIds().map((id) => '<label><input type="checkbox" data-act="grp-stg" data-gid="' + gid + '" data-id="' + id + '"' + (g.stageOff[id] ? '' : ' checked') + '> ' + nxEsc(STAGES[id].name) + '</label>').join('') + '</div>';
     sl += '<label class="nxchk1"><input type="checkbox" data-act="grp-ovd" data-gid="' + gid + '"' + (ovd ? ' checked' : '') + '> רחפנים מותאמים לקבוצה</label>';
     if (ovd) sl += '<div class="nxchk">' + DRONE_IDS.map((id) => '<label><input type="checkbox" data-act="grp-drn" data-gid="' + gid + '" data-id="' + id + '"' + (g.droneOff[id] ? '' : ' checked') + '> ' + nxEsc(PRESETS[id].label) + '</label>').join('') + '</div>';
-    sv += nxF('ערכת נושא לקבוצה', '<div class="nxbtns"><button class="nxb' + (!g.kit && !g.themeId ? ' sel' : '') + '" data-act="grp-kit" data-gid="' + gid + '" data-v="">כללית</button>' + NX_GXPRESETS.map((p) => '<button class="nxb' + (g.kit === p.id ? ' sel' : '') + '" data-act="grp-kit" data-gid="' + gid + '" data-v="' + p.id + '">' + nxEsc(p.name) + '</button>').join('') + '</div>' + (Object.keys(NX.themes).length ? '<select data-gf="themeId" data-gid="' + gid + '"><option value="">ערכה שמורה שלי: ללא</option>' + Object.keys(NX.themes).map((t) => '<option value="' + t + '"' + (g.themeId === t && !g.kit ? ' selected' : '') + '>' + nxEsc(NX.themes[t].name) + '</option>').join('') + '</select>' : ''));
+    if (false) sv += nxF('ערכת נושא לקבוצה', '<div class="nxbtns"><button class="nxb' + (!g.kit && !g.themeId ? ' sel' : '') + '" data-act="grp-kit" data-gid="' + gid + '" data-v="">כללית</button>' + NX_GXPRESETS.map((p) => '<button class="nxb' + (g.kit === p.id ? ' sel' : '') + '" data-act="grp-kit" data-gid="' + gid + '" data-v="' + p.id + '">' + nxEsc(p.name) + '</button>').join('') + '</div>' + (Object.keys(NX.themes).length ? '<select data-gf="themeId" data-gid="' + gid + '"><option value="">ערכה שמורה שלי: ללא</option>' + Object.keys(NX.themes).map((t) => '<option value="' + t + '"' + (g.themeId === t && !g.kit ? ' selected' : '') + '>' + nxEsc(NX.themes[t].name) + '</option>').join('') + '</select>' : ''));
     mem.forEach((u) => { sm += '<div class="nxrow2"><span>' + nxEsc((NX.accts[u] || {}).name || u) + '</span><button class="nxb" data-act="pl-set" data-u="' + u + '" data-gid="">הסר</button></div>'; });
     const free = Object.keys(NX.accts).filter((u) => nxPlayerGid(u) !== gid);
     if (free.length) sm += '<div class="nxbtns"><select id="admAdd_' + gid + '">' + free.map((u) => '<option value="' + u + '">' + nxEsc(NX.accts[u].name || u) + '</option>').join('') + '</select><button class="nxb" data-act="grp-add" data-gid="' + gid + '">הוסף לקבוצה</button></div>';
@@ -11027,7 +11020,6 @@ function nxTabGroups() {
     h += nxCrsSec(gk('a'), 'הגדרות כלליות', g.mode === 'student' ? 'מצב תלמיד' : 'פריסטייל', sa, false);
     h += nxCrsSec(gk('k'), 'קורסים', nxGroupCourses(g).length ? nxGroupCourses(g).length + ' קורסים' : 'ללא', sk);
     h += nxCrsSec(gk('l'), 'מסלולים ורחפנים', (g.force ? 'נעולה על שלב' : '') + (ov ? ' שלבים מותאמים' : '') + (ovd ? ' רחפנים מותאמים' : '') || 'ברירת מחדל', sl);
-    h += nxCrsSec(gk('v'), 'ערכת נושא', g.kit ? 'ערכה' : g.themeId ? 'שמורה' : 'כללית', sv);
     h += nxCrsSec(gk('m'), 'חברים', mem.length + ' שחקנים', sm);
     h += '<div class="nxbtns"><button class="nxb danger" data-act="grp-del" data-gid="' + gid + '">מחק קבוצה</button></div></details>';
   });
@@ -11059,7 +11051,6 @@ function nxTabPlayers() {
     if (a.role) h += nxStaffBox(a.perms, a.groups, 'pl-perm', 'pl-sg', un);
     h += nxF('הודעה לשחקן', '<input type="text" id="admPN_' + un + '" placeholder="הודעה שתופיע אצל השחקן"><button class="nxb" data-act="pl-note" data-u="' + un + '">שלח</button>');
     h += nxF('סיסמה חדשה', '<input type="text" id="admPP_' + un + '" maxlength="40" placeholder="לפחות 4 תווים"><button class="nxb" data-act="pl-pw" data-u="' + un + '">עדכן</button>');
-    h += nxF('ערכת נושא', '<select data-af="themeId" data-un="' + un + '"><option value="">כללית / של הקבוצה</option>' + Object.keys(NX.themes).map((t) => '<option value="' + t + '"' + (a.themeId === t ? ' selected' : '') + '>' + nxEsc(NX.themes[t].name) + '</option>').join('') + '</select>');
     h += '<p class="nxn">מסלולים, רחפנים, נעילה ומצב תלמיד/פריסטייל נקבעים בקבוצה של השחקן (לשונית קבוצות).</p>';
     h += '<div class="nxbtns"><button class="nxb" data-act="pl-reset" data-u="' + un + '" title="מוחק את המסלולים שהשחקן סיים: במצב תלמיד הכול ננעל מחדש">אפס התקדמות</button><button class="nxb danger" data-act="pl-del" data-u="' + un + '">מחק שחקן</button></div></details>';
   });
@@ -11227,7 +11218,7 @@ function nxAdmRender() {
   const tabs = [['game', 'עריכת משחק'], ['stages', 'שלבים'], ['tracks', 'מסלולים'], ['courses', 'קורסים'], ['drones', 'רחפנים'], ['music', 'מוזיקה'], ['groups', 'קבוצות'], ['players', 'שחקנים'], ['progress', 'מעקב']];
   $('admTabs').style.display = NX.ted ? 'none' : '';
   $('admTabs').innerHTML = tabs.map((t) => '<button data-tab="' + t[0] + '"' + (NX.tab === t[0] ? ' class="on"' : '') + '>' + t[1] + '</button>').join('');
-  const fn = { game: nxTabGame, look: nxTabLook, stages: nxTabStages, tracks: nxTabTracks, courses: nxTabCourses, drones: nxTabDrones, music: nxTabMusic, progress: nxTabProgress, groups: () => nxTabGroups() + (Object.keys(NX.themes).length ? '<h3 style="margin-top:16px">ערכות נושא שמורות</h3>' + nxTabThemes() : ''), players: nxTabPlayers }[NX.tab];
+  const fn = { game: nxTabGame, look: nxTabLook, stages: nxTabStages, tracks: nxTabTracks, courses: nxTabCourses, drones: nxTabDrones, music: nxTabMusic, progress: nxTabProgress, groups: nxTabGroups, players: nxTabPlayers }[NX.tab];
   const body = $('admBody'), st = body.scrollTop;
   body.innerHTML = NX.ted ? nxTedHead() + nxTabLook() : nxThemeBanner() + (fn ? fn() : '');
   body.scrollTop = st;
