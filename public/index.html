@@ -1606,7 +1606,7 @@ body.nx-open #vidPlay,body.nx-open #vidRec{display:none!important}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 402</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 403</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -5435,8 +5435,14 @@ let atCrash = 0;                                             // crashes (prop be
 let lastDmg = -10, dmgT = 0, restartT = 0, stableT = 0;      // stableT: seconds of airborne flight without a new hit          // restartT: countdown to an automatic restart when a prop falls below 30%
 const _cb = new THREE.Vector3(), _cq = new THREE.Quaternion();
 function resetProps() { PROP.h = [1, 1, 1, 1]; PROP.dirty = true; }
-function respawnDrone() {          // back to the spot ~1 s before the crash (x/z/heading), on the floor, levelled, stationary, props repaired; race progress is kept
-  const p = respawnPose || { x: drone.pos.x, y: Math.max(drone.pos.y, 0.4), z: drone.pos.z, yaw: 0 };
+function gatePose(i, dist) {                                     // on the floor, `dist` metres before gate i, facing it (gate forward = local -Z, as in startPose)
+  const g = gates[i]; if (!g) return null;
+  const yaw = (g.yaw || 0) * DEG, fx = -Math.sin(yaw), fz = -Math.cos(yaw);
+  return { x: g.x - fx * dist, y: 0.12, z: g.z - fz * dist, yaw };
+}
+function respawnDrone() {          // in a race: in front of the next gate to pass. Otherwise back to the spot ~1 s before the crash. Levelled, stationary, props repaired; race progress is kept
+  const next = state === 'racing' && gates.length ? gatePose(seq % gates.length, 12) : null;
+  const p = next || respawnPose || { x: drone.pos.x, y: Math.max(drone.pos.y, 0.4), z: drone.pos.z, yaw: 0 };
   drone.pos.set(p.x, 0.12, p.z);          // same spot, but on the floor
   drone.quat.setFromEuler(new THREE.Euler(0, p.yaw, 0, 'YXZ'));
   drone.vel.set(0, 0, 0); drone.w.set(0, 0, 0); drone.wd.set(0, 0, 0); drone.tp.set(0, 0, 0); drone.thrAct = 0;
