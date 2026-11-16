@@ -1608,7 +1608,7 @@ body.vid-on #osd,body.vid-on #sticks,body.vid-on #propHud,body.vid-on #btnStartR
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 406</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 407</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -9404,6 +9404,7 @@ NXH.locked = (id) => {                                      // student mode: a t
   if (NX.cseq) {                                              // a course: every item opens after all the earlier ones were done (an exam counts only when passed)
     const k = String(id).replace(/^pub_/, ''), i = NX.cseq.findIndex((s) => s.id === k);
     if (i < 0) return true;
+    if (NX.eff.mode !== 'student') return false;                 // freestyle: every course track is open, the order is only a suggestion
     for (let j = 0; j < i; j++) if (!nxIsDoneAny(NX.cseq[j].id)) return true;
     return false;
   }
@@ -10982,7 +10983,7 @@ function nxTabGroups() {
     h += '<details class="nxcard" data-gid="' + gid + '"' + (NX.openG === gid ? ' open' : '') + '><summary><b>' + nxEsc(g.name) + '</b> <span class="code">קוד ' + nxEsc(g.code) + '</span> <span class="cnt">' + mem.length + ' שחקנים</span>' + (g.hold ? ' <span class="hold">עצורה</span>' : '') + '</summary>';
     let sa = '', sk = '', sm = '', sv = '', sl = '';
     sa += nxF('שם', '<input type="text" data-gf="name" data-gid="' + gid + '" value="' + nxEsc(g.name) + '">');
-    sa += nxF('מצב הקבוצה', '<div class="nxbtns"><button class="nxb' + (g.mode === 'student' ? ' pri' : '') + '" data-act="grp-mode" data-gid="' + gid + '" data-v="student">מצב תלמיד</button><button class="nxb' + (g.mode === 'student' ? '' : ' pri') + '" data-act="grp-mode" data-gid="' + gid + '" data-v="free">מצב פריסטייל</button></div><p class="nxn">' + (g.mode === 'student' ? 'תלמיד: חייב לסיים כל מסלול כדי לפתוח את הבא, ואי אפשר לדלג בין מסלולים.' : 'פריסטייל: התלמיד מטייל חופשי בין כל המסלולים.') + '</p>');
+    sa += nxF('מצב הקבוצה', '<div class="nxbtns"><button class="nxb' + (g.mode === 'student' ? ' pri' : '') + '" data-act="grp-mode" data-gid="' + gid + '" data-v="student">מצב תלמיד</button><button class="nxb' + (g.mode === 'student' ? '' : ' pri') + '" data-act="grp-mode" data-gid="' + gid + '" data-v="free">מצב פריסטייל</button></div><p class="nxn">' + (g.mode === 'student' ? 'תלמיד: חייב לסיים כל מסלול כדי לפתוח את הבא, ואי אפשר לדלג בין מסלולים. מסלול שכבר הושלם נשאר פתוח.' : 'פריסטייל: התלמיד מטייל חופשי בין כל המסלולים (גם במסלולי הקורס).') + '</p>');
     sa += '<div class="nxbtns"><button class="nxb' + (g.hold ? ' pri' : '') + '" data-act="grp-hold" data-gid="' + gid + '">' + (g.hold ? 'שחרר את הקבוצה' : 'עצור את הקבוצה') + '</button><button class="nxb" data-act="grp-prev" data-gid="' + gid + '">הצג כקבוצה</button></div>';
     sa += nxF('הודעה לקבוצה', '<input type="text" id="admN_' + gid + '" placeholder="הודעה שתופיע אצל השחקנים"><button class="nxb" data-act="grp-note" data-gid="' + gid + '">שלח</button>');
     sk += nxGroupCourseUi(gid, g);
