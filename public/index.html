@@ -1193,8 +1193,8 @@ button.stgnm.cur b{color:var(--ac)}button.stgnm.cur b:before{content:'\25C0  ';f
 #vidRec .vrt{font:700 30px var(--mono);direction:ltr;text-align:right;color:var(--ti,#fff);margin:6px 0}#vidRec .nxn{margin:4px 0;line-height:1.4}#vidRec .nxn.sm{font-size:11px;color:var(--mu)}
 #vidRec .nxbtns{display:flex;gap:6px;margin:4px 0}#vidRec button{font:700 13px 'Rubik',Arial,sans-serif;color:#fff;background:var(--tile2);border:0;padding:8px 14px;cursor:pointer}#vidRec button.pri{background:#ff3d3d}#vidRec button:disabled{opacity:.5}
 @keyframes vidBlink{50%{opacity:.25}}
-#vidPlay{display:none;position:fixed;inset:0;z-index:66;direction:rtl;background:#0b0c0e;overflow:auto;font:14px 'Rubik',Arial,sans-serif;color:var(--tx)}#vidPlay.on{display:block}
-#vidPlay .vcol{display:flex;flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:22px;padding:22px 24px 40px}#vidPlay .vmain{flex:none;width:min(1072px,calc(100vw - 48px));display:flex;flex-direction:column}#vidPlay .vdesc{flex:1 1 300px;min-width:0}
+#vidPlay{display:none;position:fixed;inset:0;z-index:66;direction:rtl;background:transparent;overflow:auto;font:14px 'Rubik',Arial,sans-serif;color:var(--tx)}#vidPlay.on{display:block}
+#vidPlay .vcol{display:flex;flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:22px;padding:22px 24px 40px;min-height:100vh;box-sizing:border-box}#vidPlay .vmain{flex:none;width:min(1072px,calc(100vw - 48px));display:flex;flex-direction:column}#vidPlay .vdesc{flex:1 1 300px;min-width:0}
 #vidPlay .vbox{position:relative;width:100%;aspect-ratio:16/9;background:transparent;border:1px solid var(--ln);overflow:hidden}
 #vidPlay .vlive{position:absolute;left:14px;top:12px;display:flex;align-items:center;gap:10px;padding:5px 10px;background:rgba(11,12,14,.72);border:1px solid rgba(255,255,255,.25);font:600 11px var(--mono);letter-spacing:.2em;color:#fff;direction:ltr}#vidPlay .vlive .dot{width:9px;height:9px;border-radius:50%;background:#ff3d3d;box-shadow:0 0 10px #ff3d3d;animation:vidBlink 1.2s step-end infinite}
 #vidPlay #vidMap{position:absolute;right:14px;bottom:14px;width:160px;height:160px;background:rgba(11,12,14,.78);border:1px solid var(--ac)}
@@ -1206,7 +1206,7 @@ button.stgnm.cur b{color:var(--ac)}button.stgnm.cur b:before{content:'\25C0  ';f
 #vidPlay .vctl i.stop{display:block;width:18px;height:18px;background:#fff}
 #vidPlay .vprog{flex:1;height:10px;background:rgba(255,255,255,.15);cursor:pointer;position:relative}#vidPlay .vprog div{height:100%;width:0;background:var(--ac);pointer-events:none}
 #vidPlay .vtime{font:600 13px var(--mono);color:var(--tx);min-width:100px;text-align:right}
-#vidPlay .vside{display:flex;flex-direction:column;gap:12px;padding:18px 4px 0}
+#vidPlay .vside{display:flex;flex-direction:column;gap:12px;padding:18px 4px 0;background:#0b0c0e}
 #vidPlay .vk{font:500 11px var(--mono);letter-spacing:.3em;color:var(--mu)}#vidPlay h2{margin:0;font:700 28px var(--ui);font-style:italic;color:var(--ti,#fff);line-height:1.1}
 #vidPlay .vbtns{display:flex;gap:10px;margin:4px 0 6px}#vidPlay .vbtns .fly{height:56px;padding:0 44px;font-size:22px}#vidPlay .vbtns .b{height:56px;padding:0 22px}
 #vidPlay .vdesc{display:flex;flex-direction:column;gap:10px;padding:14px 16px;background:var(--p1);border:1px solid var(--ln);min-height:200px}
@@ -1606,7 +1606,7 @@ body.nx-open #vidPlay,body.nx-open #vidRec{display:none!important}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 400</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 401</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -13343,6 +13343,10 @@ function vidDrawBox(box, p) {                                     // the scene i
     const dv = droneMesh.visible, gv = typeof ghostMesh !== 'undefined' && ghostMesh ? ghostMesh.visible : null, asp = fpvCam.aspect;
     droneMesh.visible = false; if (gv !== null) ghostMesh.visible = false;
     fpvCam.aspect = w / Math.max(1, h); fpvCam.updateProjectionMatrix();
+    renderer.setRenderTarget(null); renderer.setScissorTest(false); renderer.setViewport(0, 0, W, H);
+    const cc = new THREE.Color(); renderer.getClearColor(cc); const ca = renderer.getClearAlpha();
+    renderer.setClearColor(0x0b0c0e, 1); renderer.clear(true, true, true);                    // the whole screen dark, the film only inside the window (the overlay above is transparent)
+    renderer.setClearColor(cc, ca);
     renderer.setViewport(x, y, w, h); renderer.setScissor(x, y, w, h); renderer.setScissorTest(true);
     renderer.render(scene, fpvCam);
     renderer.setScissorTest(false); renderer.setViewport(0, 0, W, H); renderer.setScissor(0, 0, W, H);
@@ -13428,7 +13432,7 @@ function vidPrevStop() { VID.prev = null; }
 function vidPrevTick(dt) {
   const p = VID.prev; if (!p) return;
   const cv = document.querySelector('#admBody canvas.vidcv[data-id="' + p.id + '"], #edAdmSlot canvas.vidcv[data-id="' + p.id + '"]');
-  if (!cv || !cv.isConnected || !NX.open) { VID.prev = null; return; }
+  if (!cv || !cv.isConnected || !(NX.open || NX.edWin)) { VID.prev = null; return; }      // the card lives in the admin panel or in the editor's window
   const len = p.n / (p.v.fps || VID_FPS);
   if (p.playing) { p.t += Math.min(dt, 0.05); if (p.t >= len) { p.t = 0; } }
   const keep = { x: drone.pos.x, y: drone.pos.y, z: drone.pos.z, q: drone.quat.clone(), th: input.throttle, r: input.roll, pi: input.pitch, ya: input.yaw };
