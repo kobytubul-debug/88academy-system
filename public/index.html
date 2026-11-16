@@ -1227,6 +1227,8 @@ body.nx-open #vidPlay,body.nx-open #vidRec{display:none!important}
 .tcsep{display:inline-block;width:2px;height:16px;background:var(--ac);opacity:.7;margin:0 5px;align-self:center}
 .tcNums .tcsep{height:22px}
 #menu.hidden #trkCar,#menu.hidden #trkCar *{pointer-events:none!important}     /* the hidden track screen must never catch a click meant for the editor or the flight */
+body.vid-on #osd,body.vid-on #sticks,body.vid-on #propHud,body.vid-on #btnStartRace,body.vid-on #menuBtn,body.vid-on #nxGuideBtn,body.vid-on #nxHint,body.vid-on #nxCoach,body.vid-on #flash{display:none!important}
+#vidBox #crosshair{display:block;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:128px;height:96px;z-index:2;pointer-events:none}
 </style>
 </head>
 <body>
@@ -1606,7 +1608,7 @@ body.nx-open #vidPlay,body.nx-open #vidRec{display:none!important}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 404</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 405</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -13419,7 +13421,14 @@ function vidPlayStop(start) {
 }
 function vidPlayUI(on) {
   const el = $('vidPlay'); if (!el) return;
-  if (!on) { el.classList.remove('on'); return; }
+  const cross = $('crosshair'), box = $('vidBox');
+  if (!on) {
+    el.classList.remove('on'); document.body.classList.remove('vid-on');
+    if (cross && VID.crossHome && cross.parentNode !== VID.crossHome) { VID.crossHome.insertBefore(cross, VID.crossNext && VID.crossNext.parentNode === VID.crossHome ? VID.crossNext : null); }   // the real crosshair goes back to the HUD
+    return;
+  }
+  document.body.classList.add('vid-on');                                                                                     // the live HUD (sticks, crosshair, prop damage, buttons) is hidden: the film carries its own
+  if (cross && box && cross.parentNode !== box) { VID.crossHome = cross.parentNode; VID.crossNext = cross.nextSibling; box.appendChild(cross); }      // the crosshair sits in the middle of the film, as it was when recorded
   const p = VID.play, st = STAGES[p.id], v = p.v, len = vidLen(v), c = typeof TC !== 'undefined' && TC.cat ? TC.cat[p.id] : null;
   const req = typeof trkCarReq === 'function' ? trkCarReq(p.id) : [];
   $('vidSide').innerHTML = '<div class="vk">' + nxEsc((st.num ? 'שלב ' + String(st.num).padStart(2, '0') : 'שלב') + (c ? ' · ' + c.cat : '') + ' · סרטון הסבר · ' + vidFmt(len)) + '</div><h2>' + nxEsc(st.name) + '</h2>' +
