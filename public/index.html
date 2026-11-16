@@ -1610,7 +1610,7 @@ body.vid-on #osd,body.vid-on #sticks,body.vid-on #propHud,body.vid-on #btnStartR
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 411</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 412</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -13121,6 +13121,10 @@ function mzWant() {
 function mzTick() {
   const want = mzWant(), inM = typeof inMenu !== 'undefined' && inMenu;
   if (inM && MZ.flyPicked) MZ.flyPicked = false;                                   // back in the menus: the flight choice is forgotten
+  if (MZ.mode === 'test') {                                                        // the manager is auditioning one song: leave it alone until it ends or is stopped
+    if (MZ.audio && !MZ.audio.paused && !MZ.audio.ended) { mzApplyVol(); mzShow(); return; }
+    MZ.mode = 'off'; MZ.cur = null; MZ.idx = -1;
+  }
   if (want !== MZ.mode) {
     if (want === 'off') { mzStop(); MZ.mode = 'off'; }
     else if (MZ.unlocked) { const list = mzSongs(want); mzPlay(want, 0); }
@@ -13212,7 +13216,7 @@ function nxTabMusic() {
   h += '<h3 style="margin-top:14px">שירים (' + songs.length + ')</h3>';
   songs.forEach((s, i) => {
     h += '<div class="nxcard" data-mz="' + i + '"><div class="nxrow"><input type="text" data-act="mz-title" data-i="' + i + '" value="' + nxEsc(s.t || '') + '" placeholder="שם השיר" style="flex:1">' +
-      '<button class="nxb" data-act="mz-test" data-i="' + i + '" title="האזנה">&#9654;</button><button class="nxb" data-act="mz-up" data-i="' + i + '"' + (i ? '' : ' disabled') + '>&#9650;</button><button class="nxb" data-act="mz-down" data-i="' + i + '"' + (i < songs.length - 1 ? '' : ' disabled') + '>&#9660;</button><button class="nxb danger" data-act="mz-del" data-i="' + i + '">מחק</button></div>' +
+      '<button class="nxb" data-act="mz-test" data-i="' + i + '" title="' + (MZ.mode === 'test' && MZ.cur === s ? 'עצור' : 'האזנה') + '">' + (MZ.mode === 'test' && MZ.cur === s ? '&#9632;' : '&#9654;') + '</button><button class="nxb" data-act="mz-up" data-i="' + i + '"' + (i ? '' : ' disabled') + '>&#9650;</button><button class="nxb" data-act="mz-down" data-i="' + i + '"' + (i < songs.length - 1 ? '' : ' disabled') + '>&#9660;</button><button class="nxb danger" data-act="mz-del" data-i="' + i + '">מחק</button></div>' +
       '<div class="nxn" style="direction:ltr;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + nxEsc(s.u) + '</div>' +
       '<div class="nxchk"><label><input type="checkbox" data-act="mz-menu" data-i="' + i + '"' + (s.menu !== false ? ' checked' : '') + '> במסכי התפריט</label><label><input type="checkbox" data-act="mz-fly" data-i="' + i + '"' + (s.fly !== false ? ' checked' : '') + '> בטיסה</label></div></div>';
   });
@@ -13233,7 +13237,17 @@ function nxMzAct(a, el) {
   else if (a === 'mz-menu' || a === 'mz-fly') { if (S[i]) { S[i][a === 'mz-menu' ? 'menu' : 'fly'] = !!el.checked; done(false); } }
   else if (a === 'mz-del') { if (S[i]) { S.splice(i, 1); done(true); } }
   else if (a === 'mz-up' || a === 'mz-down') { const j = a === 'mz-up' ? i - 1 : i + 1; if (S[i] && S[j]) { const t = S[i]; S[i] = S[j]; S[j] = t; done(true); } }
-  else if (a === 'mz-test') { if (S[i]) { MZ.unlocked = true; const au = mzEnsureAudio(); if (au) { MZ.mode = 'test'; MZ.cur = S[i]; try { au.src = S[i].u; au.setAttribute('data-u', S[i].u); mzApplyVol(); const p = au.play(); if (p && p.catch) p.catch(() => nxToast('לא ניתן לנגן את הקישור הזה')); } catch (e) { nxToast('לא ניתן לנגן את הקישור הזה'); } } } }
+  else if (a === 'mz-test') {                                                     // audition this song (click again to stop it)
+    if (S[i]) {
+      MZ.unlocked = true; const au = mzEnsureAudio();
+      if (au) {
+        if (MZ.mode === 'test' && MZ.cur === S[i] && !au.paused) { au.pause(); MZ.mode = 'off'; MZ.cur = null; MZ.idx = -1; mzRenderList(); return; }
+        MZ.mode = 'test'; MZ.cur = S[i]; MZ.idx = i;
+        try { au.src = S[i].u; au.setAttribute('data-u', S[i].u); mzApplyVol(); const p = au.play(); if (p && p.catch) p.catch(() => nxToast('לא ניתן לנגן את הקישור הזה')); } catch (e) { nxToast('לא ניתן לנגן את הקישור הזה'); }
+        mzRenderList();
+      }
+    }
+  }
   else if (a === 'mz-add') {
     const u = String(($('mzNewU') || {}).value || '').trim(), t = String(($('mzNewT') || {}).value || '').trim();
     if (!mzOkUrl(u)) { nxToast('הקישור צריך להתחיל ב-https:// או ב-/'); return true; }
