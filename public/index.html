@@ -1606,7 +1606,7 @@ body.nx-open #vidPlay,body.nx-open #vidRec{display:none!important}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 401</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 402</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -13338,8 +13338,8 @@ function vidDrawBox(box, p) {                                     // the scene i
   if (!box || !box.isConnected) return;
   try {
     updateCameras();
-    const r = box.getBoundingClientRect(), pr = renderer.getPixelRatio(), W = renderer.domElement.width, H = renderer.domElement.height;
-    const x = Math.round(r.left * pr), y = Math.round((window.innerHeight - r.bottom) * pr), w = Math.round(r.width * pr), h = Math.round(r.height * pr);
+    const r = box.getBoundingClientRect(), sz = renderer.getSize(new THREE.Vector2()), W = sz.x, H = sz.y;     // CSS pixels: the renderer applies the screen's pixel ratio itself
+    const x = Math.round(r.left), y = Math.round(H - r.bottom), w = Math.round(r.width), h = Math.round(r.height);
     const dv = droneMesh.visible, gv = typeof ghostMesh !== 'undefined' && ghostMesh ? ghostMesh.visible : null, asp = fpvCam.aspect;
     droneMesh.visible = false; if (gv !== null) ghostMesh.visible = false;
     fpvCam.aspect = w / Math.max(1, h); fpvCam.updateProjectionMatrix();
