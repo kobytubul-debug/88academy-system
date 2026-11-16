@@ -1606,7 +1606,7 @@ body.nx-open #vidPlay,body.nx-open #vidRec{display:none!important}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 403</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 404</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -9645,7 +9645,7 @@ async function nxLogin(un, pw, knownHash) {
   NX.curH = h; NX.curSalt = c.salt;                          // kept so the first-sign-in password change can prove who is asking and refuse the temporary password again
   if (NX.checkCred) { let good = false; try { good = await NX.checkCred(un, h); } catch (e) { return e && e.status === 429 ? 'נסיונות רבים מדי, נסה שוב בעוד כמה דקות' : 'אין חיבור לשרת, נסה שוב'; } if (!good) return 'שם משתמש או סיסמה שגויים'; }   // hosted: the server compares, the hash is never sent out
   else if (h !== c.h) return 'שם משתמש או סיסמה שגויים';
-  NX.un = un; NX.kickSeen = -1; nxDoneLoad(); await nxHistLoad();
+  NX.un = un; NX.kickSeen = -1; NX.vseen = {}; nxDoneLoad(); await nxHistLoad();
   try { const ps = await NX.db.doc('players/' + NX.uid).get(); const pd = ps && ps.exists ? ps.data() : null; if (pd && pd.un === un && Array.isArray(pd.vseen)) { NX.vseen = NX.vseen || {}; pd.vseen.forEach((k) => { NX.vseen[k] = 1; }); } if (pd && pd.un === un && Array.isArray(pd.done)) { pd.done.forEach((k) => { NX.done[k] = 1; }); try { localStorage.setItem(nxDoneKey(), JSON.stringify(NX.done)); } catch (e) { /* ignore */ } } } catch (e) { /* ignore */ }
   try { window.sessionStorage.setItem('fpvNexusLogin', JSON.stringify({ un, h })); localStorage.removeItem('fpvNexusLogin'); } catch (e) { /* ignore */ }      // the sign-in lives only as long as this tab: closing the page signs the student out (a reload keeps it)
   nxWatchAcct();
@@ -9696,7 +9696,7 @@ function nxWatchAcct() {
 function nxLogout(msg) {
   try { localStorage.removeItem('fpvNexusLogin'); window.sessionStorage.removeItem('fpvNexusLogin'); } catch (e) { /* ignore */ }
   if (NX.acctUnsub) { try { NX.acctUnsub(); } catch (e) { /* ignore */ } NX.acctUnsub = null; }
-  NX.un = ''; NX.acct = null; NX.name = ''; NX.accReady = false; NX.done = {}; NX.hist = []; if (NX.staff) nxStaffOff();
+  NX.un = ''; NX.acct = null; NX.name = ''; NX.accReady = false; NX.done = {}; NX.hist = []; NX.vseen = {}; if (NX.staff) nxStaffOff();
   if (NX.db && NX.uid && NX.role === 'player') NX.db.doc('live/' + NX.uid).set({ sid: '', ts: Date.now() }).catch(() => { /* ignore */ });
   if (!inMenu) { try { goMenu('main'); } catch (e) { /* ignore */ } }
   nxApplyView(); nxHoldCheck();
@@ -13477,14 +13477,16 @@ function vidTick(dt) { vidRecTick(dt); vidPlayTick(dt); vidPrevTick(dt); }
 
 /* ---------- "seen once" per student, kept with the player's record on the server ---------- */
 function vidSeenKey(id) { const v = vidOf(id); return vidKey(id) + ':' + (v ? v.at : 0); }
+function vidSeenLS() { return 'fpvNexusVidSeen:' + (NX.un || ''); }                      // per account, so a student on the instructor's computer is not counted as having watched
 function vidSeen(id) {
   const k = vidSeenKey(id);
   if (NX.vseen && NX.vseen[k]) return true;
-  try { const m = JSON.parse(localStorage.getItem('fpvNexusVidSeen') || '{}'); return !!m[k]; } catch (e) { return false; }
+  if (!NX.un) return false;
+  try { const m = JSON.parse(localStorage.getItem(vidSeenLS()) || '{}'); return !!m[k]; } catch (e) { return false; }
 }
 function vidMarkSeen(id) {
   const k = vidSeenKey(id);
-  try { const m = JSON.parse(localStorage.getItem('fpvNexusVidSeen') || '{}'); m[k] = 1; localStorage.setItem('fpvNexusVidSeen', JSON.stringify(m)); } catch (e) { /* ignore */ }
+  if (NX.un) { try { const m = JSON.parse(localStorage.getItem(vidSeenLS()) || '{}'); m[k] = 1; localStorage.setItem(vidSeenLS(), JSON.stringify(m)); } catch (e) { /* ignore */ } }
   NX.vseen = NX.vseen || {}; NX.vseen[k] = 1;                       // the player's record on the server carries it (written with the live status)
 }
 /* when a stage starts: the video first (once), then the normal flow (countdown / auto race) */
@@ -13501,7 +13503,7 @@ function vidMarkSeen(id) {
       if (Date.now() - t0 > 5000) return;
       if (fadeBusy || inMenu || !currentStage || currentStage.id !== id) { setTimeout(tick, 150); return; }
       if (typeof nxGuideClose === 'function') nxGuideClose();
-      if (!again) vidMarkSeen(id);
+      if (!again && !(NX.role === 'admin' && !NX.preview)) vidMarkSeen(id);
       vidPlayStart(id, { onEnd: (start) => { if (typeof nxGuideAutoStart === 'function') nxGuideAutoStart(id); } });
       if (VID.play) VID.play.again = again;
     };
