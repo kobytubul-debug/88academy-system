@@ -17,7 +17,7 @@ const PUBLIC = path.join(__dirname, 'public');
 const ADMIN_USER = (process.env.ADMIN_USERNAME || (PROD ? '' : 'admin')).trim();
 const ADMIN_PASS = process.env.ADMIN_PASSWORD || (PROD ? '' : 'admin1234');
 if (!ADMIN_USER || !ADMIN_PASS) { console.error('ADMIN_USERNAME and ADMIN_PASSWORD must be set.'); process.exit(1); }
-const TOKEN_DAYS = 30;
+const TOKEN_DAYS = 1;                         // a manager sign-in is good for one day at most
 const MAX_BODY = 6 * 1024 * 1024;
 const SEG = /^[A-Za-z0-9_\-.~:@+]{1,80}$/;
 

@@ -1610,14 +1610,14 @@ body.vid-on #osd,body.vid-on #sticks,body.vid-on #propHud,body.vid-on #btnStartR
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 413</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 414</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
     <div class="whobox">
       <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
       <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><div class="whopw"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><button type="button" id="whoEye" class="eye" title="הצג או הסתר את הסיסמה" tabindex="-1">&#128065;</button></div><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button><div class="whoNote">אין לך חשבון? פנה למדריך שלך.</div></div>
-      <div id="whoAdminPane" style="display:none"><h3>כניסת מנהל</h3><p>הכניסה למנהלי המערכת בלבד.</p><input id="whoAu" type="text" maxlength="60" autocomplete="username" placeholder="שם משתמש" dir="ltr"><div class="whopw"><input id="whoAp" type="password" maxlength="80" autocomplete="current-password" placeholder="סיסמה" dir="ltr"></div><label class="whoRem"><input id="whoAr" type="checkbox"> זכור אותי במחשב הזה</label><div id="whoAerr"></div><button id="whoAGo">כניסה</button><button id="whoAStu" class="sec">כניסת תלמידים</button></div>
+      <div id="whoAdminPane" style="display:none"><h3>כניסת מנהל</h3><p>הכניסה למנהלי המערכת בלבד.</p><input id="whoAu" type="text" maxlength="60" autocomplete="username" placeholder="שם משתמש" dir="ltr"><div class="whopw"><input id="whoAp" type="password" maxlength="80" autocomplete="current-password" placeholder="סיסמה" dir="ltr"></div><label class="whoRem" style="display:none"><input id="whoAr" type="checkbox"></label><p class="nxn" style="margin:6px 0 0;font-size:11px;opacity:.75">הכניסה תקפה ללשונית הזו בלבד ופגה כשסוגרים אותה.</p><div id="whoAerr"></div><button id="whoAGo">כניסה</button><button id="whoAStu" class="sec">כניסת תלמידים</button></div>
     </div>
   </div>
 </div>
@@ -1652,7 +1652,8 @@ body.vid-on #osd,body.vid-on #sticks,body.vid-on #propHud,body.vid-on #btnStartR
   const ss = { get(k) { try { return window.sessionStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { window.sessionStorage.setItem(k, v); } catch (e) { /* ignore */ } }, del(k) { try { window.sessionStorage.removeItem(k); } catch (e) { /* ignore */ } } };
   ls.del('nxHostToken');                       // an older build kept the manager sign-in in the whole browser: a new tab then opened as the manager
   const ADM_PATH = /^\/admin\/?$/i.test(window.location.pathname);   // the manager acts as the manager only on /admin; the regular address is always the student page
-  let token = ADM_PATH ? (ss.get('nxHostTok') || ls.get('nxHostTokL') || '') : '', adminOk = false;   // by default the manager is signed in for this tab only
+  ls.del('nxHostTokL');                                                 // a manager sign-in never outlives its tab: anyone opening /admin later on the same computer must sign in again
+  let token = ADM_PATH ? (ss.get('nxHostTok') || '') : '', adminOk = false;
   const clone = (o) => JSON.parse(JSON.stringify(o));
   const hdr = () => { const h = { 'X-Uid': UID, 'Content-Type': 'application/json' }; if (token) h.Authorization = 'Bearer ' + token; return h; };
   async function api(method, url, body) {
@@ -1745,7 +1746,7 @@ body.vid-on #osd,body.vid-on #sticks,body.vid-on #propHud,body.vid-on #btnStartR
     async changePw(un, h, salt, nh) { const r = await api('POST', '/api/db/changepw', { un, h, salt, nh }); if (!r || !r.ok) { const e = new Error('changepw'); e.status = 400; throw e; } },
     async listBackups() { const r = await api('GET', '/api/admin/backups'); return r.list || []; },
     async restoreBackup(name) { return api('POST', '/api/admin/restore', { name }); },
-    async adminLogin(u, p, remember) { const r = await api('POST', '/api/admin/login', { u, p }); token = r.token; if (remember) ls.set('nxHostTokL', token); else ss.set('nxHostTok', token); },
+    async adminLogin(u, p) { const r = await api('POST', '/api/admin/login', { u, p }); token = r.token; ss.set('nxHostTok', token); },
     adminLogout() { ss.del('nxHostTok'); ls.del('nxHostTokL'); ls.del('fpvNexusAsPlayer'); try { window.sessionStorage.removeItem('fpvNexusAsPlayer'); } catch (e) { /* ignore */ } window.location.href = '/'; }
   };
 
