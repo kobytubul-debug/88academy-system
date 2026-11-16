@@ -1608,7 +1608,7 @@ body.vid-on #osd,body.vid-on #sticks,body.vid-on #propHud,body.vid-on #btnStartR
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 405</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 406</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -8974,7 +8974,8 @@ function nxLocalDb() {
 function nxGroupOf(gid) { return gid && NX.groups[gid] ? NX.groups[gid] : null; }
 function nxEffective(base, grp, acct) {
   const c = nxMerge(nxDefault(), nxClone(base || {}));
-  const ovr = (x) => {
+  let grpDrones = false;                                          // the group's drone list wins: a player's own list counts only when the group has none
+  const ovr = (x, isGrp) => {
     if (!x) return;
     if (x.themeId && NX.themes[x.themeId]) {
       const t = NX.themes[x.themeId];
@@ -8984,13 +8985,13 @@ function nxEffective(base, grp, acct) {
     }
     if (x.kit) nxApplyKit(c, x.kit);                // a ready-made look chosen for this group or player
     if (x.stageOff) c.stages.off = x.stageOff;
-    if (x.droneOff) c.drones.off = x.droneOff;
+    if (x.droneOff && (isGrp || !grpDrones)) { c.drones.off = x.droneOff; if (isGrp) grpDrones = true; }
     if (x.force) c.stages.force = x.force;
     if (x.mode) c.mode = x.mode;
     if (Array.isArray(x.courseIds) && x.courseIds.length) { c.courseIds = x.courseIds.slice(); c.courseId = c.courseIds[0]; }
     else if (x.courseId) { c.courseId = x.courseId; c.courseIds = [x.courseId]; }
   };
-  ovr(grp); ovr(acct);
+  ovr(grp, true); ovr(acct, false);
   return c;
 }
 function nxMyGid() { return NX.acct ? (NX.acct.gid || '') : ''; }
@@ -11035,7 +11036,7 @@ function nxTabPlayers() {
     h += nxF('נעילה על שלב', '<select data-af="force" data-un="' + un + '"><option value="">ללא</option>' + nxStageIds().map((id) => '<option value="' + id + '"' + (a.force === id ? ' selected' : '') + '>' + nxEsc(STAGES[id].name) + '</option>').join('') + '</select>');
     h += '<label class="nxchk1"><input type="checkbox" data-act="pl-ovs" data-u="' + un + '"' + (ov ? ' checked' : '') + '> שלבים מותאמים לשחקן</label>';
     if (ov) h += '<div class="nxchk">' + nxStageIds().map((id) => '<label><input type="checkbox" data-act="pl-stg" data-u="' + un + '" data-id="' + id + '"' + (a.stageOff[id] ? '' : ' checked') + '> ' + nxEsc(STAGES[id].name) + '</label>').join('') + '</div>';
-    h += '<label class="nxchk1"><input type="checkbox" data-act="pl-ovd" data-u="' + un + '"' + (ovd ? ' checked' : '') + '> רחפנים מותאמים לשחקן</label>';
+    h += '<label class="nxchk1"><input type="checkbox" data-act="pl-ovd" data-u="' + un + '"' + (ovd ? ' checked' : '') + '> רחפנים מותאמים לשחקן <small class="nxsm">(רק כשלקבוצה שלו אין רשימה משלה)</small></label>';
     if (ovd) h += '<div class="nxchk">' + DRONE_IDS.map((id) => '<label><input type="checkbox" data-act="pl-drn" data-u="' + un + '" data-id="' + id + '"' + (a.droneOff[id] ? '' : ' checked') + '> ' + nxEsc(PRESETS[id].label) + '</label>').join('') + '</div>';
     h += '<div class="nxbtns"><button class="nxb danger" data-act="pl-del" data-u="' + un + '">מחק שחקן</button></div></details>';
   });
