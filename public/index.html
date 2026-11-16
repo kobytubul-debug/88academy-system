@@ -1221,6 +1221,11 @@ body.nx-open #vidPlay,body.nx-open #vidRec{display:none!important}
 .vidrow{display:flex;gap:10px;align-items:stretch}.vidpv{flex:1;min-width:0;padding:8px 10px;background:var(--p2);border:1px solid var(--ln);display:flex;flex-direction:column;gap:2px;justify-content:center}.vidpv b{font:700 22px var(--mono);color:var(--ti,#fff);direction:ltr;text-align:right}.vidpv small{font-size:11px;color:var(--mu);line-height:1.4}
 .vidbtns{display:flex;flex-direction:column;gap:6px;justify-content:center}
 #adm button.nxb.rec{background:#ff3d3d!important;color:#fff!important;display:flex;align-items:center;gap:8px}#adm button.nxb.rec i{width:10px;height:10px;border-radius:50%;background:#fff}
+
+#trkCar{position:relative}
+#tcTip{display:none;position:absolute;z-index:5;transform:translate(-50%,calc(-100% - 8px));padding:5px 10px;background:var(--bg);border:1px solid var(--ac);color:var(--ti,#fff);font-size:12px;white-space:nowrap;pointer-events:none;box-shadow:0 4px 14px rgba(0,0,0,.4)}
+.tcsep{display:inline-block;width:2px;height:16px;background:var(--ac);opacity:.7;margin:0 5px;align-self:center}
+.tcNums .tcsep{height:22px}
 </style>
 </head>
 <body>
@@ -1422,6 +1427,7 @@ body.nx-open #vidPlay,body.nx-open #vidRec{display:none!important}
               </div>
             </div>
             <div class="tcFoot"><span>גלגלת העכבר או חיצים ↑↓ מעבירים למסלול הבא · Enter = טוס</span><div class="tcNums" id="tcNums"></div></div>
+            <div id="tcTip" role="tooltip"></div>
           </div>
           <table class="trktbl">
             <thead><tr><th>#</th><th>מפה</th><th>מסלול</th><th>קושי</th><th>שערים</th><th>אורך</th><th>הקפה הכי טובה</th><th>מרוץ הכי טוב</th><th>כוכבים</th><th></th></tr></thead>
@@ -1599,7 +1605,7 @@ body.nx-open #vidPlay,body.nx-open #vidRec{display:none!important}
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 398</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 399</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo"><span>FPV</span> <b>NEXUS</b></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div><div class="whoDr"><canvas id="whoDroneCv" width="640" height="400"></canvas></div></div>
@@ -8172,8 +8178,9 @@ function trkCarRender(full) {
     d.classList.toggle('cur', off === 0); d.classList.toggle('prev', off < 0); d.classList.toggle('next', off > 0); d.classList.toggle('far', Math.abs(off) > 1);
     if (Math.abs(off) <= 1) trkCarPic(d.dataset.id, d, my);
   }));
-  $('tcDots').innerHTML = TC.ids.map((x, k) => '<button data-k="' + k + '" class="' + (k === TC.i ? 'on' : '') + '" aria-label="' + tcEsc(STAGES[x].name) + '"></button>').join('');
-  $('tcNums').innerHTML = TC.ids.map((x, k) => '<button data-k="' + k + '" class="' + (k === TC.i ? 'on' : '') + (NXH.locked(x) ? ' lk' : '') + '" title="' + tcEsc(STAGES[x].name) + '">' + (k + 1) + '</button>').join('');
+  const sep = (k) => (k > 0 && TC.cat[TC.ids[k]] !== TC.cat[TC.ids[k - 1]]) ? '<i class="tcsep" title="' + tcEsc((TC.cat[TC.ids[k]] || {}).cat || '') + '"></i>' : '';     // a divider where the next course begins
+  $('tcDots').innerHTML = TC.ids.map((x, k) => sep(k) + '<button data-k="' + k + '" class="' + (k === TC.i ? 'on' : '') + '" data-tip="' + tcEsc(STAGES[x].name) + '" aria-label="' + tcEsc(STAGES[x].name) + '"></button>').join('');
+  $('tcNums').innerHTML = TC.ids.map((x, k) => sep(k) + '<button data-k="' + k + '" class="' + (k === TC.i ? 'on' : '') + (NXH.locked(x) ? ' lk' : '') + '" data-tip="' + tcEsc(STAGES[x].name) + (NXH.locked(x) ? ' · נעול' : '') + '" aria-label="' + tcEsc(STAGES[x].name) + '">' + (k + 1) + '</button>').join('');
 }
 function trkCarWire() {
   const root = $('trkCar'); if (!root || !root.addEventListener) return;
@@ -8199,6 +8206,11 @@ function trkCarWire() {
     else if (t.classList.contains('del')) { if (t.dataset.armed) { deleteCustomTrack(id); return; } t.dataset.armed = '1'; t.textContent = 'בטוח?'; setTimeout(() => { t.dataset.armed = ''; t.textContent = 'מחק'; }, 2500); }
   });
   root.addEventListener('mouseenter', () => { if (TC.ids[TC.i]) setTrkBg(TC.ids[TC.i]); });
+  const tip = $('tcTip');                                           // the stage name, at once, when the mouse rests on a number or a dot
+  if (tip) {
+    root.addEventListener('mouseover', (e) => { const t = e.target.closest ? e.target.closest('[data-tip]') : null; if (!t) return; tip.textContent = t.dataset.tip; tip.style.display = 'block'; const r = t.getBoundingClientRect(), R = root.getBoundingClientRect(); tip.style.left = (r.left + r.width / 2 - R.left) + 'px'; tip.style.top = (r.top - R.top) + 'px'; });
+    root.addEventListener('mouseout', (e) => { const t = e.target.closest ? e.target.closest('[data-tip]') : null; if (t) tip.style.display = 'none'; });
+  }
   window.addEventListener('keydown', (e) => {
     if (!inMenu || currentScreen !== 'missions' || fadeBusy) return;
     const t = e.target, tag = t && t.tagName; if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
