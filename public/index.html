@@ -13347,8 +13347,12 @@ function vidDrawBox(box, p) {                                     // the scene i
     const cc = new THREE.Color(); renderer.getClearColor(cc); const ca = renderer.getClearAlpha();
     renderer.setClearColor(0x0b0c0e, 1); renderer.clear(true, true, true);                    // the whole screen dark, the film only inside the window (the overlay above is transparent)
     renderer.setClearColor(cc, ca);
+    const bg = scene.background; scene.background = null;
+    let col = 0x0b0c0e; try { const c = getComputedStyle(document.body).getPropertyValue('--bg').trim(); if (/^#[0-9a-f]{6}$/i.test(c)) col = parseInt(c.slice(1), 16); } catch (e) { /* ignore */ }
+    renderer.setScissorTest(false); renderer.setViewport(0, 0, W, H); renderer.setClearColor(col, 1); renderer.clear();      // the page colour everywhere...
+    scene.background = bg;
     renderer.setViewport(x, y, w, h); renderer.setScissor(x, y, w, h); renderer.setScissorTest(true);
-    renderer.render(scene, fpvCam);
+    renderer.render(scene, fpvCam);                                                                                        // ...and the flight inside the window
     renderer.setScissorTest(false); renderer.setViewport(0, 0, W, H); renderer.setScissor(0, 0, W, H);
     fpvCam.aspect = asp; fpvCam.updateProjectionMatrix();
     droneMesh.visible = dv; if (gv !== null) ghostMesh.visible = gv;
