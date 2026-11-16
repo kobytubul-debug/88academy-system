@@ -8974,8 +8974,7 @@ function nxLocalDb() {
 function nxGroupOf(gid) { return gid && NX.groups[gid] ? NX.groups[gid] : null; }
 function nxEffective(base, grp, acct) {
   const c = nxMerge(nxDefault(), nxClone(base || {}));
-  let grpDrones = false;                                          // the group's drone list wins: a player's own list counts only when the group has none
-  const ovr = (x, isGrp) => {
+  const ovr = (x, isGrp) => {                                     // tracks, drones, the stage lock and the mode come from the group only; a player sets just a look of their own
     if (!x) return;
     if (x.themeId && NX.themes[x.themeId]) {
       const t = NX.themes[x.themeId];
@@ -8984,8 +8983,9 @@ function nxEffective(base, grp, acct) {
       if (t.hide) c.hide = Object.assign({}, c.hide, t.hide);
     }
     if (x.kit) nxApplyKit(c, x.kit);                // a ready-made look chosen for this group or player
+    if (!isGrp) return;
     if (x.stageOff) c.stages.off = x.stageOff;
-    if (x.droneOff && (isGrp || !grpDrones)) { c.drones.off = x.droneOff; if (isGrp) grpDrones = true; }
+    if (x.droneOff) c.drones.off = x.droneOff;
     if (x.force) c.stages.force = x.force;
     if (x.mode) c.mode = x.mode;
     if (Array.isArray(x.courseIds) && x.courseIds.length) { c.courseIds = x.courseIds.slice(); c.courseId = c.courseIds[0]; }
@@ -9692,6 +9692,7 @@ function nxWatchAcct() {
     if (!sn.exists) { if (NX.acct !== null || NX.accReady) nxLogout('החשבון הוסר'); NX.accReady = true; return; }
     NX.accReady = true;
     const d = sn.data(); NX.acct = d; NX.name = d.name || un; nxStaffSync(d); nxPwCheck();
+    if (nxResetCheck(d) && NX.role !== 'admin') nxToast('המדריך איפס את ההתקדמות שלך');
     const k = d.kick || 0;
     if (NX.kickSeen < 0) NX.kickSeen = k; else if (k > NX.kickSeen) { nxLogout('המדריך ניתק אותך'); return; }
     nxApplyView(); nxHoldCheck(); nxBar(); nxTelemetry();
@@ -10951,6 +10952,21 @@ function nxAcctSave(un, patch) {
   NX.accts[un] = a;
   return nxWrite('accounts/' + un, a);
 }
+function nxResetProgress(un) {                                  // the manager wipes what a student finished: every device of that student clears its own copy when it sees the new stamp
+  if (!NX.accts[un]) return;
+  nxAcctSave(un, { pReset: Date.now() });
+  Object.keys(NX.players || {}).forEach((uid) => { const p = NX.players[uid]; if (p && p.un === un && Array.isArray(p.done) && p.done.length) nxWrite('players/' + uid, Object.assign({}, p, { done: [] })); });
+}
+function nxResetProgressGroup(gid) { nxPlayersOf(gid).forEach(nxResetProgress); }
+const nxResetKey = () => 'fpvNexusDoneReset.' + NX.un;
+function nxResetCheck(d) {                                      // a student's client: a reset stamp newer than the one this device saw clears the finished list
+  const at = Number(d && d.pReset) || 0; if (!at) return false;
+  let seen = 0; try { seen = Number(localStorage.getItem(nxResetKey())) || 0; } catch (e) { seen = 0; }
+  if (at <= seen) return false;
+  NX.done = {};
+  try { localStorage.setItem(nxResetKey(), String(at)); localStorage.setItem(nxDoneKey(), '{}'); } catch (e) { /* ignore */ }
+  return true;
+}
 async function nxCreatePlayer(name, un, pw, gid, extra) {
   un = nxUnClean(un); name = String(name || '').trim().slice(0, 24);
   if (!name) { nxToast('חסר שם לתצוגה'); return; }
@@ -10984,7 +11000,7 @@ function nxTabGroups() {
     let sa = '', sk = '', sm = '', sv = '', sl = '';
     sa += nxF('שם', '<input type="text" data-gf="name" data-gid="' + gid + '" value="' + nxEsc(g.name) + '">');
     sa += nxF('מצב הקבוצה', '<div class="nxbtns"><button class="nxb' + (g.mode === 'student' ? ' pri' : '') + '" data-act="grp-mode" data-gid="' + gid + '" data-v="student">מצב תלמיד</button><button class="nxb' + (g.mode === 'student' ? '' : ' pri') + '" data-act="grp-mode" data-gid="' + gid + '" data-v="free">מצב פריסטייל</button></div><p class="nxn">' + (g.mode === 'student' ? 'תלמיד: חייב לסיים כל מסלול כדי לפתוח את הבא, ואי אפשר לדלג בין מסלולים. מסלול שכבר הושלם נשאר פתוח.' : 'פריסטייל: התלמיד מטייל חופשי בין כל המסלולים (גם במסלולי הקורס).') + '</p>');
-    sa += '<div class="nxbtns"><button class="nxb' + (g.hold ? ' pri' : '') + '" data-act="grp-hold" data-gid="' + gid + '">' + (g.hold ? 'שחרר את הקבוצה' : 'עצור את הקבוצה') + '</button><button class="nxb" data-act="grp-prev" data-gid="' + gid + '">הצג כקבוצה</button></div>';
+    sa += '<div class="nxbtns"><button class="nxb' + (g.hold ? ' pri' : '') + '" data-act="grp-hold" data-gid="' + gid + '">' + (g.hold ? 'שחרר את הקבוצה' : 'עצור את הקבוצה') + '</button><button class="nxb" data-act="grp-prev" data-gid="' + gid + '">הצג כקבוצה</button><button class="nxb" data-act="grp-reset" data-gid="' + gid + '" title="מוחק את המסלולים שכל שחקני הקבוצה סיימו: במצב תלמיד הכול ננעל מחדש">אפס התקדמות לקבוצה</button></div>';
     sa += nxF('הודעה לקבוצה', '<input type="text" id="admN_' + gid + '" placeholder="הודעה שתופיע אצל השחקנים"><button class="nxb" data-act="grp-note" data-gid="' + gid + '">שלח</button>');
     sk += nxGroupCourseUi(gid, g);
     sl += nxF('נעילה על שלב', '<select data-gf="force" data-gid="' + gid + '"><option value="">ללא</option>' + nxStageIds().map((id) => '<option value="' + id + '"' + (g.force === id ? ' selected' : '') + '>' + nxEsc(STAGES[id].name) + '</option>').join('') + '</select>');
@@ -11034,12 +11050,8 @@ function nxTabPlayers() {
     h += nxF('הודעה לשחקן', '<input type="text" id="admPN_' + un + '" placeholder="הודעה שתופיע אצל השחקן"><button class="nxb" data-act="pl-note" data-u="' + un + '">שלח</button>');
     h += nxF('סיסמה חדשה', '<input type="text" id="admPP_' + un + '" maxlength="40" placeholder="לפחות 4 תווים"><button class="nxb" data-act="pl-pw" data-u="' + un + '">עדכן</button>');
     h += nxF('ערכת נושא', '<select data-af="themeId" data-un="' + un + '"><option value="">כללית / של הקבוצה</option>' + Object.keys(NX.themes).map((t) => '<option value="' + t + '"' + (a.themeId === t ? ' selected' : '') + '>' + nxEsc(NX.themes[t].name) + '</option>').join('') + '</select>');
-    h += nxF('נעילה על שלב', '<select data-af="force" data-un="' + un + '"><option value="">ללא</option>' + nxStageIds().map((id) => '<option value="' + id + '"' + (a.force === id ? ' selected' : '') + '>' + nxEsc(STAGES[id].name) + '</option>').join('') + '</select>');
-    h += '<label class="nxchk1"><input type="checkbox" data-act="pl-ovs" data-u="' + un + '"' + (ov ? ' checked' : '') + '> שלבים מותאמים לשחקן</label>';
-    if (ov) h += '<div class="nxchk">' + nxStageIds().map((id) => '<label><input type="checkbox" data-act="pl-stg" data-u="' + un + '" data-id="' + id + '"' + (a.stageOff[id] ? '' : ' checked') + '> ' + nxEsc(STAGES[id].name) + '</label>').join('') + '</div>';
-    h += '<label class="nxchk1"><input type="checkbox" data-act="pl-ovd" data-u="' + un + '"' + (ovd ? ' checked' : '') + '> רחפנים מותאמים לשחקן <small class="nxsm">(רק כשלקבוצה שלו אין רשימה משלה)</small></label>';
-    if (ovd) h += '<div class="nxchk">' + DRONE_IDS.map((id) => '<label><input type="checkbox" data-act="pl-drn" data-u="' + un + '" data-id="' + id + '"' + (a.droneOff[id] ? '' : ' checked') + '> ' + nxEsc(PRESETS[id].label) + '</label>').join('') + '</div>';
-    h += '<div class="nxbtns"><button class="nxb danger" data-act="pl-del" data-u="' + un + '">מחק שחקן</button></div></details>';
+    h += '<p class="nxn">מסלולים, רחפנים, נעילה ומצב תלמיד/פריסטייל נקבעים בקבוצה של השחקן (לשונית קבוצות).</p>';
+    h += '<div class="nxbtns"><button class="nxb" data-act="pl-reset" data-u="' + un + '" title="מוחק את המסלולים שהשחקן סיים: במצב תלמיד הכול ננעל מחדש">אפס התקדמות</button><button class="nxb danger" data-act="pl-del" data-u="' + un + '">מחק שחקן</button></div></details>';
   });
   return h + nxExportCard();
 }
@@ -11479,6 +11491,8 @@ function nxAdmWireOn(body) {
     else if (a === 'grp-kit') { NX.openG = gid; nxGroupSave(gid, { kit: el.dataset.v || '', themeId: '' }); NX.kitPeek = gid; nxApplyView(); nxToast('ערכת הנושא של הקבוצה עודכנה, כך היא נראית אצלם'); nxAdmRender(); }
     else if (a === 'grp-mode') { NX.openG = gid; nxGroupSave(gid, { mode: el.dataset.v === 'student' ? 'student' : 'free' }); nxAdmRender(); }
     else if (a === 'grp-hold') { NX.openG = gid; nxGroupSave(gid, { hold: !NX.groups[gid].hold }); nxAdmRender(); }
+    else if (a === 'grp-reset') { const n = nxPlayersOf(gid).length; if (!n) { nxToast('אין שחקנים בקבוצה'); return; } nxResetProgressGroup(gid); nxToast('ההתקדמות של ' + n + ' שחקנים אופסה'); }
+    else if (a === 'pl-reset') { const un = el.dataset.u; NX.openP = un; nxResetProgress(un); nxToast('ההתקדמות של ' + nxEsc((NX.accts[un] || {}).name || un) + ' אופסה'); }
     else if (a === 'grp-prev') { NX.preview = true; NX.previewUn = ''; NX.previewGid = gid; nxApplyView(); nxAdmRender(); }
     else if (a === 'grp-note') { const v = $('admN_' + gid).value.trim(); if (v) { NX.openG = gid; nxGroupSave(gid, { notice: v, noticeId: String(Date.now()) }); nxToast('ההודעה נשלחה'); } }
     else if (a === 'grp-del') {
