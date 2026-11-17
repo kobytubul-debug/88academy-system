@@ -1818,7 +1818,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 430</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 431</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -8206,7 +8206,7 @@ function selectDrone(id) {
   droneSel = id;
   const d = DRONE_INFO[id];
   document.querySelectorAll('#droneCards .ditem').forEach((el) => el.classList.toggle('sel', el.dataset.id === id));
-  const old = droneViews.findIndex((v) => v.big); if (old >= 0) droneViews.splice(old, 1);
+  const old = droneViews.findIndex((v) => v.big); if (old >= 0) dvDispose(droneViews.splice(old, 1)[0]);
   const cv = $('dBigCv'); if (cv) { const v = makeDroneView(id, cv, false, true); v.big = true; droneViews.push(v); }
   $('dMainEn').textContent = d.en; $('dMainName').textContent = d.title; $('dMainDesc').textContent = d.desc;
   $('dStats').innerHTML = droneStatRows(id);
@@ -8290,11 +8290,21 @@ function drawMainDrone(dt) {                     // the body stays still between
   } else dvRenderer.render(v.sc, v.cam);
   g.clearRect(0, 0, v.cv.width, v.cv.height); g.drawImage(dvRenderer.domElement, 0, 0, v.cv.width, v.cv.height);
 }
+function dvDispose(v) {                                          // free the GPU copies of a drone picture that is being replaced (they piled up on every rebuild)
+  if (!v || !v.sc || !v.sc.traverse) return;
+  try {
+    v.sc.traverse((o) => {
+      if (o.geometry && o.geometry.dispose) o.geometry.dispose();
+      (Array.isArray(o.material) ? o.material : o.material ? [o.material] : []).forEach((m) => { ['map', 'bumpMap'].forEach((k) => { if (m[k] && m[k] !== _carbonTex && m[k].dispose) m[k].dispose(); }); if (m.dispose) m.dispose(); });
+    });
+  } catch (e) { /* nothing to free */ }
+}
 function buildMainDrone() {
   const cv = $('mainDroneCv'); if (!cv || !dvRenderer && !window.THREE) return;
   let id = settings.preset;
   const ok = DRONE_IDS.filter(NXH.droneOk);
   if (!DRONE_INFO[id] || ok.indexOf(id) < 0) id = ok.indexOf('fpv5') >= 0 ? 'fpv5' : (ok[0] || 'fpv5');
+  if (mainDv) dvDispose(mainDv);
   const v = makeDroneView(id, cv, true);
   v.model.rotation.y = MAIN_FACE_Y === null ? -0.75 : MAIN_FACE_Y;
   mainDv = v; drawMainDrone(0);
@@ -8302,11 +8312,17 @@ function buildMainDrone() {
   hcardDrone();
 }
 /* the picture on the "התחל משחק" card (build 430): the game's own 5" freestyle model, drawn again whenever the manager changes its colours */
-let hcardSig = null;
-function hcardDrone() {
+let hcardSig = null, hcardT = 0;
+function hcardDrone() {                                          // called on every change; the picture is drawn once things settle (a colour drag fires many changes)
   if (typeof document === 'undefined' || !window.THREE) return;
+  if (JSON.stringify(NXH.dcol('fpv5') || {}) === hcardSig) return;
+  if (hcardT) window.clearTimeout(hcardT);
+  hcardT = window.setTimeout(() => { hcardT = 0; hcardDraw(); }, hcardSig === null ? 50 : 900);
+}
+function hcardDraw() {
   const sig = JSON.stringify(NXH.dcol('fpv5') || {});
   if (sig === hcardSig) return;
+  if (typeof NX !== 'undefined' && NX.open && NX.tab === 'drones') { hcardT = window.setTimeout(() => { hcardT = 0; hcardDraw(); }, 900); return; }   // not while the manager is still picking colours
   try {
     const W = 760, H = 500, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
     const v = makeDroneView('fpv5', cv, true);
@@ -8316,6 +8332,7 @@ function hcardDrone() {
     dvRenderer.setSize(W, H, false); dvRenderer.render(v.sc, v.cam);
     const g = cv.getContext('2d'); g.clearRect(0, 0, W, H); g.drawImage(el, 0, 0, W, H);
     dvRenderer.setSize(w0, h0, false);
+    dvDispose(v);
     const px = g.getImageData(0, 0, W, H).data;                       // crop to the drone so it fills the card like the old picture
     let x0 = W, y0 = H, x1 = -1, y1 = -1;
     for (let y = 0; y < H; y += 2) for (let x = 0; x < W; x += 2) if (px[(y * W + x) * 4 + 3] > 12) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
@@ -8337,7 +8354,7 @@ function applyGateLabels() {                    // the main screen shows the tra
 function buildDroneCards(keep) {
   const wrap = $('droneCards');
   const back = $('btnBackD'); if (back.parentNode !== $('scrDrone')) $('scrDrone').appendChild(back);   // keep it alive while the grid is rebuilt
-  droneViews.length = 0;
+  droneViews.forEach(dvDispose); droneViews.length = 0;
   const ids = DRONE_IDS.filter(NXH.droneOk);
   if (!ids.length) { wrap.innerHTML = ''; return; }
   wrap.innerHTML =
@@ -10291,6 +10308,11 @@ function nxThemePeek() {
   const d = nxClone(NX.draft); nxMerge(d.theme, nxClone(t.theme || {})); d.tx = nxClone(t.tx || {}); d.hide = nxClone(t.hide || {});
   return d;
 }
+let nxDrT = 0;
+function nxDroneRebuildSoon() {                                   // build 431: one rebuild of the drone pictures after the last change, not one per colour-picker event
+  if (nxDrT) window.clearTimeout(nxDrT);
+  nxDrT = window.setTimeout(() => { nxDrT = 0; if (currentScreen === 'drone') buildDroneCards(true); else if (currentScreen === 'main') buildMainDrone(); }, 220);
+}
 function nxApplyView() {
   let c;
   if (NX.role === 'admin') c = NX.preview ? nxEffective(NX.pub, nxGroupOf(NX.previewGid), NX.previewUn ? NX.accts[NX.previewUn] : null) : nxEffective(nxThemePeek(), NX.tab === 'groups' && NX.kitPeek ? nxGroupOf(NX.kitPeek) : null, null);   // groups tab: the chosen group's look is shown live
@@ -10308,8 +10330,7 @@ function nxApplyView() {
   if (sig !== NX.lastSig) {
     NX.lastSig = sig;
     if (currentScreen === 'missions') buildCards();
-    else if (currentScreen === 'drone') buildDroneCards(true);
-    else if (currentScreen === 'main') buildMainDrone();
+    else if (currentScreen === 'drone' || currentScreen === 'main') nxDroneRebuildSoon();   // drawn again once the changes settle (a colour drag fires many)
   } else if (currentScreen === 'drone') {
     document.querySelectorAll('#droneCards .ditem').forEach((it) => { const n = it.querySelector('.dname'); if (n && DRONE_INFO[it.dataset.id]) n.textContent = DRONE_INFO[it.dataset.id].title; });
     if (droneSel && DRONE_INFO[droneSel] && $('dMainName')) { $('dMainName').textContent = DRONE_INFO[droneSel].title; $('dMainDesc').textContent = DRONE_INFO[droneSel].desc; }
