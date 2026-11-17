@@ -1230,11 +1230,11 @@ body.nx-open #vidPlay,body.nx-open #vidRec{display:none!important}
 body.vid-on #osd,body.vid-on #sticks,body.vid-on #propHud,body.vid-on #btnStartRace,body.vid-on #menuBtn,body.vid-on #nxGuideBtn,body.vid-on #nxHint,body.vid-on #nxCoach,body.vid-on #flash{display:none!important}
 #vidBox #crosshair{display:block;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:128px;height:96px;z-index:2;pointer-events:none}
 
-/* ---------- home + sign-in redesign (build 416): chrome logo, static drone on the right, two picture cards ---------- */
-.nxlogo{display:flex;flex-direction:column;align-items:center;direction:ltr;font-family:var(--mono);font-weight:900;font-style:italic;line-height:.95;letter-spacing:.06em;filter:drop-shadow(0 4px 0 color-mix(in srgb,var(--ac) 35%,#000)) drop-shadow(0 0 18px color-mix(in srgb,var(--ac) 45%,transparent))}
-.nxlogo .l1,.nxlogo .l2{background:linear-gradient(180deg,#fff 0%,#dbe6f2 45%,#8aa0b8 50%,#fff 100%);-webkit-background-clip:text;background-clip:text;color:transparent!important}
+/* ---------- home + sign-in redesign (build 417): chrome logo, static drone on the right, two picture cards ---------- */
+.nxlogo{display:flex;flex-direction:column;align-items:center;direction:ltr;font-family:var(--mono);font-weight:900;font-style:italic;line-height:1.08;letter-spacing:.06em;overflow:visible;filter:drop-shadow(0 4px 0 color-mix(in srgb,var(--ac) 35%,#000)) drop-shadow(0 0 18px color-mix(in srgb,var(--ac) 45%,transparent))}
+.nxlogo .l1,.nxlogo .l2{display:block;padding:.04em .14em 0;margin:0;background:linear-gradient(180deg,#fff 0%,#dbe6f2 45%,#8aa0b8 50%,#fff 100%);-webkit-background-clip:text;background-clip:text;color:transparent!important}
 .nxlogo .l2{background:linear-gradient(180deg,#fff 0%,var(--ac) 48%,color-mix(in srgb,var(--ac) 55%,#000) 52%,#fff 100%);-webkit-background-clip:text;background-clip:text}
-#scrMain .mhead{position:absolute;left:0;right:0;top:clamp(18px,4vh,44px);text-align:center;direction:rtl}
+#scrMain .mhead{position:absolute;left:0;right:0;top:clamp(18px,4vh,44px);text-align:center;direction:rtl;overflow:visible}
 #scrMain .mhead .logo{font-size:clamp(40px,6.2vw,74px);letter-spacing:.06em}
 #scrMain .mhead .logo2{border-top:0;padding-top:0;margin-top:10px;font-size:clamp(14px,1.8vw,20px);letter-spacing:.5em;margin-left:.5em}
 #scrMain .mhead .tag{margin:6px 0 0;letter-spacing:.4em}
@@ -1252,11 +1252,11 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 .hcard .hsh{position:absolute;top:-8px;right:-14px;width:68%;height:110%;background:linear-gradient(160deg,rgba(255,255,255,.35),rgba(255,255,255,.06));clip-path:polygon(28% 0,100% 0,100% 100%,0 100%)}
 .hcard .hburst{position:absolute;left:6%;right:6%;top:18%;height:56%;border-radius:50%;background:radial-gradient(ellipse at 50% 70%,rgba(255,255,255,.55) 0%,rgba(255,255,255,.12) 40%,rgba(255,255,255,0) 70%);filter:blur(6px)}
 .hcard .hclip{position:absolute;top:-44%;bottom:0;overflow:hidden;pointer-events:none}
-.hcard.blue .hclip{left:0;right:-42%}
-.hcard.red .hclip{right:0;left:-42%}
-.hcard .himg{position:absolute;width:142%;height:auto;top:30%;transform:perspective(520px) rotateX(16deg) rotate(-10deg);transform-origin:50% 100%;-webkit-mask-image:linear-gradient(180deg,#000 70%,rgba(0,0,0,0) 100%);mask-image:linear-gradient(180deg,#000 70%,rgba(0,0,0,0) 100%);filter:drop-shadow(0 14px 18px rgba(0,0,0,.7));transition:filter .2s ease,transform .2s ease}
-.hcard.blue .himg{left:-21%}
-.hcard.red .himg{right:-21%}
+.hcard.blue .hclip{left:0;right:-30%}
+.hcard.red .hclip{right:0;left:-30%}
+.hcard .himg{position:absolute;width:104%;height:auto;top:16%;transform:perspective(520px) rotateX(16deg) rotate(-10deg);transform-origin:50% 100%;-webkit-mask-image:linear-gradient(180deg,#000 70%,rgba(0,0,0,0) 100%);mask-image:linear-gradient(180deg,#000 70%,rgba(0,0,0,0) 100%);filter:drop-shadow(0 14px 18px rgba(0,0,0,.7));transition:filter .2s ease,transform .2s ease}
+.hcard.blue .himg{left:-6%}
+.hcard.red .himg{right:-6%}
 .hcard .himg.flip{transform:perspective(520px) rotateX(16deg) rotate(10deg) scaleX(-1)}
 .hcard .hlbl{position:absolute;left:-6%;right:-6%;bottom:-3px;text-align:center;font:900 italic clamp(22px,2.3vw,30px)/1 var(--ui);color:#fff;letter-spacing:.01em;text-shadow:0 0 2px #06101a,0 3px 0 #06101a,-2px 0 0 #06101a,2px 0 0 #06101a,0 -2px 0 #06101a,0 6px 18px rgba(0,0,0,.8)}
 .hcard.blue:hover .hbg{box-shadow:0 0 0 2px #7fb4ff,0 0 34px 8px rgba(80,150,255,.75),0 18px 40px rgba(0,0,0,.6);filter:brightness(1.25)}
@@ -1656,7 +1656,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 416</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 417</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><span class="l1">FPV</span><span class="l2">NEXUS</span></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
