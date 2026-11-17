@@ -1278,12 +1278,15 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 .whoSub{margin-top:4px}
 @media(max-width:900px){#scrMain .mdrone{right:-10vw;top:46%;width:80vw;opacity:.6}#scrMain .mtiles{gap:14px}#scrMain .micons{left:8px;bottom:8px}}
 
-/* ---------- the FPV NEXUS logo (build 421): 3D chrome letters in the theme colour, FPV up-left and NEXUS down-right ---------- */
+/* ---------- the FPV NEXUS logo (build 422): 3D chrome letters in the theme colour, FPV up-left and NEXUS down-right ---------- */
 .nxlogo{display:flex;justify-content:center;filter:none!important;text-shadow:none!important}
 .nxlogosvg{display:block;height:auto;overflow:visible;filter:drop-shadow(0 0 22px color-mix(in srgb,var(--ac) 45%,transparent))}
 .nxlogosvg text{text-shadow:none!important}
 #scrMain .mhead .nxlogosvg{width:clamp(300px,34vw,500px)}
 .whoLogo .nxlogosvg{width:clamp(260px,30vw,420px)}
+
+/* ---------- next-gate marker kind (build 422) ---------- */
+.gmseg{gap:0!important}.gmseg .b{flex:1;border-radius:0}.gmseg .b.hot{background:var(--ac);color:#04110b;font-weight:900}
 </style>
 </head>
 <body>
@@ -1378,10 +1381,17 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
     </details>
     <details class="eds"><summary>מסלול</summary>
     <div class="row"><label style="flex:0 0 70px">הקפות</label><select id="edLaps"><option value="1">1 · מסלול חד פעמי: השער האחרון הוא הסיום</option><option value="2">2</option><option value="3">3 (ברירת מחדל)</option><option value="4">4</option><option value="5">5</option><option value="8">8</option><option value="10">10</option></select></div>
-    <div class="row" style="margin-top:8px;border-top:1px solid var(--ln);padding-top:8px"><b style="flex:1">חצי השער הבא</b><label style="flex:0 0 auto;display:flex;align-items:center;gap:6px"><input type="checkbox" id="edGmOn" checked> הצג</label></div>
+    <div class="row" style="margin-top:8px;border-top:1px solid var(--ln);padding-top:8px"><b style="flex:1">סימון השער הבא</b><label style="flex:0 0 auto;display:flex;align-items:center;gap:6px"><input type="checkbox" id="edGmOn" checked> הצג</label></div>
+    <div class="row gmseg" role="group" aria-label="סוג הסימון"><button class="b" id="edGmArrow" aria-pressed="true" title="ארבעה חצים שמתכנסים לשער הבא">חצים</button><button class="b" id="edGmRing" aria-pressed="false" title="עיגול ירוק בשער לעבור, כחול עם X בשער שאחריו, אדום עם X מאחור">עיגולים</button></div>
     <div class="row"><label style="flex:0 0 70px">גודל</label><input type="range" id="edGmSz" min="0.3" max="3" step="0.1" value="1" style="flex:1;min-width:0"><output id="edGmSzV" style="flex:0 0 30px;text-align:center">1</output></div>
-    <div class="row"><label style="flex:0 0 70px">צבע</label><input type="color" id="edGmCol" value="#ffffff" title="צבע החצים" style="flex:0 0 52px;height:34px;padding:0;border:0;background:none;cursor:pointer"><button class="b" id="edGmReset" title="חזרה לברירת מחדל" style="flex:1">איפוס</button></div>
-    <div class="keys" style="font-size:11px">התצוגה המקדימה מופיעה על השער הנבחר.</div>
+    <div class="row" id="edGmColRow"><label style="flex:0 0 70px">צבע</label><input type="color" id="edGmCol" value="#ffffff" title="צבע החצים" style="flex:0 0 52px;height:34px;padding:0;border:0;background:none;cursor:pointer"></div>
+    <div id="edGmRingRows" style="display:none">
+    <div class="row"><label for="edGmCg" style="flex:1">עיגול ירוק: עוברים בשער הזה</label><input type="color" id="edGmCg" value="#2fe36b" title="צבע השער שעוברים עכשיו" style="flex:0 0 52px;height:34px;padding:0;border:0;background:none;cursor:pointer"></div>
+    <div class="row"><label for="edGmCb" style="flex:1">כחול עם X: השער הבא</label><input type="color" id="edGmCb" value="#3b6cff" title="צבע השער שאחריו" style="flex:0 0 52px;height:34px;padding:0;border:0;background:none;cursor:pointer"></div>
+    <div class="row"><label for="edGmCr" style="flex:1">אדום עם X: צד לא נכון</label><input type="color" id="edGmCr" value="#ff3b3b" title="צבע השער כשמסתכלים עליו מאחור" style="flex:0 0 52px;height:34px;padding:0;border:0;background:none;cursor:pointer"></div>
+    </div>
+    <div class="btns"><button class="b" id="edGmReset" title="חזרה לברירת מחדל (סוג הסימון נשאר)">איפוס</button></div>
+    <div class="keys" style="font-size:11px">התצוגה המקדימה מופיעה על השער הנבחר. במצב עיגולים החצים לא מוצגים.</div>
     </details>
     <details class="eds"><summary>סביבה: דשא וצללים</summary>
     <div class="row"><label style="flex:0 0 70px">צבע דשא</label><input type="color" id="inpGrass" value="#5b8e30" title="צבע הדשא" style="flex:0 0 52px;height:34px;padding:0;border:0;background:none"><button class="b" id="btnGrassReset" style="margin-inline-start:8px">איפוס</button></div>
@@ -1390,7 +1400,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
     </details>
     <details class="eds"><summary>מראה</summary>
     <div class="row"><label style="flex:0 0 70px">צבע</label><select id="propType" style="display:none"></select><select id="propColor"></select><input type="color" id="propColorFree" value="#ff6a1a" title="צבע חופשי: בחר כל צבע" style="flex:0 0 44px;height:34px;padding:0;border:0;background:none;cursor:pointer"><button class="b" id="propColorAll" title="צבע את כל האלמנטים מאותו סוג במסלול בצבע שנבחר" style="flex:0 0 auto">כל הסוג</button></div>
-    <div class="row"><label style="flex:0 0 70px">צורת שער</label><select id="gateKind"><option value="">ברירת מחדל של המפה</option><option value="ring">טבעת</option><option value="square">ריבוע</option><option value="arch">קשת (ללא בסיס)</option><option value="wide">רחב ושטוח</option><option value="tall">גבוה וצר</option><option value="hex">משושה</option><option value="double">שער כפול</option></select></div>
+    <div class="row"><label style="flex:0 0 70px">צורת שער</label><select id="gateKind"><option value="">ברירת מחדל של המפה</option><option value="ring">טבעת</option><option value="square">ריבוע</option><option value="arch">קשת (ללא בסיס)</option><option value="wide">רחב ושטוח</option><option value="tall">גבוה וצר</option><option value="hex">משושה</option><option value="double">שער כפול</option><option value="race">שער מירוץ לבן (עומד על הקרקע)</option></select></div>
     <div class="row"><label style="flex:0 0 70px">דוגמה</label><button class="b" data-gpat="" title="מסגרת בצבע אחיד">רגיל</button><button class="b" data-gpat="bw" title="פסים שחור-לבן">שחור מקווקו</button><button class="b" data-gpat="rw" title="פסים אדום-לבן, כמו מדרכה">אדום מדרכה</button></div>
     <div class="row"><label style="flex:0 0 70px"></label><button class="b" data-gpat="bw" data-gall="1">כל השערים: שחור</button><button class="b" data-gpat="rw" data-gall="1">כל השערים: אדום</button><button class="b" data-gpat="" data-gall="1">כולם רגיל</button></div>
     </details>
@@ -1667,7 +1677,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 421</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 422</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -3362,7 +3372,7 @@ function makeLabelTexture(n, st) {                               // game-style n
 /* Gate frame: the FRONT (entrance, +Z side) and BACK (exit, -Z side) halves of the rim are separate
    meshes so they can glow in different colours. The drone must fly through in local -Z direction. */
 /* per-gate shape and size: d.k = ring | square | arch | wide | tall (default: the map's type), d.sz = size multiplier */
-const GATE_KINDS = { ring: 'טבעת', square: 'ריבוע', arch: 'קשת (ללא בסיס)', wide: 'רחב ושטוח', tall: 'גבוה וצר', hex: 'משושה', double: 'שער כפול', triple: 'שער משולש', archwide: 'קשת רחבה', archtall: 'קשת גבוהה', slit: 'חריץ צר וגבוה', ledge: 'פס רחב נמוך', none: 'נסתר (קו מדידה בלבד)' };
+const GATE_KINDS = { ring: 'טבעת', square: 'ריבוע', arch: 'קשת (ללא בסיס)', wide: 'רחב ושטוח', tall: 'גבוה וצר', hex: 'משושה', double: 'שער כפול', triple: 'שער משולש', archwide: 'קשת רחבה', archtall: 'קשת גבוהה', slit: 'חריץ צר וגבוה', ledge: 'פס רחב נמוך', race: 'שער מירוץ לבן (עומד על הקרקע)', none: 'נסתר (קו מדידה בלבד)' };
 function gateSpec(d) {
   let kind = d && d.k && GATE_KINDS[d.k] ? d.k : GATE_TYPE;
   if (!GATE_KINDS[kind]) kind = 'square';
@@ -3375,10 +3385,15 @@ function gateSpec(d) {
   else if (kind === 'double') { iw *= 1.6; ih *= 0.85; } else if (kind === 'hex') { ih = iw * 0.866; }
   else if (kind === 'triple') { iw *= 2.3; ih *= 0.85; } else if (kind === 'archwide') { iw *= 1.6; ih *= 0.9; } else if (kind === 'archtall') { iw *= 0.8; ih *= 1.6; }
   else if (kind === 'slit') { iw *= 0.45; ih *= 1.7; } else if (kind === 'ledge') { iw *= 2.1; ih *= 0.5; }
-  const ow = iw + t, oh = ih + t;
+  const race = kind === 'race';                                   // a white race gate: thick posts standing on the ground and a deep top beam
+  const tp = 1.3 * s, tb = 1.3 * s, dz = 1.0 * s, gy = Math.max(0.6, Number(d && d.y) || 0);
+  const ow = iw + (race ? tp : t), oh = ih + (race ? tb : t);
   // frame bars (oriented boxes in the gate plane): cx, cy centre, a angle (rad), hl half length, ht half thickness
   const bars = [];
-  if (kind === 'hex') {
+  if (race) {
+    bars.push({ cx: 0, cy: oh - tb / 2, a: 0, hl: ow, ht: tb / 2 });                                    // the beam rests on the posts
+    [-1, 1].forEach((sg) => bars.push({ cx: sg * (ow - tp / 2), cy: (ih - gy) / 2, a: Math.PI / 2, hl: (ih + gy) / 2, ht: tp / 2 }));   // posts from the ground up to the beam
+  } else if (kind === 'hex') {
     for (let i = 0; i < 6; i++) {
       const a0 = i * Math.PI / 3, a1 = (i + 1) * Math.PI / 3, am = a0 + Math.PI / 6;
       const mx = (Math.cos(a0) + Math.cos(a1)) / 2 * iw + Math.cos(am) * t / 2, my = (Math.sin(a0) + Math.sin(a1)) / 2 * iw + Math.sin(am) * t / 2;
@@ -3394,11 +3409,24 @@ function gateSpec(d) {
     if (kind === 'triple') [-1, 1].forEach((sg) => bars.push({ cx: sg * iw / 3, cy: 0, a: Math.PI / 2, hl: oh, ht: t / 2 }));
   }
   const div = kind === 'double' ? [0] : kind === 'triple' ? [-iw / 3, iw / 3] : [];
-  return { kind, ring: kind === 'ring', arch: kind === 'arch' || kind === 'archwide' || kind === 'archtall', hex: kind === 'hex', dbl: kind === 'double', div, t, iw, ih, ow, oh, s, bars };
+  return { kind, ring: kind === 'ring', arch: kind === 'arch' || kind === 'archwide' || kind === 'archtall', hex: kind === 'hex', dbl: kind === 'double', div, t, iw, ih, ow, oh, s, bars, race, tp, tb, dz, gy };
 }
 /* striped gate finishes: black/white hazard stripes, red/white like a kerb. The pattern replaces the gate colour on the frame; the glow still follows the race */
 const GATE_PATS = { bw: { name: 'שחור-לבן מקווקו', a: '#15171b', b: '#f2f2f2' }, rw: { name: 'אדום-לבן (מדרכה)', a: '#d4232a', b: '#f2f2f2' } };
 const GATE_PAT_LEN = 0.6;                                       // metres per stripe pair
+/* the race gate's finish: white boards with a coloured band along every long edge (the gate colour picks the band colour) */
+const GATE_RACE_TRIM = '#1e63d6';
+const gateRaceTex = {};
+function gateRaceMat(col) {
+  const c = /^#[0-9a-f]{6}$/i.test(col || '') ? col.toLowerCase() : GATE_RACE_TRIM;
+  if (!gateRaceTex[c]) {
+    const cv = document.createElement('canvas'); cv.width = 4; cv.height = 64;
+    const g = cv.getContext('2d'); g.fillStyle = '#f4f6f8'; g.fillRect(0, 0, 4, 64); g.fillStyle = c; g.fillRect(0, 0, 4, 8); g.fillRect(0, 56, 4, 8);
+    gateRaceTex[c] = new THREE.CanvasTexture(cv);
+  }
+  const t = gateRaceTex[c].clone(); t.needsUpdate = true;          // one copy per board: a rebuild disposes the old ones
+  return new THREE.MeshLambertMaterial({ color: 0xffffff, map: t, emissive: 0x6a6a6a, emissiveMap: t });
+}
 const gatePatCache = {};
 function gatePatTexture(id) {
   if (gatePatCache[id]) return gatePatCache[id];
@@ -3423,7 +3451,7 @@ function gateCopy(g) {
 
 /* physical details so a gate reads as a real race gate: dark corner joints, clamps on rings, a safety-striped stand with a weighted foot */
 function gateDeco(grp, sp, d, k) {
-  if (sp.kind === 'none') return;
+  if (sp.kind === 'none' || sp.race) return;
   const dk = () => new THREE.MeshLambertMaterial({ color: 0x23272e }), add = (geo, mat, x, y, z) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.castShadow = true; grp.add(m); return m; };
   const t = sp.t;
   if (sp.ring) {
@@ -3448,9 +3476,9 @@ function buildGateObj(i, d) {
   const grp = new THREE.Group();
   const bars = [], fronts = [], backs = [], halos = [];
   const sp = gateSpec(d), t = sp.t, ow = sp.ow, oh = sp.oh, k = Math.max(ow, oh) / 1.55;
-  const pat = d.p && GATE_PATS[d.p] ? d.p : '';
+  const pat = d.p && GATE_PATS[d.p] && !sp.race ? d.p : '';
   const mk = (geo, front, len) => {
-    const m = new THREE.Mesh(geo, pat ? gatePatMat(pat, len || 1) : new THREE.MeshBasicMaterial({ color: front ? COL.frontIdle : COL.back }));
+    const m = new THREE.Mesh(geo, sp.race ? gateRaceMat(d.c) : pat ? gatePatMat(pat, len || 1) : new THREE.MeshBasicMaterial({ color: front ? COL.frontIdle : COL.back }));
     m.userData.gateIndex = i;
     bars.push(m); (front ? fronts : backs).push(m);
     grp.add(m);
@@ -3466,6 +3494,12 @@ function buildGateObj(i, d) {
     mk(new THREE.TorusGeometry(Rr, tube * 0.72, 12, 96), true, 2 * Math.PI * Rr).position.z = tube * 0.45;
     mk(new THREE.TorusGeometry(Rr, tube * 0.72, 12, 96), false, 2 * Math.PI * Rr).position.z = -tube * 0.45;
     halo(new THREE.TorusGeometry(Rr, tube * 1.9, 12, 96), 0, 0, tube * 0.45);
+  } else if (sp.race) {                                           // one solid board per bar, the full depth of the gate
+    sp.bars.forEach((br) => {
+      const m = mk(new THREE.BoxGeometry(2 * br.hl, 2 * br.ht, sp.dz), true, 2 * br.hl);
+      m.position.set(br.cx, br.cy, 0); m.rotation.z = br.a; m.castShadow = true; m.receiveShadow = true;
+      halo(new THREE.BoxGeometry(2 * br.hl + 0.5, 2 * br.ht + 0.5, sp.dz + 0.5), br.cx, br.cy, 0); halos[halos.length - 1].rotation.z = br.a;
+    });
   } else {
     sp.bars.forEach((br) => {
       const place = (m, dz) => { m.position.set(br.cx, br.cy, dz); m.rotation.z = br.a; };
@@ -3493,7 +3527,7 @@ function buildGateObj(i, d) {
     grp.add(label);
   }
   // support pole for upright gates
-  if (!sp.ring && sp.kind !== 'none' && Math.abs(d.pitch || 0) < 5 && d.y - oh > 0.2) {
+  if (!sp.ring && !sp.race && sp.kind !== 'none' && Math.abs(d.pitch || 0) < 5 && d.y - oh > 0.2) {
     const h = d.y - oh;
     const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.06 * k, 0.06 * k, h, 8), new THREE.MeshLambertMaterial({ color: 0x555b66 }));
     pole.position.set(0, -oh - h / 2, 0);
@@ -3502,13 +3536,14 @@ function buildGateObj(i, d) {
   }
   gateDeco(grp, sp, d, k);
   grp.position.set(d.x, d.y, d.z);
-  grp.rotation.set((d.pitch || 0) * DEG, (d.yaw || 0) * DEG, 0, 'YXZ');
+  grp.rotation.set(sp.race ? 0 : (d.pitch || 0) * DEG, (d.yaw || 0) * DEG, 0, 'YXZ');      // a race gate always stands upright on the ground
   grp.updateMatrixWorld(true);
   gateGroup.add(grp);
-  return { group: grp, spec: sp, bars, fronts, backs, halos, arrow, label, pat, inv: new THREE.Matrix4(), center: new THREE.Vector3(d.x, d.y, d.z) };
+  return { group: grp, spec: sp, bars, fronts, backs, halos, arrow, label, pat, fixed: !!sp.race, inv: new THREE.Matrix4(), center: new THREE.Vector3(d.x, d.y, d.z) };
 }
 
 function minGateY(d) {
+  if (d && d.k === 'race') return 0.6;                            // the posts reach the ground from any height
   const p = Math.abs(d.pitch || 0) * DEG, sp = gateSpec(d);
   const ext = sp.ring ? sp.oh : sp.oh * Math.cos(p) + sp.ow * Math.sin(p);
   return ext + 0.3;
@@ -3603,6 +3638,7 @@ function refreshGateTransform(i) {
 
 function disposeGateObjs() {
   if (typeof gmkClear === 'function') gmkClear();
+  if (typeof grkClear === 'function') grkClear();
   for (const go of gateObjs) {
     gateGroup.remove(go.group);
     go.group.traverse((o) => {
@@ -5663,7 +5699,7 @@ const _gp = new THREE.Vector3(), _gn = new THREE.Vector3();
 function collideGates() {
   const R = 0.14;
   for (let i = 0; i < gateObjs.length; i++) {
-    const go = gateObjs[i], c = go.center, sp = go.spec, o = sp.ow, t = sp.t, reach = Math.max(sp.ow, sp.oh) * 1.5 + 1.2;
+    const go = gateObjs[i], c = go.center, sp = go.spec, o = sp.ow, t = sp.race ? sp.dz : sp.t, reach = Math.max(sp.ow, sp.oh, sp.gy || 0) * 1.5 + 1.2;
     const dx = drone.pos.x - c.x, dy = drone.pos.y - c.y, dz = drone.pos.z - c.z;
     if (dx * dx + dy * dy + dz * dz > reach * reach) continue;
     _gp.copy(drone.pos).applyMatrix4(go.inv);
@@ -5938,6 +5974,10 @@ function showFlash(text, color) {
 }
 
 function paintGate(go, fc, bc, haloOp) {
+  if (go.fixed) {                                                 // a white race gate stays white: only the editor's selection glows
+    for (const h of go.halos) { h.material.color.copy(fc); h.material.opacity = haloOp >= 0.5 ? haloOp : 0; }
+    go.arrow.material.color.copy(fc); return;
+  }
   if (!go.pat) { for (const m of go.fronts) m.material.color.copy(fc); for (const m of go.backs) m.material.color.copy(bc); }   // a striped frame keeps its stripes; only the glow and arrow follow the race
   for (const h of go.halos) { h.material.color.copy(fc); h.material.opacity = haloOp; }
   go.arrow.material.color.copy(fc);
@@ -5968,12 +6008,47 @@ function gmkBuild(i) {
     m.userData.ang = n * Math.PI / 2;          // 0 = right, 90 = up, 180 = left, 270 = down
     g.add(m); GMK.arrows.push(m);
   }
-  g.userData.R = Math.max(0.4, Math.min(sp.iw, sp.ih) * 0.5 * 0.85 * Math.min(1, D.size > 1 ? 1 : 1));
+  g.userData.R = Math.max(0.4, Math.min(sp.iw, gateOpenHH(sp)) * 0.5 * 0.85 * Math.min(1, D.size > 1 ? 1 : 1));
+  g.position.y = gateOpenCY(sp);
   go.group.add(g);
   GMK.grp = g; GMK.gate = i;
 }
+function gateOpenCY(sp) { return sp.race ? (sp.ih - sp.gy) / 2 : 0; }        // the middle of the opening (a race gate opens down to the ground)
+function gateOpenHH(sp) { return sp.race ? (sp.ih + sp.gy) / 2 : sp.ih; }
+/* circle markers instead of the arrows (track setting): green = pass this gate, blue with an X = the gate after it,
+   red with an X = the gate to pass, seen from behind. Each disc shows from one side of the gate only. */
+const GRK = { list: [], key: '' };
+function grkClear() {
+  for (const g of GRK.list) { if (g.parent) g.parent.remove(g); g.traverse((m) => { if (m.geometry) m.geometry.dispose(); if (m.material) m.material.dispose(); }); }
+  GRK.list = []; GRK.key = '';
+}
+function grkMark(i, col, cross, back) {
+  const go = gateObjs[i]; if (!go || go.spec.kind === 'none') return;
+  const sp = go.spec, D = gmDesign(), R = Math.max(0.3, Math.min(sp.iw, gateOpenHH(sp)) * 0.6 * D.size), w = R * 0.17;
+  const g = new THREE.Group(), mat = () => new THREE.MeshBasicMaterial({ color: new THREE.Color(col), transparent: true, opacity: 0.95, depthWrite: false });
+  const ring = new THREE.Mesh(new THREE.RingGeometry(R - w, R, 64), mat()); ring.renderOrder = 15; g.add(ring);
+  if (cross) [1, -1].forEach((sg) => { const b = new THREE.Mesh(new THREE.PlaneGeometry(R * 1.3, w * 0.85), mat()); b.rotation.z = sg * Math.PI / 4; b.renderOrder = 15; g.add(b); });
+  g.position.set(0, gateOpenCY(sp), 0);
+  if (back) g.rotation.y = Math.PI;                               // faces the exit side: seen only from behind
+  go.group.add(g); GRK.list.push(g);
+}
+function grkFrame() {
+  const D = gmDesign(), N = gateObjs.length;
+  let cur = -1, nxt = -1;
+  if (D.on && D.mk === 'ring' && N) {
+    if (editorMode) { cur = selected >= 0 && selected < N ? selected : -1; nxt = cur >= 0 && N > 1 ? (cur + 1) % N : -1; }   // the editor previews it on the selected gate
+    else if (!inMenu && (state === 'racing' || state === 'countdown')) { cur = nextGate; nxt = N > 1 && seq + 1 < N * trackLaps() ? (nextGate + 1) % N : -1; }
+  }
+  const go = (i) => (i >= 0 && gateObjs[i] ? gateObjs[i].group.uuid : '');
+  const key = cur >= 0 ? [cur, nxt, D.size, D.cg, D.cb, D.cr, go(cur), go(nxt)].join('|') : '';
+  if (key === GRK.key) return;
+  grkClear(); GRK.key = key; if (!key) return;
+  grkMark(cur, D.cg, false, false);
+  grkMark(cur, D.cr, true, true);
+  if (nxt >= 0 && nxt !== cur) grkMark(nxt, D.cb, true, false);
+}
 function gmkFrame(dt) {
-  const D = gmDesign(), ok = (i) => D.on && gateObjs[i] && gateObjs[i].spec.kind !== 'none';
+  const D = gmDesign(), ok = (i) => D.on && D.mk !== 'ring' && gateObjs[i] && gateObjs[i].spec.kind !== 'none';
   // flying: the next gate. Editing: a live preview on the selected gate, so the design can be judged on the map
   const want = editorMode ? (selected >= 0 && ok(selected) ? selected : -1) : (!inMenu && (state === 'racing' || state === 'countdown') && ok(nextGate) ? nextGate : -1);
   if (want !== GMK.gate || (want >= 0 && GMK.key !== D.size + D.col) || (want >= 0 && GMK.grp && GMK.grp.parent !== gateObjs[want].group)) { if (want < 0) gmkClear(); else gmkBuild(want); }
@@ -6120,6 +6195,7 @@ function onCountdown(dt) {
 
 function apertureOK(x, y, sp) {
   if (sp.ring) return x * x + y * y <= sp.iw * sp.iw;
+  if (sp.race) return Math.abs(x) <= sp.iw && y >= -sp.gy && y <= sp.ih;     // from the ground up to the beam
   const ax = Math.abs(x), ay = Math.abs(y);
   if (sp.hex) return ay <= sp.ih && 0.866 * ax + 0.5 * ay <= sp.ih;
   if (sp.div && sp.div.some((d) => Math.abs(x - d) < sp.t / 2)) return false;
@@ -7856,12 +7932,19 @@ function normBall(b) {                                   // a track without a dr
   const alt = Number(b.alt);
   return { ctl: b.ctl === 'climb' || b.ctl === 'speed' ? b.ctl : 'turn', view: b.view === 'chase' ? 'chase' : 'fpv', speed: n(b.speed, 1, 20, 6), turn: n(b.turn, 20, 180, 80), climb: n(b.climb, 0.5, 10, 3), alt: isFinite(alt) && b.alt !== null && b.alt !== '' ? Math.min(40, Math.max(0.3, alt)) : null };
 }
-function normGm(g) {                                            // design of the next-gate arrows: null = the defaults
+const GM_RING = { cg: '#2fe36b', cb: '#3b6cff', cr: '#ff3b3b' };   // circle markers: pass here / the gate after it / wrong side
+function normGm(g) {                                            // design of the next-gate marker (arrows or circles): null = the defaults
   if (!g || typeof g !== 'object') return null;
-  const on = g.on !== false, size = Math.max(0.3, Math.min(3, Number(g.size) || 1)), col = /^#[0-9a-f]{6}$/i.test(g.col || '') ? g.col.toLowerCase() : '#ffffff';
-  return on && size === 1 && col === '#ffffff' ? null : { on, size: Math.round(size * 10) / 10, col };
+  const hex = (v, d) => (/^#[0-9a-f]{6}$/i.test(v || '') ? v.toLowerCase() : d);
+  const on = g.on !== false, size = Math.max(0.3, Math.min(3, Number(g.size) || 1)), col = hex(g.col, '#ffffff'), ring = g.mk === 'ring';
+  const cg = hex(g.cg, GM_RING.cg), cb = hex(g.cb, GM_RING.cb), cr = hex(g.cr, GM_RING.cr);
+  if (on && size === 1 && col === '#ffffff' && !ring && cg === GM_RING.cg && cb === GM_RING.cb && cr === GM_RING.cr) return null;
+  const o = { on, size: Math.round(size * 10) / 10, col };
+  if (ring) o.mk = 'ring';
+  if (cg !== GM_RING.cg) o.cg = cg; if (cb !== GM_RING.cb) o.cb = cb; if (cr !== GM_RING.cr) o.cr = cr;
+  return o;
 }
-function gmOf(st) { return Object.assign({ on: true, size: 1, col: '#ffffff' }, (st && st.gm) || {}); }
+function gmOf(st) { return Object.assign({ on: true, size: 1, col: '#ffffff', mk: 'arrow' }, GM_RING, (st && st.gm) || {}); }
 function normLock(l) {                                   // a pitch-only track: the drone starts airborne in angle mode, holds its height by itself, only the pitch stick (forward/back) works
   if (!l || typeof l !== 'object') return null;
   const n = (v, lo, hi, d) => { v = Number(v); return isFinite(v) ? Math.min(hi, Math.max(lo, v)) : d; };
@@ -8577,7 +8660,7 @@ function frame(now) {
   pulse += dt;
 
   applyGateLabels();
-  gmkFrame(dt);
+  gmkFrame(dt); grkFrame();
   introFrame(dt);
   whoFrame();
   if (typeof nxFallTick === 'function') nxFallTick();
@@ -12800,14 +12883,24 @@ function edSyncLaps() {
 }
 function edSyncGm() {                                 // the next-gate arrow design of the track being edited
   if (!$('edGmOn') || !currentStage) return;
-  const G = gmOf(currentStage), own = !!(currentStage.custom && !currentStage.pub);
+  const G = gmOf(currentStage), own = !!(currentStage.custom && !currentStage.pub), ring = G.mk === 'ring';
   $('edGmOn').checked = G.on; $('edGmSz').value = G.size; $('edGmSzV').textContent = String(G.size); $('edGmCol').value = G.col;
-  ['edGmOn', 'edGmSz', 'edGmCol', 'edGmReset'].forEach((id) => { $(id).disabled = !own; });
+  if ($('edGmCg')) { $('edGmCg').value = G.cg; $('edGmCb').value = G.cb; $('edGmCr').value = G.cr; }
+  if ($('edGmArrow')) {
+    $('edGmArrow').classList.toggle('hot', !ring); $('edGmRing').classList.toggle('hot', ring);
+    $('edGmArrow').setAttribute('aria-pressed', String(!ring)); $('edGmRing').setAttribute('aria-pressed', String(ring));
+  }
+  if ($('edGmColRow')) $('edGmColRow').style.display = ring ? 'none' : '';        // arrows: one colour; circles: three
+  if ($('edGmRingRows')) $('edGmRingRows').style.display = ring ? '' : 'none';
+  ['edGmOn', 'edGmSz', 'edGmCol', 'edGmReset', 'edGmArrow', 'edGmRing', 'edGmCg', 'edGmCb', 'edGmCr'].forEach((id) => { if ($(id)) $(id).disabled = !own; });
 }
 function edSetGm(f, v) {
   if (!currentStage || !currentStage.custom || currentStage.pub) return;
   const G = gmOf(currentStage);
-  if (f === 'on') G.on = !!v; else if (f === 'size') G.size = parseFloat(v) || 1; else if (f === 'col') G.col = v; else if (f === 'reset') { G.on = true; G.size = 1; G.col = '#ffffff'; }
+  if (f === 'on') G.on = !!v; else if (f === 'size') G.size = parseFloat(v) || 1; else if (f === 'col') G.col = v;
+  else if (f === 'mk') G.mk = v === 'ring' ? 'ring' : 'arrow';
+  else if (f === 'cg' || f === 'cb' || f === 'cr') G[f] = v;
+  else if (f === 'reset') { G.on = true; G.size = 1; G.col = '#ffffff'; Object.assign(G, GM_RING); }     // the kind of marker stays as chosen
   currentStage.gm = normGm(G); saveCustomList(); markCustom(); edSyncGm(); if (window.__onTrackChanged) window.__onTrackChanged();
 }
 function edSyncBody(dt) {                             // runs every frame: the editor dock follows editorMode, whichever way it was entered or left
@@ -12913,6 +13006,9 @@ function edpApply(what, v) {
   $('edGmSz').addEventListener('change', (e) => { edSetGm('size', e.target.value); e.target.blur(); });
   $('edGmCol').addEventListener('change', (e) => { edSetGm('col', e.target.value); e.target.blur(); });
   $('edGmReset').addEventListener('click', (e) => { edSetGm('reset'); e.target.blur(); });
+  if ($('edGmArrow')) $('edGmArrow').addEventListener('click', (e) => { edSetGm('mk', 'arrow'); e.currentTarget.blur(); });
+  if ($('edGmRing')) $('edGmRing').addEventListener('click', (e) => { edSetGm('mk', 'ring'); e.currentTarget.blur(); });
+  ['Cg', 'Cb', 'Cr'].forEach((k) => { const el = $('edGm' + k); if (el) el.addEventListener('change', (e) => { edSetGm(k.toLowerCase(), e.target.value); e.target.blur(); }); });
   $('edGateNext').addEventListener('click', (e) => { edGateStep(1); e.currentTarget.blur(); });
   $('edGatePrev').addEventListener('click', (e) => { edGateStep(-1); e.currentTarget.blur(); });
   $('edUndo').addEventListener('click', (e) => { edUndoStep(); e.target.blur(); });
