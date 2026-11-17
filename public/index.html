@@ -1818,7 +1818,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 426</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 427</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -7786,6 +7786,57 @@ function motorModel(o) {                                           // o: { r, h,
   for (let i = 0; i < 6; i++) add(rotor, new THREE.TorusGeometry(sr, sr * 0.2, 6, 18), ti, top + sh * (0.3 + i * 0.11), Math.PI / 2);   // its thread
   return { base, rotor, top };
 }
+/* ---------- frame parts cut from carbon sheet (build 427): flat plates from a 2D outline, the arms with round motor pads, the body after the reference photos ---------- */
+function rrPts(x0, y0, x1, y1, r, n) {                           // a rounded rectangle, counter-clockwise
+  const p = [], c = [[x1 - r, y0 + r, -Math.PI / 2], [x1 - r, y1 - r, 0], [x0 + r, y1 - r, Math.PI / 2], [x0 + r, y0 + r, Math.PI]];
+  c.forEach((q) => { for (let i = 0; i <= n; i++) { const a = q[2] + (i / n) * Math.PI / 2; p.push(new THREE.Vector2(q[0] + Math.cos(a) * r, q[1] + Math.sin(a) * r)); } });
+  return p;
+}
+function carbonPlate(shape, t) {                                 // a plate t thick cut from the outline (thickness along the shape's Z); the weave has the same scale as on the rounded boxes
+  const geo = new THREE.ExtrudeGeometry(shape, { depth: t, bevelEnabled: true, bevelThickness: t * 0.12, bevelSize: Math.min(0.004, t * 0.12), bevelSegments: 1, curveSegments: 10 });
+  geo.translate(0, 0, -t / 2);
+  try { const U = geo.attributes.uv; for (let i = 0; i < U.count * 2; i++) U.array[i] /= 0.3; U.needsUpdate = true; } catch (e) { /* keep the uvs */ }
+  return geo;
+}
+function armPlateGeo(len, w, t, padR) {                          // a flat arm along +X from under the body to a round motor pad at len, with the motor's centre and screw holes
+  const b = Math.asin(Math.min(0.95, w / 2 / padR)), r0 = 0.12, sh = new THREE.Shape();
+  sh.moveTo(r0, -w / 2);
+  sh.lineTo(len - padR * Math.cos(b), -w / 2);
+  sh.absarc(len, 0, padR, Math.PI + b, 3 * Math.PI - b, false);
+  sh.lineTo(r0, w / 2);
+  sh.closePath();
+  const hole = (x, y, r) => { const h = new THREE.Path(); h.absarc(x, y, r, 0, Math.PI * 2, true); sh.holes.push(h); };
+  hole(len, 0, padR * 0.27);
+  for (let k = 0; k < 4; k++) { const a = Math.PI / 4 + k * Math.PI / 2; hole(len + Math.cos(a) * padR * 0.62, Math.sin(a) * padR * 0.62, padR * 0.09); }
+  const geo = carbonPlate(sh, t); geo.rotateX(-Math.PI / 2);
+  return geo;
+}
+function frameBody(tgt, FR, carbon, anod) {                      // bottom plate, top plate, side plates and standoffs of the body (FR: W wide, from z0 at the front to z1, side plates from y0, H tall)
+  const add = (geo, mat, x, y, z) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); tgt.add(m); return m; };
+  const W = FR.W, z0 = FR.z0, z1 = FR.z1, t = FR.t, top = FR.y0 + FR.H, flat = (sh) => { const g = carbonPlate(sh, t); g.rotateX(-Math.PI / 2); return g; };
+  add(flat(new THREE.Shape(rrPts(-W / 2 - 0.02, -z1 - 0.03, W / 2 + 0.02, -z0 + 0.03, 0.05, 4))), carbon, 0, -t / 2, 0);        // bottom plate
+  const tf = FR.pod ? z0 + 0.3 : z0, ts = new THREE.Shape(rrPts(-W / 2, -FR.tail, W / 2, -tf, 0.04, 4));                       // top plate; a tail at the back carries the antenna mount
+  if (FR.pod) [[0.02, 0.16], [0.22, 0.36]].forEach((q) => ts.holes.push(new THREE.Path(rrPts(-W / 2 + 0.06, -q[1], W / 2 - 0.06, -q[0], 0.02, 3))));
+  else {
+    FR.straps.forEach((z) => ts.holes.push(new THREE.Path(rrPts(-W / 2 + 0.05, -z - 0.014, W / 2 - 0.05, -z + 0.014, 0.012, 3))));   // battery strap slots
+    ts.holes.push(new THREE.Path(rrPts(-W / 2 + 0.07, -(z0 + 0.15), W / 2 - 0.07, -(z0 + 0.06), 0.025, 3)));                       // a window in front of the battery
+    ts.holes.push(new THREE.Path(rrPts(-W / 2 + 0.08, -(FR.straps[1] - 0.06), W / 2 - 0.08, -(FR.straps[0] + 0.06), 0.03, 3)));      // and one under it
+  }
+  add(flat(ts), carbon, 0, top + t / 2, 0);
+  const side = (pts, wins) => { const sh = new THREE.Shape(pts); wins.forEach((w) => sh.holes.push(new THREE.Path(rrPts(w[0], w[2], w[1], w[3], 0.025, 3)))); const g = carbonPlate(sh, 0.03); g.rotateY(-Math.PI / 2); return g; };
+  if (FR.pod) {                                                  // racer: a camera pod at the front, tall at the camera and lower towards the back
+    const zb = z0 + 0.46, hF = top + 0.1, pts = [new THREE.Vector2(z0, FR.y0), new THREE.Vector2(zb, FR.y0), new THREE.Vector2(zb, top), new THREE.Vector2(z0 + 0.12, hF), new THREE.Vector2(z0, hF - 0.04)];
+    const g = side(pts, [[z0 + 0.14, zb - 0.08, FR.y0 + 0.04, top - 0.03]]);
+    [-1, 1].forEach((sx) => add(g, carbon, sx * (W / 2 - 0.015), 0, 0));
+    [[0.06], [0.4]].forEach((q) => [-1, 1].forEach((sx) => add(new THREE.CylinderGeometry(0.016, 0.016, FR.H, 10), anod, sx * (W / 2 - 0.04), FR.y0 + FR.H / 2, q[0])));
+  } else {                                                       // freestyle and 10": side plates along the whole body with windows, black standoffs in the corners
+    const n = FR.win === 'big' ? 4 : 3, gap = FR.win === 'big' ? 0.05 : 0.07, a = z0 + 0.08, b = z1 - 0.08, wl = (b - a - gap * (n - 1)) / n, m = FR.win === 'big' ? 0.04 : 0.055, wins = [];
+    for (let i = 0; i < n; i++) wins.push([a + i * (wl + gap), a + i * (wl + gap) + wl, FR.y0 + m, top - m]);
+    const g = side(rrPts(z0, FR.y0, z1, top, 0.03, 3), wins);
+    [-1, 1].forEach((sx) => add(g, carbon, sx * W / 2, 0, 0));
+    [z0 + 0.05, z1 - 0.05].forEach((z) => [-1, 1].forEach((sx) => add(new THREE.CylinderGeometry(0.016, 0.016, FR.H, 10), anod, sx * (W / 2 - 0.04), FR.y0 + FR.H / 2, z)));
+  }
+}
 function buildDroneModel(id) {
   const whoop = id === 'whoop';
   const big = id === 'fpv10' || id === 'fpv10w', load = id === 'fpv10w', race = id === 'race5';
@@ -7802,31 +7853,33 @@ function buildDroneModel(id) {
 
   if (!whoop) {
     /* ---------- 5" RACING QUAD ---------- */
-    const R = big ? 0.84 : (race ? 0.6 : 0.62), M = big ? 0.9 : (race ? 0.7 : 0.74);                                  // prop radius, motor offset on each axis
+    const R = big ? 0.84 : (race ? 0.6 : 0.62), M = big ? 1.0 : (race ? 0.7 : 0.74);   // the 10" motors sit a bit further out: its long body stays clear of the props                                  // prop radius, motor offset on each axis
     const ctr = new THREE.Group(); grp.add(ctr); let tgt = ctr;      // the central frame is its own group (a racer's is far smaller than a freestyler's)
     const plate = (y, w, d) => { const m = new THREE.Mesh(roundBoxGeo(w, 0.035, d, 0.014, 0.3), carbon); m.position.y = y; tgt.add(m); };
     const mk = (geo, mat, x, y, z) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); tgt.add(m); return m; };
     const std = (c, r, mt) => new THREE.MeshStandardMaterial({ color: c, roughness: r === undefined ? 0.55 : r, metalness: mt === undefined ? 0.2 : mt });
     const accent = dcl(DC.a, cA);
-    plate(-0.02, race ? 0.4 : 0.5, race ? 0.85 : 0.95);                                   // bottom plate
-    plate(0.13, 0.46, 0.8);                                    // top plate
-    [[-0.07, -0.05], [0.07, -0.05]].forEach((q) => mk(new THREE.BoxGeometry(0.1, 0.004, 0.3), black, q[0], 0.133, q[1]));   // lightening slots in the top plate
+    const FR = race ? { W: 0.32, z0: -0.5, z1: 0.48, y0: 0.06, H: 0.14, tail: 0.48, pod: true, t: 0.035 }      // racer: slim body with a camera pod (photo 2)
+      : big ? { W: 0.42, z0: -0.55, z1: 0.5, y0: 0.045, H: 0.255, tail: 0.6, win: 'big', t: 0.035, straps: [-0.26, 0.26] }   // 10": long box with big windows (photo 3)
+      : { W: 0.4, z0: -0.46, z1: 0.44, y0: 0.045, H: 0.2, tail: 0.53, win: 'std', t: 0.035, straps: [-0.23, 0.29] };     // freestyle: tall box (photo 1)
+    const topY = FR.y0 + FR.H + FR.t / 2;                        // centre of the top plate
     const gold = new THREE.MeshPhongMaterial({ color: 0xd9a432, shininess: 110, specular: 0xffe9a8 });
-    [[-0.17, -0.3], [0.17, -0.3], [-0.17, 0.3], [0.17, 0.3]].forEach((q) => mk(new THREE.CylinderGeometry(0.016, 0.016, 0.15, 10), gold, q[0], 0.055, q[1]));   // anodised standoffs
-    mk(new THREE.BoxGeometry(0.34, 0.022, 0.36), std(0x1f4a35, 0.5, 0.1), 0, 0.0, 0.02);          // ESC board
-    mk(new THREE.BoxGeometry(0.32, 0.022, 0.34), std(0x14161a, 0.5, 0.1), 0, 0.045, 0.02);        // flight controller
-    mk(new THREE.BoxGeometry(0.3, 0.02, 0.3), std(0x1f4a35, 0.5, 0.1), 0, 0.09, 0.02);           // VTX board
-    mk(new THREE.CylinderGeometry(0.04, 0.04, 0.09, 14), std(0x15171b, 0.5, 0.3), 0.0, 0.06, 0.32).rotation.x = Math.PI / 2;   // capacitor at the rear
+    const anod = new THREE.MeshPhongMaterial({ color: 0x1b1d22, shininess: 90, specular: 0x6a7078 });   // black anodised standoffs
+    frameBody(tgt, FR, carbon, anod);
+    mk(new THREE.BoxGeometry(0.34, 0.022, 0.36), std(0x1f4a35, 0.5, 0.1), 0, 0.075, 0.02);         // ESC board
+    mk(new THREE.BoxGeometry(0.32, 0.022, 0.34), std(0x14161a, 0.5, 0.1), 0, 0.12, 0.02);          // flight controller
+    mk(new THREE.BoxGeometry(0.3, 0.02, 0.3), std(0x1f4a35, 0.5, 0.1), 0, 0.165, 0.02);            // VTX board
+    mk(new THREE.CylinderGeometry(0.04, 0.04, 0.09, 14), std(0x15171b, 0.5, 0.3), 0.0, 0.1, 0.32).rotation.x = Math.PI / 2;   // capacitor at the rear
     const BW = big ? 0.48 : 0.41;                            // the two 5" packs are a touch narrower than the 10" one
     const BH = 0.448;                                        // every pack is twice the old height; the racer carries the same full-size pack as the freestyler, slung under the frame
     const packC = dcl(DC.b, race ? 0x14161a : 0x1b2230);
-    const bz = race ? 0.05 : 0.1, batY = race ? -0.03 - BH / 2 : 0.148 + BH / 2, savedTgt = tgt;
+    const bz = race ? 0.05 : 0, batY = race ? -0.03 - BH / 2 : topY + FR.t / 2 + 0.006 + BH / 2, savedTgt = tgt;   // on top of the top plate (the racer's under the frame)
     if (race) tgt = grp;                                     // the racer's frame group is shrunk, the pack must keep its real size
     mk(roundBoxGeo(BW, BH, 0.78, 0.05, 0.3), std(packC, 0.55, 0.1), 0, batY, bz);                  // LiPo pack
     mk(new THREE.BoxGeometry(BW - 0.16, 0.004, 0.5), std(accent, 0.6, 0.0), 0, batY + (race ? -BH / 2 - 0.002 : BH / 2 + 0.002), bz);         // sticker on the pack
-    [-0.16, 0.36].forEach((z) => mk(roundBoxGeo(BW + 0.03, BH + 0.016, 0.045, 0.018, 0.3), rubber, 0, batY, z - 0.1 + bz));        // two battery straps
+    (race ? [-0.21, 0.31] : FR.straps).forEach((z) => mk(roundBoxGeo(BW + 0.03, BH + 0.016, 0.045, 0.018, 0.3), rubber, 0, batY, z));        // two battery straps (through the slots of the top plate)
     tgt = savedTgt;
-    mk(new THREE.BoxGeometry(0.09, 0.05, 0.08), std(0xe8b81a, 0.5, 0.1), 0, race ? -0.03 : 0.12, 0.54);   // XT60 plug
+    mk(new THREE.BoxGeometry(0.09, 0.05, 0.08), std(0xe8b81a, 0.5, 0.1), 0, race ? -0.03 : FR.y0 + 0.07, race ? 0.54 : FR.z1 + 0.1);   // XT60 plug
     const sideMat = carbon;
     [-1, 1].forEach((sx) => mk(roundBoxGeo(0.035, 0.2, 0.26, 0.014, 0.3), sideMat, sx * 0.115, 0.1, -0.4));  // camera side plates
     const TILT = 0.52;                                          // camera angled 30 degrees up, like a real FPV cam
@@ -7835,7 +7888,8 @@ function buildDroneModel(id) {
     const lens = mk(new THREE.CylinderGeometry(0.052, 0.058, 0.07, 22), DC.c ? new THREE.MeshPhongMaterial({ color: new THREE.Color(DC.c).multiplyScalar(0.35), emissive: new THREE.Color(DC.c).multiplyScalar(0.3), shininess: 160, specular: new THREE.Color(DC.c).lerp(new THREE.Color(0xffffff), 0.5) }) : new THREE.MeshPhongMaterial({ color: 0x0a1a24, emissive: 0x0f4258, shininess: 160, specular: 0x9fd8f0 }), 0, 0.14 + 0.09 * Math.sin(TILT), -0.45 - 0.09 * Math.cos(TILT));
     lens.rotation.x = TILT - Math.PI / 2; lensGlint(lens, 0.055, 0.035, DC.c);
     mk(new THREE.TorusGeometry(0.056, 0.012, 8, 22), metal, 0, 0.14 + 0.125 * Math.sin(TILT), -0.45 - 0.125 * Math.cos(TILT)).rotation.x = TILT;          // lens ring
-    mk(roundBoxGeo(0.1, 0.06, 0.12, 0.02, 0.1), std(accent, 0.6, 0.0), 0, 0.16, 0.5);                  // 3D-printed antenna mount
+    const mountZ = FR.tail - 0.065, mountY = topY + FR.t / 2 + 0.03;
+    mk(roundBoxGeo(0.1, 0.06, 0.12, 0.02, 0.1), std(accent, 0.6, 0.0), 0, mountY, mountZ);                  // 3D-printed antenna mount on the top plate's tail
     /* FPV antenna like a real Lumenier-style one: gold SMA base, thin black coax mast, coloured lollipop head; short on the 5" quads, long on the 10" ones */
     const antLen = big ? 0.72 : 0.32, headL0 = big ? 0.27 : 0.19, headL = headL0 * 0.8, headR = (big ? 0.058 : 0.05) * 1.8, headCol = dcl(DC.t, big ? 0xd8372b : 0x8fd12f);
     const A = new THREE.Group(), am = (geo, mat, y) => { const m = new THREE.Mesh(geo, mat); m.position.y = y; A.add(m); return m; }, yb = race ? 0 : antLen - headL0;
@@ -7847,26 +7901,22 @@ function buildDroneModel(id) {
     am(new THREE.CylinderGeometry(headR, 0.02, headL * 0.28, 16), headMat, yb + headL * 0.15);                  // tapered shoulder
     am(new THREE.CylinderGeometry(headR, headR, headL * 0.64, 16), headMat, yb + headL * 0.28 + headL * 0.32);   // head body
     am(new THREE.CylinderGeometry(headR * 0.86, headR, headL * 0.08, 16), headMat, yb + headL * 0.96);          // small bevel, then a flat top
-    A.position.set(0, race ? 0.07 : 0.19, race ? 0.24 : 0.5); A.rotation.x = 0.6;
+    A.position.set(0, race ? (mountY + 0.03) * 0.58 : mountY + 0.03, race ? mountZ * 0.58 : mountZ); A.rotation.x = 0.6;   // on the mount (the racer's frame group is shrunk)
     (race ? grp : tgt).add(A);
     /* flight-controller details: signal LEDs, wiring and a status light, so the electronics read as real parts */
     const led = (c, x, y, z) => mk(new THREE.BoxGeometry(0.02, 0.012, 0.02), new THREE.MeshBasicMaterial({ color: c }), x, y, z);
-    led(0x3dff7a, 0.12, 0.062, -0.12); led(0xff3b30, 0.12, 0.062, -0.07); led(0x2d8cff, -0.12, 0.062, -0.1);
-    [[-0.1, 0.1], [0.1, 0.1]].forEach((q) => mk(new THREE.CylinderGeometry(0.008, 0.008, 0.3, 6), std(q[0] < 0 ? 0xc0392b : 0x15171b, 0.6, 0.0), q[0], 0.02, q[1] - 0.12));
+    led(0x3dff7a, 0.12, 0.137, -0.12); led(0xff3b30, 0.12, 0.137, -0.07); led(0x2d8cff, -0.12, 0.137, -0.1);
+    [[-0.1, 0.1], [0.1, 0.1]].forEach((q) => mk(new THREE.CylinderGeometry(0.008, 0.008, 0.3, 6), std(q[0] < 0 ? 0xc0392b : 0x15171b, 0.6, 0.0), q[0], 0.094, q[1] - 0.12));
     if (race) ctr.scale.setScalar(0.58);                         // racing frame: about half the size of a freestyle frame
     tgt = grp;
     const motC = dcl(DC.m, race ? 0x2f6fd0 : 0xc0392b);
     const wireM = new THREE.MeshStandardMaterial({ color: 0x0b0c0e, roughness: 0.45 });
     const nutM = new THREE.MeshPhongMaterial({ color: 0x1a1c20, shininess: 100, specular: 0x8a9099 }), nutHexM = new THREE.MeshPhongMaterial({ color: 0x1a1c20, shininess: 100, specular: 0x8a9099, flatShading: true });
+    const AT = race ? 0.035 : 0.045, armGeo = armPlateGeo(M * Math.SQRT2, race ? 0.08 : 0.1, AT, race ? 0.125 : 0.13);   // one flat arm shape for all four
     const RR = race ? R * 1.12 : R, PF = PROP_PF[big ? 'p10' : 'p5'], bgCCW = propBladeGeo(PF, RR, false), bgCW = propBladeGeo(PF, RR, true);   // 5" blades on the freestyle and racer, 10" blades on both 10-inch drones
     [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach((p, i) => {
-      const px = p[0] * M, pz = p[1] * M, len = Math.hypot(px, pz);
-      const arm = new THREE.Mesh(roundBoxGeo(len, race ? 0.05 : 0.07, race ? 0.1 : 0.15, race ? 0.02 : 0.03, 0.3), carbon);          // thick solid arm
-      arm.position.set(px / 2, 0.01, pz / 2); arm.rotation.y = -Math.atan2(pz, px); grp.add(arm);
-      if (race) [[0.34, dcl(DC.s1, 0xc0392b)], [0.6, dcl(DC.s2, 0x2f6fd0)]].forEach((st) => {       // red / blue accent stripes on the carbon arms
-        const sm = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.056, 0.104), new THREE.MeshStandardMaterial({ color: st[1], roughness: 0.6 }));
-        sm.position.set(px * st[0], 0.011, pz * st[0]); sm.rotation.y = -Math.atan2(pz, px); grp.add(sm);
-      });
+      const px = p[0] * M, pz = p[1] * M;
+      const arm = new THREE.Mesh(armGeo, carbon); arm.position.y = AT / 2; arm.rotation.y = -Math.atan2(pz, px); grp.add(arm);   // flat carbon arm from under the body to the motor pad
       const armTop = race ? 0.035 : 0.045, MO = motorModel({ r: 0.115, h: 0.115, label: big ? '2810' : '2207', sleeve: motorCss(motC), sh: 0.12 });   // the bell takes the drone's motor colour
       MO.base.position.set(px, armTop, pz); grp.add(MO.base);
       const wireG = new THREE.Group(); wireG.position.set(px, armTop + 0.012, pz); wireG.rotation.y = -Math.atan2(-pz, -px); grp.add(wireG);   // three black motor wires along the arm into the frame
@@ -9920,7 +9970,7 @@ NXH.droneOk = (id) => nxAdminEditing() || !NX.eff || !NX.eff.drones.off[id];
 const NX_DRONE0 = {};
 const NX_DCOL = {
   fpv5: [['m', 'מנועים', '#c0392b'], ['p', 'פרופלורים', '#ff8a1a'], ['a', 'מצבר ואקסנט (מדבקה ובסיס אנטנה)', '#e8751a'], ['b', 'גוף הסוללה', '#1b2230'], ['c', 'גוף המצלמה', '#0f1113'], ['f', 'מסגרת וזרועות (גוון)', '#ffffff'], ['t', 'אנטנה (ראש)', '#8fd12f']],
-  race5: [['m', 'מנועים', '#2f6fd0'], ['p', 'פרופלורים', '#2f8fd0'], ['a', 'מצבר ואקסנט (מדבקה ובסיס אנטנה)', '#1fa89a'], ['b', 'גוף הסוללה', '#14161a'], ['c', 'גוף המצלמה', '#0f1113'], ['f', 'מסגרת וזרועות (גוון)', '#ffffff'], ['s1', 'פס זרוע ראשון', '#c0392b'], ['s2', 'פס זרוע שני', '#2f6fd0'], ['t', 'אנטנה (ראש)', '#8fd12f']],
+  race5: [['m', 'מנועים', '#2f6fd0'], ['p', 'פרופלורים', '#2f8fd0'], ['a', 'מצבר ואקסנט (מדבקה ובסיס אנטנה)', '#1fa89a'], ['b', 'גוף הסוללה', '#14161a'], ['c', 'גוף המצלמה', '#0f1113'], ['f', 'מסגרת וזרועות (גוון)', '#ffffff'], ['t', 'אנטנה (ראש)', '#8fd12f']],
   fpv10: [['m', 'מנועים', '#c0392b'], ['p', 'פרופלורים', '#ff8a1a'], ['a', 'מצבר ואקסנט (מדבקה ובסיס אנטנה)', '#e8751a'], ['b', 'גוף הסוללה', '#1b2230'], ['c', 'גוף המצלמה', '#0f1113'], ['f', 'מסגרת וזרועות (גוון)', '#ffffff'], ['t', 'אנטנה (ראש)', '#d8372b']],
   fpv10w: [['m', 'מנועים', '#c0392b'], ['p', 'פרופלורים', '#ff8a1a'], ['a', 'מצבר ואקסנט (מדבקה ובסיס אנטנה)', '#e8751a'], ['b', 'גוף הסוללה', '#1b2230'], ['c', 'גוף המצלמה', '#0f1113'], ['f', 'מסגרת וזרועות (גוון)', '#ffffff'], ['t', 'אנטנה (ראש)', '#d8372b']],
   whoop: [['a', 'גוף שקוף (מחזיקים וחישוקים)', '#f2f6fa'], ['p1', 'מגיני מדחפים', '#4fa3ee'], ['p2', 'פרופלורים', '#ffffff'], ['m', 'מנועים', '#2f6fd0'], ['c', 'גוף המצלמה', '#0f1113']]
