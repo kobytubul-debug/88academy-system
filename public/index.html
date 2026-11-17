@@ -1818,7 +1818,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 433</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 434</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -8189,44 +8189,80 @@ function buildDroneModel(id) {
     }
     if (big) grp.scale.setScalar(0.78);
   } else {
-    /* ---------- TINY WHOOP: like a real 65 mm whoop: short blue ducts with little feet, clear 3-blade props, black flight-controller board,
-       clear camera mount with a big lens, black antenna ---------- */
-    const D = 0.44, C = 0.425, H = 0.07, YC = 0.1;       // ducts almost touch each other, as on a real whoop
-    const blue = dcl(DC.p1, 0x4fa3ee);
-    const ductMat = new THREE.MeshPhongMaterial({ color: blue, emissive: 0x0b2240, shininess: 60, specular: 0xbfd8ff, transparent: true, opacity: 0.82, side: THREE.DoubleSide });
-    const guardMat = new THREE.MeshPhongMaterial({ color: blue, emissive: 0x0b2240, shininess: 70, specular: 0xbfd8ff });
-    const clearMat = new THREE.MeshPhongMaterial({ color: dcl(DC.a, 0xf2f6fa), emissive: 0x20262c, shininess: 100, specular: 0xffffff, transparent: true, opacity: 0.72, side: THREE.DoubleSide });
-    const propMat = new THREE.MeshPhongMaterial({ color: dcl(DC.p2, 0xffffff), emissive: 0x1c1e20, shininess: 90, transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false });
+    /* ---------- TINY WHOOP 65 (from the photos): one-piece translucent frame — four open ducts (top and bottom rings joined by posts, spokes under the motor, little feet),
+       silver/blue 1102 motors with clear 3-blade props, a black flight-controller board, a frosted canopy holding the camera at the front, a black antenna rod at the back,
+       the 1S pack slung underneath with its white plug behind ---------- */
+    const WD = 0.36, C = 0.425, H = 0.075, YC = 0.1, by0 = YC - H / 2;               // duct radius, duct centres on each axis, duct height, duct mid height, bottom ring height
+    const fcol = dcl(DC.p1, 0x26282c), ccol = dcl(DC.a, 0xeef2f6);
+    const frameM = new THREE.MeshPhongMaterial({ color: fcol, emissive: new THREE.Color(fcol).multiplyScalar(0.12), shininess: 60, specular: 0xd8ecff, transparent: true, opacity: 0.9 });
+    const canM = new THREE.MeshPhongMaterial({ color: ccol, emissive: 0x1c2024, shininess: 90, specular: 0xffffff, transparent: true, opacity: 0.78, side: THREE.DoubleSide });
+    const propMat = new THREE.MeshPhongMaterial({ color: dcl(DC.p2, 0xf4f8fb), emissive: 0x1c1e20, shininess: 90, transparent: true, opacity: 0.6, side: THREE.DoubleSide, depthWrite: false });
+    const std = (c, r, mt) => new THREE.MeshStandardMaterial({ color: c, roughness: r === undefined ? 0.55 : r, metalness: mt === undefined ? 0.2 : mt });
+    const wm = (geo, mat, x, y, z) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); grp.add(m); return m; };
+    const UP = new THREE.Vector3(0, 1, 0);
+    const bar = (a, b, r, mat) => { const d = new THREE.Vector3().subVectors(b, a), m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, d.length(), 8), mat);
+      m.position.copy(a).addScaledVector(d, 0.5); m.quaternion.setFromUnitVectors(UP, d.clone().normalize()); grp.add(m); return m; };
+    const wireM = new THREE.MeshStandardMaterial({ color: 0x0d0e10, roughness: 0.45 });
     [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach((p, i) => {
-      const cx = p[0] * C, cz = p[1] * C;
-      const wall = new THREE.Mesh(new THREE.CylinderGeometry(D - 0.02, D - 0.02, H, 48, 1, true), ductMat); wall.position.set(cx, YC, cz); grp.add(wall);   // short translucent duct
-      [H / 2, -H / 2].forEach((dy) => { const rim = new THREE.Mesh(new THREE.TorusGeometry(D - 0.02, 0.016, 8, 56), guardMat); rim.rotation.x = Math.PI / 2; rim.position.set(cx, YC + dy, cz); grp.add(rim); });
-      const MW = motorModel({ r: 0.05, h: 0.06, label: '', sleeve: motorCss(dcl(DC.m, 0x2f6fd0)), sh: 0.04 });   // a small motor of the same kind, in the whoop's motor colour
-      MW.base.position.set(cx, YC + 0.005 - MW.top, cz); grp.add(MW.base);
-      for (let k = 0; k < 3; k++) {                            // clear motor mount spokes out to the duct wall
-        const an = k * 2.094 + 0.5, sp = new THREE.Mesh(new THREE.BoxGeometry(D - 0.06, 0.02, 0.03), clearMat);
-        sp.position.set(cx + Math.cos(an) * (D - 0.06) / 2, YC - 0.07, cz + Math.sin(an) * (D - 0.06) / 2); sp.rotation.y = -an; grp.add(sp);
-      }
-      const pg = new THREE.Group(); pg.position.set(cx, YC + 0.03, cz);
-      MW.rotor.position.y = -0.025 - MW.top; pg.add(MW.rotor);   // the whoop's bell turns with its prop (the prop is pressed on: no nut)
-      const bg = bladeGeo(D - 0.1, 0.15, 0.28);
+      const cx = p[0] * C, cz = p[1] * C, out = Math.atan2(cz, cx);
+      const prof = [[WD - 0.006, by0 - 0.008], [WD + 0.006, by0 - 0.008], [WD + 0.007, YC + H / 2 - 0.004], [WD + 0.002, YC + H / 2 + 0.004], [WD - 0.005, YC + H / 2], [WD - 0.006, by0 - 0.008]].map((q) => new THREE.Vector2(q[0], q[1]));
+      wm(new THREE.LatheGeometry(prof, 72), frameM, cx, 0, cz);                                                               // the duct: one thin continuous wall with a rounded lip
+      wm(new THREE.CylinderGeometry(0.075, 0.075, 0.022, 20), frameM, cx, by0, cz);                                              // motor pad
+      for (let k = 0; k < 6; k++) { const a = out + k * Math.PI / 3; bar(new THREE.Vector3(cx + Math.cos(a) * 0.07, by0, cz + Math.sin(a) * 0.07), new THREE.Vector3(cx + Math.cos(a) * WD, by0, cz + Math.sin(a) * WD), 0.008, frameM); }   // thin spokes
+      [-0.45, 0.45].forEach((da) => {                                                                                        // two little loop feet on the outside
+        const a = out + da, f = new THREE.Mesh(new THREE.TorusGeometry(0.045, 0.009, 6, 14, Math.PI), frameM);
+        f.position.set(cx + Math.cos(a) * WD, by0 - 0.004, cz + Math.sin(a) * WD); f.rotation.set(0, -a + Math.PI / 2, Math.PI); grp.add(f);
+      });
+      const MW = motorModel({ r: 0.05, h: 0.06, label: '', sleeve: motorCss(dcl(DC.m, 0xc9ced4)), sh: 0.04 });
+      const baseY = by0 + 0.011; MW.base.position.set(cx, baseY, cz); grp.add(MW.base);
+      const pg = new THREE.Group(); pg.position.set(cx, baseY + MW.top + 0.012, cz);
+      MW.rotor.position.y = -(MW.top + 0.012); pg.add(MW.rotor);
+      const bg = bladeGeo(WD - 0.05, 0.11, 0.3);
       for (let k = 0; k < 3; k++) { const bl = new THREE.Mesh(bg, propMat); bl.rotation.y = k * Math.PI * 2 / 3; pg.add(bl); }   // three clear blades
-      pg.add(new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.045, 0.05, 16), clearMat));
+      const hubM = new THREE.MeshPhongMaterial({ color: dcl(DC.p2, 0xf4f8fb), shininess: 100, transparent: true, opacity: 0.75 });
+      pg.add(new THREE.Mesh(new THREE.CylinderGeometry(0.038, 0.044, 0.045, 16), hubM));
       pg.userData.dir = (i === 0 || i === 3) ? 1 : -1;
       grp.add(pg); props.push(pg);
+      [-1, 0, 1].forEach((w) => {                                                                                         // three black motor wires curling in to the board
+        const n = new THREE.Vector3(-Math.sin(out), 0, Math.cos(out)).multiplyScalar(w * 0.014);
+        const c = new THREE.CatmullRomCurve3([new THREE.Vector3(cx * 0.84, baseY + 0.02, cz * 0.84).add(n), new THREE.Vector3(cx * 0.66, YC + 0.0, cz * 0.66).add(n), new THREE.Vector3(cx * 0.44, YC + 0.035, cz * 0.44).add(n)]);
+        grp.add(new THREE.Mesh(new THREE.TubeGeometry(c, 16, 0.0075, 6, false), wireM));
+      });
     });
-    // black flight-controller board with four silver screws
-    const fc = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.025, 0.5), black); fc.position.set(0, YC + 0.07, 0.0); fc.rotation.y = Math.PI / 4; grp.add(fc);     // the board is turned 45 degrees: its corners point into the gaps between the motor ducts
-    const fc2 = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.02, 0.36), new THREE.MeshStandardMaterial({ color: 0x242a30, roughness: 0.5 })); fc2.position.set(0, YC + 0.1, 0.06); fc2.rotation.y = Math.PI / 4; grp.add(fc2);
-    [[0, -0.29], [0, 0.29], [-0.29, 0], [0.29, 0]].forEach((q) => { const sc = new THREE.Mesh(new THREE.CylinderGeometry(0.026, 0.026, 0.07, 10), metal); sc.position.set(q[0], YC + 0.08, q[1]); grp.add(sc); });
-    // clear 3D-printed camera mount, big lens tilted 30 degrees up
-    const TILT = 0.52;
-    const mount = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.22, 0.17), clearMat); mount.position.set(0, YC + 0.22, -0.2); mount.rotation.x = TILT; grp.add(mount);
-    const cam = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.16, 0.12), DC.c ? new THREE.MeshStandardMaterial({ color: DC.c, roughness: 0.5, metalness: 0.3 }) : black); cam.position.set(0, YC + 0.22, -0.2); cam.rotation.x = TILT; grp.add(cam);
-    const lens = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.095, 0.08, 24), DC.c ? new THREE.MeshPhongMaterial({ color: new THREE.Color(DC.c).multiplyScalar(0.35), emissive: new THREE.Color(DC.c).multiplyScalar(0.3), shininess: 160, specular: new THREE.Color(DC.c).lerp(new THREE.Color(0xffffff), 0.5) }) : new THREE.MeshPhongMaterial({ color: 0x0b0e12, emissive: 0x0a1620, shininess: 160, specular: 0x88aadd }));
-    lens.position.set(0, YC + 0.22 + 0.1 * Math.sin(TILT), -0.2 - 0.1 * Math.cos(TILT)); lens.rotation.x = TILT - Math.PI / 2; grp.add(lens); lensGlint(lens, 0.092, 0.04, DC.c);
-    const lring = new THREE.Mesh(new THREE.TorusGeometry(0.095, 0.014, 8, 24), metal); lring.position.set(0, YC + 0.22 + 0.14 * Math.sin(TILT), -0.2 - 0.14 * Math.cos(TILT)); lring.rotation.x = TILT; grp.add(lring);
-    const bt = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.1, 0.56), new THREE.MeshStandardMaterial({ color: 0x1a1c20, roughness: 0.6 })); bt.position.set(0, YC - 0.1, 0.06); grp.add(bt);
+    /* the frame's middle: a flat square tying the four ducts together, under the board */
+    const mid = wm(roundBoxGeo(0.36, 0.024, 0.36, 0.05, 0.1), frameM, 0, by0 + 0.002, 0); mid.rotation.y = Math.PI / 4;
+    [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach((p) => { const a = Math.atan2(p[1], p[0]); const b = wm(new THREE.BoxGeometry(C * Math.SQRT2 - WD + 0.04, 0.024, 0.06), frameM, Math.cos(a) * (0.24 + (C * Math.SQRT2 - WD) / 2) * 0.72, by0 + 0.002, Math.sin(a) * (0.24 + (C * Math.SQRT2 - WD) / 2) * 0.72); b.rotation.y = -a; });
+    /* flight-controller board with parts on it and four silver screws */
+    const fcY = YC + 0.03;
+    wm(roundBoxGeo(0.34, 0.022, 0.38, 0.03, 0.1), std(0x121316, 0.45, 0.2), 0, fcY, 0.02);
+    [[0.08, -0.06, 0.05, 0.04, 0x2a2c30], [-0.07, 0.07, 0.06, 0.05, 0x2a2c30], [0.1, 0.1, 0.03, 0.03, 0xd9a432], [-0.11, -0.08, 0.025, 0.025, 0xc9ced4], [0.0, 0.14, 0.05, 0.02, 0xf2f2f2], [0.11, 0.0, 0.03, 0.02, 0xf2c21a]].forEach((q) => wm(new THREE.BoxGeometry(q[2], 0.012, q[3]), std(q[4], 0.5, 0.3), q[0], fcY + 0.016, q[1]));
+    [[-0.155, 0.02], [0.155, 0.02], [-0.12, -0.15], [0.12, -0.15]].forEach((q) => wm(new THREE.CylinderGeometry(0.022, 0.022, 0.02, 12), metal, q[0], fcY + 0.018, q[1]));
+    /* the frosted canopy: two side frames rising over the board, a bridge over the camera, a spine down to the antenna holder at the back */
+    const TILT = 0.54, CY = YC + 0.16, CZ = -0.12, CS = 0.78;
+    [-1, 1].forEach((sx) => {
+      const s = new THREE.Shape(); s.moveTo(-0.21, fcY + 0.012); s.lineTo(-0.2, CY + 0.02); s.quadraticCurveTo(-0.17, CY + 0.13, -0.06, CY + 0.12); s.quadraticCurveTo(0.08, CY + 0.06, 0.2, fcY + 0.03); s.lineTo(0.2, fcY + 0.012); s.closePath();
+      const hl = new THREE.Path(); hl.absellipse(0.02, fcY + 0.07, 0.07, 0.035, 0, Math.PI * 2, true, 0); s.holes.push(hl);
+      const g = new THREE.ExtrudeGeometry(s, { depth: 0.024, bevelEnabled: true, bevelThickness: 0.005, bevelSize: 0.005, bevelSegments: 2, curveSegments: 14 });
+      g.rotateY(-Math.PI / 2); g.translate(0.012, 0, 0);
+      wm(g, canM, sx * 0.085, 0, 0);
+    });
+    wm(roundBoxGeo(0.2, 0.028, 0.09, 0.012, 0.1), canM, 0, CY + 0.115, CZ + 0.05);                                       // bridge over the camera
+    bar(new THREE.Vector3(0, CY + 0.11, CZ + 0.09), new THREE.Vector3(0, fcY + 0.06, 0.24), 0.022, canM);                  // spine down to the back
+    wm(new THREE.CylinderGeometry(0.03, 0.034, 0.08, 14), canM, 0, fcY + 0.06, 0.25);                                      // antenna holder
+    bar(new THREE.Vector3(0, fcY + 0.05, 0.25), new THREE.Vector3(0, fcY + 0.05 + 0.29, 0.25 + 0.29 * 0.12), 0.012, black);   // the black antenna rod
+    /* the camera, set in the canopy's front */
+    const cam = wm(roundBoxGeo(0.15, 0.14, 0.12, 0.03, 0.1), DC.c ? new THREE.MeshStandardMaterial({ color: DC.c, roughness: 0.5, metalness: 0.3 }) : black, 0, CY, CZ); cam.rotation.x = TILT; cam.scale.setScalar(CS);
+    const lens = wm(new THREE.CylinderGeometry(0.06, 0.066, 0.07, 24), DC.c ? new THREE.MeshPhongMaterial({ color: new THREE.Color(DC.c).multiplyScalar(0.35), emissive: new THREE.Color(DC.c).multiplyScalar(0.3), shininess: 160 }) : new THREE.MeshPhongMaterial({ color: 0x111215, shininess: 60, specular: 0x444444 }), 0, CY + 0.085 * CS * Math.sin(TILT), CZ - 0.085 * CS * Math.cos(TILT));
+    lens.rotation.x = TILT - Math.PI / 2; lens.scale.setScalar(CS); lensGlint(lens, 0.062, 0.035, DC.c);
+    const lr = wm(new THREE.TorusGeometry(0.064, 0.013, 8, 24), black, 0, CY + 0.115 * CS * Math.sin(TILT), CZ - 0.115 * CS * Math.cos(TILT)); lr.rotation.x = TILT; lr.scale.setScalar(CS);
+    const ring = wm(new THREE.TorusGeometry(0.085, 0.016, 8, 28), canM, 0, CY + 0.06 * Math.sin(TILT), CZ - 0.06 * Math.cos(TILT)); ring.rotation.x = TILT;   // canopy ring round the lens
+    /* the 1S pack under the frame and its white plug at the back */
+    {
+      wm(roundBoxGeo(0.17, 0.075, 0.42, 0.02, 0.1), std(dcl(DC.b, 0x2a2d33), 0.5, 0.2), 0, by0 - 0.05, 0.03);
+      wm(new THREE.BoxGeometry(0.12, 0.004, 0.26), std(0x9aa3ad, 0.4, 0.5), 0, by0 - 0.012, 0.03);
+      wm(roundBoxGeo(0.08, 0.05, 0.07, 0.01, 0.1), std(0xf2f2f2, 0.6, 0), 0, by0 - 0.02, 0.29);
+      [[-0.015, 0xd62a2a], [0.015, 0x111214]].forEach((q) => bar(new THREE.Vector3(q[0], by0 - 0.02, 0.26), new THREE.Vector3(q[0], fcY, 0.19), 0.006, new THREE.MeshStandardMaterial({ color: q[1], roughness: 0.5 })));
+    }
     grp.scale.setScalar(1.3);
   }
   grp.traverse((o) => { if (o.isMesh) { o.castShadow = true; } });
@@ -10239,7 +10275,7 @@ const NX_DCOL = {
   race5: [['m', 'מנועים', '#1b1d21'], ['p', 'פרופלורים', '#2f8fd0'], ['a', 'מצבר ואקסנט (מדבקה ובסיס אנטנה)', '#1fa89a'], ['b', 'גוף הסוללה', '#14161a'], ['c', 'גוף המצלמה', '#0f1113'], ['f', 'מסגרת וזרועות (גוון)', '#ffffff'], ['so', 'מגני TPU', '#5cc8d8']],
   fpv10: [['m', 'מנועים', '#c0392b'], ['p', 'פרופלורים', '#ff8a1a'], ['a', 'מצבר ואקסנט (מדבקה ובסיס אנטנה)', '#e8751a'], ['b', 'גוף הסוללה', '#1b2230'], ['c', 'גוף המצלמה', '#0f1113'], ['f', 'מסגרת וזרועות (גוון)', '#ffffff'], ['so', 'עמודים ומגני TPU', '#f2e21a'], ['t', 'אנטנה (ראש)', '#d8372b']],
   fpv10w: [['m', 'מנועים', '#c0392b'], ['p', 'פרופלורים', '#ff8a1a'], ['a', 'מצבר ואקסנט (מדבקה ובסיס אנטנה)', '#e8751a'], ['b', 'גוף הסוללה', '#1b2230'], ['c', 'גוף המצלמה', '#0f1113'], ['f', 'מסגרת וזרועות (גוון)', '#ffffff'], ['so', 'עמודים ומגני TPU', '#f2e21a'], ['t', 'אנטנה (ראש)', '#d8372b']],
-  whoop: [['a', 'גוף שקוף (מחזיקים וחישוקים)', '#f2f6fa'], ['p1', 'מגיני מדחפים', '#4fa3ee'], ['p2', 'פרופלורים', '#ffffff'], ['m', 'מנועים', '#2f6fd0'], ['c', 'גוף המצלמה', '#0f1113']]
+  whoop: [['p1', 'שלדה ותעלות', '#26282c'], ['a', 'כיפת המצלמה', '#eef2f6'], ['p2', 'פרופלורים', '#f4f8fb'], ['m', 'מנועים', '#c9ced4'], ['c', 'גוף המצלמה', '#0f1113'], ['b', 'סוללה', '#2a2d33']]
 };
 function nxApplyTexts(c, ghost) {
   NX_TX.forEach((r) => {
