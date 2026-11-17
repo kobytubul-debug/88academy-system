@@ -1240,20 +1240,21 @@ body.vid-on #osd,body.vid-on #sticks,body.vid-on #propHud,body.vid-on #btnStartR
 #scrMain .mhead .tag{margin:6px 0 0;letter-spacing:.4em}
 #scrMain .mdrone{right:-6vw;top:50%;transform:translateY(-44%);width:min(60vw,900px)}
 #scrMain .mtiles{left:50%;right:auto;bottom:clamp(20px,5vh,46px);transform:translateX(-50%);width:auto;flex-wrap:nowrap;gap:28px;align-items:flex-end;justify-content:center;direction:rtl}
-#scrMain .mtiles .hcard,#scrMain .mtiles .hcard.quit,body.gx-btn #scrMain .mtiles .hcard{position:relative;width:clamp(150px,15vw,200px);height:clamp(120px,12.6vw,168px);min-height:0;padding:0;margin:0!important;border:0!important;border-radius:12px;background:transparent!important;overflow:visible;clip-path:none!important;box-shadow:none!important;animation:none!important;transition:transform .18s ease;display:block;white-space:normal}
+#scrMain .mtiles .mbtn.hcard,#scrMain .mtiles .mbtn.hcard.big,#scrMain .mtiles .mbtn.hcard.quit,#scrMain .mtiles #btnQuit.hcard,#scrMain .mtiles #btnStart.hcard,body.gx-btn #scrMain .mtiles .mbtn.hcard,#scrMain .mtiles.n4 .mbtn.hcard{position:relative;flex:0 0 auto!important;order:0!important;width:clamp(150px,15vw,200px)!important;height:clamp(120px,12.6vw,168px)!important;max-height:none!important;min-height:0;padding:0;margin:0!important;border:0!important;border-radius:12px;background:transparent!important;overflow:visible!important;clip-path:none!important;box-shadow:none!important;animation:none!important;transition:transform .18s ease;display:block;white-space:normal}
 #scrMain .mtiles .hcard:after{content:none!important}
 #scrMain .mtiles .hcard:before{content:none!important}
 #scrMain .mtiles .hcard:hover{transform:translateY(-6px) scale(1.04)}
 .hcard .hbg{position:absolute;inset:0;border-radius:12px;overflow:hidden;box-shadow:0 14px 34px rgba(0,0,0,.6),0 0 0 2px rgba(255,255,255,.18);transition:box-shadow .2s ease,filter .2s ease}
 .hcard.blue .hbg{background:linear-gradient(135deg,#0b1a3a 0%,#132c66 45%,#1f4aa8 100%)}
 .hcard.red .hbg{background:linear-gradient(135deg,#3a0b12 0%,#7a1420 45%,#c62f3a 100%)}
+body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mtiles .mbtn.hcard.quit{background:transparent!important;border:0!important;box-shadow:none!important;filter:none!important;color:#fff}
 .hcard .hbg:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 25% 25%,rgba(255,255,255,.28) 0%,rgba(255,255,255,0) 45%)}
 .hcard .hsh{position:absolute;top:-8px;right:-14px;width:68%;height:110%;background:linear-gradient(160deg,rgba(255,255,255,.35),rgba(255,255,255,.06));clip-path:polygon(28% 0,100% 0,100% 100%,0 100%)}
 .hcard .hburst{position:absolute;left:6%;right:6%;top:18%;height:56%;border-radius:50%;background:radial-gradient(ellipse at 50% 70%,rgba(255,255,255,.55) 0%,rgba(255,255,255,.12) 40%,rgba(255,255,255,0) 70%);filter:blur(6px)}
 .hcard .hclip{position:absolute;top:-44%;bottom:0;overflow:hidden;pointer-events:none}
 .hcard.blue .hclip{left:0;right:-42%}
 .hcard.red .hclip{right:0;left:-42%}
-.hcard .himg{position:absolute;width:142%;height:auto;top:44%;transform:perspective(520px) rotateX(16deg) rotate(-10deg);transform-origin:50% 100%;-webkit-mask-image:linear-gradient(180deg,#000 70%,rgba(0,0,0,0) 100%);mask-image:linear-gradient(180deg,#000 70%,rgba(0,0,0,0) 100%);filter:drop-shadow(0 14px 18px rgba(0,0,0,.7));transition:filter .2s ease,transform .2s ease}
+.hcard .himg{position:absolute;width:142%;height:auto;top:30%;transform:perspective(520px) rotateX(16deg) rotate(-10deg);transform-origin:50% 100%;-webkit-mask-image:linear-gradient(180deg,#000 70%,rgba(0,0,0,0) 100%);mask-image:linear-gradient(180deg,#000 70%,rgba(0,0,0,0) 100%);filter:drop-shadow(0 14px 18px rgba(0,0,0,.7));transition:filter .2s ease,transform .2s ease}
 .hcard.blue .himg{left:-21%}
 .hcard.red .himg{right:-21%}
 .hcard .himg.flip{transform:perspective(520px) rotateX(16deg) rotate(10deg) scaleX(-1)}
@@ -1262,7 +1263,7 @@ body.vid-on #osd,body.vid-on #sticks,body.vid-on #propHud,body.vid-on #btnStartR
 .hcard.blue:hover .himg{filter:drop-shadow(0 0 14px rgba(110,170,255,.95)) drop-shadow(0 14px 18px rgba(0,0,0,.7)) brightness(1.15);transform:perspective(520px) rotateX(16deg) rotate(-10deg) scale(1.06)}
 .hcard.red:hover .hbg{box-shadow:0 0 0 2px #ff8a8a,0 0 34px 8px rgba(255,80,80,.75),0 18px 40px rgba(0,0,0,.6);filter:brightness(1.25)}
 .hcard.red:hover .himg{filter:drop-shadow(0 0 14px rgba(255,110,110,.95)) drop-shadow(0 14px 18px rgba(0,0,0,.7)) brightness(1.15);transform:perspective(520px) rotateX(16deg) rotate(10deg) scaleX(-1) scale(1.06)}
-#scrMain .micons{position:absolute;right:18px;bottom:16px;display:flex;gap:4px;direction:rtl}
+#scrMain .micons{position:absolute;left:18px;bottom:16px;display:flex;gap:4px;direction:rtl}
 #scrMain .micons .mico,body.gx-btn #scrMain .micons .mico{width:76px;height:66px;min-height:0;margin:0!important;padding:4px 2px;border:0!important;border-radius:10px;background:transparent!important;color:var(--mu);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;font:700 10px var(--ui);letter-spacing:.04em;box-shadow:none!important;clip-path:none!important;transform:none;white-space:nowrap}
 #scrMain .micons .mico svg{width:28px;height:28px}
 #scrMain .micons .mico:hover{color:var(--bt,#fff);background:color-mix(in srgb,var(--p2) 60%,transparent)!important;transform:none}
@@ -1271,7 +1272,7 @@ body.vid-on #osd,body.vid-on #sticks,body.vid-on #propHud,body.vid-on #btnStartR
 .whoWrap{display:flex;flex-direction:column;align-items:center;gap:26px;width:min(520px,94vw)}
 .whoLogo.nxlogo{font-size:clamp(44px,6vw,72px);font-family:var(--mono)}
 .whoSub{margin-top:4px}
-@media(max-width:900px){#scrMain .mdrone{right:-10vw;top:46%;width:80vw;opacity:.6}#scrMain .mtiles{gap:14px}#scrMain .mtiles .hcard{width:150px;height:120px}#scrMain .micons{right:8px;bottom:8px}}
+@media(max-width:900px){#scrMain .mdrone{right:-10vw;top:46%;width:80vw;opacity:.6}#scrMain .mtiles{gap:14px}#scrMain .micons{left:8px;bottom:8px}}
 </style>
 </head>
 <body>
