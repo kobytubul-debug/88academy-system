@@ -1277,6 +1277,13 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 .whoLogo.nxlogo{font-size:clamp(44px,6vw,72px);font-family:var(--mono)}
 .whoSub{margin-top:4px}
 @media(max-width:900px){#scrMain .mdrone{right:-10vw;top:46%;width:80vw;opacity:.6}#scrMain .mtiles{gap:14px}#scrMain .micons{left:8px;bottom:8px}}
+
+/* ---------- the FPV NEXUS logo (build 421): 3D chrome letters in the theme colour, FPV up-left and NEXUS down-right ---------- */
+.nxlogo{display:flex;justify-content:center;filter:none!important;text-shadow:none!important}
+.nxlogosvg{display:block;height:auto;overflow:visible;filter:drop-shadow(0 0 22px color-mix(in srgb,var(--ac) 45%,transparent))}
+.nxlogosvg text{text-shadow:none!important}
+#scrMain .mhead .nxlogosvg{width:clamp(300px,34vw,500px)}
+.whoLogo .nxlogosvg{width:clamp(260px,30vw,420px)}
 </style>
 </head>
 <body>
@@ -1429,7 +1436,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
   <canvas id="gxBg" width="480" height="270"></canvas>
   <div class="scr on" id="scrMain">
     <div class="mhead">
-      <div class="logo nxlogo"><span id="logoA" class="l1">FPV</span><span id="logoB" class="l2">NEXUS</span></div>
+      <div class="logo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="hlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="hlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#hlWord" x="9" y="9" fill="#020b10"></use><use href="#hlWord" x="8" y="8" fill="url(#hlSide)"></use><use href="#hlWord" x="7" y="7" fill="url(#hlSide)"></use><use href="#hlWord" x="6" y="6" fill="url(#hlSide)"></use><use href="#hlWord" x="5" y="5" fill="url(#hlSide)"></use><use href="#hlWord" x="4" y="4" fill="url(#hlSide)"></use><use href="#hlWord" x="3" y="3" fill="url(#hlSide)"></use><use href="#hlWord" x="2" y="2" fill="url(#hlSide)"></use><use href="#hlWord" x="1" y="1" fill="url(#hlSide)"></use><use href="#hlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#hlFace)" stroke="#ffffff" stroke-width="1.2"><g id="hlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="logoA" x="40" y="96">FPV</text><text id="logoB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div>
       <div class="logo2">סימולטור טיסה</div>
       <div class="tag">FPV RACING SIMULATOR · 88ACADEMY</div>
     </div>
@@ -1660,10 +1667,10 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 420</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 421</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
-    <div class="whoBrand"><div class="whoLogo nxlogo"><span class="l1">FPV</span><span class="l2">NEXUS</span></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
+    <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
     <div class="whobox">
       <div id="whoRole"><h3>מצב בדיקה מקומי</h3><p>הסנכרון החי אינו זמין בתצוגה הזו. אפשר לנסות את שני התפקידים בלשוניות שונות של אותו דפדפן.</p><button id="whoAdmin">אני מנהל</button><button id="whoPl" class="sec">אני שחקן</button></div>
       <div id="whoPlayer"><h3>כניסה לסימולטור</h3><p>הכנס את שם המשתמש והסיסמה שקיבלת מהמדריך.</p><input id="whoUn" type="text" maxlength="24" autocomplete="username" placeholder="שם משתמש" dir="ltr"><div class="whopw"><input id="whoPw" type="password" maxlength="40" autocomplete="current-password" placeholder="סיסמה" dir="ltr"><button type="button" id="whoEye" class="eye" title="הצג או הסתר את הסיסמה" tabindex="-1">&#128065;</button></div><div id="whoErr"></div><button id="whoGo">כניסה</button><button id="whoCancel" class="sec" style="display:none">ביטול</button><button id="whoAdm" class="sec" style="display:none">חזרה למנהל</button><div class="whoNote">אין לך חשבון? פנה למדריך שלך.</div></div>
@@ -7315,7 +7322,7 @@ function showScreen(name) {
     $(p[1]).classList.toggle('on', p[0] === name);
   });
   if (name === 'drone') buildDroneCards();
-  if (name === 'main') buildMainDrone();
+  if (name === 'main') { buildMainDrone(); if (typeof nxLogoSync === 'function') window.requestAnimationFrame(() => nxLogoSync()); }
   if (name === 'missions') buildCards();
   setTrkBg(name === 'missions' ? trkSel : null);
   NXH.logo();
@@ -9112,6 +9119,21 @@ function nxTrackDroneRestore() {                                   // a track wi
   const own = NX.tdOwn; NX.tdOwn = '';
   if (own && settings.preset !== own && PRESETS[own]) { settings.preset = own; syncSliders(); }
 }
+/* ---------- the logo: the sign-in screen shows the home words (the manager can rename them), and each logo frames its own words ---------- */
+function nxLogoSync() {
+  const a = document.getElementById('logoA'), b = document.getElementById('logoB'), wa = document.getElementById('wlA'), wb = document.getElementById('wlB');
+  if (a && wa && wa.textContent !== a.textContent) wa.textContent = a.textContent;
+  if (b && wb && wb.textContent !== b.textContent) wb.textContent = b.textContent;
+  nxLogoFit('hlWord'); nxLogoFit('wlWord');
+}
+function nxLogoFit(id) {                                          // the frame follows the words: letters drawn slanted (12 degrees) with a 9 px depth
+  const g = document.getElementById(id), svg = g && g.ownerSVGElement; if (!svg || typeof g.getBBox !== 'function') return;
+  let bb = null; try { bb = g.getBBox(); } catch (e) { return; }
+  if (!bb || !(bb.width > 0)) return;                              // hidden right now: keep the default frame
+  const k = Math.tan(12 * Math.PI / 180), x0 = bb.x + 30 - k * (bb.y + bb.height), x1 = bb.x + bb.width + 30 - k * bb.y + 9;
+  svg.setAttribute('viewBox', Math.floor(x0 - 14) + ' 0 ' + Math.ceil(x1 - x0 + 28) + ' 214');
+}
+try { if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => nxLogoSync()); } catch (e) { /* ignore */ }
 const nxDoneKey = () => 'fpvNexusDone.' + NX.un;
 function nxDoneLoad() {
   NX.done = {};
@@ -9569,6 +9591,7 @@ function nxApplyTexts(c, ghost) {
     if (el.dataset.d0 === undefined) el.dataset.d0 = el.textContent;
     el.textContent = c.tx[r[0]] ? c.tx[r[0]] : el.dataset.d0;
   });
+  nxLogoSync();
   NX_HIDE.forEach((r) => {
     const el = document.querySelector(r[2]); if (!el) return;
     const hid = !!c.hide[r[0]];
@@ -9735,6 +9758,7 @@ function nxShowAdminPane(msg) {                                // the manager's 
 function nxShowWho(force, msg) {
   const w = $('who');
   w.classList.add('on');
+  window.requestAnimationFrame(() => nxLogoSync());                 // the sign-in logo can be measured once it is on screen
   const local = NX.local && !NX.role_chosen;
   $('whoAdminPane').style.display = 'none';
   $('whoRole').style.display = local ? 'block' : 'none';
