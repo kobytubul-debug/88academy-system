@@ -938,7 +938,7 @@ body.gx-hud #resNew:not(:empty){font:800 italic 20px var(--ui);letter-spacing:.1
 body.gx-glow .logo{text-shadow:0 0 28px color-mix(in srgb,var(--lg2) 45%,transparent)}
 body.gx-glow .logo span{text-shadow:0 0 22px var(--lg2),0 0 52px color-mix(in srgb,var(--lg2) 55%,transparent)}
 body.gx-glow .rtitle,body.gx-glow .scr h2{text-shadow:0 0 16px color-mix(in srgb,var(--ac) 50%,transparent)}
-body.gx-on #scrMain .mdrone canvas{filter:drop-shadow(0 0 30px color-mix(in srgb,var(--ac) 38%,transparent)) drop-shadow(0 18px 24px rgba(0,0,0,.45))}
+body.gx-stage #scrMain .mdrone canvas{filter:drop-shadow(0 0 30px color-mix(in srgb,var(--ac) 38%,transparent)) drop-shadow(0 18px 24px rgba(0,0,0,.45))}
 
 /* ================= SKINS: complete interface looks (shape, borders, panels, typography, backdrop) ================= */
 body[class*="skin-"] .mbtn,body[class*="skin-"] button.b,body[class*="skin-"] .newtrk,body[class*="skin-"] .fly{clip-path:none!important;font-style:normal}
@@ -1230,7 +1230,7 @@ body.nx-open #vidPlay,body.nx-open #vidRec{display:none!important}
 body.vid-on #osd,body.vid-on #sticks,body.vid-on #propHud,body.vid-on #btnStartRace,body.vid-on #menuBtn,body.vid-on #nxGuideBtn,body.vid-on #nxHint,body.vid-on #nxCoach,body.vid-on #flash{display:none!important}
 #vidBox #crosshair{display:block;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:128px;height:96px;z-index:2;pointer-events:none}
 
-/* ---------- home + sign-in redesign (build 417): chrome logo, static drone on the right, two picture cards ---------- */
+/* ---------- home + sign-in redesign (build 416): chrome logo, static drone on the right, two picture cards ---------- */
 .nxlogo{display:flex;flex-direction:column;align-items:center;direction:ltr;font-family:var(--mono);font-weight:900;font-style:italic;line-height:1.08;letter-spacing:.06em;overflow:visible;filter:drop-shadow(0 4px 0 color-mix(in srgb,var(--ac) 35%,#000)) drop-shadow(0 0 18px color-mix(in srgb,var(--ac) 45%,transparent))}
 .nxlogo .l1,.nxlogo .l2{display:block;padding:.04em .14em 0;margin:0;background:linear-gradient(180deg,#fff 0%,#dbe6f2 45%,#8aa0b8 50%,#fff 100%);-webkit-background-clip:text;background-clip:text;color:transparent!important}
 .nxlogo .l2{background:linear-gradient(180deg,#fff 0%,var(--ac) 48%,color-mix(in srgb,var(--ac) 55%,#000) 52%,#fff 100%);-webkit-background-clip:text;background-clip:text}
@@ -1656,7 +1656,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 417</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 418</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><span class="l1">FPV</span><span class="l2">NEXUS</span></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -7275,7 +7275,7 @@ function introClose() {
 function introFrame(dt) {                                       // the same animated backdrop and holographic platform as the home page, in the theme accent
   if (!introOn) return;
   const t = nowSec, cv = $('introBg'), c = gxCfg();
-  if (cv && c && c.on && c.bg) {
+  if (cv && c && c.bg) {
     cv.style.display = 'block';
     const g = cv.getContext('2d'), w = cv.width, h = cv.height, a = gxAccent(), col = (al) => 'rgba(' + a[0] + ',' + a[1] + ',' + a[2] + ',' + al + ')';
     g.clearRect(0, 0, w, h); (GX_BG[c.bgmode] || GX_BG.grid)(g, w, h, t, col);
@@ -7626,7 +7626,7 @@ const DRONE_REAL = { fpv5: 1, race5: 1.01, fpv10: 2.1, fpv10w: 2.1, whoop: 0.46 
 const DRONE_WB_MM = { fpv5: 225, race5: 215, fpv10: 450, fpv10w: 450, whoop: 70 };
 const DV_CAM_ALL = 1.75;                          // common camera distance factor so a 10" fits beside the 5" and the whoop
 function gxStageSync(v) {                                   // the holographic stage follows the "game style" switches live: off hides it, on builds it when missing
-  const c = gxCfg(), want = !!(c.on && c.stage);
+  const c = gxCfg(), want = !!c.stage;
   if (want && !v.gx) v.gx = gxDroneStage(v.sc, v.floor.position.y, v.model, v.lim);
   if (v.gx && v.gx.grp) v.gx.grp.visible = want;
   return want ? v.gx : null;
@@ -7660,7 +7660,7 @@ function makeDroneView(id, cv, fit, big) {
 function renderDroneViews(tsec) {
   if (!droneViews.length || !dvRenderer) return;
   droneViews.forEach((v) => {
-    const gxw = !!(gxCfg().on && gxCfg().stage);
+    const gxw = !!gxCfg().stage;
     if (v.still && v.drawn && v.stageDrawn === gxw) return;   // list thumbnails are drawn once and stay still (redrawn when the stage switch changes)
     v.stageDrawn = gxw;
     v.model.rotation.y = v.still ? 0.6 : tsec * DV_SPIN + v.phase;   // continuous 360-degree yaw
@@ -8646,6 +8646,14 @@ const GX_GRADES = {
 };
 
 function gxCfg() { return GX.cfg || GX.st; }
+/* every effect has its own switch (build 418). The first switch ("on") now covers only the game font and the map tint.
+   A configuration saved before build 418 with that switch off still means "everything off", whatever its other boxes say. */
+const GX_FX = ['btn', 'hud', 'glow', 'bg', 'vig', 'scan', 'stage', 'speed', 'gate', 'rank', 'snd'];
+function gxNorm(g) {
+  const c = Object.assign({}, GX.st, g || {});
+  if (!(c.v >= 2)) { if (!c.on) GX_FX.forEach((k) => { c[k] = false; }); c.v = 2; }
+  return c;
+}
 function gxRgbOf(hex) {
   const m = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec((hex || '').trim());
   return m ? [parseInt(m[1], 16), parseInt(m[2], 16), parseInt(m[3], 16)] : [76, 195, 230];
@@ -8659,19 +8667,18 @@ function gxAccent() {                                    // theme accent, re-rea
 }
 
 function gxApply(t) {
-  const c = GX.cfg = Object.assign({}, GX.st, (t && t.gx) || {});
-  const b = document.body, on = !!c.on;
+  const c = GX.cfg = gxNorm(t && t.gx);
+  const b = document.body;
   Array.from(b.classList).filter((k) => k.indexOf('skin-') === 0).forEach((k) => b.classList.remove(k));
-  ['gx-on', 'gx-btn', 'gx-hud', 'gx-glow', 'gx-vig', 'gx-scan'].forEach((k) => b.classList.remove(k));
+  ['gx-on', 'gx-btn', 'gx-hud', 'gx-glow', 'gx-vig', 'gx-scan', 'gx-stage'].forEach((k) => b.classList.remove(k));
   if (c.skin && /^[a-z]+$/.test(c.skin)) b.classList.add('skin-' + c.skin);       // whole-interface skin (shapes, borders, typography, panels)
-  if (on) {
-    b.classList.add('gx-on');
-    if (c.btn) b.classList.add('gx-btn');
-    if (c.hud) b.classList.add('gx-hud');
-    if (c.glow) b.classList.add('gx-glow');
-    if (c.vig) b.classList.add('gx-vig');
-    if (c.scan) b.classList.add('gx-scan');
-  }
+  if (c.on) b.classList.add('gx-on');                                               // game font + map tint
+  if (c.btn) b.classList.add('gx-btn');                                             // each effect on its own, with or without the others
+  if (c.hud) b.classList.add('gx-hud');
+  if (c.glow) b.classList.add('gx-glow');
+  if (c.vig) b.classList.add('gx-vig');
+  if (c.scan) b.classList.add('gx-scan');
+  if (c.stage) b.classList.add('gx-stage');
   gxApplyGrade();
 }
 function gxApplyGrade() {
@@ -8782,7 +8789,7 @@ const GX_BG = {
 
 function gxMenuBg(dt) {
   const cv = $('gxBg'); if (!cv) return;
-  const c = gxCfg(), on = !!(c.on && c.bg && inMenu);
+  const c = gxCfg(), on = !!(c.bg && inMenu);
   cv.style.display = on ? 'block' : 'none';
   if (!on) return;
   GX.bgClock += dt; GX.bgDraw += dt;
@@ -8802,7 +8809,7 @@ function gxGlowTexture(inner, outer, vertical) {
   return new THREE.CanvasTexture(cv);
 }
 function gxDroneStage(sc, floorY, model, lim) {
-  const c = gxCfg(); if (!(c.on && c.stage)) return null;
+  const c = gxCfg(); if (!c.stage) return null;
   let rad = 1.9;
   try { const bb = new THREE.Box3().setFromObject(model), sz = bb.getSize(new THREE.Vector3()); if (isFinite(sz.x)) rad = Math.max(1.7, Math.max(sz.x, sz.z) * 0.62); } catch (e) { /* default size */ }
   if (lim > 0) rad = Math.min(rad, lim);                  // the platform must fit inside the view, never cut by its edges
@@ -8838,7 +8845,7 @@ function gxDroneStage(sc, floorY, model, lim) {
 
 /* ---------- in-flight effects ---------- */
 function gxGate() {
-  const c = gxCfg(); if (!(c.on && c.gate)) return;
+  const c = gxCfg(); if (!c.gate) return;
   GX.combo = nowSec - GX.comboT < 3.2 ? GX.combo + 1 : 1; GX.comboT = nowSec;
   const el = $('gxPass'); if (!el) return;
   el.innerHTML = '<i></i>' + (GX.combo > 1 ? '<b>COMBO &times;' + GX.combo + '</b>' : '');
@@ -8846,7 +8853,7 @@ function gxGate() {
 }
 function gxSpeed(dt) {
   const cv = $('gxSpd'); if (!cv) return;
-  const c = gxCfg(), fly = c.on && c.speed && !inMenu && !paused && !editorMode && (state === 'racing' || state === 'free');
+  const c = gxCfg(), fly = c.speed && !inMenu && !paused && !editorMode && (state === 'racing' || state === 'free');
   const sp = fly ? drone.vel.length() : 0;
   GX.spdA += (clamp((sp - 13) / 24, 0, 1) - GX.spdA) * Math.min(1, dt * 5);
   const g = cv.getContext('2d');
@@ -8880,7 +8887,7 @@ function gxRank(r) {
 function gxResults(r) {
   const el = $('resGrade'); if (!el) return;
   const c = gxCfg();
-  if (!(c.on && c.rank)) { el.style.display = 'none'; return; }
+  if (!c.rank) { el.style.display = 'none'; return; }
   const g = gxRank(r);
   el.style.display = 'block'; el.dataset.g = g;
   el.innerHTML = '<small>RANK</small><b>' + g + '</b>';
@@ -8894,7 +8901,7 @@ function gxFanfare(g) {
 
 /* ---------- interface sounds ---------- */
 function gxTick(kind) {
-  const c = gxCfg(); if (!(c.on && c.snd) || settings.muted) return;
+  const c = gxCfg(); if (!c.snd || settings.muted) return;
   const now = performance.now(); if (now - GX.lastTick < 45) return; GX.lastTick = now;
   try {
     if (!Sound.ctx) { if (kind !== 2) return; Sound.init(); }
@@ -10240,7 +10247,7 @@ const NX_GXPRESETS = [
   { id: 'paper', name: 'נייר בהיר', t: { ac: '#274690', am: '#c4501b', bg: '#f4f1ea', p1: '#fffdf8', p2: '#ece7da', ln: '#cfc8b8', tx: '#23211d', mu: '#6f6a5e', btn: 'sharp', bw: 1, balign: 'c', overlay: 0.2, trans: 'fade', dur: 350, fadeMs: 500 }, gx: { font: 'frank', skin: 'paper', bgmode: 'dots', grade: 'off', btn: false, hud: false, glow: false, vig: false, stage: false, scan: false } }
 ];
 const NX_GXSW = [
-  ['on', 'מצב משחק (מפעיל את כל השכבה)'], ['btn', 'כפתורים משחקיים: חיתוכים, ברק ולחיצה'], ['hud', 'מסגרות HUD וכותרות משחקיות'], ['glow', 'זוהר ללוגו ולכותרות'],
+  ['on', 'פונט משחקי וגוון מפות'], ['btn', 'כפתורים משחקיים: חיתוכים, ברק ולחיצה'], ['hud', 'מסגרות HUD וכותרות משחקיות'], ['glow', 'זוהר ללוגו ולכותרות'],
   ['bg', 'רקע תפריט חי: רשת וניצוצות'], ['vig', 'ויניאט וגוון מסך'], ['scan', 'קווי סריקה (מסך CRT)'], ['stage', 'במה הולוגרפית לרחפן'],
   ['speed', 'קווי מהירות בטיסה'], ['gate', 'אפקט מעבר שער וקומבו'], ['rank', 'דרגה S/A/B/C במסך התוצאות'], ['snd', 'צלילי ממשק']
 ];
@@ -10253,8 +10260,8 @@ function nxApplyKit(c, id) {
 }
 function nxGxWindow(t) {
   NX.openCats = NX.openCats || {};
-  const g = Object.assign({}, GX.st, t.gx || {});
-  let h = '<p class="nxn">שכבת עיצוב משחקית. כל אפקט מופעל או מכובה בנפרד, והמיקום של האלמנטים לא משתנה.</p><div class="nxchk">';
+  const g = gxNorm(t.gx);
+  let h = '<p class="nxn">שכבת עיצוב משחקית. כל אפקט עובד לבד: אפשר ללחוץ "כבה הכול" ואז לסמן רק את מה שרוצים. המיקום של האלמנטים לא משתנה.</p><div class="nxchk">';
   NX_GXSW.forEach((r) => { h += '<label><input type="checkbox" data-k="theme.gx.' + r[0] + '"' + (g[r[0]] ? ' checked' : '') + '> ' + r[1] + '</label>'; });
   h += '</div>';
   h += nxF('פונט משחקי', nxSel('theme.gx.font', g.font, [['keep', 'השתמש בפונט הכללי (למטה)']].concat(Object.keys(NX_FONTS).map((k) => [k, NX_FONTS[k][0]]))));
@@ -10262,7 +10269,7 @@ function nxGxWindow(t) {
   h += nxF('רקע התפריט', nxSel('theme.gx.bgmode', g.bgmode || 'grid', [['grid', 'רשת ונצנוצים'], ['radar', 'מכ"ם'], ['bokeh', 'כדורי אור'], ['retro', 'שמש רטרו'], ['streaks', 'קווי מהירות'], ['dots', 'נקודות שקטות'], ['party', 'זרקורים וקונפטי'], ['none', 'בלי רקע']]));
   h += nxF('גוון מפות', nxSel('theme.gx.grade', g.grade, [['auto', 'אוטומטי לפי המפה']].concat(Object.keys(GX_GRADES).map((k) => [k, GX_GRADES[k].name]))));
   h += '<h4>ערכות משחקיות מוכנות</h4><div class="nxbtns">' + NX_GXPRESETS.map((p, i) => '<button class="nxb' + (NX.draft.gxp === p.name ? ' sel' : '') + '" data-act="gx-preset" data-i="' + i + '">' + nxEsc(p.name) + '</button>').join('') + '' + Object.keys(NX.themes).map((id) => '<span style="display:inline-flex;align-items:stretch"><button class="nxb" data-act="gx-saved" data-id="' + id + '" title="ערכה שנשמרה">★ ' + nxEsc(NX.themes[id].name || id) + '</button><button class="nxb" data-act="th-del" data-id="' + id + '" title="מחק את הערכה" style="color:#ff453a;padding:0 8px;margin-inline-start:-1px">&#10005;</button></span>').join('') + '</div>';
-  const swo = NX_GXSW.filter((r) => r[0] !== 'scan'), allOn = swo.every((r) => g[r[0]]), allOff = swo.every((r) => !g[r[0]]);
+  const swo = NX_GXSW.filter((r) => r[0] !== 'scan'), allOn = swo.every((r) => g[r[0]]), allOff = NX_GXSW.every((r) => !g[r[0]]);
   h += '<div class="nxbtns"><button class="nxb' + (allOn ? ' sel' : '') + '" data-act="gx-all-on">הפעל הכול</button><button class="nxb' + (allOff ? ' sel' : '') + '" data-act="gx-all-off">כבה הכול</button></div>';
   return '<details class="nxcol" data-cid="gxAll"' + (NX.openCats.gxAll ? ' open' : '') + '><summary>סגנון משחק</summary><div class="nxcolb">' + h + '</div></details>';
 }
@@ -11340,6 +11347,7 @@ function nxResizeImage(file, cb) {
 function nxField(el) {
   const k = el.dataset.k; if (!k) return;
   const v = el.type === 'checkbox' ? el.checked : (el.dataset.num ? Number(el.value) : el.value);
+  if (k.indexOf('theme.gx.') === 0) { NX.draft.theme = NX.draft.theme || {}; NX.draft.theme.gx = gxNorm(NX.draft.theme.gx); }   // read an old "all off" the old way before one box is ticked
   nxSetPath(NX.draft, k, v);
   if (el.tagName === 'INPUT' && el.type === 'range') { const o = el.parentNode.querySelector('output'); if (o) o.textContent = el.value; }
   NX.draft = nxMerge(nxDefault(), NX.draft);
@@ -11494,8 +11502,8 @@ function nxAdmWireOn(body) {
     else if (a === 'pl-spec') nxSpecStart(el.dataset.u);
     else if (a === 'pl-watch') { NX.watch = el.dataset.u; nxAdmRender(); }
     else if (a === 'gx-saved') { const t = NX.themes[id]; if (t) { NX.draft.theme = nxMerge(nxDefault().theme, nxClone(t.theme)); NX.draft.tx = nxClone(t.tx || {}); NX.draft.hide = nxClone(t.hide || {}); NX.draft.gxp = ''; nxTouch(); nxAdmRender(); nxToast('הוחלה ערכה: ' + (t.name || id)); } }
-    else if (a === 'gx-preset') { const p = NX_GXPRESETS[+el.dataset.i]; NX_XCOL.forEach((k) => { NX.draft.theme[k] = ''; }); Object.assign(NX.draft.theme, p.t); NX.draft.theme.gx = Object.assign({}, GX.st, { on: true }, p.gx); NX.draft.gxp = p.name; nxTouch(); nxAdmRender(); nxToast('הוחלה ערכה: ' + p.name); }
-    else if (a === 'gx-all-on' || a === 'gx-all-off') { const on = a === 'gx-all-on'; NX_GXSW.forEach((r) => { if (r[0] !== 'scan') NX.draft.theme.gx[r[0]] = on; }); NX.draft.gxp = ''; nxTouch(); nxAdmRender(); }
+    else if (a === 'gx-preset') { const p = NX_GXPRESETS[+el.dataset.i]; NX_XCOL.forEach((k) => { NX.draft.theme[k] = ''; }); Object.assign(NX.draft.theme, p.t); NX.draft.theme.gx = Object.assign({}, GX.st, { on: true }, p.gx, { v: 2 }); NX.draft.gxp = p.name; nxTouch(); nxAdmRender(); nxToast('הוחלה ערכה: ' + p.name); }
+    else if (a === 'gx-all-on' || a === 'gx-all-off') { const on = a === 'gx-all-on'; NX.draft.theme.gx = gxNorm(NX.draft.theme.gx); NX_GXSW.forEach((r) => { if (r[0] !== 'scan' || !on) NX.draft.theme.gx[r[0]] = on; }); NX.draft.gxp = ''; nxTouch(); nxAdmRender(); }   // "turn all off" clears the scan lines too
     else if (a === 'col-auto') { NX.draft.theme[el.dataset.k] = ''; nxTouch(); nxAdmRender(); }
     else if (a === 'look-font') { NX.draft.theme.font = nxDefault().theme.font; nxTouch(); nxAdmRender(); nxToast('הפונט אופס לברירת מחדל'); }
     else if (a === 'look-reset') { NX.draft.theme = nxDefault().theme; NX.draft.tx = {}; nxTouch(); nxAdmRender(); nxToast('המראה אופס לברירת מחדל (עדיין לא נשמר, לחץ "שמור ופרסם")'); }
@@ -11732,7 +11740,7 @@ const whoActive = () => { const w = $('who'); return !!(w && w.classList && w.cl
 function whoFrame() {
   if (!whoActive()) { if (whoV) { try { disposeGroup(whoV.sc); } catch (e) { /* ignore */ } whoV = null; } whoTried = false; return; }
   const t = nowSec, cv = $('whoBg'), c = gxCfg();
-  if (cv && c && c.on && c.bg) {
+  if (cv && c && c.bg) {
     cv.style.display = 'block';
     const g = cv.getContext('2d'), w = cv.width, h = cv.height, a = gxAccent(), col = (al) => 'rgba(' + a[0] + ',' + a[1] + ',' + a[2] + ',' + al + ')';
     g.clearRect(0, 0, w, h); (GX_BG[c.bgmode] || GX_BG.grid)(g, w, h, t, col);
