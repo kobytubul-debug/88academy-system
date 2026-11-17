@@ -1840,7 +1840,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 443</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 444</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -8345,8 +8345,16 @@ function renderDroneViews(tsec) {
   droneViews.forEach((v) => {
     const gxw = !!gxCfg().stage;
     if (v.still && v.drawn && v.stageDrawn === gxw) return;   // list thumbnails are drawn once and stay still (redrawn when the stage switch changes)
-    v.stageDrawn = gxw;
+    if (v.card) {                                             // a card on top: still at the home angle, turning while hovered, easing back after
+      const dt = v.tPrev === undefined ? 0 : Math.min(0.1, Math.max(0, tsec - v.tPrev)); v.tPrev = tsec;
+      if (v.hov) v.spin += dt * 2.2; else { const k = Math.round(v.spin / (Math.PI * 2)) * Math.PI * 2; v.spin += (k - v.spin) * Math.min(1, dt * 5); if (Math.abs(k - v.spin) < 0.002) v.spin = k; }
+      const settled = !v.hov && v.spin === Math.round(v.spin / (Math.PI * 2)) * Math.PI * 2;
+      if (settled && v.drawn && v.stageDrawn === gxw) return;
+      v.model.rotation.y = (MAIN_FACE_Y === null ? -0.75 : MAIN_FACE_Y) + v.spin;
+      v.drawn = settled;
+    } else
     v.model.rotation.y = v.still ? 0.6 : tsec * DV_SPIN + v.phase;   // continuous 360-degree yaw
+    v.stageDrawn = gxw;
     if (gxStageSync(v)) v.gx(tsec);
     if (dvRenderer.domElement.width !== v.cv.width || dvRenderer.domElement.height !== v.cv.height) dvRenderer.setSize(v.cv.width, v.cv.height, false);   // each picture renders at its own size (the big one stays sharp)
     dvRenderer.render(v.sc, v.cam);
@@ -8539,7 +8547,8 @@ function buildDroneCards(keep) {
     it.addEventListener('click', () => { Sound.ui(); selectDrone(id); });
     it.addEventListener('dblclick', () => { setPreset(id); showScreen('missions'); });
     list.appendChild(it);
-    const tv = makeDroneView(id, it.querySelector('canvas'), true); tv.phase = ids.indexOf(id) * 0.7; droneViews.push(tv);   // build 443: each card's drone framed to the same size and turning
+    const tv = makeDroneView(id, it.querySelector('canvas'), true); tv.card = true; tv.spin = 0; droneViews.push(tv);   // build 444: same size, standing at the home screen's angle; it turns only while the pointer is on its card
+    it.addEventListener('mouseenter', () => { tv.hov = true; }); it.addEventListener('mouseleave', () => { tv.hov = false; });
     const dc = document.createElement('div'); dc.className = 'dcard far'; dc.dataset.id = id;            // its card on the stage (shown dimmed above or below the chosen one)
     dc.innerHTML = '<canvas width="320" height="200"></canvas>';
     dc.addEventListener('click', () => { if (!dc.classList.contains('cur')) { Sound.ui(); selectDrone(id); } });
