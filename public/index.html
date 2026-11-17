@@ -349,20 +349,41 @@ kbd{display:inline-block;min-width:26px;text-align:center;padding:1px 7px;margin
 
 /* ---------- drone selection / flight mode panel ---------- */
 #scrDrone{width:min(1500px,97vw);max-height:96vh}
-#droneCards{display:grid;grid-template-columns:230px minmax(0,1fr) 330px;grid-template-rows:minmax(0,1fr) auto;gap:14px 18px;direction:ltr;margin:6px 0 8px;height:min(76vh,680px);text-align:right}
-#droneCards>.dlist{grid-column:1;grid-row:1}#droneCards>.dmain{grid-column:2;grid-row:1}#droneCards>.dside{grid-column:3;grid-row:1}#droneCards>.dtext{grid-column:2;grid-row:2;align-self:center;display:flex;flex-direction:column;align-items:center;direction:rtl;min-width:0}
-#droneCards>#btnBackD{grid-column:1;grid-row:2;width:100%;margin:0;font-size:15px;white-space:nowrap}#droneCards>#dGo{grid-column:3;grid-row:2}
-.dlist{overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding-right:4px}
-.ditem{background:#fff1;border:2px solid var(--ln);cursor:pointer;padding:6px 8px 8px;direction:rtl;background:var(--p1);transition:border-color .12s}
+#droneCards{display:grid;grid-template-columns:300px minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto auto;gap:10px 26px;direction:rtl;margin:8px 0 4px;height:min(80vh,760px);text-align:right}   /* build 439: list on top, the drone big in the middle, stats on the right */
+#droneCards>.dlist{grid-column:1/3;grid-row:1}#droneCards>.dmain{grid-column:2;grid-row:2}#droneCards>.dside{grid-column:1;grid-row:2/4;align-self:end}#droneCards>.dtext{grid-column:2;grid-row:3;align-self:center;display:flex;flex-direction:column;align-items:center;direction:rtl;min-width:0}
+#droneCards>#dGo{grid-column:1;grid-row:4}#droneCards>#btnBackD{grid-column:2;grid-row:4;justify-self:end}
+.dlist{overflow-x:auto;display:flex;flex-direction:row;justify-content:center;gap:10px;padding:2px 0 4px}
+.ditem{background:#fff1;border:2px solid var(--ln);cursor:pointer;padding:4px 5px 6px;direction:rtl;background:var(--p1);transition:border-color .12s,transform .15s;flex:0 0 160px;width:160px}
+.ditem.sel{transform:translateY(-2px)}
 .ditem:hover{border-color:var(--ac)}
 .ditem.sel{border-color:var(--am);background:var(--p2)}
-.ditem canvas{width:100%;height:auto;display:block;background:var(--bg)}
-.ditem .dtag{font:10px var(--mono);letter-spacing:.14em;color:var(--mu);direction:ltr;text-align:right;margin-top:6px}
-.ditem .dname{font-size:15px;color:var(--ti,#fff);font-weight:500}
-.dmain{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:0;direction:rtl}
-.dmain canvas{width:100%;max-height:88%;object-fit:contain;display:block;margin:auto 0}
+.ditem canvas{width:100%;height:74px;object-fit:contain;display:block;background:var(--bg)}
+.ditem .dtag{font:9px var(--mono);letter-spacing:.12em;color:var(--mu);direction:ltr;text-align:right;margin-top:4px}
+.ditem .dname{font-size:12px;color:var(--ti,#fff);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dmain{position:relative;min-height:0;direction:rtl;overflow:hidden}
+.dmain>#dBigCv{position:absolute;left:50%;top:50%;width:80%;height:64%;transform:translate(-50%,-50%);object-fit:contain;display:block;z-index:2;pointer-events:none}
+.dstack{position:absolute;inset:0;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 13%,#000 87%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 13%,#000 87%,transparent 100%)}
+.dcard{position:absolute;left:50%;top:50%;width:44%;height:26%;transform:translate(-50%,-50%) translateY(150%) scale(.9);opacity:.35;filter:grayscale(1) blur(1px);transition:transform .45s cubic-bezier(.2,.8,.2,1),opacity .35s,filter .35s;cursor:pointer}
+.dcard.prev{transform:translate(-50%,-50%) translateY(-150%) scale(.9)}
+.dcard.cur{opacity:0;pointer-events:none;transform:translate(-50%,-50%)}
+.dcard.far{opacity:0;pointer-events:none}
+.dcard canvas{width:100%;height:100%;object-fit:contain;display:block}
+.dArr{position:absolute;left:50%;transform:translateX(-50%);z-index:3;width:110px;height:28px;border:0;background:var(--ln);cursor:pointer;opacity:.85}.dArr:hover{background:var(--ac);opacity:1}
+.dArr.up{top:0;clip-path:polygon(0 100%,50% 0,100% 100%)}.dArr.dn{bottom:0;clip-path:polygon(0 0,100% 0,50% 100%)}
+/* the two buttons in the console-menu look: "בחר רחפן" lit in blue, "חזור" lights red on hover (and then the blue one goes out) */
+.dmb{position:relative;height:72px;padding:0 26px;color:#8e9aa8;font:900 26px var(--ui);display:flex;align-items:center;justify-content:flex-start;gap:12px;background:none;border:0;cursor:pointer;transition:color .2s;white-space:nowrap;direction:rtl}
+.dmb:before{content:"";position:absolute;inset:0;background:linear-gradient(270deg,color-mix(in srgb,var(--c) 34%,transparent) 0%,transparent 92%);opacity:0;transition:opacity .25s}
+.dmb:after{content:"";position:absolute;right:0;bottom:0;height:3px;width:26px;background:var(--c);box-shadow:0 0 12px var(--c);transition:width .35s ease}
+.dmb .bar{position:absolute;right:0;top:12px;bottom:12px;width:4px;background:var(--c);opacity:0;transition:opacity .2s}
+.dmb .l,.dmb svg{position:relative;transition:transform .25s,opacity .25s}
+.dmb svg{color:var(--c);opacity:0;transform:translateX(10px)}
+.dmb:hover,.dmb.on{color:#fff}.dmb:hover:before,.dmb.on:before{opacity:1}.dmb:hover:after,.dmb.on:after{width:100%}.dmb:hover .bar,.dmb.on .bar{opacity:1}
+.dmb:hover .l,.dmb.on .l{transform:translateX(-6px)}.dmb:hover svg,.dmb.on svg{opacity:1;transform:none}
+.dmb.dgo{--c:#3fd3ff}#btnBackD.dmb{--c:#ff4d5e}
+#droneCards:has(#btnBackD:hover) .dgo.on{color:#8e9aa8}#droneCards:has(#btnBackD:hover) .dgo.on:before,#droneCards:has(#btnBackD:hover) .dgo.on .bar{opacity:0}#droneCards:has(#btnBackD:hover) .dgo.on:after{width:26px}#droneCards:has(#btnBackD:hover) .dgo.on .l{transform:none}#droneCards:has(#btnBackD:hover) .dgo.on svg{opacity:0;transform:translateX(10px)}
 .dtext .den{font:12px var(--mono);letter-spacing:.2em;color:var(--mu);direction:ltr}
 .dtext h3{font-size:clamp(17px,1.9vw,25px);font-weight:600;color:var(--ti,#fff);margin:2px 0 0;line-height:1.1;text-align:center}
+#droneCards .dtext h3{font:600 clamp(20px,1.9vw,27px) var(--ui);letter-spacing:0;text-transform:none;border:0;padding:0;margin:2px 0 0;color:var(--ti,#fff)}
 .dtext p{font-size:13px;line-height:1.5;color:var(--mu);max-width:560px;text-align:center;margin-top:4px}
 .dside{display:flex;flex-direction:column;gap:10px;min-height:0;direction:rtl}
 .dpanel{background:var(--p1);border:1px solid var(--ln);overflow-y:auto;flex:1;min-height:0}
@@ -371,7 +392,7 @@ kbd{display:inline-block;min-width:26px;text-align:center;padding:1px 7px;margin
 .drow{display:flex;justify-content:space-between;gap:10px;padding:7px 12px;border-top:1px solid var(--ln);font-size:14px;color:var(--tx)}
 .drow b{font-weight:500;color:var(--ti,#fff)}
 .dpanel .dbar{padding:4px 12px;margin:0}
-.dgo{width:100%;margin:0;font-size:19px;direction:rtl}
+.dgo{width:100%;margin:0;direction:rtl}
 @media(max-width:900px){#droneCards{grid-template-columns:1fr;grid-template-rows:none;height:auto}#droneCards>*{grid-column:1!important;grid-row:auto!important}.dlist{flex-direction:row;overflow-x:auto}.ditem{min-width:170px}}
 .dbar{display:flex;align-items:center;gap:10px;margin:5px 0;font-size:12px;color:var(--mu)}
 .dbar span{flex:0 0 96px}
@@ -984,7 +1005,7 @@ body.skin-tact .scr h2,body.skin-tact .rtitle,body.skin-tact #pause h2{position:
 body.skin-tact .scr h2:before,body.skin-tact .rtitle:before,body.skin-tact #pause h2:before{content:"";display:block;position:absolute;inset:0;width:auto;height:auto;background:var(--ac);box-shadow:none;filter:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='t' x='-5%25' y='-5%25' width='110%25' height='110%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.05' numOctaves='3' seed='7'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='7'/%3E%3C/filter%3E%3C/svg%3E#t");transform:rotate(-1deg);z-index:-1}
 body.skin-tact .rbox,body.skin-tact #pause .glass,body.skin-tact #who .whobox,body.skin-tact .card{border-radius:14px!important;border:2px solid var(--ac);background:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px) 0 0/24px 24px,linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px) 0 0/24px 24px,var(--p1)}
 body.skin-tact .card:hover{border-color:var(--am)}
-#droneCards>#dGo,#droneCards .dgo{width:100%!important;max-width:100%!important;min-width:0;margin:0!important;box-sizing:border-box}
+#droneCards>#dGo,#droneCards .dgo{width:100%!important;max-width:100%!important;min-width:0;margin:0!important;box-sizing:border-box;font-size:26px!important}
 body.skin-tact,body.skin-tact *{font-weight:700!important}
 body.skin-tact #scrMain .mhead .logo2,body.skin-tact #scrMain .mtiles .mbtn:after,body.skin-tact .hint{font-weight:900!important}
 
@@ -1655,7 +1676,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
     <h2>בחר את הרחפן שלך</h2>
     <div class="sub">הבחירה קובעת את הפיזיקה: מסה, דחף, גרר אווירי ותגובה &middot; לאחר הבחירה תעבור לבחירת המפה</div>
     <div id="droneCards"></div>
-    <button class="mbtn small" id="btnBackD">חזור לתפריט הראשי</button>
+    <button class="dmb" id="btnBackD"><i class="bar"></i><span class="l">חזור לתפריט הראשי</span><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>
   </div>
 
   <div class="scr" id="scrControls">
@@ -1818,7 +1839,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 438</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 439</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -8337,9 +8358,7 @@ function droneStatRows(id) {
   const d = DRONE_INFO[id], p = PRESETS[id];
   const row = (k, v) => '<div class="drow"><span>' + k + '</span><b class="ltr">' + v + '</b></div>';
   return '<div class="dsec">כללי</div>' +
-    row('משקל', d.mass) + row('מרחק בין מנועים', '~' + DRONE_WB_MM[id] + ' מ"מ') + row('יחס דחף-משקל', p.twr.toFixed(1) + ':1') + row('סוללה', (p.cells || '-') + 'S') +
-    '<div class="dsec">בקרה</div>' +
-    row('קצב סיבוב (Rate)', (p.rate || '-') + '°/s') + row('קצב Yaw', (p.yaw || '-') + '°/s') + row('אקספו', (p.expo != null ? p.expo : '-')) +
+    row('משקל', d.mass) + row('סוללה', (p.cells || '-') + 'S') +                    // build 439: wheelbase, thrust ratio and the control rows left the panel
     '<div class="dsec">ביצועים</div>' +
     d.bars.map((b) => '<div class="dbar"><span>' + b[0] + '</span><i style="--v:' + b[1] + '%"></i></div>').join('');
 }
@@ -8347,6 +8366,8 @@ function selectDrone(id) {
   droneSel = id;
   const d = DRONE_INFO[id];
   document.querySelectorAll('#droneCards .ditem').forEach((el) => el.classList.toggle('sel', el.dataset.id === id));
+  const ids = Array.from(document.querySelectorAll('#dStack .dcard')).map((c) => c.dataset.id), at = ids.indexOf(id), n = ids.length;   // the stage: this drone big, the ones before and after it dimmed above and below
+  document.querySelectorAll('#dStack .dcard').forEach((c, k) => { const off = ((k - at) % n + n) % n; c.className = 'dcard ' + (off === 0 ? 'cur' : off === 1 ? 'next' : off === n - 1 ? 'prev' : 'far'); });
   const old = droneViews.findIndex((v) => v.big); if (old >= 0) dvDispose(droneViews.splice(old, 1)[0]);
   const cv = $('dBigCv'); if (cv) { const v = makeDroneView(id, cv, false, true); v.big = true; droneViews.push(v); }
   $('dMainEn').textContent = d.en; $('dMainName').textContent = d.title; $('dMainDesc').textContent = d.desc;
@@ -8500,11 +8521,12 @@ function buildDroneCards(keep) {
   if (!ids.length) { wrap.innerHTML = ''; return; }
   wrap.innerHTML =
     '<div class="dlist" id="dList"></div>' +
-    '<div class="dmain"><canvas id="dBigCv" width="' + DV_W + '" height="' + DV_H + '"></canvas></div>' +
+    '<div class="dmain"><div class="dstack" id="dStack"></div><canvas id="dBigCv" width="' + DV_W + '" height="' + DV_H + '"></canvas>' +
+    '<button class="dArr up" id="dUp" aria-label="הרחפן הקודם"></button><button class="dArr dn" id="dDn" aria-label="הרחפן הבא"></button></div>' +
     '<div class="dtext"><div class="den" id="dMainEn"></div><h3 id="dMainName"></h3><p id="dMainDesc"></p></div>' +
     '<div class="dside"><div class="dpanel"><div class="dph">נתוני הרחפן</div><div id="dStats"></div>' +
-    '<div class="drates"><div class="dsh">רמת רייטים</div><div class="drbtns" id="dRates"><button data-q="easy">מתחיל</button><button data-q="medium">בינוני</button><button data-q="pro">מקצוען</button></div><div class="drinfo" id="dRInfo"></div></div></div></div>' +
-    '<button class="mbtn gold dgo" id="dGo">בחר רחפן &raquo;</button>';
+    '<div class="drates"><div class="dsh">רמה</div><div class="drbtns" id="dRates"><button data-q="easy">מתחיל</button><button data-q="medium">בינוני</button><button data-q="pro">מקצוען</button></div></div></div></div>' +
+    '<button class="dmb dgo on" id="dGo"><i class="bar"></i><span class="l">בחר רחפן</span><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>';
   wrap.appendChild(back);
   const list = $('dList');
   ids.forEach((id) => {
@@ -8516,11 +8538,20 @@ function buildDroneCards(keep) {
     it.addEventListener('dblclick', () => { setPreset(id); showScreen('missions'); });
     list.appendChild(it);
     const tv = makeDroneView(id, it.querySelector('canvas')); tv.still = true; droneViews.push(tv);
+    const dc = document.createElement('div'); dc.className = 'dcard far'; dc.dataset.id = id;            // its card on the stage (shown dimmed above or below the chosen one)
+    dc.innerHTML = '<canvas width="320" height="200"></canvas>';
+    dc.addEventListener('click', () => { if (!dc.classList.contains('cur')) { Sound.ui(); selectDrone(id); } });
+    $('dStack').appendChild(dc);
+    const sv = makeDroneView(id, dc.querySelector('canvas')); sv.still = true; droneViews.push(sv);
   });
+  const step = (k) => { const at = ids.indexOf(droneSel); Sound.ui(); selectDrone(ids[((at < 0 ? 0 : at) + k + ids.length) % ids.length]); };
+  $('dUp').addEventListener('click', () => step(-1)); $('dDn').addEventListener('click', () => step(1));
+  let wt = 0;
+  wrap.querySelector('.dmain').addEventListener('wheel', (e) => { e.preventDefault(); const t = Date.now(); if (t - wt < 350) return; wt = t; step(e.deltaY > 0 ? 1 : -1); }, { passive: false });
+  NXH.droneStep = step;
   const drSync = () => {
-    const on = quickRatesOn(), r = advCur().rates;
+    const on = quickRatesOn();
     wrap.querySelectorAll('#dRates button').forEach((x) => { if (x.dataset.q === on) x.classList.add('on'); else x.classList.remove('on'); });
-    $('dRInfo').textContent = (on ? QUICK_RATES[on].label : 'מותאם אישית') + ' · MAX ' + Math.round(bfMaxVel(r.roll)) + '°/ש׳';
   };
   wrap.querySelectorAll('#dRates button').forEach((x) => x.addEventListener('click', () => { Sound.ui(); applyQuickRates(x.dataset.q); drSync(); }));
   drSync();
@@ -8528,6 +8559,12 @@ function buildDroneCards(keep) {
   selectDrone(keep && ids.indexOf(droneSel) >= 0 ? droneSel : ids.indexOf(settings.preset) >= 0 ? settings.preset : ids[0]);   // keep: a rebuild after an admin edit stays on the drone being looked at
 }
 
+if (typeof document !== 'undefined' && document.addEventListener) document.addEventListener('keydown', (e) => {   // up / down arrows scroll through the drones on the drone screen
+  if (!inMenu || currentScreen !== 'drone' || !NXH.droneStep || (typeof NX !== 'undefined' && NX.open)) return;
+  if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
+  const a = document.activeElement; if (a && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)) return;
+  e.preventDefault(); NXH.droneStep(e.key === 'ArrowUp' ? -1 : 1);
+});
 /* ---------- FLIGHT MODE: free flight by default, race on demand ---------- */
 function startRace() {
   if (inMenu || paused || editorMode || fadeBusy || flightMode === 'race') return;
@@ -9693,7 +9730,7 @@ const NX_TX = [
   ['osdEd', 'כפתור: עורך OSD', '#btnOsdEd .hlbl'], ['controls', 'כפתור: מדריך מקשים', '#btnControls .hlbl'],
   ['hint', 'שורת הרמז בתחתית', '#scrMain .hint'],
   ['droneH', 'כותרת בחירת רחפן', '#scrDrone h2'], ['droneS', 'תת-כותרת בחירת רחפן', '#scrDrone .sub'],
-  ['backD', 'כפתור חזרה (רחפן)', '#btnBackD'], ['backM', 'כפתור חזרה (מסלול)', '#btnBackM'],
+  ['backD', 'כפתור חזרה (רחפן)', '#btnBackD .l'], ['backM', 'כפתור חזרה (מסלול)', '#btnBackM'],
   ['trkInfo', 'שורת מידע במסלולים', '.trkinfo'], ['newTrk', 'כפתור מפה חדשה', '#btnNewTrack']
 ];
 const NX_HIDE = [
