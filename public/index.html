@@ -1818,7 +1818,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 434</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 435</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -8172,18 +8172,29 @@ function buildDroneModel(id) {
       pg.userData.dir = (i === 0 || i === 3) ? 1 : -1;
       grp.add(pg); props.push(pg);
     });
-    if (load) {                                                // a gray bottle-shaped tank strapped flat under the frame, neck towards the camera
-      const gray = new THREE.MeshStandardMaterial({ color: 0x6a717b, roughness: 0.6, metalness: 0.1 });
-      const dark = new THREE.MeshStandardMaterial({ color: 0x3a3f47, roughness: 0.6, metalness: 0.3 });
-      const BR = 0.27, BY = -0.05 - BR, BZ = 0.1;                  // body radius, centre height, centre z
-      const part = (geo, mat, y, z, rx) => { const m = new THREE.Mesh(geo, mat); m.position.set(0, y, z); if (rx) m.rotation.x = rx; grp.add(m); return m; };
-      part(new THREE.CylinderGeometry(BR, BR, 0.82, 40), gray, BY, BZ, Math.PI / 2);                                  // body
-      const back = part(new THREE.SphereGeometry(BR, 32, 16), gray, BY, BZ + 0.41); back.scale.set(1, 1, 0.55);        // rounded bottom of the bottle
-      part(new THREE.CylinderGeometry(0.11, BR, 0.26, 40), gray, BY, BZ - 0.41 - 0.13, -Math.PI / 2);                  // shoulder narrowing to the neck
-      part(new THREE.CylinderGeometry(0.11, 0.11, 0.2, 24), gray, BY, BZ - 0.41 - 0.26 - 0.1, -Math.PI / 2);          // neck
-      part(new THREE.CylinderGeometry(0.135, 0.135, 0.09, 24), dark, BY, BZ - 0.41 - 0.26 - 0.2 - 0.045, -Math.PI / 2);   // screw cap
-      [BZ - 0.22, BZ + 0.3].forEach((z) => {                       // two straps hold it to the frame
-        const t = new THREE.Mesh(new THREE.TorusGeometry(BR + 0.012, 0.022, 10, 40), dark); t.position.set(0, BY, z); grp.add(t);
+    if (load) {                                                /* the payload (build 435, from the user's picture): a finned bomb in olive drab slung under the frame, nose to the front */
+      const olive = new THREE.MeshStandardMaterial({ color: 0x666a48, roughness: 0.62, metalness: 0.15 });
+      const dark = new THREE.MeshStandardMaterial({ color: 0x1b1c1e, roughness: 0.55, metalness: 0.3 });
+      const grey = new THREE.MeshStandardMaterial({ color: 0x8c8a82, roughness: 0.45, metalness: 0.4 });
+      const silver = new THREE.MeshPhongMaterial({ color: 0xc9ccd0, shininess: 110, specular: 0xffffff });
+      const RB = 0.24, BY = -0.05 - RB, BZ = 0.1, LT = 1.53;                                   // widest radius, axis height, centre along the body, overall length
+      const prof = [[0, 0.3], [0.085, 0.3], [0.16, 0.5], [0.215, 0.7], [RB, 0.86], [RB, 1.0], [0.215, 1.12], [0.175, 1.2], [0, 1.2]];   // tail cone, body, shoulder (heights along the axis from the tail)
+      const rAt = (y) => { for (let k = 1; k < prof.length - 1; k++) if (y <= prof[k][1]) { const a = prof[k - 1], b = prof[k]; return a[0] + (b[0] - a[0]) * (y - a[1]) / Math.max(1e-6, b[1] - a[1]); } return RB; };
+      const G = new THREE.Group(); G.rotation.x = -Math.PI / 2; G.position.set(0, BY, BZ + LT / 2); grp.add(G);   // axis along z: the nose ends up at the front
+      const lathe = (pts, mat) => { const m = new THREE.Mesh(new THREE.LatheGeometry(pts.map((q) => new THREE.Vector2(q[0], q[1])), 40), mat); G.add(m); return m; };
+      lathe(prof, olive);                                                                                         // the olive body
+      lathe([[0, 1.2], [0.175, 1.2], [0.125, 1.36], [0, 1.36]], dark);                                            // black band on the nose
+      lathe([[0, 1.36], [0.125, 1.36], [0.072, 1.47], [0, 1.47]], grey);                                          // grey fuze cone
+      lathe([[0, 1.47], [0.064, 1.47], [0.064, 1.515], [0.05, LT], [0, LT]], silver);                              // the fuze cap
+      for (let k = 0; k < 6; k++) { const y = 0.87 + k * 0.024, t = new THREE.Mesh(new THREE.TorusGeometry(RB + 0.002, 0.004, 6, 48), new THREE.MeshStandardMaterial({ color: 0x4a4d34, roughness: 0.7 })); t.rotation.x = Math.PI / 2; t.position.y = y; G.add(t); }   // the grooved bands
+      const boom = new THREE.Mesh(new THREE.CylinderGeometry(0.062, 0.062, 0.34, 20), dark); boom.position.y = 0.17; G.add(boom);   // tail boom
+      for (let k = 0; k < 6; k++) {                                                                               // six black tail fins
+        const a = k * Math.PI / 3, f = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.26, 0.13), dark);
+        f.position.set(Math.cos(a) * 0.125, 0.15, Math.sin(a) * 0.125); f.rotation.y = -a + Math.PI / 2; G.add(f);
+      }
+      const fr = new THREE.Mesh(new THREE.TorusGeometry(0.185, 0.01, 6, 36), dark); fr.rotation.x = Math.PI / 2; fr.position.y = 0.04; G.add(fr);   // ring round the fin tips
+      [0.82, 1.08].forEach((y) => {                                                                               // two straps hold it to the frame
+        const z = BZ + LT / 2 - y, t = new THREE.Mesh(new THREE.TorusGeometry(rAt(y) + 0.012, 0.022, 10, 40), dark); t.position.set(0, BY, z); grp.add(t);
         const po = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.05, 0.06), dark); po.position.set(0, -0.035, z); grp.add(po);
       });
     }
