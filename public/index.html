@@ -349,7 +349,7 @@ kbd{display:inline-block;min-width:26px;text-align:center;padding:1px 7px;margin
 
 /* ---------- drone selection / flight mode panel ---------- */
 #scrDrone{width:min(1500px,97vw);max-height:96vh}
-#droneCards{display:grid;grid-template-columns:300px minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) 0 auto;gap:10px 26px;direction:rtl;margin:8px 0 4px;height:min(80vh,760px);text-align:right}   /* build 439: list on top, the drone big in the middle, stats on the right */
+#droneCards{display:grid;grid-template-columns:300px minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) 0 72px;gap:10px 26px;direction:rtl;margin:8px 0 4px;height:min(80vh,760px);text-align:right}   /* build 439: list on top, the drone big in the middle, stats on the right */
 #droneCards>.dlist{grid-column:1/3;grid-row:1}#droneCards>.dmain{grid-column:1/3;grid-row:2/5}#droneCards>.dside{grid-column:1;grid-row:2/4;align-self:end;position:relative;z-index:4}#droneCards>.dtext{grid-column:1/3;grid-row:4;z-index:3;pointer-events:none;align-self:end;padding-bottom:34px;display:flex;flex-direction:column;align-items:center;direction:rtl;min-width:0}
 #droneCards>#dGo{grid-column:1;grid-row:4;align-self:center}#droneCards>#btnBackD{grid-column:2;grid-row:4;justify-self:end;align-self:center}
 .dlist{overflow:visible;display:flex;flex-direction:row;justify-content:center;gap:18px;padding:52px 30px 22px;margin:-18px 0 -12px}
@@ -382,8 +382,18 @@ kbd{display:inline-block;min-width:26px;text-align:center;padding:1px 7px;margin
 .dmb:hover .l,.dmb.on .l{transform:translateX(-6px)}.dmb:hover svg,.dmb.on svg{opacity:1;transform:none}
 .dmb.dgo{--c:#3fd3ff}#btnBackD.dmb{--c:#ff4d5e}
 #btnBackM.dmb{--c:#ff4d5e;height:60px;font-size:22px}
-#trkCar .tcBody{grid-template-rows:minmax(0,1fr) auto}#trkCar .tcInfo,#trkCar .tcStage{grid-row:1}
-#trkCar .tcBody>.fly{grid-column:1;grid-row:2;width:100%}#trkCar .tcBody>#btnBackM{grid-column:3;grid-row:2;justify-self:end;height:72px;font-size:26px}
+/* build 454: the two bottom buttons sit on exactly the same spot on the drone screen and the track screen */
+:root{--pl:0px;--navW:min(1500px,97vw)}body.nx-open{--pl:min(440px,42vw)}
+.navfix{justify-self:auto!important;align-self:auto!important;position:fixed!important;top:auto!important;bottom:calc(2vh + 14px)!important;z-index:60;margin:0!important;height:72px!important;font-size:26px!important}
+.navfix.r{left:calc(var(--pl) + (100vw - var(--pl) + var(--navW)) / 2 - 306px)!important;right:auto!important;width:300px!important}
+.navfix.l{left:calc(var(--pl) + (100vw - var(--pl) - var(--navW)) / 2 + 6px)!important;right:auto!important}
+#scrDrone.on,#scrMissions.on{display:flex;flex-direction:column;height:96vh;max-height:96vh;align-self:center}
+#scrMissions{width:var(--navW)}#scrDrone #droneCards{flex:1;min-height:0;height:auto}
+#scrMissions .trkwin{flex:0 0 auto;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;clip-path:none!important;mask:none!important}
+#scrDrone,#scrDrone #droneCards,#scrMissions,#scrMissions .trkmain,#scrMissions #trkCar,#scrMissions .tcBody,#scrMissions .tcInfo{clip-path:none!important}
+@keyframes scrFadeOnly{from{opacity:0}to{opacity:1}}
+#scrDrone.on,#scrMissions.on{transform:none!important;animation-name:scrFadeOnly!important}   /* a transformed or blurred parent would pin the fixed buttons to it instead of the screen */
+#droneCards>#dGo.navfix,#trkCar .fly.navfix{width:300px!important;max-width:300px!important}#trkCar{height:calc(96vh - 290px);max-height:none;min-height:360px}
 #trkCar .fly.dmb{background:none!important;border:0!important;border-radius:0!important;clip-path:none!important;backdrop-filter:none!important;box-shadow:none!important;color:#8e9aa8;height:72px;padding:0 26px;font:900 26px var(--ui)!important;font-style:normal!important;letter-spacing:0;justify-content:flex-start}
 #trkCar .fly.dmb.on,#trkCar .fly.dmb:not(:disabled):hover{color:#fff}
 #trkCar .fly.dmb:disabled{opacity:.55;cursor:not-allowed}
@@ -1642,7 +1652,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
       <div class="trkhead">
         <div class="advtitle">בחירת מסלול<small>CHANGE TRACK</small></div>
         <div class="trkinfo">3 הקפות בכל מרוץ &middot; שערים 9&times;9 מ' &middot; עד 3 כוכבים</div>
-        <button class="dmb" id="btnBackM"><i class="bar"></i><span class="l">חזור לבחירת רחפן</span><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>
+        <button class="dmb navfix l" id="btnBackM"><i class="bar"></i><span class="l">חזור לבחירת רחפן</span><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>
       </div>
       <div class="trkgrid">
         <aside class="trkside">
@@ -1687,7 +1697,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
     <h2>בחר את הרחפן שלך</h2>
     <div class="sub">הבחירה קובעת את הפיזיקה: מסה, דחף, גרר אווירי ותגובה &middot; לאחר הבחירה תעבור לבחירת המפה</div>
     <div id="droneCards"></div>
-    <button class="dmb" id="btnBackD"><i class="bar"></i><span class="l">חזור לתפריט הראשי</span><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>
+    <button class="dmb navfix l" id="btnBackD"><i class="bar"></i><span class="l">חזור לתפריט הראשי</span><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>
   </div>
 
   <div class="scr" id="scrControls">
@@ -1850,7 +1860,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 453</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 454</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -8544,7 +8554,7 @@ function buildDroneCards(keep) {
     '<div class="dtext"><div class="den" id="dMainEn"></div></div>' +
     '<div class="dside"><div class="dhead"><h3 id="dMainName"></h3><p id="dMainDesc"></p></div><div class="dpanel"><div class="dph">נתוני הרחפן</div><div id="dStats"></div>' +
     '<div class="drates"><div class="dsh">רמה</div><div class="drbtns" id="dRates"><button data-q="easy">מתחיל</button><button data-q="medium">בינוני</button><button data-q="pro">מקצוען</button></div></div></div></div>' +
-    '<button class="dmb dgo on" id="dGo"><i class="bar"></i><span class="l">בחר רחפן</span><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>';
+    '<button class="dmb dgo on navfix r" id="dGo"><i class="bar"></i><span class="l">בחר רחפן</span><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>';
   wrap.appendChild(back);
   const list = $('dList');
   ids.forEach((id) => {
@@ -9003,7 +9013,7 @@ function trkCarInfo(id) {
   h += adm ? '<div><span>קושי</span><b class="sm" style="font-family:inherit;color:' + st.color + '">' + tcEsc(st.diff) + '</b></div>' : '<div><span>הקפות</span><b>' + (st.laps || 1) + '</b></div>';
   h += '<div><span>הקפה הכי טובה</span><b class="sm">' + fmtTime(sp.bestLap) + '</b></div><div><span>מרוץ הכי טוב</span><b class="sm">' + fmtTime(sp.bestTotal) + '</b></div><div class="stars"><span>כוכבים</span>' + stars + '</div></div>';
   if (req.length) h += '<div class="tcReq"><span>מה נדרש כדי לעבור</span><div>' + req.map((r) => '<em class="' + (r.soft ? 'soft' : 'hard') + '">' + tcEsc(r.t) + '</em>').join('') + '</div></div>';
-  h += '<div class="tcBtns"><button class="fly dmb dgo' + (lk ? '' : ' on') + '" data-id="' + id + '"' + (lk ? ' disabled' : '') + '><i class="bar"></i><span class="l">' + (lk ? '&#128274; נעול' : 'טוס') + '</span><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>';   // build 451: the console-menu look of the drone screen
+  h += '<div class="tcBtns"><button class="fly dmb navfix r dgo' + (lk ? '' : ' on') + '" data-id="' + id + '"' + (lk ? ' disabled' : '') + '><i class="bar"></i><span class="l">' + (lk ? '&#128274; נעול' : 'טוס') + '</span><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>';   // build 451: the console-menu look of the drone screen
   if (!lk) h += '<button class="b edt" data-id="' + id + '">' + (st.custom && !st.pub ? 'ערוך' : 'שכפל ועריך') + '</button><button class="b dup" data-id="' + id + '">שכפל</button>';
   if (st.custom && !st.pub) h += '<button class="b del" data-id="' + id + '">מחק</button>';
   h += '</div>';
