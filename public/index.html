@@ -720,6 +720,17 @@ body.nx-staff #admPub,body.nx-staff #admPrev{display:none}
 .plst{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;color:var(--mu);margin:6px 0}
 #who{display:none;position:fixed;inset:0;z-index:140;background:radial-gradient(ellipse at 30% 40%,color-mix(in srgb,var(--ac) 14%,var(--bg)),var(--bg) 72%);align-items:center;justify-content:center;direction:rtl;overflow:auto}
 #who.on{display:flex}
+#nxRc{display:none;position:fixed;inset:0;z-index:140;background:color-mix(in srgb,var(--bg) 92%,transparent);align-items:center;justify-content:center;direction:rtl}   /* build 472: the radio explainer after signing in */
+#nxRc.on{display:flex}
+#nxRc .rcbox{width:min(980px,96vw);max-height:96vh;overflow:auto;background:var(--bg);border:1px solid var(--ln);border-radius:12px;padding:20px 22px 18px;color:var(--tx);font:15px var(--ui)}
+#nxRc .rchd{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}#nxRc .rcen{font:500 12px var(--mono);letter-spacing:.25em;color:var(--ac);direction:ltr;text-align:right}#nxRc h3{font-size:26px;color:var(--ti,#fff);margin:0}#nxRc .rcmu{font-size:12px;color:var(--mu)}
+#nxRc .rcgrid{display:grid;grid-template-columns:1.15fr 1fr;gap:14px;align-items:center}#nxRc .rcsvg{width:100%;display:block}
+#nxRc .rcdv{position:relative;height:min(42vh,340px);border:1px solid var(--ln);border-radius:10px;background:color-mix(in srgb,var(--p1) 70%,#000);overflow:hidden}#nxRc .rcdv>div{position:absolute;inset:0}#nxRc .rcdv>div canvas{width:100%!important;height:100%!important;display:block}#nxRc .rcdv>span{position:absolute;right:10px;top:8px;font-size:11px;color:var(--mu)}
+#nxRc .rctabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}#nxRc .rctabs button{padding:8px 4px;border-radius:8px;background:var(--p1);color:var(--ti,#fff);border:1px solid var(--ln);cursor:pointer;font:500 16px var(--ui)}#nxRc .rctabs button small{display:block;font:500 10px var(--mono);letter-spacing:.15em;color:var(--mu)}#nxRc .rctabs button.on{border-color:var(--ac);background:color-mix(in srgb,var(--ac) 16%,var(--p1))}
+#nxRc .rcinfo{margin-top:12px;border:1px solid var(--ln);border-radius:10px;padding:12px 14px;background:var(--p1);min-height:96px}#nxRc .rcl{display:flex;gap:10px;align-items:baseline}#nxRc .rcl b{font-size:19px;color:var(--ac)}#nxRc .rcl span{font:12px var(--mono);color:var(--mu)}#nxRc .rcl em{margin-right:auto;font-size:12px;font-style:normal;color:var(--am)}#nxRc .rcinfo p{font-size:15px;line-height:1.7;margin:6px 0 0}
+#nxRc .rcft{display:flex;align-items:center;gap:12px;margin-top:14px}#nxRc .rcft label{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--mu);cursor:pointer}#nxRc .rcft>div{margin-right:auto;display:flex;gap:8px}#nxRc .rcft .b.on{background:var(--ac);color:var(--bg);border-color:var(--ac)}
+#nxRc .rcar{stroke:var(--ac);stroke-width:2.5;fill:none;stroke-linecap:round}#nxRc .rck{fill:url(#rccapG)}#nxRc .rck.on{fill:var(--ac)}
+@media(max-width:760px){#nxRc .rcgrid{grid-template-columns:1fr}#nxRc .rcdv{height:220px}}
 #nxPw{display:none;position:fixed;inset:0;z-index:150;background:rgba(6,8,12,.94);align-items:center;justify-content:center}
 #nxPw.on{display:flex}
 #nxPw .pwbox{width:min(420px,92vw);background:var(--p1);border:1px solid var(--ln);padding:26px 24px;text-align:center;color:var(--tx);font:15px 'Rubik',Arial,sans-serif;border-radius:4px}
@@ -1657,6 +1668,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
     </div>
     <div class="micons">
       <button class="mbtn mt mico" id="btnSettings" title="הגדרות הרחפן והבקרה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"></path></svg><span class="hlbl">הגדרות</span></button>
+      <button class="mbtn mt mico" id="btnRcHelp" title="הסבר על השלט"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"></rect><circle cx="8.5" cy="10" r="2.5"></circle><circle cx="15.5" cy="10" r="2.5"></circle><path d="M9 16h6"></path></svg><span class="hlbl">הסבר על השלט</span></button>
       <button class="mbtn mt mico" id="btnControls" title="מקשים ושלט"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="12" rx="3"></rect><circle cx="7" cy="13" r="2"></circle><circle cx="17" cy="13" r="2"></circle><path d="M9 4h6"></path></svg><span class="hlbl">מדריך מקשים</span></button>
       <button class="mbtn mt mico" id="btnOsdEd" title="מיקום ומראה ה-HUD"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="14" rx="2"></rect><path d="M12 8v6M9 11h6"></path></svg><span class="hlbl">עורך OSD</span></button>
     </div>
@@ -1877,7 +1889,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 471</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 472</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -1888,6 +1900,13 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
     </div>
   </div>
 </div>
+<div id="nxRc" role="dialog" aria-label="הסבר על השלט"><div class="rcbox">
+<div class="rchd"><div><div class="rcen">RADIO · MODE 2</div><h3>הכר את השלט</h3></div><div class="rcmu">4 צירים</div></div>
+<div class="rcgrid"><svg viewBox="0 0 340 300" class="rcsvg" aria-hidden="true"><defs><linearGradient id="rcbG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5c5f63"/><stop offset=".5" stop-color="#4a4d51"/><stop offset="1" stop-color="#3a3c40"/></linearGradient><linearGradient id="rceG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2e3033"/><stop offset=".12" stop-color="#46494d00"/><stop offset=".88" stop-color="#46494d00"/><stop offset="1" stop-color="#2e3033"/></linearGradient><radialGradient id="rcgimG" cx=".5" cy=".45" r=".6"><stop offset="0" stop-color="#2a2c2f"/><stop offset=".85" stop-color="#1c1d20"/><stop offset="1" stop-color="#3a3c40"/></radialGradient><linearGradient id="rcplateG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d9dce0"/><stop offset=".5" stop-color="#9da1a7"/><stop offset="1" stop-color="#e8eaed"/></linearGradient><radialGradient id="rccapG" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#5a5d62"/><stop offset=".6" stop-color="#2a2c30"/><stop offset="1" stop-color="#141517"/></radialGradient><linearGradient id="rcscrG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfd6c8"/><stop offset="1" stop-color="#aeb8a6"/></linearGradient><pattern id="rcknurl" width="3" height="3" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="1.4" height="3" fill="#00000055"/></pattern></defs><path d="M58 40 L282 40 Q314 40 318 72 L322 258 Q322 284 296 284 L44 284 Q18 284 18 258 L22 72 Q26 40 58 40 Z" fill="url(#rcbG)" stroke="#232427" stroke-width="2"/><path d="M58 40 L282 40 Q314 40 318 72 L322 258 Q322 284 296 284 L44 284 Q18 284 18 258 L22 72 Q26 40 58 40 Z" fill="url(#rceG)"/><path d="M60 48 L280 48" stroke="#ffffff1c" stroke-width="2" stroke-linecap="round"/><path d="M46 278 L294 278" stroke="#00000033" stroke-width="2" stroke-linecap="round"/><g fill="#2a2c2f" stroke="#1a1b1d" stroke-width="1"><rect x="38" y="30" width="34" height="14" rx="5"/><rect x="268" y="30" width="34" height="14" rx="5"/></g><g fill="#26282b" stroke="#141517" stroke-width="1"><circle cx="40" cy="64" r="7"/><circle cx="300" cy="64" r="7"/><circle cx="62" cy="58" r="6"/><circle cx="278" cy="58" r="6"/></g><g stroke="#c8ccd1" stroke-width="3" stroke-linecap="round"><line x1="40" y1="64" x2="40" y2="55"/><line x1="300" y1="64" x2="300" y2="55"/><line x1="62" y1="58" x2="62" y2="50"/><line x1="278" y1="58" x2="278" y2="50"/></g><rect x="146" y="54" width="48" height="12" rx="6" fill="#2e3033" stroke="#1d1e21"/><text x="170" y="63" text-anchor="middle" font-size="7" fill="#c8ccd1" font-family="monospace" letter-spacing="1">NEXUS</text><g><circle cx="92" cy="126" r="52" fill="#2e3033" stroke="#1d1e21" stroke-width="1.5"/><circle cx="92" cy="126" r="44" fill="url(#rcgimG)"/><circle cx="92" cy="126" r="31" fill="none" stroke="url(#rcplateG)" stroke-width="3"/><g fill="#b9bdc3"><circle cx="70" cy="104" r="2"/><circle cx="114" cy="104" r="2"/><circle cx="70" cy="148" r="2"/><circle cx="114" cy="148" r="2"/></g><line x1="92" y1="88" x2="92" y2="164" stroke="#ffffff14"/><line x1="54" y1="126" x2="130" y2="126" stroke="#ffffff14"/></g><g><circle cx="248" cy="126" r="52" fill="#2e3033" stroke="#1d1e21" stroke-width="1.5"/><circle cx="248" cy="126" r="44" fill="url(#rcgimG)"/><circle cx="248" cy="126" r="31" fill="none" stroke="url(#rcplateG)" stroke-width="3"/><g fill="#b9bdc3"><circle cx="226" cy="104" r="2"/><circle cx="270" cy="104" r="2"/><circle cx="226" cy="148" r="2"/><circle cx="270" cy="148" r="2"/></g><line x1="248" y1="88" x2="248" y2="164" stroke="#ffffff14"/><line x1="210" y1="126" x2="286" y2="126" stroke="#ffffff14"/></g><g fill="#2a2c2f" stroke="#1a1b1d"><rect x="152" y="88" width="36" height="10" rx="5"/><rect x="152" y="104" width="36" height="10" rx="5"/></g><circle cx="170" cy="138" r="9" fill="#3a3c40" stroke="#26282b"/><text x="170" y="141.5" text-anchor="middle" font-size="9" fill="#d9dce0" font-family="monospace" font-weight="bold">88</text><g fill="#cfd2d6"><rect x="58" y="190" width="14" height="6" rx="3"/><rect x="78" y="190" width="14" height="6" rx="3"/><rect x="248" y="190" width="14" height="6" rx="3"/><rect x="268" y="190" width="14" height="6" rx="3"/></g><rect x="108" y="190" width="124" height="74" rx="7" fill="#1d1e21" stroke="#141517"/><rect x="114" y="196" width="112" height="62" rx="3" fill="url(#rcscrG)"/><text x="170" y="214" text-anchor="middle" font-size="9" fill="#2b3326" font-family="monospace" letter-spacing="1">NEXUS RC</text><text x="170" y="234" text-anchor="middle" font-size="14" fill="#1b2216" font-family="monospace" font-weight="bold" id="rcScr">THR</text><rect x="128" y="244" width="84" height="6" rx="2" fill="#8f9a88"/><rect id="rcScrBar" x="128" y="244" width="42" height="6" rx="2" fill="#2b3326"/><g fill="#2a2c2f" stroke="#1a1b1d"><circle cx="252" cy="222" r="7"/><circle cx="276" cy="222" r="7"/><rect x="246" y="238" width="36" height="9" rx="4"/><circle cx="88" cy="222" r="7"/><circle cx="64" cy="222" r="7"/><rect x="58" y="238" width="36" height="9" rx="4"/></g><g id="rcArL" class="rcar"></g><g id="rcArR" class="rcar"></g><line id="rcShL" x1="92" y1="126" x2="92" y2="126" stroke="#9da1a7" stroke-width="5" stroke-linecap="round"/><line id="rcShR" x1="248" y1="126" x2="248" y2="126" stroke="#9da1a7" stroke-width="5" stroke-linecap="round"/><circle id="rcKL" class="rck" cx="92" cy="126" r="12" stroke="#0e0f11" stroke-width="1.5"/><circle id="rcKLk" cx="92" cy="126" r="12" fill="url(#rcknurl)"/><circle id="rcKR" class="rck" cx="248" cy="126" r="12" stroke="#0e0f11" stroke-width="1.5"/><circle id="rcKRk" cx="248" cy="126" r="12" fill="url(#rcknurl)"/></svg><div class="rcdv"><div id="rcDv"></div><span>מה הרחפן עושה</span></div></div>
+<div class="rctabs" id="rcTabs"></div>
+<div class="rcinfo"><div class="rcl"><b id="rcN"></b><span id="rcE"></span><em id="rcS"></em></div><p id="rcT"></p></div>
+<div class="rcft"><label><input type="checkbox" id="rcSkip"> אל תציג שוב</label><div><button class="b" id="rcLater">דלג</button><button class="b on" id="rcOk">הבנתי, נמשיך</button></div></div>
+</div></div>
 <div id="nxPw"><div class="pwbox"><h3>בחירת סיסמה אישית</h3><p>זו הכניסה הראשונה שלך עם סיסמה זמנית. בחר סיסמה חדשה שרק אתה מכיר (לפחות 6 תווים). אחרי ההחלפה תוכל להיכנס לסימולטור.</p><div class="pwrow"><input id="nxPw1" type="password" maxlength="40" autocomplete="new-password" placeholder="סיסמה חדשה" dir="ltr"><button id="nxPwEye" type="button" class="eye" title="הצג או הסתר">&#128065;</button></div><input id="nxPw2" type="password" maxlength="40" autocomplete="new-password" placeholder="הקלד שוב את הסיסמה" dir="ltr"><div id="nxPwErr"></div><button id="nxPwGo" type="button">החלף סיסמה והמשך</button></div></div>
 <div id="nxBar"></div>
 <div id="nxBoard"></div>
@@ -12799,6 +12818,7 @@ function nxWireWho() {
     if (err) { $('whoErr').textContent = err; return; }
     try { if (inMenu && typeof showScreen === 'function' && currentScreen !== 'main') showScreen('main'); } catch (e) { /* ignore */ }
     $('who').classList.remove('on'); nxApplyView(); nxHoldCheck(); nxTelemetry();
+    try { if (typeof rcAfterLogin === 'function') rcAfterLogin(); } catch (e) { /* ignore */ }   // build 472: the radio explainer after signing in
   });
   $('whoPw').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('whoGo').click(); });
   $('whoEye').addEventListener('click', () => { const p = $('whoPw'); p.type = p.type === 'password' ? 'text' : 'password'; });
@@ -14674,6 +14694,111 @@ function vidShowAgain() {                                         // from the pa
   hidePause(); paused = false;
   startStage(id);
 }
+
+/* ---------- build 472: the radio explainer (after signing in, and from the "הסבר על השלט" button) ----------
+   Mode 2: throttle and yaw on the left stick, pitch and roll on the right. The stick on the drawing moves and the
+   pilot's own drone (the game model) answers next to it. "אל תציג שוב" keeps it from opening after the next sign-ins. */
+const RC_AX = [
+  { k: 'thr', n: 'גז', e: 'THROTTLE', s: 'סטיק שמאל · למעלה ולמטה', st: 'L', d: 'v', t: 'קובע כמה מהר המנועים מסתובבים. דוחפים למעלה והרחפן עולה, מורידים והוא יורד. הסטיק הזה לא חוזר לאמצע לבד: היד שומרת עליו בגובה שמחזיק את הרחפן באוויר.' },
+  { k: 'yaw', n: 'יאו', e: 'YAW', s: 'סטיק שמאל · ימינה ושמאלה', st: 'L', d: 'h', t: 'מסובב את הרחפן סביב עצמו, כמו להסתכל ימינה או שמאלה. הרחפן לא נוטה ולא זז הצידה, רק האף מסתובב לכיוון חדש.' },
+  { k: 'pitch', n: "פיץ'", e: 'PITCH', s: 'סטיק ימין · למעלה ולמטה', st: 'R', d: 'v', t: 'מטה את האף קדימה או אחורה. דוחפים קדימה והאף יורד, הרחפן טס קדימה. מושכים אחורה והוא בולם או טס לאחור. כשעוזבים, הסטיק חוזר לאמצע.' },
+  { k: 'roll', n: 'רול', e: 'ROLL', s: 'סטיק ימין · ימינה ושמאלה', st: 'R', d: 'h', t: 'מטה את הרחפן לצד ימין או שמאל, והוא מחליק לאותו צד. יחד עם יאו וגז זו הדרך לפנות בצורה חלקה.' }
+];
+const RC_SKIP_KEY = 'fpvNexusRcSkip';
+const RCH = { on: false, cur: 0, auto: true, t0: 0, last: 0, raf: 0, R: null, S: null, C: null, D: null, model: null, key: '', base: { y: 0, r: 1 } };
+const RC_CX = { L: 92, R: 248 }, RC_CY = 126;
+function rcSkipped() { try { return localStorage.getItem(RC_SKIP_KEY) === '1'; } catch (e) { return false; } }
+function rcArrows(id, cx, d) {
+  const g = $(id); if (!g) return;
+  const y = RC_CY;
+  g.innerHTML = !d ? '' : d === 'v'
+    ? '<path d="M' + cx + ' ' + (y - 46) + ' l-7 9 M' + cx + ' ' + (y - 46) + ' l7 9 M' + cx + ' ' + (y + 46) + ' l-7 -9 M' + cx + ' ' + (y + 46) + ' l7 -9"/>'
+    : '<path d="M' + (cx - 46) + ' ' + y + ' l9 -7 M' + (cx - 46) + ' ' + y + ' l9 7 M' + (cx + 46) + ' ' + y + ' l-9 -7 M' + (cx + 46) + ' ' + y + ' l-9 7"/>';
+}
+function rcSel(i) {
+  RCH.cur = i; RCH.t0 = performance.now();
+  const a = RC_AX[i], tabs = $('rcTabs');
+  if (tabs) Array.from(tabs.children).forEach((b, j) => b.classList.toggle('on', j === i));
+  $('rcN').textContent = a.n; $('rcE').textContent = a.e; $('rcS').textContent = a.s; $('rcT').textContent = a.t; $('rcScr').textContent = a.e;
+  rcArrows('rcArL', RC_CX.L, a.st === 'L' ? a.d : ''); rcArrows('rcArR', RC_CX.R, a.st === 'R' ? a.d : '');
+  $('rcKL').classList.toggle('on', a.st === 'L'); $('rcKR').classList.toggle('on', a.st === 'R');
+}
+function rcKnob(s, x, y) {
+  const px = RC_CX[s] + x * 24, py = RC_CY - y * 24;
+  ['rcK' + s, 'rcK' + s + 'k'].forEach((id) => { const k = $(id); if (k) { k.setAttribute('cx', px); k.setAttribute('cy', py); } });
+  const sh = $('rcSh' + s); if (sh) { sh.setAttribute('x2', px); sh.setAttribute('y2', py); }
+}
+function rcScene() {                                              // the pilot's own drone, the same model as in the game
+  const host = $('rcDv'); if (!host || typeof THREE === 'undefined') return false;
+  const W = Math.max(200, host.clientWidth || 400), H = Math.max(160, host.clientHeight || 300);
+  if (!RCH.R) {
+    RCH.R = new THREE.WebGLRenderer({ antialias: true, alpha: true }); RCH.R.setClearColor(0x000000, 0);
+    RCH.S = new THREE.Scene();
+    RCH.S.add(new THREE.AmbientLight(0xffffff, 0.5)); RCH.S.add(new THREE.HemisphereLight(0xcfe8ff, 0x20242b, 0.5));
+    const dl = new THREE.DirectionalLight(0xffffff, 1.0); dl.position.set(3, 6, 4); RCH.S.add(dl);
+    const rim = new THREE.DirectionalLight(0x6fb8d8, 0.5); rim.position.set(-4, 2, -3); RCH.S.add(rim);
+    RCH.grid = new THREE.GridHelper(20, 40, 0x2a2d7a, 0x1a1d4a); RCH.S.add(RCH.grid);
+    RCH.D = new THREE.Group(); RCH.S.add(RCH.D);
+    RCH.C = new THREE.PerspectiveCamera(34, W / H, 0.05, 200);
+  }
+  if (host.firstChild !== RCH.R.domElement) { host.innerHTML = ''; host.appendChild(RCH.R.domElement); }
+  RCH.R.setPixelRatio(Math.min(2, window.devicePixelRatio || 1)); RCH.R.setSize(W, H, false);
+  RCH.C.aspect = W / H; RCH.C.updateProjectionMatrix();
+  const id = (typeof settings !== 'undefined' && settings.preset) || 'fpv5';
+  if (RCH.key !== id || !RCH.model) {
+    if (RCH.model) { RCH.D.remove(RCH.model); RCH.model.traverse((o) => { if (o.geometry) o.geometry.dispose(); }); }
+    const m = buildDroneModel(id); const rs = (typeof DRONE_REAL !== 'undefined' && DRONE_REAL[id]) || 1; m.scale.multiplyScalar(rs);
+    RCH.D.add(m); RCH.model = m; RCH.key = id;
+    let r = 1, lo = -0.3;
+    try { const b = new THREE.Box3().setFromObject(m), sz = new THREE.Vector3(); b.getSize(sz); r = Math.max(sz.x, sz.z, 0.2) / 2; lo = b.min.y; } catch (e) { /* keep defaults */ }
+    RCH.base = { r, lo };
+    RCH.grid.scale.setScalar(r); RCH.grid.position.y = lo - r * 0.75;
+    RCH.C.position.set(r * 2.6, r * 2.0, r * 3.4); RCH.C.lookAt(0, 0, 0);
+  }
+  return true;
+}
+function rcLoop(now) {
+  if (!RCH.on) return;
+  RCH.raf = requestAnimationFrame(rcLoop);
+  const dt = Math.min(0.05, Math.max(0, (now - RCH.last) / 1000)); RCH.last = now;
+  const tt = (now - RCH.t0) / 1000;
+  if (RCH.auto && tt > 6) rcSel((RCH.cur + 1) % RC_AX.length);
+  const a = RC_AX[RCH.cur], v = Math.sin(tt * 1.7), r = RCH.base.r;
+  let L = [0, -0.2], Rr = [0, 0], spin = 30;
+  const D = RCH.D; if (!D) return;
+  D.position.set(0, Math.sin(now / 700) * 0.03 * r, 0); D.rotation.set(0, 0, 0);
+  if (a.k === 'thr') { L = [0, v]; D.position.y = v * 0.45 * r; spin = 18 + 22 * (v + 1); }
+  if (a.k === 'yaw') { L = [v, -0.2]; D.rotation.y = -v * 1.1; }
+  if (a.k === 'pitch') { Rr = [0, v]; D.rotation.x = -v * 0.42; D.position.z = -v * 0.55 * r; }
+  if (a.k === 'roll') { Rr = [v, 0]; D.rotation.z = -v * 0.42; D.position.x = v * 0.55 * r; }
+  rcKnob('L', L[0], L[1]); rcKnob('R', Rr[0], Rr[1]);
+  const sv = a.k === 'thr' ? L[1] : a.k === 'yaw' ? L[0] : a.k === 'pitch' ? Rr[1] : Rr[0], bar = $('rcScrBar'); if (bar) bar.setAttribute('width', Math.max(2, 42 + 42 * sv));
+  const pr = (RCH.model && RCH.model.userData.props) || []; for (let i = 0; i < pr.length; i++) pr[i].rotation.y += (pr[i].userData && pr[i].userData.dir ? pr[i].userData.dir : (i % 2 ? -1 : 1)) * spin * dt;
+  if (RCH.R) RCH.R.render(RCH.S, RCH.C);
+}
+function rcHelpOpen() {
+  const box = $('nxRc'); if (!box) return false;
+  box.classList.add('on'); RCH.on = true; RCH.auto = true;
+  const sk = $('rcSkip'); if (sk) sk.checked = rcSkipped();
+  rcSel(0);
+  try { rcScene(); } catch (e) { /* the drawing still explains without the drone */ }
+  cancelAnimationFrame(RCH.raf); RCH.last = performance.now(); RCH.raf = requestAnimationFrame(rcLoop);
+  return true;
+}
+function rcHelpClose() {
+  const box = $('nxRc'); if (box) box.classList.remove('on');
+  RCH.on = false; cancelAnimationFrame(RCH.raf);
+  const sk = $('rcSkip'); try { if (sk && sk.checked) localStorage.setItem(RC_SKIP_KEY, '1'); else if (sk) localStorage.removeItem(RC_SKIP_KEY); } catch (e) { /* ignore */ }
+}
+function rcAfterLogin() { if (!rcSkipped()) rcHelpOpen(); }     // called after a sign-in with a user name and password
+(function rcWire() {
+  if (typeof document === 'undefined' || !$('nxRc')) return;
+  const tabs = $('rcTabs');
+  if (tabs && !tabs.children.length) RC_AX.forEach((a, i) => { const b = document.createElement('button'); b.type = 'button'; b.innerHTML = a.n + '<small>' + a.e + '</small>'; b.addEventListener('click', () => { RCH.auto = false; rcSel(i); b.blur(); }); tabs.appendChild(b); });
+  $('rcOk').addEventListener('click', rcHelpClose); $('rcLater').addEventListener('click', rcHelpClose);
+  const hb = $('btnRcHelp'); if (hb) hb.addEventListener('click', (e) => { rcHelpOpen(); if (e.currentTarget && e.currentTarget.blur) e.currentTarget.blur(); });
+  window.addEventListener('resize', () => { if (RCH.on) { try { rcScene(); } catch (e) { /* ignore */ } } });
+})();
 
 /* ---------- boot ---------- */
 buildAdvUI();
