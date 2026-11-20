@@ -1813,11 +1813,11 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
           <div class="cstyle" data-s="3"><canvas width="192" height="144"></canvas><div>88ACADEMY</div></div>
         </div>
         <div class="ospv"><canvas id="osdPreview" width="480" height="270"></canvas><div class="ospvcap">תצוגה מקדימה חיה של ה-HUD</div></div>
-        <label class="chk"><input type="checkbox" id="chkLadder"><span>הצג סרגל גובה וערוד במרכז: <b id="stLadder">כן</b></span></label>
+        <div class="hudopts" hidden style="display:none"><label class="chk"><input type="checkbox" id="chkLadder"><span>הצג סרגל גובה וערוד במרכז: <b id="stLadder">כן</b></span></label>
         <label class="chk"><input type="checkbox" id="chkDots"><span>הצג שביל נקודות לשער הבא: <b id="stDots">כן</b></span></label>
         <label class="chk"><input type="checkbox" id="chkLine"><span>הצג נתיב טיסה מקווקו (Racing Line): <b id="stLine">כן</b></span></label>
         <label class="chk"><input type="checkbox" id="chkArrow"><span>הצג חץ הכוונה צף: <b id="stArrow">כן</b></span></label>
-        <div class="note">שביל הנקודות והחץ הצף ונתיב הטיסה המקווקו פעילים כברירת מחדל רק במצב &quot;טיסה במסלול&quot; (בטיסה חופשית הנתיב מוצג רק אם הפעלת אותו בהגדרות). הכוונת פעילה בכל מצב.</div></div>
+        <div class="note">שביל הנקודות והחץ הצף ונתיב הטיסה המקווקו פעילים כברירת מחדל רק במצב &quot;טיסה במסלול&quot; (בטיסה חופשית הנתיב מוצג רק אם הפעלת אותו בהגדרות). הכוונת פעילה בכל מצב.</div></div></div>
       <div class="advsec c6"><h3>CAMERA &amp; AUDIO <span>מצלמה ושמע</span></h3>
         <div class="row"><label>זווית מצלמה</label><input type="range" id="rngTilt" min="25" max="45" step="1" value="30"><span class="val" id="valTilt">30&deg;</span></div>
         <div class="row"><label>עוצמת קול</label><input type="range" id="rngVol" min="0" max="1" step="0.01" value="0.5"><span class="val" id="valVol">50%</span></div>
@@ -1869,7 +1869,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 461</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 462</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -7076,7 +7076,7 @@ let rlLast = 0;
 function updateRaceLineVis() {
   if (!raceLine) return;
   const playing = state === 'countdown' || state === 'racing' || state === 'crashed' || state === 'finished';
-  const show = settings.raceLine && !inMenu && (editorMode || (flightMode === 'race' ? playing : (state === 'free' || state === 'crashed') && raceLineFree));
+  const show = (typeof nxTrackHud === 'function' ? nxTrackHud('line') : settings.raceLine) && !inMenu && (editorMode || (flightMode === 'race' ? playing : (state === 'free' || state === 'crashed') && raceLineFree));
   raceLine.visible = show;
   if (show && raceLineTex) {              // conveyor-belt flow: dashes slide from gate 1 toward gate 2, ...
     const now = performance.now();
@@ -7099,8 +7099,8 @@ function updateNav() {
   const wrong = wrongT > 0;
   const colHex = wrong ? 0xff3b30 : dist < 25 ? 0x5fd08a : 0x4cc3e6;
   const col = '#' + colHex.toString(16).padStart(6, '0');
-  if (settings.dotPath && !hudHidden) updateDotPath(c, colHex);
-  if (!settings.navArrow) return;
+  if ((typeof nxTrackHud === 'function' ? nxTrackHud('dots') : settings.dotPath) && !hudHidden) updateDotPath(c, colHex);
+  if (!(typeof nxTrackHud === 'function' ? nxTrackHud('arrow') : settings.navArrow)) return;
 
   _pv.copy(c).applyMatrix4(fpvCam.matrixWorldInverse);
   const behind = _pv.z > -0.05;
@@ -9899,6 +9899,11 @@ function nxTrackDrone(id) {
   const d = m && m[String(id).replace(/^pub_/, '')];
   return d && PRESETS[d] && DRONE_INFO[d] ? d : '';
 }
+function nxTrackHud(k) {                                        // build 462: dot path / racing line / floating arrow are set per track by the manager (on by default)
+  const id = typeof currentStage !== 'undefined' && currentStage ? currentStage.id : '';
+  const src = nxAdminEditing() || !NX.eff ? NX.draft : NX.eff, m = src && src.stages && src.stages.hud, o = m && id && m[String(id).replace(/^pub_/, '')];
+  return o && typeof o[k] === 'boolean' ? o[k] : true;
+}
 const nxDroneName = (d) => (DRONE_INFO[d] && DRONE_INFO[d].title) || (PRESETS[d] && PRESETS[d].label) || d;
 function nxTrackDroneApply(id) {                                   // as a track starts: its drone flies (even one hidden for the group); the player's own choice is kept aside
   const want = nxTrackDrone(id);
@@ -11534,6 +11539,11 @@ function nxTrackPanel(id) {
   const dk = String(id).replace(/^pub_/, ''), dsel = (D.stages.drone || {})[dk] || '';
   let dr = '<p class="nxn">כשבוחרים רחפן, כל מי שטס במסלול הזה טס בו, גם אם בחר רחפן אחר וגם אם הרחפן מוסתר לקבוצה שלו. בסיום המסלול חוזר הרחפן שהשחקן בחר.</p>';
   dr += nxF('רחפן', '<select data-act="trk-drone" data-id="' + dk + '"><option value="">בחירת השחקן</option>' + DRONE_IDS.map((x) => '<option value="' + x + '"' + (dsel === x ? ' selected' : '') + '>' + nxEsc(nxDroneName(x)) + '</option>').join('') + '</select>');
+  const HO = (D.stages.hud || {})[dk] || {}, hon = (k) => typeof HO[k] === 'boolean' ? HO[k] : true;
+  let hv = '<p class="nxn">מה השחקן רואה על המסך בזמן הטיסה במסלול הזה.</p>';
+  [['dots', 'שביל נקודות לשער הבא'], ['line', 'נתיב טיסה מקווקו (Racing Line)'], ['arrow', 'חץ הכוונה צף']].forEach((q) => { hv += nxF(q[1], '<label class="stgsw"><input type="checkbox" data-act="trk-hud" data-f="' + q[0] + '" data-id="' + dk + '"' + (hon(q[0]) ? ' checked' : '') + '><i></i></label>'); });
+  const hn = ['dots', 'line', 'arrow'].filter(hon).length;
+  h += nxTrkSec(tag('hud'), 'סימוני ניווט', hn === 3 ? 'הכל מוצג' : hn ? hn + ' מתוך 3' : 'כבוי', hv);
   h += nxTrkSec(tag('drn'), 'רחפן למסלול', dsel && PRESETS[dsel] ? nxEsc(nxDroneName(dsel)) : 'בחירת השחקן', dr);
   return h;
 }
@@ -12374,6 +12384,7 @@ function nxAdmWireOn(body) {
       else if (nm && nm !== st._n0) NX.draft.tnames[id] = nm; else delete NX.draft.tnames[id];
       nxTouch(); nxAdmRender(); if (currentScreen === 'missions') buildCards(); return;
     }
+    if (a === 'trk-hud') { const m = NX.draft.stages.hud = NX.draft.stages.hud || {}, o = m[id] = m[id] || {}; o[el.dataset.f] = !!el.checked; nxTouch(); nxAdmRender(); try { updateRaceLineVis(); } catch (e2) { /* ignore */ } return; }
     if (a === 'trk-drone') { const m = NX.draft.stages.drone = NX.draft.stages.drone || {}; if (el.value && PRESETS[el.value]) m[id] = el.value; else delete m[id]; nxTouch(); nxAdmRender(); if (currentScreen === 'missions') buildCards(); return; }
     if (a === 'trk-cat') { const t = NX.draft.tcats; if (el.value) t.of[id] = el.value; else delete t.of[id]; nxTouch(); nxAdmRender(); if (currentScreen === 'missions') buildCards(); return; }
     if (a === 'stg-vis') { if (el.checked) delete NX.draft.stages.off[id]; else NX.draft.stages.off[id] = true; nxTouch(); nxAdmRender(); }
