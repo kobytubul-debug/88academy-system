@@ -1877,7 +1877,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 470</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 471</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -3299,6 +3299,15 @@ scene.add(ghostMesh);
 /* ============================================================
    WEB AUDIO — brushless motor synthesis + effects
    ============================================================ */
+/* build 471: the voice of each drone. idle / max = blade-pass frequency at idle and full throttle, harm = harmonic strengths,
+   det = the four motors' small offsets (beating), mix = how much the sticks spread the motors apart, wr = whine / blade-pass ratio */
+const SND_PROF = {
+  fpv5:   { idle: 165, max: 1350, harm: [0, 1, 0.72, 0.5, 0.36, 0.26, 0.18, 0.13, 0.09, 0.06, 0.04], det: [0, 0.011, -0.008, 0.017], mix: 0.09, wr: 2.33, whine: 0.05, air: 0.13, airF: [500, 2600], lp: 5200, vol: 0.34 },
+  race5:  { idle: 200, max: 1750, harm: [0, 1, 0.8, 0.62, 0.48, 0.36, 0.28, 0.2, 0.15, 0.1, 0.07, 0.05], det: [0, 0.009, -0.006, 0.014], mix: 0.1, wr: 2.33, whine: 0.07, air: 0.12, airF: [600, 3200], lp: 6500, vol: 0.33 },
+  whoop:  { idle: 430, max: 2700, harm: [0, 1, 0.45, 0.62, 0.3, 0.38, 0.2, 0.24, 0.12, 0.14], det: [0, 0.015, -0.012, 0.022], mix: 0.12, wr: 1.75, whine: 0.09, air: 0.2, airF: [1500, 4500], lp: 8000, vol: 0.27 },
+  fpv10:  { idle: 62, max: 470, harm: [0, 1, 0.88, 0.46, 0.3, 0.17, 0.1, 0.06, 0.035], det: [0, 0.018, -0.014, 0.026], mix: 0.07, wr: 3.5, whine: 0.025, air: 0.17, airF: [220, 1100], lp: 2600, vol: 0.4 },
+  fpv10w: { idle: 58, max: 430, harm: [0, 1, 0.9, 0.48, 0.32, 0.18, 0.1, 0.06, 0.035], det: [0, 0.02, -0.016, 0.028], mix: 0.065, wr: 3.5, whine: 0.022, air: 0.19, airF: [200, 1000], lp: 2400, vol: 0.42 }
+};
 const Sound = {
   ctx: null, master: null, motorGain: null, motorFilter: null, oscs: [], noiseBuf: null, started: false,
   init() {
@@ -3311,27 +3320,27 @@ const Sound = {
       this.master.gain.value = settings.muted ? 0 : settings.volume;
       this.master.connect(ctx.destination);
 
-      this.motorFilter = ctx.createBiquadFilter();
-      this.motorFilter.type = 'lowpass';
-      this.motorFilter.frequency.value = 1800;
-      this.motorFilter.Q.value = 2.5;
-      this.motorGain = ctx.createGain();
-      this.motorGain.gain.value = 0;
-      this.motorFilter.connect(this.motorGain);
-      this.motorGain.connect(this.master);
-
-      // four detuned oscillators emulate four motors beating against each other
-      const defs = [['sawtooth', 1.0, 0.5], ['sawtooth', 1.012, 0.45], ['triangle', 2.0, 0.5], ['square', 0.994, 0.12]];
-      for (const d of defs) {
-        const o = ctx.createOscillator();
-        o.type = d[0];
-        o.frequency.value = 200;
-        const g = ctx.createGain();
-        g.gain.value = d[2] * 0.5;
-        o.connect(g); g.connect(this.motorFilter);
-        o.start();
-        this.oscs.push({ o, mult: d[1] });
+      this.motorFilter = ctx.createBiquadFilter();             // build 471: a real-drone voice per drone (see SND_PROF) instead of four plain oscillators
+      this.motorFilter.type = 'lowpass'; this.motorFilter.frequency.value = 6000; this.motorFilter.Q.value = 0.7;
+      this.motorGain = ctx.createGain(); this.motorGain.gain.value = 0;
+      this.motorFilter.connect(this.motorGain); this.motorGain.connect(this.master);
+      for (let m = 0; m < 4; m++) {                            // four motors: each a blade-pass tone with harmonics, panned a little apart, beating against each other
+        const o = ctx.createOscillator(), g = ctx.createGain(); g.gain.value = 0.25;
+        o.frequency.value = 200; o.connect(g); g.connect(this.motorFilter); o.start();
+        this.oscs.push({ o, g, j: 0 });
       }
+      this.whine = ctx.createOscillator(); this.whine.type = 'triangle'; this.whineG = ctx.createGain(); this.whineG.gain.value = 0;   // the electric whine of the brushless motors
+      this.whineF = ctx.createBiquadFilter(); this.whineF.type = 'bandpass'; this.whineF.Q.value = 4;
+      this.whine.connect(this.whineF); this.whineF.connect(this.whineG); this.whineG.connect(this.motorGain); this.whine.start();
+      const nb = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate), nd = nb.getChannelData(0);
+      for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1;
+      this.air = ctx.createBufferSource(); this.air.buffer = nb; this.air.loop = true;          // air rushing through the props (a band of noise, kept under the tone)
+      this.airF = ctx.createBiquadFilter(); this.airF.type = 'bandpass'; this.airF.Q.value = 0.9; this.airG = ctx.createGain(); this.airG.gain.value = 0;
+      this.air.connect(this.airF); this.airF.connect(this.airG); this.airG.connect(this.motorGain); this.air.start();
+      this.wind = ctx.createBufferSource(); this.wind.buffer = nb; this.wind.loop = true; this.wind.playbackRate.value = 0.5;   // wind past the frame at speed
+      this.windF = ctx.createBiquadFilter(); this.windF.type = 'lowpass'; this.windF.frequency.value = 900; this.windG = ctx.createGain(); this.windG.gain.value = 0;
+      this.wind.connect(this.windF); this.windF.connect(this.windG); this.windG.connect(this.master); this.wind.start();
+      this.sndKey = '';
       // noise buffer for crashes
       const len = ctx.sampleRate * 0.6;
       this.noiseBuf = ctx.createBuffer(1, len, ctx.sampleRate);
@@ -3348,13 +3357,31 @@ const Sound = {
   // thr in 0..1 (real-time throttle input), armed enables idle whine
   updateMotor(thr, armed, speed) {
     if (!this.started) return;
-    const p = PRESETS[settings.preset];
-    const t = this.ctx.currentTime;
-    const base = p.audioBase + thr * p.audioRange;
-    const f = base * (1 + Math.min(speed, 40) * 0.0015);
-    for (const x of this.oscs) x.o.frequency.setTargetAtTime(f * x.mult, t, 0.04);
-    this.motorFilter.frequency.setTargetAtTime(700 + thr * 3200, t, 0.05);
-    const vol = armed ? (0.035 + 0.30 * Math.pow(thr, 1.25)) : 0;
+    const P = SND_PROF[settings.preset] || SND_PROF.fpv5, t = this.ctx.currentTime, ctx = this.ctx;
+    if (this.sndKey !== settings.preset) {                     // a new drone: its own harmonic colour
+      this.sndKey = settings.preset;
+      const re = new Float32Array(P.harm.length), im = new Float32Array(P.harm.length); P.harm.forEach((a, i) => { im[i] = a; });
+      const w = ctx.createPeriodicWave(re, im); this.oscs.forEach((x) => x.o.setPeriodicWave(w));
+      this.motorFilter.frequency.setTargetAtTime(P.lp, t, 0.05);
+    }
+    thr = Math.max(0, Math.min(1, thr || 0));
+    const rpm = Math.pow(thr, 0.62);                            // prop speed rises fast off idle and flattens at the top, like a real motor under load
+    const bpf = P.idle + (P.max - P.idle) * rpm;               // blade-pass frequency (Hz)
+    const r = (typeof input !== 'undefined' && input) ? input : { roll: 0, pitch: 0, yaw: 0 }, k = P.mix;
+    const mixs = [[-1, -1, 1], [-1, 1, -1], [1, -1, -1], [1, 1, 1]];   // M1 rear-right, M2 front-right, M3 rear-left, M4 front-left: roll / pitch / yaw change each motor's speed
+    this.oscs.forEach((x, m) => {
+      x.j += (Math.random() - 0.5) * 0.004; x.j *= 0.96;      // tiny random wander so the four motors never lock together
+      const d = mixs[m][0] * (r.roll || 0) * k + mixs[m][1] * (r.pitch || 0) * k + mixs[m][2] * (r.yaw || 0) * k * 0.7;
+      x.o.frequency.setTargetAtTime(Math.max(20, bpf * (1 + P.det[m] + d + x.j)), t, 0.035);
+    });
+    const ew = bpf * P.wr;                                     // electrical whine: pole pairs over blades
+    this.whine.frequency.setTargetAtTime(ew, t, 0.04); this.whineF.frequency.setTargetAtTime(ew, t, 0.04);
+    this.whineG.gain.setTargetAtTime(armed ? P.whine * (0.25 + 0.75 * rpm) : 0, t, 0.05);
+    this.airF.frequency.setTargetAtTime(P.airF[0] + P.airF[1] * rpm, t, 0.06);
+    this.airG.gain.setTargetAtTime(armed ? P.air * Math.pow(rpm, 1.6) : 0, t, 0.06);
+    const sp = Math.min(Math.max(speed || 0, 0), 45) / 45;
+    this.windG.gain.setTargetAtTime(armed ? 0.16 * sp * sp : 0, t, 0.15); this.windF.frequency.setTargetAtTime(500 + 1500 * sp, t, 0.15);
+    const vol = armed ? P.vol * (0.07 + 0.93 * Math.pow(rpm, 1.35)) : 0;
     this.motorGain.gain.setTargetAtTime(vol, t, 0.05);
   },
   beep(freq, dur, type, vol) {
