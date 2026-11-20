@@ -1216,9 +1216,9 @@ body.nx-open #nxFall{display:none!important}
 .tcArr{position:absolute;left:50%;transform:translateX(-50%);z-index:3;width:110px;height:30px;border:0;background:var(--ln);cursor:pointer;opacity:.8}.tcArr:hover{background:var(--ac);opacity:1}
 .tcArr.up{top:0;clip-path:polygon(0 100%,50% 0,100% 100%)}.tcArr.dn{bottom:0;clip-path:polygon(0 0,100% 0,50% 100%)}
 .tcStack{position:relative;flex:1;width:100%;overflow:hidden;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 12%,#000 88%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 12%,#000 88%,transparent 100%)}
-.tcCard{position:absolute;left:50%;top:50%;width:62%;height:34%;transform:translate(-50%,-50%) translateY(112%) scale(.92);transition:transform .45s cubic-bezier(.2,.8,.2,1),opacity .35s,width .45s,height .45s,filter .35s;opacity:.45;filter:blur(1px) grayscale(.4);pointer-events:none;background:var(--bg);border:1px solid var(--ln);overflow:hidden;cursor:pointer;z-index:1}
+.tcCard{position:absolute;left:50%;top:50%;width:auto;max-width:62%;height:38%;aspect-ratio:4/3;transform:translate(-50%,-50%) translateY(112%) scale(.92);transition:transform .45s cubic-bezier(.2,.8,.2,1),opacity .35s,width .45s,height .45s,filter .35s;opacity:.45;filter:blur(1px) grayscale(.4);pointer-events:none;background:var(--bg);border:1px solid var(--ln);overflow:hidden;cursor:pointer;z-index:1}
 .tcCard.prev{transform:translate(-50%,-50%) translateY(-112%) scale(.92)}
-.tcCard.cur{width:96%;height:70%;transform:translate(-50%,-50%);opacity:1;filter:none;pointer-events:auto;border-color:var(--ac);z-index:2;box-shadow:0 0 0 1px var(--ac),0 12px 40px rgba(0,0,0,.5)}
+.tcCard.cur{width:auto;max-width:96%;height:80%;aspect-ratio:4/3;transform:translate(-50%,-50%);opacity:1;filter:none;pointer-events:auto;border-color:var(--ac);z-index:2;box-shadow:0 0 0 1px var(--ac),0 12px 40px rgba(0,0,0,.5)}
 .tcCard.far{opacity:0}
 .tcCard.prev,.tcCard.next{pointer-events:auto}
 .tcCard img,.tcCard canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
@@ -1877,7 +1877,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 465</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 466</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -8851,8 +8851,8 @@ function trkPeekCam(G) {                                          // a camera ab
   G.forEach((g) => { x0 = Math.min(x0, g.x); x1 = Math.max(x1, g.x); z0 = Math.min(z0, g.z); z1 = Math.max(z1, g.z); y1 = Math.max(y1, g.y); });
   const cx = (x0 + x1) / 2, cz = (z0 + z1) / 2, R = Math.max(30, Math.hypot(x1 - x0, z1 - z0) / 2 + 14);
   let dx = G[G.length - 1].x - G[0].x, dz = G[G.length - 1].z - G[0].z; const dl = Math.hypot(dx, dz) || 1; dx /= dl; dz /= dl; if (dl < 1) { dx = 0; dz = -1; }
-  const cam = new THREE.PerspectiveCamera(40, 560 / 300, 1, 5000);
-  cam.position.set(cx - dx * R * 1.15 + (-dz) * R * 0.75, Math.max(R * 0.8, y1 + 12), cz - dz * R * 1.15 + dx * R * 0.75); cam.lookAt(cx, Math.min(y1, 10) * 0.6, cz);
+  const cam = new THREE.PerspectiveCamera(40, 4 / 3, 1, 5000), K = 1.25;          // build 466: 4:3 picture; a little further back so the narrower frame still takes in the track
+  cam.position.set(cx - dx * R * 1.15 * K + (-dz) * R * 0.75 * K, Math.max(R * 0.8 * K, y1 + 12), cz - dz * R * 1.15 * K + dx * R * 0.75 * K); cam.lookAt(cx, Math.min(y1, 10) * 0.6, cz);
   cam.updateMatrixWorld(true);
   return cam;
 }
@@ -8867,7 +8867,7 @@ function trkPeekReal(st) {                                        // the REAL ma
     const G = st.gen().map(gateCopy); if (!G.length) return '';
     const key = 'R' + trkPeekKey(st, G); if (trkPeekCache[key]) return trkPeekCache[key];
     loadStage(st.id); loaded = true;
-    if (!trkPeekR) { trkPeekR = new THREE.WebGLRenderer({ antialias: true, alpha: false, preserveDrawingBuffer: true }); trkPeekR.setSize(560, 300, false); trkPeekR.setPixelRatio(1); }
+    if (!trkPeekR) { trkPeekR = new THREE.WebGLRenderer({ antialias: true, alpha: false, preserveDrawingBuffer: true }); trkPeekR.setSize(640, 480, false); trkPeekR.setPixelRatio(1); }
     const cam = trkPeekCam(G); droneMesh.visible = false; ghostMesh.visible = false; sky.position.copy(cam.position);
     trkPeekR.render(scene, cam);
     const u = trkPeekR.domElement.toDataURL('image/jpeg', 0.85);
@@ -8885,7 +8885,7 @@ function trkPeek3D(st) {                                          // a real 3D p
     const O = (st.objects || []).filter((o) => o && isFinite(o.x) && isFinite(o.z)).slice(0, 400);
     const key = st.id + '|' + G.map((g) => [g.x, g.y, g.z, g.yaw, g.pitch, g.k, g.sz].join(',')).join(';') + '|' + O.length;
     if (trkPeekCache[key]) return trkPeekCache[key];
-    if (!trkPeekR) { trkPeekR = new THREE.WebGLRenderer({ antialias: true, alpha: false, preserveDrawingBuffer: true }); trkPeekR.setSize(560, 300, false); trkPeekR.setPixelRatio(1); }
+    if (!trkPeekR) { trkPeekR = new THREE.WebGLRenderer({ antialias: true, alpha: false, preserveDrawingBuffer: true }); trkPeekR.setSize(640, 480, false); trkPeekR.setPixelRatio(1); }
     const sc = new THREE.Scene(); sc.background = new THREE.Color(0x0d1218);
     let x0 = 1e9, x1 = -1e9, z0 = 1e9, z1 = -1e9, y1 = 6;
     G.forEach((g) => { x0 = Math.min(x0, g.x); x1 = Math.max(x1, g.x); z0 = Math.min(z0, g.z); z1 = Math.max(z1, g.z); y1 = Math.max(y1, g.y); });
@@ -9053,7 +9053,7 @@ function trkCarInfo(id) {
 function trkCarCard(id, k) {
   const st = STAGES[id], gts = st.gen(), lk = NXH.locked(id);
   const d = document.createElement('div'); d.className = 'tcCard'; d.dataset.id = id; d.dataset.k = k;
-  d.innerHTML = '<canvas width="560" height="300"></canvas><div class="lb"><i>' + String(k + 1).padStart(2, '0') + '</i><b>' + tcEsc(st.name) + '</b></div>' + (lk ? '<div class="lk">&#128274; נעול</div>' : '') + '<div class="tg">TOP VIEW · ' + Math.round(pathLen(gts)) + ' m</div>';
+  d.innerHTML = '<canvas width="640" height="480"></canvas><div class="lb"><i>' + String(k + 1).padStart(2, '0') + '</i><b>' + tcEsc(st.name) + '</b></div>' + (lk ? '<div class="lk">&#128274; נעול</div>' : '') + '<div class="tg">TOP VIEW · ' + Math.round(pathLen(gts)) + ' m</div>';
   drawMiniMap(d.querySelector('canvas'), gts, st.color);
   return d;
 }
