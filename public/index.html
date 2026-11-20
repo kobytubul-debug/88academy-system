@@ -1877,7 +1877,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 468</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 469</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -5777,9 +5777,8 @@ function gatePose(i, dist) {                                     // on the floor
   const yaw = (g.yaw || 0) * DEG, fx = -Math.sin(yaw), fz = -Math.cos(yaw);
   return { x: g.x - fx * dist, y: 0.12, z: g.z - fz * dist, yaw };
 }
-function respawnDrone() {          // in a race: in front of the next gate to pass. Otherwise back to the spot ~1 s before the crash. Levelled, stationary, props repaired; race progress is kept
-  const next = state === 'racing' && gates.length ? gatePose(seq % gates.length, 12) : null;
-  const p = next || respawnPose || { x: drone.pos.x, y: Math.max(drone.pos.y, 0.4), z: drone.pos.z, yaw: 0 };
+function respawnDrone() {          // back to the spot of the crash. Levelled, stationary, props repaired; race progress is kept
+  const p = respawnPose || {             /* build 469: always back at the spot of the crash (also in a race), race progress kept */ x: drone.pos.x, y: Math.max(drone.pos.y, 0.4), z: drone.pos.z, yaw: 0 };
   drone.pos.set(p.x, 0.12, p.z);          // same spot, but on the floor
   drone.quat.setFromEuler(new THREE.Euler(0, p.yaw, 0, 'YXZ'));
   drone.vel.set(0, 0, 0); drone.w.set(0, 0, 0); drone.wd.set(0, 0, 0); drone.tp.set(0, 0, 0); drone.thrAct = 0;
@@ -5793,22 +5792,15 @@ function damageProp(speed, nx, ny, nz) {
   if (Math.hypot(_cb.x, _cb.z) < 0.25) best = Math.floor(Math.random() * 4);     // flat landing / hit from above or below
   else for (let i = 0; i < 4; i++) { const d = _cb.x * MOTOR_POS[i][0] + _cb.z * MOTOR_POS[i][1] + Math.random() * 0.02; if (d > bd) { bd = d; best = i; } }
   const cv = PRESETS[settings.preset].crashV;
-  const delta = clamp((speed - 3.2) / (cv * 0.9), 0, 1.4) * 0.8;                // severity of this impact
-  if (delta <= 0.02) return;
-  stableT = 0;
-  const before = PROP.h[best];
-  if (before <= 0) return;
-  const now = Math.max(0, before - delta);
-  PROP.h[best] = now < 0.04 ? 0 : now;
-  PROP.dirty = true;
-  if (PROP.h[best] < 0.3) {
-    if (restartT <= 0 && state === 'racing') atCrash++;
-    restartT = 1.4;
-    _eu2.setFromQuaternion(drone.quat, 'YXZ');
-    respawnPose = poseHist.length ? poseHist[0] : { x: drone.pos.x, y: drone.pos.y, z: drone.pos.z, yaw: _eu2.y };
-    showFlash('פרופלור ' + (best + 1) + ' מתחת ל-30% - חוזר לנקודה שלפני ההתרסקות', '#ff4d4d');
-  }
-  else showFlash('נזק לפרופלור ' + (best + 1) + ': ' + Math.round(PROP.h[best] * 100) + '%', PROP.h[best] > 0.5 ? '#e6b450' : '#ff8a3c');
+  const delta = clamp((speed - 3.2) / (cv * 0.9), 0, 1.4) * 0.8;                // severity of this impact (1 = a whole propeller)
+  // build 469: a hit never damages a propeller or changes how the drone flies. Only a hit of more than 50% is a crash:
+  // the flight is disqualified for a moment and starts again from the spot where it crashed
+  if (delta <= 0.5 || restartT > 0) return;
+  if (state === 'racing') atCrash++;
+  restartT = 1.4;
+  _eu2.setFromQuaternion(drone.quat, 'YXZ');
+  respawnPose = poseHist.length ? poseHist[poseHist.length - 1] : { x: drone.pos.x, y: drone.pos.y, z: drone.pos.z, yaw: _eu2.y };
+  showFlash('התרסקות - ממשיכים מהמקום שבו הרחפן התרסק', '#ff4d4d');
 }
 function impact(speed, nx, ny, nz) {
   const flying = state === 'racing' || state === 'free';
