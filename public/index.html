@@ -1890,7 +1890,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 483</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 484</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -4304,10 +4304,10 @@ function pcGeo(geo) {                            // -> { kind: 'box'|'cyl'|'sph'
   if (ty === 'BoxGeometry' && fin(pr.width) && fin(pr.height) && fin(pr.depth)) return { kind: 'box', min: [-pr.width / 2, -pr.height / 2, -pr.depth / 2], max: [pr.width / 2, pr.height / 2, pr.depth / 2] };
   if ((ty === 'CylinderGeometry' || ty === 'ConeGeometry') && fin(pr.height)) {
     const rt = ty === 'ConeGeometry' ? 0 : pr.radiusTop, rb = ty === 'ConeGeometry' ? pr.radius : pr.radiusBottom;
-    if (fin(rt) && fin(rb)) { const R = Math.max(rt, rb); return { kind: 'cyl', min: [-R, -pr.height / 2, -R], max: [R, pr.height / 2, R], rt, rb }; }
+    if (fin(rt) && fin(rb)) { const R = Math.max(rt, rb); return { kind: 'cyl', min: [-R, -pr.height / 2, -R], max: [R, pr.height / 2, R], rt, rb, open: !!pr.openEnded }; }
   }
   if (/^(Sphere|Dodecahedron|Icosahedron|Octahedron|Tetrahedron)Geometry$/.test(ty) && fin(pr.radius)) { const R = pr.radius; return { kind: 'sph', min: [-R, -R, -R], max: [R, R, R] }; }
-  if (ty === 'TorusGeometry' && fin(pr.radius) && fin(pr.tube)) { const R = pr.radius + pr.tube; return { kind: 'box', min: [-R, -R, -pr.tube], max: [R, R, pr.tube] }; }
+  if (ty === 'TorusGeometry' && fin(pr.radius) && fin(pr.tube)) { const R = pr.radius + pr.tube; return { kind: 'tor', min: [-R, -R, -pr.tube], max: [R, R, pr.tube], R: pr.radius, tube: pr.tube }; }   // build 484: a ring, hollow in the middle
   let bb = geo.boundingBox; if (!bb && typeof geo.computeBoundingBox === 'function') { geo.computeBoundingBox(); bb = geo.boundingBox; }
   if (!bb || !bb.min || !bb.max || ![bb.min.x, bb.min.y, bb.min.z, bb.max.x, bb.max.y, bb.max.z].every(fin)) return null;
   return { kind: 'custom', min: [bb.min.x, bb.min.y, bb.min.z], max: [bb.max.x, bb.max.y, bb.max.z] };
@@ -4318,6 +4318,10 @@ function pcParts(m) {                            // one mesh -> solid parts: { k
   const sx = Math.abs(sc.x), sy = Math.abs(sc.y), sz = Math.abs(sc.z), out = [];
   if (![sx, sy, sz, ro.x, ro.y, ro.z, po.x, po.y, po.z].every((v) => typeof v === 'number' && isFinite(v))) return [];
   const upright = Math.abs(ro.x) < 0.2 && Math.abs(ro.z) < 0.2;
+  const hole = G.kind === 'tor' ? (G.R - G.tube) * Math.min(sx, sy) : (G.kind === 'cyl' && G.open ? Math.min(G.rt, G.rb) * Math.min(sx, sz) : 0);
+  if (G.kind === 'tor' && hole < 0.35) G.kind = 'box';                                     // a hole too small for a drone (tyres): solid as before
+  const hollow = (G.kind === 'tor' || (G.kind === 'cyl' && G.open)) && hole >= 0.35, flatTurn = Math.abs(ro.x) < 0.02 && Math.abs(ro.z) < 0.02;
+  if (hollow || (!flatTurn && !(upright && (G.kind === 'cyl' || G.kind === 'sph')))) return pcSlices(G, sx, sy, sz, ro, po);   // build 484: hollow (pipes, rings) and tilted shapes are cut into small pieces that follow the real shape, so their openings stay open
   const cx = (G.min[0] + G.max[0]) / 2 * sx, cy = (G.min[1] + G.max[1]) / 2 * sy, cz = (G.min[2] + G.max[2]) / 2 * sz;
   const hx = (G.max[0] - G.min[0]) / 2 * sx, hy = (G.max[1] - G.min[1]) / 2 * sy, hz = (G.max[2] - G.min[2]) / 2 * sz;
   if (upright && (G.kind === 'cyl' || G.kind === 'sph' || (G.kind === 'custom' && Math.max(hx, hz) < 1.6 * Math.min(hx, hz)))) {
@@ -4339,6 +4343,49 @@ function pcParts(m) {                            // one mesh -> solid parts: { k
   }
   return out.filter((q) => q.y1 > 0.2 && (q.k === 'c' ? q.r >= 0.07 : Math.min(q.hx, q.hz) >= 0.03 && Math.max(q.hx, q.hz) >= 0.07));
 }
+function pcSdf(G, x, y, z) {                    // build 484: distance from a point (geometry space) to the shape's surface/solid; <= 0 inside
+  if (G.kind === 'tor') return Math.hypot(Math.hypot(x, y) - G.R, z) - G.tube;
+  if (G.kind === 'cyl') { const hh = G.max[1], r = G.rb + (G.rt - G.rb) * (y / (2 * hh) + 0.5), d = Math.hypot(x, z), dy = Math.abs(y) - hh;
+    if (G.open) return dy > 0 ? Math.hypot(dy, d - r) : Math.abs(d - r) - 0.06;
+    return Math.max(d - r, dy); }
+  if (G.kind === 'sph') return Math.hypot(x, y, z) - G.max[0];
+  return -1;                                     // box / custom: every piece of the box is solid
+}
+function pcSlices(G, sx, sy, sz, ro, po) {       // build 484: the shape cut into pieces of at most ~0.7 m; each kept piece becomes a small upright box around its turned corners
+  const L = [(G.max[0] - G.min[0]) * sx, (G.max[1] - G.min[1]) * sy, (G.max[2] - G.min[2]) * sz];
+  const axis = G.kind === 'tor' ? 2 : (G.kind === 'cyl' && G.open ? 1 : -1);          // hollow shapes: fine pieces across the ring, long pieces along its axis
+  const ring = axis >= 0 ? Math.max(0.12, Math.min(0.7, (G.kind === 'tor' ? G.R : Math.max(G.rt, G.rb)) * 0.25 * ((sx + sy + sz) / 3))) : 0.7;
+  let piece = 0.7, pr = ring, n; for (;;) { n = L.map((l, d) => Math.max(1, Math.ceil(l / (d === axis ? piece : pr)))); if (n[0] * n[1] * n[2] <= (axis >= 0 ? 400 : 90)) break; piece *= 1.2; pr *= 1.2; }
+  const out = [], S = [sx, sy, sz], ms = (sx + sy + sz) / 3;
+  for (let i = 0; i < n[0]; i++) for (let j = 0; j < n[1]; j++) for (let k = 0; k < n[2]; k++) {
+    const lo = [G.min[0] + (G.max[0] - G.min[0]) * i / n[0], G.min[1] + (G.max[1] - G.min[1]) * j / n[1], G.min[2] + (G.max[2] - G.min[2]) * k / n[2]];
+    const hi = [G.min[0] + (G.max[0] - G.min[0]) * (i + 1) / n[0], G.min[1] + (G.max[1] - G.min[1]) * (j + 1) / n[1], G.min[2] + (G.max[2] - G.min[2]) * (k + 1) / n[2]];
+    const c = [(lo[0] + hi[0]) / 2, (lo[1] + hi[1]) / 2, (lo[2] + hi[2]) / 2], dd = [(hi[0] - lo[0]) * sx, (hi[1] - lo[1]) * sy, (hi[2] - lo[2]) * sz]; if (axis >= 0) dd[axis] = 0;
+    const hd = Math.hypot(dd[0], dd[1], dd[2]) / 2;
+    if (pcSdf(G, c[0], c[1], c[2]) * ms > hd * 0.85) continue;          // this piece is empty (inside the pipe, the hole of a ring, outside a round)
+    let mnx = 1e9, mxx = -1e9, mnz = 1e9, mxz = -1e9, mny = 1e9, mxy = -1e9;
+    for (let q = 0; q < 8; q++) { const v = pcEul([(q & 1 ? hi[0] : lo[0]) * S[0], (q & 2 ? hi[1] : lo[1]) * S[1], (q & 4 ? hi[2] : lo[2]) * S[2]], ro); mnx = Math.min(mnx, v[0]); mxx = Math.max(mxx, v[0]); mny = Math.min(mny, v[1]); mxy = Math.max(mxy, v[1]); mnz = Math.min(mnz, v[2]); mxz = Math.max(mxz, v[2]); }
+    const shrink = G.kind === 'box' || G.kind === 'custom' ? 0 : 0.12;   // round pieces: the box around a curved piece is a little bigger than the wall
+    const ax = (mxx - mnx) / 2, az = (mxz - mnz) / 2, ay = (mxy - mny) / 2;
+    out.push({ k: 'b', x: po.x + (mnx + mxx) / 2, z: po.z + (mnz + mxz) / 2, hx: Math.max(0.04, ax * (1 - shrink)), hz: Math.max(0.04, az * (1 - shrink)), a: 0, y0: po.y + mny + ay * shrink, y1: po.y + mxy - ay * shrink });
+  }
+  return pcMerge(out).filter((q) => q.y1 > 0.2);
+}
+function pcMerge(L) {                            // build 484: join neighbouring pieces that line up (a straight pipe becomes long strips), so there are fewer parts
+  const e = 0.02, same = (a, b) => Math.abs(a - b) < e;
+  for (let pass = 0; pass < 3; pass++) {
+    let changed = true;
+    while (changed) { changed = false;
+      for (let i = 0; i < L.length && !changed; i++) for (let j = i + 1; j < L.length; j++) { const A = L[i], B = L[j];
+        const ax = [A.x - A.hx, A.x + A.hx], bx = [B.x - B.hx, B.x + B.hx], az = [A.z - A.hz, A.z + A.hz], bz = [B.z - B.hz, B.z + B.hz];
+        let M = null;
+        if (pass === 0 && same(az[0], bz[0]) && same(az[1], bz[1]) && same(A.y0, B.y0) && same(A.y1, B.y1) && (Math.abs(ax[1] - bx[0]) < 0.1 || Math.abs(bx[1] - ax[0]) < 0.1 || (ax[0] < bx[1] && bx[0] < ax[1]))) { const lo = Math.min(ax[0], bx[0]), hi = Math.max(ax[1], bx[1]); M = { ...A, x: (lo + hi) / 2, hx: (hi - lo) / 2 }; }
+        if (pass === 1 && same(ax[0], bx[0]) && same(ax[1], bx[1]) && same(A.y0, B.y0) && same(A.y1, B.y1) && (Math.abs(az[1] - bz[0]) < 0.1 || Math.abs(bz[1] - az[0]) < 0.1 || (az[0] < bz[1] && bz[0] < az[1]))) { const lo = Math.min(az[0], bz[0]), hi = Math.max(az[1], bz[1]); M = { ...A, z: (lo + hi) / 2, hz: (hi - lo) / 2 }; }
+        if (pass === 2 && same(ax[0], bx[0]) && same(ax[1], bx[1]) && same(az[0], bz[0]) && same(az[1], bz[1]) && (Math.abs(A.y1 - B.y0) < 0.25 || Math.abs(B.y1 - A.y0) < 0.25 || (A.y0 < B.y1 && B.y0 < A.y1))) M = { ...A, y0: Math.min(A.y0, B.y0), y1: Math.max(A.y1, B.y1) };
+        if (M) { L[i] = M; L.splice(j, 1); changed = true; break; } } }
+  }
+  return L;
+}
 function pcInside(A, B) {                        // is the footprint and height range of part A fully inside part B?
   if (A.y0 < B.y0 - 0.05 || A.y1 > B.y1 + 0.05) return false;
   const pts = [];
@@ -4355,7 +4402,7 @@ function pcBuild(meshes) {                       // parts of all meshes, without
   const vol = (q) => (q.y1 - q.y0) * (q.k === 'c' ? Math.PI * q.r * q.r : 4 * q.hx * q.hz);
   parts.sort((a, b) => vol(b) - vol(a));
   const keep = []; parts.forEach((q) => { if (!keep.some((k) => pcInside(q, k))) keep.push(q); });
-  return keep.slice(0, 70);
+  return keep.slice(0, 160);
 }
 const _pcCache = {};
 function pcTemplate(type) {                      // measured once per prop type from its real mesh; null when it cannot be measured
