@@ -721,7 +721,7 @@ body.nx-staff #admPub,body.nx-staff #admPrev{display:none}
 #who{display:none;position:fixed;inset:0;z-index:140;background:radial-gradient(ellipse at 30% 40%,color-mix(in srgb,var(--ac) 14%,var(--bg)),var(--bg) 72%);align-items:center;justify-content:center;direction:rtl;overflow:auto}
 #who.on{display:flex}
 #crashWin{display:none;position:fixed;inset:0;z-index:60;pointer-events:none;background:rgba(6,7,26,.35);align-items:center;justify-content:center}#crashWin.on{display:flex}#crashWin .cwb{width:140px;height:140px;border-radius:16px;background:#e5484d}#crashWin svg{width:100%;height:100%;display:block}   /* build 474: crash picture */
-#nxRc .rc3d{cursor:grab;touch-action:none;aspect-ratio:4/3;width:100%;height:auto;display:block}#nxRc{display:none;position:fixed;inset:0;z-index:140;background:color-mix(in srgb,var(--bg) 92%,transparent);align-items:center;justify-content:center;direction:rtl}   /* build 472: the radio explainer after signing in */
+#nxRc .rccols{display:flex;justify-content:center;gap:14px;margin-top:8px}#nxRc .rccols button{width:34px;height:34px;padding:0;border-radius:50%;border:2px solid rgba(255,255,255,.22);cursor:pointer;transition:transform .15s,border-color .15s}#nxRc .rccols button:hover{transform:scale(1.08)}#nxRc .rccols button.on{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.18)}#nxRc .rc3d{cursor:grab;touch-action:none;aspect-ratio:4/3;width:100%;height:auto;display:block}#nxRc{display:none;position:fixed;inset:0;z-index:140;background:color-mix(in srgb,var(--bg) 92%,transparent);align-items:center;justify-content:center;direction:rtl}   /* build 472: the radio explainer after signing in */
 #nxRc.on{display:flex}
 #nxRc .rcbox{width:min(980px,96vw);max-height:96vh;overflow:auto;background:var(--bg);border:1px solid var(--ln);border-radius:12px;padding:20px 22px 18px;color:var(--tx);font:15px var(--ui)}
 #nxRc .rchd{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}#nxRc .rcen{font:500 12px var(--mono);letter-spacing:.25em;color:var(--ac);direction:ltr;text-align:right}#nxRc h3{font-size:26px;color:var(--ti,#fff);margin:0}#nxRc .rcmu{font-size:12px;color:var(--mu)}
@@ -1891,7 +1891,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 490</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 491</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -1905,7 +1905,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="crashWin" aria-hidden="true"><div class="cwb"><svg viewBox="0 0 140 140" aria-hidden="true"><g transform="translate(70 70) scale(1.15)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round"><path d="M-6 -9 L-30 -33 M-6 9 L-30 33 M6 9 L30 33 M6 -9 L11 -14" stroke-width="5"/><rect x="-11" y="-17" width="22" height="34" rx="4" stroke-width="4.5"/><rect x="-6" y="-26" width="12" height="8" rx="2" stroke-width="3.5"/><circle cx="-36" cy="-36" r="12" stroke-width="4"/><circle cx="-36" cy="-36" r="2.5" fill="#fff" stroke="none"/><circle cx="-36" cy="36" r="12" stroke-width="4"/><circle cx="-36" cy="36" r="2.5" fill="#fff" stroke="none"/><circle cx="36" cy="36" r="12" stroke-width="4"/><circle cx="36" cy="36" r="2.5" fill="#fff" stroke="none"/><path d="M51.0 -36.5 L41.4 -30.2 L49.5 -24.6 L38.4 -24.8 L45.4 -12.8 L34.7 -20.1 L33.0 -11.3 L28.5 -18.0 L21.1 -9.9 L23.3 -22.1 L12.6 -18.4 L19.5 -26.7 L10.2 -29.7 L20.2 -32.7 L10.9 -41.9 L22.2 -38.7 L21.7 -47.5 L28.3 -40.9 L32.7 -51.2 L34.2 -39.7 L44.2 -46.8 L39.2 -36.1Z" fill="#fff" stroke="#fff" stroke-width="2"/><path d="M35.4 -30.8 L42.6 -28.3 L35.5 -27.5 L37.9 -23.2 L33.6 -24.4 L33.5 -18.4 L30.0 -24.3 L26.8 -18.9 L26.8 -24.9 L21.8 -22.8 L25.0 -27.7 L17.8 -28.2 L23.6 -30.9 L20.3 -34.4 L25.4 -33.9 L23.6 -39.8 L28.3 -35.6 L29.9 -42.1 L31.7 -35.8 L36.5 -40.2 L34.7 -34.2 L40.1 -34.7Z" fill="#e5484d" stroke="none"/></g></svg></div></div>
 <div id="nxRc" role="dialog" aria-label="הסבר על השלט"><div class="rcbox">
 <div class="rchd"><div><div class="rcen">RADIO · MODE 2</div><h3>הכר את השלט</h3></div><div class="rcmu">4 צירים</div></div>
-<div class="rcgrid"><canvas id="rcRadio" class="rcsvg rc3d" width="880" height="660" aria-label="השלט · גרור כדי לסובב"></canvas><div class="rcdv"><div id="rcDv"></div><span>מה הרחפן עושה</span></div></div>
+<div class="rcgrid"><div class="rcradw"><canvas id="rcRadio" class="rcsvg rc3d" width="880" height="660" aria-label="השלט · גרור כדי לסובב"></canvas><div class="rccols" id="rcCols" aria-label="צבע השלט"></div></div><div class="rcdv"><div id="rcDv"></div><span>מה הרחפן עושה</span></div></div>
 <div class="rctabs" id="rcTabs"></div>
 <div class="rcinfo"><div class="rcl"><b id="rcN"></b><span id="rcE"></span><em id="rcS"></em></div><p id="rcT"></p></div>
 <div class="rcft"><label><input type="checkbox" id="rcSkip"> אל תציג שוב</label><div><button class="b" id="rcLater">דלג</button><button class="b on" id="rcOk">הבנתי, נמשיך</button></div></div>
@@ -14958,6 +14958,7 @@ function rcRadio() {                                              // build 489: 
   const cv = $('rcRadio'); if (!cv || typeof THREE === 'undefined' || typeof rcRadioInit !== 'function') return false;
   if (!RCH.Q) {
     RCH.Q = rcRadioInit(cv);
+    try { rcColWire(RCH.Q); } catch (e) { /* the radio still works without its colour buttons */ }
     let drag = null; const Q = RCH.Q;
     cv.addEventListener('pointerdown', (e) => { drag = [e.clientX, e.clientY]; try { cv.setPointerCapture(e.pointerId); } catch (er) { /* ignore */ } cv.style.cursor = 'grabbing'; });
     cv.addEventListener('pointermove', (e) => { if (!drag) return; Q.yaw = Math.max(-0.9, Math.min(0.9, Q.yaw + (e.clientX - drag[0]) * 0.006)); Q.pit = Math.max(-0.4, Math.min(1.2, Q.pit + (e.clientY - drag[1]) * 0.004)); drag = [e.clientX, e.clientY]; });
@@ -15064,7 +15065,8 @@ const body = add(bodyG, [plast, rimM]);
 /* a slightly raised front panel round the wells */
 const FZ = BT / 2 + 0.22;
 const panel = new THREE.Shape(); { const w = 2.05, h = 1.12, r = 0.6; panel.moveTo(-w + r, h); panel.lineTo(w - r, h); panel.quadraticCurveTo(w, h, w, h - r); panel.lineTo(w, -h + r); panel.quadraticCurveTo(w, -h, w - r, -h); panel.lineTo(-w + r, -h); panel.quadraticCurveTo(-w, -h, -w, -h + r); panel.lineTo(-w, h - r); panel.quadraticCurveTo(-w, h, -w + r, h); }
-add(new THREE.ExtrudeGeometry(panel, { depth: 0.02, bevelEnabled: true, bevelThickness: 0.015, bevelSize: 0.03, bevelSegments: 3 }), new THREE.MeshStandardMaterial({ color: 0x232529, roughness: 0.55, metalness: 0.1 }), 0, 0.42, FZ - 0.01);
+const panelM = new THREE.MeshStandardMaterial({ color: 0x232529, roughness: 0.55, metalness: 0.1 });
+add(new THREE.ExtrudeGeometry(panel, { depth: 0.02, bevelEnabled: true, bevelThickness: 0.015, bevelSize: 0.03, bevelSegments: 3 }), panelM || new THREE.MeshStandardMaterial({ color: 0x232529, roughness: 0.55, metalness: 0.1 }), 0, 0.42, FZ - 0.01);
 /* gimbals (like the user's photo): a dark round bezel with four white ticks, a raised square frame, and in its window the gimbal
    mechanism - two ribbed guide rails and the yoke block that slides with the stick - then the chrome shaft and its knurled end */
 const GX = 1.3, GY = 0.4, sticks = {};
@@ -15154,7 +15156,7 @@ add(new THREE.SphereGeometry(0.11, 20, 12), rubber, 0, 1.08, 0, ant).scale.z = 0
 const floor = new THREE.Mesh(new THREE.PlaneGeometry(14, 14), new THREE.ShadowMaterial({ opacity: 0.35 })); floor.rotation.x = -Math.PI / 2; floor.position.y = -2.45; floor.receiveShadow = true; S.add(floor);
 radio.rotation.x = -0.55;   // tilted toward the viewer, like held in the hands
   C.position.set(0, 1.2, 10.4); C.lookAt(0, 0.1, 0);
-  return { R, S, C, radio, sticks, drawScreen, GY, FZ, yaw: 0, pit: 0 };
+  return { R, S, C, radio, sticks, drawScreen, GY, FZ, yaw: 0, pit: 0, mats: { plast, rimM, panelM } };
 }
 /* the glow and the arrows of the stick that is moving (a: the axis shown, now: ms) */
 function rcRadioFx(Q, a, now) {
@@ -15164,6 +15166,27 @@ function rcRadioFx(Q, a, now) {
     A.mat.opacity += ((on ? 0.7 + 0.3 * Math.sin(now / 200) : 0) - A.mat.opacity) * 0.2;
     const zz = FZ + 0.035 + 0.095, D = 0.8 + 0.02 * Math.sin(now / 200), P = [[0, D], [0, -D], [D, 0], [-D, 0]];
     A.m.forEach((m, n) => { m.visible = on && (a.d === 'v' ? n < 2 : n >= 2); m.position.set(A.x + P[n][0], GY + P[n][1], zz); }); });
+}
+/* build 491: the colour buttons under the radio paint its body (the shading stays: the front a touch darker, the rounded edge a touch lighter) */
+const RC_COLS = ['#80ff9e', '#80d6ff', '#ffff80', '#e61b1b', '#b31564'];
+const RC_COL_KEY = 'fpvNexusRcCol';
+function rcRadioColor(Q, hex) {
+  if (!Q || !Q.mats) return;
+  const base = hex ? new THREE.Color(hex) : new THREE.Color(0x2c2e33);
+  Q.mats.plast.color.copy(base);
+  Q.mats.rimM.color.copy(base).lerp(new THREE.Color(0xffffff), hex ? 0.12 : 0.08);
+  Q.mats.panelM.color.copy(base).multiplyScalar(hex ? 0.78 : 0.8);
+}
+function rcColWire(Q) {
+  const host = document.getElementById('rcCols'); if (!host || host.children.length) return;
+  let cur = ''; try { cur = localStorage.getItem(RC_COL_KEY) || ''; } catch (e) { /* ignore */ }
+  RC_COLS.forEach((c) => { const b = document.createElement('button'); b.type = 'button'; b.style.background = c; b.title = c; b.setAttribute('aria-label', 'צבע השלט ' + c);
+    b.classList.toggle('on', c === cur);
+    b.addEventListener('click', () => { const nc = b.classList.contains('on') ? '' : c;   // a second click on the same colour goes back to the original grey
+      Array.from(host.children).forEach((x) => x.classList.toggle('on', x === b && !!nc)); rcRadioColor(Q, nc);
+      try { if (nc) localStorage.setItem(RC_COL_KEY, nc); else localStorage.removeItem(RC_COL_KEY); } catch (e) { /* ignore */ } b.blur(); });
+    host.appendChild(b); });
+  if (cur) rcRadioColor(Q, cur);
 }
 
 /* build 486 (preview): 2.5" CINEWHOOP from the user's photos — four smoky translucent ducts joined by webs with a triangle cut-out, a black carbon X frame
