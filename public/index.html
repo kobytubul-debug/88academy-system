@@ -1891,7 +1891,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 496</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 497</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -3632,7 +3632,7 @@ function makeLabelTexture(n, st) {                               // game-style n
 /* Gate frame: the FRONT (entrance, +Z side) and BACK (exit, -Z side) halves of the rim are separate
    meshes so they can glow in different colours. The drone must fly through in local -Z direction. */
 /* per-gate shape and size: d.k = ring | square | arch | wide | tall (default: the map's type), d.sz = size multiplier */
-const GATE_KINDS = { ring: 'טבעת', square: 'ריבוע', arch: 'קשת (ללא בסיס)', wide: 'רחב ושטוח', tall: 'גבוה וצר', hex: 'משושה', double: 'שער כפול', triple: 'שער משולש', archwide: 'קשת רחבה', archtall: 'קשת גבוהה', slit: 'חריץ צר וגבוה', ledge: 'פס רחב נמוך', race: 'שער מירוץ לבן (עומד על הקרקע)', none: 'נסתר (קו מדידה בלבד)' };
+const GATE_KINDS = { ring: 'טבעת', square: 'ריבוע', arch: 'קשת (ללא בסיס)', wide: 'רחב ושטוח', tall: 'גבוה וצר', hex: 'משושה', double: 'שער כפול', triple: 'שער משולש', archwide: 'קשת רחבה', archtall: 'קשת גבוהה', slit: 'חריץ צר וגבוה', ledge: 'פס רחב נמוך', race: 'שער מירוץ לבן (עומד על הקרקע)', banner: 'שער באנר (עמודים משובצים)', none: 'נסתר (קו מדידה בלבד)' };
 function gateSpec(d) {
   let kind = d && d.k && GATE_KINDS[d.k] ? d.k : GATE_TYPE;
   if (!GATE_KINDS[kind]) kind = 'square';
@@ -3645,7 +3645,7 @@ function gateSpec(d) {
   else if (kind === 'double') { iw *= 1.6; ih *= 0.85; } else if (kind === 'hex') { ih = iw * 0.866; }
   else if (kind === 'triple') { iw *= 2.3; ih *= 0.85; } else if (kind === 'archwide') { iw *= 1.6; ih *= 0.9; } else if (kind === 'archtall') { iw *= 0.8; ih *= 1.6; }
   else if (kind === 'slit') { iw *= 0.45; ih *= 1.7; } else if (kind === 'ledge') { iw *= 2.1; ih *= 0.5; }
-  const race = kind === 'race';                                   // a white race gate: thick posts standing on the ground and a deep top beam
+  const race = kind === 'race' || kind === 'banner';   // build 497: the banner gate is built like the race gate (posts to the ground, deep top beam)                                   // a white race gate: thick posts standing on the ground and a deep top beam
   const tp = 1.3 * s, tb = 1.3 * s, dz = 1.0 * s, gy = Math.max(0.6, Number(d && d.y) || 0);
   const ow = iw + (race ? tp : t), oh = ih + (race ? tb : t);
   // frame bars (oriented boxes in the gate plane): cx, cy centre, a angle (rad), hl half length, ht half thickness
@@ -3669,7 +3669,7 @@ function gateSpec(d) {
     if (kind === 'triple') [-1, 1].forEach((sg) => bars.push({ cx: sg * iw / 3, cy: 0, a: Math.PI / 2, hl: oh, ht: t / 2 }));
   }
   const div = kind === 'double' ? [0] : kind === 'triple' ? [-iw / 3, iw / 3] : [];
-  return { kind, ring: kind === 'ring', arch: kind === 'arch' || kind === 'archwide' || kind === 'archtall', hex: kind === 'hex', dbl: kind === 'double', div, t, iw, ih, ow, oh, s, bars, race, tp, tb, dz, gy };
+  return { kind, ring: kind === 'ring', arch: kind === 'arch' || kind === 'archwide' || kind === 'archtall', hex: kind === 'hex', dbl: kind === 'double', banner: kind === 'banner', div, t, iw, ih, ow, oh, s, bars, race, tp, tb, dz, gy };
 }
 /* striped gate finishes: black/white hazard stripes, red/white like a kerb. The pattern replaces the gate colour on the frame; the glow still follows the race */
 const GATE_PATS = { bw: { name: 'שחור-לבן מקווקו', a: '#15171b', b: '#f2f2f2' }, rw: { name: 'אדום-לבן (מדרכה)', a: '#d4232a', b: '#f2f2f2' } };
@@ -3686,6 +3686,32 @@ function gateRaceMat(col) {
   }
   const t = gateRaceTex[c].clone(); t.needsUpdate = true;          // one copy per board: a rebuild disposes the old ones
   return new THREE.MeshLambertMaterial({ color: 0xffffff, map: t, emissive: 0x6a6a6a, emissiveMap: t });
+}
+/* build 497: the banner gate - black-and-white checkered posts and a coloured banner across the top with our own name on it
+   (the gate colour picks the banner colour; red when none is set) */
+const GATE_BANNER_COL = '#d8262f';
+const gateCheckTex = {}, gateBannerTex = {};
+function gateCheckMat(len, th) {                                   // squares as wide as the post, two columns, running along it
+  const key = Math.round(len * 10) + 'x' + Math.round(th * 10);
+  if (!gateCheckTex[key]) { const n = Math.max(2, Math.round(len / (th / 2))), cv = document.createElement('canvas'); cv.width = n * 16; cv.height = 32;
+    const g = cv.getContext('2d'); g.fillStyle = '#f4f5f7'; g.fillRect(0, 0, cv.width, 32); g.fillStyle = '#141518';
+    for (let i = 0; i < n; i++) for (let r = 0; r < 2; r++) if ((i + r) % 2) g.fillRect(i * 16, r * 16, 16, 16);
+    const t = new THREE.CanvasTexture(cv); t.magFilter = THREE.NearestFilter; gateCheckTex[key] = t; }
+  const t = gateCheckTex[key].clone(); t.needsUpdate = true;
+  return new THREE.MeshLambertMaterial({ color: 0xffffff, map: t, emissive: 0x555555, emissiveMap: t });
+}
+function gateBannerMat(col, len, th) {
+  const c = /^#[0-9a-f]{6}$/i.test(col || '') ? col.toLowerCase() : GATE_BANNER_COL, key = c + Math.round(len * 10) + 'x' + Math.round(th * 10);
+  if (!gateBannerTex[key]) { const W = 1024, H = Math.max(96, Math.round(W * th / len)), cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+    const g = cv.getContext('2d'); g.fillStyle = c; g.fillRect(0, 0, W, H);
+    g.fillStyle = 'rgba(255,255,255,.9)'; g.fillRect(0, H * 0.06, W, H * 0.035); g.fillRect(0, H * 0.905, W, H * 0.035);   // thin white lines along both edges
+    g.fillStyle = '#ffffff'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.font = 'italic 900 ' + Math.round(H * 0.48) + 'px "Arial Black", Arial, sans-serif'; g.fillText('FPV NEXUS', W / 2, H * 0.44);
+    g.font = '700 ' + Math.round(H * 0.15) + 'px Arial, sans-serif'; g.fillText('88ACADEMY · RACE GATE', W / 2, H * 0.76);
+    gateBannerTex[key] = new THREE.CanvasTexture(cv); }
+  const t = gateBannerTex[key].clone(), tb = gateBannerTex[key].clone(); t.needsUpdate = true; tb.needsUpdate = true; tb.wrapS = THREE.RepeatWrapping; tb.repeat.x = -1; tb.offset.x = 1;
+  const face = (tx) => new THREE.MeshLambertMaterial({ color: 0xffffff, map: tx, emissive: 0x4a4a4a, emissiveMap: tx }), edge = new THREE.MeshLambertMaterial({ color: new THREE.Color(c).multiplyScalar(0.85) });
+  return [edge, edge, edge, edge, face(t), face(tb)];                  // box faces: +x -x +y -y front back (the back is mirrored so the name reads right from both sides)
 }
 const gatePatCache = {};
 function gatePatTexture(id) {
@@ -3757,6 +3783,7 @@ function buildGateObj(i, d) {
   } else if (sp.race) {                                           // one solid board per bar, the full depth of the gate
     sp.bars.forEach((br) => {
       const m = mk(new THREE.BoxGeometry(2 * br.hl, 2 * br.ht, sp.dz), true, 2 * br.hl);
+      if (sp.banner) { if (m.material.dispose) m.material.dispose(); m.material = Math.abs(br.a) < 0.1 ? gateBannerMat(d.c, 2 * br.hl, 2 * br.ht) : gateCheckMat(2 * br.hl, 2 * br.ht); }   // build 497
       m.position.set(br.cx, br.cy, 0); m.rotation.z = br.a; m.castShadow = true; m.receiveShadow = true;
       halo(new THREE.BoxGeometry(2 * br.hl + 0.5, 2 * br.ht + 0.5, sp.dz + 0.5), br.cx, br.cy, 0); halos[halos.length - 1].rotation.z = br.a;
     });
@@ -3799,11 +3826,11 @@ function buildGateObj(i, d) {
   grp.rotation.set(sp.race ? 0 : (d.pitch || 0) * DEG, (d.yaw || 0) * DEG, 0, 'YXZ');      // a race gate always stands upright on the ground
   grp.updateMatrixWorld(true);
   gateGroup.add(grp);
-  return { group: grp, spec: sp, bars, fronts, backs, halos, arrow, label, pat, fixed: !!sp.race, inv: new THREE.Matrix4(), center: new THREE.Vector3(d.x, d.y, d.z) };
+  return { group: grp, spec: sp, bars, fronts, backs, halos, arrow, label, pat: pat || (sp.banner ? 'banner' : ''), fixed: !!sp.race, inv: new THREE.Matrix4(), center: new THREE.Vector3(d.x, d.y, d.z) };
 }
 
 function minGateY(d) {
-  if (d && d.k === 'race') return 0.6;                            // the posts reach the ground from any height
+  if (d && (d.k === 'race' || d.k === 'banner')) return 0.6;                            // the posts reach the ground from any height
   const p = Math.abs(d.pitch || 0) * DEG, sp = gateSpec(d);
   const ext = sp.ring ? sp.oh : sp.oh * Math.cos(p) + sp.ow * Math.sin(p);
   return ext + 0.3;
@@ -3943,7 +3970,7 @@ function disposeGateObjs() {
     gateGroup.remove(go.group);
     go.group.traverse((o) => {
       if (o.geometry) o.geometry.dispose();
-      if (o.material) { if (o.material.map) o.material.map.dispose(); o.material.dispose(); }
+      if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach((mt) => { if (mt.map) mt.map.dispose(); mt.dispose(); });   // the banner gate's beam has one material per face
     });
   }
   gateObjs = [];
