@@ -1891,7 +1891,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 489</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 490</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -14960,7 +14960,7 @@ function rcRadio() {                                              // build 489: 
     RCH.Q = rcRadioInit(cv);
     let drag = null; const Q = RCH.Q;
     cv.addEventListener('pointerdown', (e) => { drag = [e.clientX, e.clientY]; try { cv.setPointerCapture(e.pointerId); } catch (er) { /* ignore */ } cv.style.cursor = 'grabbing'; });
-    cv.addEventListener('pointermove', (e) => { if (!drag) return; Q.yaw = Math.max(-0.9, Math.min(0.9, Q.yaw + (e.clientX - drag[0]) * 0.006)); Q.pit = Math.max(-0.4, Math.min(0.5, Q.pit + (e.clientY - drag[1]) * 0.004)); drag = [e.clientX, e.clientY]; });
+    cv.addEventListener('pointermove', (e) => { if (!drag) return; Q.yaw = Math.max(-0.9, Math.min(0.9, Q.yaw + (e.clientX - drag[0]) * 0.006)); Q.pit = Math.max(-0.4, Math.min(1.2, Q.pit + (e.clientY - drag[1]) * 0.004)); drag = [e.clientX, e.clientY]; });
     const up = () => { drag = null; cv.style.cursor = ''; }; cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
   }
   return true;
@@ -14981,7 +14981,7 @@ function rcLoop(now) {
   if (a.k === 'roll') { Rr = [v, 0]; D.rotation.z = -v * 0.42; D.position.x = v * 0.55 * r; }
   rcKnob('L', L[0], L[1]); rcKnob('R', Rr[0], Rr[1]);
   const sv = a.k === 'thr' ? L[1] : a.k === 'yaw' ? L[0] : a.k === 'pitch' ? Rr[1] : Rr[0], bar = $('rcScrBar'); if (bar) bar.setAttribute('width', Math.max(2, 42 + 42 * sv));
-  if (RCH.Q) { const Q = RCH.Q; Q.drawScreen(a.e.slice(0, 5), (sv + 1) / 2); Q.radio.rotation.y = Q.yaw + Math.sin(now / 4000) * 0.12; Q.radio.rotation.x = -0.55 + Q.pit; Q.R.render(Q.S, Q.C); }
+  if (RCH.Q) { const Q = RCH.Q; Q.drawScreen(a.e.slice(0, 5), (sv + 1) / 2); rcRadioFx(Q, a, now); Q.radio.rotation.y = Q.yaw + Math.sin(now / 4000) * 0.12; Q.radio.rotation.x = -0.55 + Q.pit; Q.R.render(Q.S, Q.C); }
   const pr = (RCH.model && RCH.model.userData.props) || []; for (let i = 0; i < pr.length; i++) pr[i].rotation.y += (pr[i].userData && pr[i].userData.dir ? pr[i].userData.dir : (i % 2 ? -1 : 1)) * spin * dt;
   if (RCH.R) RCH.R.render(RCH.S, RCH.C);
 }
@@ -15010,10 +15010,14 @@ function rcAfterLogin() { if (!rcSkipped()) rcHelpOpen(); }     // called after 
   window.addEventListener('resize', () => { if (RCH.on) { try { rcScene(); } catch (e) { /* ignore */ } } });
 })();
 
-/* build 489: the radio is a 3D model (own design: square body, gimbals with a square frame and a sliding yoke, chrome knurled sticks,
-   big screen at the bottom with four buttons on its left and one long button on its right) that the pilot can turn with the mouse */
+/* build 489 / 490: the radio is a 3D model of our own design (square body with round corners, gimbals with a square frame and a sliding yoke,
+   chrome knurled sticks that glow green while they move with small arrows on the bezel, a big screen at the bottom with four buttons on
+   its left and a long one on its right, a pill power button between the sticks, trims, USB-C ports top and bottom, rubber side grips).
+   The pilot turns it with the mouse. */
 function rcRadioInit(cv) {
 /* ---------- textures ---------- */
+function rcRoundBox(w, h, d, r) { const sh = new THREE.Shape(), x = w / 2, z = d / 2, rr = Math.min(r, x, z); sh.moveTo(-x + rr, -z); sh.lineTo(x - rr, -z); sh.quadraticCurveTo(x, -z, x, -z + rr); sh.lineTo(x, z - rr); sh.quadraticCurveTo(x, z, x - rr, z); sh.lineTo(-x + rr, z); sh.quadraticCurveTo(-x, z, -x, z - rr); sh.lineTo(-x, -z + rr); sh.quadraticCurveTo(-x, -z, -x + rr, -z);
+  const g = new THREE.ExtrudeGeometry(sh, { depth: h, bevelEnabled: false, curveSegments: 10 }); g.rotateX(Math.PI / 2); g.translate(0, h / 2, 0); return g; }
 function noiseTex(base, amp, n) { const c = document.createElement('canvas'); c.width = c.height = 256; const g = c.getContext('2d'); g.fillStyle = base; g.fillRect(0, 0, 256, 256);
   for (let i = 0; i < n; i++) { const v = Math.random(); g.fillStyle = 'rgba(' + (v > 0.5 ? '255,255,255,' : '0,0,0,') + (amp * Math.random()) + ')'; g.fillRect(Math.random() * 256, Math.random() * 256, 1.5, 1.5); }
   const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; return t; }
@@ -15049,13 +15053,14 @@ const acc = new THREE.MeshStandardMaterial({ color: 0xff8a1a, roughness: 0.4, me
 const radio = new THREE.Group(); S.add(radio);
 const add = (geo, mat, x, y, z, par) => { const m = new THREE.Mesh(geo, mat); m.position.set(x || 0, y || 0, z || 0); m.castShadow = m.receiveShadow = true; (par || radio).add(m); return m; };
 /* the body: a compact pad with two round grips (front face toward +z), deep rounded edges */
-const sh = new THREE.Shape(); { const x0 = -2.28, x1 = 2.28, y0 = -1.92, y1 = 1.7, r = 0.38;   // narrow: the sides come almost to the sticks   // a square body with rounded corners
+const sh = new THREE.Shape(); { const x0 = -2.28, x1 = 2.28, y0 = -1.92, y1 = 1.7, r = 0.75;   // narrow: the sides come almost to the sticks   // a square body with rounded corners
   sh.moveTo(x0 + r, y0); sh.lineTo(x1 - r, y0); sh.quadraticCurveTo(x1, y0, x1, y0 + r); sh.lineTo(x1, y1 - r); sh.quadraticCurveTo(x1, y1, x1 - r, y1);
   sh.lineTo(x0 + r, y1); sh.quadraticCurveTo(x0, y1, x0, y1 - r); sh.lineTo(x0, y0 + r); sh.quadraticCurveTo(x0, y0, x0 + r, y0); }
 const BT = 0.55, bodyG = new THREE.ExtrudeGeometry(sh, { depth: BT, bevelEnabled: true, bevelThickness: 0.22, bevelSize: 0.2, bevelSegments: 8, curveSegments: 48 }); bodyG.translate(0, 0, -BT / 2);
 const body = add(bodyG, [plast, rimM]);
 /* rubber grip pads on both sides */
-[-1, 1].forEach((sx) => { const g = add(new THREE.BoxGeometry(0.16, 2.3, 0.62), gripM, sx * 2.43, -0.25, 0); });
+/* rubber grip pads (build 489m): along both sides, the same strip carried forward round the front edge so it shows from the front */
+[-1, 1].forEach((sx) => { const zf = BT / 2 + 0.24, zb = -0.31; add(new THREE.BoxGeometry(0.16, 1.95, zf - zb), gripM, sx * 2.43, -0.12, (zf + zb) / 2); });
 /* a slightly raised front panel round the wells */
 const FZ = BT / 2 + 0.22;
 const panel = new THREE.Shape(); { const w = 2.05, h = 1.12, r = 0.6; panel.moveTo(-w + r, h); panel.lineTo(w - r, h); panel.quadraticCurveTo(w, h, w, h - r); panel.lineTo(w, -h + r); panel.quadraticCurveTo(w, -h, w - r, -h); panel.lineTo(-w + r, -h); panel.quadraticCurveTo(-w, -h, -w, -h + r); panel.lineTo(-w, h - r); panel.quadraticCurveTo(-w, h, -w + r, h); }
@@ -15068,11 +15073,11 @@ const tickM = new THREE.MeshBasicMaterial({ color: 0xe8ecf0 }), mechM = new THRE
 const chrome = new THREE.MeshStandardMaterial({ color: 0xe9edf2, roughness: 0.12, metalness: 1 });
 const rr = (w, h, r) => { const p = new THREE.Shape(); p.moveTo(-w / 2 + r, -h / 2); p.lineTo(w / 2 - r, -h / 2); p.quadraticCurveTo(w / 2, -h / 2, w / 2, -h / 2 + r); p.lineTo(w / 2, h / 2 - r); p.quadraticCurveTo(w / 2, h / 2, w / 2 - r, h / 2); p.lineTo(-w / 2 + r, h / 2); p.quadraticCurveTo(-w / 2, h / 2, -w / 2, h / 2 - r); p.lineTo(-w / 2, -h / 2 + r); p.quadraticCurveTo(-w / 2, -h / 2, -w / 2 + r, -h / 2); return p; };
 [['L', -GX], ['R', GX]].forEach(([k, x]) => {
-  const Z = FZ;
+  const Z = FZ + 0.035;                                                                                      // above the raised front panel (it was hiding the floor and the ticks)
   add(new THREE.TorusGeometry(0.8, 0.07, 20, 80), bezelM, x, GY, Z + 0.02);                                  // the round bezel
   add(new THREE.TorusGeometry(0.71, 0.012, 8, 80), new THREE.MeshStandardMaterial({ color: 0x55585e, roughness: 0.35, metalness: 0.6 }), x, GY, Z + 0.035);   // its bright inner edge
   add(new THREE.CylinderGeometry(0.73, 0.73, 0.04, 80), floorM, x, GY, Z - 0.005).rotation.x = Math.PI / 2;  // the floor of the well
-  [[0, 1], [0, -1], [1, 0], [-1, 0]].forEach((d) => { const t = add(new THREE.BoxGeometry(d[0] ? 0.12 : 0.018, d[0] ? 0.018 : 0.12, 0.004), tickM, x + d[0] * 0.6, GY + d[1] * 0.6, Z + 0.018); });   // four white ticks
+  [[0, 1], [0, -1], [1, 0], [-1, 0]].forEach((d) => add(new THREE.BoxGeometry(d[0] ? 0.2 : 0.03, d[0] ? 0.03 : 0.2, 0.006), tickM, x + d[0] * 0.58, GY + d[1] * 0.58, Z + 0.02));   // four white ticks between the frame and the bezel (longer, build 489b)
   [[-1, -1], [1, 1]].forEach((q) => add(new THREE.CylinderGeometry(0.018, 0.018, 0.006, 12), tickM, x + q[0] * 0.42, GY + q[1] * 0.42, Z + 0.018).rotation.x = Math.PI / 2);   // two small dots
   const fr = rr(0.86, 0.86, 0.1); fr.holes.push(new THREE.Path(rr(0.66, 0.66, 0.05).getPoints(24)));             // the raised square frame
   add(new THREE.ExtrudeGeometry(fr, { depth: 0.05, bevelEnabled: true, bevelThickness: 0.012, bevelSize: 0.012, bevelSegments: 2, curveSegments: 12 }), bezelM, x, GY, Z + 0.016);
@@ -15088,27 +15093,53 @@ const rr = (w, h, r) => { const p = new THREE.Shape(); p.moveTo(-w / 2 + r, -h /
   const end = add(new THREE.CylinderGeometry(0.13, 0.13, 0.3, 40), knurl, 0, 0, 0.68, piv); end.rotation.x = Math.PI / 2;
   [0.53, 0.83].forEach((z) => add(new THREE.TorusGeometry(0.13, 0.014, 10, 40), chrome, 0, 0, z, piv));      // bright chamfers at both ends
   const cap = add(new THREE.CircleGeometry(0.125, 40), chrome, 0, 0, 0.835, piv);
-  sticks[k] = piv; sticks[k + 'y'] = yoke; sticks[k + 'x0'] = x;
+  /* build 489d: while this stick moves it glows see-through green, and small arrows beside its tip show the move */
+  const glowM = new THREE.MeshBasicMaterial({ color: 0x39ff7a, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
+  const gl1 = add(new THREE.CylinderGeometry(0.17, 0.17, 0.34, 40), glowM, 0, 0, 0.68, piv); gl1.rotation.x = Math.PI / 2; gl1.castShadow = false;
+  const gl2 = add(new THREE.CylinderGeometry(0.075, 0.075, 0.55, 24), glowM, 0, 0, 0.27, piv); gl2.rotation.x = Math.PI / 2; gl2.castShadow = false;
+  const arM = new THREE.MeshBasicMaterial({ color: 0x39ff7a, transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide });
+  const tri = new THREE.Shape(); tri.moveTo(0, 0.09); tri.lineTo(0.075, -0.035); tri.lineTo(0.03, -0.035); tri.lineTo(0.03, -0.075); tri.lineTo(-0.03, -0.075); tri.lineTo(-0.03, -0.035); tri.lineTo(-0.075, -0.035); tri.closePath();
+  const arrows = [0, 1, 2, 3].map((n) => { const m = add(new THREE.ShapeGeometry(tri), arM, 0, 0, 0); m.castShadow = false; m.rotation.z = [0, Math.PI, -Math.PI / 2, Math.PI / 2][n]; return m; });   // up, down, right, left
+  sticks[k] = piv; sticks[k + 'y'] = yoke; sticks[k + 'x0'] = x; sticks[k + 'g'] = glowM; sticks[k + 'a'] = { m: arrows, mat: arM, x };
 });
-/* trims (little rocker buttons) */
-[[-1.3, -0.46, 0.34, 0.08], [1.3, -0.46, 0.34, 0.08]].forEach((q) => add(new THREE.BoxGeometry(q[2], q[3], 0.06), plastDk, q[0], q[1], FZ + 0.02));
+/* trims (build 489c): a rocker for each stick axis - a vertical one on the inner side of each stick, a horizontal one under it.
+   each is a dark pill in a metal surround, with a raised ridge across its middle and a dot at both ends */
+{ const pill = (w, h, r) => { const p = new THREE.Shape(); p.moveTo(-w / 2 + r, -h / 2); p.lineTo(w / 2 - r, -h / 2); p.quadraticCurveTo(w / 2, -h / 2, w / 2, -h / 2 + r); p.lineTo(w / 2, h / 2 - r); p.quadraticCurveTo(w / 2, h / 2, w / 2 - r, h / 2); p.lineTo(-w / 2 + r, h / 2); p.quadraticCurveTo(-w / 2, h / 2, -w / 2, h / 2 - r); p.lineTo(-w / 2, -h / 2 + r); p.quadraticCurveTo(-w / 2, -h / 2, -w / 2 + r, -h / 2); return p; };
+  const ZT = FZ + 0.03;
+  const trim = (x, y, vert) => { const w = vert ? 0.1 : 0.3, h = vert ? 0.3 : 0.1;   // smaller (build 489g)
+    add(new THREE.ExtrudeGeometry(pill(w + 0.05, h + 0.05, 0.08), { depth: 0.015, bevelEnabled: false, curveSegments: 10 }), steel, x, y, ZT);
+    add(new THREE.ExtrudeGeometry(pill(w, h, 0.06), { depth: 0.04, bevelEnabled: true, bevelThickness: 0.01, bevelSize: 0.01, bevelSegments: 2, curveSegments: 10 }), plastDk, x, y, ZT + 0.01);
+    add(new THREE.BoxGeometry(vert ? w * 0.7 : 0.025, vert ? 0.025 : h * 0.7, 0.02), rimM, x, y, ZT + 0.065);
+    [-1, 1].forEach((t) => add(new THREE.CylinderGeometry(0.014, 0.014, 0.008, 10), new THREE.MeshBasicMaterial({ color: 0x9aa0a8 }), x + (vert ? 0 : t * 0.11), y + (vert ? t * 0.11 : 0), ZT + 0.062).rotation.x = Math.PI / 2); };
+  [-1, 1].forEach((sx) => { trim(sx * 0.3, -0.04, true); trim(sx * 1.3, -0.56, false); }); }
 /* centre: power button with an orange ring, two menu keys, the colour screen under glass */
-add(new THREE.CylinderGeometry(0.13, 0.13, 0.06, 32), plastDk, 0, 0.92, FZ + 0.03).rotation.x = Math.PI / 2;
-add(new THREE.TorusGeometry(0.075, 0.014, 8, 32), acc, 0, 0.92, FZ + 0.065);
-[0.55, 0.3].forEach((y) => { const b = add(new THREE.CylinderGeometry(0.07, 0.07, 0.46, 20), plastDk, 0, y, FZ + 0.03); b.rotation.z = Math.PI / 2; });
+{ const pill = (w, h, r) => { const p = new THREE.Shape(); p.moveTo(-w / 2 + r, -h / 2); p.lineTo(w / 2 - r, -h / 2); p.quadraticCurveTo(w / 2, -h / 2, w / 2, -h / 2 + r); p.lineTo(w / 2, h / 2 - r); p.quadraticCurveTo(w / 2, h / 2, w / 2 - r, h / 2); p.lineTo(-w / 2 + r, h / 2); p.quadraticCurveTo(-w / 2, h / 2, -w / 2, h / 2 - r); p.lineTo(-w / 2, -h / 2 + r); p.quadraticCurveTo(-w / 2, -h / 2, -w / 2 + r, -h / 2); return p; };
+  add(new THREE.ExtrudeGeometry(pill(0.8, 0.25, 0.12), { depth: 0.02, bevelEnabled: false, curveSegments: 12 }), steel, 0, GY, FZ);   // the power button (build 489f): a lying pill like the long button beside the screen
+  add(new THREE.ExtrudeGeometry(pill(0.74, 0.2, 0.1), { depth: 0.045, bevelEnabled: true, bevelThickness: 0.012, bevelSize: 0.012, bevelSegments: 3, curveSegments: 12 }), plastDk, 0, GY, FZ + 0.012);
+  add(new THREE.TorusGeometry(0.045, 0.01, 8, 32), new THREE.MeshBasicMaterial({ color: 0xffb340 }), 0, GY, FZ + 0.072); }   // right in the middle between the two sticks (build 489h)   // a small amber ring in its middle
+[-0.31, -0.48].forEach((y) => { const b = add(new THREE.CylinderGeometry(0.07, 0.07, 0.46, 20), plastDk, 0, y, FZ + 0.03); b.rotation.z = Math.PI / 2; });
 add(new THREE.BoxGeometry(2.12, 1.18, 0.09), new THREE.MeshStandardMaterial({ color: 0x141518, roughness: 0.4, metalness: 0.2 }), 0, -1.16, FZ + 0.02);   // the screen: big, at the bottom of the radio
 const scr = add(new THREE.PlaneGeometry(1.96, 1.03), new THREE.MeshBasicMaterial({ map: scrTex }), 0, -1.16, FZ + 0.07);
 add(new THREE.PlaneGeometry(1.96, 1.03), new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.05, metalness: 0, transparent: true, opacity: 0.12, clearcoat: 1 }), 0, -1.16, FZ + 0.075);
 /* four buttons in a column on the left of the screen */
-[-0.76, -1.04, -1.32, -1.6].forEach((y) => { add(new THREE.CylinderGeometry(0.115, 0.115, 0.03, 32), steel, -1.36, y, FZ + 0.01).rotation.x = Math.PI / 2;
+[-0.84, -1.09, -1.34, -1.59].forEach((y) => { add(new THREE.CylinderGeometry(0.115, 0.115, 0.03, 32), steel, -1.36, y, FZ + 0.01).rotation.x = Math.PI / 2;
   const b = add(new THREE.CylinderGeometry(0.095, 0.1, 0.07, 32), plastDk, -1.36, y, FZ + 0.045); b.rotation.x = Math.PI / 2; });
 /* one long button on the right of the screen */
 { const pill = (w, h, r) => { const p = new THREE.Shape(); p.moveTo(-w / 2 + r, -h / 2); p.lineTo(w / 2 - r, -h / 2); p.quadraticCurveTo(w / 2, -h / 2, w / 2, -h / 2 + r); p.lineTo(w / 2, h / 2 - r); p.quadraticCurveTo(w / 2, h / 2, w / 2 - r, h / 2); p.lineTo(-w / 2 + r, h / 2); p.quadraticCurveTo(-w / 2, h / 2, -w / 2, h / 2 - r); p.lineTo(-w / 2, -h / 2 + r); p.quadraticCurveTo(-w / 2, -h / 2, -w / 2 + r, -h / 2); return p; };
-  add(new THREE.ExtrudeGeometry(pill(0.25, 1.04, 0.12), { depth: 0.02, bevelEnabled: false, curveSegments: 12 }), steel, 1.36, -1.18, FZ);
-  add(new THREE.ExtrudeGeometry(pill(0.2, 0.98, 0.1), { depth: 0.045, bevelEnabled: true, bevelThickness: 0.012, bevelSize: 0.012, bevelSegments: 3, curveSegments: 12 }), plastDk, 1.36, -1.18, FZ + 0.012); }
+  add(new THREE.ExtrudeGeometry(pill(0.25, 0.92, 0.12), { depth: 0.02, bevelEnabled: false, curveSegments: 12 }), steel, 1.36, -1.22, FZ);
+  add(new THREE.ExtrudeGeometry(pill(0.2, 0.86, 0.1), { depth: 0.045, bevelEnabled: true, bevelThickness: 0.012, bevelSize: 0.012, bevelSegments: 3, curveSegments: 12 }), plastDk, 1.36, -1.22, FZ + 0.012); }
+/* two USB-C ports (build 489i/j): one in the bottom edge, one in the top edge in front of the antenna -
+   each a rounded metal mouth, the dark slot and the contact tongue with four gold contacts */
+const usbc = (yb, z, up) => { const s1 = up ? -1 : 1;
+  add(rcRoundBox(0.36, 0.03, 0.13, 0.06), steel, 0, yb + s1 * 0.004, z);
+  add(rcRoundBox(0.3, 0.032, 0.085, 0.04), new THREE.MeshStandardMaterial({ color: 0x050506, roughness: 1 }), 0, yb + s1 * 0.001, z);
+  add(new THREE.BoxGeometry(0.19, 0.034, 0.022), new THREE.MeshStandardMaterial({ color: 0x2a2c30, roughness: 0.5, metalness: 0.4 }), 0, yb, z);
+  [-0.06, -0.02, 0.02, 0.06].forEach((x) => add(new THREE.BoxGeometry(0.012, 0.036, 0.024), new THREE.MeshStandardMaterial({ color: 0xd9a432, roughness: 0.3, metalness: 0.9 }), x, yb, z)); };
+usbc(-1.92 - 0.2, -0.02, false);
+usbc(1.7 + 0.2, 0.14, true);
 /* top edge: four toggle switches on metal collars, two small knobs, the folding antenna */
 const TY = 1.9, edgeY = (x) => 1.9;
-[-1.68, -1.05, 1.05, 1.68].forEach((x, i) => { const y = edgeY(x) + 0.04;
+[-1.45, -0.95, 0.95, 1.45].forEach((x, i) => { const y = edgeY(x) + 0.04;
   add(new THREE.CylinderGeometry(0.11, 0.13, 0.16, 24), steel, x, y, 0.05);
   const lev = add(new THREE.CylinderGeometry(0.035, 0.045, 0.42, 16), metal, x, y + 0.25, 0.05); lev.rotation.z = (i % 2 ? -1 : 1) * 0.28;
   add(new THREE.SphereGeometry(0.06, 16, 12), metal, x - Math.sin(lev.rotation.z) * 0.2, y + 0.46, 0.05); });
@@ -15123,7 +15154,16 @@ add(new THREE.SphereGeometry(0.11, 20, 12), rubber, 0, 1.08, 0, ant).scale.z = 0
 const floor = new THREE.Mesh(new THREE.PlaneGeometry(14, 14), new THREE.ShadowMaterial({ opacity: 0.35 })); floor.rotation.x = -Math.PI / 2; floor.position.y = -2.45; floor.receiveShadow = true; S.add(floor);
 radio.rotation.x = -0.55;   // tilted toward the viewer, like held in the hands
   C.position.set(0, 1.2, 10.4); C.lookAt(0, 0.1, 0);
-  return { R, S, C, radio, sticks, drawScreen, GY, yaw: 0, pit: 0 };
+  return { R, S, C, radio, sticks, drawScreen, GY, FZ, yaw: 0, pit: 0 };
+}
+/* the glow and the arrows of the stick that is moving (a: the axis shown, now: ms) */
+function rcRadioFx(Q, a, now) {
+  const sticks = Q.sticks, GY = Q.GY, FZ = Q.FZ;
+  ['L', 'R'].forEach((k) => { const on = a.st === k, g = sticks[k + 'g'], A = sticks[k + 'a']; if (!g || !A) return;
+    g.opacity += ((on ? 0.38 + 0.12 * Math.sin(now / 160) : 0) - g.opacity) * 0.2;
+    A.mat.opacity += ((on ? 0.7 + 0.3 * Math.sin(now / 200) : 0) - A.mat.opacity) * 0.2;
+    const zz = FZ + 0.035 + 0.095, D = 0.8 + 0.02 * Math.sin(now / 200), P = [[0, D], [0, -D], [D, 0], [-D, 0]];
+    A.m.forEach((m, n) => { m.visible = on && (a.d === 'v' ? n < 2 : n >= 2); m.position.set(A.x + P[n][0], GY + P[n][1], zz); }); });
 }
 
 /* build 486 (preview): 2.5" CINEWHOOP from the user's photos — four smoky translucent ducts joined by webs with a triangle cut-out, a black carbon X frame
