@@ -721,7 +721,7 @@ body.nx-staff #admPub,body.nx-staff #admPrev{display:none}
 #who{display:none;position:fixed;inset:0;z-index:140;background:radial-gradient(ellipse at 30% 40%,color-mix(in srgb,var(--ac) 14%,var(--bg)),var(--bg) 72%);align-items:center;justify-content:center;direction:rtl;overflow:auto}
 #who.on{display:flex}
 #crashWin{display:none;position:fixed;inset:0;z-index:60;pointer-events:none;background:rgba(6,7,26,.35);align-items:center;justify-content:center}#crashWin.on{display:flex}#crashWin .cwb{width:140px;height:140px;border-radius:16px;background:#e5484d}#crashWin svg{width:100%;height:100%;display:block}   /* build 474: crash picture */
-#nxRc{display:none;position:fixed;inset:0;z-index:140;background:color-mix(in srgb,var(--bg) 92%,transparent);align-items:center;justify-content:center;direction:rtl}   /* build 472: the radio explainer after signing in */
+#nxRc .rc3d{cursor:grab;touch-action:none;aspect-ratio:4/3;width:100%;height:auto;display:block}#nxRc{display:none;position:fixed;inset:0;z-index:140;background:color-mix(in srgb,var(--bg) 92%,transparent);align-items:center;justify-content:center;direction:rtl}   /* build 472: the radio explainer after signing in */
 #nxRc.on{display:flex}
 #nxRc .rcbox{width:min(980px,96vw);max-height:96vh;overflow:auto;background:var(--bg);border:1px solid var(--ln);border-radius:12px;padding:20px 22px 18px;color:var(--tx);font:15px var(--ui)}
 #nxRc .rchd{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}#nxRc .rcen{font:500 12px var(--mono);letter-spacing:.25em;color:var(--ac);direction:ltr;text-align:right}#nxRc h3{font-size:26px;color:var(--ti,#fff);margin:0}#nxRc .rcmu{font-size:12px;color:var(--mu)}
@@ -1891,7 +1891,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 488</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 489</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -1905,7 +1905,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="crashWin" aria-hidden="true"><div class="cwb"><svg viewBox="0 0 140 140" aria-hidden="true"><g transform="translate(70 70) scale(1.15)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round"><path d="M-6 -9 L-30 -33 M-6 9 L-30 33 M6 9 L30 33 M6 -9 L11 -14" stroke-width="5"/><rect x="-11" y="-17" width="22" height="34" rx="4" stroke-width="4.5"/><rect x="-6" y="-26" width="12" height="8" rx="2" stroke-width="3.5"/><circle cx="-36" cy="-36" r="12" stroke-width="4"/><circle cx="-36" cy="-36" r="2.5" fill="#fff" stroke="none"/><circle cx="-36" cy="36" r="12" stroke-width="4"/><circle cx="-36" cy="36" r="2.5" fill="#fff" stroke="none"/><circle cx="36" cy="36" r="12" stroke-width="4"/><circle cx="36" cy="36" r="2.5" fill="#fff" stroke="none"/><path d="M51.0 -36.5 L41.4 -30.2 L49.5 -24.6 L38.4 -24.8 L45.4 -12.8 L34.7 -20.1 L33.0 -11.3 L28.5 -18.0 L21.1 -9.9 L23.3 -22.1 L12.6 -18.4 L19.5 -26.7 L10.2 -29.7 L20.2 -32.7 L10.9 -41.9 L22.2 -38.7 L21.7 -47.5 L28.3 -40.9 L32.7 -51.2 L34.2 -39.7 L44.2 -46.8 L39.2 -36.1Z" fill="#fff" stroke="#fff" stroke-width="2"/><path d="M35.4 -30.8 L42.6 -28.3 L35.5 -27.5 L37.9 -23.2 L33.6 -24.4 L33.5 -18.4 L30.0 -24.3 L26.8 -18.9 L26.8 -24.9 L21.8 -22.8 L25.0 -27.7 L17.8 -28.2 L23.6 -30.9 L20.3 -34.4 L25.4 -33.9 L23.6 -39.8 L28.3 -35.6 L29.9 -42.1 L31.7 -35.8 L36.5 -40.2 L34.7 -34.2 L40.1 -34.7Z" fill="#e5484d" stroke="none"/></g></svg></div></div>
 <div id="nxRc" role="dialog" aria-label="הסבר על השלט"><div class="rcbox">
 <div class="rchd"><div><div class="rcen">RADIO · MODE 2</div><h3>הכר את השלט</h3></div><div class="rcmu">4 צירים</div></div>
-<div class="rcgrid"><svg viewBox="0 0 340 300" class="rcsvg" aria-hidden="true"><defs><linearGradient id="rcbG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5c5f63"/><stop offset=".5" stop-color="#4a4d51"/><stop offset="1" stop-color="#3a3c40"/></linearGradient><linearGradient id="rceG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2e3033"/><stop offset=".12" stop-color="#46494d00"/><stop offset=".88" stop-color="#46494d00"/><stop offset="1" stop-color="#2e3033"/></linearGradient><radialGradient id="rcgimG" cx=".5" cy=".45" r=".6"><stop offset="0" stop-color="#2a2c2f"/><stop offset=".85" stop-color="#1c1d20"/><stop offset="1" stop-color="#3a3c40"/></radialGradient><linearGradient id="rcplateG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d9dce0"/><stop offset=".5" stop-color="#9da1a7"/><stop offset="1" stop-color="#e8eaed"/></linearGradient><radialGradient id="rccapG" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#5a5d62"/><stop offset=".6" stop-color="#2a2c30"/><stop offset="1" stop-color="#141517"/></radialGradient><linearGradient id="rcscrG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfd6c8"/><stop offset="1" stop-color="#aeb8a6"/></linearGradient><pattern id="rcknurl" width="3" height="3" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="1.4" height="3" fill="#00000055"/></pattern></defs><path d="M58 40 L282 40 Q314 40 318 72 L322 258 Q322 284 296 284 L44 284 Q18 284 18 258 L22 72 Q26 40 58 40 Z" fill="url(#rcbG)" stroke="#232427" stroke-width="2"/><path d="M58 40 L282 40 Q314 40 318 72 L322 258 Q322 284 296 284 L44 284 Q18 284 18 258 L22 72 Q26 40 58 40 Z" fill="url(#rceG)"/><path d="M60 48 L280 48" stroke="#ffffff1c" stroke-width="2" stroke-linecap="round"/><path d="M46 278 L294 278" stroke="#00000033" stroke-width="2" stroke-linecap="round"/><g fill="#2a2c2f" stroke="#1a1b1d" stroke-width="1"><rect x="38" y="30" width="34" height="14" rx="5"/><rect x="268" y="30" width="34" height="14" rx="5"/></g><g fill="#26282b" stroke="#141517" stroke-width="1"><circle cx="40" cy="64" r="7"/><circle cx="300" cy="64" r="7"/><circle cx="62" cy="58" r="6"/><circle cx="278" cy="58" r="6"/></g><g stroke="#c8ccd1" stroke-width="3" stroke-linecap="round"><line x1="40" y1="64" x2="40" y2="55"/><line x1="300" y1="64" x2="300" y2="55"/><line x1="62" y1="58" x2="62" y2="50"/><line x1="278" y1="58" x2="278" y2="50"/></g><rect x="146" y="54" width="48" height="12" rx="6" fill="#2e3033" stroke="#1d1e21"/><text x="170" y="63" text-anchor="middle" font-size="7" fill="#c8ccd1" font-family="monospace" letter-spacing="1">NEXUS</text><g><circle cx="92" cy="126" r="52" fill="#2e3033" stroke="#1d1e21" stroke-width="1.5"/><circle cx="92" cy="126" r="44" fill="url(#rcgimG)"/><circle cx="92" cy="126" r="31" fill="none" stroke="url(#rcplateG)" stroke-width="3"/><g fill="#b9bdc3"><circle cx="70" cy="104" r="2"/><circle cx="114" cy="104" r="2"/><circle cx="70" cy="148" r="2"/><circle cx="114" cy="148" r="2"/></g><line x1="92" y1="88" x2="92" y2="164" stroke="#ffffff14"/><line x1="54" y1="126" x2="130" y2="126" stroke="#ffffff14"/></g><g><circle cx="248" cy="126" r="52" fill="#2e3033" stroke="#1d1e21" stroke-width="1.5"/><circle cx="248" cy="126" r="44" fill="url(#rcgimG)"/><circle cx="248" cy="126" r="31" fill="none" stroke="url(#rcplateG)" stroke-width="3"/><g fill="#b9bdc3"><circle cx="226" cy="104" r="2"/><circle cx="270" cy="104" r="2"/><circle cx="226" cy="148" r="2"/><circle cx="270" cy="148" r="2"/></g><line x1="248" y1="88" x2="248" y2="164" stroke="#ffffff14"/><line x1="210" y1="126" x2="286" y2="126" stroke="#ffffff14"/></g><g fill="#2a2c2f" stroke="#1a1b1d"><rect x="152" y="88" width="36" height="10" rx="5"/><rect x="152" y="104" width="36" height="10" rx="5"/></g><circle cx="170" cy="138" r="9" fill="#3a3c40" stroke="#26282b"/><text x="170" y="141.5" text-anchor="middle" font-size="9" fill="#d9dce0" font-family="monospace" font-weight="bold">88</text><g fill="#cfd2d6"><rect x="58" y="190" width="14" height="6" rx="3"/><rect x="78" y="190" width="14" height="6" rx="3"/><rect x="248" y="190" width="14" height="6" rx="3"/><rect x="268" y="190" width="14" height="6" rx="3"/></g><rect x="108" y="190" width="124" height="74" rx="7" fill="#1d1e21" stroke="#141517"/><rect x="114" y="196" width="112" height="62" rx="3" fill="url(#rcscrG)"/><text x="170" y="214" text-anchor="middle" font-size="9" fill="#2b3326" font-family="monospace" letter-spacing="1">NEXUS RC</text><text x="170" y="234" text-anchor="middle" font-size="14" fill="#1b2216" font-family="monospace" font-weight="bold" id="rcScr">THR</text><rect x="128" y="244" width="84" height="6" rx="2" fill="#8f9a88"/><rect id="rcScrBar" x="128" y="244" width="42" height="6" rx="2" fill="#2b3326"/><g fill="#2a2c2f" stroke="#1a1b1d"><circle cx="252" cy="222" r="7"/><circle cx="276" cy="222" r="7"/><rect x="246" y="238" width="36" height="9" rx="4"/><circle cx="88" cy="222" r="7"/><circle cx="64" cy="222" r="7"/><rect x="58" y="238" width="36" height="9" rx="4"/></g><g id="rcArL" class="rcar"></g><g id="rcArR" class="rcar"></g><line id="rcShL" x1="92" y1="126" x2="92" y2="126" stroke="#9da1a7" stroke-width="5" stroke-linecap="round"/><line id="rcShR" x1="248" y1="126" x2="248" y2="126" stroke="#9da1a7" stroke-width="5" stroke-linecap="round"/><circle id="rcKL" class="rck" cx="92" cy="126" r="12" stroke="#0e0f11" stroke-width="1.5"/><circle id="rcKLk" cx="92" cy="126" r="12" fill="url(#rcknurl)"/><circle id="rcKR" class="rck" cx="248" cy="126" r="12" stroke="#0e0f11" stroke-width="1.5"/><circle id="rcKRk" cx="248" cy="126" r="12" fill="url(#rcknurl)"/></svg><div class="rcdv"><div id="rcDv"></div><span>מה הרחפן עושה</span></div></div>
+<div class="rcgrid"><canvas id="rcRadio" class="rcsvg rc3d" width="880" height="660" aria-label="השלט · גרור כדי לסובב"></canvas><div class="rcdv"><div id="rcDv"></div><span>מה הרחפן עושה</span></div></div>
 <div class="rctabs" id="rcTabs"></div>
 <div class="rcinfo"><div class="rcl"><b id="rcN"></b><span id="rcE"></span><em id="rcS"></em></div><p id="rcT"></p></div>
 <div class="rcft"><label><input type="checkbox" id="rcSkip"> אל תציג שוב</label><div><button class="b" id="rcLater">דלג</button><button class="b on" id="rcOk">הבנתי, נמשיך</button></div></div>
@@ -14915,11 +14915,12 @@ function rcSel(i) {
   RCH.cur = i; RCH.t0 = performance.now();
   const a = RC_AX[i], tabs = $('rcTabs');
   if (tabs) Array.from(tabs.children).forEach((b, j) => b.classList.toggle('on', j === i));
-  $('rcN').textContent = a.n; $('rcE').textContent = a.e; $('rcS').textContent = a.s; $('rcT').textContent = a.t; $('rcScr').textContent = a.e;
+  $('rcN').textContent = a.n; $('rcE').textContent = a.e; $('rcS').textContent = a.s; $('rcT').textContent = a.t; if ($('rcScr')) $('rcScr').textContent = a.e;
   rcArrows('rcArL', RC_CX.L, a.st === 'L' ? a.d : ''); rcArrows('rcArR', RC_CX.R, a.st === 'R' ? a.d : '');
-  $('rcKL').classList.toggle('on', a.st === 'L'); $('rcKR').classList.toggle('on', a.st === 'R');
+  if ($('rcKL')) $('rcKL').classList.toggle('on', a.st === 'L'); if ($('rcKR')) $('rcKR').classList.toggle('on', a.st === 'R');
 }
 function rcKnob(s, x, y) {
+  const Q = RCH.Q; if (Q && Q.sticks[s]) { const MAX = 0.42; Q.sticks[s].rotation.set(-y * MAX, x * MAX, 0); const yk = Q.sticks[s + 'y']; if (yk) yk.position.set(Q.sticks[s + 'x0'] + x * 0.13, Q.GY + y * 0.13, yk.position.z); return; }   // build 489: the 3D radio
   const px = RC_CX[s] + x * 24, py = RC_CY - y * 24;
   ['rcK' + s, 'rcK' + s + 'k'].forEach((id) => { const k = $(id); if (k) { k.setAttribute('cx', px); k.setAttribute('cy', py); } });
   const sh = $('rcSh' + s); if (sh) { sh.setAttribute('x2', px); sh.setAttribute('y2', py); }
@@ -14953,6 +14954,17 @@ function rcScene() {                                              // the pilot's
   }
   return true;
 }
+function rcRadio() {                                              // build 489: the 3D radio, built once; drag on it to turn it
+  const cv = $('rcRadio'); if (!cv || typeof THREE === 'undefined' || typeof rcRadioInit !== 'function') return false;
+  if (!RCH.Q) {
+    RCH.Q = rcRadioInit(cv);
+    let drag = null; const Q = RCH.Q;
+    cv.addEventListener('pointerdown', (e) => { drag = [e.clientX, e.clientY]; try { cv.setPointerCapture(e.pointerId); } catch (er) { /* ignore */ } cv.style.cursor = 'grabbing'; });
+    cv.addEventListener('pointermove', (e) => { if (!drag) return; Q.yaw = Math.max(-0.9, Math.min(0.9, Q.yaw + (e.clientX - drag[0]) * 0.006)); Q.pit = Math.max(-0.4, Math.min(0.5, Q.pit + (e.clientY - drag[1]) * 0.004)); drag = [e.clientX, e.clientY]; });
+    const up = () => { drag = null; cv.style.cursor = ''; }; cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
+  }
+  return true;
+}
 function rcLoop(now) {
   if (!RCH.on) return;
   RCH.raf = requestAnimationFrame(rcLoop);
@@ -14969,6 +14981,7 @@ function rcLoop(now) {
   if (a.k === 'roll') { Rr = [v, 0]; D.rotation.z = -v * 0.42; D.position.x = v * 0.55 * r; }
   rcKnob('L', L[0], L[1]); rcKnob('R', Rr[0], Rr[1]);
   const sv = a.k === 'thr' ? L[1] : a.k === 'yaw' ? L[0] : a.k === 'pitch' ? Rr[1] : Rr[0], bar = $('rcScrBar'); if (bar) bar.setAttribute('width', Math.max(2, 42 + 42 * sv));
+  if (RCH.Q) { const Q = RCH.Q; Q.drawScreen(a.e.slice(0, 5), (sv + 1) / 2); Q.radio.rotation.y = Q.yaw + Math.sin(now / 4000) * 0.12; Q.radio.rotation.x = -0.55 + Q.pit; Q.R.render(Q.S, Q.C); }
   const pr = (RCH.model && RCH.model.userData.props) || []; for (let i = 0; i < pr.length; i++) pr[i].rotation.y += (pr[i].userData && pr[i].userData.dir ? pr[i].userData.dir : (i % 2 ? -1 : 1)) * spin * dt;
   if (RCH.R) RCH.R.render(RCH.S, RCH.C);
 }
@@ -14978,6 +14991,7 @@ function rcHelpOpen() {
   const sk = $('rcSkip'); if (sk) sk.checked = rcSkipped();
   rcSel(0);
   try { rcScene(); } catch (e) { /* the drawing still explains without the drone */ }
+  try { rcRadio(); } catch (e) { RCH.Q = null; }
   cancelAnimationFrame(RCH.raf); RCH.last = performance.now(); RCH.raf = requestAnimationFrame(rcLoop);
   return true;
 }
@@ -14995,6 +15009,122 @@ function rcAfterLogin() { if (!rcSkipped()) rcHelpOpen(); }     // called after 
   const hb = $('btnRcHelp'); if (hb) hb.addEventListener('click', (e) => { rcHelpOpen(); if (e.currentTarget && e.currentTarget.blur) e.currentTarget.blur(); });
   window.addEventListener('resize', () => { if (RCH.on) { try { rcScene(); } catch (e) { /* ignore */ } } });
 })();
+
+/* build 489: the radio is a 3D model (own design: square body, gimbals with a square frame and a sliding yoke, chrome knurled sticks,
+   big screen at the bottom with four buttons on its left and one long button on its right) that the pilot can turn with the mouse */
+function rcRadioInit(cv) {
+/* ---------- textures ---------- */
+function noiseTex(base, amp, n) { const c = document.createElement('canvas'); c.width = c.height = 256; const g = c.getContext('2d'); g.fillStyle = base; g.fillRect(0, 0, 256, 256);
+  for (let i = 0; i < n; i++) { const v = Math.random(); g.fillStyle = 'rgba(' + (v > 0.5 ? '255,255,255,' : '0,0,0,') + (amp * Math.random()) + ')'; g.fillRect(Math.random() * 256, Math.random() * 256, 1.5, 1.5); }
+  const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; return t; }
+function knurlTex() { const c = document.createElement('canvas'); c.width = 128; c.height = 64; const g = c.getContext('2d'); g.fillStyle = '#808080'; g.fillRect(0, 0, 128, 64);
+  for (let i = -64; i < 192; i += 6) { g.strokeStyle = '#ffffff'; g.lineWidth = 2; g.beginPath(); g.moveTo(i, 0); g.lineTo(i + 64, 64); g.stroke(); g.strokeStyle = '#000'; g.beginPath(); g.moveTo(i + 64, 0); g.lineTo(i, 64); g.stroke(); }
+  const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(4, 1); return t; }
+function gripTex() { const c = document.createElement('canvas'); c.width = c.height = 128; const g = c.getContext('2d'); g.fillStyle = '#7a7a7a'; g.fillRect(0, 0, 128, 128);
+  for (let y = 0; y < 128; y += 8) for (let x = (y / 8) % 2 ? 4 : 0; x < 128; x += 8) { const gr = g.createRadialGradient(x, y, 0, x, y, 3.4); gr.addColorStop(0, '#fff'); gr.addColorStop(1, '#7a7a7a'); g.fillStyle = gr; g.beginPath(); g.arc(x, y, 3.4, 0, 7); g.fill(); }
+  const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(9, 9); return t; }
+const scrCv = document.createElement('canvas'); scrCv.width = 608; scrCv.height = 320; const scrTex = new THREE.CanvasTexture(scrCv);
+function drawScreen(name, thr) { const g = scrCv.getContext('2d'); const gr = g.createLinearGradient(0, 0, 0, 320); gr.addColorStop(0, '#0f2f44'); gr.addColorStop(1, '#061520'); g.fillStyle = gr; g.fillRect(0, 0, 608, 320);
+  g.fillStyle = '#6fd0ff'; g.font = '600 34px monospace'; g.textAlign = 'center'; g.fillText('NEXUS RC', 304, 64);
+  g.fillStyle = '#ffffff'; g.font = '700 82px monospace'; g.fillText(name, 304, 170);
+  g.fillStyle = '#0b1c27'; g.fillRect(70, 214, 468, 34); g.fillStyle = '#ff8a1a'; g.fillRect(70, 214, 468 * thr, 34); g.strokeStyle = '#2c5a74'; g.lineWidth = 3; g.strokeRect(70, 214, 468, 34);
+  g.fillStyle = '#9dff5a'; g.font = '600 30px monospace'; g.fillText('TX 100%  ·  RX OK', 304, 292); scrTex.needsUpdate = true; }
+/* ---------- scene ---------- */
+const R = new THREE.WebGLRenderer({ canvas: cv, antialias: true, alpha: true }); R.setClearColor(0x000000, 0); R.setPixelRatio(Math.min(2, window.devicePixelRatio || 1)); R.shadowMap.enabled = true; R.shadowMap.type = THREE.PCFSoftShadowMap;
+const S = new THREE.Scene(), C = new THREE.PerspectiveCamera(30, cv.width / cv.height, 0.1, 100);
+S.add(new THREE.AmbientLight(0xffffff, 0.35)); S.add(new THREE.HemisphereLight(0xdfeaff, 0x1a1c22, 0.55));
+const key = new THREE.DirectionalLight(0xffffff, 1.05); key.position.set(-3, 7, 8); key.castShadow = true; key.shadow.mapSize.set(2048, 2048); ['left', 'bottom'].forEach((k) => key.shadow.camera[k] = -6); ['right', 'top'].forEach((k) => key.shadow.camera[k] = 6); S.add(key);
+const rim = new THREE.DirectionalLight(0x8fd0ff, 0.7); rim.position.set(6, 3, -5); S.add(rim);
+const fill = new THREE.PointLight(0xffd7a8, 0.5, 30); fill.position.set(4, -2, 6); S.add(fill);
+/* materials: soft-touch plastic, a glossier rim, brushed metal, rubber */
+const plast = new THREE.MeshStandardMaterial({ color: 0x2c2e33, roughness: 0.68, metalness: 0.05, bumpMap: noiseTex('#808080', 0.35, 9000), bumpScale: 0.012 });
+const plastDk = new THREE.MeshStandardMaterial({ color: 0x18191c, roughness: 0.75, metalness: 0.05 });
+const rimM = new THREE.MeshStandardMaterial({ color: 0x3c3f45, roughness: 0.4, metalness: 0.15 });
+const metal = new THREE.MeshStandardMaterial({ color: 0xb8bcc2, roughness: 0.28, metalness: 0.95 });
+const steel = new THREE.MeshStandardMaterial({ color: 0x8d9197, roughness: 0.35, metalness: 0.9 });
+const knurl = new THREE.MeshStandardMaterial({ color: 0x9a9ea4, roughness: 0.32, metalness: 0.95, bumpMap: knurlTex(), bumpScale: 0.025 });
+const rubber = new THREE.MeshStandardMaterial({ color: 0x121214, roughness: 0.95, metalness: 0 });
+const gripM = new THREE.MeshStandardMaterial({ color: 0x232428, roughness: 0.85, metalness: 0.02, bumpMap: gripTex(), bumpScale: 0.03 });
+const acc = new THREE.MeshStandardMaterial({ color: 0xff8a1a, roughness: 0.4, metalness: 0.2, emissive: 0x401c00 });
+const radio = new THREE.Group(); S.add(radio);
+const add = (geo, mat, x, y, z, par) => { const m = new THREE.Mesh(geo, mat); m.position.set(x || 0, y || 0, z || 0); m.castShadow = m.receiveShadow = true; (par || radio).add(m); return m; };
+/* the body: a compact pad with two round grips (front face toward +z), deep rounded edges */
+const sh = new THREE.Shape(); { const x0 = -2.28, x1 = 2.28, y0 = -1.92, y1 = 1.7, r = 0.38;   // narrow: the sides come almost to the sticks   // a square body with rounded corners
+  sh.moveTo(x0 + r, y0); sh.lineTo(x1 - r, y0); sh.quadraticCurveTo(x1, y0, x1, y0 + r); sh.lineTo(x1, y1 - r); sh.quadraticCurveTo(x1, y1, x1 - r, y1);
+  sh.lineTo(x0 + r, y1); sh.quadraticCurveTo(x0, y1, x0, y1 - r); sh.lineTo(x0, y0 + r); sh.quadraticCurveTo(x0, y0, x0 + r, y0); }
+const BT = 0.55, bodyG = new THREE.ExtrudeGeometry(sh, { depth: BT, bevelEnabled: true, bevelThickness: 0.22, bevelSize: 0.2, bevelSegments: 8, curveSegments: 48 }); bodyG.translate(0, 0, -BT / 2);
+const body = add(bodyG, [plast, rimM]);
+/* rubber grip pads on both sides */
+[-1, 1].forEach((sx) => { const g = add(new THREE.BoxGeometry(0.16, 2.3, 0.62), gripM, sx * 2.43, -0.25, 0); });
+/* a slightly raised front panel round the wells */
+const FZ = BT / 2 + 0.22;
+const panel = new THREE.Shape(); { const w = 2.05, h = 1.12, r = 0.6; panel.moveTo(-w + r, h); panel.lineTo(w - r, h); panel.quadraticCurveTo(w, h, w, h - r); panel.lineTo(w, -h + r); panel.quadraticCurveTo(w, -h, w - r, -h); panel.lineTo(-w + r, -h); panel.quadraticCurveTo(-w, -h, -w, -h + r); panel.lineTo(-w, h - r); panel.quadraticCurveTo(-w, h, -w + r, h); }
+add(new THREE.ExtrudeGeometry(panel, { depth: 0.02, bevelEnabled: true, bevelThickness: 0.015, bevelSize: 0.03, bevelSegments: 3 }), new THREE.MeshStandardMaterial({ color: 0x232529, roughness: 0.55, metalness: 0.1 }), 0, 0.42, FZ - 0.01);
+/* gimbals (like the user's photo): a dark round bezel with four white ticks, a raised square frame, and in its window the gimbal
+   mechanism - two ribbed guide rails and the yoke block that slides with the stick - then the chrome shaft and its knurled end */
+const GX = 1.3, GY = 0.4, sticks = {};
+const bezelM = new THREE.MeshStandardMaterial({ color: 0x141416, roughness: 0.5, metalness: 0.15 }), floorM = new THREE.MeshStandardMaterial({ color: 0x2b2d31, roughness: 0.7, metalness: 0.1 });
+const tickM = new THREE.MeshBasicMaterial({ color: 0xe8ecf0 }), mechM = new THREE.MeshStandardMaterial({ color: 0x1a1b1e, roughness: 0.55, metalness: 0.3 }), voidM = new THREE.MeshStandardMaterial({ color: 0x070708, roughness: 1 });
+const chrome = new THREE.MeshStandardMaterial({ color: 0xe9edf2, roughness: 0.12, metalness: 1 });
+const rr = (w, h, r) => { const p = new THREE.Shape(); p.moveTo(-w / 2 + r, -h / 2); p.lineTo(w / 2 - r, -h / 2); p.quadraticCurveTo(w / 2, -h / 2, w / 2, -h / 2 + r); p.lineTo(w / 2, h / 2 - r); p.quadraticCurveTo(w / 2, h / 2, w / 2 - r, h / 2); p.lineTo(-w / 2 + r, h / 2); p.quadraticCurveTo(-w / 2, h / 2, -w / 2, h / 2 - r); p.lineTo(-w / 2, -h / 2 + r); p.quadraticCurveTo(-w / 2, -h / 2, -w / 2 + r, -h / 2); return p; };
+[['L', -GX], ['R', GX]].forEach(([k, x]) => {
+  const Z = FZ;
+  add(new THREE.TorusGeometry(0.8, 0.07, 20, 80), bezelM, x, GY, Z + 0.02);                                  // the round bezel
+  add(new THREE.TorusGeometry(0.71, 0.012, 8, 80), new THREE.MeshStandardMaterial({ color: 0x55585e, roughness: 0.35, metalness: 0.6 }), x, GY, Z + 0.035);   // its bright inner edge
+  add(new THREE.CylinderGeometry(0.73, 0.73, 0.04, 80), floorM, x, GY, Z - 0.005).rotation.x = Math.PI / 2;  // the floor of the well
+  [[0, 1], [0, -1], [1, 0], [-1, 0]].forEach((d) => { const t = add(new THREE.BoxGeometry(d[0] ? 0.12 : 0.018, d[0] ? 0.018 : 0.12, 0.004), tickM, x + d[0] * 0.6, GY + d[1] * 0.6, Z + 0.018); });   // four white ticks
+  [[-1, -1], [1, 1]].forEach((q) => add(new THREE.CylinderGeometry(0.018, 0.018, 0.006, 12), tickM, x + q[0] * 0.42, GY + q[1] * 0.42, Z + 0.018).rotation.x = Math.PI / 2);   // two small dots
+  const fr = rr(0.86, 0.86, 0.1); fr.holes.push(new THREE.Path(rr(0.66, 0.66, 0.05).getPoints(24)));             // the raised square frame
+  add(new THREE.ExtrudeGeometry(fr, { depth: 0.05, bevelEnabled: true, bevelThickness: 0.012, bevelSize: 0.012, bevelSegments: 2, curveSegments: 12 }), bezelM, x, GY, Z + 0.016);
+  add(new THREE.PlaneGeometry(0.66, 0.66), voidM, x, GY, Z + 0.017);                                          // the dark inside of the window
+  [-1, 1].forEach((sy) => { add(new THREE.BoxGeometry(0.5, 0.07, 0.03), mechM, x, GY + sy * 0.2, Z + 0.035);    // two guide rails...
+    for (let r = 0; r < 9; r++) add(new THREE.BoxGeometry(0.012, 0.075, 0.012), new THREE.MeshStandardMaterial({ color: 0x3a3d42, roughness: 0.4, metalness: 0.5 }), x - 0.2 + r * 0.05, GY + sy * 0.2, Z + 0.054); });   // ...with ribs
+  const piv = new THREE.Group(); piv.position.set(x, GY, Z + 0.02); radio.add(piv);
+  const yoke = new THREE.Group(); yoke.position.set(x, GY, Z + 0.05); radio.add(yoke);                       // the yoke block, slides inside the window
+  add(new THREE.BoxGeometry(0.26, 0.22, 0.06), mechM, 0, 0, 0, yoke);
+  add(new THREE.BoxGeometry(0.2, 0.16, 0.012), new THREE.MeshStandardMaterial({ color: 0x2c2e33, roughness: 0.4, metalness: 0.4 }), 0, 0, 0.036, yoke);
+  const shaft = add(new THREE.CylinderGeometry(0.04, 0.05, 0.5, 24), chrome, 0, 0, 0.25, piv); shaft.rotation.x = Math.PI / 2;
+  add(new THREE.CylinderGeometry(0.075, 0.06, 0.06, 24), chrome, 0, 0, 0.5, piv).rotation.x = Math.PI / 2;    // collar under the end
+  const end = add(new THREE.CylinderGeometry(0.13, 0.13, 0.3, 40), knurl, 0, 0, 0.68, piv); end.rotation.x = Math.PI / 2;
+  [0.53, 0.83].forEach((z) => add(new THREE.TorusGeometry(0.13, 0.014, 10, 40), chrome, 0, 0, z, piv));      // bright chamfers at both ends
+  const cap = add(new THREE.CircleGeometry(0.125, 40), chrome, 0, 0, 0.835, piv);
+  sticks[k] = piv; sticks[k + 'y'] = yoke; sticks[k + 'x0'] = x;
+});
+/* trims (little rocker buttons) */
+[[-1.3, -0.46, 0.34, 0.08], [1.3, -0.46, 0.34, 0.08]].forEach((q) => add(new THREE.BoxGeometry(q[2], q[3], 0.06), plastDk, q[0], q[1], FZ + 0.02));
+/* centre: power button with an orange ring, two menu keys, the colour screen under glass */
+add(new THREE.CylinderGeometry(0.13, 0.13, 0.06, 32), plastDk, 0, 0.92, FZ + 0.03).rotation.x = Math.PI / 2;
+add(new THREE.TorusGeometry(0.075, 0.014, 8, 32), acc, 0, 0.92, FZ + 0.065);
+[0.55, 0.3].forEach((y) => { const b = add(new THREE.CylinderGeometry(0.07, 0.07, 0.46, 20), plastDk, 0, y, FZ + 0.03); b.rotation.z = Math.PI / 2; });
+add(new THREE.BoxGeometry(2.12, 1.18, 0.09), new THREE.MeshStandardMaterial({ color: 0x141518, roughness: 0.4, metalness: 0.2 }), 0, -1.16, FZ + 0.02);   // the screen: big, at the bottom of the radio
+const scr = add(new THREE.PlaneGeometry(1.96, 1.03), new THREE.MeshBasicMaterial({ map: scrTex }), 0, -1.16, FZ + 0.07);
+add(new THREE.PlaneGeometry(1.96, 1.03), new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.05, metalness: 0, transparent: true, opacity: 0.12, clearcoat: 1 }), 0, -1.16, FZ + 0.075);
+/* four buttons in a column on the left of the screen */
+[-0.76, -1.04, -1.32, -1.6].forEach((y) => { add(new THREE.CylinderGeometry(0.115, 0.115, 0.03, 32), steel, -1.36, y, FZ + 0.01).rotation.x = Math.PI / 2;
+  const b = add(new THREE.CylinderGeometry(0.095, 0.1, 0.07, 32), plastDk, -1.36, y, FZ + 0.045); b.rotation.x = Math.PI / 2; });
+/* one long button on the right of the screen */
+{ const pill = (w, h, r) => { const p = new THREE.Shape(); p.moveTo(-w / 2 + r, -h / 2); p.lineTo(w / 2 - r, -h / 2); p.quadraticCurveTo(w / 2, -h / 2, w / 2, -h / 2 + r); p.lineTo(w / 2, h / 2 - r); p.quadraticCurveTo(w / 2, h / 2, w / 2 - r, h / 2); p.lineTo(-w / 2 + r, h / 2); p.quadraticCurveTo(-w / 2, h / 2, -w / 2, h / 2 - r); p.lineTo(-w / 2, -h / 2 + r); p.quadraticCurveTo(-w / 2, -h / 2, -w / 2 + r, -h / 2); return p; };
+  add(new THREE.ExtrudeGeometry(pill(0.25, 1.04, 0.12), { depth: 0.02, bevelEnabled: false, curveSegments: 12 }), steel, 1.36, -1.18, FZ);
+  add(new THREE.ExtrudeGeometry(pill(0.2, 0.98, 0.1), { depth: 0.045, bevelEnabled: true, bevelThickness: 0.012, bevelSize: 0.012, bevelSegments: 3, curveSegments: 12 }), plastDk, 1.36, -1.18, FZ + 0.012); }
+/* top edge: four toggle switches on metal collars, two small knobs, the folding antenna */
+const TY = 1.9, edgeY = (x) => 1.9;
+[-1.68, -1.05, 1.05, 1.68].forEach((x, i) => { const y = edgeY(x) + 0.04;
+  add(new THREE.CylinderGeometry(0.11, 0.13, 0.16, 24), steel, x, y, 0.05);
+  const lev = add(new THREE.CylinderGeometry(0.035, 0.045, 0.42, 16), metal, x, y + 0.25, 0.05); lev.rotation.z = (i % 2 ? -1 : 1) * 0.28;
+  add(new THREE.SphereGeometry(0.06, 16, 12), metal, x - Math.sin(lev.rotation.z) * 0.2, y + 0.46, 0.05); });
+[-0.55, 0.55].forEach((x) => { add(new THREE.CylinderGeometry(0.14, 0.14, 0.12, 32), knurl, x, edgeY(x) + 0.04, 0.02); });
+const ant = new THREE.Group(); ant.position.set(0, TY + 0.06, -0.12); ant.rotation.x = -0.25; radio.add(ant);
+add(new THREE.CylinderGeometry(0.12, 0.12, 0.3, 24), plastDk, 0, 0, 0, ant).rotation.z = Math.PI / 2;
+const blade = add(new THREE.BoxGeometry(0.22, 1.05, 0.12), rubber, 0, 0.55, 0, ant);
+add(new THREE.SphereGeometry(0.11, 20, 12), rubber, 0, 1.08, 0, ant).scale.z = 0.55;
+/* two speaker grilles and the lanyard bar on the back */
+[-1, 1].forEach((sx) => { for (let i = 0; i < 9; i++) add(new THREE.CylinderGeometry(0.018, 0.018, 0.02, 8), plastDk, sx * (1.75 + (i % 3) * 0.08), -1.38 + Math.floor(i / 3) * 0.08, FZ - 0.005).rotation.x = Math.PI / 2; });
+/* a soft floor shadow */
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(14, 14), new THREE.ShadowMaterial({ opacity: 0.35 })); floor.rotation.x = -Math.PI / 2; floor.position.y = -2.45; floor.receiveShadow = true; S.add(floor);
+radio.rotation.x = -0.55;   // tilted toward the viewer, like held in the hands
+  C.position.set(0, 1.2, 10.4); C.lookAt(0, 0.1, 0);
+  return { R, S, C, radio, sticks, drawScreen, GY, yaw: 0, pit: 0 };
+}
 
 /* build 486 (preview): 2.5" CINEWHOOP from the user's photos — four smoky translucent ducts joined by webs with a triangle cut-out, a black carbon X frame
    with 1404 motors on round pads and clear 3-blade 63 mm props, a top plate with a battery strap over a frosted pad, the HD camera in a black TPU cage
