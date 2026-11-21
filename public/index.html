@@ -1891,7 +1891,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 495</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 496</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -5522,6 +5522,122 @@ PX.acacia = (add, T, col) => {
 PX.hedge = (add, T, col) => {
   const a = pyAdd(add), n = Math.max(3, Math.round(T.len / 1.1));
   for (let i = 0; i < n; i++) { const x = (i / (n - 1) - 0.5) * (T.len - 1), s = T.dep * 0.72; a(leafBlobGeo(i), leafMat(col, 0.95 + (i % 3) * 0.05), x, T.h * 0.45, (i % 2 ? 0.08 : -0.08), s * 1.1, T.h * 0.52, s); }
+};
+/* ============================================================
+   build 496: ABANDONED ("BANDO") ELEMENTS - places FPV pilots dive and thread:
+   a hollow factory chimney you dive into and leave through a hole at its foot, an empty concrete shell with
+   window and door holes, a bare concrete frame, a broken shed with holes in its roof and walls, a broken wall,
+   a rusty tank lying on its side, an old steel tower and a ruined archway.
+   Every one is built from separate pieces, so the game's collision follows the pieces and the gaps stay open.
+   ============================================================ */
+Object.assign(PROP_TYPES, {
+  bandochim: { name: 'ארובה חלולה לצלילה', r: 2.4, h: 24, cr: 2.2, defc: '#9b5a44', cat: 'bando' },
+  bandoshell: { name: 'מבנה נטוש', h: 8, len: 14, dep: 9, cr: 4.8, defc: '#8f8a82', cat: 'bando' },
+  bandoframe: { name: 'שלד בטון', h: 10, len: 12, dep: 8, cr: 4.5, defc: '#a39e95', cat: 'bando' },
+  bandoshed: { name: 'סככה הרוסה', h: 5, len: 12, dep: 7, cr: 3.8, defc: '#7a6d5c', cat: 'bando' },
+  bandowall: { name: 'קיר שבור עם חורים', h: 4.5, len: 10, dep: 0.5, cr: 0.6, defc: '#9a948a', cat: 'bando' },
+  bandotank: { name: 'מכל חלוד שוכב', h: 4.4, len: 9, dep: 4.4, cr: 2.4, defc: '#8a4e2e', cat: 'bando' },
+  bandotower: { name: 'מגדל פלדה ישן', h: 16, len: 4, dep: 4, cr: 2.2, defc: '#7d5a44', cat: 'bando' },
+  bandoarch: { name: 'קשת הרוסה', h: 7, len: 9, dep: 2.2, cr: 2, defc: '#8e897f', cat: 'bando' }
+});
+/* a stain-darkened, slightly uneven shade of the element's colour */
+const bdShade = (col, f) => propShade(col, f);
+const bdRust = () => propMat('#7a3f22');
+
+PX.bandochim = (add, T, col, M) => {           // a ring of brick staves, open at the top; a hole at its foot to fly out of
+  const N = 18, R = T.r, th = 0.38, w = 2 * Math.PI * R / N + 0.04, door = [0, 1, 2], DH = 4.4;          // staves 0-2 leave the hole (about 2.5 x 4.4 m)
+  for (let i = 0; i < N; i++) {
+    const a = (i + 0.5) / N * Math.PI * 2, x = Math.cos(a) * R, z = Math.sin(a) * R, isDoor = door.indexOf(i) >= 0;
+    const y0 = isDoor ? DH : 0, top = T.h - 1.6, hh = top - y0;
+    const s = add(new THREE.BoxGeometry(th, hh, w), bdShade(col, 0.9 + (i % 3) * 0.05), x, y0 + hh / 2, z); s.rotation.y = -a;
+    const k = add(new THREE.BoxGeometry(th + 0.06, 1.6, w), bdShade(col, 0.42), Math.cos(a) * (R + 0.01), top + 0.8, Math.sin(a) * (R + 0.01)); k.rotation.y = -a;   // the soot-black top
+    [0.3, 0.6].forEach((f) => { const b = add(new THREE.BoxGeometry(0.1, 0.25, w), M.dark, Math.cos(a) * (R + th / 2 + 0.03), T.h * f, Math.sin(a) * (R + th / 2 + 0.03)); b.rotation.y = -a; });   // iron bands
+  }
+  const am = 1.5 / N * Math.PI * 2, dl = add(new THREE.BoxGeometry(th + 0.1, 0.5, w * 3.2), bdShade(col, 0.75), Math.cos(am) * R, DH + 0.25, Math.sin(am) * R); dl.rotation.y = -am;   // lintel over the hole
+  for (let k = 0; k < 6; k++) { const a = Math.PI + 0.35; const ld = add(new THREE.BoxGeometry(0.08, 0.08, 0.8), M.grey, Math.cos(a) * (R + th / 2 + 0.25), 2 + k * 3.4, Math.sin(a) * (R + th / 2 + 0.25)); ld.rotation.y = -a; }   // the old ladder rungs
+};
+PX.bandoshell = (add, T, col, M) => {           // an empty two-floor concrete shell: walls with window and door holes, a floor with a hole, half a roof
+  const L = T.len, D = T.dep, H = T.h, F = H / 2, wt = 0.35, c = bdShade(col, 0.95), cd = bdShade(col, 0.8);
+  const wallX = (z, holes) => {               // a wall along x at z, holes: [[x0, x1, y0, y1], ...]
+    const xs = [-L / 2, L / 2]; let cuts = [[-L / 2, L / 2, 0, H]];
+    holes.forEach((h) => { const next = []; cuts.forEach((q) => { if (h[1] <= q[0] || h[0] >= q[1] || h[3] <= q[2] || h[2] >= q[3]) { next.push(q); return; }
+      if (h[0] > q[0]) next.push([q[0], h[0], q[2], q[3]]); if (h[1] < q[1]) next.push([h[1], q[1], q[2], q[3]]);
+      if (h[2] > q[2]) next.push([Math.max(q[0], h[0]), Math.min(q[1], h[1]), q[2], h[2]]); if (h[3] < q[3]) next.push([Math.max(q[0], h[0]), Math.min(q[1], h[1]), h[3], q[3]]); }); cuts = next; });
+    cuts.forEach((q) => { if (q[1] - q[0] > 0.05 && q[3] - q[2] > 0.05) add(new THREE.BoxGeometry(q[1] - q[0], q[3] - q[2], wt), c, (q[0] + q[1]) / 2, (q[2] + q[3]) / 2, z); });
+    return xs; };
+  const wallZ = (x, holes) => { const g = new THREE.Group(); let cuts = [[-D / 2, D / 2, 0, H]];
+    holes.forEach((h) => { const next = []; cuts.forEach((q) => { if (h[1] <= q[0] || h[0] >= q[1] || h[3] <= q[2] || h[2] >= q[3]) { next.push(q); return; }
+      if (h[0] > q[0]) next.push([q[0], h[0], q[2], q[3]]); if (h[1] < q[1]) next.push([h[1], q[1], q[2], q[3]]);
+      if (h[2] > q[2]) next.push([Math.max(q[0], h[0]), Math.min(q[1], h[1]), q[2], h[2]]); if (h[3] < q[3]) next.push([Math.max(q[0], h[0]), Math.min(q[1], h[1]), h[3], q[3]]); }); cuts = next; });
+    cuts.forEach((q) => { if (q[1] - q[0] > 0.05 && q[3] - q[2] > 0.05) add(new THREE.BoxGeometry(wt, q[3] - q[2], q[1] - q[0]), c, x, (q[2] + q[3]) / 2, (q[0] + q[1]) / 2); }); return g; };
+  const win = (x) => [[x - 1.1, x + 1.1, 1.2, 2.9], [x - 1.1, x + 1.1, F + 1.2, F + 2.9]];
+  wallX(D / 2, [[-1.4, 1.4, 0, 3], ...win(-L / 3), ...win(L / 3)]);             // front: a big door in the middle, windows on both floors
+  wallX(-D / 2, [...win(-L / 3), ...win(0), ...win(L / 3), [L / 2 - 3.2, L / 2 - 0.6, F + 0.8, H]]);   // back: windows and a broken corner
+  wallZ(-L / 2, [[-1, 1, F + 1.2, F + 2.9], [-1.3, 1.3, 0, 2.8]]);
+  wallZ(L / 2, [[-1, 1, 1.2, 2.9], [-1, 1, F + 1.2, F + 2.9]]);
+  [[-L / 2, -D / 2 + 3.2, L / 2, D / 2], [-L / 2, -D / 2, -1, -D / 2 + 3.2], [2.4, -D / 2, L / 2, -D / 2 + 3.2]].forEach((q) =>     // the first floor, with a hole to drop through
+    add(new THREE.BoxGeometry(q[2] - q[0], 0.3, q[3] - q[1]), cd, (q[0] + q[2]) / 2, F, (q[1] + q[3]) / 2));
+  add(new THREE.BoxGeometry(L * 0.55, 0.3, D), cd, -L * 0.225, H, 0);                  // half a roof
+  for (let k = 0; k < 5; k++) add(new THREE.BoxGeometry(0.06, 0.06, D * 0.9), M.grey, L * 0.06 + k * 0.9, H - 0.05, 0);   // bare rebars where the roof broke off
+  [[-2, 0.25, 1.5], [3.5, 0.2, -2]].forEach((q) => { const r = add(new THREE.BoxGeometry(1.4, 0.5, 1), bdShade(col, 0.7), q[0], q[1], q[2]); r.rotation.y = q[0]; });   // rubble
+};
+PX.bandoframe = (add, T, col, M) => {           // a bare concrete frame: columns, beams and three thin floor slabs with big holes
+  const L = T.len, D = T.dep, H = T.h, lv = 3, c = bdShade(col, 0.95), cd = bdShade(col, 0.82);
+  [-1, 0, 1].forEach((i) => [-1, 1].forEach((j) => add(new THREE.BoxGeometry(0.45, H, 0.45), c, i * L / 2, H / 2, j * D / 2)));
+  for (let k = 1; k <= lv; k++) { const y = k * H / lv;
+    [-1, 1].forEach((j) => add(new THREE.BoxGeometry(L + 0.45, 0.45, 0.4), cd, 0, y - 0.22, j * D / 2));
+    [-1, 0, 1].forEach((i) => add(new THREE.BoxGeometry(0.4, 0.45, D), cd, i * L / 2, y - 0.22, 0));
+    if (k < lv) { const side = k % 2 ? -1 : 1; add(new THREE.BoxGeometry(L / 2 - 0.4, 0.22, D - 0.4), bdShade(col, 0.88), side * L / 4, y - 0.02, 0); } }   // a slab on one half only, alternating
+  for (let k = 0; k < 6; k++) add(new THREE.BoxGeometry(0.05, 1.2, 0.05), M.grey, L / 2 - 0.1, H + 0.6, -D / 2 + k * 0.3);   // rebars sticking out of the top
+};
+PX.bandoshed = (add, T, col, M) => {            // a broken shed: rusty posts, a roof with missing panels, walls with holes
+  const L = T.len, D = T.dep, H = T.h, rust = bdRust(), sheet = bdShade(col, 0.95);
+  [-1, -1 / 3, 1 / 3, 1].forEach((i) => [-1, 1].forEach((j) => add(new THREE.BoxGeometry(0.2, H, 0.2), rust, i * L / 2, H / 2, j * D / 2)));
+  [-1, 1].forEach((j) => add(new THREE.BoxGeometry(L, 0.2, 0.2), rust, 0, H, j * D / 2));
+  const panels = 8, pw = L / panels;
+  for (let k = 0; k < panels; k++) { if (k === 2 || k === 5 || k === 6) continue;                    // missing roof panels: holes to fly through
+    const p = add(new THREE.BoxGeometry(pw - 0.05, 0.08, D + 0.4), sheet, -L / 2 + (k + 0.5) * pw, H + 0.12 + (k % 2) * 0.05, 0); p.rotation.x = (k % 3 - 1) * 0.04; }
+  for (let k = 0; k < panels; k++) { if (k === 1 || k === 3 || k === 4 || k === 7) continue;         // the back wall: half the sheets are gone
+    add(new THREE.BoxGeometry(pw - 0.05, H * (k % 2 ? 0.6 : 0.9), 0.06), sheet, -L / 2 + (k + 0.5) * pw, H * (k % 2 ? 0.3 : 0.45), -D / 2); }
+  [[-L / 2, 0.6], [L / 2, 0.4]].forEach((q) => add(new THREE.BoxGeometry(0.06, H * q[1], D * 0.5), sheet, q[0], H * q[1] / 2, -D / 4));   // broken end walls
+  const fallen = add(new THREE.BoxGeometry(pw, 0.08, D * 0.8), sheet, -L / 2 + 2.5 * pw, 1.2, 0.6); fallen.rotation.z = 0.5;   // a fallen panel leaning inside
+};
+PX.bandowall = (add, T, col, M) => {            // a broken wall: three holes through it and a jagged top
+  const L = T.len, H = T.h, d = T.dep, c = bdShade(col, 0.95);
+  const holes = [[-3.3, -1.6, 1, 2.8], [0.2, 2.2, 1.6, 3.6], [3, 4.4, 0, 2.2]];
+  const cols = [-L / 2, -3.3, -1.6, 0.2, 2.2, 3, 4.4, L / 2];
+  for (let i = 0; i < cols.length - 1; i++) { const x0 = cols[i], x1 = cols[i + 1], hole = holes.find((h) => h[0] === x0 && h[1] === x1), top = H - ((i * 37) % 5) * 0.35;
+    if (!hole) { add(new THREE.BoxGeometry(x1 - x0, top, d), c, (x0 + x1) / 2, top / 2, 0); continue; }
+    if (hole[2] > 0) add(new THREE.BoxGeometry(x1 - x0, hole[2], d), c, (x0 + x1) / 2, hole[2] / 2, 0);
+    if (hole[3] < top) add(new THREE.BoxGeometry(x1 - x0, top - hole[3], d), c, (x0 + x1) / 2, (hole[3] + top) / 2, 0); }
+  for (let k = 0; k < 4; k++) add(new THREE.BoxGeometry(0.05, 0.9, 0.05), M.grey, -L / 2 + 1 + k * 2.6, H + 0.2, 0);   // rebars
+};
+PX.bandotank = (add, T, col, M) => {            // a rusty tank on its side, both ends open, a hole torn in its top
+  const R = T.h / 2, Lh = T.len, m = new THREE.MeshLambertMaterial({ color: new THREE.Color(col), side: THREE.DoubleSide });
+  const t = add(new THREE.CylinderGeometry(R, R, Lh, 28, 1, true, 0.55, Math.PI * 2 - 1.1), m, 0, R + 0.3, 0); t.rotation.z = Math.PI / 2;   // the shell, with a long tear on top
+  [-1, 1].forEach((s) => { const r = add(new THREE.TorusGeometry(R, 0.14, 6, 28), bdShade(col, 0.7), s * Lh / 2, R + 0.3, 0); r.rotation.y = Math.PI / 2; });
+  for (let k = -1; k <= 1; k++) { const r = add(new THREE.TorusGeometry(R + 0.03, 0.08, 6, 28), bdShade(col, 0.6), k * Lh / 3, R + 0.3, 0); r.rotation.y = Math.PI / 2; }
+  [-1, 1].forEach((s) => add(new THREE.BoxGeometry(0.4, 0.6, R * 1.6), bdRust(), s * Lh / 3, 0.3, 0));   // the cradles it lies on
+};
+PX.bandotower = (add, T, col, M) => {           // an old steel lattice tower: four legs, braces, a platform with a hole
+  const H = T.h, a = T.len / 2, b = a * 0.45, rust = propMat(col), n = 4;
+  const leg = (sx, sz) => { const g = new THREE.Vector3(sx * a, 0, sz * a), t = new THREE.Vector3(sx * b, H, sz * b), d = new THREE.Vector3().subVectors(t, g);
+    const m = add(new THREE.CylinderGeometry(0.12, 0.14, d.length(), 8), rust, (g.x + t.x) / 2, H / 2, (g.z + t.z) / 2); m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.normalize()); };
+  [[-1, -1], [1, -1], [1, 1], [-1, 1]].forEach((q) => leg(q[0], q[1]));
+  for (let k = 1; k <= n; k++) { const y = k * H / (n + 1), w = a - (a - b) * y / H;
+    [-1, 1].forEach((s) => { add(new THREE.BoxGeometry(2 * w, 0.1, 0.1), rust, 0, y, s * w); add(new THREE.BoxGeometry(0.1, 0.1, 2 * w), rust, s * w, y, 0); }); }
+  const py = H * 0.82, pw = (a - (a - b) * 0.82) * 2 + 0.8;
+  [[-1, 0.34], [1, 0.34]].forEach((q) => add(new THREE.BoxGeometry(pw, 0.12, pw * q[1]), bdShade(col, 0.8), 0, py, q[0] * pw * (0.5 - q[1] / 2)));   // the platform: two strips, a gap in the middle
+  [-1, 1].forEach((s) => add(new THREE.BoxGeometry(pw, 0.9, 0.06), rust, 0, py + 0.5, s * pw / 2));   // its rails
+};
+PX.bandoarch = (add, T, col, M) => {            // a ruined archway: two thick piers, a broken arch of blocks, rubble
+  const L = T.len, H = T.h, d = T.dep, c = bdShade(col, 0.95), pw = 1.6, span = L - 2 * pw, R = span / 2, ys = H - R - 0.4;
+  [-1, 1].forEach((s) => add(new THREE.BoxGeometry(pw, ys + 0.6, d), c, s * (L / 2 - pw / 2), (ys + 0.6) / 2, 0));
+  const N = 9;
+  for (let k = 0; k < N; k++) { if (k === 6) continue;                                             // one block fell out
+    const a0 = Math.PI * k / N, a1 = Math.PI * (k + 1) / N, am = (a0 + a1) / 2, rr = R + 0.45;
+    const b = add(new THREE.BoxGeometry(0.9, R * (a1 - a0) + 0.1, d), bdShade(col, 0.9 + (k % 2) * 0.06), Math.cos(am) * rr, ys + Math.sin(am) * rr, 0); b.rotation.z = am; }
+  [[1.8, 0.35, 0.9, 0.4], [-0.6, 0.25, -0.5, 1.2]].forEach((q) => { const r = add(new THREE.BoxGeometry(0.9, q[1] * 2, 0.8), bdShade(col, 0.75), q[0], q[1], q[2]); r.rotation.y = q[3]; });
 };
 /* ============================================================
    ADVANCED QUAD SETUP (Betaflight-style PID / rates / angle / TPA / anti-gravity / throttle curve)
@@ -13508,6 +13624,7 @@ const ED_CATS = [
   { name: 'מחסומים ומכשולים', items: edPropItems(['barrier', 'tires', 'wall', 'fence', 'hurdle', 'jersey', 'sandbags', 'crate', 'cratestack', 'barrel', 'drumrow', 'hay', 'haystack', 'netfence', 'tirewall', 'pallets', 'pipe', 'ramp', 'rail', 'boom', 'brickwall', 'scaffold']) },
   { name: 'עצים וצמחים', items: edPropItems(['pine', 'spruce', 'cypress', 'oak', 'birch', 'willow', 'olive', 'acacia', 'palm', 'deadtree', 'sapling', 'bush', 'hedge', 'bamboo', 'cactus', 'flowers', 'tallgrass', 'reeds', 'cornrow', 'mushroom', 'log', 'stump']) },
   { name: 'מבנים', items: edPropItems(['house', 'villa', 'building', 'skyscraper', 'warehouse', 'barn', 'hangar', 'shed', 'kiosk', 'tent', 'gazebo', 'bunker', 'container', 'tower', 'watchtower', 'lighthouse', 'watertank', 'silo', 'chimney', 'antenna', 'windmill', 'solarpanel', 'billboard', 'grandstand', 'lamp', 'bench']) },
+  { name: 'מבנים נטושים (באנדו)', items: edPropItems(['bandochim', 'bandoshell', 'bandoframe', 'bandoshed', 'bandowall', 'bandotank', 'bandotower', 'bandoarch']) },   // build 496
   { name: 'סלעים ושטח', items: edPropItems(['rock', 'bigrock', 'boulders', 'stoneline', 'rockwall', 'cliff', 'spire', 'mesa', 'hill', 'mound', 'dune', 'crater', 'pond', 'crystal', 'iceblock', 'snowpile']) },
   { name: 'רכבים', items: edPropItems(['car', 'sportscar', 'jeep', 'pickup', 'van', 'ambulance', 'truck', 'firetruck', 'bus', 'tractor', 'forklift', 'tank', 'trailer', 'caravan', 'trainwagon', 'motorbike', 'bicycle', 'boat', 'sailboat', 'plane', 'heli', 'hotair', 'ufo', 'crane']) }
 ];
