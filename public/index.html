@@ -1889,7 +1889,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 472</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 473</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -2088,7 +2088,11 @@ const PRESETS = {
     cdLin:  [0.030, 0.050, 0.020],   // linear drag
     rateTau: 0.060, angDrag: 0.5, motorTau: 0.055,
     meshScale: 1.0, audioBase: 150, audioRange: 950,
-    rate: 650, yaw: 450, expo: 0.35
+    rate: 650, yaw: 450, expo: 0.35,
+    // build 473: real rigid-body physics, calibrated against VelociDrone flights (punch, throttle cut, carving, falls)
+    real: { m: 0.65, arm: 0.078, Ixx: 0.0022, Iyy: 0.0040, Izz: 0.0022, Fmax: 11, idle: 0.012, kQ: 0.016, tUp: 0.022, tDn: 0.025, thrExp: 2.5,
+            pitchSpd: 52, disc: 0.015, rotorDrag: 0.12, side: 1.0, CdA: [0.019, 0.019, 0.019],
+            kp: [120, 40, 120], ki: [10, 25, 10], kd: [1.3, 0, 1.3], ff: [0.9, 0.6, 0.9], rcHz: 30 }
   },
   whoop: {
     label: 'טיני ווּפּ', crashV: 6.0, cells: 1, mass: 0.030, twr: 3.6,
@@ -5827,7 +5831,7 @@ function respawnDrone() {          // back to the spot of the crash. Levelled, s
   const p = respawnPose || {             /* build 469: always back at the spot of the crash (also in a race), race progress kept */ x: drone.pos.x, y: Math.max(drone.pos.y, 0.4), z: drone.pos.z, yaw: 0 };
   drone.pos.set(p.x, 0.12, p.z);          // same spot, but on the floor
   drone.quat.setFromEuler(new THREE.Euler(0, p.yaw, 0, 'YXZ'));
-  drone.vel.set(0, 0, 0); drone.w.set(0, 0, 0); drone.wd.set(0, 0, 0); drone.tp.set(0, 0, 0); drone.thrAct = 0;
+  drone.vel.set(0, 0, 0); drone.w.set(0, 0, 0); drone.wd.set(0, 0, 0); drone.tp.set(0, 0, 0); drone.thrAct = 0; realReset();
   resetProps(); poseHist.length = 0; poseAcc = 0; respawnPose = null;
   $('flash').classList.remove('on');
 }
@@ -6021,6 +6025,80 @@ function lockThr(pr) {                              // throttle command (0..1 mo
   const need = (1 + apd / G) / (pr.twr * upY * Math.max(0.5, batterySag()) * Math.max(0.3, PE.cap));
   return clamp(Math.sqrt(Math.max(need, 0)), 0, 1);
 }
+/* ---------- build 473: REAL QUAD PHYSICS (drones whose preset has `real`) ----------
+   Four motors with their own spin-up / spin-down, the mass and inertia of a real quad, a Betaflight-style rate controller
+   (RC smoothing, P / I / D / feed-forward, airmode mixer with motor saturation), thrust that falls with the air flowing
+   through the props (a near-idle prop brakes a climb), propwash in fast descents, body drag, rotor drag and side grip. */
+const RQ = { F: [0, 0, 0, 0], I: { x: 0, y: 0, z: 0 }, pw: { x: 0, y: 0, z: 0 }, s1: { x: 0, y: 0, z: 0 }, s2: { x: 0, y: 0, z: 0 }, sp: { x: 0, y: 0, z: 0 }, upT: 0 };
+const RQ_MOT = [[1, -1, -1], [-1, -1, 1], [1, 1, 1], [-1, 1, -1]];   // [x, z, yaw torque sign] in units of the arm: front-right, front-left, rear-right, rear-left
+function realReset() { RQ.F = [0, 0, 0, 0]; ['I', 'pw', 's1', 's2', 'sp'].forEach((k) => { RQ[k] = { x: 0, y: 0, z: 0 }; }); RQ.upT = 0; }
+const _rv = new THREE.Vector3(), _rf = new THREE.Vector3();
+function realStep(dt, p, A, LK, armed, thrStick) {
+  const Q = p.real;
+  // 1. target body rates: the same rates, angle and horizon modes as the rest of the game
+  const sp = { x: 0, y: 0, z: 0 };
+  if (armed) {
+    sp.y = -bfRate(input.yaw, A.rates.yaw) * DEG;
+    const acroX = -bfRate(input.pitch, A.rates.pitch) * DEG, acroZ = -bfRate(input.roll, A.rates.roll) * DEG;
+    if (LK ? currentStage.lock.mode === 'acro' : settings.mode === 'acro') { sp.x = acroX; sp.z = acroZ; }
+    else {
+      _eu.setFromQuaternion(drone.quat, 'YXZ');
+      const horizon = !LK && settings.mode === 'horizon', kp = 9 * A.angle.strength / 50, maxA = (horizon ? 80 : A.angle.limit) * DEG;
+      const limX = Math.min(400, advMV.pitch) * DEG, limZ = Math.min(400, advMV.roll) * DEG;
+      const lx = clamp(kp * (-input.pitch * maxA - _eu.x), -limX, limX), lz = clamp(kp * wrapPi(-input.roll * maxA - _eu.z), -limZ, limZ);
+      const lw = horizon ? clamp(1 - Math.max(Math.abs(input.pitch), Math.abs(input.roll)) * A.angle.transition / 100, 0, 1) : 1;
+      sp.x = lw * lx + (1 - lw) * acroX; sp.z = lw * lz + (1 - lw) * acroZ;
+    }
+  }
+  // 2. RC smoothing + rate PID -> torque
+  const ks = 1 - Math.exp(-2 * Math.PI * Q.rcHz * dt), Iv = { x: Q.Ixx, y: Q.Iyy, z: Q.Izz }, tq = { x: 0, y: 0, z: 0 };
+  ['x', 'y', 'z'].forEach((c, i) => {
+    RQ.s1[c] += (sp[c] - RQ.s1[c]) * ks; RQ.s2[c] += (RQ.s1[c] - RQ.s2[c]) * ks;
+    const s2 = RQ.s2[c], e = s2 - drone.w[c];
+    if (armed) RQ.I[c] = clamp(RQ.I[c] + e * dt, -2, 2); else RQ.I[c] = 0;
+    const dsp = (s2 - RQ.sp[c]) / dt, dw = (drone.w[c] - RQ.pw[c]) / dt; RQ.sp[c] = s2; RQ.pw[c] = drone.w[c];
+    tq[c] = armed ? Iv[c] * (Q.kp[i] * e + Q.ki[i] * RQ.I[c] + Q.ff[i] * dsp - Q.kd[i] * dw) : 0;
+  });
+  // 3. collective thrust; a pitch-only track keeps its own throttle logic (same lift as before)
+  const W = Q.m * G;
+  let Tc;
+  if (!armed) Tc = 0;
+  else if (LK) { const c = lockCmd(p); Tc = clamp(p.twr * c * c, 0, 4 * Q.Fmax / W) * W; }
+  else Tc = 4 * Q.Fmax * Math.pow(clamp(throttleCurve(thrStick), 0, 1), Q.thrExp);
+  // 4. mixer with saturation (airmode keeps the torques and gives up collective)
+  const r = Q.arm, r2 = 4 * r * r, want = RQ_MOT.map((m) => Tc / 4 + tq.x * (-m[1] * r) / r2 + tq.z * (m[0] * r) / r2 + tq.y * m[2] / (4 * Q.kQ));
+  const lo = armed ? Q.idle * Q.Fmax : 0, hi = Q.Fmax;
+  let mn = Math.min(...want), mx = Math.max(...want);
+  if (mx - mn > hi - lo) { const k = (hi - lo) / (mx - mn), mid = (mx + mn) / 2; for (let i = 0; i < 4; i++) want[i] = (want[i] - mid) * k + (hi + lo) / 2; }
+  else { if (mx > hi) for (let i = 0; i < 4; i++) want[i] -= mx - hi; mn = Math.min(...want); if (mn < lo) for (let i = 0; i < 4; i++) want[i] += lo - mn; }
+  // 5. motors and props: lag, inflow (a slow prop brakes a fast climb), propwash in fast descents, battery sag
+  _qi.copy(drone.quat).invert(); _rv.copy(drone.vel).sub(windVec).applyQuaternion(_qi);
+  const vAx = _rv.y, hs = Math.hypot(_rv.x, _rv.z), wash = clamp((-vAx - 2.5) / 6, 0, 1) * clamp(1 - hs / 7, 0, 1), sag = batterySag();
+  let Ft = 0, tX = 0, tY = 0, tZ = 0;
+  for (let i = 0; i < 4; i++) {
+    RQ.F[i] += (want[i] - RQ.F[i]) * (1 - Math.exp(-dt / (want[i] > RQ.F[i] ? Q.tUp : Q.tDn)));
+    const rpm = Math.sqrt(Math.max(RQ.F[i], 0) / Q.Fmax), inf = 1 - vAx / (Q.pitchSpd * Math.max(rpm, 0.04));
+    let f = RQ.F[i] * sag * Math.min(inf, 1.08) * (1 - 0.3 * wash) * (1 + 0.12 * wash * Math.sin(nowSec * (53 + i * 11) + i));
+    if (inf < 0) f = -Q.disc * vAx * Math.abs(vAx);
+    Ft += f; tX += -RQ_MOT[i][1] * r * f; tZ += RQ_MOT[i][0] * r * f; tY += RQ_MOT[i][2] * Q.kQ * RQ.F[i];
+  }
+  drone.thrAct = Math.pow(clamp(Ft / (4 * Q.Fmax), 0, 1), 1 / Q.thrExp);
+  // 6. rotation (Euler's equations, gyroscopic coupling), turbulence
+  const w = drone.w;
+  w.x += (tX - (Q.Izz - Q.Iyy) * w.y * w.z) / Q.Ixx * dt; w.y += (tY - (Q.Ixx - Q.Izz) * w.z * w.x) / Q.Iyy * dt; w.z += (tZ - (Q.Iyy - Q.Ixx) * w.x * w.y) / Q.Izz * dt;
+  w.addScaledVector(turbTorque, dt);
+  w.multiplyScalar(Math.exp(-0.15 * dt));
+  const wl = w.length();
+  if (wl > 1e-7) { _ax.copy(w).multiplyScalar(1 / wl); _dq.setFromAxisAngle(_ax, wl * dt); drone.quat.multiply(_dq).normalize(); }
+  // 7. forces: thrust, body drag, rotor drag + side grip, gravity (all against the air, so wind pushes the drone)
+  _qi.copy(drone.quat).invert(); _rv.copy(drone.vel).sub(windVec).applyQuaternion(_qi);
+  const rho = 0.6125, tr = Math.sqrt(clamp(Ft / W, 0, 4));
+  _rf.set(-rho * Q.CdA[0] * Math.abs(_rv.x) * _rv.x - (Q.rotorDrag * tr + Q.side) * Q.m * _rv.x,
+          -rho * Q.CdA[1] * Math.abs(_rv.y) * _rv.y + Ft,
+          -rho * Q.CdA[2] * Math.abs(_rv.z) * _rv.z - Q.rotorDrag * Q.m * tr * _rv.z).applyQuaternion(drone.quat);
+  _acc.copy(_rf).multiplyScalar(1 / Q.m); _acc.y -= G;
+  drone.vel.addScaledVector(_acc, dt); drone.pos.addScaledVector(drone.vel, dt);
+}
 function stepPhysics(dt) {
   const p = PRESETS[settings.preset];
   updateWind(dt);
@@ -6048,6 +6126,9 @@ function stepPhysics(dt) {
     else if (L.axis === 'roll') { input.roll = clamp(input.roll || 0, -1, 1) * L.gain; input.pitch = L.mode === 'acro' ? 0 : L.fwd; }   // the automatic forward lean only exists in angle mode
     else { input.roll = 0; input.pitch = clamp(input.pitch || 0, -1, 1) * L.gain; }
   }   // only the pitch stick works
+  const REAL = !!p.real && state !== 'crashed';
+  if (REAL) realStep(dt, p, A, LK, armed, thrStick);
+  else {
   const thrCmd = LK && armed ? lockCmd(p) : armed ? throttleCurve(thrStick) : 0;    // Betaflight throttle mid / expo; a pitch-only track holds its height by itself
   drone.thrAct += (thrCmd - drone.thrAct) * (1 - Math.exp(-dt / p.motorTau));
 
@@ -6135,6 +6216,7 @@ function stepPhysics(dt) {
   _acc.y -= G;
   drone.vel.addScaledVector(_acc, dt);
   drone.pos.addScaledVector(drone.vel, dt);
+  }
   if (currentStage && currentStage.ball && (state === 'racing' || state === 'free')) ballStep(dt, currentStage.ball);   // no drone: a ball rolls forward by itself
 
   // ----- ground contact -----
@@ -6147,7 +6229,11 @@ function stepPhysics(dt) {
     drone.vel.x *= f; drone.vel.z *= f;
     drone.w.multiplyScalar(Math.exp(-5 * dt));
     drone.onGround = true;
-    if (drone.thrAct < 0.3 && state !== 'crashed') {   // settle upright when motors are idle
+    if (REAL) {
+      const upY = 1 - 2 * (drone.quat.x * drone.quat.x + drone.quat.z * drone.quat.z);
+      if (armed && upY < -0.2 && restartT <= 0) { RQ.upT += dt; if (RQ.upT > 0.6) { RQ.upT = 0; if (state === 'racing') atCrash++; restartT = 1.4; respawnPose = poseHist.length ? poseHist[poseHist.length - 1] : null; } }
+      else RQ.upT = 0;
+    } else if (drone.thrAct < 0.3 && state !== 'crashed') {   // settle upright when motors are idle
       _eu2.setFromQuaternion(drone.quat, 'YXZ');
       _eu2.x = 0; _eu2.z = 0;
       _qt.setFromEuler(_eu2);
@@ -6399,7 +6485,7 @@ function placeDroneAtStart() {
   const s = startPose();
   drone.pos.set(s.x, s.y, s.z);
   drone.vel.set(0, 0, 0);
-  drone.w.set(0, 0, 0); drone.wd.set(0, 0, 0); drone.tp.set(0, 0, 0); drone.prevThr = 0;
+  drone.w.set(0, 0, 0); drone.wd.set(0, 0, 0); drone.tp.set(0, 0, 0); drone.prevThr = 0; realReset();
   drone.quat.setFromEuler(new THREE.Euler(0, s.yaw * DEG, 0, 'YXZ'));
   drone.thrAct = 0;
   if (lockOn()) {
