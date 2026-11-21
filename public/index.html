@@ -1602,6 +1602,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
     <div class="row"><label for="edHud_dots" style="flex:1">שביל נקודות לשער הבא</label><input type="checkbox" id="edHud_dots" checked></div>
     <div class="row"><label for="edHud_line" style="flex:1">נתיב טיסה מקווקו (Racing Line)</label><input type="checkbox" id="edHud_line" checked></div>
     <div class="row"><label for="edHud_arrow" style="flex:1">חץ הכוונה צף</label><input type="checkbox" id="edHud_arrow" checked></div>
+    <div class="row"><label for="edHudStyle" style="flex:0 0 70px">צורת הנתיב</label><select id="edHudStyle" style="flex:1"><option value="dash">קווקוו</option><option value="chev">שברונים</option></select></div>
     <div class="row"><label style="flex:0 0 70px">מיקום הנתיב</label><span style="flex:0 0 auto;font-size:11px;color:#8b929c">רצפה</span><input type="range" id="edHudPos" min="0" max="100" step="5" value="100" style="flex:1;min-width:0" aria-label="גובה הנתיב המקווקו: מהרצפה עד מרכז השער"><span style="flex:0 0 auto;font-size:11px;color:#8b929c">מרכז השער</span><output id="edHudPosV" style="flex:0 0 44px;text-align:center">מרכז</output></div>
     </details>
     <details class="eds"><summary>סביבה: דשא וצללים</summary>
@@ -1890,7 +1891,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 484</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 485</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -3829,7 +3830,7 @@ function disposeRaceLine() {
   scene.remove(raceLine);
   raceLine.traverse((o) => { if (o.geometry) o.geometry.dispose(); if (o.material) o.material.dispose(); });
   if (raceLineTex) { raceLineTex.dispose(); raceLineTex = null; }
-  raceLine = null;
+  raceLine = null; raceChev = null;
 }
 /* 3D racing line: closed CatmullRom spline through every gate centre (gate 1 -> 2 -> ... -> 1),
    rendered as a glowing tube whose dash texture scrolls forward along the flight direction */
@@ -3841,6 +3842,7 @@ function buildRaceLine() {
   const loop = trackLaps() !== 1, curve = new THREE.CatmullRomCurve3(pts, loop, 'centripetal');       // one lap: the line stops at the last gate
   const len = curve.getLength();
   const segs = Math.min(1600, Math.max(240, Math.ceil(len / 1.2)));
+  if (typeof nxTrackHud === 'function' && nxTrackHud('style') === 'chev') { buildRaceChevrons(curve, len, loop); return; }   // build 485: chevrons instead of the dashed tube
   raceLineTex = makeFlowTexture();
   raceLineTex.repeat.set(Math.max(1, len / RL_PERIOD), 1);
   const core = new THREE.Mesh(new THREE.TubeGeometry(curve, segs, 0.2, 6, loop),
@@ -3852,6 +3854,44 @@ function buildRaceLine() {
   raceLine.renderOrder = 5;
   raceLine.visible = false;
   scene.add(raceLine);
+}
+/* build 485: racing line as glowing chevrons that slide along the path (chosen per track in the editor) */
+const RC_SP = 3.6;                                           // metres between chevrons
+let raceChev = null;
+function chevronShape() {                                    // a thick "^": tip forward (+y), two arms back
+  const s = new THREE.Shape(), W = 0.7, T = 0.3, D = 0.62;
+  s.moveTo(0, D * 0.5); s.lineTo(W, -D * 0.5); s.lineTo(W - T * 0.95, -D * 0.5); s.lineTo(0, D * 0.5 - T * 1.15); s.lineTo(-W + T * 0.95, -D * 0.5); s.lineTo(-W, -D * 0.5); s.closePath();
+  return new THREE.ShapeGeometry(s);
+}
+function buildRaceChevrons(curve, len, loop) {
+  const n = Math.max(2, Math.min(700, Math.floor(len / RC_SP))), geo = chevronShape();
+  const core = new THREE.InstancedMesh(geo, new THREE.MeshBasicMaterial({ color: 0xf2ffff, transparent: true, opacity: 0.95, depthWrite: false, side: THREE.DoubleSide }), n);
+  const glow = new THREE.InstancedMesh(geo, new THREE.MeshBasicMaterial({ color: 0x19ffe8, transparent: true, opacity: 0.55, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide }), n);
+  core.frustumCulled = false; glow.frustumCulled = false; core.renderOrder = 6; glow.renderOrder = 5;
+  const K = Math.max(64, Math.ceil(len / 0.25)), P = [], F = [], up = new THREE.Vector3(0, 1, 0);           // a table of points and frames along the path
+  for (let i = 0; i <= K; i++) { const u = i / K, p = curve.getPointAt(u), t = curve.getTangentAt(u), side = new THREE.Vector3().crossVectors(t, up);
+    if (side.lengthSq() < 1e-6) side.set(1, 0, 0); side.normalize();
+    const flat = new THREE.Vector3().crossVectors(side, t).normalize(), a = 52 * DEG;                       // tilted up toward the pilot behind, so it reads like a sign
+    const nrm = flat.clone().multiplyScalar(Math.cos(a)).addScaledVector(t, -Math.sin(a)), fwd = new THREE.Vector3().crossVectors(nrm, side).normalize();
+    const m = new THREE.Matrix4().makeBasis(side, fwd, nrm); P.push(p); F.push(new THREE.Quaternion().setFromRotationMatrix(m)); }
+  raceLine = new THREE.Group(); raceLine.add(glow, core); raceLine.renderOrder = 5; raceLine.visible = false; scene.add(raceLine);
+  raceChev = { core, glow, n, len, K, P, F, loop, flow: 0 };
+  placeRaceChevrons(0);
+}
+const _rcM = new THREE.Matrix4(), _rcS = new THREE.Vector3(), _rcP = new THREE.Vector3();
+function placeRaceChevrons(dt) {
+  const R = raceChev; if (!R) return;
+  R.flow = (R.flow + dt * 14) % (R.len);                    // 14 m/s, like the dashes
+  const cam = (typeof activeCam !== 'undefined' && activeCam) ? activeCam.position : null;
+  for (let i = 0; i < R.n; i++) {
+    let d = i * (R.len / R.n) + R.flow; if (d >= R.len) { if (!R.loop) d -= R.len; else d %= R.len; }
+    const k = Math.min(R.K, Math.round(d / R.len * R.K)), p = R.P[k];
+    let sc = 1; if (cam) { const dc = p.distanceTo(cam); sc = Math.min(1, Math.max(0, (dc - 1.8) / 2.5)); }          // fade out (shrink) right in front of the camera
+    if (!R.loop) { const ed = Math.min(d, R.len - d); sc *= Math.min(1, ed / 2); }
+    _rcS.set(sc, sc, sc); _rcM.compose(p, R.F[k], _rcS); R.core.setMatrixAt(i, _rcM);
+    _rcS.multiplyScalar(1.32); _rcP.copy(p); _rcM.compose(_rcP, R.F[k], _rcS); R.glow.setMatrixAt(i, _rcM);
+  }
+  R.core.instanceMatrix.needsUpdate = true; R.glow.instanceMatrix.needsUpdate = true;
 }
 function buildRoute() {
   while (routeGroup.children.length) {
@@ -7272,7 +7312,9 @@ function updateRaceLineVis() {
   const playing = state === 'countdown' || state === 'racing' || state === 'crashed' || state === 'finished';
   const show = (typeof nxTrackHud === 'function' ? nxTrackHud('line') : settings.raceLine) && !inMenu && (editorMode || (flightMode === 'race' ? playing : (state === 'free' || state === 'crashed') && raceLineFree));
   raceLine.visible = show;
-  if (show && raceLineTex) {              // conveyor-belt flow: dashes slide from gate 1 toward gate 2, ...
+  if (show && raceChev) {                 // build 485: chevrons slide along the path
+    const now = performance.now(), dt = Math.min(0.1, Math.max(0, (now - rlLast) / 1000)); rlLast = now; placeRaceChevrons(dt);
+  } else if (show && raceLineTex) {              // conveyor-belt flow: dashes slide from gate 1 toward gate 2, ...
     const now = performance.now();
     const dt = Math.min(0.1, Math.max(0, (now - rlLast) / 1000));
     rlLast = now;
@@ -10097,23 +10139,26 @@ function nxTrackHud(k) {                                        // build 462: do
   const id = typeof currentStage !== 'undefined' && currentStage ? currentStage.id : '';
   const src = nxAdminEditing() || !NX.eff ? NX.draft : NX.eff, m = src && src.stages && src.stages.hud, o = m && id && m[String(id).replace(/^pub_/, '')];
   if (k === 'pos') return o && isFinite(o.pos) ? Math.max(0, Math.min(100, Number(o.pos))) : 100;
+  if (k === 'style') return o && o.style === 'chev' ? 'chev' : 'dash';           // build 485: racing line drawn as dashes (default) or chevrons
   return o && typeof o[k] === 'boolean' ? o[k] : true;
 }
 function nxHudSet(k, v) {                                       // build 463: the control window of the track editor sets them for the track being edited
   if (typeof currentStage === 'undefined' || !currentStage || !NX.draft) return false;
   const id = String(currentStage.id).replace(/^pub_/, ''), m = NX.draft.stages.hud = NX.draft.stages.hud || {}, o = m[id] = m[id] || {};
-  o[k] = k === 'pos' ? Math.max(0, Math.min(100, Math.round(Number(v) || 0))) : !!v; nxTouch();
-  if (k === 'pos') { try { buildRaceLine(); } catch (e) { /* ignore */ } }
+  o[k] = k === 'pos' ? Math.max(0, Math.min(100, Math.round(Number(v) || 0))) : k === 'style' ? (v === 'chev' ? 'chev' : 'dash') : !!v; nxTouch();
+  if (k === 'pos' || k === 'style') { try { buildRaceLine(); } catch (e) { /* ignore */ } }
   try { updateRaceLineVis(); } catch (e) { /* ignore */ }
   nxHudSync(); return true;
 }
 function nxHudSync() {
   if (typeof document === 'undefined' || !$('edHudPos')) return;
   ['dots', 'line', 'arrow'].forEach((k) => { const el = $('edHud_' + k); if (el) el.checked = nxTrackHud(k); });
+  if ($('edHudStyle')) $('edHudStyle').value = nxTrackHud('style');
   const p = nxTrackHud('pos'); $('edHudPos').value = p; $('edHudPosV').textContent = p === 0 ? 'רצפה' : p === 100 ? 'מרכז' : p + '%';
 }
 function nxHudWire() {
   ['dots', 'line', 'arrow'].forEach((k) => { const el = $('edHud_' + k); if (el) el.addEventListener('change', () => { nxHudSet(k, el.checked); el.blur(); }); });
+  const st = $('edHudStyle'); if (st) st.addEventListener('change', () => { nxHudSet('style', st.value); st.blur(); });
   const r = $('edHudPos'); if (r) { r.addEventListener('input', () => nxHudSet('pos', r.value)); r.addEventListener('change', () => r.blur()); }
 }
 if (typeof document !== 'undefined' && document.addEventListener) { if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', nxHudWire); else nxHudWire(); }
