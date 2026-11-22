@@ -360,6 +360,13 @@ kbd{display:inline-block;min-width:26px;text-align:center;padding:1px 7px;margin
 .ditem .dclip canvas{width:100%;height:100%;object-fit:contain;display:block;background:none;filter:drop-shadow(0 10px 12px rgba(0,0,0,.7));transition:transform .2s ease,filter .2s ease}
 .ditem:hover .dclip canvas{transform:scale(1.08);filter:drop-shadow(0 0 12px rgba(110,170,255,.95)) drop-shadow(0 10px 12px rgba(0,0,0,.7)) brightness(1.12)}
 .ditem .dtag{position:absolute;right:10px;left:10px;bottom:24px;z-index:2;font:9px var(--mono);letter-spacing:.12em;color:#c9d8ee;direction:ltr;text-align:right}
+.dfunw{position:relative;flex:0 0 172px;width:172px;height:104px;z-index:6}
+.dfunw>.dfun{width:172px;height:104px}
+.dfun .dfar{position:absolute;top:8px;left:10px;z-index:3;font-size:12px;color:#fff;text-shadow:0 1px 3px #000}
+.dfunl{display:none;position:absolute;top:calc(100% + 10px);right:0;width:190px;max-height:330px;overflow-y:auto;overflow-x:hidden;padding:34px 0 10px 18px;flex-direction:column;align-items:flex-start;gap:40px;scrollbar-width:thin;scrollbar-color:#3a4aa0 transparent}
+.dfunl.on{display:flex}
+.dfunl::-webkit-scrollbar{width:6px}.dfunl::-webkit-scrollbar-thumb{background:#3a4aa0;border-radius:3px}
+.dfunl>.ditem{flex:0 0 104px}
 .ditem .dname{position:absolute;right:8px;left:8px;bottom:6px;z-index:2;text-align:right;font:900 italic 14px/1.1 var(--ui);color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 0 2px #06101a,0 2px 0 #06101a,-1px 0 0 #06101a,1px 0 0 #06101a,0 4px 12px rgba(0,0,0,.8)}
 .dmain{position:relative;min-height:0;direction:rtl;overflow:visible}
 .dmain>#dBigCv{position:absolute;left:50%;top:50%;width:calc(min(76%,calc(100% - 640px)) * 1.25);height:120%;transform:translate(-50%,-50%);object-fit:contain;display:block;z-index:2;pointer-events:none}
@@ -1891,7 +1898,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 500</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 501</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -2170,6 +2177,162 @@ const sun = new THREE.DirectionalLight(0xfff2d6, 1.0);
 sun.position.set(80, 140, 60);
 scene.add(ambientLight, hemiLight, sun);
 
+/* ============================================================
+   FUN DRONES (build 501): characters that fly exactly like the 5" freestyle
+   ------------------------------------------------------------
+   Each one is its own drone id (fun_duck ...). Its PRESETS entry inherits everything from PRESETS.fpv5 through the prototype,
+   so physics, rates, battery, fall drag and sound are the 5" freestyle's (also after the admin changes the 5").
+   Only the look is different, and they have no propellers. They live in a sub-menu under the "רחפנים מצחיקים" card on the
+   drone screen, not in DRONE_IDS, and they are allowed wherever the 5" freestyle is allowed.
+   ============================================================ */
+const FUN_DRONES = [
+  { id: 'fun_duck', n: 'ברווז גומי', en: 'RUBBER DUCK', f: 'duck', k: 0.85 },
+  { id: 'fun_ufo', n: 'צלחת', en: 'UFO', f: 'ufo', k: 1 },
+  { id: 'fun_sofa', n: 'ספה', en: 'SOFA', f: 'sofa', k: 1 },
+  { id: 'fun_pizza', n: 'פרוסת פיצה', en: 'PIZZA', f: 'pizza', k: 1 },
+  { id: 'fun_jet', n: 'מטוס קרב', en: 'FIGHTER JET', f: 'jet', k: 1.3 }
+];
+const FUN_IDS = FUN_DRONES.map((d) => d.id);
+const isFunDrone = (id) => FUN_IDS.indexOf(id) >= 0;
+FUN_DRONES.forEach((d) => { if (PRESETS.fpv5 && !PRESETS[d.id]) { const p = Object.create(PRESETS.fpv5); p.label = d.n; p.fun = true; PRESETS[d.id] = p; } });
+const FUN_BUILD = (function () {
+const M = (c, o) => new THREE.MeshStandardMaterial(Object.assign({ color: c, roughness: 0.55, metalness: 0.05 }, o || {}));
+const add = (p, geo, mat, x, y, z) => { const m = new THREE.Mesh(geo, mat); m.position.set(x || 0, y || 0, z || 0); p.add(m); return m; };
+/* four little props on arms - every fun drone is still a quad */
+function props(g, R, y, col) { return [];   /* the characters fly with no visible props */ const list = []; [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach((q, i) => {
+  const arm = add(g, new THREE.CylinderGeometry(0.03, 0.03, R * 1.05, 8), M(0x2a2d33), q[0] * R * 0.36, y - 0.04, q[1] * R * 0.36); arm.rotation.z = Math.PI / 2; arm.rotation.y = Math.atan2(q[1], q[0]) * -1;
+  add(g, new THREE.CylinderGeometry(0.07, 0.08, 0.1, 12), M(0x26282c, { metalness: 0.6, roughness: 0.3 }), q[0] * R * 0.72, y, q[1] * R * 0.72);
+  const p = new THREE.Group(); p.position.set(q[0] * R * 0.72, y + 0.07, q[1] * R * 0.72); g.add(p);
+  for (let k = 0; k < 2; k++) { const b = add(p, new THREE.BoxGeometry(0.62, 0.012, 0.08), M(col || 0xf2f5f8, { transparent: true, opacity: 0.75 })); b.rotation.y = k * Math.PI / 2 * 0; b.rotation.y = k * Math.PI; }
+  p.userData.dir = (i === 0 || i === 3) ? 1 : -1; list.push(p); }); return list; }
+/* 1. a rubber duck (like the user's photo), sculpted as ONE smooth piece, like a moulded toy:
+   a long round body with a flat bottom, a back that sweeps up into a pointed tail, a big round head that melts into the body,
+   raised moulded wings on the sides; a wide orange beak a little open, black oval eyes with a shine */
+function duck() { const g = new THREE.Group();
+  const y = new THREE.MeshPhysicalMaterial({ color: 0xffd200, roughness: 0.3, metalness: 0, clearcoat: 0.9, clearcoatRoughness: 0.18 });
+  const o = new THREE.MeshPhysicalMaterial({ color: 0xff5a1f, roughness: 0.32, clearcoat: 0.6 });
+  const V = THREE.Vector3;
+  const ell = (p, c, r) => { const x = (p.x - c[0]) / r[0], yy = (p.y - c[1]) / r[1], z = (p.z - c[2]) / r[2]; return (Math.sqrt(x * x + yy * yy + z * z) - 1) * Math.min(r[0], r[1], r[2]); };
+  const smin = (a, b, k) => { const h = Math.max(k - Math.abs(a - b), 0) / k; return Math.min(a, b) - h * h * k * 0.25; };
+  /* the shape as a distance field: every part blends smoothly into the next */
+  const sdf = (p) => {
+    let d = ell(p, [0, 0, 0.06], [0.6, 0.44, 0.8]);                                    // the body
+    d = smin(d, ell(p, [0, 0.16, 0.48], [0.4, 0.34, 0.4]), 0.22);                       // the back rises
+    const tq = new V(p.x, p.y, p.z - (p.y - 0.3) * 0.35); d = smin(d, ell(tq, [0, 0.44, 0.66], [0.22, 0.34, 0.25]), 0.24); d = smin(d, ell(p, [0, 0.66, 0.8], [0.09, 0.15, 0.1]), 0.16);   // ...to a soft point at the top   // the tail points up and a little back
+    d = smin(d, ell(p, [0, 0.4, -0.32], [0.3, 0.22, 0.3]), 0.14);                      // a short neck
+    d = smin(d, ell(p, [0, 0.8, -0.38], [0.44, 0.42, 0.43]), 0.12);                    // the big round head: a clear ball on top
+    [-1, 1].forEach((sd) => { const wq = new V(p.x, p.y - (p.z - 0.2) * 0.35, p.z); d = smin(d, ell(wq, [sd * 0.5, 0.06, 0.24], [0.15, 0.22, 0.42]), 0.06); });   // raised moulded wings
+    return Math.max(d, -(p.y + 0.34));                                                  // flat bottom
+  };
+  const C = new V(0, 0.38, 0.05);
+  const surf = (o0, dir) => { let a = 0, b = 2.2; for (let k = 0; k < 40; k++) { const m = (a + b) / 2; if (sdf(o0.clone().addScaledVector(dir, m)) < 0) a = m; else b = m; } return o0.clone().addScaledVector(dir, a); };
+  /* shrink-wrap a fine sphere onto the shape; normals from the field, so it shades smooth like real plastic */
+  const sg = new THREE.SphereGeometry(1, 140, 100), P = sg.attributes.position, N = sg.attributes.normal, e = 0.002;
+  for (let k = 0; k < P.count; k++) { const dir = new V(P.getX(k), P.getY(k), P.getZ(k)).normalize();
+    /* outermost crossing: step in from outside */ let a, b, t = 2.2; while (t > 0 && sdf(C.clone().addScaledVector(dir, t)) > 0) t -= 0.02; a = Math.max(0, t); b = t + 0.02;
+    for (let n = 0; n < 20; n++) { const m = (a + b) / 2; if (sdf(C.clone().addScaledVector(dir, m)) < 0) a = m; else b = m; }
+    const pt = C.clone().addScaledVector(dir, a); P.setXYZ(k, pt.x, pt.y, pt.z);
+    const nx = sdf(new V(pt.x + e, pt.y, pt.z)) - sdf(new V(pt.x - e, pt.y, pt.z)), ny = sdf(new V(pt.x, pt.y + e, pt.z)) - sdf(new V(pt.x, pt.y - e, pt.z)), nz = sdf(new V(pt.x, pt.y, pt.z + e)) - sdf(new V(pt.x, pt.y, pt.z - e));
+    const nv = new V(nx, ny, nz).normalize(); N.setXYZ(k, nv.x, nv.y, nv.z); }
+  P.needsUpdate = true; N.needsUpdate = true;
+  add(g, sg, y, 0, 0, 0);
+  const HC = new V(0, 0.8, -0.38);
+  /* the beak (the earlier one the user liked): a thick wide upper part turned a little up, a lower part, slightly open with a darker mouth.
+     A root piece where it meets the face, so it grows out of the head with no seams or gaps */
+  const bp = surf(HC, new V(0, -0.2, -1).normalize());
+  const up = add(g, new THREE.SphereGeometry(0.2, 26, 16), o, 0, bp.y + 0.04, bp.z - 0.12); up.scale.set(1.1, 0.42, 1.1); up.rotation.x = 0.22;
+  const lo = add(g, new THREE.SphereGeometry(0.17, 24, 14), o, 0, bp.y - 0.08, bp.z - 0.07); lo.scale.set(0.95, 0.4, 0.9); lo.rotation.x = -0.25;
+  const mo = add(g, new THREE.SphereGeometry(0.14, 20, 12), M(0xb8321c, { roughness: 0.5 }), 0, bp.y - 0.02, bp.z - 0.06); mo.scale.set(0.9, 0.3, 0.8);
+  const rt = add(g, new THREE.SphereGeometry(0.2, 26, 16), o, 0, bp.y - 0.015, bp.z + 0.03); rt.scale.set(0.95, 0.68, 0.55);   // the root, sunk into the face
+  /* eyes: black ovals painted onto the head - part of the surface like on the moulded toy, not sticking out; a small shine on each */
+  [-1, 1].forEach((sd) => { const d = new V(sd * 0.55, 0.4, -0.73).normalize(), pe = surf(HC, d), nrm = pe.clone().addScaledVector(HC, -1).normalize();
+    const ey = add(g, new THREE.SphereGeometry(0.075, 22, 14), new THREE.MeshPhysicalMaterial({ color: 0x050505, roughness: 0.15, clearcoat: 1 }), pe.x - nrm.x * 0.004, pe.y - nrm.y * 0.004, pe.z - nrm.z * 0.004);
+    ey.lookAt(pe.clone().add(nrm)); ey.scale.set(0.6, 1.35, 0.14);
+    const sh = add(g, new THREE.CircleGeometry(0.016, 12), new THREE.MeshBasicMaterial({ color: 0xffffff }), 0, 0, 0); const sp = pe.clone().addScaledVector(nrm, 0.0075).add(new V(0, 0.04, 0)); sh.position.copy(sp); sh.lookAt(sp.clone().add(nrm)); });
+  g.userData.anim = (t) => { g.rotation.z = Math.sin(t * 2) * 0.04; };
+  g.userData.props = props(g, 1.25, 1.12); g.scale.setScalar(0.85); return g; }
+/* 4. a flying saucer with blinking lights */
+function ufo() { const g = new THREE.Group(), met = M(0xb8c0c8, { metalness: 0.8, roughness: 0.25 });
+  const d = add(g, new THREE.SphereGeometry(0.8, 32, 12), met, 0, 0, 0); d.scale.y = 0.22;
+  add(g, new THREE.SphereGeometry(0.36, 24, 14, 0, Math.PI * 2, 0, Math.PI / 2), M(0x7fffd4, { transparent: true, opacity: 0.6, metalness: 0.1, roughness: 0.05 }), 0, 0.12, 0);
+  const alien = add(g, new THREE.SphereGeometry(0.13, 14, 10), M(0x7be05a), 0, 0.22, 0);
+  [-1, 1].forEach((s) => { const e = add(g, new THREE.SphereGeometry(0.04, 12, 8), M(0x111111), s * 0.05, 0.25, -0.12); e.scale.set(0.8, 1.3, 0.6); });   // the alien's eyes, on its face (they were sunk inside its head)
+  const rim = add(g, new THREE.TorusGeometry(0.8, 0.045, 10, 48), M(0x8a929c, { metalness: 0.85, roughness: 0.3 }), 0, 0, 0); rim.rotation.x = Math.PI / 2;   // the saucer's rim
+  const lights = []; for (let i = 0; i < 10; i++) { const a = i / 10 * Math.PI * 2; lights.push(add(g, new THREE.SphereGeometry(0.05, 10, 8), new THREE.MeshBasicMaterial({ color: 0xffe14a }), Math.cos(a) * 0.84, 0, Math.sin(a) * 0.84)); }   // on the rim (they were hidden inside the saucer)
+  g.userData.anim = (t) => lights.forEach((l, i) => l.material.color.setHex(((Math.floor(t * 6) + i) % 3) ? 0x555533 : 0xffe14a));
+  g.userData.props = props(g, 1.15, 0.36, 0xb8ffb0); return g; }
+/* 5. a flying sofa: soft rounded parts like a real couch - a base, two seat cushions and two back cushions, rolled arms, short wooden legs */
+function sofa() { const g = new THREE.Group(), f = M(0x7d46c9, { roughness: 0.92 }), cu = M(0x9a62e8, { roughness: 0.95 }), wood = M(0x5a3a1c, { roughness: 0.6 });
+  const soft = (w, h, d, r) => { const x = w / 2 - r, y = h / 2 - r, sh = new THREE.Shape(); sh.moveTo(-x, -y - r * 0); sh.absarc(x, -y, r, -Math.PI / 2, 0); sh.absarc(x, y, r, 0, Math.PI / 2); sh.absarc(-x, y, r, Math.PI / 2, Math.PI); sh.absarc(-x, -y, r, Math.PI, Math.PI * 1.5);
+    const gg = new THREE.ExtrudeGeometry(sh, { depth: Math.max(0.01, d - 2 * r), bevelEnabled: true, bevelThickness: r, bevelSize: r * 0.6, bevelSegments: 5, curveSegments: 10 }); gg.translate(0, 0, -(d - 2 * r) / 2); return gg; };   // a box with soft rounded edges
+  add(g, soft(1.5, 0.24, 0.72, 0.07), f, 0, 0, 0);                                                        // the base
+  [-1, 1].forEach((s) => add(g, soft(0.62, 0.15, 0.58, 0.06), cu, s * 0.33, 0.19, -0.04));                 // two seat cushions, a seam between them
+  add(g, soft(1.5, 0.52, 0.2, 0.08), f, 0, 0.32, 0.28);                                                    // the back frame
+  [-1, 1].forEach((s) => { const bk = add(g, soft(0.62, 0.38, 0.16, 0.07), cu, s * 0.33, 0.43, 0.15); bk.rotation.x = -0.12; });   // two back cushions, leaning a little
+  [-1, 1].forEach((s) => { add(g, soft(0.2, 0.32, 0.72, 0.08), f, s * 0.76, 0.14, 0);                       // the arms...
+    const roll = add(g, new THREE.CylinderGeometry(0.12, 0.12, 0.74, 20), f, s * 0.76, 0.32, 0); roll.rotation.x = Math.PI / 2; });   // ...rolled on top
+  [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach((q) => add(g, new THREE.CylinderGeometry(0.045, 0.03, 0.14, 10), wood, q[0] * 0.66, -0.19, q[1] * 0.28));   // short tapered wooden legs
+  add(g, soft(0.3, 0.3, 0.1, 0.05), M(0xffd23f, { roughness: 0.95 }), 0.42, 0.42, 0.04).rotation.z = 0.3;   // a throw cushion
+  g.userData.props = props(g, 1.35, 0.62); return g; }
+/* 6. a pizza slice */
+function pizza() { const g = new THREE.Group(), sh = new THREE.Shape(); sh.moveTo(0, -0.85); sh.lineTo(0.62, 0.55); sh.quadraticCurveTo(0, 0.78, -0.62, 0.55); sh.closePath();
+  const base = add(g, new THREE.ExtrudeGeometry(sh, { depth: 0.08, bevelEnabled: true, bevelThickness: 0.02, bevelSize: 0.02, bevelSegments: 2 }), M(0xffc45a, { roughness: 0.9 }), 0, 0, 0); base.rotation.x = -Math.PI / 2;
+  const top = add(g, new THREE.ExtrudeGeometry(sh, { depth: 0.02, bevelEnabled: false }), M(0xffe27a, { roughness: 0.8 }), 0, 0.1, 0); top.rotation.x = -Math.PI / 2; top.scale.set(0.9, 0.9, 1);
+  /* the crust: a thick rolled edge that follows the round back of the slice exactly (it was a ring placed by guess and floated off the edge) */
+  const edge = new THREE.QuadraticBezierCurve3(new THREE.Vector3(0.62, 0.09, -0.55), new THREE.Vector3(0, 0.09, -0.86), new THREE.Vector3(-0.62, 0.09, -0.55));
+  add(g, new THREE.TubeGeometry(edge, 24, 0.085, 10, false), M(0xd9902f, { roughness: 0.9 }), 0, 0, 0);
+  [[0.62, -0.55], [-0.62, -0.55]].forEach((q) => add(g, new THREE.SphereGeometry(0.085, 12, 10), M(0xd9902f, { roughness: 0.9 }), q[0], 0.09, q[1]));   // round ends of the crust
+  [[0.1, -0.2], [-0.2, 0.25], [0.25, 0.3], [0, 0.05], [-0.05, -0.45]].forEach((q) => add(g, new THREE.CylinderGeometry(0.08, 0.08, 0.03, 14), M(0xc0392b), q[0], 0.13, -q[1]));
+  g.rotation.y = Math.PI;   // the point flies first
+  g.userData.props = props(g, 1.2, 0.42); return g; }
+/* 7. a fighter jet of our own design (no real model, no markings): a slim grey body with a pointed nose, a tinted bubble canopy,
+   swept delta wings, two tail fins leaning out, side air intakes, small tail wings, and an exhaust that glows in flight */
+function jet() { const g = new THREE.Group();
+  const grey = M(0x8a949e, { roughness: 0.5, metalness: 0.35, flatShading: true }), dark = M(0x3c434b, { roughness: 0.6, metalness: 0.3 });
+  /* the body: a lathe profile along the length, nose to the front (-z) */
+  const pr = []; [[0, -1.25], [0.05, -1.1], [0.11, -0.85], [0.17, -0.5], [0.21, -0.1], [0.22, 0.4], [0.2, 0.85], [0.16, 1.05], [0.15, 1.1]].forEach((q) => pr.push(new THREE.Vector2(q[0], q[1])));
+  const bd = add(g, new THREE.LatheGeometry(pr, 24), grey, 0, 0.3, 0); bd.rotation.x = Math.PI / 2; bd.scale.set(1, 1, 0.82);
+  add(g, new THREE.ConeGeometry(0.052, 0.16, 18), dark, 0, 0.3, -1.25).rotation.x = -Math.PI / 2;   // the nose tip
+  /* the canopy: a long tinted bubble */
+  const cn = add(g, new THREE.SphereGeometry(0.15, 24, 16), new THREE.MeshPhysicalMaterial({ color: 0x1a2a3a, metalness: 0.4, roughness: 0.05, clearcoat: 1, transparent: true, opacity: 0.88 }), 0, 0.44, -0.58); cn.scale.set(0.75, 0.7, 2.1);
+  /* side air intakes */
+  [-1, 1].forEach((sd) => { const it = add(g, new THREE.BoxGeometry(0.12, 0.17, 0.6), grey, sd * 0.2, 0.25, -0.1); it.rotation.y = sd * 0.04;
+    add(g, new THREE.BoxGeometry(0.1, 0.13, 0.02), M(0x0b0c0e), sd * 0.2, 0.25, -0.405); });
+  /* swept delta wings: a flat triangle shape, thin, on each side */
+  [-1, 1].forEach((sd) => { const w = new THREE.Shape(); w.moveTo(0, -0.35); w.lineTo(sd * 0.95, 0.55); w.lineTo(sd * 0.95, 0.72); w.lineTo(0, 0.78); w.closePath();
+    const wg = new THREE.ExtrudeGeometry(w, { depth: 0.035, bevelEnabled: false }); wg.rotateX(Math.PI / 2);
+    add(g, wg, grey, 0, 0.27, 0);
+    add(g, new THREE.CylinderGeometry(0.018, 0.018, 0.34, 10), dark, sd * 0.95, 0.25, 0.58).rotation.x = Math.PI / 2; });   // wingtip rails
+  /* small tail wings and two fins leaning out */
+  [-1, 1].forEach((sd) => { const t = new THREE.Shape(); t.moveTo(0, 0.75); t.lineTo(sd * 0.48, 1.05); t.lineTo(sd * 0.48, 1.16); t.lineTo(0, 1.14); t.closePath();
+    const tg = new THREE.ExtrudeGeometry(t, { depth: 0.025, bevelEnabled: false }); tg.rotateX(Math.PI / 2); add(g, tg, grey, 0, 0.28, 0);
+    const f = new THREE.Shape(); f.moveTo(0.62, 0); f.lineTo(1.1, 0); f.lineTo(1.15, 0.4); f.lineTo(1.0, 0.42); f.closePath();
+    const fg = new THREE.ExtrudeGeometry(f, { depth: 0.025, bevelEnabled: false }); fg.rotateY(-Math.PI / 2);
+    const fm = add(g, fg, grey, sd * 0.13, 0.38, 0); fm.rotation.z = -sd * 0.35; });
+  /* the exhaust nozzle and its glow */
+  const nz = add(g, new THREE.CylinderGeometry(0.15, 0.13, 0.14, 22, 1, true), dark, 0, 0.3, 1.16); nz.rotation.x = Math.PI / 2; nz.material.side = THREE.DoubleSide;
+  const fl = add(g, new THREE.ConeGeometry(0.11, 0.5, 18, 1, true), new THREE.MeshBasicMaterial({ color: 0xff8a2a, transparent: true, opacity: 0.75, side: THREE.DoubleSide }), 0, 0.3, 1.45); fl.rotation.x = Math.PI / 2;   // pointing backward
+  const core = add(g, new THREE.CircleGeometry(0.12, 22), new THREE.MeshBasicMaterial({ color: 0xffd27a }), 0, 0.3, 1.21);
+  g.userData.anim = (t) => { const k = 0.85 + Math.sin(t * 30) * 0.12 + Math.sin(t * 17) * 0.06; fl.scale.set(1, k, 1); fl.material.opacity = 0.55 + 0.25 * k; core.material.color.setHSL(0.1, 1, 0.6 + 0.08 * Math.sin(t * 25)); };
+  g.userData.props = props(g, 1.25, 1.12); g.scale.setScalar(0.85); return g; }
+
+return { duck, ufo, sofa, pizza, jet };
+})();
+let FUN_REF = null;                                              // the 5" freestyle's size and centre height: every character is fitted to it
+const FUN_CACHE = {};                                            // the duck is sculpted point by point: build each character once, then hand out copies
+function buildFunModel(id) {
+  const d = FUN_DRONES.find((x) => x.id === id) || FUN_DRONES[0];
+  if (FUN_CACHE[d.id]) { const c = FUN_CACHE[d.id].clone(); c.userData = { props: [], anim: null, fun: d.id }; return c; }
+  if (!FUN_REF) { const r = new THREE.Box3().setFromObject(buildDroneModel('fpv5')), s = r.getSize(new THREE.Vector3()); FUN_REF = { size: Math.max(s.x, s.y, s.z), cy: (r.min.y + r.max.y) / 2 }; }
+  const m = FUN_BUILD[d.f](), grp = new THREE.Group(); grp.add(m); m.updateMatrixWorld(true);
+  let b = new THREE.Box3().setFromObject(m); const sz = b.getSize(new THREE.Vector3());
+  m.scale.multiplyScalar(FUN_REF.size * 0.95 * (d.k || 1) / Math.max(sz.x, sz.y, sz.z, 1e-3)); m.updateMatrixWorld(true);
+  b = new THREE.Box3().setFromObject(m); const c = b.getCenter(new THREE.Vector3()); m.position.set(-c.x, FUN_REF.cy - c.y, -c.z);
+  grp.traverse((o) => { if (o.isMesh) o.castShadow = true; });
+  grp.userData.props = []; grp.userData.anim = m.userData.anim || null; grp.userData.fun = d.id;
+  FUN_CACHE[d.id] = grp;
+  return grp.clone();
+}
 /* 88 ACADEMY logo (text removed, transparent background, white alpha mask) used by crosshair style 3 */
 const LOGO_IMG = document.createElement('img');
 let logoReady = false;
@@ -3345,6 +3508,7 @@ const SND_PROF = {
   fpv10:  { idle: 62, max: 470, harm: [0, 1, 0.88, 0.46, 0.3, 0.17, 0.1, 0.06, 0.035], det: [0, 0.018, -0.014, 0.026], mix: 0.07, wr: 3.5, whine: 0.025, air: 0.17, airF: [220, 1100], lp: 2600, vol: 0.4 },
   fpv10w: { idle: 58, max: 430, harm: [0, 1, 0.9, 0.48, 0.32, 0.18, 0.1, 0.06, 0.035], det: [0, 0.02, -0.016, 0.028], mix: 0.065, wr: 3.5, whine: 0.022, air: 0.19, airF: [200, 1000], lp: 2400, vol: 0.42 }
 };
+FUN_IDS.forEach((id) => { SND_PROF[id] = SND_PROF.fpv5; });   // build 501: the fun drones sound exactly like the 5" freestyle
 const Sound = {
   ctx: null, master: null, motorGain: null, motorFilter: null, oscs: [], noiseBuf: null, started: false,
   init() {
@@ -7924,7 +8088,7 @@ let resultsVisible = false, resultToken = 0;
 let introV = null, introOn = false;
 function introOpen(st) {                                        // fill the stage intro: number, name, description, map and the chosen drone
   const id0 = settings.preset, ok = DRONE_IDS.filter(NXH.droneOk);
-  const id = DRONE_INFO[id0] && ok.indexOf(id0) >= 0 ? id0 : (ok.indexOf('fpv5') >= 0 ? 'fpv5' : (ok[0] || 'fpv5'));
+  const id = DRONE_INFO[id0] && (ok.indexOf(id0) >= 0 || droneUsable(id0)) ? id0 : (ok.indexOf('fpv5') >= 0 ? 'fpv5' : (ok[0] || 'fpv5'));
   $('introNum').textContent = 'שלב ' + st.num;
   $('introName').textContent = st.name;
   $('introDesc').textContent = String(st.desc || '').slice(0, 170);
@@ -8045,6 +8209,11 @@ const DRONE_INFO = {
   }
 };
 const DRONE_IDS = ['fpv5', 'race5', 'fpv10', 'fpv10w', 'cine25', 'whoop'];   // build 486: the 2.5" sits between the 10" and the 65 mm whoop
+FUN_DRONES.forEach((d) => {                                   // build 501: the fun drones fly like the 5" freestyle, so they show its numbers
+  const b = DRONE_INFO.fpv5;
+  DRONE_INFO[d.id] = { title: d.n, en: d.en, mass: b.mass, fun: true, desc: 'נראה כמו ' + d.n + ', אבל טס בדיוק כמו רחפן פריסטייל 5 אינץ\': אותה פיזיקה, אותו דחף ואותו צליל מנועים. בלי פרופלורים.', bars: b.bars, icon: '' };
+});
+const droneUsable = (id) => !!DRONE_INFO[id] && NXH.droneOk(id) && (DRONE_IDS.indexOf(id) >= 0 || isFunDrone(id));   // build 501: a fun drone is a valid choice too
 /* 3D rotating drone viewers (one shared WebGL renderer, copied into each card canvas) */
 const DV_W = 640, DV_H = 400;
 const DV_SPIN = Math.PI * 2 / 23;     // one full turn every ~23 s, like the reference turntable
@@ -8301,6 +8470,7 @@ function frameBody(tgt, FR, carbon, soM) {                       // the body: a 
   }
 }
 function buildDroneModel(id) {
+  if (isFunDrone(id)) return buildFunModel(id);                  // build 501: a fun character (f26fun.js)
   if (id === 'cine25') return buildCine25(NXH.dcol(id) || {});   // build 486: its own builder (c25drone.js)
   const whoop = id === 'whoop';
   const big = id === 'fpv10' || id === 'fpv10w', load = id === 'fpv10w', race = id === 'race5';
@@ -8801,11 +8971,12 @@ function selectDrone(id) {
   const d = DRONE_INFO[id];
   document.querySelectorAll('#droneCards .ditem').forEach((el) => el.classList.toggle('sel', el.dataset.id === id));
   const ids = Array.from(document.querySelectorAll('#dStack .dcard')).map((c) => c.dataset.id), at = ids.indexOf(id), n = ids.length;   // the stage: this drone big, the ones before and after it dimmed above and below
-  document.querySelectorAll('#dStack .dcard').forEach((c, k) => { const off = ((k - at) % n + n) % n; c.className = 'dcard ' + (off === 0 ? 'cur' : off === 1 ? 'next' : off === n - 1 ? 'prev' : 'far'); });
+  document.querySelectorAll('#dStack .dcard').forEach((c, k) => { const off = ((k - at) % n + n) % n; c.className = 'dcard ' + (at < 0 ? 'far' : off === 0 ? 'cur' : off === 1 ? 'next' : off === n - 1 ? 'prev' : 'far'); });   // a fun drone is not on the stage: all dimmed
   const old = droneViews.findIndex((v) => v.big); if (old >= 0) dvDispose(droneViews.splice(old, 1)[0]);
   const cv = $('dBigCv'); if (cv) { const v = makeDroneView(id, cv, true, true); v.cam.position.multiplyScalar(0.8); v.cam.aspect = 1400 / 875; v.cam.fov = 2 * Math.atan(1.25 * Math.tan(16 * DEG)) / DEG; v.cam.updateProjectionMatrix(); v.cam.setViewOffset(1400, 875, 0, 70, 1400, 875);   /* builds 467-468: the picture is 25% wider and 25% taller (same drone size) so the 10" propellers are not cut on any side */ v.big = true; droneViews.push(v); }   // build 449: the picture is shifted up a tenth so the near propellers never leave the bottom edge (same size)   // build 440: each drone framed to fill the stage, then brought closer
   $('dMainEn').textContent = d.en; $('dMainName').textContent = d.title; $('dMainDesc').textContent = d.desc;
   $('dStats').innerHTML = droneStatRows(id);
+  if (isFunDrone(id)) funCardShow(id);
   if (typeof nxDroneMark === 'function') nxDroneMark();
 }
 /* main screen: the drone picked on the drone-selection screen, drawn once and kept still (default: 5-inch freestyle) */
@@ -8899,7 +9070,7 @@ function buildMainDrone() {
   const cv = $('mainDroneCv'); if (!cv || !dvRenderer && !window.THREE) return;
   let id = settings.preset;
   const ok = DRONE_IDS.filter(NXH.droneOk);
-  if (!DRONE_INFO[id] || ok.indexOf(id) < 0) id = ok.indexOf('fpv5') >= 0 ? 'fpv5' : (ok[0] || 'fpv5');
+  if (!DRONE_INFO[id] || (ok.indexOf(id) < 0 && !droneUsable(id))) id = ok.indexOf('fpv5') >= 0 ? 'fpv5' : (ok[0] || 'fpv5');
   if (mainDv) dvDispose(mainDv);
   const v = makeDroneView(id, cv, true);
   v.model.rotation.y = MAIN_FACE_Y === null ? -0.75 : MAIN_FACE_Y;
@@ -8979,6 +9150,7 @@ function buildDroneCards(keep) {
     $('dStack').appendChild(dc);
     const sv = makeDroneView(id, dc.querySelector('canvas')); sv.still = true; droneViews.push(sv);
   });
+  buildFunCard(list);                                            // build 501: the "רחפנים מצחיקים" card, after the whoop, with its drop-down list
   const step = (k) => { const at = ids.indexOf(droneSel); Sound.ui(); selectDrone(ids[((at < 0 ? 0 : at) + k + ids.length) % ids.length]); };
   $('dUp').addEventListener('click', () => step(-1)); $('dDn').addEventListener('click', () => step(1));
   let wt = 0;
@@ -8991,7 +9163,38 @@ function buildDroneCards(keep) {
   wrap.querySelectorAll('#dRates button').forEach((x) => x.addEventListener('click', () => { Sound.ui(); applyQuickRates(x.dataset.q); drSync(); }));
   drSync();
   $('dGo').addEventListener('click', () => { setPreset(droneSel); Sound.ui(); showScreen('missions'); });
-  selectDrone(keep && ids.indexOf(droneSel) >= 0 ? droneSel : ids.indexOf(settings.preset) >= 0 ? settings.preset : ids[0]);   // keep: a rebuild after an admin edit stays on the drone being looked at
+  selectDrone(keep && (ids.indexOf(droneSel) >= 0 || droneUsable(droneSel)) ? droneSel : (ids.indexOf(settings.preset) >= 0 || droneUsable(settings.preset)) ? settings.preset : ids[0]);   // keep: a rebuild after an admin edit stays on the drone being looked at
+}
+
+/* build 501: the fun drones card. It shows the character picked last; a click opens a list under it (one card per character, scrolls) */
+let funCardV = null;
+function funCurrent() { return isFunDrone(droneSel) ? droneSel : isFunDrone(settings.preset) ? settings.preset : FUN_IDS[0]; }
+function funCardShow(id) {
+  const fc = $('dFunCard'); if (!fc) return;
+  fc.dataset.id = id; fc.classList.toggle('sel', droneSel === id);
+  fc.querySelector('.dtag').textContent = DRONE_INFO[id].en; fc.querySelector('.dname').textContent = DRONE_INFO[id].title;
+  const i = droneViews.indexOf(funCardV); if (i >= 0) { dvDispose(droneViews.splice(i, 1)[0]); }
+  funCardV = makeDroneView(id, fc.querySelector('canvas'), true); funCardV.cam.position.multiplyScalar(0.85); funCardV.card = true; funCardV.spin = 0; droneViews.push(funCardV);
+  fc.onmouseenter = () => { funCardV.hov = true; }; fc.onmouseleave = () => { funCardV.hov = false; };
+}
+function buildFunCard(list) {
+  if (!NXH.droneOk('fpv5') || !FUN_IDS.length) return;
+  const card = (id, cls) => '<span class="hbg" aria-hidden="true"><span class="hsh"></span><span class="hburst"></span></span><span class="dclip" aria-hidden="true"><canvas width="320" height="200"></canvas></span><div class="dtag">' + DRONE_INFO[id].en + '</div><div class="dname">' + DRONE_INFO[id].title + '</div>' + (cls ? '<span class="dfar">▼</span>' : '');
+  const w = document.createElement('div'); w.className = 'dfunw';
+  w.innerHTML = '<div class="ditem hcard blue dfun" id="dFunCard"></div><div class="dfunl" id="dFunList"></div>';
+  list.appendChild(w);
+  const fc = $('dFunCard'), fl = $('dFunList'), cur = funCurrent();
+  fc.innerHTML = card(cur, true);
+  fc.addEventListener('click', () => { Sound.ui(); const on = !fl.classList.contains('on'); fl.classList.toggle('on', on); fc.querySelector('.dfar').textContent = on ? '▲' : '▼'; });
+  FUN_IDS.forEach((id) => {
+    const it = document.createElement('div'); it.className = 'ditem hcard blue'; it.dataset.id = id; it.innerHTML = card(id, false);
+    it.addEventListener('click', () => { Sound.ui(); selectDrone(id); });
+    it.addEventListener('dblclick', () => { setPreset(id); showScreen('missions'); });
+    fl.appendChild(it);
+    const tv = makeDroneView(id, it.querySelector('canvas'), true); tv.cam.position.multiplyScalar(0.85); tv.card = true; tv.spin = 0; droneViews.push(tv);
+    it.addEventListener('mouseenter', () => { tv.hov = true; }); it.addEventListener('mouseleave', () => { tv.hov = false; });
+  });
+  funCardShow(cur);
 }
 
 if (typeof document !== 'undefined' && document.addEventListener) document.addEventListener('keydown', (e) => {   // up / down arrows scroll through the drones on the drone screen
@@ -10802,7 +11005,7 @@ NXH.orderedIds = (ids0) => {
   return out;
 };
 NXH.dcol = (id) => (NX.eff && NX.eff.drones.col && NX.eff.drones.col[id]) || {};
-NXH.droneOk = (id) => nxAdminEditing() || !NX.eff || !NX.eff.drones.off[id];
+NXH.droneOk = (id) => { if (typeof isFunDrone === 'function' && isFunDrone(id)) id = 'fpv5'; return nxAdminEditing() || !NX.eff || !NX.eff.drones.off[id]; };   // build 501: the fun drones follow the 5" freestyle
 
 const NX_DRONE0 = {};
 const NX_DCOL = {
