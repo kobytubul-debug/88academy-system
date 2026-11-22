@@ -1898,7 +1898,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 505</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 506</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -2320,8 +2320,19 @@ var JETP = (function () {
     return { P, I, smooth: true, m }; }
   function disc(c, rx, ry, m) { const P = [c.slice()], I = [], M = 24; for (let j = 0; j < M; j++) { const a = j / M * Math.PI * 2; P.push([c[0] + Math.cos(a) * rx, c[1] + Math.sin(a) * ry, c[2]]); }
     for (let j = 0; j < M; j++) I.push([0, 1 + j, 1 + (j + 1) % M], [0, 1 + (j + 1) % M, 1 + j]); return { P, I, smooth: false, m }; }
+  /* the canopy as a glass cap lying on the body: it starts as a point on the nose and rises in one smooth slope (no round front),
+     is fullest over the pilot, and closes in a rounded end into the spine */
+  function canopy() { const N = 44, M = 26, P = [], I = [], zf = -1.0, zr = -0.4, H = 0.095, W = 0.088;
+    for (let i = 0; i <= N; i++) { const t = i / N, z = zf + (zr - zf) * t, s = sec(z);
+      const hc = H * Math.pow(sm(0, 0.6, t), 0.85) * Math.sqrt(Math.max(0, 1 - Math.pow(sm(0.7, 1, t), 2)));
+      const wc = W * Math.pow(sm(0, 0.55, t), 0.6) * Math.sqrt(Math.max(0, 1 - Math.pow(sm(0.72, 1, t), 2.2)) * 0.85 + 0.15);
+      for (let j = 0; j <= M; j++) { const a = j / M * Math.PI, x = Math.min(wc, s.w * 0.98) * Math.cos(a);
+        const c = Math.pow(Math.min(1, Math.abs(x) / s.w), 1 / 0.75), base = s.ht * Math.pow(Math.sqrt(Math.max(0, 1 - c * c)), 1.35);
+        P.push([x, s.yc + base - 0.006 + hc * Math.pow(Math.sin(a), 0.7), z]); } }
+    for (let i = 0; i < N; i++) for (let j = 0; j < M; j++) { const a = i * (M + 1) + j, b = a + 1, c = a + M + 1, d = c + 1; I.push([a, c, b], [b, c, d]); }
+    return { P, I, smooth: true, m: 'glass' }; }
   function build() { const parts = [loft()];
-    const zc = -0.72, s = sec(zc); parts.push(ell([0, s.yc + s.ht + 0.015, zc], [0.08, 0.085, 0.27], 'glass'));          // the bubble canopy, sunk into the top of the nose
+    parts.push(canopy());
     [-1, 1].forEach((sd) => {
       const za = -0.7, zb = -0.55, wa = sec(za).w, wb = sec(zb).w, yi = sec(zb).yc;                              // intake mouths on the front of the wide shoulders, beside the canopy
       parts.push(disc([sd * (wa + wb) / 2, yi - 0.005, (za + zb) / 2 + 0.03], (wb - wa) / 2 * 1.25, 0.08, 'hole'));
