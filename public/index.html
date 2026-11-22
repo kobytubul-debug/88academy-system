@@ -1898,7 +1898,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 511</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 512</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -2275,16 +2275,44 @@ function sofa() { const g = new THREE.Group(), f = M(0x7d46c9, { roughness: 0.92
   add(g, soft(0.3, 0.3, 0.1, 0.05), M(0xffd23f, { roughness: 0.95 }), 0.42, 0.42, 0.04).rotation.z = 0.3;   // a throw cushion
   g.userData.props = props(g, 1.35, 0.62); return g; }
 /* 6. a pizza slice */
-function pizza() { const g = new THREE.Group(), sh = new THREE.Shape(); sh.moveTo(0, -0.85); sh.lineTo(0.62, 0.55); sh.quadraticCurveTo(0, 0.78, -0.62, 0.55); sh.closePath();
-  const base = add(g, new THREE.ExtrudeGeometry(sh, { depth: 0.08, bevelEnabled: true, bevelThickness: 0.02, bevelSize: 0.02, bevelSegments: 2 }), M(0xffc45a, { roughness: 0.9 }), 0, 0, 0); base.rotation.x = -Math.PI / 2;
-  const top = add(g, new THREE.ExtrudeGeometry(sh, { depth: 0.02, bevelEnabled: false }), M(0xffe27a, { roughness: 0.8 }), 0, 0.1, 0); top.rotation.x = -Math.PI / 2; top.scale.set(0.9, 0.9, 1);
-  /* the crust: a thick rolled edge that follows the round back of the slice exactly (it was a ring placed by guess and floated off the edge) */
-  const edge = new THREE.QuadraticBezierCurve3(new THREE.Vector3(0.62, 0.09, -0.55), new THREE.Vector3(0, 0.09, -0.86), new THREE.Vector3(-0.62, 0.09, -0.55));
-  add(g, new THREE.TubeGeometry(edge, 24, 0.085, 10, false), M(0xd9902f, { roughness: 0.9 }), 0, 0, 0);
-  [[0.62, -0.55], [-0.62, -0.55]].forEach((q) => add(g, new THREE.SphereGeometry(0.085, 12, 10), M(0xd9902f, { roughness: 0.9 }), q[0], 0.09, q[1]));   // round ends of the crust
-  [[0.1, -0.2], [-0.2, 0.25], [0.25, 0.3], [0, 0.05], [-0.05, -0.45]].forEach((q) => add(g, new THREE.CylinderGeometry(0.08, 0.08, 0.03, 14), M(0xc0392b), q[0], 0.13, -q[1]));
-  g.rotation.y = Math.PI;   // the point flies first
-  g.userData.props = props(g, 1.2, 0.42); return g; }
+/* the pizza slice as plain triangle parts: a soft dough base whose point droops a little, melted cheese with bubbles that runs
+   over the edges, a puffy golden crust rolled along the round back, and cupped pepperoni slices */
+var PIZZAP = (function () {
+  const AP = [0, -0.9], L = 1.45, HA = 0.43;                                        // apex (the point, to the front) and the slice's length and half angle
+  const hsh = (x, z) => { const s = Math.sin(x * 12.9898 + z * 78.233) * 43758.5453; return s - Math.floor(s); };
+  const bump = (x, z) => 0.008 * Math.sin(x * 23 + 1.3) * Math.sin(z * 19 + 0.4) + 0.006 * Math.sin(x * 41 - z * 37);
+  const droop = (z) => { const k = Math.max(0, (0.05 - z) / 0.95); return -0.1 * k * k; };   // the point bends down like a real slice
+  const at = (s, t) => { const a = s * HA, x = AP[0] + t * L * Math.sin(a), z = AP[1] + t * L * Math.cos(a); return [x, z]; };
+  function grid(N, M, f, m, smooth) { const P = [], I = [];
+    for (let i = 0; i <= N; i++) for (let j = 0; j <= M; j++) P.push(f(i / N, j / M * 2 - 1));
+    for (let i = 0; i < N; i++) for (let j = 0; j < M; j++) { const a = i * (M + 1) + j, b = a + 1, c = a + M + 1, d = c + 1; I.push([a, c, b], [b, c, d]); }
+    return { P, I, smooth: smooth !== false, m }; }
+  function build() { const parts = [], TE = 0.9;                                    // the cheese covers the slice up to TE (the crust is beyond)
+    parts.push(grid(40, 24, (t, s) => { const q = at(s, t * 0.97); return [q[0], droop(q[1]) - 0.01, q[1]]; }, 'dough'));                         // underside
+    [-1, 1].forEach((sd) => parts.push(grid(40, 2, (t, s) => { const q = at(sd, t * 0.97); return [q[0], droop(q[1]) - 0.01 + (s + 1) / 2 * 0.05, q[1]]; }, 'dough')));   // the cut sides
+    parts.push(grid(46, 30, (t, s) => { const tt = t * TE, q = at(s * 0.985, tt), e = 1 - Math.abs(s);        // the cheese top: bumpy, highest in the middle
+      return [q[0], droop(q[1]) + 0.04 + 0.012 * Math.min(1, e * 4) + bump(q[0], q[1]), q[1]]; }, 'cheese'));
+    for (let k = 0; k < 7; k++) { const sd = k % 2 ? 1 : -1, t = 0.18 + k * 0.1, q = at(sd * 0.99, t), w = 0.035 + 0.02 * hsh(k, 2);   // cheese drips over the cut edges
+      const nx = Math.cos(HA) * sd, nz = -Math.sin(HA);
+      parts.push(grid(6, 8, (u, s) => { const r = w * Math.sqrt(Math.max(0, 1 - s * s)); return [q[0] + nx * (0.005 + 0.01 * Math.cos(u * 1.5)) - Math.sin(HA) * sd * 0 + s * w * Math.sin(HA) * sd, droop(q[1]) + 0.05 - u * (0.04 + 0.03 * hsh(k, 5)) * (0.4 + 0.6 * r / w), q[1] + s * w * Math.cos(HA) + nz * 0.005]; }, 'cheese')); }
+    parts.push(grid(40, 18, (t, a) => {                                              // the crust: a puffy tube along the round back
+      const s = t * 2 - 1, q = at(s, 0.955), ang = (a + 1) * Math.PI, r = 0.075 * (1 + 0.12 * Math.sin(s * 9) + 0.08 * hsh(Math.round(t * 40), 1)) * (Math.abs(s) > 0.94 ? Math.sqrt(Math.max(0.05, (1 - Math.abs(s)) / 0.06)) : 1);
+      const dx = Math.sin(s * HA), dz = Math.cos(s * HA);
+      return [q[0] + dx * Math.cos(ang) * r, 0.045 + Math.sin(ang) * r * 0.85, q[1] + dz * Math.cos(ang) * r]; }, 'crust'));
+    [[0.0, 0.34], [0.38, 0.56], [-0.36, 0.56], [0.08, 0.66], [-0.45, 0.82], [0.5, 0.83], [-0.05, 0.86]].forEach((p, k) => {   // pepperoni slices, cupped at the edges
+      const q = at(p[0], p[1]), R = 0.085 + 0.015 * hsh(k, 3), y0 = droop(q[1]) + 0.065;
+      parts.push(grid(3, 26, (u, s) => { const a = (s + 1) * Math.PI, r = R * u; return [q[0] + Math.cos(a) * r, y0 + 0.012 * u * u, q[1] + Math.sin(a) * r]; }, k % 2 ? 'pep' : 'pep2', false));
+      parts.push(grid(1, 26, (u, s) => { const a = (s + 1) * Math.PI; return [q[0] + Math.cos(a) * R, y0 + 0.012 - u * 0.02, q[1] + Math.sin(a) * R]; }, 'pepE', false)); });
+    return parts; }
+  return { build };
+})();
+function pizza() { const g = new THREE.Group();   /* build 512: rebuilt as one soft slice */
+  const mats = { dough: M(0xe2aa5a, { roughness: 0.9 }), cheese: new THREE.MeshPhysicalMaterial({ color: 0xfacd50, roughness: 0.45, clearcoat: 0.35, clearcoatRoughness: 0.4 }),
+    crust: M(0xd6913c, { roughness: 0.85 }), pep: M(0xb2281e, { roughness: 0.5 }), pep2: M(0xa5231c, { roughness: 0.5 }), pepE: M(0x78190f, { roughness: 0.6 }) };
+  Object.keys(mats).forEach((k) => { mats[k].side = THREE.DoubleSide; });
+  PIZZAP.build().forEach((pa) => { let geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.Float32BufferAttribute([].concat.apply([], pa.P), 3)); geo.setIndex([].concat.apply([], pa.I));
+    if (!pa.smooth) geo = geo.toNonIndexed(); geo.computeVertexNormals(); g.add(new THREE.Mesh(geo, mats[pa.m])); });
+  g.userData.props = []; return g; }
 /* 7. a fighter jet in the style of a modern stealth fighter (build 504, our own model, no markings) */
 /* the jet as plain triangle parts (shared by the game and the checks): a smooth lofted fuselage, a glass canopy seated into it,
    intakes cut into the side cheeks, thin delta wings with leading-edge extensions, tail planes, two canted fins, a nozzle */
