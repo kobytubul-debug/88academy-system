@@ -1898,7 +1898,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 503</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 504</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -2285,37 +2285,68 @@ function pizza() { const g = new THREE.Group(), sh = new THREE.Shape(); sh.moveT
   [[0.1, -0.2], [-0.2, 0.25], [0.25, 0.3], [0, 0.05], [-0.05, -0.45]].forEach((q) => add(g, new THREE.CylinderGeometry(0.08, 0.08, 0.03, 14), M(0xc0392b), q[0], 0.13, -q[1]));
   g.rotation.y = Math.PI;   // the point flies first
   g.userData.props = props(g, 1.2, 0.42); return g; }
-/* 7. a fighter jet of our own design (no real model, no markings): a slim grey body with a pointed nose, a tinted bubble canopy,
-   swept delta wings, two tail fins leaning out, side air intakes, small tail wings, and an exhaust that glows in flight */
+/* 7. a fighter jet in the style of a modern stealth fighter (build 504, our own model, no markings) */
+/* the jet as plain triangle parts (shared by the game and the checks): a smooth lofted fuselage, a glass canopy seated into it,
+   intakes cut into the side cheeks, thin delta wings with leading-edge extensions, tail planes, two canted fins, a nozzle */
+var JETP = (function () {
+  const sm = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+  const Z0 = -1.25, Z1 = 1.1;
+  /* stealth-style body: a short faceted nose, sharp chines along the sides, wide flat shoulders where the intakes sit, a flat belly */
+  const sec = (z) => { const u = (z - Z0) / (Z1 - Z0), nose = Math.pow(sm(0, 0.3, u), 0.6);
+    const w = 0.02 + 0.12 * nose + 0.14 * sm(0.2, 0.4, u) - 0.1 * sm(0.76, 1, u);
+    const ht = 0.02 + 0.09 * nose + 0.03 * sm(0.3, 0.5, u) - 0.03 * sm(0.8, 1, u), hb = 0.015 + 0.07 * nose - 0.02 * sm(0.8, 1, u);
+    return { w, ht, hb, yc: -0.03 * (1 - nose) }; };
+  const pt = (z, a) => { const s = sec(z), c = Math.cos(a), si = Math.sin(a);
+    const x = s.w * Math.sign(c) * Math.pow(Math.abs(c), 0.75), y = (si > 0 ? s.ht : s.hb) * Math.sign(si) * Math.pow(Math.abs(si), 1.35);   // pointed at the sides: the chine
+    return [x, y + s.yc, z]; };
+  function loft() { const N = 100, M = 56, P = [], I = [];
+    for (let i = 0; i <= N; i++) { const z = Z0 + (Z1 - Z0) * i / N; for (let j = 0; j < M; j++) P.push(pt(z, j / M * Math.PI * 2)); }
+    for (let i = 0; i < N; i++) for (let j = 0; j < M; j++) { const a = i * M + j, b = i * M + (j + 1) % M, c = a + M, d = b + M; I.push([a, b, c], [b, d, c]); }
+    P.push([0, sec(Z0).yc, Z0 - 0.03]); const tip = P.length - 1; for (let j = 0; j < M; j++) I.push([tip, (j + 1) % M, j]);
+    return { P, I, smooth: true, m: 'body' }; }
+  function ell(c, r, m, W, H) { W = W || 32; H = H || 20; const P = [], I = [];
+    for (let i = 0; i <= H; i++) { const th = i / H * Math.PI; for (let j = 0; j <= W; j++) { const ph = j / W * Math.PI * 2; P.push([c[0] + r[0] * Math.sin(th) * Math.cos(ph), c[1] + r[1] * Math.cos(th), c[2] + r[2] * Math.sin(th) * Math.sin(ph)]); } }
+    for (let i = 0; i < H; i++) for (let j = 0; j < W; j++) { const a = i * (W + 1) + j, b = a + 1, cc = a + W + 1, d = cc + 1; I.push([a, cc, b], [b, cc, d]); }
+    return { P, I, smooth: true, m }; }
+  /* a flat plate: polygon pts [[u,v]], thickness t, map(u,v,s) -> [x,y,z] with s = -1 bottom / +1 top */
+  function plate(pts, t, map, m) { const P = [], I = [], n = pts.length;
+    pts.forEach((q) => P.push(map(q[0], q[1], 1, t))); pts.forEach((q) => P.push(map(q[0], q[1], -1, t)));
+    for (let k = 1; k < n - 1; k++) { I.push([0, k, k + 1]); I.push([n, n + k + 1, n + k]); }
+    for (let k = 0; k < n; k++) { const k2 = (k + 1) % n; I.push([k, n + k, k2], [k2, n + k, n + k2]); }
+    return { P, I, smooth: false, m }; }
+  function ring(z, r0, r1, len, m) { const P = [], I = [], M = 32;
+    for (let j = 0; j < M; j++) { const a = j / M * Math.PI * 2; P.push([Math.cos(a) * r0, Math.sin(a) * r0, z], [Math.cos(a) * r1, Math.sin(a) * r1, z + len]); }
+    for (let j = 0; j < M; j++) { const a = 2 * j, b = 2 * ((j + 1) % M); I.push([a, b, a + 1], [b, b + 1, a + 1], [a, a + 1, b], [b, a + 1, b + 1]); }
+    return { P, I, smooth: true, m }; }
+  function disc(c, rx, ry, m) { const P = [c.slice()], I = [], M = 24; for (let j = 0; j < M; j++) { const a = j / M * Math.PI * 2; P.push([c[0] + Math.cos(a) * rx, c[1] + Math.sin(a) * ry, c[2]]); }
+    for (let j = 0; j < M; j++) I.push([0, 1 + j, 1 + (j + 1) % M], [0, 1 + (j + 1) % M, 1 + j]); return { P, I, smooth: false, m }; }
+  function build() { const parts = [loft()];
+    const zc = -0.72, s = sec(zc); parts.push(ell([0, s.yc + s.ht - 0.01, zc], [0.085, 0.08, 0.28], 'glass'));          // the bubble canopy, sunk into the top of the nose
+    [-1, 1].forEach((sd) => {
+      const zi = -0.6, si = sec(zi), xi = sd * (si.w + 0.005);                                                         // diamond intake mouths beside the cockpit
+      parts.push({ P: [[xi, si.yc + 0.075, zi + 0.02], [xi + sd * 0.06, si.yc + 0.01, zi + 0.06], [xi, si.yc - 0.06, zi + 0.02], [xi - sd * 0.05, si.yc + 0.01, zi - 0.01]], I: [[0, 1, 2], [0, 2, 3], [0, 2, 1], [0, 3, 2]], smooth: false, m: 'hole' });
+      const yw = -0.01;
+      parts.push(plate([[0.2, -0.25], [0.92, 0.4], [0.92, 0.55], [0.2, 0.7]], 0.014, (u, v, k, t) => [sd * u, yw + k * t * (1 - 0.6 * Math.min(1, u)), v], 'body'));   // trapezoid wing, trailing edge swept a little forward
+      parts.push(plate([[0.14, 0.72], [0.5, 0.94], [0.5, 1.06], [0.14, 1.12]], 0.008, (u, v, k, t) => [sd * u, -0.02 + k * t, v], 'body'));            // trapezoid tail plane
+      const cant = 0.42, x0 = 0.16, y0 = 0.07;
+      parts.push(plate([[0.48, 0], [0.98, 0], [1.0, 0.4], [0.8, 0.42]], 0.008, (u, v, k, t) => [sd * (x0 + Math.sin(cant) * v) + k * t, y0 + Math.cos(cant) * v, u], 'body'));   // two big fins leaning out
+    });
+    parts.push(ring(1.06, 0.1, 0.09, 0.14, 'dark'));                                                             // one round nozzle
+    return parts; }
+  return { build, sec };
+})();
 function jet() { const g = new THREE.Group();
-  const grey = M(0x8a949e, { roughness: 0.5, metalness: 0.35, flatShading: true }), dark = M(0x3c434b, { roughness: 0.6, metalness: 0.3 });
-  /* the body: a lathe profile along the length, nose to the front (-z) */
-  const pr = []; [[0, -1.25], [0.05, -1.1], [0.11, -0.85], [0.17, -0.5], [0.21, -0.1], [0.22, 0.4], [0.2, 0.85], [0.16, 1.05], [0.15, 1.1]].forEach((q) => pr.push(new THREE.Vector2(q[0], q[1])));
-  const bd = add(g, new THREE.LatheGeometry(pr, 24), grey, 0, 0.3, 0); bd.rotation.x = Math.PI / 2; bd.scale.set(1, 1, 0.82);
-  add(g, new THREE.ConeGeometry(0.052, 0.16, 18), dark, 0, 0.3, -1.25).rotation.x = -Math.PI / 2;   // the nose tip
-  /* the canopy: a long tinted bubble */
-  const cn = add(g, new THREE.SphereGeometry(0.15, 24, 16), new THREE.MeshPhysicalMaterial({ color: 0x1a2a3a, metalness: 0.4, roughness: 0.05, clearcoat: 1, transparent: true, opacity: 0.88 }), 0, 0.44, -0.58); cn.scale.set(0.75, 0.7, 2.1);
-  /* side air intakes */
-  [-1, 1].forEach((sd) => { const it = add(g, new THREE.BoxGeometry(0.12, 0.17, 0.6), grey, sd * 0.2, 0.25, -0.1); it.rotation.y = sd * 0.04;
-    add(g, new THREE.BoxGeometry(0.1, 0.13, 0.02), M(0x0b0c0e), sd * 0.2, 0.25, -0.405); });
-  /* swept delta wings: a flat triangle shape, thin, on each side */
-  [-1, 1].forEach((sd) => { const w = new THREE.Shape(); w.moveTo(0, -0.35); w.lineTo(sd * 0.95, 0.55); w.lineTo(sd * 0.95, 0.72); w.lineTo(0, 0.78); w.closePath();
-    const wg = new THREE.ExtrudeGeometry(w, { depth: 0.035, bevelEnabled: false }); wg.rotateX(Math.PI / 2);
-    add(g, wg, grey, 0, 0.27, 0);
-    add(g, new THREE.CylinderGeometry(0.018, 0.018, 0.34, 10), dark, sd * 0.95, 0.25, 0.58).rotation.x = Math.PI / 2; });   // wingtip rails
-  /* small tail wings and two fins leaning out */
-  [-1, 1].forEach((sd) => { const t = new THREE.Shape(); t.moveTo(0, 0.75); t.lineTo(sd * 0.48, 1.05); t.lineTo(sd * 0.48, 1.16); t.lineTo(0, 1.14); t.closePath();
-    const tg = new THREE.ExtrudeGeometry(t, { depth: 0.025, bevelEnabled: false }); tg.rotateX(Math.PI / 2); add(g, tg, grey, 0, 0.28, 0);
-    const f = new THREE.Shape(); f.moveTo(0.62, 0); f.lineTo(1.1, 0); f.lineTo(1.15, 0.4); f.lineTo(1.0, 0.42); f.closePath();
-    const fg = new THREE.ExtrudeGeometry(f, { depth: 0.025, bevelEnabled: false }); fg.rotateY(-Math.PI / 2);
-    const fm = add(g, fg, grey, sd * 0.13, 0.38, 0); fm.rotation.z = -sd * 0.35; });
-  /* the exhaust nozzle and its glow */
-  const nz = add(g, new THREE.CylinderGeometry(0.15, 0.13, 0.14, 22, 1, true), dark, 0, 0.3, 1.16); nz.rotation.x = Math.PI / 2; nz.material.side = THREE.DoubleSide;
-  const fl = add(g, new THREE.ConeGeometry(0.11, 0.5, 18, 1, true), new THREE.MeshBasicMaterial({ color: 0xff8a2a, transparent: true, opacity: 0.75, side: THREE.DoubleSide }), 0, 0.3, 1.45); fl.rotation.x = Math.PI / 2;   // pointing backward
-  const core = add(g, new THREE.CircleGeometry(0.12, 22), new THREE.MeshBasicMaterial({ color: 0xffd27a }), 0, 0.3, 1.21);
-  g.userData.anim = (t) => { const k = 0.85 + Math.sin(t * 30) * 0.12 + Math.sin(t * 17) * 0.06; fl.scale.set(1, k, 1); fl.material.opacity = 0.55 + 0.25 * k; core.material.color.setHSL(0.1, 1, 0.6 + 0.08 * Math.sin(t * 25)); };
-  g.userData.props = props(g, 1.25, 1.12); g.scale.setScalar(0.85); return g; }
-
+  const mats = { body: new THREE.MeshStandardMaterial({ color: 0x7a8189, roughness: 0.5, metalness: 0.3, side: THREE.DoubleSide }),
+    glass: new THREE.MeshPhysicalMaterial({ color: 0x15202c, metalness: 0.5, roughness: 0.06, clearcoat: 1, side: THREE.DoubleSide }),
+    hole: new THREE.MeshBasicMaterial({ color: 0x07080a, side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }),
+    dark: new THREE.MeshStandardMaterial({ color: 0x33373d, roughness: 0.6, metalness: 0.5, side: THREE.DoubleSide }) };
+  JETP.build().forEach((pa) => { let geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.Float32BufferAttribute([].concat.apply([], pa.P), 3)); geo.setIndex([].concat.apply([], pa.I));
+    if (!pa.smooth) geo = geo.toNonIndexed(); geo.computeVertexNormals(); g.add(new THREE.Mesh(geo, mats[pa.m])); });
+  /* the exhaust glow */
+  const fl = new THREE.Mesh(new THREE.ConeGeometry(0.085, 0.45, 18, 1, true), new THREE.MeshBasicMaterial({ color: 0xff8a2a, transparent: true, opacity: 0.75, side: THREE.DoubleSide })); fl.position.set(0, 0, 1.42); fl.rotation.x = Math.PI / 2; g.add(fl);
+  const core = new THREE.Mesh(new THREE.CircleGeometry(0.09, 22), new THREE.MeshBasicMaterial({ color: 0xffd27a })); core.position.set(0, 0, 1.12); g.add(core);
+  g.userData.anim = (t) => { const k = 0.85 + Math.sin(t * 30) * 0.12 + Math.sin(t * 17) * 0.06; fl.scale.set(1, k, 1); fl.material.opacity = 0.55 + 0.25 * k; };
+  g.userData.props = []; return g; }
 return { duck, ufo, sofa, pizza, jet };
 })();
 let FUN_REF = null;                                              // the 5" freestyle's size and centre height: every character is fitted to it
