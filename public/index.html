@@ -1498,6 +1498,66 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 .hbcp img{position:absolute;width:100%;left:0;top:2%;transform:scaleX(-1)}
 .hbcp svg{width:22px;height:22px;color:#fff}
 .hbcp em{position:relative;font:italic 900 10px var(--ui);color:#fff;text-shadow:0 1px 0 #06101a,0 0 3px #06101a}
+
+/* ===== build 513-514: drone screen like a game's hangar: the drone big in the middle, its name at the top centre, numbers on the right,
+   one strip of tall cards along the bottom, the setup and choose buttons at the bottom right, back in the bottom left corner ===== */
+@keyframes dHexDrift{0%{background-position:50% 42%,0 0}100%{background-position:50% 42%,56px 97px}}
+#scrDrone:has(#droneCards.v2){background:#05070d!important}
+#scrDrone.on:has(#droneCards.v2){position:fixed!important;inset:0!important;width:100vw!important;max-width:none!important;height:100vh!important;max-height:none!important;margin:0!important;padding:14px 18px 0!important;border:0!important;border-radius:0!important;box-shadow:none!important;overflow:hidden!important;z-index:5;box-sizing:border-box}   /* build 516: the drone screen is a whole page, not a window on the menu */
+#scrDrone.on:has(#droneCards.v2)>*:not(#droneCards){display:none!important}
+#scrDrone.on:has(#droneCards.v2)>#droneCards{flex:1;height:100%!important}
+#droneCards.v2>.dbg:after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 62% 58% at 50% 46%,transparent 0%,transparent 28%,rgba(0,0,0,.25) 48%,rgba(0,0,0,.62) 72%,rgba(0,0,0,.93) 100%)}   /* build 517: dark at the edges, normal in the middle, getting lighter step by step on the way in */
+#droneCards.v2>.dbg{position:absolute;inset:-14px -18px 0 -18px;pointer-events:none;z-index:0;background:radial-gradient(ellipse at 50% 42%,rgba(40,60,110,.32),transparent 62%),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='97' viewBox='0 0 56 97'%3E%3Cpath d='M28 0l28 16v32L28 64 0 48V16zM28 97V64' fill='none' stroke='%23ffffff' stroke-opacity='.06' stroke-width='3'/%3E%3C/svg%3E");animation:dHexDrift 14s linear infinite}   /* build 515: the moving hexagons live in their own layer (on the screen itself they fought its show / hide animation) */
+#droneCards.v2{display:block!important;position:relative!important;height:auto!important;flex:1;min-height:560px;margin:0!important;z-index:1}
+#droneCards.v2>.dmain{position:absolute!important;inset:70px 290px 214px 290px!important}
+#droneCards.v2 .dstack,#droneCards.v2 .dArr{display:none!important}
+#droneCards.v2 .dmain>#dBigCv{width:100%!important;height:100%!important}
+#droneCards.v2>.dtext{position:absolute!important;top:0;left:0;right:0;padding:0!important;text-align:center!important;align-items:center!important;pointer-events:none;z-index:4}
+#droneCards.v2>.dtext .den{font:600 15px var(--mono);letter-spacing:.2em;color:#c9d2e0;direction:ltr}
+#droneCards.v2>.dtext h2{margin:2px 0 0;font:900 italic clamp(34px,4vw,56px)/1 var(--ui);color:#ffc21a;text-shadow:0 0 18px rgba(255,170,0,.45),0 3px 0 #000}
+#droneCards.v2>.dtext .dkind{margin-top:4px;font:700 15px var(--ui);color:#8fa8ff;letter-spacing:.06em}
+#droneCards.v2>.dside{position:absolute!important;right:6px;top:70px;bottom:230px;width:260px;display:flex;flex-direction:column;justify-content:center;gap:14px;z-index:4}
+#droneCards.v2 .dhead,#droneCards.v2 .dph,#droneCards.v2 #dStats{display:none!important}   /* build 514: only the numbers and the level buttons stay */
+#droneCards.v2 .dspecs{display:flex;flex-direction:column;gap:10px}
+#droneCards.v2 .dsp{display:grid;grid-template-columns:auto auto 1fr;align-items:baseline;gap:0 6px;direction:rtl}
+#droneCards.v2 .dsp .k{grid-column:1/4;font:700 14px var(--ui);color:#9aa6b8;letter-spacing:.04em}
+#droneCards.v2 .dsp b{font:900 40px/1 var(--ui);color:#fff;direction:ltr}
+#droneCards.v2 .dsp i{font:700 13px var(--ui);color:#c9d2e0;font-style:normal}
+#droneCards.v2 .dpanel{background:none!important;border:0!important;box-shadow:none!important;padding:0!important}
+#droneCards.v2>.dlist{position:absolute!important;left:170px;right:270px;bottom:6px;height:214px;margin:0!important;padding:0 4px 8px!important;gap:6px!important;justify-content:center;overflow:visible!important;align-items:flex-end;z-index:5}
+/* the cards: tall, a light title strip on top, the drone in the middle, the size big at the bottom and the type under it */
+#droneCards.v2 .ditem,#droneCards.v2 .dfunw,#droneCards.v2 .dfunw>.dfun{flex:0 0 104px!important;width:104px!important;height:182px!important}
+#droneCards.v2 .ditem .hbg{border-radius:4px!important;background:linear-gradient(180deg,#22325c 0%,#141e3c 55%,#0d1430 100%)!important;box-shadow:inset 0 0 0 2px #3c5590,0 8px 18px rgba(0,0,0,.55)!important;overflow:hidden}
+#droneCards.v2 .ditem .hbg:before{content:'';position:absolute;left:0;right:0;top:0;height:24px;background:linear-gradient(180deg,#4a6299,#344a7c)}
+#droneCards.v2 .ditem .hsh,#droneCards.v2 .ditem .hburst{display:none!important}
+#droneCards.v2 .ditem .dclip{left:3%!important;right:3%!important;top:26px!important;bottom:50px!important}
+#droneCards.v2 .ditem .dtag{top:0;bottom:auto;left:3px;right:3px;height:24px;line-height:24px;text-align:center;font:800 10px var(--ui);color:#fff;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;direction:ltr}
+#droneCards.v2 .ditem .dname{display:none}
+#droneCards.v2 .ditem .dsz{position:absolute;right:7px;left:7px;bottom:7px;z-index:2;text-align:right;line-height:1;text-shadow:0 2px 3px #000}
+#droneCards.v2 .ditem .dsz b{font:900 24px var(--ui);color:#fff;direction:ltr;display:inline-block}
+#droneCards.v2 .ditem .dsz i{font:800 10px var(--ui);color:#fff;font-style:normal;margin-right:2px}
+#droneCards.v2 .ditem .dsz span{display:block;font:800 11px var(--ui);color:#d6e2f5;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#droneCards.v2 .ditem:hover{transform:translateY(-4px)!important}
+#droneCards.v2 .ditem.sel{transform:translateY(-12px) scale(1.06)!important;z-index:3}
+#droneCards.v2 .ditem.sel .hbg{box-shadow:inset 0 0 0 3px #ff8a1e,0 0 22px rgba(255,140,30,.55),0 10px 22px rgba(0,0,0,.6)!important}
+#droneCards.v2 .ditem.sel .hbg:before{background:linear-gradient(180deg,#ffa53a,#f07114)}
+#droneCards.v2 .ditem.sel .dsz span{color:#ffb15a}
+#droneCards.v2 .dfunl{top:auto!important;bottom:calc(100% + 16px)!important;right:-6px!important;width:124px!important;max-height:min(56vh,520px)!important;padding:14px 0 6px 12px!important;gap:8px!important;background:rgba(5,7,13,.88);border-radius:6px;z-index:20}
+#droneCards.v2 .dfunl>.ditem{flex:0 0 182px!important}
+#droneCards.v2 .dfun .dfar{top:30px;left:6px}
+/* buttons like the picture: slanted, bold italic, bright; back is a red corner */
+#droneCards.v2 .dsetup,#droneCards.v2 #dGo{position:absolute!important;right:8px!important;width:250px!important;max-width:250px!important;height:78px!important;margin:0!important;border:0!important;cursor:pointer;color:#fff!important;font:900 italic 30px/1 var(--ui)!important;letter-spacing:.01em;text-shadow:0 2px 0 rgba(0,0,0,.35);clip-path:polygon(9% 0,100% 0,100% 72%,91% 100%,0 100%,0 28%);display:flex!important;align-items:center;justify-content:center;z-index:6;transition:filter .15s,transform .15s}
+#droneCards.v2 .dsetup{bottom:104px;background:linear-gradient(180deg,#9a6bff 0%,#6a3cf0 55%,#5229cf 100%)!important;box-shadow:inset 0 2px 0 rgba(255,255,255,.35)}
+#droneCards.v2 #dGo{bottom:12px!important;background:linear-gradient(180deg,#79e04a 0%,#3fae22 55%,#2f8f17 100%)!important;color:#eaffc9!important}
+#droneCards.v2 #dGo .l{font:inherit!important;color:inherit!important}
+#droneCards.v2 #dGo:before,#droneCards.v2 #dGo:after,#droneCards.v2 #dGo .bar,#droneCards.v2 #dGo svg{display:none!important}
+#droneCards.v2 .dsetup:hover,#droneCards.v2 #dGo:hover{filter:brightness(1.15);transform:translateY(-2px)}
+#droneCards.v2>#btnBackD{position:absolute!important;left:-2px!important;bottom:-2px!important;width:150px!important;max-width:150px!important;height:96px!important;margin:0!important;border:0!important;padding:0 0 12px 14px!important;display:flex!important;align-items:flex-end;justify-content:flex-start;background:linear-gradient(135deg,transparent 46%,#ff3b5c 46%,#d81f43 100%)!important;clip-path:none!important;z-index:6;cursor:pointer}
+#droneCards.v2>#btnBackD .l{font:900 italic 24px/1 var(--ui)!important;color:#ff3b5c!important;background:none;text-shadow:0 2px 6px rgba(0,0,0,.6)}
+#droneCards.v2>#btnBackD{background:linear-gradient(135deg,transparent 52%,rgba(255,59,92,.9) 52%,#c4183a 100%)!important}
+#droneCards.v2>#btnBackD .l{color:#fff!important}
+#droneCards.v2>#btnBackD:before,#droneCards.v2>#btnBackD:after,#droneCards.v2>#btnBackD .bar,#droneCards.v2>#btnBackD svg{display:none!important}
+#droneCards.v2>#btnBackD:hover{filter:brightness(1.15)}
 </style>
 </head>
 <body>
@@ -1898,7 +1958,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 512</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 517</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -9060,6 +9120,7 @@ function selectDrone(id) {
   const cv = $('dBigCv'); if (cv) { const v = makeDroneView(id, cv, true, true); v.cam.position.multiplyScalar(0.8); v.cam.aspect = 1400 / 875; v.cam.fov = 2 * Math.atan(1.25 * Math.tan(16 * DEG)) / DEG; v.cam.updateProjectionMatrix(); v.cam.setViewOffset(1400, 875, 0, 70, 1400, 875);   /* builds 467-468: the picture is 25% wider and 25% taller (same drone size) so the 10" propellers are not cut on any side */ v.big = true; droneViews.push(v); }   // build 449: the picture is shifted up a tenth so the near propellers never leave the bottom edge (same size)   // build 440: each drone framed to fill the stage, then brought closer
   $('dMainEn').textContent = d.en; $('dMainName').textContent = d.title; $('dMainDesc').textContent = d.desc;
   $('dStats').innerHTML = droneStatRows(id);
+  const sp = droneSpec(id); if ($('dSpecs')) $('dSpecs').innerHTML = droneSpecRows(id); if ($('dMainKind')) $('dMainKind').textContent = sp.kind;
   if (isFunDrone(id)) funCardShow(id);
   if (typeof nxDroneMark === 'function') nxDroneMark();
 }
@@ -9209,20 +9270,21 @@ function buildDroneCards(keep) {
   const ids = DRONE_IDS.filter(NXH.droneOk);
   if (!ids.length) { wrap.innerHTML = ''; return; }
   wrap.innerHTML =
-    '<div class="dlist" id="dList"></div>' +
+    '<div class="dbg" aria-hidden="true"></div><div class="dlist" id="dList"></div>' +
     '<div class="dmain"><div class="dstack" id="dStack"></div><canvas id="dBigCv" width="1400" height="875"></canvas>' +
     '<button class="dArr up" id="dUp" aria-label="הרחפן הקודם"></button><button class="dArr dn" id="dDn" aria-label="הרחפן הבא"></button></div>' +
-    '<div class="dtext"><div class="den" id="dMainEn"></div></div>' +
-    '<div class="dside"><div class="dhead"><h3 id="dMainName"></h3><p id="dMainDesc"></p></div><div class="dpanel"><div class="dph">נתוני הרחפן</div><div id="dStats"></div>' +
+    '<div class="dtext"><div class="den" id="dMainEn"></div><h2 id="dMainName"></h2><div class="dkind" id="dMainKind"></div></div>' +   /* build 513: the name big at the top centre */
+    '<div class="dside"><div class="dspecs" id="dSpecs"></div><div class="dhead"><p id="dMainDesc"></p></div><div class="dpanel"><div class="dph">נתוני הרחפן</div><div id="dStats"></div>' +
     '<div class="drates"><div class="dsh">רמה</div><div class="drbtns" id="dRates"><button data-q="easy">מתחיל</button><button data-q="medium">בינוני</button><button data-q="pro">מקצוען</button></div></div></div></div>' +
-    '<button class="dmb dgo on navfix r" id="dGo"><i class="bar"></i><span class="l">בחר רחפן</span><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>';
-  wrap.appendChild(back);
+    '<button class="dsetup" id="dSetup">הגדרות רחפן</button><button class="dmb dgo on navfix r" id="dGo"><i class="bar"></i><span class="l">בחר רחפן</span><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>';
+  wrap.appendChild(back); wrap.classList.add('v2'); const bl = back.querySelector('.l'); if (bl) bl.textContent = 'חזור';   /* build 514: a short label for the red corner */
   const list = $('dList');
+  $('dSetup').addEventListener('click', () => { Sound.ui(); setPreset(droneSel); if (typeof openAdv === 'function') openAdv(); });
   ids.forEach((id) => {
     const d = DRONE_INFO[id];
     const it = document.createElement('div');
     it.className = 'ditem hcard blue'; it.dataset.id = id;          // build 442: the look of the home screen's "התחל משחק" card, its own drone popping out of the top
-    it.innerHTML = '<span class="hbg" aria-hidden="true"><span class="hsh"></span><span class="hburst"></span></span><span class="dclip" aria-hidden="true"><canvas width="320" height="200"></canvas></span><div class="dtag">' + d.en + '</div><div class="dname">' + d.title + '</div>';
+    it.innerHTML = '<span class="hbg" aria-hidden="true"><span class="hsh"></span><span class="hburst"></span></span><span class="dclip" aria-hidden="true"><canvas width="320" height="200"></canvas></span><div class="dtag">' + d.en + '</div><div class="dname">' + d.title + '</div>' + droneSizeTag(id);
     it.addEventListener('click', () => { Sound.ui(); selectDrone(id); });
     it.addEventListener('dblclick', () => { setPreset(id); showScreen('missions'); });
     list.appendChild(it);
@@ -9250,6 +9312,14 @@ function buildDroneCards(keep) {
   selectDrone(keep && (ids.indexOf(droneSel) >= 0 || droneUsable(droneSel)) ? droneSel : (ids.indexOf(settings.preset) >= 0 || droneUsable(settings.preset)) ? settings.preset : ids[0]);   // keep: a rebuild after an admin edit stays on the drone being looked at
 }
 
+/* build 513: numbers for the drone screen, like a spec sheet: propeller size, wheelbase, battery, weight, thrust to weight */
+const DRONE_SPEC = { fpv5: { inch: '5', kind: 'פריסטייל' }, race5: { inch: '5', kind: 'מירוץ' }, fpv10: { inch: '10', kind: 'טווח ארוך' }, fpv10w: { inch: '10', kind: 'טווח ארוך + משקל' }, cine25: { inch: '2.5', kind: 'סינמטיק' }, whoop: { inch: '1.2', kind: 'טייני וופ' } };
+function droneSpec(id) { const fun = isFunDrone(id), b = fun ? 'fpv5' : id, s = DRONE_SPEC[b] || DRONE_SPEC.fpv5, p = PRESETS[id] || PRESETS.fpv5;
+  return { inch: s.inch, kind: fun ? 'רחפן מצחיק' : s.kind, wb: DRONE_WB_MM[b] || 225, cells: p.cells || 6, mass: Math.round((p.mass || 0.6) * 1000), twr: p.twr || 0 }; }
+function droneSpecRows(id) { const s = droneSpec(id), row = (k, v, u) => '<div class="dsp"><span class="k">' + k + '</span><b>' + v + '</b><i>' + u + '</i></div>';
+  return row('פרופלור', s.inch, 'אינץ\'') + row('מרחק בין מנועים', s.wb, 'מ"מ') + row('סוללה', s.cells, 'S') + row('משקל', s.mass, 'גרם') + (s.twr ? row('דחף / משקל', s.twr.toFixed(1), ':1') : ''); }
+function droneSizeTag(id) { const s = droneSpec(id); return '<div class="dsz"><b>' + s.inch + '</b><i>אינץ\'</i><span>' + s.kind + '</span></div>'; }
+
 /* build 501: the fun drones card. It shows the character picked last; a click opens a list under it (one card per character, scrolls) */
 let funCardV = null;
 function funCurrent() { return isFunDrone(droneSel) ? droneSel : isFunDrone(settings.preset) ? settings.preset : FUN_IDS[0]; }
@@ -9263,13 +9333,13 @@ function funCardShow(id) {
 }
 function buildFunCard(list) {
   if (!NXH.droneOk('fpv5') || !FUN_IDS.length) return;
-  const card = (id, cls) => '<span class="hbg" aria-hidden="true"><span class="hsh"></span><span class="hburst"></span></span><span class="dclip" aria-hidden="true"><canvas width="320" height="200"></canvas></span><div class="dtag">' + DRONE_INFO[id].en + '</div><div class="dname">' + DRONE_INFO[id].title + '</div>' + (cls ? '<span class="dfar">▼</span>' : '');
+  const card = (id, cls) => '<span class="hbg" aria-hidden="true"><span class="hsh"></span><span class="hburst"></span></span><span class="dclip" aria-hidden="true"><canvas width="320" height="200"></canvas></span><div class="dtag">' + DRONE_INFO[id].en + '</div><div class="dname">' + DRONE_INFO[id].title + '</div>' + (cls ? '<span class="dfar">▲</span><div class="dsz"><span>רחפנים מצחיקים</span></div>' : droneSizeTag(id));
   const w = document.createElement('div'); w.className = 'dfunw';
   w.innerHTML = '<div class="ditem hcard blue dfun" id="dFunCard"></div><div class="dfunl" id="dFunList"></div>';
   list.appendChild(w);
   const fc = $('dFunCard'), fl = $('dFunList'), cur = funCurrent();
   fc.innerHTML = card(cur, true);
-  fc.addEventListener('click', () => { Sound.ui(); const on = !fl.classList.contains('on'); fl.classList.toggle('on', on); fc.querySelector('.dfar').textContent = on ? '▲' : '▼'; });
+  fc.addEventListener('click', () => { Sound.ui(); const on = !fl.classList.contains('on'); fl.classList.toggle('on', on); fc.querySelector('.dfar').textContent = on ? '▼' : '▲'; });   /* build 513: the list opens upward from the strip */
   FUN_IDS.forEach((id) => {
     const it = document.createElement('div'); it.className = 'ditem hcard blue'; it.dataset.id = id; it.innerHTML = card(id, false);
     it.addEventListener('click', () => { Sound.ui(); selectDrone(id); });
