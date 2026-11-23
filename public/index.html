@@ -1754,6 +1754,14 @@ body:has(#scrMissions.on.v2) #trkBg{top:116px!important;bottom:116px!important;h
 
 #trkDbg{position:fixed;left:130px;bottom:4px;z-index:9;font:700 12px var(--ui);color:#ffc21a;background:rgba(0,0,0,.6);padding:2px 8px;border-radius:3px;direction:rtl;pointer-events:none}
 #scrMissions:not(.adm) #trkDbg{display:none}#trkDbg{display:none!important}
+
+/* build 557: course cards and the "all courses" card */
+#scrMissions.v2 .tsc.tback{background:#0d1430}
+#scrMissions.v2 .tsc.tback .bk{position:absolute;left:0;right:0;top:36px;height:100px;display:flex;align-items:center;justify-content:center;font:900 56px var(--ui);color:#8fa8ff;font-style:normal}
+#scrMissions.v2 .tsc.tback .ts{color:#c9d6ff;font:800 13px/28px var(--ui);letter-spacing:0}
+#scrMissions.v2 .tsc.tcat .ts{color:#c9d6ff;font:800 12px/28px var(--ui);letter-spacing:0}
+#scrMissions.v2 .tsc.tcat.sel .ts{color:#fff}
+#scrMissions.v2.catmode .tcBtns,#scrMissions.v2.catmode .tcReq{display:none!important}
 </style>
 </head>
 <body>
@@ -2154,7 +2162,7 @@ body:has(#scrMissions.on.v2) #trkBg{top:116px!important;bottom:116px!important;h
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 556</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 557</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -16373,7 +16381,7 @@ function trkHeroShow(id) {                                        // after a sho
   const st = STAGES[id], key = trkPeekKey(st, st.gen().map(gateCopy));
   const put = (u) => { if (!u) return; trkThumbPut(id, u); if (im.dataset.k === key) return; const t = new Image(); t.onload = () => { if (!t.naturalWidth || trkLum(t) < 12) return; im.dataset.k = key; im.classList.remove('in'); void im.offsetWidth; im.src = u; im.classList.add('in'); }; t.src = u; };
   if (trkHeroCache[key]) { put(trkHeroCache[key]); return; }
-  trkHeroT = window.setTimeout(() => { if (TC.ids[TC.i] !== id || currentScreen !== 'missions') return; put(trkHeroShot(st) || trkPeekCache['R' + key] || ''); }, 260);
+  trkHeroT = window.setTimeout(() => { if ((TCV.mode === 'cats' ? trkCatFirst(TCV.ci) : TC.ids[TC.i]) !== id || currentScreen !== 'missions') return; put(trkHeroShot(st) || trkPeekCache['R' + key] || ''); }, 260);
 }
 /* the cards show the real map too: each track's picture is made one at a time while the page is quiet (never while the player is moving through the list) */
 let trkThumbT = 0, trkLastIn = 0;
@@ -16409,30 +16417,95 @@ function trkStripCard(id, k) {
   let stars = ''; for (let n = 1; n <= 3; n++) stars += '<i class="' + (n <= sp.stars ? 'on' : '') + '">★</i>';
   return '<button class="tsc' + (k === TC.i ? ' sel' : '') + (lk ? ' lk' : '') + '" data-k="' + k + '"><span class="th">' + tcEsc(st.name) + '</span><canvas width="200" height="120"></canvas><span class="ts">' + (lk ? '&#128274;' : stars) + '</span></button>';
 }
+/* build 557: CATEGORIES. With more than one course open to the player, the page first shows one card per course; a click (or "פתח")
+   opens it and the strip shows that course's tracks, with a "כל הקטגוריות" card to go back. With one course only (a group given
+   one course by the manager) the tracks show straight away, as before. The manager sees every course. */
+const TCV = { mode: 'tracks', cat: null, ci: 0 };
+const trkCatName = (id) => (TC.cat[id] && TC.cat[id].cat) || 'כללי';
+function trkCats() { const out = []; TC.ids.forEach((id, k) => { const n = trkCatName(id); let c = out.find((x) => x.n === n); if (!c) { c = { n, ks: [] }; out.push(c); } c.ks.push(k); }); return out; }
+function trkCatFirst(ci) { const c = trkCats()[ci]; return c ? TC.ids[c.ks[0]] : TC.ids[0]; }
+function trkCatCard(c, ci) {
+  const id = TC.ids[c.ks[0]], st = STAGES[id];
+  return '<button class="tsc tcat' + (ci === TCV.ci ? ' sel' : '') + '" data-c="' + ci + '"><span class="th">' + tcEsc(c.n) + '</span><canvas width="200" height="120"></canvas><span class="ts">' + c.ks.length + ' מסלולים</span></button>';
+}
+function trkCatInfo(c) {                                          // the right panel for a course: how many tracks, how many done, the stars
+  let done = 0, stars = 0; c.ks.forEach((k) => { const sp = stageProgress(TC.ids[k]); if (sp.stars > 0) done++; stars += sp.stars || 0; });
+  return '<div class="tcTitle"><b>' + tcEsc(c.n) + '</b></div><div class="tcGrid"><div><span>מסלולים</span><b>' + c.ks.length + '</b></div><div><span>הושלמו</span><b>' + done + ' / ' + c.ks.length + '</b></div><div><span>כוכבים</span><b class="sm">' + stars + ' / ' + c.ks.length * 3 + '</b></div></div>';
+}
+function trkCatOpen(ci) {                                         // into a course: its tracks in the strip, the first (or the one already chosen) selected
+  const cats = trkCats(), c = cats[ci]; if (!c) return;
+  TCV.mode = 'tracks'; TCV.cat = c.n; TCV.ci = ci;
+  if (c.ks.indexOf(TC.i) < 0) trkCarGo(c.ks[0]); else trkV2();
+}
+function trkCatsShow() { TCV.mode = 'cats'; TCV.cat = null; trkV2(); }
+function trkCatStep(d) { const n = trkCats().length; TCV.ci = Math.max(0, Math.min(n - 1, TCV.ci + d)); trkV2(); }
 function trkV2() {
   const scr = $('scrMissions'); if (!scr) return;
   scr.classList.add('v2'); scr.classList.toggle('adm', typeof NX !== 'undefined' && NX.role === 'admin'); if (!scr.classList.contains('adm')) scr.classList.remove('envon');   /* build 543 */
   if (!$('trkHero')) {
     const h = document.createElement('div'); h.className = 'trkhero'; h.innerHTML = '<img id="trkHero" alt=""><i class="vig"></i>'; scr.insertBefore(h, scr.firstChild);
-    /* build 545: no wind button here (the map editor has it) */
     const strip = document.createElement('div'); strip.id = 'tcStrip'; strip.className = 'tcstrip';
     const car = $('trkCar'); if (car) car.appendChild(strip);   // inside the carousel, so its clicks (data-k) and the wheel work as they always did
+    trkCatWire(car, strip);
   }
   const strip = $('tcStrip'); if (!strip) return;
   if (!TC.ids.length) { strip.innerHTML = ''; strip.dataset.ids = ''; return; }
-  if (strip.dataset.ids !== TC.ids.join(',')) {
-    strip.dataset.ids = TC.ids.join(',');
-    strip.innerHTML = TC.ids.map((id, k) => trkStripCard(id, k)).join('');
-    strip.querySelectorAll('.tsc').forEach((b) => { const id = TC.ids[+b.dataset.k], st = STAGES[id]; drawMiniMap(b.querySelector('canvas'), st.gen(), st.color); });   // build 556: the drawing stays until a real picture is ready
+  const cats = trkCats(), multi = cats.length > 1;
+  if (!multi) { TCV.mode = 'tracks'; TCV.cat = null; }
+  else if (TCV.mode === 'tracks' && !cats.some((c) => c.n === TCV.cat)) TCV.mode = 'cats';
+  scr.classList.toggle('catmode', TCV.mode === 'cats');
+  const fly = document.querySelector('#scrMissions .tcBody > .fly');
+  if (TCV.mode === 'cats') {
+    TCV.ci = Math.max(0, Math.min(cats.length - 1, TCV.ci));
+    const sig = 'C|' + cats.map((c) => c.n + ':' + c.ks.length).join(',');
+    if (strip.dataset.ids !== sig) { strip.dataset.ids = sig; strip.innerHTML = cats.map(trkCatCard).join('');
+      strip.querySelectorAll('.tcat').forEach((b) => { const id = trkCatFirst(+b.dataset.c), st = STAGES[id]; drawMiniMap(b.querySelector('canvas'), st.gen(), st.color); }); }
+    strip.querySelectorAll('.tcat').forEach((b) => b.classList.toggle('sel', +b.dataset.c === TCV.ci));
+    const info = $('tcInfo'); if (info) info.innerHTML = trkCatInfo(cats[TCV.ci]);
+    if (fly) { fly.disabled = false; const l = fly.querySelector('.l'); if (l) l.textContent = 'פתח'; }
+    cats.forEach((c, ci) => { const id = TC.ids[c.ks[0]], st = STAGES[id], u = trkHeroCache[trkPeekKey(st, st.gen().map(gateCopy))]; if (u) trkCatThumb(ci, u); });
+    trkHeroShow(trkCatFirst(TCV.ci));
+  } else {
+    const c = multi ? cats.find((x) => x.n === TCV.cat) : null, ks = c ? c.ks : TC.ids.map((x, k) => k);
+    if (c) TCV.ci = cats.indexOf(c);
+    const sig = (c ? 'T|' + c.n + '|' : '') + ks.map((k) => TC.ids[k]).join(',');
+    if (strip.dataset.ids !== sig) {
+      strip.dataset.ids = sig;
+      strip.innerHTML = (c ? '<button class="tsc tback" data-back="1"><span class="th">כל הקטגוריות</span><i class="bk">&#8594;</i><span class="ts">חזרה</span></button>' : '') + ks.map((k) => trkStripCard(TC.ids[k], k)).join('');
+      strip.querySelectorAll('.tsc[data-k]').forEach((b) => { const id = TC.ids[+b.dataset.k], st = STAGES[id]; drawMiniMap(b.querySelector('canvas'), st.gen(), st.color); });   // build 556: the drawing stays until a real picture is ready
+    }
+    strip.querySelectorAll('.tsc[data-k]').forEach((b) => b.classList.toggle('sel', +b.dataset.k === TC.i));
+    ks.forEach((k) => { const id = TC.ids[k], st = STAGES[id], u = trkHeroCache[trkPeekKey(st, st.gen().map(gateCopy))]; if (u) trkThumbPut(id, u); });
+    if (TC.ids[TC.i]) trkHeroShow(TC.ids[TC.i]);
   }
-  strip.querySelectorAll('.tsc').forEach((b) => b.classList.toggle('sel', +b.dataset.k === TC.i));
   const on = strip.querySelector('.tsc.sel'); if (on && strip.scrollTo) { const L = on.offsetLeft - (strip.clientWidth - on.offsetWidth) / 2; strip.scrollTo({ left: L, behavior: 'smooth' }); }
-  TC.ids.forEach((id) => { const st = STAGES[id], u = trkHeroCache[trkPeekKey(st, st.gen().map(gateCopy))]; if (u) trkThumbPut(id, u); });
   trkLastIn = Date.now();
-  if (TC.ids[TC.i]) trkHeroShow(TC.ids[TC.i]);
   window.clearTimeout(trkThumbT); trkThumbT = window.setTimeout(trkThumbNext, 1600);
 }
-
+function trkCatThumb(ci, u) {
+  const b = document.querySelector('#tcStrip .tcat[data-c="' + ci + '"]'); if (!b || !u) return; const old = b.querySelector('img'); if (old && old.dataset.u === u) return;
+  const im = new Image(); im.alt = ''; im.className = 'in'; im.dataset.u = u;
+  im.onload = () => { if (!im.naturalWidth || trkLum(im) < 12) return; const cur = b.querySelector('canvas,img'); if (cur) b.replaceChild(im, cur); }; im.src = u;
+}
+function trkCatWire(car, strip) {                                 // clicks, Enter, the wheel and "חזור" while the courses are showing (they go to the courses, not to a track)
+  strip.addEventListener('click', (e) => {
+    const b = e.target.closest ? e.target.closest('.tsc') : null; if (!b) return;
+    if (b.dataset.back) { e.stopPropagation(); trkCatsShow(); return; }
+    if (b.dataset.c !== undefined) { e.stopPropagation(); const ci = +b.dataset.c; if (ci === TCV.ci) trkCatOpen(ci); else { TCV.ci = ci; trkV2(); } }
+  });
+  if (car) {
+    car.addEventListener('click', (e) => { if (TCV.mode !== 'cats') return; const f = e.target.closest ? e.target.closest('.fly') : null; if (f) { e.preventDefault(); e.stopPropagation(); trkCatOpen(TCV.ci); } }, true);
+    car.addEventListener('wheel', (e) => { if (TCV.mode !== 'cats') return; e.preventDefault(); e.stopPropagation(); const now = Date.now(); if (now - (TCV.wt || 0) < 420) return; TCV.wt = now; trkCatStep(e.deltaY > 0 ? 1 : -1); }, { capture: true, passive: false });
+  }
+  window.addEventListener('keydown', (e) => {
+    if (!inMenu || currentScreen !== 'missions' || TCV.mode !== 'cats') return;
+    if (e.code === 'Enter' || e.code === 'NumpadEnter') { e.preventDefault(); e.stopImmediatePropagation(); trkCatOpen(TCV.ci); }
+    else if (e.code === 'ArrowUp' || e.code === 'ArrowRight') { e.preventDefault(); e.stopImmediatePropagation(); trkCatStep(-1); }
+    else if (e.code === 'ArrowDown' || e.code === 'ArrowLeft') { e.preventDefault(); e.stopImmediatePropagation(); trkCatStep(1); }
+  }, true);
+  const bk = $('btnBackM');                                       // inside a course with others open: "חזור" goes back to the courses first
+  if (bk) bk.addEventListener('click', (e) => { if (TCV.mode === 'tracks' && TCV.cat && trkCats().length > 1) { e.preventDefault(); e.stopImmediatePropagation(); trkCatsShow(); } }, true);
+}
 
 /* build 554: a small status line on the tracks page for the manager (pictures made / tracks, and why the last one failed) */
 const trkDbgLum = { u: '', v: '-' };
