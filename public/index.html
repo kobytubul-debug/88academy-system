@@ -1656,6 +1656,63 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 /* build 539: the home window zooms in on the way to the drone screen */
 #scrMain.hzoom{animation:hZoom .46s cubic-bezier(.55,0,.8,.4) forwards!important;pointer-events:none}
 @keyframes hZoom{0%{transform:scale(1);opacity:1;filter:blur(0)}100%{transform:scale(2.3);opacity:0;filter:blur(7px)}}
+
+/* ===== build 541-542: map select as a whole page, like the picture: a dark band on top and below, the chosen map filling the middle,
+   the name big at the top, one strip of map cards over the bottom edge, back / fly in the drone screen's places ===== */
+#scrMissions.on.v2{position:fixed!important;inset:0!important;width:100vw!important;max-width:none!important;height:100vh!important;max-height:none!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;overflow:hidden!important;z-index:5;display:block!important;background:none!important}
+#scrMissions.v2:before,#scrMissions.v2:after{content:'';position:fixed;left:0;right:0;height:116px;z-index:1;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='97' viewBox='0 0 56 97'%3E%3Cpath d='M28 0l28 16v32L28 64 0 48V16zM28 97V64' fill='none' stroke='%23ffffff' stroke-opacity='.035' stroke-width='3'/%3E%3C/svg%3E"),#020306}#scrMissions.v2:before{top:0}#scrMissions.v2:after{bottom:0}   /* the dark bands above and below the map; with no picture yet the painted map behind shows in the middle */
+body:has(#scrMissions.on.v2) #trkBg{top:116px!important;bottom:116px!important;height:auto!important}
+#scrMissions.v2 .trkwin,#scrMissions.v2 .trkgrid,#scrMissions.v2 .trkmain,#scrMissions.v2 #trkCar,#scrMissions.v2 .tcBody{position:static!important;display:block!important;background:none!important;border:0!important;box-shadow:none!important;padding:0!important;margin:0!important;clip-path:none!important;width:auto!important;height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;transform:none!important}
+#scrMissions.v2 .trkhead,#scrMissions.v2 .tcDots,#scrMissions.v2 .tcFoot,#scrMissions.v2 .trktbl,#scrMissions.v2 .tcStage,#scrMissions.v2 #tcTip,#scrMissions.v2 .tcTitle .no,#scrMissions.v2 .tcDesc,#scrMissions.v2 .tcDrone,#scrMissions.v2 .tcHead #tcCat,#scrMissions.v2 .tcHead #tcCatN,#scrMissions.v2 .tcHead #tcPos{display:none!important}
+#scrMissions.v2 .trkhero{position:fixed;left:0;right:0;top:116px;bottom:116px;z-index:0;pointer-events:none;overflow:hidden}
+#scrMissions.v2 #trkHero{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0}
+#scrMissions.v2 #trkHero.in{animation:trkHeroIn .6s ease both}
+@keyframes trkHeroIn{from{opacity:0;transform:scale(1.04)}to{opacity:1;transform:scale(1)}}
+#scrMissions.v2 .trkhero .vig{position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,7,13,.45) 0%,transparent 14%,transparent 74%,rgba(5,7,13,.6) 100%),radial-gradient(ellipse 75% 70% at 50% 45%,transparent 45%,rgba(0,0,0,.5) 100%)}
+#scrMissions.v2 .tcHead{position:fixed!important;left:0;top:26px;z-index:4;display:block!important;background:none!important;border:0!important;padding:0!important}
+#scrMissions.v2 .tcHead .tcHd{display:block!important;margin:0!important;padding:6px 60px 6px 22px!important;font:900 italic 30px/1 var(--ui)!important;color:#e8edf5!important;background:linear-gradient(90deg,rgba(60,72,120,.85),rgba(60,72,120,.2))!important;clip-path:polygon(0 0,100% 0,93% 100%,0 100%);border:0!important;text-align:right}
+#scrMissions.v2 .tcHead .tcHd small{display:none}
+#scrMissions.v2 .tcTitle{position:fixed!important;left:auto;right:34px;top:20px;z-index:4;display:block!important;text-align:right;pointer-events:none;margin:0!important;padding:0!important;background:none!important;border:0!important}
+#scrMissions.v2 .tcTitle b{font:900 italic clamp(34px,4vw,60px)/1 var(--ui)!important;color:#ffc21a!important;text-shadow:0 0 18px rgba(255,170,0,.45),0 4px 0 #000}
+/* the numbers on the right, as on the drone screen, on a dark glass so they read over the map */
+#scrMissions.v2 .tcInfo{position:fixed!important;right:22px;top:136px;width:250px;max-height:calc(100vh - 136px - 330px);z-index:4;display:flex!important;flex-direction:column;gap:12px;overflow-y:auto;background:rgba(5,7,13,.6)!important;border:0!important;border-radius:6px;padding:14px 16px!important;text-align:right;direction:rtl;scrollbar-width:none}
+#scrMissions.v2 .tcGrid{display:flex!important;flex-direction:column;gap:10px;background:none!important;border:0!important;padding:0!important}
+#scrMissions.v2 .tcGrid>div{display:block;background:none!important;border:0!important;padding:0!important}
+#scrMissions.v2 .tcGrid span{display:block;font:700 14px var(--ui)!important;color:#9aa6b8!important;letter-spacing:.04em}
+#scrMissions.v2 .tcGrid b{font:900 34px/1.05 var(--ui)!important;color:#fff!important;direction:ltr;display:inline-block}
+#scrMissions.v2 .tcGrid b.sm{font-size:24px!important}
+#scrMissions.v2 .tcGrid .stars i{font-size:26px;font-style:normal;color:#3a4152}#scrMissions.v2 .tcGrid .stars i.on{color:#ffc21a;text-shadow:0 0 10px rgba(255,190,0,.6)}
+#scrMissions.v2 .tcReq{background:none!important;padding:0!important}
+#scrMissions.v2 .tcBtns{display:flex!important;flex-wrap:wrap;gap:6px;background:none!important}
+#scrMissions.v2 .tcBtns .b{flex:1 1 auto}
+#scrMissions.v2 #trkCar .tcBody>.fly.dmb,#scrMissions.v2 .tcBody>.fly{position:fixed!important;letter-spacing:.3px!important;text-transform:none!important;right:26px!important;bottom:12px!important;left:auto!important;top:auto!important;width:250px!important;max-width:250px!important;height:78px!important;margin:0!important;border:0!important;cursor:pointer;color:#eaffc9!important;font:900 italic 30px/1 var(--ui)!important;background:linear-gradient(180deg,#79e04a 0%,#3fae22 55%,#2f8f17 100%)!important;clip-path:polygon(9% 0,100% 0,100% 72%,91% 100%,0 100%,0 28%)!important;display:flex!important;align-items:center;justify-content:center;z-index:6;text-shadow:0 2px 0 rgba(0,0,0,.35)}
+#scrMissions.v2 .tcBody>.fly .l{font:inherit!important;color:inherit!important}
+#scrMissions.v2 .tcBody>.fly:before,#scrMissions.v2 .tcBody>.fly:after,#scrMissions.v2 .tcBody>.fly .bar,#scrMissions.v2 .tcBody>.fly svg{display:none!important}
+#scrMissions.v2 .tcBody>.fly:disabled{filter:grayscale(.8) brightness(.7);cursor:not-allowed}
+#scrMissions.v2 .tcBody>.fly:not(:disabled):hover,#scrMissions.v2 .trkenvb:hover{filter:brightness(1.15);transform:translateY(-2px)}
+#scrMissions.v2 .trkenvb{position:fixed;right:26px;bottom:104px;width:250px;height:78px;border:0;cursor:pointer;color:#fff;font:900 italic 28px/1 var(--ui);background:linear-gradient(180deg,#6b45c9 0%,#45239a 55%,#341a7a 100%);clip-path:polygon(9% 0,100% 0,100% 72%,91% 100%,0 100%,0 28%);z-index:6;text-shadow:0 2px 0 rgba(0,0,0,.35);transition:filter .15s,transform .15s}
+#scrMissions.v2 #btnBackM{position:fixed!important;left:0!important;bottom:0!important;right:auto!important;top:auto!important;width:112px!important;max-width:112px!important;min-width:0!important;height:150px!important;margin:0!important;border:0!important;padding:0 0 12px 8px!important;display:flex!important;align-items:flex-end;justify-content:flex-start;direction:ltr!important;background:linear-gradient(to top right,#c4183a 0%,rgba(255,59,92,.92) 50%,transparent 50%)!important;clip-path:none!important;z-index:6;cursor:pointer}
+#scrMissions.v2 #btnBackM .l{font-size:0!important;background:none!important}#scrMissions.v2 #btnBackM .l:after{content:'חזור';font:900 italic 20px/20px var(--ui);color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.6)}
+#scrMissions.v2 #btnBackM:before,#scrMissions.v2 #btnBackM:after,#scrMissions.v2 #btnBackM .bar,#scrMissions.v2 #btnBackM svg{display:none!important}
+#scrMissions.v2 #btnBackM:hover{filter:brightness(1.15)}
+#scrMissions.v2 .trktools{position:fixed;left:22px;top:78px;z-index:5}
+#scrMissions.v2 .trkside{display:none!important}
+#scrMissions.v2.envon .trkside{display:block!important;position:fixed!important;right:290px;top:136px;bottom:200px;width:300px;z-index:7;overflow-y:auto;background:rgba(14,16,22,.95)!important;border:2px solid #3a3f49!important;border-radius:6px;padding:12px!important}
+#scrMissions.v2.envon .trkenvb{filter:brightness(1.25)}
+#scrMissions.v2:not(.adm) .trkenvb,#scrMissions.v2:not(.adm) .trkside,#scrMissions.v2:not(.adm) .tcBtns{display:none!important}   /* build 543: the wind panel and edit / copy / delete are the manager's only */
+/* the cards, like the picture: a name strip on top, the map's picture, the stars; the chosen one orange and raised */
+#scrMissions.v2 .tcstrip{position:fixed;left:150px;right:300px;bottom:10px;height:230px;z-index:5;display:flex;flex-direction:row;gap:6px;align-items:flex-end;justify-content:safe center;overflow-x:auto;overflow-y:hidden;padding:20px 8px 4px;scrollbar-width:thin;scrollbar-color:#3c5590 transparent;direction:rtl}
+#scrMissions.v2 .tsc{position:relative;flex:0 0 150px;width:150px;height:164px;border:0;padding:0;cursor:pointer;background:#16213f;clip-path:polygon(0 0,100% 0,100% 88%,92% 100%,0 100%);box-shadow:none;overflow:hidden;transition:transform .18s ease;filter:drop-shadow(0 8px 14px rgba(0,0,0,.6))}
+#scrMissions.v2 .tsc .th{position:absolute;left:0;right:0;top:0;height:36px;display:flex;align-items:center;justify-content:center;padding:0 6px;font:900 15px/1.05 var(--ui);color:#fff;text-align:center;letter-spacing:.01em;background:linear-gradient(180deg,#5d74a8,#3a5084);text-shadow:0 2px 2px rgba(0,0,0,.5);overflow:hidden}
+#scrMissions.v2 .tsc canvas,#scrMissions.v2 .tsc img{position:absolute;left:0;right:0;top:36px;width:100%;height:100px;display:block;object-fit:cover;background:#0d1430}
+#scrMissions.v2 .tsc .ts{position:absolute;left:0;right:0;bottom:0;height:28px;line-height:28px;text-align:center;font-size:15px;letter-spacing:2px;color:#4a5576;background:linear-gradient(180deg,#22325c,#16213f)}
+#scrMissions.v2 .tsc .ts i{font-style:normal}#scrMissions.v2 .tsc .ts i.on{color:#ffc21a}
+#scrMissions.v2 .tsc.lk{filter:grayscale(.7) brightness(.75) drop-shadow(0 8px 14px rgba(0,0,0,.6))}
+#scrMissions.v2 .tsc:hover{transform:translateY(-4px)}
+#scrMissions.v2 .tsc.sel{flex-basis:176px;width:176px;height:186px;transform:translateY(-10px);z-index:2;filter:drop-shadow(0 0 16px rgba(255,140,30,.55)) drop-shadow(0 10px 18px rgba(0,0,0,.6))}
+#scrMissions.v2 .tsc.sel .th{background:linear-gradient(180deg,#ffa53a,#f07114)}
+#scrMissions.v2 .tsc.sel canvas,#scrMissions.v2 .tsc.sel img{height:122px}
+#scrMissions.v2 .tsc.sel .ts{background:linear-gradient(180deg,#ff9a2e,#e2560f);color:#7a2e00}#scrMissions.v2 .tsc.sel .ts i.on{color:#fff}
 </style>
 </head>
 <body>
@@ -2056,7 +2113,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 540</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 544</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -9902,7 +9959,7 @@ function trkCarRender(full) {
   const bkM = $('btnBackM'), body = info.parentNode;           // build 453: "טוס" and the back button sit where the drone screen has its two buttons (bottom right / bottom left)
   if (body && body.querySelectorAll) Array.from(body.querySelectorAll('.tcBody > .fly')).forEach((b) => b.parentNode.removeChild(b));
   if (bkM && body && body.appendChild && bkM.parentNode !== body) body.appendChild(bkM);
-  if (!n) { stack.innerHTML = ''; info.innerHTML = '<p class="nxn">אין מסלולים להצגה.</p>'; $('tcDots').innerHTML = ''; $('tcNums').innerHTML = ''; $('tcPos').textContent = ''; return; }
+  if (!n) { stack.innerHTML = ''; info.innerHTML = '<p class="nxn">אין מסלולים להצגה.</p>'; $('tcDots').innerHTML = ''; $('tcNums').innerHTML = ''; $('tcPos').textContent = ''; if (typeof trkV2 === 'function') trkV2(); return; }
   const id = TC.ids[TC.i], c = TC.cat[id];
   $('tcCat').textContent = c ? c.cat : ''; $('tcCatN').textContent = c ? c.n + ' מסלולים' : n + ' מסלולים';
   $('tcPos').textContent = String(TC.i + 1).padStart(2, '0') + ' / ' + String(n).padStart(2, '0');
@@ -9924,6 +9981,7 @@ function trkCarRender(full) {
       if (top - pad < dd.scrollTop) dd.scrollTop = Math.max(0, top - pad);
       else if (top + on.offsetHeight + pad > dd.scrollTop + h) dd.scrollTop = top + on.offsetHeight + pad - h; } }
   $('tcNums').innerHTML = TC.ids.map((x, k) => sep(k) + '<button data-k="' + k + '" class="' + (k === TC.i ? 'on' : '') + (NXH.locked(x) ? ' lk' : '') + '" data-tip="' + tcEsc(STAGES[x].name) + (NXH.locked(x) ? ' · נעול' : '') + '" aria-label="' + tcEsc(STAGES[x].name) + '">' + (k + 1) + '</button>').join('');
+  if (typeof trkV2 === 'function') trkV2();   // build 541: the whole-page map select (t28maps.js)
 }
 function trkCarWire() {
   const root = $('trkCar'); if (!root || !root.addEventListener) return;
@@ -16171,6 +16229,91 @@ function dsuDefaults() {
   dsuSyncAll(); dsuView(); dsuDirty();
 }
 if (typeof document !== 'undefined' && document.addEventListener) document.addEventListener('keydown', (e) => { if (DSU.open && e.code === 'Escape') { e.stopPropagation(); dsuClose(false); } }, true);
+
+/* ============================================================
+   MAP SELECT PAGE (build 541): the tracks screen as a whole page, like the drone screen.
+   ------------------------------------------------------------
+   The chosen track's real map fills the page (rendered once per track from a low camera behind the start, cached).
+   Its name sits big at the top centre and its numbers on the right, in the drone screen's fonts and places.
+   One strip of cards along the bottom, one per track (a header with the name, the track drawn from above, its stars).
+   "טוס" is where "בחר רחפן" is, "תנאי סביבה" where "הגדרות רחפן" is (it opens the wind panel), "חזור" in the red corner.
+   The old carousel and table stay in the page, hidden, so every button and key still works through them.
+   ============================================================ */
+let trkHeroR = null; const trkHeroCache = {}; let trkHeroT = 0;
+function trkHeroCam(G) {                                          // low behind the first gate, looking down the track
+  const a = G[0], b = G[Math.min(1, G.length - 1)];
+  let dx = b.x - a.x, dz = b.z - a.z; const dl = Math.hypot(dx, dz); if (dl < 1) { dx = 0; dz = -1; } else { dx /= dl; dz /= dl; }
+  const cam = new THREE.PerspectiveCamera(58, 16 / 9, 0.5, 5000);
+  cam.position.set(a.x - dx * 22 - dz * 6, Math.max(5, a.y + 4), a.z - dz * 22 + dx * 6);
+  cam.lookAt(a.x + dx * 30, Math.max(3, a.y + 1), a.z + dz * 30); cam.updateMatrixWorld(true);
+  return cam;
+}
+function trkHeroShot(st) {                                        // the real map, like trkPeekReal, but wide and from the pilot's height
+  if (trkPeekBusy || typeof loadStage !== 'function' || editorMode || !inMenu) return '';
+  const prev = currentStage; if (!prev || !STAGES[prev.id] || (customized && !(prev.custom && !prev.pub))) return '';
+  const G = st.gen().map(gateCopy); if (!G.length) return '';
+  const key = trkPeekKey(st, G); if (trkHeroCache[key]) return trkHeroCache[key];
+  trkPeekBusy = true; let url = '', loaded = false; const dm = droneMesh.visible, gm = ghostMesh.visible, sp = sky.position.clone();
+  try {
+    loadStage(st.id); loaded = true;
+    if (!trkHeroR) { trkHeroR = new THREE.WebGLRenderer({ antialias: true, alpha: false, preserveDrawingBuffer: true }); trkHeroR.setSize(1600, 900, false); trkHeroR.setPixelRatio(1); }
+    const cam = trkHeroCam(G); droneMesh.visible = false; ghostMesh.visible = false; sky.position.copy(cam.position);
+    trkHeroR.render(scene, cam);
+    const u = trkHeroR.domElement.toDataURL('image/jpeg', 0.86); if (typeof u === 'string' && u.indexOf('data:image') === 0) { url = u; trkHeroCache[key] = u; }
+  } catch (e) { url = ''; }
+  finally { if (loaded) { try { loadStage(prev.id); } catch (e2) { /* ignore */ } } droneMesh.visible = dm; ghostMesh.visible = gm; sky.position.copy(sp); trkPeekBusy = false; }
+  return url;
+}
+function trkHeroShow(id) {                                        // after a short pause, so stepping through the tracks fast does not render each one
+  const im = $('trkHero'); if (!im || !STAGES[id]) return;
+  window.clearTimeout(trkHeroT);
+  const st = STAGES[id], key = trkPeekKey(st, st.gen().map(gateCopy));
+  const put = (u) => { if (!u) return; trkThumbPut(id, u); if (im.dataset.k === key) return; im.dataset.k = key; im.classList.remove('in'); void im.offsetWidth; im.src = u; im.classList.add('in'); };
+  if (trkHeroCache[key]) { put(trkHeroCache[key]); return; }
+  trkHeroT = window.setTimeout(() => { if (TC.ids[TC.i] !== id || currentScreen !== 'missions') return; put(trkHeroShot(st) || trkPeekCache['R' + key] || ''); }, 260);
+}
+/* the cards show the real map too: each track's picture is made one at a time while the page is quiet (never while the player is moving through the list) */
+let trkThumbT = 0, trkLastIn = 0;
+function trkThumbPut(id, u) { const k = TC.ids.indexOf(id), b = document.querySelector('#tcStrip .tsc[data-k="' + k + '"]'); if (!b || !u) return; const cv = b.querySelector('canvas,img'); if (cv && cv.tagName === 'IMG' && cv.src === u) return; const im = document.createElement('img'); im.alt = ''; im.src = u; if (cv) b.replaceChild(im, cv); }
+function trkThumbNext() {
+  window.clearTimeout(trkThumbT);
+  if (currentScreen !== 'missions' || !inMenu) return;
+  if (Date.now() - trkLastIn < 1500) { trkThumbT = window.setTimeout(trkThumbNext, 700); return; }
+  const id = TC.ids.find((x) => { const st = STAGES[x]; return st && trkHeroCache[trkPeekKey(st, st.gen().map(gateCopy))] === undefined; });
+  if (!id) return;
+  const u = trkHeroShot(STAGES[id]); if (u) trkThumbPut(id, u); else { const st = STAGES[id]; trkHeroCache[trkPeekKey(st, st.gen().map(gateCopy))] = ''; }
+  trkThumbT = window.setTimeout(trkThumbNext, 650);
+}
+function trkStripCard(id, k) {
+  const st = STAGES[id], sp = stageProgress(id), lk = NXH.locked(id);
+  let stars = ''; for (let n = 1; n <= 3; n++) stars += '<i class="' + (n <= sp.stars ? 'on' : '') + '">★</i>';
+  return '<button class="tsc' + (k === TC.i ? ' sel' : '') + (lk ? ' lk' : '') + '" data-k="' + k + '"><span class="th">' + tcEsc(st.name) + '</span><canvas width="200" height="120"></canvas><span class="ts">' + (lk ? '&#128274;' : stars) + '</span></button>';
+}
+function trkV2() {
+  const scr = $('scrMissions'); if (!scr) return;
+  scr.classList.add('v2'); scr.classList.toggle('adm', typeof NX !== 'undefined' && NX.role === 'admin'); if (!scr.classList.contains('adm')) scr.classList.remove('envon');   /* build 543 */
+  if (!$('trkHero')) {
+    const h = document.createElement('div'); h.className = 'trkhero'; h.innerHTML = '<img id="trkHero" alt=""><i class="vig"></i>'; scr.insertBefore(h, scr.firstChild);
+    const env = document.createElement('button'); env.id = 'trkEnvBtn'; env.className = 'trkenvb'; env.textContent = 'תנאי סביבה';
+    env.addEventListener('click', () => { Sound.ui(); scr.classList.toggle('envon'); });
+    scr.appendChild(env);
+    const strip = document.createElement('div'); strip.id = 'tcStrip'; strip.className = 'tcstrip';
+    const car = $('trkCar'); if (car) car.appendChild(strip);   // inside the carousel, so its clicks (data-k) and the wheel work as they always did
+  }
+  const strip = $('tcStrip'); if (!strip) return;
+  if (!TC.ids.length) { strip.innerHTML = ''; strip.dataset.ids = ''; return; }
+  if (strip.dataset.ids !== TC.ids.join(',')) {
+    strip.dataset.ids = TC.ids.join(',');
+    strip.innerHTML = TC.ids.map((id, k) => trkStripCard(id, k)).join('');
+    strip.querySelectorAll('.tsc').forEach((b) => { const id = TC.ids[+b.dataset.k], st = STAGES[id]; drawMiniMap(b.querySelector('canvas'), st.gen(), st.color); });
+  }
+  strip.querySelectorAll('.tsc').forEach((b) => b.classList.toggle('sel', +b.dataset.k === TC.i));
+  const on = strip.querySelector('.tsc.sel'); if (on && strip.scrollTo) { const L = on.offsetLeft - (strip.clientWidth - on.offsetWidth) / 2; strip.scrollTo({ left: L, behavior: 'smooth' }); }
+  TC.ids.forEach((id) => { const st = STAGES[id], u = trkHeroCache[trkPeekKey(st, st.gen().map(gateCopy))]; if (u) trkThumbPut(id, u); });
+  trkLastIn = Date.now();
+  if (TC.ids[TC.i]) trkHeroShow(TC.ids[TC.i]);
+  window.clearTimeout(trkThumbT); trkThumbT = window.setTimeout(trkThumbNext, 1600);
+}
 
 /* ---------- boot ---------- */
 buildAdvUI();
