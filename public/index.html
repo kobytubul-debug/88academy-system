@@ -1753,7 +1753,7 @@ body:has(#scrMissions.on.v2) #trkBg{top:116px!important;bottom:116px!important;h
 @keyframes tscIn{from{opacity:0}to{opacity:1}}
 
 #trkDbg{position:fixed;left:130px;bottom:4px;z-index:9;font:700 12px var(--ui);color:#ffc21a;background:rgba(0,0,0,.6);padding:2px 8px;border-radius:3px;direction:rtl;pointer-events:none}
-#scrMissions:not(.adm) #trkDbg{display:none}
+#scrMissions:not(.adm) #trkDbg{display:none}#trkDbg{display:none!important}
 </style>
 </head>
 <body>
@@ -2154,7 +2154,7 @@ body:has(#scrMissions.on.v2) #trkBg{top:116px!important;bottom:116px!important;h
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 555</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 556</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -16371,13 +16371,23 @@ function trkHeroShow(id) {                                        // after a sho
   const im = $('trkHero'); if (!im || !STAGES[id]) return;
   window.clearTimeout(trkHeroT);
   const st = STAGES[id], key = trkPeekKey(st, st.gen().map(gateCopy));
-  const put = (u) => { if (!u) return; trkThumbPut(id, u); if (im.dataset.k === key) return; im.dataset.k = key; im.classList.remove('in'); void im.offsetWidth; im.src = u; im.classList.add('in'); };
+  const put = (u) => { if (!u) return; trkThumbPut(id, u); if (im.dataset.k === key) return; const t = new Image(); t.onload = () => { if (!t.naturalWidth || trkLum(t) < 12) return; im.dataset.k = key; im.classList.remove('in'); void im.offsetWidth; im.src = u; im.classList.add('in'); }; t.src = u; };
   if (trkHeroCache[key]) { put(trkHeroCache[key]); return; }
   trkHeroT = window.setTimeout(() => { if (TC.ids[TC.i] !== id || currentScreen !== 'missions') return; put(trkHeroShot(st) || trkPeekCache['R' + key] || ''); }, 260);
 }
 /* the cards show the real map too: each track's picture is made one at a time while the page is quiet (never while the player is moving through the list) */
 let trkThumbT = 0, trkLastIn = 0;
-function trkThumbPut(id, u) { const k = TC.ids.indexOf(id), b = document.querySelector('#tcStrip .tsc[data-k="' + k + '"]'); if (!b || !u) { if (u && !b) console.warn('[FPV maps] no card for', id, k); return; } const cv = b.querySelector('.ph,img'); if (cv && cv.tagName === 'IMG' && cv.src === u) return; const im = document.createElement('img'); im.alt = ''; im.className = 'in'; im.src = u; if (cv) b.replaceChild(im, cv); }
+function trkThumbPut(id, u) {                                     // build 556: the picture goes on the card only once it has loaded and is not black
+  const k = TC.ids.indexOf(id), b = document.querySelector('#tcStrip .tsc[data-k="' + k + '"]'); if (!b || !u) return;
+  const old = b.querySelector('img'); if (old && old.dataset.u === u) return;
+  const im = new Image(); im.alt = ''; im.className = 'in'; im.dataset.u = u;
+  im.onload = () => { if (!im.naturalWidth || trkLum(im) < 12) { trkPicBad(id, u); return; } const cur = b.querySelector('canvas,img'); if (cur && b.contains(cur)) b.replaceChild(im, cur); };
+  im.src = u; }
+function trkLum(im) { try { const c = document.createElement('canvas'); c.width = 16; c.height = 9; const g = c.getContext('2d'); g.drawImage(im, 0, 0, 16, 9); const p = g.getImageData(0, 0, 16, 9).data; let t = 0; for (let i = 0; i < p.length; i += 4) t += p[i] + p[i + 1] + p[i + 2]; return t / (p.length / 4) / 3; } catch (e) { return 255; } }
+function trkPicBad(id, u) {                                       // a black picture: forget it (here and in the browser store) so it is never shown
+  Object.keys(trkHeroCache).forEach((k) => { if (trkHeroCache[k] === u) { trkHeroCache[k] = ''; trkPicOpen((db) => { try { db.transaction('p', 'readwrite').objectStore('p').delete(k); } catch (e) { /* ignore */ } }); } });
+  trkHeroWhy = 'black picture';
+}
 function trkPicIds() { try { return STAGE_ORDER.concat(CUSTOM_ORDER).filter((x) => STAGES[x] && NXH.stageOk(x)); } catch (e) { return []; } }
 function trkThumbNext() {                                         // one picture at a time, only while nobody touches the mouse or keys, on the menu screens
   window.clearTimeout(trkThumbT);
@@ -16413,6 +16423,7 @@ function trkV2() {
   if (strip.dataset.ids !== TC.ids.join(',')) {
     strip.dataset.ids = TC.ids.join(',');
     strip.innerHTML = TC.ids.map((id, k) => trkStripCard(id, k)).join('');
+    strip.querySelectorAll('.tsc').forEach((b) => { const id = TC.ids[+b.dataset.k], st = STAGES[id]; drawMiniMap(b.querySelector('canvas'), st.gen(), st.color); });   // build 556: the drawing stays until a real picture is ready
   }
   strip.querySelectorAll('.tsc').forEach((b) => b.classList.toggle('sel', +b.dataset.k === TC.i));
   const on = strip.querySelector('.tsc.sel'); if (on && strip.scrollTo) { const L = on.offsetLeft - (strip.clientWidth - on.offsetWidth) / 2; strip.scrollTo({ left: L, behavior: 'smooth' }); }
