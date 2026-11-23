@@ -1528,15 +1528,15 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 /* the cards: tall, a light title strip on top, the drone in the middle, the size big at the bottom and the type under it */
 #droneCards.v2 .ditem,#droneCards.v2 .dfunw,#droneCards.v2 .dfunw>.dfun{flex:0 0 104px!important;width:104px!important;height:182px!important}
 #droneCards.v2 .ditem .hbg{border-radius:4px!important;background:linear-gradient(180deg,#22325c 0%,#141e3c 55%,#0d1430 100%)!important;box-shadow:inset 0 0 0 2px #3c5590,0 8px 18px rgba(0,0,0,.55)!important;overflow:hidden}
-#droneCards.v2 .ditem .hbg:before{content:'';position:absolute;left:0;right:0;top:0;height:24px;background:linear-gradient(180deg,#4a6299,#344a7c)}
+#droneCards.v2 .ditem .hbg:before{content:'';position:absolute;left:0;right:0;top:0;height:42px;background:linear-gradient(180deg,#4a6299,#344a7c)}
 #droneCards.v2 .ditem .hsh,#droneCards.v2 .ditem .hburst{display:none!important}
-#droneCards.v2 .ditem .dclip{left:3%!important;right:3%!important;top:26px!important;bottom:50px!important}
-#droneCards.v2 .ditem .dtag{top:0;bottom:auto;left:3px;right:3px;height:24px;line-height:24px;text-align:center;font:800 10px var(--ui);color:#fff;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;direction:ltr}
+#droneCards.v2 .ditem .dclip{left:0!important;right:0!important;top:40px!important;bottom:52px!important;overflow:hidden}
+#droneCards.v2 .ditem .dtag{top:0;bottom:auto;left:4px;right:4px;height:42px;display:flex;align-items:center;justify-content:center;text-align:center;font:800 13px/1.1 var(--ui);color:#fff;letter-spacing:.02em;white-space:normal;overflow:hidden;direction:ltr}   /* build 518: bigger, two lines when needed */
 #droneCards.v2 .ditem .dname{display:none}
 #droneCards.v2 .ditem .dsz{position:absolute;right:7px;left:7px;bottom:7px;z-index:2;text-align:right;line-height:1;text-shadow:0 2px 3px #000}
-#droneCards.v2 .ditem .dsz b{font:900 24px var(--ui);color:#fff;direction:ltr;display:inline-block}
+#droneCards.v2 .ditem .dsz b{font:900 26px var(--ui);color:#fff;direction:ltr;display:inline-block}
 #droneCards.v2 .ditem .dsz i{font:800 10px var(--ui);color:#fff;font-style:normal;margin-right:2px}
-#droneCards.v2 .ditem .dsz span{display:block;font:800 11px var(--ui);color:#d6e2f5;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#droneCards.v2 .ditem .dsz span{display:block;font:800 12px/1.15 var(--ui);color:#d6e2f5;margin-top:3px;white-space:normal}
 #droneCards.v2 .ditem:hover{transform:translateY(-4px)!important}
 #droneCards.v2 .ditem.sel{transform:translateY(-12px) scale(1.06)!important;z-index:3}
 #droneCards.v2 .ditem.sel .hbg{box-shadow:inset 0 0 0 3px #ff8a1e,0 0 22px rgba(255,140,30,.55),0 10px 22px rgba(0,0,0,.6)!important}
@@ -1544,7 +1544,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 #droneCards.v2 .ditem.sel .dsz span{color:#ffb15a}
 #droneCards.v2 .dfunl{top:auto!important;bottom:calc(100% + 16px)!important;right:-6px!important;width:124px!important;max-height:min(56vh,520px)!important;padding:14px 0 6px 12px!important;gap:8px!important;background:rgba(5,7,13,.88);border-radius:6px;z-index:20}
 #droneCards.v2 .dfunl>.ditem{flex:0 0 182px!important}
-#droneCards.v2 .dfun .dfar{top:30px;left:6px}
+#droneCards.v2 .dfun .dfar{top:48px;left:6px}
 /* buttons like the picture: slanted, bold italic, bright; back is a red corner */
 #droneCards.v2 .dsetup,#droneCards.v2 #dGo{position:absolute!important;right:8px!important;width:250px!important;max-width:250px!important;height:78px!important;margin:0!important;border:0!important;cursor:pointer;color:#fff!important;font:900 italic 30px/1 var(--ui)!important;letter-spacing:.01em;text-shadow:0 2px 0 rgba(0,0,0,.35);clip-path:polygon(9% 0,100% 0,100% 72%,91% 100%,0 100%,0 28%);display:flex!important;align-items:center;justify-content:center;z-index:6;transition:filter .15s,transform .15s}
 #droneCards.v2 .dsetup{bottom:104px;background:linear-gradient(180deg,#9a6bff 0%,#6a3cf0 55%,#5229cf 100%)!important;box-shadow:inset 0 2px 0 rgba(255,255,255,.35)}
@@ -1958,7 +1958,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 517</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 518</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -9288,7 +9288,7 @@ function buildDroneCards(keep) {
     it.addEventListener('click', () => { Sound.ui(); selectDrone(id); });
     it.addEventListener('dblclick', () => { setPreset(id); showScreen('missions'); });
     list.appendChild(it);
-    const tv = makeDroneView(id, it.querySelector('canvas'), true); tv.cam.position.multiplyScalar(0.85); tv.card = true; tv.spin = 0; droneViews.push(tv);   // build 444: same size, standing at the home screen's angle; it turns only while the pointer is on its card
+    const tv = makeDroneView(id, it.querySelector('canvas'), true); tv.cam.position.multiplyScalar(0.58); tv.card = true; tv.spin = 0; droneViews.push(tv);   // build 444: same size, standing at the home screen's angle; it turns only while the pointer is on its card
     it.addEventListener('mouseenter', () => { tv.hov = true; }); it.addEventListener('mouseleave', () => { tv.hov = false; });
     const dc = document.createElement('div'); dc.className = 'dcard far'; dc.dataset.id = id;            // its card on the stage (shown dimmed above or below the chosen one)
     dc.innerHTML = '<canvas width="320" height="200"></canvas>';
@@ -9328,7 +9328,7 @@ function funCardShow(id) {
   fc.dataset.id = id; fc.classList.toggle('sel', droneSel === id);
   fc.querySelector('.dtag').textContent = DRONE_INFO[id].en; fc.querySelector('.dname').textContent = DRONE_INFO[id].title;
   const i = droneViews.indexOf(funCardV); if (i >= 0) { dvDispose(droneViews.splice(i, 1)[0]); }
-  funCardV = makeDroneView(id, fc.querySelector('canvas'), true); funCardV.cam.position.multiplyScalar(0.85); funCardV.card = true; funCardV.spin = 0; droneViews.push(funCardV);
+  funCardV = makeDroneView(id, fc.querySelector('canvas'), true); funCardV.cam.position.multiplyScalar(0.58); funCardV.card = true; funCardV.spin = 0; droneViews.push(funCardV);
   fc.onmouseenter = () => { funCardV.hov = true; }; fc.onmouseleave = () => { funCardV.hov = false; };
 }
 function buildFunCard(list) {
@@ -9345,7 +9345,7 @@ function buildFunCard(list) {
     it.addEventListener('click', () => { Sound.ui(); selectDrone(id); });
     it.addEventListener('dblclick', () => { setPreset(id); showScreen('missions'); });
     fl.appendChild(it);
-    const tv = makeDroneView(id, it.querySelector('canvas'), true); tv.cam.position.multiplyScalar(0.85); tv.card = true; tv.spin = 0; droneViews.push(tv);
+    const tv = makeDroneView(id, it.querySelector('canvas'), true); tv.cam.position.multiplyScalar(0.58); tv.card = true; tv.spin = 0; droneViews.push(tv);
     it.addEventListener('mouseenter', () => { tv.hov = true; }); it.addEventListener('mouseleave', () => { tv.hov = false; });
   });
   funCardShow(cur);
