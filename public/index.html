@@ -10094,7 +10094,7 @@ window.__onRaceFinished = function (r) {
    loads), then open to the sides while the page's parts come in (no more long black screen) */
 function doorsThrough(cb) {
   if (fadeBusy) return; fadeBusy = true;
-  let d = $('dtr'); if (!d) { d = document.createElement('div'); d.id = 'dtr'; d.innerHTML = '<div class="dr l"></div><div class="dr r"></div><div class="dwait"><i class="wv"></i><i class="wv w2"></i><i class="orb"></i><i class="orb o2"></i></div><div class="dring"></div><div class="dload"><b>טוען</b><span><i></i></span></div>';   /* build 530: ripples, two orbiting arcs and a loading bar around the logo */ document.body.appendChild(d);
+  let d = $('dtr'); if (!d) { d = document.createElement('div'); d.id = 'dtr'; d.innerHTML = '<div class="dr l"></div><div class="dr r"></div><div class="dring"></div>'; document.body.appendChild(d);
     const lg = d.querySelector('.dring'); lg.style.webkitMaskImage = lg.style.maskImage = 'url(' + LOGO_IMG.src + ')'; }   /* build 528: the 88 logo (no words) in the middle of the doors */
   { const L = (typeof NX !== 'undefined' && NX.eff && NX.eff.logo) || null; d.querySelector('.dring').style.backgroundColor = L && /^#[0-9a-f]{6}$/i.test(L.color || '') ? L.color : '#ffffff'; }
   const t0 = performance.now(); d.className = 'on'; void d.offsetWidth; d.classList.add('close');
