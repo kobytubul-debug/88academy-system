@@ -1556,6 +1556,81 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 #droneCards.v2>#btnBackD .l{font:900 italic 20px/20px var(--ui)!important;color:#fff!important;background:none;text-shadow:0 2px 6px rgba(0,0,0,.6)}
 #droneCards.v2>#btnBackD:before,#droneCards.v2>#btnBackD:after,#droneCards.v2>#btnBackD .bar,#droneCards.v2>#btnBackD svg{display:none!important}
 #droneCards.v2>#btnBackD:hover{filter:brightness(1.15)}
+
+/* ===== build 523: the drone setup page ===== */
+#dsu{position:fixed;inset:0;z-index:70;display:none;background:#05070d;color:#e8edf5;direction:rtl;font-family:var(--ui);overflow:hidden}
+#dsu.on{display:block;animation:scrFadeOnly .25s ease both}
+#dsu .dsubg{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 34% 46%,rgba(70,40,120,.35),transparent 60%),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='97' viewBox='0 0 56 97'%3E%3Cpath d='M28 0l28 16v32L28 64 0 48V16zM28 97V64' fill='none' stroke='%23ffffff' stroke-opacity='.06' stroke-width='3'/%3E%3C/svg%3E");animation:dHexDrift 14s linear infinite}
+#dsu .dsubg:after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 58% at 34% 48%,transparent 0%,transparent 26%,rgba(0,0,0,.28) 48%,rgba(0,0,0,.66) 72%,rgba(0,0,0,.94) 100%)}
+#dsu #dsuCv{position:absolute;left:0;top:70px;width:calc(100% - 560px);height:calc(100% - 110px);object-fit:contain;pointer-events:none}
+#dsu .dsuhd{position:absolute;left:0;top:26px;padding:6px 60px 6px 22px;font:900 italic 30px/1 var(--ui);color:#e8edf5;background:linear-gradient(90deg,rgba(60,72,120,.75),rgba(60,72,120,.15));clip-path:polygon(0 0,100% 0,93% 100%,0 100%);direction:rtl}
+#dsu .dsutt{position:absolute;top:14px;left:0;width:calc(100% - 560px);text-align:center;pointer-events:none}
+#dsu .dsutt .den{font:600 14px var(--mono);letter-spacing:.2em;color:#c9d2e0;direction:ltr}
+#dsu .dsutt h2{margin:2px 0 0;font:900 italic clamp(30px,3.4vw,50px)/1 var(--ui);color:#ffc21a;text-shadow:0 0 18px rgba(255,170,0,.45),0 3px 0 #000}
+#dsu .dsutt .dkind{margin-top:4px;font:700 14px var(--ui);color:#8fa8ff}
+#dsu .dsup{position:absolute;right:18px;top:22px;bottom:22px;width:530px;display:flex;flex-direction:column}
+#dsu .dsutabs{display:flex;gap:6px;padding-right:10px}
+#dsu .dsutabs button{border:0;cursor:pointer;padding:8px 22px 6px;font:900 italic 22px var(--ui);color:#7c8494;background:#22252c;border-radius:6px 6px 0 0}
+#dsu .dsutabs button.on{color:#e8edf5;background:#3a3f49}
+#dsu .dsubody{flex:1;min-height:0;overflow-y:auto;background:rgba(20,22,27,.94);border:2px solid #3a3f49;border-radius:0 6px 6px 6px;padding:10px 12px 6px;scrollbar-width:thin;scrollbar-color:#4a505a transparent}
+#dsu section{margin-bottom:12px}
+#dsu section h4{margin:0 0 8px;padding:6px 10px;text-align:center;font:900 26px/1 var(--ui);letter-spacing:.03em;color:#c3c8d0;background:linear-gradient(180deg,#3d424c,#2e323a);border-radius:4px}
+#dsu .sub{grid-column:1/-1;font:700 13px var(--ui);color:#9aa3b0;background:#262a31;padding:4px 8px;border-radius:3px}
+#dsu .dsufc{display:grid;grid-template-columns:1fr 168px;gap:8px;align-items:start}
+#dsu .dsurt .rh,#dsu .dsurt .rr{display:grid;grid-template-columns:52px 1fr 1fr 1fr 44px;gap:4px;align-items:center;direction:ltr}
+#dsu .dsurt .rh span{font:700 10px var(--ui);color:#b7bec9;text-align:center}
+#dsu .dsurt .rr{margin-bottom:4px}
+#dsu .dsurt .ax{font:900 13px var(--ui);color:#fff;padding:3px 4px;border-radius:2px;text-align:center}
+#dsu .rr.roll .ax{background:#ff2e63}#dsu .rr.pitch .ax{background:#46c93a}#dsu .rr.yaw .ax{background:#3d7bff}
+#dsu .dsurt .mv{font:700 13px var(--mono);color:#dfe4ec;text-align:center}
+#dsu #dsuG{width:168px;height:106px;border:1px solid #2f3540;border-radius:3px}
+#dsu .dsurow3{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;margin-top:6px}
+#dsu .dsl .k{display:block;font:700 13px var(--ui);color:#d6dbe3;margin-bottom:3px}
+#dsu .dsl .bar{position:relative;height:28px;background:#5a5f68;border-radius:2px;cursor:ew-resize;overflow:hidden;direction:ltr;touch-action:none}
+#dsu .dsl .bar i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(180deg,#ffcf3a,#e8a400)}
+#dsu .dsl .bar b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:900 15px var(--ui);color:#141414;text-shadow:0 0 3px rgba(255,255,255,.55)}
+#dsu .dsl.sm .bar{height:24px}#dsu .dsl.sm .bar b{font-size:13px}
+#dsu .dsucr{margin-bottom:8px}
+#dsu .dsucr .k{font:700 13px var(--ui);color:#d6dbe3;margin-bottom:4px}
+#dsu .dsucr .sw{display:flex;flex-wrap:nowrap;gap:4px;direction:ltr}
+#dsu .dsucr .sw button{flex:1 1 0;min-width:0;max-width:30px;height:34px;border:0;padding:0;cursor:pointer;background:var(--c);border-radius:2px;box-shadow:inset 0 -6px 0 rgba(0,0,0,.25);transition:transform .12s}
+#dsu .dsucr .sw button:hover{transform:translateY(-2px)}
+#dsu .dsucr .sw button.on{outline:3px solid #fff;outline-offset:1px;transform:translateY(-3px)}
+#dsu .dsunote{font-size:13px;color:#9aa3b0;margin:0 0 8px}
+#dsu .dsuadv{border:0;cursor:pointer;padding:10px 18px;font:900 16px var(--ui);color:#fff;background:linear-gradient(180deg,#6b45c9,#45239a);border-radius:4px}
+#dsu .dsuft{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 4px 0}
+#dsu .dsuft button{border:0;cursor:pointer;padding:12px 26px;font:900 italic 24px/1 var(--ui);clip-path:polygon(9% 0,100% 0,100% 70%,91% 100%,0 100%,0 30%)}
+#dsu .dsuft .def{color:#0d3550;background:linear-gradient(180deg,#5cc8ff,#2a95dc)}
+#dsu .dsuft .save{color:#13400f;background:linear-gradient(180deg,#8ee35e,#4fb52c)}
+#dsu .dsuft button:hover{filter:brightness(1.12)}
+#dsu #dsuMsg{font:700 13px var(--ui);color:#ffc21a}
+#dsu .dsuback{position:absolute;left:0;bottom:0;width:112px;height:150px;border:0;cursor:pointer;padding:0 0 12px 8px;display:flex;align-items:flex-end;justify-content:flex-start;direction:ltr;background:linear-gradient(to top right,#c4183a 0%,rgba(255,59,92,.92) 50%,transparent 50%)}
+#dsu .dsuback .l{font:900 italic 20px/20px var(--ui);color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.6)}
+#dsu .dsuback:hover{filter:brightness(1.15)}
+@media(max-width:1100px){#dsu .dsup{width:440px}#dsu #dsuCv,#dsu .dsutt{width:calc(100% - 470px)}}
+
+/* ===== build 527: hangar doors into the drone screen, and its parts coming in ===== */
+#dtr{position:fixed;inset:0;z-index:96;pointer-events:none;display:none}
+#dtr.on{display:block;pointer-events:auto}
+#dtr .dr{position:absolute;top:0;bottom:0;width:50.4%;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='97' viewBox='0 0 56 97'%3E%3Cpath d='M28 0l28 16v32L28 64 0 48V16zM28 97V64' fill='none' stroke='%2378a0ff' stroke-opacity='.14' stroke-width='3'/%3E%3C/svg%3E"),linear-gradient(180deg,#0c1222,#05070d);transition:transform .32s cubic-bezier(.7,0,.3,1)}
+#dtr .dr.l{left:0;transform:translateX(-102%);box-shadow:inset -3px 0 0 #5aa8ff,6px 0 26px rgba(90,168,255,.55)}
+#dtr .dr.r{right:0;transform:translateX(102%);box-shadow:inset 3px 0 0 #5aa8ff,-6px 0 26px rgba(90,168,255,.55)}
+#dtr.close .dr{transform:translateX(0)}
+#dtr.open .dr{transition:transform .55s cubic-bezier(.5,0,.2,1)}
+#dtr .dring{position:absolute;left:50%;top:50%;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;border:4px solid rgba(90,168,255,.2);border-top-color:#8fc4ff;opacity:0;transition:opacity .2s;animation:dRing .7s linear infinite}
+#dtr.close .dring{opacity:1;transition-delay:.25s}
+@keyframes dRing{to{transform:rotate(360deg)}}
+@keyframes dsInTop{from{opacity:0;transform:translateY(-34px)}}
+@keyframes dsInRight{from{opacity:0;transform:translateX(50px)}}
+@keyframes dsInUp{from{opacity:0;transform:translateY(70px)}}
+@keyframes dsInZoom{from{opacity:0;transform:scale(.82)}}
+#scrDrone.on #droneCards.v2>.dtext{animation:dsInTop .5s .25s cubic-bezier(.2,.9,.3,1.2) backwards}
+#scrDrone.on #droneCards.v2>.dside{animation:dsInRight .5s .35s ease-out backwards}
+#scrDrone.on #droneCards.v2>.dmain{animation:dsInZoom .7s .15s cubic-bezier(.2,.9,.3,1.1) backwards}
+#scrDrone.on #droneCards.v2>.dlist>*{animation:dsInUp .45s cubic-bezier(.2,.9,.3,1.15) backwards}
+#scrDrone.on #droneCards.v2>.dlist>*:nth-child(1){animation-delay:.3s}#scrDrone.on #droneCards.v2>.dlist>*:nth-child(2){animation-delay:.36s}#scrDrone.on #droneCards.v2>.dlist>*:nth-child(3){animation-delay:.42s}#scrDrone.on #droneCards.v2>.dlist>*:nth-child(4){animation-delay:.48s}#scrDrone.on #droneCards.v2>.dlist>*:nth-child(5){animation-delay:.54s}#scrDrone.on #droneCards.v2>.dlist>*:nth-child(6){animation-delay:.6s}#scrDrone.on #droneCards.v2>.dlist>*:nth-child(7){animation-delay:.66s}
+#scrDrone.on #droneCards.v2>.dsetup,#scrDrone.on #droneCards.v2>#dGo{animation:dsInRight .45s .5s ease-out backwards}
+#scrDrone.on #droneCards.v2>#btnBackD{animation:dsInUp .45s .5s ease-out backwards}
 </style>
 </head>
 <body>
@@ -1956,7 +2031,7 @@ body[class*=skin-] #scrMain .mtiles .mbtn.hcard,body[class*=skin-] #scrMain .mti
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 522</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 527</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -6157,6 +6232,7 @@ function advChanged(noDirty) {
   if (!noDirty) { adv.dirty = true; advDirtyMark(); }
 }
 function openAdv() {
+  if (typeof dsuPlayerOnly === 'function' && dsuPlayerOnly()) { dsuOpen(settings.preset); return; }   // build 525: the PID window is the manager's only; a player gets the drone setup page
   if (advOpen) return;
   advOpen = true;
   advSync(); advDirtyMark(); advMsg('');
@@ -9277,7 +9353,7 @@ function buildDroneCards(keep) {
     '<button class="dsetup" id="dSetup">הגדרות רחפן</button><button class="dmb dgo on navfix r" id="dGo"><i class="bar"></i><span class="l">בחר רחפן</span><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>';
   wrap.appendChild(back); wrap.classList.add('v2'); const bl = back.querySelector('.l'); if (bl) bl.textContent = 'חזור';   /* build 514: a short label for the red corner */
   const list = $('dList');
-  $('dSetup').addEventListener('click', () => { Sound.ui(); setPreset(droneSel); if (typeof openAdv === 'function') openAdv(); });
+  $('dSetup').addEventListener('click', () => { Sound.ui(); if (typeof dsuOpen === 'function') dsuOpen(droneSel); else if (typeof openAdv === 'function') openAdv(); });   /* build 523: the drone setup page */
   ids.forEach((id) => {
     const d = DRONE_INFO[id];
     const it = document.createElement('div');
@@ -9990,7 +10066,18 @@ window.__onRaceFinished = function (r) {
 };
 
 /* ---------- menu wiring ---------- */
-$('btnStart').addEventListener('click', () => { if (fadeBusy) return; fadeThrough('', () => showScreen('drone')); });
+/* build 527: home -> drone screen through hangar doors: two hex panels slide shut (the drone page is built behind them, a ring turns while it
+   loads), then open to the sides while the page's parts come in (no more long black screen) */
+function doorsThrough(cb) {
+  if (fadeBusy) return; fadeBusy = true;
+  let d = $('dtr'); if (!d) { d = document.createElement('div'); d.id = 'dtr'; d.innerHTML = '<div class="dr l"></div><div class="dr r"></div><div class="dring"></div>'; document.body.appendChild(d); }
+  d.className = 'on'; void d.offsetWidth; d.classList.add('close');
+  setTimeout(() => {
+    try { cb(); } catch (e) { console.error(e); }
+    requestAnimationFrame(() => requestAnimationFrame(() => { d.classList.remove('close'); d.classList.add('open'); setTimeout(() => { d.className = ''; fadeBusy = false; }, 620); }));
+  }, 330);
+}
+$('btnStart').addEventListener('click', () => { if (fadeBusy) return; Sound.ui(); doorsThrough(() => showScreen('drone')); });
 $('btnSettings').addEventListener('click', openAdv);
 $('btnOsdEd').addEventListener('click', openOsdEd);
 $('btnPanelOsd').addEventListener('click', (e) => { e.target.blur(); openOsdEd(); });
@@ -15895,6 +15982,153 @@ function buildCine25(o) {
   grp.userData.props = props;
   return grp;
 }
+
+/* ============================================================
+   DRONE SETUP PAGE (build 523): opened by "הגדרות רחפן" on the drone screen, for every player.
+   ------------------------------------------------------------
+   A whole page like the drone screen: the drone big on the left, its name at the top, a panel on the right with two tabs.
+   BASIC  : flight controller rates (roll / pitch / yaw: RC rate, super rate, RC expo, max deg/s and the curve), angle mode
+            strength and limit; camera tilt and field of view; the drone's colours, part by part.
+   PHYSICS: throttle mid / expo, TPA, anti-gravity, and the full advanced setup (PIDs) one click away.
+   Nothing changes until "שמור". "ברירת מחדל" puts this drone's page back to the defaults (still needs "שמור").
+   Rates, angle, throttle, TPA and anti-gravity are the advanced setup's current profile (r7adv.js), so both stay in step.
+   The player's own colours are kept in this browser and laid over the manager's colours for that drone.
+   ============================================================ */
+const DSU_KEY = 'fpvNexusSetup.v1';
+const DSU_PAL = ['#f2f4f7', '#9aa0a8', '#4a4f57', '#111315', '#ff3d7f', '#c8102e', '#ff2bd6', '#3d5afe', '#00b8ff', '#18d64a', '#2e7d1f', '#ffc21a', '#ff6a00', '#7a1d8f', '#4d5a86'];   /* build 524: no browns */
+const DSU = { st: { fov: 105, col: {} }, open: false, id: '', d: null, view: null, tab: 'basic' };
+function dsuLoad() {
+  try { const o = JSON.parse(localStorage.getItem(DSU_KEY) || 'null');
+    if (o && typeof o === 'object') { if (typeof o.fov === 'number' && isFinite(o.fov)) DSU.st.fov = clamp(o.fov, 80, 130); if (o.col && typeof o.col === 'object') DSU.st.col = o.col; } } catch (e) { /* ignore */ }
+}
+function dsuSave() { try { localStorage.setItem(DSU_KEY, JSON.stringify(DSU.st)); } catch (e) { /* ignore */ } }
+function dsuApplyFov() { try { fpvCam.fov = DSU.st.fov; fpvCam.updateProjectionMatrix(); } catch (e) { /* ignore */ } }
+dsuLoad(); dsuApplyFov();
+/* the player's colours over the manager's; while the page is open, the colours being tried */
+if (typeof NXH !== 'undefined' && NXH.dcol) {
+  const base = NXH.dcol;
+  NXH.dcol = (id) => Object.assign({}, base(id), DSU.st.col[id] || {}, DSU.open && DSU.d && DSU.id === id ? DSU.d.col : {});
+}
+const dsuPlayerOnly = () => !(typeof NX !== 'undefined' && NX.role === 'admin');   // build 525: anyone but the manager
+function dsuParts(id) {   /* build 524: the player does not colour the camera body or the frame; the battery accent is called the battery sticker */
+  return ((typeof NX_DCOL !== 'undefined' && NX_DCOL[id]) || []).filter((p) => !/^גוף המצלמה|^מסגרת וזרועות/.test(p[1])).map((p) => (/^מצבר ואקסנט/.test(p[1]) ? [p[0], 'מדבקה על הסוללה', p[2]] : p)); }
+function dsuDraft(id) {
+  const A = advCur();
+  return { rates: JSON.parse(JSON.stringify(A.rates)), angle: { strength: A.angle.strength, limit: A.angle.limit }, thr: { mid: A.thr.mid, expo: A.thr.expo },
+    tpa: { rate: A.tpa.rate }, ag: { gain: A.ag.gain }, tilt: settings.tilt, fov: DSU.st.fov, col: Object.assign({}, DSU.st.col[id] || {}) };
+}
+/* one slider: a yellow bar with its value in the middle; drag, click or the mouse wheel */
+function dsuSl(key, label, min, max, step, dec, cls) {
+  return '<div class="dsl ' + (cls || '') + '" data-k="' + key + '" data-min="' + min + '" data-max="' + max + '" data-step="' + step + '" data-dec="' + dec + '">' + (label ? '<span class="k">' + label + '</span>' : '') + '<div class="bar"><i></i><b></b></div></div>';
+}
+function dsuGet(k) { return k.split('.').reduce((o, p) => o[p], DSU.d); }
+function dsuSet(k, v) { const p = k.split('.'), last = p.pop(); p.reduce((o, q) => o[q], DSU.d)[last] = v; }
+function dsuSyncSl(el) {
+  const v = dsuGet(el.dataset.k), mn = +el.dataset.min, mx = +el.dataset.max, dec = +el.dataset.dec;
+  el.querySelector('i').style.width = clamp((v - mn) / (mx - mn), 0, 1) * 100 + '%'; el.querySelector('b').textContent = (+v).toFixed(dec);
+}
+function dsuBindSl(el) {
+  const bar = el.querySelector('.bar'), mn = +el.dataset.min, mx = +el.dataset.max, st = +el.dataset.step;
+  const put = (v) => { v = clamp(Math.round(v / st) * st, mn, mx); dsuSet(el.dataset.k, +v.toFixed(4)); dsuSyncSl(el); dsuChanged(el.dataset.k); };
+  const fromX = (e) => { const r = bar.getBoundingClientRect(); put(mn + clamp((e.clientX - r.left) / r.width, 0, 1) * (mx - mn)); };   // left = low, like the picture
+  bar.addEventListener('pointerdown', (e) => { e.preventDefault(); bar.setPointerCapture(e.pointerId); fromX(e); const mv = (ev) => fromX(ev), up = () => { bar.removeEventListener('pointermove', mv); bar.removeEventListener('pointerup', up); }; bar.addEventListener('pointermove', mv); bar.addEventListener('pointerup', up); });
+  bar.addEventListener('wheel', (e) => { e.preventDefault(); put(dsuGet(el.dataset.k) + (e.deltaY < 0 ? st : -st)); }, { passive: false });
+  dsuSyncSl(el);
+}
+function dsuBuild() {
+  let pg = $('dsu'); if (pg) return pg;
+  pg = document.createElement('div'); pg.id = 'dsu';
+  const ax = [['roll', 'רול'], ['pitch', "פיץ'"], ['yaw', 'סבסוב']];
+  pg.innerHTML = '<div class="dsubg" aria-hidden="true"></div><canvas id="dsuCv" width="1400" height="875"></canvas>' +
+    '<div class="dsuhd">הגדרות רחפן</div><div class="dsutt"><div class="den" id="dsuEn"></div><h2 id="dsuName"></h2><div class="dkind" id="dsuKind"></div></div>' +
+    '<div class="dsup"><div class="dsutabs"><button data-t="basic" class="on">בסיסי</button><button data-t="phys">פיזיקה</button></div>' +
+    '<div class="dsubody">' +
+    '<div class="dsutab" data-t="basic">' +
+      '<section><h4>בקר טיסה</h4><div class="dsufc"><div class="dsurt"><div class="rh"><span></span><span>RC Rate</span><span>Super Rate</span><span>RC Expo</span><span>מקס׳ °/ש׳</span></div>' +
+      ax.map((a) => '<div class="rr ' + a[0] + '"><span class="ax">' + a[1] + '</span>' + dsuSl('rates.' + a[0] + '.rc', '', 0.01, 2.55, 0.01, 2, 'sm') + dsuSl('rates.' + a[0] + '.rate', '', 0, 0.99, 0.01, 2, 'sm') + dsuSl('rates.' + a[0] + '.expo', '', 0, 1, 0.01, 2, 'sm') + '<span class="mv" id="dsuMv_' + a[0] + '"></span></div>').join('') +
+      '</div><canvas id="dsuG" width="300" height="190"></canvas></div>' +
+      '</section>' +   /* build 526: no angle-mode strength / limit on this page */
+      '<section><h4>מצלמה</h4><div class="dsurow3">' + dsuSl('tilt', 'זווית מצלמה', 25, 45, 1, 0) + dsuSl('fov', 'שדה ראייה', 80, 130, 1, 0) + '</div></section>' +
+      '<section class="dsucol"><h4>צבע</h4><div id="dsuCols"></div></section>' +
+    '</div>' +
+    '<div class="dsutab" data-t="phys" hidden>' +
+      '<section><h4>מצערת</h4><div class="dsurow3">' + dsuSl('thr.mid', 'אמצע', 0, 1, 0.01, 2) + dsuSl('thr.expo', 'אקספו', 0, 1, 0.01, 2) + '</div></section>' +
+      '<section><h4>יציבות</h4><div class="dsurow3">' + dsuSl('tpa.rate', 'TPA', 0, 1, 0.01, 2) + dsuSl('ag.gain', 'אנטי-גרביטציה', 0, 250, 1, 0) + '</div></section>' +
+      '<section><h4>מתקדם</h4><p class="dsunote">כל ערכי ה-PID, נקודת ה-TPA ועוד, בחלון ההגדרות המתקדמות.</p><button class="dsuadv" id="dsuAdv">הגדרות מתקדמות (PID)</button></section>' +
+    '</div></div>' +
+    '<div class="dsuft"><button class="def" id="dsuDef">ברירת מחדל</button><span id="dsuMsg"></span><button class="save" id="dsuSave">שמור</button></div></div>' +
+    '<button class="dsuback" id="dsuBack"><span class="l">חזור</span></button>';
+  document.body.appendChild(pg);
+  pg.querySelectorAll('.dsutabs button').forEach((b) => b.addEventListener('click', () => { Sound.ui(); DSU.tab = b.dataset.t;
+    pg.querySelectorAll('.dsutabs button').forEach((x) => x.classList.toggle('on', x === b)); pg.querySelectorAll('.dsutab').forEach((t) => { t.hidden = t.dataset.t !== DSU.tab; }); }));
+  $('dsuBack').addEventListener('click', () => { Sound.ui(); dsuClose(false); });
+  $('dsuSave').addEventListener('click', () => { Sound.ui(); dsuCommit(); });
+  $('dsuDef').addEventListener('click', () => { Sound.ui(); dsuDefaults(); });
+  $('dsuAdv').addEventListener('click', () => { Sound.ui(); if (dsuPlayerOnly()) return; dsuCommit(true); if (typeof openAdv === 'function') openAdv(); });
+  return pg;
+}
+function dsuCols() {
+  const parts = dsuParts(DSU.id), box = $('dsuCols'), sec = box.closest('section');
+  sec.style.display = parts.length ? '' : 'none';
+  const base = (typeof NX !== 'undefined' && NX.eff && NX.eff.drones.col && NX.eff.drones.col[DSU.id]) || {};
+  box.innerHTML = parts.map((p) => { const cur = (DSU.d.col[p[0]] || base[p[0]] || p[2]).toLowerCase();
+    return '<div class="dsucr"><div class="k">' + p[1] + '</div><div class="sw">' + DSU_PAL.map((c) => '<button data-p="' + p[0] + '" data-c="' + c + '" style="--c:' + c + '"' + (c.toLowerCase() === cur ? ' class="on"' : '') + '></button>').join('') + '</div></div>'; }).join('');
+  box.querySelectorAll('button').forEach((b) => b.addEventListener('click', () => { Sound.ui(); DSU.d.col[b.dataset.p] = b.dataset.c;
+    box.querySelectorAll('button[data-p="' + b.dataset.p + '"]').forEach((x) => x.classList.toggle('on', x === b)); dsuView(); dsuDirty(); }));
+}
+function dsuView() {
+  if (DSU.view) { const i = droneViews.indexOf(DSU.view); if (i >= 0) droneViews.splice(i, 1); dvDispose(DSU.view); DSU.view = null; }
+  if (!DSU.open) return;
+  const v = makeDroneView(DSU.id, $('dsuCv'), true, true); v.cam.position.multiplyScalar(0.8); v.cam.aspect = 1400 / 875; v.cam.fov = 2 * Math.atan(1.25 * Math.tan(16 * DEG)) / DEG; v.cam.updateProjectionMatrix(); v.cam.setViewOffset(1400, 875, 0, 40, 1400, 875);
+  v.setup = true; droneViews.push(v); DSU.view = v;
+}
+function dsuGraph() {
+  const cv = $('dsuG'); if (!cv) return; const g = cv.getContext('2d'), W = cv.width, H = cv.height;
+  g.clearRect(0, 0, W, H); g.fillStyle = 'rgba(8,10,16,.85)'; g.fillRect(0, 0, W, H);
+  g.strokeStyle = '#2b3240'; g.lineWidth = 1; g.beginPath(); g.moveTo(W / 2 + 0.5, 0); g.lineTo(W / 2 + 0.5, H); g.moveTo(0, H / 2 + 0.5); g.lineTo(W, H / 2 + 0.5); g.stroke();
+  const ymax = Math.max(200, ...AXES.map((a) => bfMaxVel(DSU.d.rates[a]))) * 1.08;
+  AXES.forEach((a) => { g.strokeStyle = AXIS_COL[a]; g.lineWidth = 2; g.beginPath();
+    for (let i = 0; i <= 80; i++) { const s = -1 + i / 40, x = (s + 1) / 2 * W, y = H / 2 - bfRate(s, DSU.d.rates[a]) / ymax * (H / 2); if (i) g.lineTo(x, y); else g.moveTo(x, y); } g.stroke(); });
+}
+function dsuMv() { AXES.forEach((a) => { const e = $('dsuMv_' + a); if (e) e.textContent = bfMaxVel(DSU.d.rates[a]); }); dsuGraph(); }
+function dsuDirty() { const m = $('dsuMsg'); if (m) m.textContent = 'יש שינויים שלא נשמרו'; }
+function dsuChanged(k) { if (/^rates\./.test(k)) dsuMv(); dsuDirty(); }
+function dsuSyncAll() { document.querySelectorAll('#dsu .dsl').forEach(dsuSyncSl); dsuMv(); dsuCols(); }
+function dsuOpen(id) {
+  dsuBuild();
+  DSU.id = id || droneSel || settings.preset; DSU.d = dsuDraft(DSU.id); DSU.open = true;
+  const d = DRONE_INFO[DSU.id] || DRONE_INFO.fpv5;
+  $('dsuEn').textContent = d.en; $('dsuName').textContent = d.title; $('dsuKind').textContent = typeof droneSpec === 'function' ? droneSpec(DSU.id).kind : '';
+  if (!$('dsu').dataset.bound) { document.querySelectorAll('#dsu .dsl').forEach(dsuBindSl); $('dsu').dataset.bound = '1'; }
+  const adv = $('dsuAdv').closest('section'); adv.style.display = dsuPlayerOnly() ? 'none' : '';   /* build 525: the PID button only for the manager */
+  const pt = document.querySelector('#dsu .dsutabs button[data-t="phys"]'); pt.style.display = dsuPlayerOnly() ? 'none' : '';   /* build 526: the physics tab only for the manager */
+  if (dsuPlayerOnly() && DSU.tab !== 'basic') document.querySelector('#dsu .dsutabs button[data-t="basic"]').click();
+  dsuSyncAll(); $('dsuMsg').textContent = '';
+  $('dsu').classList.add('on'); dsuView();
+}
+function dsuClose(saved) {
+  DSU.open = false; dsuView();
+  const pg = $('dsu'); if (pg) pg.classList.remove('on');
+  if (saved && typeof buildDroneCards === 'function' && currentScreen === 'drone') buildDroneCards(true);   // the cards and the big drone take the new colours
+}
+function dsuCommit(stay) {
+  const A = advCur(), D = DSU.d;
+  AXES.forEach((a) => Object.assign(A.rates[a], D.rates[a]));
+  A.angle.strength = D.angle.strength; A.angle.limit = D.angle.limit; A.thr.mid = D.thr.mid; A.thr.expo = D.thr.expo; A.tpa.rate = D.tpa.rate; A.ag.gain = D.ag.gain;
+  advRecalc(); saveAdv(); if (typeof advSync === 'function') try { advSync(); } catch (e) { /* the advanced window is not built yet */ }
+  setTilt(D.tilt); DSU.st.fov = D.fov; dsuApplyFov();
+  DSU.st.col[DSU.id] = Object.assign({}, D.col); if (!Object.keys(DSU.st.col[DSU.id]).length) delete DSU.st.col[DSU.id];
+  dsuSave();
+  if (stay) { dsuClose(true); return; }
+  $('dsuMsg').textContent = 'נשמר'; dsuClose(true);
+}
+function dsuDefaults() {
+  const Z = advDefaults();
+  DSU.d.rates = JSON.parse(JSON.stringify(Z.rates)); DSU.d.angle = { strength: Z.angle.strength, limit: Z.angle.limit }; DSU.d.thr = { mid: Z.thr.mid, expo: Z.thr.expo }; DSU.d.tpa = { rate: Z.tpa.rate }; DSU.d.ag = { gain: Z.ag.gain };
+  DSU.d.tilt = 30; DSU.d.fov = 105; DSU.d.col = {};
+  dsuSyncAll(); dsuView(); dsuDirty();
+}
+if (typeof document !== 'undefined' && document.addEventListener) document.addEventListener('keydown', (e) => { if (DSU.open && e.code === 'Escape') { e.stopPropagation(); dsuClose(false); } }, true);
 
 /* ---------- boot ---------- */
 buildAdvUI();
