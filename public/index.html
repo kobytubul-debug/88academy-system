@@ -2174,7 +2174,7 @@ body:has(#scrMissions.on.v2) #trkBg{top:116px!important;bottom:116px!important;h
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 564</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 565</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -4199,7 +4199,7 @@ function gateSpec(d) {
     bars.push({ cx: 0, cy: oh - tb / 2, a: 0, hl: ow, ht: tb / 2 });                                    // the beam rests on the posts
     [-1, 1].forEach((sg) => bars.push({ cx: sg * (ow - tp / 2), cy: (ih - gy) / 2, a: Math.PI / 2, hl: (ih + gy) / 2, ht: tp / 2 }));   // posts from the ground up to the beam
   } else if (kind === 'flag') {
-    bars.push({ cx: -iw - 0.1 * s, cy: 2.4 * s - gy, a: Math.PI / 2, hl: 2.4 * s, ht: 0.07 * s });                  // only the flag's pole is solid
+    bars.push({ cx: 0, cy: 2.4 * s - gy, a: Math.PI / 2, hl: 2.4 * s, ht: 0.07 * s });                  // build 565: the gate's point is the flag's pole, as with the element                  // only the flag's pole is solid
   } else if (kind === 'hex') {
     for (let i = 0; i < 6; i++) {
       const a0 = i * Math.PI / 3, a1 = (i + 1) * Math.PI / 3, am = a0 + Math.PI / 6;
@@ -4216,7 +4216,7 @@ function gateSpec(d) {
     if (kind === 'triple') [-1, 1].forEach((sg) => bars.push({ cx: sg * iw / 3, cy: 0, a: Math.PI / 2, hl: oh, ht: t / 2 }));
   }
   const div = kind === 'double' ? [0] : kind === 'triple' ? [-iw / 3, iw / 3] : [];
-  return { kind, ring: kind === 'ring', arch: kind === 'arch' || kind === 'archwide' || kind === 'archtall', hex: kind === 'hex', dbl: kind === 'double', banner: kind === 'banner', flag: kind === 'flag', div, t, iw, ih, ow, oh, s, bars, race, tp, tb, dz, gy };
+  return { kind, ring: kind === 'ring', arch: kind === 'arch' || kind === 'archwide' || kind === 'archtall', hex: kind === 'hex', dbl: kind === 'double', banner: kind === 'banner', flag: kind === 'flag', ox: kind === 'flag' ? iw + 0.15 * s : 0, div, t, iw, ih, ow, oh, s, bars, race, tp, tb, dz, gy };
 }
 /* striped gate finishes: black/white hazard stripes, red/white like a kerb. The pattern replaces the gate colour on the frame; the glow still follows the race */
 const GATE_PATS = { bw: { name: 'שחור-לבן מקווקו', a: '#15171b', b: '#f2f2f2' }, rw: { name: 'אדום-לבן (מדרכה)', a: '#d4232a', b: '#f2f2f2' } };
@@ -4331,11 +4331,11 @@ function buildGateObj(i, d) {
   } else if (sp.flag) {                                            // build 563: a feather flag beside the opening, its sail pointing away from it
     try {
       const f = buildPropMesh({ t: 'featherflag', c: d.c || '#e5484d' });
-      f.position.set(-sp.iw - 0.1 * sp.s, -sp.gy, 0); f.scale.set(-sp.s, sp.s, sp.s);   // build 564: the flag grows with the gate's size
+      f.position.set(0, -sp.gy, 0); f.scale.set(sp.s, sp.s, sp.s);   // build 565: exactly the element's flag, standing on the ground; it grows with the gate's size
       f.traverse((m) => { if (m.isMesh) { m.userData.gateIndex = i; m.castShadow = true; bars.push(m); } });
       grp.add(f);
-    } catch (e) { mk(new THREE.CylinderGeometry(0.05 * sp.s, 0.05 * sp.s, 4.8 * sp.s, 8), true, 4.8 * sp.s).position.set(-sp.iw - 0.1 * sp.s, 2.4 * sp.s - sp.gy, 0); }   // the props code is not loaded yet: the pole alone
-    halo(new THREE.BoxGeometry(1.6 * sp.s, 5.3 * sp.s, 0.6 * sp.s), -sp.iw - 0.65 * sp.s, 2.45 * sp.s - sp.gy, 0);
+    } catch (e) { mk(new THREE.CylinderGeometry(0.05 * sp.s, 0.05 * sp.s, 4.8 * sp.s, 8), true, 4.8 * sp.s).position.set(0, 2.4 * sp.s - sp.gy, 0); }   // the props code is not loaded yet: the pole alone
+    halo(new THREE.BoxGeometry(1.6 * sp.s, 5.3 * sp.s, 0.6 * sp.s), 0.55 * sp.s, 2.45 * sp.s - sp.gy, 0);
   } else if (sp.race) {                                           // one solid board per bar, the full depth of the gate
     sp.bars.forEach((br) => {
       const m = mk(new THREE.BoxGeometry(2 * br.hl, 2 * br.ht, sp.dz), true, 2 * br.hl);
@@ -4355,7 +4355,7 @@ function buildGateObj(i, d) {
   // exit-direction marker (cone points to local -Z)
   const arrow = new THREE.Mesh(new THREE.ConeGeometry(0.22 * k, 0.6 * k, 12), new THREE.MeshBasicMaterial({ color: 0xffffff }));
   arrow.rotation.x = -Math.PI / 2;
-  arrow.position.set(0, oh + 0.55 * k, -0.1);
+  arrow.position.set(sp.ox || 0, oh + 0.55 * k, -0.1);
   arrow.userData.gateIndex = i;
   arrow.visible = sp.kind !== 'none'; grp.add(arrow);
   // number label (own style per gate: colour, font, size, position)
@@ -4365,7 +4365,7 @@ function buildGateObj(i, d) {
     label = new THREE.Sprite(new THREE.SpriteMaterial({ map: makeLabelTexture(i + 1, ns), transparent: true, depthTest: false }));
     const sc = 1.55 * k * (ns.s || 1);
     label.scale.set(sc, sc, 1);
-    label.position.set((ns.x || 0), (ns.p === 'm' ? 0 : ns.p === 'b' ? -oh - 1.5 * k : oh + 1.5 * k) + (ns.y || 0), 0);
+    label.position.set((ns.x || 0) + (sp.ox || 0), (ns.p === 'm' ? 0 : ns.p === 'b' ? -oh - 1.5 * k : oh + 1.5 * k) + (ns.y || 0), 0);
     label.renderOrder = 10;
     grp.add(label);
   }
@@ -4529,6 +4529,7 @@ function refreshGateTransform(i) {
   go.group.updateMatrixWorld(true);
   go.inv.copy(go.group.matrixWorld).invert();
   go.center.set(d.x, d.y, d.z);
+  if (go.spec.ox) go.center.set(go.spec.ox, typeof gateOpenCY === 'function' ? gateOpenCY(go.spec) : 0, 0).applyMatrix4(go.group.matrixWorld);   // a flag gate: aim at the opening beside the flag, not at its pole
 }
 
 function disposeGateObjs() {
@@ -7186,7 +7187,7 @@ function gmkBuild(i) {
     g.add(m); GMK.arrows.push(m);
   }
   g.userData.R = Math.max(0.4, Math.min(sp.iw, gateOpenHH(sp)) * 0.5 * 0.85 * Math.min(1, D.size > 1 ? 1 : 1));
-  g.position.y = gateOpenCY(sp);
+  g.position.set(sp.ox || 0, gateOpenCY(sp), 0);
   go.group.add(g);
   GMK.grp = g; GMK.gate = i;
 }
@@ -7205,7 +7206,7 @@ function grkMark(i, col, cross, back) {
   const g = new THREE.Group(), mat = () => new THREE.MeshBasicMaterial({ color: new THREE.Color(col), transparent: true, opacity: 0.95, depthWrite: false });
   const ring = new THREE.Mesh(new THREE.RingGeometry(R - w, R, 64), mat()); ring.renderOrder = 15; g.add(ring);
   if (cross) [1, -1].forEach((sg) => { const b = new THREE.Mesh(new THREE.PlaneGeometry(R * 1.3, w * 0.85), mat()); b.rotation.z = sg * Math.PI / 4; b.renderOrder = 15; g.add(b); });
-  g.position.set(0, gateOpenCY(sp), 0);
+  g.position.set(sp.ox || 0, gateOpenCY(sp), 0);
   if (back) g.rotation.y = Math.PI;                               // faces the exit side: seen only from behind
   go.group.add(g); GRK.list.push(g);
 }
@@ -7269,9 +7270,10 @@ function checkWrongWay(prev, cur, dt) {
   _wb.copy(cur).applyMatrix4(go.inv);
   const ox = go.spec.ow, oy = go.spec.oh;
   // entering / passing through the gate plane from the back (exit) side
-  const crossing = _wa.z < 0 && _wb.z >= 0 && Math.abs(_wb.x) <= ox * 1.1 && Math.abs(_wb.y) <= oy * 1.1;
+  const wx = _wb.x - (go.spec.ox || 0);
+  const crossing = _wa.z < 0 && _wb.z >= 0 && Math.abs(wx) <= ox * 1.1 && Math.abs(_wb.y) <= oy * 1.1;
   // closing in on the exit rim from behind the gate, inside its footprint
-  const closing = _wb.z < 0 && _wb.z > -26 && Math.abs(_wb.x) <= ox * 1.25 && Math.abs(_wb.y) <= oy * 1.25 &&
+  const closing = _wb.z < 0 && _wb.z > -26 && Math.abs(wx) <= ox * 1.25 && Math.abs(_wb.y) <= oy * 1.25 &&
     (_wb.z - _wa.z) / Math.max(dt, 1e-4) > 1.5;
   if (crossing || closing) { wrongT = 1.1; wrongIdx = seq % N; }
 }
@@ -7373,6 +7375,7 @@ function onCountdown(dt) {
 
 function apertureOK(x, y, sp) {
   if (sp.ring) return x * x + y * y <= sp.iw * sp.iw;
+  if (sp.flag) x -= sp.ox;                                                  // build 565: the opening is beside the flag
   if (sp.race || sp.flag) return Math.abs(x) <= sp.iw && y >= -sp.gy && y <= sp.ih;     // from the ground up to the beam
   const ax = Math.abs(x), ay = Math.abs(y);
   if (sp.hex) return ay <= sp.ih && 0.866 * ax + 0.5 * ay <= sp.ih;
