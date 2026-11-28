@@ -2210,7 +2210,7 @@ body:has(#scrMissions.on.v2) #trkBg{top:116px!important;bottom:116px!important;h
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 567</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 568</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -4218,6 +4218,7 @@ function gateSpec(d) {
   if (!GATE_KINDS[kind]) kind = 'square';
   if (!GATE_KINDS[kind]) kind = 'square';
   const s = d && d.sz ? clamp(Number(d.sz) || 1, 0.5, 1.8) : 1;
+  if (GATE_MODELS && GATE_MODELS[kind]) return gateModelSpec(kind, d, s);   // build 568: gates that are their own 3D models
   const t = (GATE_OUTER - GATE_INNER) * s;
   let iw = GATE_INNER * s, ih = iw;
   if (kind === 'none') { iw = GATE_INNER * 1.8; ih = iw; }                       // a hidden measuring line: wide, nothing drawn
@@ -4320,6 +4321,7 @@ function gateCopy(g) {
 }
 
 /* physical details so a gate reads as a real race gate: dark corner joints, clamps on rings, a safety-striped stand with a weighted foot */
+const GATE_RECT = { square: 1, wide: 1, tall: 1, double: 1, triple: 1, slit: 1, ledge: 1 };
 function gateDeco(grp, sp, d, k) {
   if (sp.kind === 'none' || sp.race || sp.flag || sp.white) return;
   const dk = () => new THREE.MeshLambertMaterial({ color: 0x23272e }), add = (geo, mat, x, y, z) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.castShadow = true; grp.add(m); return m; };
@@ -4333,7 +4335,7 @@ function gateDeco(grp, sp, d, k) {
       add(new THREE.BoxGeometry(t * 0.62, t * 0.62, t * 0.8), dk(), x - Math.cos(br.a) * t * 0.2 * s, y - Math.sin(br.a) * t * 0.2 * s, 0).rotation.z = br.a;
     }));
   }
-  const upright = !sp.ring && Math.abs(d.pitch || 0) < 5, h = d.y - sp.oh;
+  const upright = !sp.ring && !GATE_RECT[sp.kind] && Math.abs(d.pitch || 0) < 5, h = d.y - sp.oh;   // build 568: square / rectangular gates float with no stand under them
   if (upright && h > 0.2) {                                              // striped collars on the stand + a weighted foot on the ground
     const yel = new THREE.MeshLambertMaterial({ color: 0xe8b81a }), r = 0.075 * k, n = Math.max(1, Math.min(4, Math.floor(h / 1.2)));
     for (let i = 0; i < n; i++) add(new THREE.CylinderGeometry(r, r, 0.18 * k, 10), i % 2 ? dk() : yel, 0, -sp.oh - (i + 0.5) * h / n, 0);
@@ -4364,6 +4366,9 @@ function buildGateObj(i, d) {
     mk(new THREE.TorusGeometry(Rr, tube * 0.72, 12, 96), true, 2 * Math.PI * Rr).position.z = tube * 0.45;
     mk(new THREE.TorusGeometry(Rr, tube * 0.72, 12, 96), false, 2 * Math.PI * Rr).position.z = -tube * 0.45;
     halo(new THREE.TorusGeometry(Rr, tube * 1.9, 12, 96), 0, 0, tube * 0.45);
+  } else if (sp.mdl) {
+    try { buildGateModel(grp, sp, d, i, bars); } catch (e) { console.warn('[FPV gates] model', sp.mdl, e); }
+    halo(new THREE.BoxGeometry(2 * sp.ow, sp.ih + sp.gy, 0.8), sp.ox, (sp.ih - sp.gy) / 2, 0);
   } else if (sp.flag) {                                            // build 563: a feather flag beside the opening, its sail pointing away from it
     try {
       const f = buildPropMesh({ t: 'featherflag', c: d.c || '#e5484d' });
@@ -4406,7 +4411,7 @@ function buildGateObj(i, d) {
     grp.add(label);
   }
   // support pole for upright gates
-  if (!sp.ring && !sp.race && !sp.flag && !sp.white && sp.kind !== 'none' && Math.abs(d.pitch || 0) < 5 && d.y - oh > 0.2) {
+  if (!sp.ring && !sp.race && !sp.flag && !sp.white && !GATE_RECT[sp.kind] && sp.kind !== 'none' && Math.abs(d.pitch || 0) < 5 && d.y - oh > 0.2) {
     const h = d.y - oh;
     const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.06 * k, 0.06 * k, h, 8), new THREE.MeshLambertMaterial({ color: 0x555b66 }));
     pole.position.set(0, -oh - h / 2, 0);
@@ -4822,6 +4827,142 @@ canvas.addEventListener('pointerup', (e) => {
   downPos = null;
 });
 
+/* ============================================================
+   MODEL GATES (build 568): gates built as their own 3D models, standing on the ground.
+   Each one says where its opening is (a box from y0 to top, beside it with ox, or round holes), where it is solid
+   (bars for the crash test) and how it looks. Their colour is the gate colour picked in the editor.
+   ============================================================ */
+var GATE_MODELS = {};
+(function () {
+  const PI = Math.PI, W0 = GATE_INNER;
+  const tex = {};
+  function chkTex(a, b, n) {
+    const key = 'c' + a + b + n; if (tex[key]) return tex[key];
+    const cv = document.createElement('canvas'); cv.width = 64; cv.height = 64 * n;
+    const g = cv.getContext('2d');
+    for (let y = 0; y < 2 * n; y++) for (let x = 0; x < 2; x++) { g.fillStyle = (x + y) % 2 ? a : b; g.fillRect(x * 32, y * 32, 32, 32); }
+    const t = new THREE.CanvasTexture(cv); t.wrapS = t.wrapT = THREE.RepeatWrapping; tex[key] = t; return t;
+  }
+  function banTex(col) {
+    const key = 'b' + col; if (tex[key]) return tex[key];
+    const cv = document.createElement('canvas'); cv.width = 512; cv.height = 96;
+    const g = cv.getContext('2d');
+    g.fillStyle = col; g.fillRect(0, 0, 512, 96);
+    g.fillStyle = '#ffffff'; for (let i = 0; i < 6; i++) { g.fillRect(8 + (i % 2) * 12, 12 + i * 12, 12, 12); g.fillRect(480 + (i % 2) * 12, 12 + i * 12, 12, 12); }
+    g.font = 'italic 900 58px Arial'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('FPV NEXUS', 256, 50);
+    const t = new THREE.CanvasTexture(cv); tex[key] = t; return t;
+  }
+  const lam = (c) => new THREE.MeshLambertMaterial({ color: new THREE.Color(c) });
+  const glow = (c) => new THREE.MeshBasicMaterial({ color: new THREE.Color(c) });
+  // arc bars: a curve split into straight pieces for the crash test
+  function arcBars(R, tube, sx, sy, n, cx0, cy0) {
+    const out = [];
+    for (let k = 0; k < n; k++) {
+      const a0 = PI * k / n, a1 = PI * (k + 1) / n;
+      const x0 = cx0 + R * Math.cos(a0) * sx, y0 = cy0 + R * Math.sin(a0) * sy, x1 = cx0 + R * Math.cos(a1) * sx, y1 = cy0 + R * Math.sin(a1) * sy;
+      out.push({ cx: (x0 + x1) / 2, cy: (y0 + y1) / 2, a: Math.atan2(y1 - y0, x1 - x0), hl: Math.hypot(x1 - x0, y1 - y0) / 2 + tube * 0.3, ht: tube });
+    }
+    return out;
+  }
+  const post = (x, y0, y1, ht) => ({ cx: x, cy: (y0 + y1) / 2, a: PI / 2, hl: (y1 - y0) / 2, ht });
+  const beam = (y, hw, ht, x) => ({ cx: x || 0, cy: y, a: 0, hl: hw, ht });
+  const ringBars = (cx, cy, R, tube) => { const o = []; for (let k = 0; k < 16; k++) { const a = k / 16 * 2 * PI; o.push({ cx: cx + Math.cos(a) * R, cy: cy + Math.sin(a) * R, a: a + PI / 2, hl: R * PI / 16 + tube * 0.3, ht: tube }); } return o; };
+  // helpers that add a mesh to the model group
+  function H(grp) {
+    const add = (geo, mat, x, y, z) => { const m = new THREE.Mesh(geo, mat); m.position.set(x || 0, y || 0, z || 0); m.castShadow = true; grp.add(m); return m; };
+    return {
+      add,
+      box: (w, h, d, mat, x, y, z) => add(new THREE.BoxGeometry(w, h, d), mat, x, y, z),
+      cyl: (r0, r1, h, mat, x, y, z, n) => add(new THREE.CylinderGeometry(r0, r1, h, n || 12), mat, x, y, z),
+      arc: (R, tube, mat, x, y, sx, sy, a0, al) => { const m = add(new THREE.TorusGeometry(R, tube, 10, 48, al === undefined ? PI : al), mat, x, y, 0); m.rotation.z = a0 || 0; m.scale.set(sx || 1, sy || 1, 1); return m; },
+    };
+  }
+  const feet = (h, s, xs) => xs.forEach((x) => { const m = h.box(1.3 * s, 1.0 * s, 1.3 * s, new THREE.MeshLambertMaterial({ map: chkTex('#111111', '#f4f4f4', 1) }), x, 0.5 * s, 0); });
+  // ---------- the models ----------
+  const D = {};
+  D.infarch = { name: 'קשת מתנפחת', c: '#e5484d', spec(s) { const R = 4.8 * s, tb = 0.75 * s; return { iw: (R - tb) * 0.82, top: (R - tb) * 0.88, bars: arcBars(R, tb, 1, 1, 8, 0, 0), t: 2 * tb }; },
+    build(h, s, c) { const R = 4.8 * s, tb = 0.75 * s; h.arc(R, tb, lam(c), 0, 0); h.arc(R, tb * 0.25, lam('#ffffff'), 0, 0, 1, 1, 0.18, PI - 0.36).position.z = tb * 0.92; feet(h, s, [-R, R]); } };
+  D.lowarch = { name: 'קשת נמוכה רחבה', c: '#c0392b', spec(s) { const R = 4.8 * s, tb = 0.7 * s; return { iw: R * 1.45 * 0.75, top: R * 0.62 * 0.8, bars: arcBars(R, tb, 1.45, 0.62, 10, 0, 0), t: 2 * tb }; },
+    build(h, s, c) { const R = 4.8 * s, tb = 0.7 * s; h.arc(R, tb, lam(c), 0, 0, 1.45, 0.62); feet(h, s, [-R * 1.45, R * 1.45]); } };
+  D.chevarch = { name: 'קשת שברונים', c: '#e5484d', spec(s) { const R = 4.6 * s, tb = 0.6 * s; return { iw: (R - tb) * 0.82, top: (R - tb) * 0.88, bars: arcBars(R, tb, 1, 1, 8, 0, 0), t: 2 * tb }; },
+    build(h, s, c) { const R = 4.6 * s, tb = 0.6 * s, n = 14; for (let k = 0; k < n; k++) h.arc(R, tb, lam(k % 2 ? '#f4f6f8' : c), 0, 0, 1, 1, PI * k / n, PI / n); } };
+  D.neonarch = { name: 'קשת ניאון', c: '#35c46b', spec(s) { const L = 4 * s, R = 3.8 * s, tb = 0.32 * s; return { iw: R - tb, top: L + (R - tb) * 0.75, bars: [post(-R, 0, L, tb), post(R, 0, L, tb)].concat(arcBars(R, tb, 1, 1, 8, 0, L)), t: 2 * tb }; },
+    build(h, s, c) { const L = 4 * s, R = 3.8 * s, tb = 0.32 * s, m = glow(c);
+      [-R, R].forEach((x) => h.cyl(tb, tb, L, m, x, L / 2, 0)); h.arc(R, tb, m, 0, L);
+      const gm = new THREE.MeshBasicMaterial({ color: new THREE.Color(c), transparent: true, opacity: 0.22, blending: THREE.AdditiveBlending, depthWrite: false });
+      [-R, R].forEach((x) => h.cyl(tb * 2.6, tb * 2.6, L, gm, x, L / 2, 0)); h.arc(R, tb * 2.6, gm, 0, L);
+      [-R, R].forEach((x) => h.box(1.2 * s, 0.3 * s, 1.2 * s, lam('#202329'), x, 0.15 * s, 0)); } };
+  D.tubearch = { name: 'קשת צינור', c: '#2d8cff', spec(s) { const L = 3 * s, R = 3.8 * s, tb = 0.55 * s; return { iw: R - tb, top: L + (R - tb) * 0.75, bars: [post(-R, 0, L, tb), post(R, 0, L, tb)].concat(arcBars(R, tb, 1, 1, 8, 0, L)), t: 2 * tb }; },
+    build(h, s, c) { const L = 3 * s, R = 3.8 * s, tb = 0.55 * s, w = lam('#f4f6f8'); [-R, R].forEach((x) => { h.cyl(tb, tb, L, w, x, L / 2, 0); h.cyl(tb * 1.3, tb * 1.3, 0.4 * s, lam(c), x, 0.2 * s, 0); }); h.arc(R, tb, w, 0, L); } };
+  D.shoe = { name: 'פרסה זוהרת', c: '#35c46b', spec(s) { const L = 1.6 * s, R = 4 * s, tb = 0.8 * s; return { iw: R - tb, top: L + (R - tb) * 0.75, bars: [post(-R, 0, L, tb), post(R, 0, L, tb)].concat(arcBars(R, tb, 1, 1, 8, 0, L)), t: 2 * tb }; },
+    build(h, s, c) { const L = 1.6 * s, R = 4 * s, tb = 0.8 * s, w = lam('#f4f6f8'); [-R, R].forEach((x) => h.cyl(tb, tb, L, w, x, L / 2, 0)); h.arc(R, tb, w, 0, L);
+      const d = h.add(new THREE.CircleGeometry(R * 1.1, 40), new THREE.MeshBasicMaterial({ color: new THREE.Color(c), transparent: true, opacity: 0.4, depthWrite: false }), 0, 0.04, 0); d.rotation.x = -PI / 2; d.castShadow = false;
+      [-R, R].forEach((x) => h.cyl(tb * 0.5, tb * 0.5, 0.1 * s, glow(c), x, L * 0.3, tb * 0.95).rotation.x = PI / 2); } };
+  D.chkring = { name: 'טבעת משובצת', c: '#ff6a1a', spec(s) { const R = 4.4 * s, tb = 0.55 * s, cy = R + tb + 0.2 * s; return { iw: R, top: cy + R, circ: [{ x: 0, y: cy, r: R - tb }], bars: ringBars(0, cy, R, tb), t: 2 * tb }; },
+    build(h, s, c) { const R = 4.4 * s, tb = 0.55 * s, cy = R + tb + 0.2 * s, t = chkTex(c, '#f4f6f8', 1).clone(); t.needsUpdate = true; t.repeat.set(24, 1);
+      h.add(new THREE.TorusGeometry(R, tb, 12, 96), new THREE.MeshLambertMaterial({ map: t }), 0, cy, 0); [-1, 1].forEach((sg) => h.box(1.6 * s, 0.25 * s, 1.4 * s, lam('#2a2e35'), sg * 0.9 * s, 0.12 * s, 0)); } };
+  D.dblring = { name: 'טבעת כפולה', c: '#e5484d', spec(s) { const R = 3.1 * s, tb = 0.45 * s, cy = R + tb + 0.2 * s, x = R + tb + 0.1 * s; return { iw: 2 * x, top: cy + R, circ: [{ x: -x, y: cy, r: R - tb }, { x, y: cy, r: R - tb }], bars: ringBars(-x, cy, R, tb).concat(ringBars(x, cy, R, tb)), t: 2 * tb }; },
+    build(h, s, c) { const R = 3.1 * s, tb = 0.45 * s, cy = R + tb + 0.2 * s, x = R + tb + 0.1 * s, t = chkTex(c, '#f4f6f8', 1).clone(); t.needsUpdate = true; t.repeat.set(18, 1);
+      [-x, x].forEach((xx) => { h.add(new THREE.TorusGeometry(R, tb, 12, 80), new THREE.MeshLambertMaterial({ map: t }), xx, cy, 0); h.box(1.4 * s, 0.25 * s, 1.2 * s, lam('#2a2e35'), xx, 0.12 * s, 0); }); } };
+  // banner gates on stakes: two chequered panels, a printed banner on top, lifted on thin stakes
+  function stakeBanner(name, w, hh, sq) {
+    return { name, c: '#1f2a66',
+      spec(s) { const W = w * s, H = hh * s, lift = 0.6 * s, pw = 0.9 * s, y0 = lift + (sq ? 0.6 * s : 0);
+        const b = [post(-W - pw / 2, lift, lift + H, pw / 2), post(W + pw / 2, lift, lift + H, pw / 2), beam(lift + H + 0.6 * s, W + pw, 0.6 * s)];
+        if (sq) b.push(beam(lift + 0.3 * s, W + pw, 0.3 * s));
+        return { iw: W, y0, top: lift + H, bars: b, t: 0.3 * s }; },
+      build(h, s, c) { const W = w * s, H = hh * s, lift = 0.6 * s, pw = 0.9 * s, dep = 0.12 * s;
+        const pm = new THREE.MeshLambertMaterial({ map: (() => { const t = chkTex('#111111', '#f4f4f4', 4).clone(); t.needsUpdate = true; t.repeat.set(1, H / (pw * 2)); return t; })() });
+        [-1, 1].forEach((sg) => { h.box(pw, H, dep, pm, sg * (W + pw / 2), lift + H / 2, 0); h.cyl(0.04 * s, 0.04 * s, lift + 1.2 * s, lam('#2b2e33'), sg * (W + pw / 2), (lift + 1.2 * s) / 2 - 0.1 * s, 0, 6); });
+        h.box(2 * (W + pw), 1.2 * s, dep, new THREE.MeshLambertMaterial({ map: banTex(c) }), 0, lift + H + 0.6 * s, 0);
+        if (sq) h.box(2 * (W + pw), 0.6 * s, dep, lam('#f4f6f8'), 0, lift + 0.3 * s, 0); } };
+  }
+  D.banS = stakeBanner('באנר על יתדות S', 2.6, 4, false);
+  D.banM = stakeBanner('באנר על יתדות M', 3.4, 5, false);
+  D.banL = stakeBanner('באנר על יתדות L', 4.2, 6, false);
+  D.bansq = stakeBanner('ריבוע באנר על יתדות', 3.6, 5.4, true);
+  D.bantilt = (() => { const b = stakeBanner('באנר נטוי', 3.4, 5, false), bb = b.build; b.c = '#d8262f';
+    b.build = (h, s, c) => { const g = new THREE.Group(); bb(H(g), s, c); g.rotation.x = -0.22; h.grp.add(g); }; return b; })();
+  D.hurdle = { name: 'משוכה', c: '#e5484d', spec(s) { const W = 4.1 * s; return { iw: W, y0: 2.5 * s, top: 9 * s, bars: [post(-W - 0.2 * s, 0, 3 * s, 0.2 * s), post(W + 0.2 * s, 0, 3 * s, 0.2 * s), beam(2.25 * s, W, 0.25 * s), beam(1.4 * s, W, 0.18 * s)], t: 0.4 * s }; },
+    build(h, s, c) { const W = 4.1 * s, w = lam('#e8eaed'); [-1, 1].forEach((sg) => { h.box(0.4 * s, 3 * s, 0.4 * s, w, sg * (W + 0.2 * s), 1.5 * s, 0); h.box(0.4 * s, 0.15 * s, 2 * s, w, sg * (W + 0.2 * s), 0.08 * s, 0); });
+      h.box(2 * W, 0.5 * s, 0.2 * s, lam(c), 0, 2.25 * s, 0); h.box(2 * W, 0.36 * s, 0.2 * s, w, 0, 1.4 * s, 0); } };
+  D.pole1 = { name: 'עמוד בודד (עוברים לידו)', c: '#ffd23f', spec(s) { const W = 4.1 * s; return { iw: W, ox: W + 0.5 * s, top: 8 * s, bars: [post(0, 0, 6 * s, 0.3 * s)], t: 0.6 * s }; },
+    build(h, s, c) { h.cyl(0.08 * s, 0.32 * s, 6 * s, lam('#e8eaed'), 0, 3 * s, 0); h.cyl(0.36 * s, 0.42 * s, 1.2 * s, lam(c), 0, 0.6 * s, 0); } };
+  D.poles = { name: 'זוג עמודים', c: '#ffd23f', spec(s) { const W = 4.1 * s; return { iw: W, top: 8 * s, bars: [post(-W - 0.4 * s, 0, 6 * s, 0.3 * s), post(W + 0.4 * s, 0, 6 * s, 0.3 * s)], t: 0.6 * s }; },
+    build(h, s, c) { const W = 4.1 * s; [-1, 1].forEach((sg) => { h.cyl(0.08 * s, 0.32 * s, 6 * s, lam('#e8eaed'), sg * (W + 0.4 * s), 3 * s, 0); h.cyl(0.36 * s, 0.42 * s, 1.2 * s, lam(c), sg * (W + 0.4 * s), 0.6 * s, 0); }); } };
+  D.pylon = { name: 'פירמידה (עוברים לידה)', c: '#ff6a1a', spec(s) { const W = 4.1 * s; return { iw: W, ox: W + 1.8 * s, top: 9 * s, bars: [post(0, 0, 7 * s, 0.9 * s)], t: 1.8 * s }; },
+    build(h, s, c) { h.cyl(0, 1.5 * s, 7 * s, lam('#f4f6f8'), 0, 3.5 * s, 0, 4).rotation.y = PI / 4;
+      [[2.3, 0.6], [4.4, 0.6]].forEach(([y, hh]) => { const r1 = 1.5 * s * (1 - (y - hh / 2) / 7), r0 = 1.5 * s * (1 - (y + hh / 2) / 7); h.cyl(r0 * 1.02, r1 * 1.02, hh * s, lam(c), 0, y * s, 0, 4).rotation.y = PI / 4; }); } };
+  D.ladder = { name: 'סולם (בין השלבים)', c: '#ff6a1a', spec(s) { const W = 4.1 * s; return { iw: W, y0: 3.3 * s, top: 6.2 * s, bars: [post(-W - 0.25 * s, 0, 8 * s, 0.25 * s), post(W + 0.25 * s, 0, 8 * s, 0.25 * s), beam(3 * s, W, 0.3 * s), beam(6.5 * s, W, 0.3 * s)], t: 0.5 * s }; },
+    build(h, s, c) { const W = 4.1 * s, w = lam('#f4f6f8'); [-1, 1].forEach((sg) => { h.box(0.5 * s, 8 * s, 0.5 * s, w, sg * (W + 0.25 * s), 4 * s, 0); h.box(0.5 * s, 0.2 * s, 2.4 * s, lam('#c9ced4'), sg * (W + 0.25 * s), 0.1 * s, 0); });
+      h.box(2 * W, 0.6 * s, 0.4 * s, lam(c), 0, 3 * s, 0); h.box(2 * W, 0.6 * s, 0.4 * s, w, 0, 6.5 * s, 0); } };
+  D.hgate = { name: 'שער H (מעל המוט)', c: '#ff6a1a', spec(s) { const W = 4.1 * s; return { iw: W, y0: 3.8 * s, top: 8 * s, bars: [post(-W - 0.25 * s, 0, 8 * s, 0.25 * s), post(W + 0.25 * s, 0, 8 * s, 0.25 * s), beam(3.5 * s, W, 0.3 * s)], t: 0.5 * s }; },
+    build(h, s, c) { const W = 4.1 * s, w = lam('#f4f6f8'); [-1, 1].forEach((sg) => { h.box(0.5 * s, 8 * s, 0.5 * s, w, sg * (W + 0.25 * s), 4 * s, 0); h.box(0.5 * s, 0.2 * s, 2.4 * s, lam('#c9ced4'), sg * (W + 0.25 * s), 0.1 * s, 0); });
+      h.box(2 * W, 0.6 * s, 0.4 * s, w, 0, 3.5 * s, 0); h.box(2 * W, 0.2 * s, 0.42 * s, lam(c), 0, 3.75 * s, 0); } };
+  D.tower = { name: 'מגדל פאנלים (עוברים לידו)', c: '#e5484d', spec(s) { const W = 4.1 * s; return { iw: W, ox: W + 1.3 * s, top: 9 * s, bars: [post(0, 0, 8 * s, 1.1 * s)], t: 1 * s }; },
+    build(h, s, c) { h.box(2.2 * s, 8 * s, 0.5 * s, lam('#f4f6f8'), 0, 4 * s, 0); h.box(0.5 * s, 8 * s, 2.2 * s, lam('#cfd3d8'), -1.35 * s, 4 * s, 0);
+      [[5.8, c], [2.6, '#1b1e23']].forEach(([y, cc]) => h.cyl(0.75 * s, 0.75 * s, 0.06 * s, lam(cc), 0, y * s, 0.27 * s, 24).rotation.x = PI / 2); } };
+  D.cube = { name: 'קובייה', c: '#2d8cff', spec(s) { const W = 4.1 * s, e = 0.3 * s; return { iw: W - e, y0: 2 * e, top: 2 * W - e, bars: [post(-W, 0, 2 * W, e), post(W, 0, 2 * W, e), beam(2 * W - e, W, e), beam(e, W, e)], t: 2 * W }; },
+    build(h, s, c) { const W = 4.1 * s, e = 0.3 * s, m = lam('#f4f6f8'), cm = lam(c);
+      [-W, W].forEach((x) => [-W, W].forEach((z) => h.box(2 * e, 2 * W, 2 * e, m, x, W, z)));
+      [e, 2 * W - e].forEach((y) => { [-W, W].forEach((z) => h.box(2 * W, 2 * e, 2 * e, y > W ? cm : m, 0, y, z)); [-W, W].forEach((x) => h.box(2 * e, 2 * e, 2 * W, y > W ? cm : m, x, y, 0)); }); } };
+  Object.keys(D).forEach((k) => { GATE_MODELS[k] = D[k]; GATE_KINDS[k] = D[k].name; });
+  GATE_MODELS.H = (grp) => { const h = H(grp); h.grp = grp; return h; };
+})();
+/* the gate spec of a model gate: it stands on the ground like the feather flag (the gate's height only says where the opening's middle is drawn) */
+function gateModelSpec(kind, d, s) {
+  const M = GATE_MODELS[kind], o = M.spec(s), gy = Math.max(0.6, Number(d && d.y) || 0), t = o.t || 0.4 * s;
+  const ih = Math.max(1, o.top - gy), iw = o.iw;
+  return { kind, mdl: kind, ring: false, arch: false, hex: false, dbl: false, banner: false, flag: true, white: false, ox: o.ox || 0, y0: o.y0 || 0, circ: o.circ || null,
+    div: [], race: false, s, t, tp: t, tb: t, dz: t, gy, iw, ih, ow: iw + t, oh: ih + t, bars: o.bars.map((b) => ({ cx: b.cx, cy: b.cy - gy, a: b.a, hl: b.hl, ht: b.ht })) };
+}
+function buildGateModel(grp, sp, d, i, bars) {
+  const M = GATE_MODELS[sp.mdl], g = new THREE.Group(), h = GATE_MODELS.H(g);
+  M.build(h, sp.s, /^#[0-9a-f]{6}$/i.test(d.c || '') ? d.c : M.c);
+  g.position.set(0, -sp.gy, 0);
+  g.traverse((m) => { if (m.isMesh) { m.userData.gateIndex = i; bars.push(m); } });
+  grp.add(g);
+}
 /* ============================================================
    PROPS: cones, flags, pylons, barriers, tyre stacks.
    Placed in the track editor, saved with the track, solid for the drone.
@@ -7227,8 +7368,8 @@ function gmkBuild(i) {
   go.group.add(g);
   GMK.grp = g; GMK.gate = i;
 }
-function gateOpenCY(sp) { return sp.race || sp.flag ? (sp.ih - sp.gy) / 2 : 0; }        // the middle of the opening (a race gate opens down to the ground)
-function gateOpenHH(sp) { return sp.race || sp.flag ? (sp.ih + sp.gy) / 2 : sp.ih; }
+function gateOpenCY(sp) { return sp.circ ? sp.circ[0].y - sp.gy : sp.race || sp.flag ? (sp.ih + (sp.y0 || 0) - sp.gy) / 2 : 0; }        // the middle of the opening (a race gate opens down to the ground)
+function gateOpenHH(sp) { return sp.circ ? sp.circ[0].r : sp.race || sp.flag ? (sp.ih - (sp.y0 || 0) + sp.gy) / 2 : sp.ih; }
 /* circle markers instead of the arrows (track setting): green = pass this gate, blue with an X = the gate after it,
    red with an X = the gate to pass, seen from behind. Each disc shows from one side of the gate only. */
 const GRK = { list: [], key: '' };
@@ -7412,7 +7553,8 @@ function onCountdown(dt) {
 function apertureOK(x, y, sp) {
   if (sp.ring) return x * x + y * y <= sp.iw * sp.iw;
   if (sp.flag) x -= sp.ox;                                                  // build 565: the opening is beside the flag
-  if (sp.race || sp.flag) return Math.abs(x) <= sp.iw && y >= -sp.gy && y <= sp.ih;     // from the ground up to the beam
+  if (sp.circ) return sp.circ.some((c) => (x - c.x) * (x - c.x) + (y - c.y + sp.gy) * (y - c.y + sp.gy) <= c.r * c.r);   // build 568: round holes of a model gate
+  if (sp.race || sp.flag) return Math.abs(x) <= sp.iw && y >= (sp.y0 || 0) - sp.gy && y <= sp.ih;     // from the ground up to the beam
   const ax = Math.abs(x), ay = Math.abs(y);
   if (sp.hex) return ay <= sp.ih && 0.866 * ax + 0.5 * ay <= sp.ih;
   if (sp.div && sp.div.some((d) => Math.abs(x - d) < sp.t / 2)) return false;
