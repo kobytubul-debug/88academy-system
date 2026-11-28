@@ -2174,7 +2174,7 @@ body:has(#scrMissions.on.v2) #trkBg{top:116px!important;bottom:116px!important;h
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 560</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 561</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -5229,6 +5229,7 @@ Object.assign(PROP_TYPES, {
   /* markers */
   minicone: { name: 'קונוס קטן', r: 0.25, h: 0.75 },
   chkflag: { name: 'דגל משובץ', r: 0.1, h: 5 },
+  featherflag: { name: 'דגל נוצה', r: 0.1, h: 4.8, defc: '#e5484d' },
   windsock: { name: 'שרוול רוח', r: 0.12, h: 6 },
   balloon: { name: 'בלון', r: 0.9, h: 6, cr: 0.7 },
   marker: { name: 'סימון קרקע', r: 1.6, h: 0.12 },
@@ -5295,6 +5296,34 @@ PX.chkflag = (add, T, col, M) => {
   pxCyl(add, T.r, T.r, T.h, M.grey, 0, T.h / 2, 0, 10);
   pxCyl(add, 0.4, 0.45, 0.12, M.dark, 0, 0.06, 0, 16);
   for (let i = 0; i < 4; i++) for (let j = 0; j < 3; j++) pxBox(add, 0.5, 0.4, 0.04, (i + j) % 2 ? M.white : M.dark, 0.35 + i * 0.5, T.h - 0.35 - j * 0.4, 0);
+};
+/* feather flag (build 561): a tall sail with a curved top on a pole and a cross base. Top white, bottom in the chosen
+   colour with a peak in the border, a white checker emblem and a thin coloured frame. Only the pole is solid. */
+const FFL = { W: 1.1, yb: 1.0, yr: 1.6, yc: 3.7, tex: {} };
+function fflTex(col) {
+  if (FFL.tex[col]) return FFL.tex[col];
+  const W = FFL.W, H = PROP_TYPES.featherflag.h, y0 = FFL.yb, cw = 128, ch = 512;
+  const cv = document.createElement('canvas'); cv.width = cw; cv.height = ch;
+  const g = cv.getContext('2d'), X = (x) => x / W * cw, Y = (y) => (1 - (y - y0) / (H - y0)) * ch;
+  g.fillStyle = '#f2f4f7'; g.fillRect(0, 0, cw, ch);
+  g.fillStyle = col; g.beginPath(); g.moveTo(X(0), Y(2.4)); g.lineTo(X(0.5), Y(2.55)); g.lineTo(X(W), Y(2.4)); g.lineTo(X(W), Y(-1)); g.lineTo(X(0), Y(-1)); g.closePath(); g.fill();
+  g.fillStyle = '#f2f4f7'; const q = 0.1;
+  for (let r = 0; r < 4; r++) for (let c = r; c <= 6 - r; c += 2) g.fillRect(X(0.2 + c * q), Y(2.3 - r * q), X(q) + 0.5, Y(0) - Y(q) + 0.5);
+  g.strokeStyle = col; g.lineWidth = 10; g.beginPath(); g.moveTo(X(0), Y(y0)); g.lineTo(X(W), Y(FFL.yr)); g.lineTo(X(W), Y(H)); g.quadraticCurveTo(X(0), Y(H), X(0), Y(FFL.yc)); g.closePath(); g.stroke();
+  const t = new THREE.CanvasTexture(cv); FFL.tex[col] = t; return t;
+}
+PX.featherflag = (add, T, col, M) => {
+  const W = FFL.W, H = T.h, pole = propMat('#3a3e44');
+  pxCyl(add, 0.045, 0.05, FFL.yc, pole, 0, FFL.yc / 2, 0, 8);
+  const curve = new THREE.QuadraticBezierCurve3(new THREE.Vector3(0, FFL.yc, 0), new THREE.Vector3(0, H, 0), new THREE.Vector3(W, H, 0));
+  add(new THREE.TubeGeometry(curve, 16, 0.04, 6, false), pole, 0, 0, 0);
+  [0, 1].forEach((i) => { const b = pxBox(add, 0.9, 0.06, 0.08, M.dark, 0, 0.03, 0); b.rotation.y = Math.PI / 4 + i * Math.PI / 2; });
+  pxCyl(add, 0.09, 0.09, 0.2, M.dark, 0, 0.1, 0, 10);
+  const sh = new THREE.Shape(); sh.moveTo(0, FFL.yb); sh.lineTo(W, FFL.yr); sh.lineTo(W, H); sh.quadraticCurveTo(0, H, 0, FFL.yc); sh.closePath();
+  const geo = new THREE.ShapeGeometry(sh, 12), pa = geo.attributes.position, uv = geo.attributes.uv;
+  if (pa && uv) { for (let i = 0; i < pa.count; i++) uv.setXY(i, pa.getX(i) / W, (pa.getY(i) - FFL.yb) / (H - FFL.yb)); uv.needsUpdate = true; }
+  let mat; try { mat = new THREE.MeshLambertMaterial({ map: fflTex(col), side: THREE.DoubleSide }); } catch (e) { mat = new THREE.MeshLambertMaterial({ color: new THREE.Color(col), side: THREE.DoubleSide }); }
+  add(geo, mat, 0.03, 0, 0);
 };
 PX.windsock = (add, T, col, M) => {
   pxCyl(add, T.r, T.r, T.h, M.grey, 0, T.h / 2, 0, 8);
@@ -14279,7 +14308,7 @@ function edAlignUndo() {
 }
 const ED_CATS = [
   { name: 'שערים', items: ['banner'].concat(Object.keys(GATE_KINDS).filter((k) => k !== 'banner')).map((k) => ({ id: 'g:' + k, kind: 'gate', k, name: GATE_KINDS[k] })) },   // build 499: the banner gate first, easy to find
-  { name: 'קונוסים ודגלים', items: edPropItems(['cone', 'bigcone', 'minicone', 'conerow', 'flag', 'chkflag', 'pennant', 'pylon', 'stake', 'slalompole', 'signpost', 'windsock', 'balloon', 'beacon', 'marker', 'ringmark', 'arrowmark', 'startline', 'pathdisc', 'patharrow']) },
+  { name: 'קונוסים ודגלים', items: edPropItems(['cone', 'bigcone', 'minicone', 'conerow', 'flag', 'chkflag', 'featherflag', 'pennant', 'pylon', 'stake', 'slalompole', 'signpost', 'windsock', 'balloon', 'beacon', 'marker', 'ringmark', 'arrowmark', 'startline', 'pathdisc', 'patharrow']) },
   { name: 'מחסומים ומכשולים', items: edPropItems(['barrier', 'tires', 'wall', 'fence', 'hurdle', 'jersey', 'sandbags', 'crate', 'cratestack', 'barrel', 'drumrow', 'hay', 'haystack', 'netfence', 'tirewall', 'pallets', 'pipe', 'ramp', 'rail', 'boom', 'brickwall', 'scaffold']) },
   { name: 'עצים וצמחים', items: edPropItems(['pine', 'spruce', 'cypress', 'oak', 'birch', 'willow', 'olive', 'acacia', 'palm', 'deadtree', 'sapling', 'bush', 'hedge', 'bamboo', 'cactus', 'flowers', 'tallgrass', 'reeds', 'cornrow', 'mushroom', 'log', 'stump']) },
   { name: 'מבנים', items: edPropItems(['house', 'villa', 'building', 'skyscraper', 'warehouse', 'barn', 'hangar', 'shed', 'kiosk', 'tent', 'gazebo', 'bunker', 'container', 'tower', 'watchtower', 'lighthouse', 'watertank', 'silo', 'chimney', 'antenna', 'windmill', 'solarpanel', 'billboard', 'grandstand', 'lamp', 'bench']) },
