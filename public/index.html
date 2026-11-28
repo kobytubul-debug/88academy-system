@@ -971,6 +971,7 @@ body.ed-on:not(.edop) #edTop{left:0}
 #edCtl .edcaX+input{border-right:3px solid #e5484d}#edCtl .edcaY+input{border-right:3px solid #5fd08a}#edCtl .edcaZ+input{border-right:3px solid #2d8cff}
 #edCtl .edcb2{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:14px}#edCtl .edcb2 .b{height:34px;font-size:12.5px;padding:0 4px;margin:0}
 #edcFly{background:#3fae22!important;color:#eaffc9!important}
+#edCtl .edcsd{display:grid;grid-template-columns:1fr 1fr;gap:6px}#edCtl .edcsd .b{height:32px;margin:0;font-size:12.5px}#edCtl .edcsd .b.on{background:var(--acfill,var(--ac));color:var(--ot,#06222b)}
 #edcMsg{min-height:16px;margin-top:8px;font-size:12px}
 #edcCount{color:var(--mu);font-size:11.5px;margin-top:6px}
 
@@ -2210,7 +2211,7 @@ body:has(#scrMissions.on.v2) #trkBg{top:116px!important;bottom:116px!important;h
 <div id="nxTab" title="F9">&#9881; ממשק מנהל</div>
 <div id="mzDock"><div id="mzSpkWrap"><button class="mzb" id="mzSpk" type="button"></button><div id="mzVolBox"><input type="range" id="mzVol" min="0" max="100" step="1" value="50"></div></div><button class="mzb" id="mzNote" type="button" title="רשימת השמעה"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V7.8l8-1.7v6.2A3.5 3.5 0 1 0 21 15.5V3z"/></svg></button></div>
 <div id="mzList"><div class="mzh"><span>&#9835; מוזיקה</span><span><button id="mzPrev" type="button">&#9198;</button><button id="mzNext" type="button">&#9197;</button><button id="mzClose" type="button">&#10005;</button></span></div><div id="mzListBody"></div><div id="mzVolRow"><input type="range" id="mzVol2" min="0" max="100" step="1" value="50"></div></div>
-<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 572</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
+<div id="adm"><div class="admh"><b>ממשק מנהל <small>FPV NEXUS CONTROL · build 573</small></b><button id="admPub">נשמר &#10003;</button><button id="admPrev">מצב שחקן</button><button id="admX">&#10005;</button></div><div id="admTabs"></div><div id="admBody"></div></div>
 <div id="who"><canvas id="whoBg" width="480" height="270"></canvas>
   <div class="whoWrap">
     <div class="whoBrand"><div class="whoLogo nxlogo"><svg class="nxlogosvg" role="img" aria-label="FPV NEXUS" viewBox="0 0 640 214"><defs><linearGradient id="wlFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"></stop><stop offset=".45" stop-color="#d6f4ff"></stop><stop offset=".5" style="stop-color:color-mix(in srgb,var(--ac) 45%,#fff)"></stop><stop offset=".53" style="stop-color:var(--ac)"></stop><stop offset=".8" style="stop-color:color-mix(in srgb,var(--ac) 55%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 25%,#fff)"></stop></linearGradient><linearGradient id="wlSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:color-mix(in srgb,var(--ac) 35%,#000)"></stop><stop offset="1" style="stop-color:color-mix(in srgb,var(--ac) 10%,#000)"></stop></linearGradient></defs><g transform="translate(30 0) skewX(-12)"><use href="#wlWord" x="9" y="9" fill="#020b10"></use><use href="#wlWord" x="8" y="8" fill="url(#wlSide)"></use><use href="#wlWord" x="7" y="7" fill="url(#wlSide)"></use><use href="#wlWord" x="6" y="6" fill="url(#wlSide)"></use><use href="#wlWord" x="5" y="5" fill="url(#wlSide)"></use><use href="#wlWord" x="4" y="4" fill="url(#wlSide)"></use><use href="#wlWord" x="3" y="3" fill="url(#wlSide)"></use><use href="#wlWord" x="2" y="2" fill="url(#wlSide)"></use><use href="#wlWord" x="1" y="1" fill="url(#wlSide)"></use><use href="#wlWord" fill="none" stroke="#03141c" stroke-width="7" stroke-linejoin="round"></use><g fill="url(#wlFace)" stroke="#ffffff" stroke-width="1.2"><g id="wlWord" font-family="Orbitron, 'Russo One', Rubik, sans-serif" font-weight="900" font-size="100" font-style="normal" letter-spacing="0"><text id="wlA" x="40" y="96">FPV</text><text id="wlB" x="600" y="190" text-anchor="end">NEXUS</text></g></g></g></svg></div><div class="whoSub">סימולטור טיסה &middot; 88ACADEMY</div></div>
@@ -4254,7 +4255,7 @@ function gateSpec(d) {
     if (kind === 'triple') [-1, 1].forEach((sg) => bars.push({ cx: sg * iw / 3, cy: 0, a: Math.PI / 2, hl: oh, ht: t / 2 }));
   }
   const div = kind === 'double' ? [0] : kind === 'triple' ? [-iw / 3, iw / 3] : [];
-  return { kind, ring: kind === 'ring', arch: kind === 'arch' || kind === 'archwide' || kind === 'archtall', hex: kind === 'hex', dbl: kind === 'double', banner: kind === 'banner', flag: kind === 'flag', white, ox: kind === 'flag' ? iw + 0.15 * s : 0, div, t, iw, ih, ow, oh, s, bars, race, tp, tb, dz, gy };
+  return { kind, ring: kind === 'ring', arch: kind === 'arch' || kind === 'archwide' || kind === 'archtall', hex: kind === 'hex', dbl: kind === 'double', banner: kind === 'banner', flag: kind === 'flag', white, ox: kind === 'flag' ? (d && d.sd === -1 ? -1 : 1) * (iw + 0.15 * s) : 0, div, t, iw, ih, ow, oh, s, bars, race, tp, tb, dz, gy };
 }
 /* striped gate finishes: black/white hazard stripes, red/white like a kerb. The pattern replaces the gate colour on the frame; the glow still follows the race */
 const GATE_PATS = { bw: { name: 'שחור-לבן מקווקו', a: '#15171b', b: '#f2f2f2' }, rw: { name: 'אדום-לבן (מדרכה)', a: '#d4232a', b: '#f2f2f2' } };
@@ -4317,6 +4318,7 @@ function gateCopy(g) {
   if ((g.k === 'race' || g.k === 'banner' || g.k === 'wh') && g.gl > 0) o.gl = g.gl;
   if (g.c && /^#[0-9a-f]{6}$/i.test(g.c)) o.c = g.c;
   if (g.p && GATE_PATS[g.p]) o.p = g.p;
+  if (g.sd === -1) o.sd = -1;                                     // build 573: a side-pass gate (flag, pole ...) passed on its other side
   const nn = cleanNum(g.n); if (nn) o.n = nn;
   return o;
 }
@@ -4954,7 +4956,7 @@ var GATE_MODELS = {};
 function gateModelSpec(kind, d, s) {
   const M = GATE_MODELS[kind], o = M.spec(s), gy = Math.max(0.6, Number(d && d.y) || 0), t = o.t || 0.4 * s;
   const ih = Math.max(1, o.top - gy), iw = o.iw;
-  return { kind, mdl: kind, ring: false, arch: false, hex: false, dbl: false, banner: false, flag: true, white: false, ox: o.ox || 0, y0: o.y0 || 0, circ: o.circ || null,
+  return { kind, mdl: kind, ring: false, arch: false, hex: false, dbl: false, banner: false, flag: true, white: false, ox: (o.ox || 0) * (d && d.sd === -1 ? -1 : 1), y0: o.y0 || 0, circ: o.circ || null,
     div: [], race: false, s, t, tp: t, tb: t, dz: t, gy, iw, ih, ow: iw + t, oh: ih + t, bars: o.bars.map((b) => ({ cx: b.cx, cy: b.cy - gy, a: b.a, hl: b.hl, ht: b.ht })) };
 }
 function buildGateModel(grp, sp, d, i, bars) {
@@ -15389,6 +15391,7 @@ function edcBuild() {
     '<div id="edcBody"><div class="edcn" id="edcName"></div>' +
     '<div class="edsh">מיקום</div><div class="edcg">' + ax('edcX', 'X', 'X') + ax('edcY', 'Y', 'Y') + ax('edcZ', 'Z', 'Z') + '</div>' +
     '<div class="edsh">סיבוב</div><div class="edcg">' + ax('edcRx', 'X', 'X') + ax('edcRy', 'Y', 'Y') + '</div>' +
+    '<div id="edcSide"><div class="edsh">מאיפה עוקפים</div><div class="edcsd"><button class="b" type="button" data-s="-1">משמאל לו</button><button class="b" type="button" data-s="1">מימין לו</button></div></div>' +
     '<div class="edsh">קנה מידה</div><div class="edcg">' + ax('edcS', 'S', '×') + '</div>' +
     '<div class="edsh" id="edcDl">מרחק מהשער הקודם</div><div class="edcg edcro"><label class="edca edcaX">X</label><output id="edcDx"></output><label class="edca edcaY">Y</label><output id="edcDy"></output><label class="edca edcaZ">Z</label><output id="edcDz"></output><label class="edca">↔</label><output id="edcDt"></output></div>' +
     '</div>' +
@@ -15407,6 +15410,11 @@ function edcBuild() {
   num('edcRy', (v) => edpApply('yaw', v));
   num('edcRx', (v) => { const e = edpEntity(); if (!e || e.kind !== 'gate') return; e.d.pitch = clamp(v, -90, 90); refreshGateTransform(selected); trackEdited(); });
   num('edcS', (v) => edpApply('sz', v));
+  c.querySelectorAll('#edcSide button').forEach((b) => b.addEventListener('click', () => {   // build 573: which side of a flag / pole the pilot passes
+    b.blur(); const e = edpEntity(); if (!e || e.kind !== 'gate') return;
+    if (b.dataset.s === '-1') e.d.sd = -1; else delete e.d.sd;
+    rebuildTrack(); trackEdited(); edcSync(true);
+  }));
   $('edcFly').addEventListener('click', (e) => { e.currentTarget.blur(); $('edExit').click(); });
   $('edcEnv').addEventListener('click', (e) => { e.currentTarget.blur(); edcTab('trk'); const s = [...box.querySelectorAll('details.eds>summary')].find((x) => /תנאי סביבה/.test(x.textContent)); if (s) s.click(); });
   $('edcMove').addEventListener('click', (e) => { e.currentTarget.blur(); const s = $('edMove') && $('edMove').querySelector('summary'); if (s) s.click(); });
@@ -15448,7 +15456,7 @@ function edcCheck() {                                           // a quick look 
 function edcSync(force) {
   const c = $('edCtl'); if (!c || !editorMode) return;
   const e = edpEntity(), d = e && e.d, dist = e ? edcDist() : null;
-  const key = EDC.unit + '|' + (e ? e.kind + (e.kind === 'gate' ? selected : selProp) + '|' + [d.x, d.y, d.z, d.yaw, d.pitch, d.s, d.sz, d.k, d.t].join(',') : '-') + '|' + gates.length + '|' + propData.length + (dist ? '|' + dist.x + dist.z : '');
+  const key = EDC.unit + '|' + (e ? e.kind + (e.kind === 'gate' ? selected : selProp) + '|' + [d.x, d.y, d.z, d.yaw, d.pitch, d.s, d.sz, d.k, d.t, d.sd].join(',') : '-') + '|' + gates.length + '|' + propData.length + (dist ? '|' + dist.x + dist.z : '');
   if (!force && key === EDC.key) return;
   EDC.key = key;
   $('edcNone').style.display = e ? 'none' : '';
@@ -15462,6 +15470,9 @@ function edcSync(force) {
   set('edcY', isG ? edcFmt(d.y) : ''); $('edcY').disabled = !isG; $('edcY').placeholder = isG ? '' : 'קרקע';
   set('edcRy', edpYaw(d.yaw || 0)); set('edcRx', isG && !up ? Math.round(d.pitch || 0) : ''); $('edcRx').disabled = !isG || up; $('edcRx').placeholder = isG && !up ? '' : '—';
   set('edcS', round2(d.s || d.sz || 1));
+  const side = isG && sp.ox;                                      // only gates passed beside them (flag, single pole, pyramid, tower)
+  $('edcSide').style.display = side ? '' : 'none';
+  if (side) $('edcSide').querySelectorAll('button').forEach((b) => b.classList.toggle('on', (b.dataset.s === '-1') === (d.sd === -1)));
   ['edcX', 'edcY', 'edcZ', 'edcS'].forEach((id) => { $(id).step = id === 'edcS' ? '0.1' : '0.5'; });
   $('edcDl').textContent = dist && dist.gate ? 'מרחק מהשער הקודם' : 'מרחק מהשער הקרוב';
   const u = EDC.unit === 'ft' ? ' ft' : ' m';
